@@ -77,5 +77,6 @@ if ($disable_context -eq 'y') {
 }
 
 Write-Output ""
-Write-Output "Script completed! Press any key to continue..."
+Write-Output "Script completed! You may need to restart to apply all changes."
+Write-Output "Press any key to continue..."
 $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")

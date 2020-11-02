@@ -13,10 +13,10 @@ Write-Output ""
 if ($remove_apps -eq 'y') {
     Write-Output "Uninstalling pre-installed windows 10 applications..."
 
-    $apps = @(
+    $apps = 
         # These apps will be uninstalled by default:
         #
-        # If you wish to keep any of the apps below simply add a # character
+        # If you wish to KEEP any of the apps below simply add a # character
         # in front of the specific app in the list below.
         "*Microsoft.GetHelp*"
         "*Microsoft.Getstarted*"
@@ -47,17 +47,21 @@ if ($remove_apps -eq 'y') {
         "*king.com.CandyCrushSaga*"
         
 
+
         # These apps will NOT be uninstalled by default:
-        #
-        # If you wish to REMOVE any of the apps below simply remove the 
-        # # character in front of the specific app in the list below.
+        # 
+        # If you wish to REMOVE any of the apps below simply remove the #
+        # character in front of the specific app in the list below.
         #"*Microsoft.WindowsStore*"   # NOTE: This app cannot be reinstalled!
         #"*Microsoft.WindowsCalculator*"
         #"*Microsoft.Windows.Photos*"
         #"*Microsoft.WindowsCamera*"
         #"*Microsoft.WindowsAlarms*"
         #"*Microsoft.WindowsMaps*"
-        #"*Microsoft.MSPaint*"
+        #"*microsoft.windowscommunicationsapps*"   # Mail & Calendar
+        #"*Microsoft.People*"
+        #"*Microsoft.ScreenSketch*"
+        #"*Microsoft.MSPaint*"   # Paint 3D
         #"*Microsoft.YourPhone*"
         #"*Microsoft.XboxApp*"
         #"*Microsoft.XboxGameOverlay*"

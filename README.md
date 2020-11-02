@@ -2,7 +2,7 @@
 A simple powershell script that allows you to remove most pre-installed windows 10 apps, remove the 3d objects, onedrive and music folder from This PC in windows explorer and remove some context menu options.
 
 ## Removable Apps
-By default, the script doesn't remove all of the default windows 10 apps, such as the windows store and the calculator. You can edit the apps list in the Win10Debloat.ps1 script to customize which apps you want to keep, and which apps you want the script to remove.
+By default, the script doesn't remove all of the default windows 10 apps, such as the windows store and the calculator. You can edit the apps list in the 'Win10Debloat.ps1' script to customize which apps you want to keep, and which apps you want the script to remove.
 
 ### These apps will be deleted by default:
 - Microsoft.GetHelp
@@ -37,10 +37,13 @@ By default, the script doesn't remove all of the default windows 10 apps, such a
 - Microsoft.WindowsStore (NOTE: This app cannot be reinstalled!)
 - Microsoft.WindowsCalculator
 - Microsoft.Windows.Photos
+- microsoft.windowscommunicationsapps (Mail & Calendar)
+- Microsoft.People
 - Microsoft.WindowsCamera
 - Microsoft.WindowsAlarms
 - Microsoft.WindowsMaps
-- Microsoft.MSPaint
+- Microsoft.MSPaint (Paint 3D)
+- Microsoft.ScreenSketch
 - Microsoft.YourPhone
 - Microsoft.XboxApp
 - Microsoft.XboxGameOverlay
@@ -54,3 +57,5 @@ By default, the script doesn't remove all of the default windows 10 apps, such a
 - Remove 'Include in library' from context menu.
 - Remove 'Give access to' from context menu.
 - Remove 'Share' from context menu.
+
+It's possible to revert these optional changes with the registry files that are included in the 'Regfiles' folder.

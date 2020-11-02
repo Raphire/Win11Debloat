@@ -1,4 +1,4 @@
-$remove_apps = Read-Host "Do you want to remove the pre-installed apps? (y/n)"
+$remove_apps = Read-Host "Do you want to remove the pre-installed windows 10 apps? (y/n)"
 
 $disable_onedrive = Read-Host "Do you want to disable the onedrive folder in windows explorer? (y/n)"
 
@@ -11,35 +11,58 @@ $disable_context = Read-Host "Do you want to remove the contextmenu entries for:
 Write-Output ""
 
 if ($remove_apps -eq 'y') {
-    Write-Output "Uninstalling pre-installed applications..."
+    Write-Output "Uninstalling pre-installed windows 10 applications..."
 
     $apps = @(
+        # These apps will be uninstalled by default:
+        #
+        # If you wish to keep any of the apps below simply add a # character
+        # in front of the specific app in the list below.
         "*Microsoft.GetHelp*"
         "*Microsoft.Getstarted*"
         "*Microsoft.WindowsFeedbackHub*"
-        "*Microsoft.MicrosoftOfficeHub*"
-        "*Microsoft.Office.OneNote*"
-        "*Microsoft.OneConnect*"
-        "*Microsoft.Messaging*"
-        "*Microsoft.SkypeApp*"
-        "*Microsoft.MixedReality.Portal*"
-        "*Microsoft.3DBuilder*"
-        "*Microsoft.Microsoft3DViewer*"
-        "*Microsoft.Print3D*"
-        "*Microsoft.MicrosoftStickyNotes*"
-        "*Microsoft.WindowsSoundRecorder*"
-        "*Microsoft.ZuneMusic*"
-        "*Microsoft.ZuneVideo*"
         "*Microsoft.BingNews*"
         "*Microsoft.BingFinance*"
         "*Microsoft.BingSports*"
         "*Microsoft.BingWeather*"
-        "*Microsoft.549981C3F5F10*"
+        "*Microsoft.BingTranslator*"
+        "*Microsoft.MicrosoftOfficeHub*"
+        "*Microsoft.Office.OneNote*"
+        "*Microsoft.MicrosoftStickyNotes*"
+        "*Microsoft.SkypeApp*"
+        "*Microsoft.OneConnect*"
+        "*Microsoft.Messaging*"
+        "*Microsoft.WindowsSoundRecorder*"
+        "*Microsoft.ZuneMusic*"
+        "*Microsoft.ZuneVideo*"
+        "*Microsoft.MixedReality.Portal*"
+        "*Microsoft.3DBuilder*"
+        "*Microsoft.Microsoft3DViewer*"
+        "*Microsoft.Print3D*"
+        "*Microsoft.549981C3F5F10*"   #Cortana app
         "*Microsoft.MicrosoftSolitaireCollection*"
+        "*Microsoft.Asphalt8Airborne*"
         "*king.com.BubbleWitch3Saga*"
         "*king.com.CandyCrushSodaSaga*"
         "*king.com.CandyCrushSaga*"
-        "*Microsoft.Asphalt8Airborne*"
+        
+
+        # These apps will NOT be uninstalled by default:
+        #
+        # If you wish to REMOVE any of the apps below simply remove the 
+        # # character in front of the specific app in the list below.
+        #"*Microsoft.WindowsStore*"   # NOTE: This app cannot be reinstalled!
+        #"*Microsoft.WindowsCalculator*"
+        #"*Microsoft.Windows.Photos*"
+        #"*Microsoft.WindowsCamera*"
+        #"*Microsoft.WindowsAlarms*"
+        #"*Microsoft.WindowsMaps*"
+        #"*Microsoft.MSPaint*"
+        #"*Microsoft.YourPhone*"
+        #"*Microsoft.XboxApp*"
+        #"*Microsoft.XboxGameOverlay*"
+        #"*Microsoft.XboxGamingOverlay*"
+        #"*Microsoft.XboxSpeechToTextOverlay*"
     )
 
     foreach ($app in $apps) {

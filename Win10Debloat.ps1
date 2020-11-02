@@ -13,7 +13,7 @@ Write-Output ""
 if ($remove_apps -eq 'y') {
     Write-Output "Uninstalling pre-installed windows 10 applications..."
 
-    $apps = 
+    $apps = @(
         # These apps will be uninstalled by default:
         #
         # If you wish to KEEP any of the apps below simply add a # character

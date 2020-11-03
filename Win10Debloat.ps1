@@ -1,12 +1,12 @@
 $remove_apps = Read-Host "Do you want to remove the pre-installed windows 10 apps? (y/n)"
 
-$disable_onedrive = Read-Host "Do you want to disable the onedrive folder in windows explorer? (y/n)"
+$disable_onedrive = Read-Host "Do you want to hide the onedrive folder in windows explorer? (y/n)"
 
-$disable_3d_objects = Read-Host "Do you want to disable the 3D objects folder in windows explorer? (y/n)"
+$disable_3d_objects = Read-Host "Do you want to hide the 3D objects folder in windows explorer? (y/n)"
 
-$disable_music = Read-Host "Do you want to disable the music folder in windows explorer? (y/n)"
+$disable_music = Read-Host "Do you want to hide the music folder in windows explorer? (y/n)"
 
-$disable_context = Read-Host "Do you want to remove the contextmenu entries for: Share, Give access to and Include in library? (y/n)"
+$disable_context = Read-Host "Do you want to disable the contextmenu entries for: Share, Give access to and Include in library? (y/n)"
 
 Write-Output ""
 
@@ -79,31 +79,32 @@ if ($remove_apps -eq 'y') {
 if ($disable_onedrive -eq 'y') {
     Write-Output "Disabling the onedrive folder in windows explorer..."
 
-    regedit /s $PSScriptRoot\Regfiles\Disable_Onedrive_Folder.reg
+    regedit /s $PSScriptRoot\Regfiles\Hide_Onedrive_Folder.reg
 }
 
 
 if ($disable_3d_objects -eq 'y') {
     Write-Output "Disabling the 3D objects folder in windows explorer..."
 
-    regedit /s $PSScriptRoot\Regfiles\Disable_3D_Objects_Folder.reg
+    regedit /s $PSScriptRoot\Regfiles\Hide_3D_Objects_Folder.reg
 }
 
 if ($disable_music -eq 'y') {
     Write-Output "Disabling the music folder in windows explorer..."
 
-    regedit /s $PSScriptRoot\Regfiles\Disable_Music_folder.reg
+    regedit /s $PSScriptRoot\Regfiles\Hide_Music_folder.reg
 }
 
 if ($disable_context -eq 'y') {
     Write-Output "Removing contextmenu entries for: Share, Include in library & Give access..."
 
-    regedit /s $PSScriptRoot\Regfiles\Remove_Share_from_context_menu.reg
-    regedit /s $PSScriptRoot\Regfiles\Remove_Include_in_library_from_context_menu.reg
-    regedit /s $PSScriptRoot\Regfiles\Remove_Give_access_to_context_menu.reg
+    regedit /s $PSScriptRoot\Regfiles\Disable_Share_from_context_menu.reg
+    regedit /s $PSScriptRoot\Regfiles\Disable_Include_in_library_from_context_menu.reg
+    regedit /s $PSScriptRoot\Regfiles\Disable_Give_access_to_context_menu.reg
 }
 
 Write-Output ""
-Write-Output "Script completed! You may need to restart to apply all changes."
+Write-Output "Script completed! Please restart your PC to make sure all changes are properly applied."
+Write-Output ""
 Write-Output "Press any key to continue..."
 $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")

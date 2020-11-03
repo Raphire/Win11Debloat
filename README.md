@@ -1,8 +1,23 @@
 # Win10Debloat
-A simple powershell script that allows you to remove most pre-installed windows 10 apps, remove the 3d objects, onedrive and music folder from This PC in windows explorer and remove some context menu options.
+A simple powershell script that allows you to remove most pre-installed windows 10 apps, hide the 3d objects, onedrive and music folder from 'This pc' in windows explorer and disable the 'Share', 'Give access to' and 'Include in library' options in the context menu.
+
+## How to run
+Step 1. To download the script, first click the green download button in the top right, next click 'Download ZIP'.
+
+Step 2. Unzip the downloaded file to a location of your choosing and navigate to that location.
+
+Step 3. Right-click the 'Run.ps1' file and select 'Run with Powershell'.
+
+Step 4. Accept the UAC prompt asking for administrator permissions, this is required for the script to function.
+
+Step 5. The script will now ask which changes you would like it to make, after which the script will start to execute them.
+
+Step 6. Once the script has executed, simply restart your pc to ensure all changes are properly applied.
+
+Step 7. Done!
 
 ## Removable Apps
-By default, the script doesn't remove all of the default windows 10 apps, such as the windows store and the calculator. You can edit the apps list in the 'Win10Debloat.ps1' script to customize which apps you want to keep, and which apps you want the script to remove.
+By default, this script will not remove all of the pre-installed windows 10 applications. You configure which applications are removed by this script by editing the apps list found in the 'Win10Debloat.ps1' file.
 
 ### These apps will be deleted by default:
 - Microsoft.GetHelp
@@ -51,11 +66,11 @@ By default, the script doesn't remove all of the default windows 10 apps, such a
 - Microsoft.XboxSpeechToTextOverlay
 
 ## Other Optional Changes
-- Disable the onedrive folder in the windows explorer sidebar.
-- Disable the 3D objects folder under 'This pc' in windows explorer.
-- Disable the music folder under 'This pc' in windows explorer.
-- Remove 'Include in library' from context menu.
-- Remove 'Give access to' from context menu.
-- Remove 'Share' from context menu.
+- Hide the onedrive folder in the windows explorer sidebar.
+- Hide the 3D objects folder under 'This pc' in windows explorer.
+- Hide the music folder under 'This pc' in windows explorer.
+- Disable the 'Include in library' from context menu.
+- Disable the 'Give access to' from context menu.
+- Disable the 'Share' from context menu.
 
 It's possible to revert these optional changes with the registry files that are included in the 'Regfiles' folder.

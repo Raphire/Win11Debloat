@@ -1,22 +1,40 @@
 Write-Output "-------------------------------------------------------------------------------------------"
-Write-Output "Win10Debloat Script"
+Write-Output "Win10Debloat Script - Setup"
 Write-Output "-------------------------------------------------------------------------------------------"
-
-$remove_apps = Read-Host "Remove the pre-installed windows 10 apps? (y/n)"
-
-$disable_onedrive = Read-Host "Hide the onedrive folder in windows explorer? (y/n)"
-
-$disable_3d_objects = Read-Host "Hide the 3D objects folder in windows explorer? (y/n)"
-
-$disable_music = Read-Host "Hide the music folder in windows explorer? (y/n)"
-
-$disable_bing_searches = Read-Host "Disable bing in windows search? (y/n)"
-
-$disable_context = Read-Host "Disable the contextmenu entries for: Share, Give access to and Include in library? (y/n)"
-
+Write-Output "(1) Run Win10Debloat with the default settings"
+Write-Output "(2) Advanced: Choose which changes you want Win10Debloat to make"
 Write-Output ""
+Do { $script_mode = Read-Host "Please select an option (1/2)" }
+while ($script_mode -ne '1' -and $script_mode -ne '2')
 
-if ($remove_apps -eq 'y') {
+
+if ($script_mode -eq '1'){
+    Clear
+    Write-Output "-------------------------------------------------------------------------------------------"
+    Write-Output "Win10Debloat Script - Default Configuration"
+    Write-Output "-------------------------------------------------------------------------------------------"
+}
+elseif ($script_mode -eq '2') {
+    Clear
+    Write-Output "-------------------------------------------------------------------------------------------"
+    Write-Output "Win10Debloat Script - Advanced Configuration"
+    Write-Output "-------------------------------------------------------------------------------------------"
+    $remove_apps = Read-Host "Remove the pre-installed windows 10 apps? (y/n)"
+
+    $disable_onedrive = Read-Host "Hide the onedrive folder in windows explorer? (y/n)"
+
+    $disable_3d_objects = Read-Host "Hide the 3D objects folder in windows explorer? (y/n)"
+
+    $disable_music = Read-Host "Hide the music folder in windows explorer? (y/n)"
+
+    $disable_bing_searches = Read-Host "Disable bing in windows search? (y/n)"
+
+    $disable_context = Read-Host "Disable the contextmenu entries for: Share, Give access to and Include in library? (y/n)"
+
+    Write-Output ""
+}
+
+if ($remove_apps -eq 'y' -or $script_mode -eq '1') {
     Write-Output "> Removing pre-installed windows 10 apps..."
 
     $apps = @(
@@ -76,7 +94,7 @@ if ($remove_apps -eq 'y') {
     )
 
     foreach ($app in $apps) {
-        Write-Output "Attempting to remove $app"
+        Write-Output "  Attempting to remove $app"
 
         Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage
     }
@@ -89,7 +107,7 @@ if ($disable_onedrive -eq 'y') {
 }
 
 
-if ($disable_3d_objects -eq 'y') {
+if ($disable_3d_objects -eq 'y' -or $script_mode -eq '1') {
     Write-Output "> Hiding the 3D objects folder in windows explorer..."
 
     regedit /s $PSScriptRoot\Regfiles\Hide_3D_Objects_Folder.reg
@@ -101,13 +119,13 @@ if ($disable_music -eq 'y') {
     regedit /s $PSScriptRoot\Regfiles\Hide_Music_folder.reg
 }
 
-if ($disable_bing_searches -eq 'y') {
+if ($disable_bing_searches -eq 'y' -or $script_mode -eq '1') {
     Write-Output "> Disabling bing in windows search..."
 
     regedit /s $PSScriptRoot\Regfiles\Disable_Bing_Searches.reg
 }
 
-if ($disable_context -eq 'y') {
+if ($disable_context -eq 'y' -or $script_mode -eq '1') {
     Write-Output "> Disabling contextmenu entries for: Share, Include in library & Give access..."
 
     regedit /s $PSScriptRoot\Regfiles\Disable_Share_from_context_menu.reg

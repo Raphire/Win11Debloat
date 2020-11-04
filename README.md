@@ -2,9 +2,9 @@
 A simple powershell script that allows you to remove most pre-installed windows 10 apps, hide the 3d objects, onedrive and music folder from 'This pc' in windows explorer and disable the 'Share', 'Give access to' and 'Include in library' options in the context menu.
 
 ## How to run
-Step 1. Download the .ZIP file by clicking the green 'Code' button on the main github page, and extract the downloaded zip file to a location of your choosing.
+Step 1. Download the script by clicking the green 'Code' button on the main github page, and extract the .ZIP file to your preferred location.
 
-Step 2. To run the script, right-click the 'Run.ps1' file and select 'Run with Powershell'.
+Step 2. Run the script by right-clicking the 'Run.ps1' file and selecting 'Run with Powershell' option.
 
 Step 3. Next, accept the windows UAC prompt to run the script as administrator, this is required for the script to function.
 

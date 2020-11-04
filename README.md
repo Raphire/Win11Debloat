@@ -1,5 +1,5 @@
 # Win10Debloat
-A simple powershell script that allows you to remove most pre-installed windows 10 apps, hide the 3d objects, onedrive and music folder from 'This pc' in windows explorer and disable the 'Share', 'Give access to' and 'Include in library' options in the context menu.
+A simple powershell script that allows you to remove most pre-installed windows 10 apps, hide the 3D objects, onedrive and music folder from 'This pc' in windows explorer, disable bing in windows search and declutter the context menu.
 
 ## How to run
 Step 1. Download the script by clicking the green 'Code' button on the main github page, and extract the .ZIP file to your preferred location.
@@ -14,7 +14,7 @@ Step 5. Once the script has executed, restart your pc to ensure all changes are 
 
 Step 6. Done!
 
-## Apps that can be removed
+## Bloatware Apps
 By default, this script will remove most, but not all of the pre-installed windows 10 applications. You configure which applications are removed by this script by editing the apps list found in the 'Win10Debloat.ps1' file.
 
 ### These apps will be deleted by default:
@@ -63,10 +63,11 @@ By default, this script will remove most, but not all of the pre-installed windo
 - Microsoft.XboxGamingOverlay
 - Microsoft.XboxSpeechToTextOverlay
 
-## Other Optional Changes
+## Other (Optional) Changes
 - Hide the onedrive folder in the windows explorer sidebar.
 - Hide the 3D objects folder under 'This pc' in windows explorer.
 - Hide the music folder under 'This pc' in windows explorer.
+- Disable bing in windows search.
 - Disable the 'Include in library' from context menu.
 - Disable the 'Give access to' from context menu.
 - Disable the 'Share' from context menu.

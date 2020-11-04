@@ -2,22 +2,20 @@
 A simple powershell script that allows you to remove most pre-installed windows 10 apps, hide the 3d objects, onedrive and music folder from 'This pc' in windows explorer and disable the 'Share', 'Give access to' and 'Include in library' options in the context menu.
 
 ## How to run
-Step 1. To download the script, first click the green download button in the top right, next click 'Download ZIP'.
+Step 1. Download the .ZIP file by clicking the green 'Code' button on the main github page, and extract the downloaded zip file to a location of your choosing.
 
-Step 2. Unzip the downloaded file to a location of your choosing and navigate to that location.
+Step 2. To run the script, right-click the 'Run.ps1' file and select 'Run with Powershell'.
 
-Step 3. Right-click the 'Run.ps1' file and select 'Run with Powershell'.
+Step 3. Next, accept the windows UAC prompt to run the script as administrator, this is required for the script to function.
 
-Step 4. Accept the UAC prompt asking for administrator permissions, this is required for the script to function.
+Step 4. The script will now ask which changes you would like it to make, and start executing them.
 
-Step 5. The script will now ask which changes you would like it to make, after which the script will start to execute them.
+Step 5. Once the script has executed, restart your pc to ensure all changes are properly applied.
 
-Step 6. Once the script has executed, simply restart your pc to ensure all changes are properly applied.
+Step 6. Done!
 
-Step 7. Done!
-
-## Removable Apps
-By default, this script will not remove all of the pre-installed windows 10 applications. You configure which applications are removed by this script by editing the apps list found in the 'Win10Debloat.ps1' file.
+## Apps that can be removed
+By default, this script will remove most, but not all of the pre-installed windows 10 applications. You configure which applications are removed by this script by editing the apps list found in the 'Win10Debloat.ps1' file.
 
 ### These apps will be deleted by default:
 - Microsoft.GetHelp
@@ -73,4 +71,4 @@ By default, this script will not remove all of the pre-installed windows 10 appl
 - Disable the 'Give access to' from context menu.
 - Disable the 'Share' from context menu.
 
-It's possible to revert these optional changes with the registry files that are included in the 'Regfiles' folder.
+These changes can be reverted with the registry files that are included in the 'Regfiles' folder.

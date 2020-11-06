@@ -29,6 +29,10 @@ elseif ($script_mode -eq '2') {
 
     $disable_bing_searches = Read-Host "Disable bing in windows search? (y/n)"
 
+    $disable_lockscreen_tips = Read-Host "Disable tips & tricks on the lockscreen? (y/n)"
+
+    $disable_windows_suggestions = Read-Host "Disable tips, tricks and suggestions in the startmenu and settings? (y/n)"
+
     $disable_context = Read-Host "Disable the contextmenu entries for: Share, Give access to and Include in library? (y/n)"
 
     Write-Output ""
@@ -123,6 +127,18 @@ if ($disable_bing_searches -eq 'y' -or $script_mode -eq '1') {
     Write-Output "> Disabling bing in windows search..."
 
     regedit /s $PSScriptRoot\Regfiles\Disable_Bing_Searches.reg
+}
+
+if ($disable_lockscreen_tips -eq 'y' -or $script_mode -eq '1') {
+    Write-Output "> Disabling tips & tricks on the lockscreen..."
+
+    regedit /s $PSScriptRoot\Regfiles\Disable_Lockscreen_Tips.reg
+}
+
+if ($disable_windows_suggestions -eq 'y' -or $script_mode -eq '1') {
+    Write-Output "> Disabling tips, tricks and suggestions in the startmenu and settings..."
+
+    regedit /s $PSScriptRoot\Regfiles\Disable_Windows_Suggestions.reg
 }
 
 if ($disable_context -eq 'y' -or $script_mode -eq '1') {

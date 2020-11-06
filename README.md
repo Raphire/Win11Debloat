@@ -7,6 +7,8 @@ You can pick and choose which modifications you want the script to make, but the
 - Remove all bloatware apps from [this list](#these-apps-will-be-deleted-by-default).
 - Hide the 3D objects folder under 'This pc' in windows explorer.
 - Disable bing in windows search.
+- Disable tips & tricks on the lockscreen. (This changes your lockscreen wallpaper to the windows default)
+- Disable tips, tricks and suggestions in the startmenu and settings.
 - Disable the 'Include in library' from context menu.
 - Disable the 'Give access to' from context menu.
 - Disable the 'Share' from context menu.
@@ -73,6 +75,8 @@ This script can also make various changes to declutter windows 10, such as:
 - Hide the 3D objects folder under 'This pc' in windows explorer.
 - Hide the music folder under 'This pc' in windows explorer.
 - Disable bing in windows search.
+- Disable tips & tricks on the lockscreen. (This changes your lockscreen wallpaper to the windows default)
+- Disable tips, tricks and suggestions in the startmenu and settings.
 - Disable the 'Include in library' from context menu.
 - Disable the 'Give access to' from context menu.
 - Disable the 'Share' from context menu.

@@ -91,10 +91,12 @@ if ($remove_apps -eq 'y' -or $script_mode -eq '1') {
         #"*Microsoft.ScreenSketch*"
         #"*Microsoft.MSPaint*"   # Paint 3D
         #"*Microsoft.YourPhone*"
+        #"*Microsoft.Xbox.TCUI*"
         #"*Microsoft.XboxApp*"
         #"*Microsoft.XboxGameOverlay*"
         #"*Microsoft.XboxGamingOverlay*"
-        #"*Microsoft.XboxSpeechToTextOverlay*"
+        #"*Microsoft.XboxIdentityProvider*"
+        #"*Microsoft.XboxSpeechToTextOverlay*"   # NOTE: This app may not be able to be reinstalled!
     )
 
     foreach ($app in $apps) {

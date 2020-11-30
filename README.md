@@ -1,5 +1,5 @@
 # Win10Debloat
-Win10Debloat is a simple powershell script that allows you to remove most pre-installed windows 10 apps, disable bing in windows search, disable tips and suggestions across the OS (such as the lockscreen, startmenu and settings) and declutter the windows explorer by hiding certain folders (such as 3D objects) from the sidebar aswell as disabling certain context menu options that a regular user would (almost) never use.
+Win10Debloat is a simple powershell script that allows you to remove most pre-installed windows 10 apps, disable bing in windows search, disable tips and suggestions across the OS (such as the lockscreen, startmenu and settings) and declutter the windows explorer by hiding certain folders (such as 3D objects) from the sidebar aswell as disabling certain context menu options that a regular user would likely never use.
 
 You can pick and choose which modifications you want the script to make, but the default settings should be fine for most people. All of the changes can be reverted using the registry files that are included in the 'Regfiles' folder, and all of the apps that are removed by default can easily be reinstalled from the microsoft store.
 

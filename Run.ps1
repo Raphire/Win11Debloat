@@ -1,9 +1,6 @@
 Write-Output "Attempting to launch script with admin privileges..."
 
-PowerShell -NoProfile -ExecutionPolicy Unrestricted -Command "& {Start-Process PowerShell -ArgumentList '-NoProfile 
-                                                                                                         -ExecutionPolicy Unrestricted 
-                                                                                                         -File ""$PSScriptRoot\Win10Debloat.ps1""'
-                                                                                          -Verb RunAs}";
+PowerShell -NoProfile -ExecutionPolicy Unrestricted -Command "& {Start-Process PowerShell -ArgumentList '-NoProfile -ExecutionPolicy Unrestricted -File ""$PSScriptRoot\Win10Debloat.ps1""' -Verb RunAs}";
 
 <#------------------------------------------------------------------------------------------------------------------------------------------------>
 It's possible to tweak the behaviour of the script by adding arguments to the ArgumentList, a full list of arguments is shown below. 

@@ -18,7 +18,7 @@ You can pick and choose which modifications you want the script to make, but the
 ## Usage
 ### Easy method:
 1. [Download the latest version of the script](https://github.com/Raphire/Win10Debloat/archive/master.zip), and extract the .ZIP file to your desired location.
-2. Run the script by right-clicking the 'Run.ps1' file and selecting 'Run with Powershell' option.
+2. Run the script by right-clicking the 'Run.ps1' file and selecting the 'Run with Powershell' option.
 3. Accept the windows UAC prompt to run the script as administrator, this is required for the script to function.
 4. Select either default, or advanced setup depending on what changes you want to make. Advanced setup will allow you to choose exactly which changes you want to make, and which changes you want to skip.
 5. Once the script has executed, restart your pc to ensure all changes are properly applied.

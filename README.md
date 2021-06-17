@@ -49,52 +49,52 @@ This method is a bit more complicated, but it gives you the option to run the sc
 By default, this script will remove most, but not all of the pre-installed windows 10 applications. You customize which applications are removed by this script by editing the apps list found in the 'Win10Debloat.ps1' file.
 
 ### These apps will be deleted by default:
-- Microsoft.GetHelp
-- Microsoft.Getstarted
-- Microsoft.WindowsFeedbackHub
-- Microsoft.BingNews
-- Microsoft.BingFinance
-- Microsoft.BingSports
-- Microsoft.BingWeather
-- Microsoft.BingTranslator
-- Microsoft.MicrosoftOfficeHub
-- Microsoft.Office.OneNote
-- Microsoft.MicrosoftStickyNotes
-- Microsoft.SkypeApp
-- Microsoft.OneConnect
-- Microsoft.Messaging
-- Microsoft.WindowsSoundRecorder
-- Microsoft.ZuneMusic
-- Microsoft.ZuneVideo
-- Microsoft.MixedReality.Portal
-- Microsoft.3DBuilder
-- Microsoft.Microsoft3DViewer
-- Microsoft.Print3D
-- Microsoft.549981C3F5F10 (Cortana)
-- Microsoft.MicrosoftSolitaireCollection
-- Microsoft.Asphalt8Airborne
 - king.com.BubbleWitch3Saga
 - king.com.CandyCrushSaga
 - king.com.CandyCrushSodaSaga
+- Microsoft.3DBuilder
+- Microsoft.549981C3F5F10 (Cortana)
+- Microsoft.Asphalt8Airborne
+- Microsoft.BingFinance
+- Microsoft.BingNews
+- Microsoft.BingSports
+- Microsoft.BingTranslator
+- Microsoft.BingWeather
+- Microsoft.GetHelp
+- Microsoft.Getstarted
+- Microsoft.Messaging
+- Microsoft.Microsoft3DViewer
+- Microsoft.MicrosoftOfficeHub
+- Microsoft.MicrosoftSolitaireCollection
+- Microsoft.MicrosoftStickyNotes
+- Microsoft.MixedReality.Portal
+- Microsoft.Office.OneNote
+- Microsoft.OneConnect
+- Microsoft.Print3D
+- Microsoft.SkypeApp
+- Microsoft.WindowsFeedbackHub
+- Microsoft.WindowsSoundRecorder
+- Microsoft.ZuneMusic
+- Microsoft.ZuneVideo
 
 ### These apps will NOT be deleted by default:
-- Microsoft.WindowsStore (NOTE: This app cannot be reinstalled!)
-- Microsoft.WindowsCalculator
-- Microsoft.Windows.Photos
-- microsoft.windowscommunicationsapps (Mail & Calendar)
-- Microsoft.People
-- Microsoft.WindowsCamera
-- Microsoft.WindowsAlarms
-- Microsoft.WindowsMaps
 - Microsoft.MSPaint (Paint 3D)
+- Microsoft.People
 - Microsoft.ScreenSketch
-- Microsoft.YourPhone
+- Microsoft.Windows.Photos
+- Microsoft.WindowsAlarms
+- Microsoft.WindowsCalculator
+- Microsoft.WindowsCamera
+- microsoft.windowscommunicationsapps (Mail & Calendar)
+- Microsoft.WindowsMaps
+- Microsoft.WindowsStore (NOTE: This app cannot be reinstalled!)
 - Microsoft.Xbox.TCUI
 - Microsoft.XboxApp
 - Microsoft.XboxGameOverlay
 - Microsoft.XboxGamingOverlay
 - Microsoft.XboxIdentityProvider
 - Microsoft.XboxSpeechToTextOverlay (NOTE: This app cannot be reinstalled from the microsoft store!)
+- Microsoft.YourPhone
 
 ## Declutter Windows 10
 This script can also make various changes to declutter windows 10, such as:

@@ -1,9 +1,9 @@
 # Win10Debloat
-Win10Debloat is a simple powershell script that allows you to remove most pre-installed windows 10 apps, disable bing in windows search, disable tips and suggestions across the OS (such as the lockscreen, startmenu and settings) and declutter the windows explorer by hiding certain folders (such as 3D objects) from the sidebar aswell as disabling certain context menu options that a regular user would likely never use.
+Win10Debloat is a simple powershell script that allows you to remove most pre-installed windows 10/11 apps, disable bing in windows search, disable tips and suggestions across the OS (such as the lockscreen, startmenu and settings) and declutter the windows explorer by hiding certain folders (such as 3D objects) from the sidebar aswell as disabling certain context menu options that a regular user would likely never use.
 
 You can pick and choose which modifications you want the script to make, but the default settings should be fine for most people. All of the changes can be reverted using the registry files that are included in the 'Regfiles' folder, and all of the apps that are removed by default can easily be reinstalled from the microsoft store.
 
-### By default, the Win10Debloat script will:
+### The windows 10 default settings will:
 - Remove all bloatware apps from [this list](#these-apps-will-be-deleted-by-default).
 - Hide the 3D objects folder under 'This pc' in windows explorer.
 - Disable bing in windows search.
@@ -12,6 +12,12 @@ You can pick and choose which modifications you want the script to make, but the
 - Disable the 'Include in library' from context menu.
 - Disable the 'Give access to' from context menu.
 - Disable the 'Share' from context menu. (Does not remove the onedrive share option)
+
+### The windows 11 default settings will:
+- Remove all bloatware apps from [this list](#these-apps-will-be-deleted-by-default).
+- Disable bing in windows search.
+- Disable tips & tricks on the lockscreen. (This changes your lockscreen wallpaper to the windows default)
+- Disable tips, tricks and suggestions in the startmenu and settings.
 
 ### Or select the 'Advanced' option in the menu to customize the script to your needs.
 
@@ -33,7 +39,8 @@ This method is a bit more complicated, but it gives you the option to run the sc
 
 | Argument | Description |
 | --------- | ----------- |
-| -RunDefaults                  |    Run the script with default settings. |
+| -RunDefaults                  |    Run the script with windows 10 default settings. |
+| -RunWin11Defaults             |    Run the script with windows 11 default settings. |
 | -RemoveApps                   |    Remove all bloatware apps from [this list](#these-apps-will-be-deleted-by-default). |
 | -DisableOnedrive              |    Hide the onedrive folder in the windows explorer sidebar. |
 | -Disable3dObjects             |    Hide the 3D objects folder under 'This pc' in windows explorer. |
@@ -45,8 +52,8 @@ This method is a bit more complicated, but it gives you the option to run the sc
 | -DisableGiveAccessTo          |    Disable the 'Give access to' option in the context menu. |
 | -DisableShare                 |    Disable the 'Share' option in the context menu. |
 
-## Debloat Windows 10
-By default, this script will remove most, but not all of the pre-installed windows 10 applications. You customize which applications are removed by this script by editing the apps list found in the 'Win10Debloat.ps1' file.
+## Debloat Windows 10/11
+By default, this script will remove most, but not all of the pre-installed windows 10/11 applications. You customize which applications are removed by this script by editing the apps list found in the 'Win10Debloat.ps1' file.
 
 ### These apps will be deleted by default:
 - king.com.BubbleWitch3Saga
@@ -96,8 +103,8 @@ By default, this script will remove most, but not all of the pre-installed windo
 - Microsoft.XboxSpeechToTextOverlay (NOTE: This app cannot be reinstalled from the microsoft store!)
 - Microsoft.YourPhone
 
-## Declutter Windows 10
-This script can also make various changes to declutter windows 10, such as:
+## Declutter Windows 10/11
+This script can also make various changes to declutter windows 10/11, such as:
 - Hide the onedrive folder in the windows explorer sidebar.
 - Hide the 3D objects folder under 'This pc' in windows explorer.
 - Hide the music folder under 'This pc' in windows explorer.

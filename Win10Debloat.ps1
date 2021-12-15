@@ -2,6 +2,7 @@
 param 
 (
     [Parameter(ValueFromPipeline=$true)][switch]$RunDefaults,
+    [Parameter(ValueFromPipeline=$true)][switch]$RunWin11Defaults,
     [Parameter(ValueFromPipeline=$true)][switch]$RemoveApps,
     [Parameter(ValueFromPipeline=$true)][switch]$DisableOnedrive,
     [Parameter(ValueFromPipeline=$true)][switch]$Disable3dObjects,
@@ -95,11 +96,15 @@ function RegImport
     reg import $path
 }
 
-if((-NOT $PSBoundParameters.Count) -or $RunDefaults -or (($PSBoundParameters.Count -eq 1) -and ($PSBoundParameters.ContainsKey('WhatIf') -or $PSBoundParameters.ContainsKey('Confirm') -or $PSBoundParameters.ContainsKey('Verbose'))))
+if((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (($PSBoundParameters.Count -eq 1) -and ($PSBoundParameters.ContainsKey('WhatIf') -or $PSBoundParameters.ContainsKey('Confirm') -or $PSBoundParameters.ContainsKey('Verbose'))))
 {
     if($RunDefaults)
     {
         $Mode = '1';
+    }
+    elseif($RunWin11Defaults)
+    {
+        $Mode = '2';
     }
     else
     {
@@ -107,12 +112,13 @@ if((-NOT $PSBoundParameters.Count) -or $RunDefaults -or (($PSBoundParameters.Cou
         Write-Output "-------------------------------------------------------------------------------------------"
         Write-Output " Win10Debloat Script - Setup"
         Write-Output "-------------------------------------------------------------------------------------------"
-        Write-Output "(1) Run Win10Debloat with the default settings"
-        Write-Output "(2) Advanced: Choose which changes you want Win10Debloat to make"
+        Write-Output "(1) Run Win10Debloat with the Windows 10 default settings"
+        Write-Output "(2) Run Win10Debloat with the Windows 11 default settings"
+        Write-Output "(3) Advanced: Choose which changes you want Win10Debloat to make"
         Write-Output ""
 
-        Do { $Mode = Read-Host "Please select an option (1/2)" }
-        while ($Mode -ne '1' -and $Mode -ne '2')
+        Do { $Mode = Read-Host "Please select an option (1/2/3)" }
+        while ($Mode -ne '1' -and $Mode -ne '2' -and $Mode -ne '3')
     }
 
     switch($Mode)
@@ -121,7 +127,7 @@ if((-NOT $PSBoundParameters.Count) -or $RunDefaults -or (($PSBoundParameters.Cou
         { 
             Clear
             Write-Output "-------------------------------------------------------------------------------------------"
-            Write-Output " Win10Debloat Script - Default Configuration"
+            Write-Output " Win10Debloat Script - Windows 10 Default Configuration"
             Write-Output "-------------------------------------------------------------------------------------------"
             $PSBoundParameters.Add('RemoveApps', $RemoveApps) 
             $PSBoundParameters.Add('Disable3dObjects', $Disable3dObjects)   
@@ -133,6 +139,17 @@ if((-NOT $PSBoundParameters.Count) -or $RunDefaults -or (($PSBoundParameters.Cou
             $PSBoundParameters.Add('DisableShare', $DisableShare)  
         }
         '2' 
+        { 
+            Clear
+            Write-Output "-------------------------------------------------------------------------------------------"
+            Write-Output " Win10Debloat Script - Windows 11 Default Configuration"
+            Write-Output "-------------------------------------------------------------------------------------------"
+            $PSBoundParameters.Add('RemoveApps', $RemoveApps)  
+            $PSBoundParameters.Add('DisableBingSearches', $DisableBingSearches) 
+            $PSBoundParameters.Add('DisableLockscreenTips', $DisableLockscreenTips)  
+            $PSBoundParameters.Add('DisableWindowsSuggestions', $DisableWindowsSuggestions) 
+        }
+        '3' 
         { 
             Clear
             Write-Output "-------------------------------------------------------------------------------------------"

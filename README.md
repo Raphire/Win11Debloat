@@ -1,7 +1,7 @@
 # Win10Debloat
-Win10Debloat is a simple powershell script that allows you to remove most pre-installed windows 10/11 apps, disable bing in windows search, disable tips and suggestions across the OS (such as the lockscreen, startmenu and settings) and declutter the windows explorer by hiding certain folders (such as 3D objects) from the sidebar aswell as disabling certain context menu options that a regular user would likely never use.
+Win10Debloat is a simple and lightweight powershell script that removes pre-installed windows 10/11 bloatware apps and declutters the experience by disabling or removing intrusive interface elements and context menu items. The script is specifically designed to be simple, quick and most importantly safe to run, it does not touch any essential windows files, settings or programs that could cause issues in the future.
 
-You can pick and choose which modifications you want the script to make, but the default settings should be fine for most people. All of the changes can be reverted using the registry files that are included in the 'Regfiles' folder, and all of the apps that are removed by default can easily be reinstalled from the microsoft store.
+You can pick and choose exactly which modifications you want the script to make, but the default settings should be fine for most people. All of the changes can be reverted using the registry files that are included in the 'Regfiles' folder, and all of the apps that are removed by default can easily be reinstalled from the microsoft store.
 
 ### The windows 10 default settings will:
 - Remove all bloatware apps from [this list](#these-apps-will-be-deleted-by-default).
@@ -21,7 +21,12 @@ You can pick and choose which modifications you want the script to make, but the
 
 ### Or select the 'Advanced' option in the menu to customize the script to your needs.
 
+## Donate a cup of coffee to support my work
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/M4M5C6UPC)
+
 ## Usage
+Disclaimer: I believe this script to be completely safe to run, but use this script at your own risk!
+
 ### Easy method:
 1. [Download the latest version of the script](https://github.com/Raphire/Win10Debloat/archive/master.zip), and extract the .ZIP file to your desired location.
 2. Run the script by right-clicking the 'Run.ps1' file and selecting the 'Run with Powershell' option.
@@ -35,7 +40,7 @@ This method is a bit more complicated, but it gives you the option to run the sc
 2. Open powershell as an administrator.
 3. Enable powershell execution by entering the following command: <code>Set-ExecutionPolicy Unrestricted -Force</code>
 4. In powershell, navigate to the directory where the files were extracted. Example: <code>cd c:\\Win10Debloat</code>
-5. Enter this into powershell to run the script: <code>.\Win10Debloat.ps1</code> To run the script with arguments simply add them at the end, as can be seen in this example: <code>.\Win10Debloat.ps1 -RemoveApps -DisableBingSearches</code>
+5. Enter this into powershell to run the script: <code>.\Win10Debloat.ps1</code> To run the script without any user input you can add arguments at the end, for example: <code>.\Win10Debloat.ps1 -RemoveApps -DisableBingSearches</code>
 
 | Argument | Description |
 | --------- | ----------- |

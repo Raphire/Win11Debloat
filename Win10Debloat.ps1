@@ -15,6 +15,7 @@ param
     [Parameter(ValueFromPipeline=$true)][switch]$DisableShare
 )
 
+# Removes all apps in the list
 function RemoveApps
 {
     Write-Output "> Removing pre-installed windows 10 apps..."
@@ -84,6 +85,7 @@ function RemoveApps
     }
 }
 
+# Import & execute regfile
 function RegImport
 {
     param 
@@ -96,6 +98,7 @@ function RegImport
     reg import $path
 }
 
+# Change mode based on provided parameters or user input
 if((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (($PSBoundParameters.Count -eq 1) -and ($PSBoundParameters.ContainsKey('WhatIf') -or $PSBoundParameters.ContainsKey('Confirm') -or $PSBoundParameters.ContainsKey('Verbose'))))
 {
     if($RunDefaults)
@@ -121,6 +124,7 @@ if((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or ((
         while ($Mode -ne '1' -and $Mode -ne '2' -and $Mode -ne '3')
     }
 
+    # Add execution parameters based on the mode
     switch($Mode)
     {
         '1' 
@@ -218,6 +222,7 @@ else
     Write-Output "-------------------------------------------------------------------------------------------"
 }
 
+# Execute all selected/provided parameters
 switch ($PSBoundParameters.Keys)
 {
     'RemoveApps' 

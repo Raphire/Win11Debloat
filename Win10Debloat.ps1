@@ -25,6 +25,12 @@ function RemoveApps
         #
         # If you wish to KEEP any of the apps below simply add a # character
         # in front of the specific app in the list below.
+        "2FE3CB00.PICSART-PHOTOSTUDIO"
+        "9E2F88E3.TWITTER"
+        "AdobeSystemsIncorporated.AdobePhotoshopExpress"
+        "Facebook.InstagramBeta"
+        "HULULLC.HULUPLUS"
+        "Clipchamp.Clipchamp*"
         "*Microsoft.GetHelp*"
         "*Microsoft.Getstarted*"
         "*Microsoft.WindowsFeedbackHub*"

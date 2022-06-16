@@ -61,9 +61,12 @@ This method is a bit more complicated, but it gives you the option to run the sc
 By default, this script will remove most, but not all of the pre-installed windows 10/11 applications. You customize which applications are removed by this script by editing the apps list found in the 'Win10Debloat.ps1' file.
 
 ### These apps will be deleted by default:
-- king.com.BubbleWitch3Saga
-- king.com.CandyCrushSaga
-- king.com.CandyCrushSodaSaga
+- 2FE3CB00.PICSART-PHOTOSTUDIO
+- 9E2F88E3.TWITTER
+- AdobeSystemsIncorporated.AdobePhotoshopExpress
+- Clipchamp.Clipchamp*
+- Facebook.InstagramBeta
+- HULULLC.HULUPLUS
 - Microsoft.3DBuilder
 - Microsoft.549981C3F5F10 (Cortana)
 - Microsoft.Asphalt8Airborne
@@ -88,6 +91,10 @@ By default, this script will remove most, but not all of the pre-installed windo
 - Microsoft.WindowsSoundRecorder
 - Microsoft.ZuneMusic
 - Microsoft.ZuneVideo
+- SpotifyAB.SpotifyMusic
+- king.com.BubbleWitch3Saga
+- king.com.CandyCrushSaga
+- king.com.CandyCrushSodaSaga
 
 ### These apps will NOT be deleted by default:
 - Microsoft.MSPaint (Paint 3D)

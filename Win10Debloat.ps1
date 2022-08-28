@@ -8,6 +8,7 @@ param
     [Parameter(ValueFromPipeline=$true)][switch]$Disable3dObjects,
     [Parameter(ValueFromPipeline=$true)][switch]$DisableMusic,
     [Parameter(ValueFromPipeline=$true)][switch]$DisableBingSearches,
+    [Parameter(ValueFromPipeline=$true)][switch]$DisableExplorerSyncAds,
     [Parameter(ValueFromPipeline=$true)][switch]$DisableLockscreenTips,
     [Parameter(ValueFromPipeline=$true)][switch]$DisableWindowsSuggestions,
     [Parameter(ValueFromPipeline=$true)][switch]$DisableIncludeInLibrary,
@@ -142,6 +143,7 @@ if((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or ((
             $PSBoundParameters.Add('RemoveApps', $RemoveApps) 
             $PSBoundParameters.Add('Disable3dObjects', $Disable3dObjects)   
             $PSBoundParameters.Add('DisableBingSearches', $DisableBingSearches) 
+            $PSBoundParameters.Add('DisableExplorerSyncAds', $DisableExplorerSyncAds)  
             $PSBoundParameters.Add('DisableLockscreenTips', $DisableLockscreenTips)  
             $PSBoundParameters.Add('DisableWindowsSuggestions', $DisableWindowsSuggestions)  
             $PSBoundParameters.Add('DisableIncludeInLibrary', $DisableIncludeInLibrary)   
@@ -154,8 +156,9 @@ if((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or ((
             Write-Output "-------------------------------------------------------------------------------------------"
             Write-Output " Win10Debloat Script - Windows 11 Default Configuration"
             Write-Output "-------------------------------------------------------------------------------------------"
-            $PSBoundParameters.Add('RemoveApps', $RemoveApps)  
+            $PSBoundParameters.Add('RemoveApps', $RemoveApps) 
             $PSBoundParameters.Add('DisableBingSearches', $DisableBingSearches) 
+            $PSBoundParameters.Add('DisableExplorerSyncAds', $DisableExplorerSyncAds)  
             $PSBoundParameters.Add('DisableLockscreenTips', $DisableLockscreenTips)  
             $PSBoundParameters.Add('DisableWindowsSuggestions', $DisableWindowsSuggestions) 
         }
@@ -189,6 +192,11 @@ if((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or ((
             if($( Read-Host -Prompt "Disable bing in windows search? (y/n)" ) -eq 'y')
             {
                 $PSBoundParameters.Add('DisableBingSearches', $DisableBingSearches)   
+            }
+
+            if($( Read-Host -Prompt "Disable sync provider ads in windows explorer? (y/n)" ) -eq 'y')
+            {
+                $PSBoundParameters.Add('DisableExplorerSyncAds', $DisableExplorerSyncAds)   
             }
 
             if($( Read-Host -Prompt "Disable tips & tricks on the lockscreen? (y/n)" ) -eq 'y')

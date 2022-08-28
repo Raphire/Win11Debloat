@@ -16,6 +16,7 @@ You can pick and choose exactly which modifications you want the script to make,
 ### The windows 11 default settings will:
 - Remove all bloatware apps from [this list](#these-apps-will-be-deleted-by-default).
 - Disable bing in windows search.
+- Disable sync provider ads in windows explorer.
 - Disable tips & tricks on the lockscreen. (This changes your lockscreen wallpaper to the windows default)
 - Disable tips, tricks and suggestions in the startmenu and settings.
 
@@ -51,6 +52,7 @@ This method is a bit more complicated, but it gives you the option to run the sc
 | -Disable3dObjects             |    Hide the 3D objects folder under 'This pc' in windows explorer. |
 | -DisableMusic                 |    Hide the music folder under 'This pc' in windows explorer. |
 | -DisableBingSearches          |    Disable bing in windows search. |
+| -DisableExplorerSyncAds       |    Disable sync provider ads in windows explorer. |
 | -DisableLockscreenTips        |    Disable tips & tricks on the lockscreen. |
 | -DisableWindowsSuggestions    |    Disable tips, tricks and suggestions in the startmenu and settings. |
 | -DisableIncludeInLibrary      |    Disable the 'Include in library' option in the context menu. |
@@ -121,6 +123,7 @@ This script can also make various changes to declutter windows 10/11, such as:
 - Hide the 3D objects folder under 'This pc' in windows explorer.
 - Hide the music folder under 'This pc' in windows explorer.
 - Disable bing in windows search.
+- Disable sync provider ads in windows explorer.
 - Disable tips & tricks on the lockscreen. (This changes your lockscreen wallpaper to the windows default)
 - Disable tips, tricks and suggestions in the startmenu and settings.
 - Disable the 'Include in library' option in the context menu.

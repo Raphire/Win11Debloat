@@ -11,6 +11,7 @@ param
     [Parameter(ValueFromPipeline=$true)][switch]$DisableExplorerSyncAds,
     [Parameter(ValueFromPipeline=$true)][switch]$DisableLockscreenTips,
     [Parameter(ValueFromPipeline=$true)][switch]$DisableWindowsSuggestions,
+    [Parameter(ValueFromPipeline=$true)][switch]$DisableTelemetry,
     [Parameter(ValueFromPipeline=$true)][switch]$DisableIncludeInLibrary,
     [Parameter(ValueFromPipeline=$true)][switch]$DisableGiveAccessTo,
     [Parameter(ValueFromPipeline=$true)][switch]$DisableShare
@@ -141,6 +142,7 @@ if((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or ((
             Write-Output " Win10Debloat Script - Windows 10 Default Configuration"
             Write-Output "-------------------------------------------------------------------------------------------"
             $PSBoundParameters.Add('RemoveApps', $RemoveApps) 
+            $PSBoundParameters.Add('DisableTelemetry', $DisableTelemetry)  
             $PSBoundParameters.Add('Disable3dObjects', $Disable3dObjects)   
             $PSBoundParameters.Add('DisableBingSearches', $DisableBingSearches) 
             $PSBoundParameters.Add('DisableExplorerSyncAds', $DisableExplorerSyncAds)  
@@ -157,6 +159,7 @@ if((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or ((
             Write-Output " Win10Debloat Script - Windows 11 Default Configuration"
             Write-Output "-------------------------------------------------------------------------------------------"
             $PSBoundParameters.Add('RemoveApps', $RemoveApps) 
+            $PSBoundParameters.Add('DisableTelemetry', $DisableTelemetry)  
             $PSBoundParameters.Add('DisableBingSearches', $DisableBingSearches) 
             $PSBoundParameters.Add('DisableExplorerSyncAds', $DisableExplorerSyncAds)  
             $PSBoundParameters.Add('DisableLockscreenTips', $DisableLockscreenTips)  
@@ -174,19 +177,9 @@ if((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or ((
                 $PSBoundParameters.Add('RemoveApps', $RemoveApps)   
             }
 
-            if($( Read-Host -Prompt "Hide the onedrive folder in windows explorer? (y/n)" ) -eq 'y')
+            if($( Read-Host -Prompt "Disable telemetry, diagnostic data and targeted ads? (y/n)" ) -eq 'y')
             {
-                $PSBoundParameters.Add('DisableOnedrive', $DisableOnedrive)   
-            }
-
-            if($( Read-Host -Prompt "Hide the 3D objects folder in windows explorer? (y/n)" ) -eq 'y')
-            {
-                $PSBoundParameters.Add('Disable3dObjects', $Disable3dObjects)   
-            }
-
-            if($( Read-Host -Prompt "Hide the music folder in windows explorer? (y/n)" ) -eq 'y')
-            {
-                $PSBoundParameters.Add('DisableMusic', $DisableMusic)   
+                $PSBoundParameters.Add('DisableTelemetry', $DisableTelemetry)   
             }
 
             if($( Read-Host -Prompt "Disable bing in windows search? (y/n)" ) -eq 'y')
@@ -209,19 +202,40 @@ if((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or ((
                 $PSBoundParameters.Add('DisableWindowsSuggestions', $DisableWindowsSuggestions)   
             }
 
-            if($( Read-Host -Prompt "Disable the 'Include in library' option in the context menu? (y/n)" ) -eq 'y')
+            if($( Read-Host -Prompt "Do you want to hide any folders from the windows explorer sidepanel? (y/n)" ) -eq 'y')
             {
-                $PSBoundParameters.Add('DisableIncludeInLibrary', $DisableIncludeInLibrary)   
+                if($( Read-Host -Prompt "Hide the onedrive folder in windows explorer? (y/n)" ) -eq 'y')
+                {
+                    $PSBoundParameters.Add('DisableOnedrive', $DisableOnedrive)   
+                }
+
+                if($( Read-Host -Prompt "Hide the 3D objects folder in windows explorer? (y/n)" ) -eq 'y')
+                {
+                    $PSBoundParameters.Add('Disable3dObjects', $Disable3dObjects)   
+                }
+
+                if($( Read-Host -Prompt "Hide the music folder in windows explorer? (y/n)" ) -eq 'y')
+                {
+                    $PSBoundParameters.Add('DisableMusic', $DisableMusic)   
+                }
             }
 
-            if($( Read-Host -Prompt "Disable the 'Give access to' option in the context menu? (y/n)" ) -eq 'y')
+            if($( Read-Host -Prompt "Do you want to disable any context menu options? (y/n)" ) -eq 'y')
             {
-                $PSBoundParameters.Add('DisableGiveAccessTo', $DisableGiveAccessTo)   
-            }
+                if($( Read-Host -Prompt "Disable the 'Include in library' option in the context menu? (y/n)" ) -eq 'y')
+                {
+                    $PSBoundParameters.Add('DisableIncludeInLibrary', $DisableIncludeInLibrary)   
+                }
 
-            if($( Read-Host -Prompt "Disable the 'Share' option in the context menu? (y/n)" ) -eq 'y')
-            {
-                $PSBoundParameters.Add('DisableShare', $DisableShare)   
+                if($( Read-Host -Prompt "Disable the 'Give access to' option in the context menu? (y/n)" ) -eq 'y')
+                {
+                    $PSBoundParameters.Add('DisableGiveAccessTo', $DisableGiveAccessTo)   
+                }
+
+                if($( Read-Host -Prompt "Disable the 'Share' option in the context menu? (y/n)" ) -eq 'y')
+                {
+                    $PSBoundParameters.Add('DisableShare', $DisableShare)   
+                }
             }
 
             Write-Output "" 
@@ -243,17 +257,9 @@ switch ($PSBoundParameters.Keys)
     {
         RemoveApps
     }
-    'DisableOnedrive'
+    'DisableTelemetry'
     {
-        RegImport "> Hiding the onedrive folder in windows explorer..." $PSScriptRoot\Regfiles\Hide_Onedrive_Folder.reg
-    }
-    'Disable3dObjects'
-    {
-        RegImport "> Hiding the 3D objects folder in windows explorer..." $PSScriptRoot\Regfiles\Hide_3D_Objects_Folder.reg
-    }
-    'DisableMusic'
-    {
-        RegImport "> Hiding the music folder in windows explorer..." $PSScriptRoot\Regfiles\Hide_Music_folder.reg
+        RegImport "> Disabling telemetry, diagnostic data and targeted ads..." $PSScriptRoot\Regfiles\Disable_Telemetry.reg
     }
     'DisableBingSearches'
     {
@@ -266,6 +272,22 @@ switch ($PSBoundParameters.Keys)
     'DisableWindowsSuggestions'
     {
         RegImport "> Disabling tips, tricks and suggestions in the startmenu and settings..." $PSScriptRoot\Regfiles\Disable_Windows_Suggestions.reg
+    }
+    'DisableExplorerSyncAds'
+    {
+        RegImport "> Disabling sync provider ads in windows explorer..." $PSScriptRoot\Regfiles\Disable_Explorer_Sync_Notifications.reg
+    }
+    'DisableOnedrive'
+    {
+        RegImport "> Hiding the onedrive folder in windows explorer..." $PSScriptRoot\Regfiles\Hide_Onedrive_Folder.reg
+    }
+    'Disable3dObjects'
+    {
+        RegImport "> Hiding the 3D objects folder in windows explorer..." $PSScriptRoot\Regfiles\Hide_3D_Objects_Folder.reg
+    }
+    'DisableMusic'
+    {
+        RegImport "> Hiding the music folder in windows explorer..." $PSScriptRoot\Regfiles\Hide_Music_folder.reg
     }
     'DisableIncludeInLibrary'
     {

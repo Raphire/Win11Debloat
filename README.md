@@ -5,10 +5,11 @@ You can pick and choose exactly which modifications you want the script to make,
 
 ### The windows 10 default settings will:
 - Remove all bloatware apps from [this list](#these-apps-will-be-deleted-by-default).
-- Hide the 3D objects folder under 'This pc' in windows explorer.
+- Disable telemetry, diagnostic data & targeted ads.
 - Disable bing in windows search.
 - Disable tips & tricks on the lockscreen. (This changes your lockscreen wallpaper to the windows default)
 - Disable tips, tricks and suggestions in the startmenu and settings.
+- Hide the 3D objects folder under 'This pc' in windows explorer.
 - Disable the 'Include in library' from context menu.
 - Disable the 'Give access to' from context menu.
 - Disable the 'Share' from context menu. (Does not remove the onedrive share option)
@@ -16,6 +17,7 @@ You can pick and choose exactly which modifications you want the script to make,
 ### The windows 11 default settings will:
 - Remove all bloatware apps from [this list](#these-apps-will-be-deleted-by-default).
 - Disable bing in windows search.
+- Disable telemetry, diagnostic data & targeted ads.
 - Disable sync provider ads in windows explorer.
 - Disable tips & tricks on the lockscreen. (This changes your lockscreen wallpaper to the windows default)
 - Disable tips, tricks and suggestions in the startmenu and settings.
@@ -36,7 +38,7 @@ Disclaimer: I believe this script to be completely safe to run, but use this scr
 5. Once the script has executed, restart your pc to ensure all changes are properly applied.
 
 ### Advanced method:
-This method is a bit more complicated, but it gives you the option to run the script with certain arguments to tailor the behaviour of the script to your specific needs. It also has the added benefit that the script will run without requiring any user input during runtime, allowing you to automate the process.
+This method gives you the option to run the script with certain arguments to tailor the behaviour of the script to your needs without any user input during runtime, making it quicker and easier to deploy it on a large number of systems.
 1. [Download the latest version of the script](https://github.com/Raphire/Win10Debloat/archive/master.zip), and extract the .ZIP file to your desired location.
 2. Open powershell as an administrator.
 3. Enable powershell execution by entering the following command: <code>Set-ExecutionPolicy Unrestricted -Force</code>
@@ -48,13 +50,14 @@ This method is a bit more complicated, but it gives you the option to run the sc
 | -RunDefaults                  |    Run the script with windows 10 default settings. |
 | -RunWin11Defaults             |    Run the script with windows 11 default settings. |
 | -RemoveApps                   |    Remove all bloatware apps from [this list](#these-apps-will-be-deleted-by-default). |
-| -DisableOnedrive              |    Hide the onedrive folder in the windows explorer sidebar. |
-| -Disable3dObjects             |    Hide the 3D objects folder under 'This pc' in windows explorer. |
-| -DisableMusic                 |    Hide the music folder under 'This pc' in windows explorer. |
+| -DisableTelemetry             |    Disable telemetry, diagnostic data & targeted ads. |
 | -DisableBingSearches          |    Disable bing in windows search. |
 | -DisableExplorerSyncAds       |    Disable sync provider ads in windows explorer. |
 | -DisableLockscreenTips        |    Disable tips & tricks on the lockscreen. |
 | -DisableWindowsSuggestions    |    Disable tips, tricks and suggestions in the startmenu and settings. |
+| -DisableOnedrive              |    Hide the onedrive folder in the windows explorer sidebar. |
+| -Disable3dObjects             |    Hide the 3D objects folder under 'This pc' in windows explorer. |
+| -DisableMusic                 |    Hide the music folder under 'This pc' in windows explorer. |
 | -DisableIncludeInLibrary      |    Disable the 'Include in library' option in the context menu. |
 | -DisableGiveAccessTo          |    Disable the 'Give access to' option in the context menu. |
 | -DisableShare                 |    Disable the 'Share' option in the context menu. |
@@ -119,13 +122,14 @@ By default, this script will remove most, but not all of the pre-installed windo
 
 ## Declutter Windows 10/11
 This script can also make various changes to declutter windows 10/11, such as:
-- Hide the onedrive folder in the windows explorer sidebar.
-- Hide the 3D objects folder under 'This pc' in windows explorer.
-- Hide the music folder under 'This pc' in windows explorer.
+- Disable telemetry, diagnostic data & targeted ads.
 - Disable bing in windows search.
 - Disable sync provider ads in windows explorer.
 - Disable tips & tricks on the lockscreen. (This changes your lockscreen wallpaper to the windows default)
 - Disable tips, tricks and suggestions in the startmenu and settings.
+- Hide the onedrive folder in the windows explorer sidebar.
+- Hide the 3D objects folder under 'This pc' in windows explorer.
+- Hide the music folder under 'This pc' in windows explorer.
 - Disable the 'Include in library' option in the context menu.
 - Disable the 'Give access to' option in the context menu.
 - Disable the 'Share' from context menu. (Does not remove the onedrive share option)

@@ -21,10 +21,11 @@ Supported Arguments:
 -RemoveApps                   |    Remove all bloatware apps from the list found in README.md.
 -DisableTelemetry             |    Disable telemetry, diagnostic data & targeted ads.
 -DisableBingSearches          |    Disable bing in windows search.
--DisableExplorerSyncAds       |    Disable sync provider ads in windows explorer.
 -DisableLockscreenTips        |    Disable tips & tricks on the lockscreen.
--DisableWindowsSuggestions    |    Disable tips, tricks and suggestions in the startmenu and settings.
--DisableOnedrive              |    Hide the onedrive folder in the windows explorer sidebar.
+-DisableWindowsSuggestions    |    Disable tips, tricks and suggestions in the startmenu and settings, and ads in windows explorer.
+-DisableOnedrive              |    Hide the onedrive folder in the windows explorer sidepanel.
+-DisableChat                  |    Hide the chat icon on the taskbar.
+-DisableWidgets               |    Hide the widget icon on the taskbar.
 -Disable3dObjects             |    Hide the 3D objects folder under 'This pc' in windows explorer.
 -DisableMusic                 |    Hide the music folder under 'This pc' in windows explorer.
 -DisableIncludeInLibrary      |    Disable the 'Include in library' option in the context menu.

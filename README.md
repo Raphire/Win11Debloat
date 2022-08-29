@@ -1,14 +1,15 @@
 # Win10Debloat
-Win10Debloat is a simple and lightweight powershell script that removes pre-installed windows 10/11 bloatware apps and declutters the experience by disabling or removing intrusive interface elements and context menu items. The script is specifically designed to be simple, quick and most importantly safe to run, it does not touch any essential windows files, settings or programs that could cause issues in the future.
+Win10Debloat is a simple and lightweight powershell script that removes pre-installed windows 10/11 bloatware apps, disables telemetry and declutters the experience by disabling or removing intrusive interface elements, ads and context menu items. No need to painstakingly go through all the settings yourself, or removing apps one by one. Win10Debloat makes te process quick and simple! 
 
-You can pick and choose exactly which modifications you want the script to make, but the default settings should be fine for most people. All of the changes can be reverted using the registry files that are included in the 'Regfiles' folder, and all of the apps that are removed by default can easily be reinstalled from the microsoft store.
+You can pick and choose exactly which modifications you want the script to make, but the default settings should be fine for most people. All of the changes can be easily reverted using the registry files that are included in the 'Regfiles' folder, and all of the apps that are removed by default can be reinstalled from the microsoft store.
 
 ### The windows 10 default settings will:
 - Remove all bloatware apps from [this list](#these-apps-will-be-deleted-by-default).
 - Disable telemetry, diagnostic data & targeted ads.
 - Disable bing in windows search.
-- Disable tips & tricks on the lockscreen. (This changes your lockscreen wallpaper to the windows default)
-- Disable tips, tricks and suggestions in the startmenu and settings.
+- Disable tips & tricks on the lockscreen. (This may change your lockscreen wallpaper to the windows default)
+- Disable tips, tricks and suggestions in the startmenu and settings, and sync provider ads in windows explorer.
+- Hide the Chat (meet now) & Widget (news and interests) icons from the taskbar.
 - Hide the 3D objects folder under 'This pc' in windows explorer.
 - Disable the 'Include in library' from context menu.
 - Disable the 'Give access to' from context menu.
@@ -16,11 +17,11 @@ You can pick and choose exactly which modifications you want the script to make,
 
 ### The windows 11 default settings will:
 - Remove all bloatware apps from [this list](#these-apps-will-be-deleted-by-default).
-- Disable bing in windows search.
 - Disable telemetry, diagnostic data & targeted ads.
-- Disable sync provider ads in windows explorer.
-- Disable tips & tricks on the lockscreen. (This changes your lockscreen wallpaper to the windows default)
-- Disable tips, tricks and suggestions in the startmenu and settings.
+- Disable bing in windows search.
+- Disable tips & tricks on the lockscreen. (This may change your lockscreen wallpaper to the windows default)
+- Disable tips, tricks and suggestions in the startmenu and settings, and sync provider ads in windows explorer.
+- Hide the Chat & Widget icons from the taskbar.
 
 ### Or select the 'Advanced' option in the menu to customize the script to your needs.
 
@@ -52,10 +53,11 @@ This method gives you the option to run the script with certain arguments to tai
 | -RemoveApps                   |    Remove all bloatware apps from [this list](#these-apps-will-be-deleted-by-default). |
 | -DisableTelemetry             |    Disable telemetry, diagnostic data & targeted ads. |
 | -DisableBingSearches          |    Disable bing in windows search. |
-| -DisableExplorerSyncAds       |    Disable sync provider ads in windows explorer. |
 | -DisableLockscreenTips        |    Disable tips & tricks on the lockscreen. |
-| -DisableWindowsSuggestions    |    Disable tips, tricks and suggestions in the startmenu and settings. |
-| -DisableOnedrive              |    Hide the onedrive folder in the windows explorer sidebar. |
+| -DisableWindowsSuggestions    |    Disable tips, tricks and suggestions in the startmenu and settings, and sync provider ads in windows explorer. |
+| -DisableChat                  |    Hide the chat (meet now) icon on the taskbar. |
+| -DisableWidgets               |    Hide the widget (news and interests) icon on the taskbar. |
+| -DisableOnedrive              |    Hide the onedrive folder in the windows explorer sidepanel. |
 | -Disable3dObjects             |    Hide the 3D objects folder under 'This pc' in windows explorer. |
 | -DisableMusic                 |    Hide the music folder under 'This pc' in windows explorer. |
 | -DisableIncludeInLibrary      |    Disable the 'Include in library' option in the context menu. |
@@ -124,10 +126,11 @@ By default, this script will remove most, but not all of the pre-installed windo
 This script can also make various changes to declutter windows 10/11, such as:
 - Disable telemetry, diagnostic data & targeted ads.
 - Disable bing in windows search.
-- Disable sync provider ads in windows explorer.
 - Disable tips & tricks on the lockscreen. (This changes your lockscreen wallpaper to the windows default)
-- Disable tips, tricks and suggestions in the startmenu and settings.
-- Hide the onedrive folder in the windows explorer sidebar.
+- Disable tips, tricks and suggestions in the startmenu and settings, and sync provider ads in windows explorer.
+- Hide the chat (meet now) icon on the taskbar.
+- Hide the widget (news and interests) icon on the taskbar.
+- Hide the onedrive folder in the windows explorer sidepanel.
 - Hide the 3D objects folder under 'This pc' in windows explorer.
 - Hide the music folder under 'This pc' in windows explorer.
 - Disable the 'Include in library' option in the context menu.

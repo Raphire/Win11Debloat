@@ -4,14 +4,15 @@ param
     [Parameter(ValueFromPipeline=$true)][switch]$RunDefaults,
     [Parameter(ValueFromPipeline=$true)][switch]$RunWin11Defaults,
     [Parameter(ValueFromPipeline=$true)][switch]$RemoveApps,
+    [Parameter(ValueFromPipeline=$true)][switch]$DisableTelemetry,
+    [Parameter(ValueFromPipeline=$true)][switch]$DisableBingSearches,
+    [Parameter(ValueFromPipeline=$true)][switch]$DisableLockscreenTips,
+    [Parameter(ValueFromPipeline=$true)][switch]$DisableWindowsSuggestions,
+    [Parameter(ValueFromPipeline=$true)][switch]$DisableChat,
+    [Parameter(ValueFromPipeline=$true)][switch]$DisableWidgets,
     [Parameter(ValueFromPipeline=$true)][switch]$DisableOnedrive,
     [Parameter(ValueFromPipeline=$true)][switch]$Disable3dObjects,
     [Parameter(ValueFromPipeline=$true)][switch]$DisableMusic,
-    [Parameter(ValueFromPipeline=$true)][switch]$DisableBingSearches,
-    [Parameter(ValueFromPipeline=$true)][switch]$DisableExplorerSyncAds,
-    [Parameter(ValueFromPipeline=$true)][switch]$DisableLockscreenTips,
-    [Parameter(ValueFromPipeline=$true)][switch]$DisableWindowsSuggestions,
-    [Parameter(ValueFromPipeline=$true)][switch]$DisableTelemetry,
     [Parameter(ValueFromPipeline=$true)][switch]$DisableIncludeInLibrary,
     [Parameter(ValueFromPipeline=$true)][switch]$DisableGiveAccessTo,
     [Parameter(ValueFromPipeline=$true)][switch]$DisableShare
@@ -143,11 +144,12 @@ if((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or ((
             Write-Output "-------------------------------------------------------------------------------------------"
             $PSBoundParameters.Add('RemoveApps', $RemoveApps) 
             $PSBoundParameters.Add('DisableTelemetry', $DisableTelemetry)  
-            $PSBoundParameters.Add('Disable3dObjects', $Disable3dObjects)   
             $PSBoundParameters.Add('DisableBingSearches', $DisableBingSearches) 
-            $PSBoundParameters.Add('DisableExplorerSyncAds', $DisableExplorerSyncAds)  
             $PSBoundParameters.Add('DisableLockscreenTips', $DisableLockscreenTips)  
             $PSBoundParameters.Add('DisableWindowsSuggestions', $DisableWindowsSuggestions)  
+            $PSBoundParameters.Add('DisableChat', $DisableChat) 
+            $PSBoundParameters.Add('DisableWidgets', $DisableWidgets) 
+            $PSBoundParameters.Add('Disable3dObjects', $Disable3dObjects)   
             $PSBoundParameters.Add('DisableIncludeInLibrary', $DisableIncludeInLibrary)   
             $PSBoundParameters.Add('DisableGiveAccessTo', $DisableGiveAccessTo)  
             $PSBoundParameters.Add('DisableShare', $DisableShare)  
@@ -161,9 +163,10 @@ if((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or ((
             $PSBoundParameters.Add('RemoveApps', $RemoveApps) 
             $PSBoundParameters.Add('DisableTelemetry', $DisableTelemetry)  
             $PSBoundParameters.Add('DisableBingSearches', $DisableBingSearches) 
-            $PSBoundParameters.Add('DisableExplorerSyncAds', $DisableExplorerSyncAds)  
             $PSBoundParameters.Add('DisableLockscreenTips', $DisableLockscreenTips)  
             $PSBoundParameters.Add('DisableWindowsSuggestions', $DisableWindowsSuggestions) 
+            $PSBoundParameters.Add('DisableChat', $DisableChat) 
+            $PSBoundParameters.Add('DisableWidgets', $DisableWidgets) 
         }
         '3' 
         { 
@@ -187,19 +190,27 @@ if((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or ((
                 $PSBoundParameters.Add('DisableBingSearches', $DisableBingSearches)   
             }
 
-            if($( Read-Host -Prompt "Disable sync provider ads in windows explorer? (y/n)" ) -eq 'y')
-            {
-                $PSBoundParameters.Add('DisableExplorerSyncAds', $DisableExplorerSyncAds)   
-            }
-
             if($( Read-Host -Prompt "Disable tips & tricks on the lockscreen? (y/n)" ) -eq 'y')
             {
                 $PSBoundParameters.Add('DisableLockscreenTips', $DisableLockscreenTips)   
             } 
 
-            if($( Read-Host -Prompt "Disable tips, tricks and suggestions in the startmenu and settings? (y/n)" ) -eq 'y')
+            if($( Read-Host -Prompt "Disable tips, tricks and suggestions in the startmenu and settings, and ads in windows explorer? (y/n)" ) -eq 'y')
             {
                 $PSBoundParameters.Add('DisableWindowsSuggestions', $DisableWindowsSuggestions)   
+            }
+
+            if($( Read-Host -Prompt "Do you want to hide any icons from the taskbar? (y/n)" ) -eq 'y')
+            {
+                if($( Read-Host -Prompt "Hide the chat (meet now) icon on the taskbar? (y/n)" ) -eq 'y')
+                {
+                    $PSBoundParameters.Add('DisableChat', $DisableChat)   
+                }
+
+                if($( Read-Host -Prompt "Hide the widget (news and interests) icon on the taskbar? (y/n)" ) -eq 'y')
+                {
+                    $PSBoundParameters.Add('DisableWidgets', $DisableWidgets)   
+                }
             }
 
             if($( Read-Host -Prompt "Do you want to hide any folders from the windows explorer sidepanel? (y/n)" ) -eq 'y')
@@ -271,11 +282,15 @@ switch ($PSBoundParameters.Keys)
     }
     'DisableWindowsSuggestions'
     {
-        RegImport "> Disabling tips, tricks and suggestions in the startmenu and settings..." $PSScriptRoot\Regfiles\Disable_Windows_Suggestions.reg
+        RegImport "> Disabling tips, tricks and suggestions in the startmenu and settings, and ads in windows explorer..." $PSScriptRoot\Regfiles\Disable_Windows_Suggestions.reg
     }
-    'DisableExplorerSyncAds'
+    'DisableChat'
     {
-        RegImport "> Disabling sync provider ads in windows explorer..." $PSScriptRoot\Regfiles\Disable_Explorer_Sync_Notifications.reg
+        RegImport "> Hiding the chat icon on the taskbar..." $PSScriptRoot\Regfiles\Disable_Chat_Taskbar.reg
+    }
+    'DisableWidgets'
+    {
+        RegImport "> Hiding the widget icon on the taskbar..." $PSScriptRoot\Regfiles\Disable_Widgets_Taskbar.reg
     }
     'DisableOnedrive'
     {

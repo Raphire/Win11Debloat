@@ -39,7 +39,7 @@ Disclaimer: I believe this script to be completely safe to run, but use this scr
 5. Once the script has executed, restart your pc to ensure all changes are properly applied.
 
 ### Advanced method:
-This method gives you the option to run the script with certain arguments to tailor the behaviour of the script to your needs without any user input during runtime, making it quicker and easier to deploy it on a large number of systems.
+This method gives you the option to run the script with certain arguments to tailor the behaviour of the script to your needs without requiring any user input during runtime, making it quicker and easier to deploy on a large number of systems.
 1. [Download the latest version of the script](https://github.com/Raphire/Win10Debloat/archive/master.zip), and extract the .ZIP file to your desired location.
 2. Open powershell as an administrator.
 3. Enable powershell execution by entering the following command: <code>Set-ExecutionPolicy Unrestricted -Force</code>
@@ -65,14 +65,16 @@ This method gives you the option to run the script with certain arguments to tai
 | -DisableShare                 |    Disable the 'Share' option in the context menu. |
 
 ## Debloat Windows 10/11
-By default, this script will remove most, but not all of the pre-installed windows 10/11 applications. You customize which applications are removed by this script by editing the apps list found in the 'Win10Debloat.ps1' file.
+By default, this script only removes apps that most people are unlikely to ever need or use. You can of course customize which apps are removed by this script by editing the apps list found in the 'Win10Debloat.ps1' file.
 
 ### These apps will be deleted by default:
 - 2FE3CB00.PICSART-PHOTOSTUDIO
 - 9E2F88E3.TWITTER
 - AdobeSystemsIncorporated.AdobePhotoshopExpress
 - Clipchamp.Clipchamp*
+- Duolingo-LearnLanguagesforFree
 - Facebook.InstagramBeta
+- Flipboard
 - HULULLC.HULUPLUS
 - Microsoft.3DBuilder
 - Microsoft.549981C3F5F10 (Cortana)
@@ -90,15 +92,25 @@ By default, this script will remove most, but not all of the pre-installed windo
 - Microsoft.MicrosoftSolitaireCollection
 - Microsoft.MicrosoftStickyNotes
 - Microsoft.MixedReality.Portal
+- Microsoft.NetworkSpeedTest
+- Microsoft.News
 - Microsoft.Office.OneNote
+- Microsoft.Office.Sway
 - Microsoft.OneConnect
 - Microsoft.Print3D
+- Microsoft.RemoteDesktop
 - Microsoft.SkypeApp
+- Microsoft.WindowsAlarms
 - Microsoft.WindowsFeedbackHub
+- Microsoft.WindowsMaps
 - Microsoft.WindowsSoundRecorder
 - Microsoft.ZuneMusic
 - Microsoft.ZuneVideo
+- PandoraMediaInc
+- Royal Revolt
 - SpotifyAB.SpotifyMusic
+- Twitter
+- Wunderlist
 - king.com.BubbleWitch3Saga
 - king.com.CandyCrushSaga
 - king.com.CandyCrushSodaSaga
@@ -108,11 +120,9 @@ By default, this script will remove most, but not all of the pre-installed windo
 - Microsoft.People
 - Microsoft.ScreenSketch
 - Microsoft.Windows.Photos
-- Microsoft.WindowsAlarms
 - Microsoft.WindowsCalculator
 - Microsoft.WindowsCamera
 - microsoft.windowscommunicationsapps (Mail & Calendar)
-- Microsoft.WindowsMaps
 - Microsoft.WindowsStore (NOTE: This app cannot be reinstalled!)
 - Microsoft.Xbox.TCUI
 - Microsoft.XboxApp

@@ -28,63 +28,72 @@ function RemoveApps
         #
         # If you wish to KEEP any of the apps below simply add a # character
         # in front of the specific app in the list below.
-        "2FE3CB00.PICSART-PHOTOSTUDIO"
-        "9E2F88E3.TWITTER"
-        "AdobeSystemsIncorporated.AdobePhotoshopExpress"
-        "Facebook.InstagramBeta"
-        "HULULLC.HULUPLUS"
-        "Clipchamp.Clipchamp*"
+        "*AdobeSystemsIncorporated.AdobePhotoshopExpress*"
+        "*Clipchamp.Clipchamp*"
+        "*Duolingo-LearnLanguagesforFree*"
+        "*Facebook*"
+        "*Flipboard*"
+        "*HULULLC.HULUPLUS*"
+        "*Microsoft.3DBuilder*"
+        "*Microsoft.549981C3F5F10*"   #Cortana app
+        "*Microsoft.Asphalt8Airborne*"
+        "*Microsoft.BingFinance*"
+        "*Microsoft.BingNews*"
+        "*Microsoft.BingSports*"
+        "*Microsoft.BingTranslator*"
+        "*Microsoft.BingWeather*"
         "*Microsoft.GetHelp*"
         "*Microsoft.Getstarted*"
-        "*Microsoft.WindowsFeedbackHub*"
-        "*Microsoft.BingNews*"
-        "*Microsoft.BingFinance*"
-        "*Microsoft.BingSports*"
-        "*Microsoft.BingWeather*"
-        "*Microsoft.BingTranslator*"
-        "*Microsoft.MicrosoftOfficeHub*"
-        "*Microsoft.Office.OneNote*"
-        "*Microsoft.MicrosoftStickyNotes*"
-        "*Microsoft.SkypeApp*"
-        "*Microsoft.OneConnect*"
         "*Microsoft.Messaging*"
+        "*Microsoft.Microsoft3DViewer*"
+        "*Microsoft.MicrosoftOfficeHub*"
+        "*Microsoft.MicrosoftSolitaireCollection*"
+        "*Microsoft.MicrosoftStickyNotes*"
+        "*Microsoft.MixedReality.Portal*"
+        "*Microsoft.NetworkSpeedTest*"
+        "*Microsoft.News*"
+        "*Microsoft.Office.OneNote*"
+        "*Microsoft.Office.Sway*"
+        "*Microsoft.OneConnect*"
+        "*Microsoft.Print3D*"
+        "*Microsoft.RemoteDesktop*"
+        "*Microsoft.SkypeApp*"
+        "*Microsoft.WindowsAlarms*"
+        "*Microsoft.WindowsFeedbackHub*"
+        "*Microsoft.WindowsMaps*"
         "*Microsoft.WindowsSoundRecorder*"
         "*Microsoft.ZuneMusic*"
         "*Microsoft.ZuneVideo*"
-        "*Microsoft.MixedReality.Portal*"
-        "*Microsoft.3DBuilder*"
-        "*Microsoft.Microsoft3DViewer*"
-        "*Microsoft.Print3D*"
-        "*Microsoft.549981C3F5F10*"   #Cortana app
-        "*Microsoft.MicrosoftSolitaireCollection*"
-        "*Microsoft.Asphalt8Airborne*"
+        "*PICSART-PHOTOSTUDIO*"
+        "*PandoraMediaInc*"
+        "*Royal Revolt*"
+        "*TWITTER*"
+        "*Wunderlist*"
         "*king.com.BubbleWitch3Saga*"
-        "*king.com.CandyCrushSodaSaga*"
         "*king.com.CandyCrushSaga*"
+        "*king.com.CandyCrushSodaSaga*"
         
 
 
         # These apps will NOT be uninstalled by default:
         # 
-        # If you wish to REMOVE any of the apps below simply remove the #
-        # character in front of the specific app in the list below.
-        #"*Microsoft.WindowsStore*"   # NOTE: This app cannot be reinstalled!
-        #"*Microsoft.WindowsCalculator*"
-        #"*Microsoft.Windows.Photos*"
-        #"*Microsoft.WindowsCamera*"
-        #"*Microsoft.WindowsAlarms*"
-        #"*Microsoft.WindowsMaps*"
-        #"*microsoft.windowscommunicationsapps*"   # Mail & Calendar
+        # If you wish to REMOVE any of the apps below simply remove the # character
+        # in front of the specific app in the list below.
+        #"*Microsoft.MSPaint*"   # Paint 3D
         #"*Microsoft.People*"
         #"*Microsoft.ScreenSketch*"
-        #"*Microsoft.MSPaint*"   # Paint 3D
-        #"*Microsoft.YourPhone*"
+        #"*Microsoft.Windows.Photos*"
+        #"*Microsoft.WindowsCalculator*"
+        #"*Microsoft.WindowsCamera*"
+        #"*Microsoft.WindowsStore*"   # NOTE: This app cannot be reinstalled!
         #"*Microsoft.Xbox.TCUI*"
         #"*Microsoft.XboxApp*"
         #"*Microsoft.XboxGameOverlay*"
         #"*Microsoft.XboxGamingOverlay*"
         #"*Microsoft.XboxIdentityProvider*"
         #"*Microsoft.XboxSpeechToTextOverlay*"   # NOTE: This app may not be able to be reinstalled!
+        #"*Microsoft.YourPhone*"
+        #"*microsoft.windowscommunicationsapps*"   # Mail & Calendar
     )
 
     foreach ($app in $apps) {

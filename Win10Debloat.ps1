@@ -130,17 +130,60 @@ if((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or ((
     }
     else
     {
-        Clear
-        Write-Output "-------------------------------------------------------------------------------------------"
-        Write-Output " Win10Debloat Script - Setup"
-        Write-Output "-------------------------------------------------------------------------------------------"
-        Write-Output "(1) Run Win10Debloat with the Windows 10 default settings"
-        Write-Output "(2) Run Win10Debloat with the Windows 11 default settings"
-        Write-Output "(3) Advanced: Choose which changes you want Win10Debloat to make"
-        Write-Output ""
+        Do { 
+            Clear
+            Write-Output "-------------------------------------------------------------------------------------------"
+            Write-Output " Win10Debloat Script - Setup"
+            Write-Output "-------------------------------------------------------------------------------------------"
+            Write-Output "(1) Run Win10Debloat with the Windows 10 default settings"
+            Write-Output "(2) Run Win10Debloat with the Windows 11 default settings"
+            Write-Output "(3) Advanced mode: Select which changes you want Win10Debloat to make"
+            Write-Output ""
+            Write-Output "(0) Show information about the script"
+            Write-Output ""
+            Write-Output ""
+            $Mode = Read-Host "Please select an option (1/2/3/0)" 
 
-        Do { $Mode = Read-Host "Please select an option (1/2/3)" }
-        while ($Mode -ne '1' -and $Mode -ne '2' -and $Mode -ne '3')
+            if($Mode -eq '0') {
+                Clear
+                Write-Output "-------------------------------------------------------------------------------------------"
+                Write-Output " Win10Debloat - Information"
+                Write-Output "-------------------------------------------------------------------------------------------"
+                Write-Output "Win10Debloat is a simple and lightweight powershell script that removes pre-installed"
+                Write-Output "windows 10/11 bloatware apps, disables telemetry and declutters the experience by disabling"
+                Write-Output "or removing intrusive interface elements, ads and context menu items. No need to"
+                Write-Output "painstakingly go through all the settings yourself, or removing apps one by one!"
+                Write-Output ""
+                Write-Output "-------------------------------------------------------------------------------------------"
+                Write-Output " Windows 10 default settings will:"
+                Write-Output "-------------------------------------------------------------------------------------------"
+                Write-Output "- Remove bloatware apps, full list can be found on github. (github.com/raphire/win10debloat)"
+                Write-Output "- Disable telemetry, diagnostic data & targeted ads."
+                Write-Output "- Disable bing & cortana in windows search."
+                Write-Output "- Disable tips & tricks on the lockscreen. (This may change your lockscreen wallpaper to the default)"
+                Write-Output "- Disable tips, tricks and suggestions in the startmenu and settings, and ads in windows explorer."
+                Write-Output "- Hide the Chat (meet now) & Widget (news and interests) icons from the taskbar."
+                Write-Output "- Hide the 3D objects folder under 'This pc' in windows explorer."
+                Write-Output "- Disable the 'Include in library' from context menu."
+                Write-Output "- Disable the 'Give access to' from context menu."
+                Write-Output "- Disable the 'Share' from context menu. (Does not remove the onedrive share option)"
+                Write-Output ""
+                Write-Output "-------------------------------------------------------------------------------------------"
+                Write-Output " Windows 11 default settings will:"
+                Write-Output "-------------------------------------------------------------------------------------------"
+                Write-Output "- Remove bloatware apps, full list can be found on github. (github.com/raphire/win10debloat)"
+                Write-Output "- Disable telemetry, diagnostic data & targeted ads."
+                Write-Output "- Disable bing & cortana in windows search."
+                Write-Output "- Disable tips & tricks on the lockscreen. (This may change your lockscreen wallpaper to the default)"
+                Write-Output "- Disable tips, tricks and suggestions in the startmenu and settings, and ads in windows explorer."
+                Write-Output "- Hide the Chat & Widget icons from the taskbar."
+                Write-Output ""
+                Write-Output ""
+                Write-Output "Press any key to go back..."
+                $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+            }
+        }
+        while ($Mode -ne '1' -and $Mode -ne '2' -and $Mode -ne '3') 
     }
 
     # Add execution parameters based on the mode
@@ -164,6 +207,7 @@ if((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or ((
             $PSBoundParameters.Add('DisableGiveAccessTo', $DisableGiveAccessTo)  
             $PSBoundParameters.Add('DisableShare', $DisableShare)  
         }
+
         '2' 
         { 
             Clear
@@ -178,6 +222,7 @@ if((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or ((
             $PSBoundParameters.Add('DisableChat', $DisableChat) 
             $PSBoundParameters.Add('DisableWidgets', $DisableWidgets) 
         }
+
         '3' 
         { 
             Clear
@@ -335,5 +380,6 @@ switch ($PSBoundParameters.Keys)
 Write-Output ""
 Write-Output "Script completed! Please restart your PC to make sure all changes are properly applied."
 Write-Output ""
+Write-Output ""
 Write-Output "Press any key to continue..."
-$Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+$null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")

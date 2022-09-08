@@ -71,9 +71,9 @@ By default, this script only removes apps that most people are unlikely to ever 
 - 2FE3CB00.PICSART-PHOTOSTUDIO
 - 9E2F88E3.TWITTER
 - AdobeSystemsIncorporated.AdobePhotoshopExpress
-- Clipchamp.Clipchamp*
+- Clipchamp.Clipchamp
 - Duolingo-LearnLanguagesforFree
-- Facebook.InstagramBeta
+- Facebook
 - Flipboard
 - HULULLC.HULUPLUS
 - Microsoft.3DBuilder

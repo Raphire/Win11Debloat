@@ -6,6 +6,7 @@ param
     [Parameter(ValueFromPipeline=$true)][switch]$RemoveApps,
     [Parameter(ValueFromPipeline=$true)][switch]$DisableTelemetry,
     [Parameter(ValueFromPipeline=$true)][switch]$DisableBingSearches,
+    [Parameter(ValueFromPipeline=$true)][switch]$DisableBing,
     [Parameter(ValueFromPipeline=$true)][switch]$DisableLockscreenTips,
     [Parameter(ValueFromPipeline=$true)][switch]$DisableWindowsSuggestions,
     [Parameter(ValueFromPipeline=$true)][switch]$DisableChat,
@@ -153,7 +154,7 @@ if((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or ((
             Write-Output "-------------------------------------------------------------------------------------------"
             $PSBoundParameters.Add('RemoveApps', $RemoveApps) 
             $PSBoundParameters.Add('DisableTelemetry', $DisableTelemetry)  
-            $PSBoundParameters.Add('DisableBingSearches', $DisableBingSearches) 
+            $PSBoundParameters.Add('DisableBing', $DisableBing) 
             $PSBoundParameters.Add('DisableLockscreenTips', $DisableLockscreenTips)  
             $PSBoundParameters.Add('DisableWindowsSuggestions', $DisableWindowsSuggestions)  
             $PSBoundParameters.Add('DisableChat', $DisableChat) 
@@ -171,7 +172,7 @@ if((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or ((
             Write-Output "-------------------------------------------------------------------------------------------"
             $PSBoundParameters.Add('RemoveApps', $RemoveApps) 
             $PSBoundParameters.Add('DisableTelemetry', $DisableTelemetry)  
-            $PSBoundParameters.Add('DisableBingSearches', $DisableBingSearches) 
+            $PSBoundParameters.Add('DisableBing', $DisableBing) 
             $PSBoundParameters.Add('DisableLockscreenTips', $DisableLockscreenTips)  
             $PSBoundParameters.Add('DisableWindowsSuggestions', $DisableWindowsSuggestions) 
             $PSBoundParameters.Add('DisableChat', $DisableChat) 
@@ -194,9 +195,9 @@ if((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or ((
                 $PSBoundParameters.Add('DisableTelemetry', $DisableTelemetry)   
             }
 
-            if($( Read-Host -Prompt "Disable bing in windows search? (y/n)" ) -eq 'y')
+            if($( Read-Host -Prompt "Disable bing & cortana in windows search? (y/n)" ) -eq 'y')
             {
-                $PSBoundParameters.Add('DisableBingSearches', $DisableBingSearches)   
+                $PSBoundParameters.Add('DisableBing', $DisableBing)   
             }
 
             if($( Read-Host -Prompt "Disable tips & tricks on the lockscreen? (y/n)" ) -eq 'y')
@@ -283,7 +284,11 @@ switch ($PSBoundParameters.Keys)
     }
     'DisableBingSearches'
     {
-        RegImport "> Disabling bing in windows search..." $PSScriptRoot\Regfiles\Disable_Bing_Searches.reg
+        RegImport "> Disabling bing & cortana in windows search..." $PSScriptRoot\Regfiles\Disable_Bing_Cortana_In_Search.reg
+    }
+    'DisableBing'
+    {
+        RegImport "> Disabling bing & cortana in windows search..." $PSScriptRoot\Regfiles\Disable_Bing_Cortana_In_Search.reg
     }
     'DisableLockscreenTips'
     {

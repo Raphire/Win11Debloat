@@ -6,7 +6,7 @@ You can pick and choose exactly which modifications you want the script to make,
 ### The windows 10 default settings will:
 - Remove all bloatware apps from [this list](#these-apps-will-be-deleted-by-default).
 - Disable telemetry, diagnostic data & targeted ads.
-- Disable bing in windows search.
+- Disable bing & cortana in windows search.
 - Disable tips & tricks on the lockscreen. (This may change your lockscreen wallpaper to the windows default)
 - Disable tips, tricks and suggestions in the startmenu and settings, and sync provider ads in windows explorer.
 - Hide the Chat (meet now) & Widget (news and interests) icons from the taskbar.
@@ -18,7 +18,7 @@ You can pick and choose exactly which modifications you want the script to make,
 ### The windows 11 default settings will:
 - Remove all bloatware apps from [this list](#these-apps-will-be-deleted-by-default).
 - Disable telemetry, diagnostic data & targeted ads.
-- Disable bing in windows search.
+- Disable bing & cortana in windows search.
 - Disable tips & tricks on the lockscreen. (This may change your lockscreen wallpaper to the windows default)
 - Disable tips, tricks and suggestions in the startmenu and settings, and sync provider ads in windows explorer.
 - Hide the Chat & Widget icons from the taskbar.
@@ -44,7 +44,7 @@ This method gives you the option to run the script with certain arguments to tai
 2. Open powershell as an administrator.
 3. Enable powershell execution by entering the following command: <code>Set-ExecutionPolicy Unrestricted -Force</code>
 4. In powershell, navigate to the directory where the files were extracted. Example: <code>cd c:\\Win10Debloat</code>
-5. Enter this into powershell to run the script: <code>.\Win10Debloat.ps1</code> To run the script without any user input you can add arguments at the end, for example: <code>.\Win10Debloat.ps1 -RemoveApps -DisableBingSearches</code>
+5. Enter this into powershell to run the script: <code>.\Win10Debloat.ps1</code> To run the script without any user input you can add arguments at the end, for example: <code>.\Win10Debloat.ps1 -RemoveApps -DisableBing</code>
 
 | Argument | Description |
 | --------- | ----------- |
@@ -52,7 +52,7 @@ This method gives you the option to run the script with certain arguments to tai
 | -RunWin11Defaults             |    Run the script with windows 11 default settings. |
 | -RemoveApps                   |    Remove all bloatware apps from [this list](#these-apps-will-be-deleted-by-default). |
 | -DisableTelemetry             |    Disable telemetry, diagnostic data & targeted ads. |
-| -DisableBingSearches          |    Disable bing in windows search. |
+| -DisableBing                  |    Disable bing & cortana in windows search. |
 | -DisableLockscreenTips        |    Disable tips & tricks on the lockscreen. |
 | -DisableWindowsSuggestions    |    Disable tips, tricks and suggestions in the startmenu and settings, and sync provider ads in windows explorer. |
 | -DisableChat                  |    Hide the chat (meet now) icon on the taskbar. |
@@ -135,7 +135,7 @@ By default, this script only removes apps that most people are unlikely to ever 
 ## Declutter Windows 10/11
 This script can also make various changes to declutter windows 10/11, such as:
 - Disable telemetry, diagnostic data & targeted ads.
-- Disable bing in windows search.
+- Disable bing & cortana in windows search.
 - Disable tips & tricks on the lockscreen. (This changes your lockscreen wallpaper to the windows default)
 - Disable tips, tricks and suggestions in the startmenu and settings, and sync provider ads in windows explorer.
 - Hide the chat (meet now) icon on the taskbar.

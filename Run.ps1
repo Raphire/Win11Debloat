@@ -12,7 +12,7 @@ PowerShell -NoProfile -ExecutionPolicy Unrestricted -Command "& {Start-Process P
                                                                                                          -ExecutionPolicy Unrestricted 
                                                                                                          -File ""$PSScriptRoot\Win10Debloat.ps1""
                                                                                                          -RemoveApps
-                                                                                                         -DisableBingSearches' 
+                                                                                                         -DisableBing' 
                                                                                           -Verb RunAs}";
 
 Supported Arguments:
@@ -20,7 +20,7 @@ Supported Arguments:
 -RunWin11Defaults             |    Run the script with windows 11 default settings.
 -RemoveApps                   |    Remove all bloatware apps from the list found in README.md.
 -DisableTelemetry             |    Disable telemetry, diagnostic data & targeted ads.
--DisableBingSearches          |    Disable bing in windows search.
+-DisableBing                  |    Disable bing & cortana in windows search.
 -DisableLockscreenTips        |    Disable tips & tricks on the lockscreen.
 -DisableWindowsSuggestions    |    Disable tips, tricks and suggestions in the startmenu and settings, and ads in windows explorer.
 -DisableOnedrive              |    Hide the onedrive folder in the windows explorer sidepanel.

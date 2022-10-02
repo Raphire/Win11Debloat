@@ -137,7 +137,7 @@ if((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or ((
             Write-Output "-------------------------------------------------------------------------------------------"
             Write-Output "(1) Run Win10Debloat with the Windows 10 default settings"
             Write-Output "(2) Run Win10Debloat with the Windows 11 default settings"
-            Write-Output "(3) Advanced mode: Select which changes you want Win10Debloat to make"
+            Write-Output "(3) Custom mode: Select which changes you want Win10Debloat to make"
             Write-Output ""
             Write-Output "(0) Show information about the script"
             Write-Output ""
@@ -227,7 +227,7 @@ if((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or ((
         { 
             Clear
             Write-Output "-------------------------------------------------------------------------------------------"
-            Write-Output " Win10Debloat Script - Advanced Configuration"
+            Write-Output " Win10Debloat Script - Custom Configuration"
             Write-Output "-------------------------------------------------------------------------------------------"
 
             if($( Read-Host -Prompt "Remove the pre-installed windows 10 apps? (y/n)" ) -eq 'y')

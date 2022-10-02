@@ -1,5 +1,5 @@
 # Win10Debloat
-Win10Debloat is a simple and lightweight powershell script that removes pre-installed windows 10/11 bloatware apps, disables telemetry and declutters the experience by disabling or removing intrusive interface elements, ads and context menu items. No need to painstakingly go through all the settings yourself, or removing apps one by one. Win10Debloat makes te process quick and simple! 
+Win10Debloat is a simple and lightweight powershell script that removes pre-installed windows 10/11 bloatware apps, disables telemetry and declutters the experience by disabling or removing intrusive interface elements, ads and context menu items. No need to painstakingly go through all the settings yourself, or removing apps one by one. Win10Debloat makes the process quick and simple! 
 
 You can pick and choose exactly which modifications you want the script to make, but the default settings should be fine for most people. All of the changes can be easily reverted using the registry files that are included in the 'Regfiles' folder, and all of the apps that are removed by default can be reinstalled from the microsoft store.
 
@@ -23,7 +23,7 @@ You can pick and choose exactly which modifications you want the script to make,
 - Disable tips, tricks and suggestions in the startmenu and settings, and sync provider ads in windows explorer.
 - Hide the Chat & Widget icons from the taskbar.
 
-### Or select the 'Advanced' option in the menu to customize the script to your needs.
+### Or select the 'Custom' option in the menu to customize the script to your needs.
 
 ## Donate a cup of coffee to support my work
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/M4M5C6UPC)
@@ -33,10 +33,11 @@ Disclaimer: I believe this script to be completely safe to run, but use this scr
 
 ### Easy method:
 1. [Download the latest version of the script](https://github.com/Raphire/Win10Debloat/archive/master.zip), and extract the .ZIP file to your desired location.
-2. Run the script by right-clicking the 'Run.ps1' file and selecting the 'Run with Powershell' option.
-3. Accept the windows UAC prompt to run the script as administrator, this is required for the script to function.
-4. Select either default, or advanced setup depending on what changes you want to make. Advanced setup will allow you to choose exactly which changes you want to make, and which changes you want to skip.
-5. Once the script has executed, restart your pc to ensure all changes are properly applied.
+2. Open powershell as an administrator.
+3. Enable powershell execution by entering the following command: <code>Set-ExecutionPolicy Unrestricted -Force</code>
+4. Navigate to the Win10Debloat folder and run the script by right-clicking the 'Run.ps1' file and selecting the 'Run with Powershell' option.
+5. Accept the windows UAC prompt to run the script as administrator, this is required for the script to function.
+6. Select either default, or custom setup depending on what changes you want to make. Custom setup will allow you to choose exactly which changes you want to make, and which changes you want to skip.
 
 ### Advanced method:
 This method gives you the option to run the script with certain arguments to tailor the behaviour of the script to your needs without requiring any user input during runtime, making it quicker and easier to deploy on a large number of systems.

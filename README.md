@@ -33,11 +33,10 @@ Disclaimer: I believe this script to be completely safe to run, but use this scr
 
 ### Easy method:
 1. [Download the latest version of the script](https://github.com/Raphire/Win10Debloat/archive/master.zip), and extract the .ZIP file to your desired location.
-2. Open powershell as an administrator.
-3. Enable powershell execution by entering the following command: <code>Set-ExecutionPolicy Unrestricted -Force</code>
-4. Navigate to the Win10Debloat folder and run the script by right-clicking the 'Run.ps1' file and selecting the 'Run with Powershell' option.
-5. Accept the windows UAC prompt to run the script as administrator, this is required for the script to function.
-6. Select either default, or custom setup depending on what changes you want to make. Custom setup will allow you to choose exactly which changes you want to make, and which changes you want to skip.
+2. Navigate to the Win10Debloat folder
+3. Double click the 'Run.bat' file to start the script.
+4. Accept the windows UAC prompt to run the script as administrator, this is required for the script to function.
+5. Select either default, or custom setup depending on what changes you want to make. Custom setup will allow you to choose exactly which changes you want to make, and which changes you want to skip.
 
 ### Advanced method:
 This method gives you the option to run the script with certain arguments to tailor the behaviour of the script to your needs without requiring any user input during runtime, making it quicker and easier to deploy on a large number of systems.

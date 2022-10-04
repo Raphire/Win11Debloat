@@ -1,3 +1,5 @@
+#Requires -RunAsAdministrator
+
 [CmdletBinding(SupportsShouldProcess)]
 param 
 (

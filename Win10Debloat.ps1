@@ -61,6 +61,7 @@ function RemoveApps
         "*Microsoft.Print3D*"
         "*Microsoft.RemoteDesktop*"
         "*Microsoft.SkypeApp*"
+        "*Microsoft.Todos*"
         "*Microsoft.WindowsAlarms*"
         "*Microsoft.WindowsFeedbackHub*"
         "*Microsoft.WindowsMaps*"
@@ -82,8 +83,10 @@ function RemoveApps
         # 
         # If you wish to REMOVE any of the apps below simply remove the # character
         # in front of the specific app in the list below.
+        #"*Microsoft.GamingApp*"
         #"*Microsoft.MSPaint*"   # Paint 3D
         #"*Microsoft.People*"
+        #"*Microsoft.PowerAutomateDesktop*"
         #"*Microsoft.ScreenSketch*"
         #"*Microsoft.Windows.Photos*"
         #"*Microsoft.WindowsCalculator*"
@@ -103,6 +106,8 @@ function RemoveApps
         Write-Output "Attempting to remove $app"
 
         Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage
+
+        Get-AppxProvisionedPackage -Online | Where-Object {$_.PackageName -like $app} | ForEach-Object { Remove-ProvisionedAppxPackage -Online -AllUsers -PackageName $_.PackageName }
     }
 }
 

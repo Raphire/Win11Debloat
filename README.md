@@ -100,6 +100,7 @@ By default, this script only removes apps that most people are unlikely to ever 
 - Microsoft.Print3D
 - Microsoft.RemoteDesktop
 - Microsoft.SkypeApp
+- Microsoft.Todos
 - Microsoft.WindowsAlarms
 - Microsoft.WindowsFeedbackHub
 - Microsoft.WindowsMaps
@@ -116,8 +117,10 @@ By default, this script only removes apps that most people are unlikely to ever 
 - king.com.CandyCrushSodaSaga
 
 ### These apps will NOT be deleted by default:
+- Microsoft.GamingApp
 - Microsoft.MSPaint (Paint 3D)
 - Microsoft.People
+- Microsoft.PowerAutomateDesktop
 - Microsoft.ScreenSketch
 - Microsoft.Windows.Photos
 - Microsoft.WindowsCalculator

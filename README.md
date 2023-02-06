@@ -68,10 +68,9 @@ This method gives you the option to run the script with certain arguments to tai
 By default, this script only removes apps that most people are unlikely to ever need or use. You can of course customize which apps are removed by this script by editing the apps list found in the 'Win10Debloat.ps1' file.
 
 ### These apps will be deleted by default:
-- 2FE3CB00.PICSART-PHOTOSTUDIO
-- 9E2F88E3.TWITTER
 - AdobeSystemsIncorporated.AdobePhotoshopExpress
 - Clipchamp.Clipchamp
+- Dolby
 - Duolingo-LearnLanguagesforFree
 - Facebook
 - Flipboard
@@ -108,8 +107,10 @@ By default, this script only removes apps that most people are unlikely to ever 
 - Microsoft.ZuneMusic
 - Microsoft.ZuneVideo
 - PandoraMediaInc
+- Picsart-Photostudio
 - Royal Revolt
-- SpotifyAB.SpotifyMusic
+- Speed test
+- Spotify
 - Twitter
 - Wunderlist
 - king.com.BubbleWitch3Saga

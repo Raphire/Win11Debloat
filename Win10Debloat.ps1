@@ -11,6 +11,7 @@ param
     [Parameter(ValueFromPipeline=$true)][switch]$DisableBing,
     [Parameter(ValueFromPipeline=$true)][switch]$DisableLockscreenTips,
     [Parameter(ValueFromPipeline=$true)][switch]$DisableWindowsSuggestions,
+    [Parameter(ValueFromPipeline=$true)][switch]$DisableSuggestions,
     [Parameter(ValueFromPipeline=$true)][switch]$DisableChat,
     [Parameter(ValueFromPipeline=$true)][switch]$DisableWidgets,
     [Parameter(ValueFromPipeline=$true)][switch]$DisableOnedrive,
@@ -209,7 +210,7 @@ if((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or ((
             $PSBoundParameters.Add('DisableTelemetry', $DisableTelemetry)  
             $PSBoundParameters.Add('DisableBing', $DisableBing) 
             $PSBoundParameters.Add('DisableLockscreenTips', $DisableLockscreenTips)  
-            $PSBoundParameters.Add('DisableWindowsSuggestions', $DisableWindowsSuggestions)  
+            $PSBoundParameters.Add('DisableSuggestions', $DisableSuggestions)  
             $PSBoundParameters.Add('DisableChat', $DisableChat) 
             $PSBoundParameters.Add('DisableWidgets', $DisableWidgets) 
             $PSBoundParameters.Add('Disable3dObjects', $Disable3dObjects)   
@@ -228,7 +229,7 @@ if((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or ((
             $PSBoundParameters.Add('DisableTelemetry', $DisableTelemetry)  
             $PSBoundParameters.Add('DisableBing', $DisableBing) 
             $PSBoundParameters.Add('DisableLockscreenTips', $DisableLockscreenTips)  
-            $PSBoundParameters.Add('DisableWindowsSuggestions', $DisableWindowsSuggestions) 
+            $PSBoundParameters.Add('DisableSuggestions', $DisableSuggestions) 
             $PSBoundParameters.Add('DisableChat', $DisableChat) 
             $PSBoundParameters.Add('DisableWidgets', $DisableWidgets) 
         }
@@ -262,7 +263,7 @@ if((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or ((
 
             if($( Read-Host -Prompt "Disable tips, tricks and suggestions in the startmenu and settings, and ads in windows explorer? (y/n)" ) -eq 'y')
             {
-                $PSBoundParameters.Add('DisableWindowsSuggestions', $DisableWindowsSuggestions)   
+                $PSBoundParameters.Add('DisableSuggestions', $DisableSuggestions)   
             }
 
             if($( Read-Host -Prompt "Do you want to hide any icons from the taskbar? (y/n)" ) -eq 'y')
@@ -350,6 +351,10 @@ switch ($PSBoundParameters.Keys)
         RegImport "> Disabling tips & tricks on the lockscreen..." $PSScriptRoot\Regfiles\Disable_Lockscreen_Tips.reg
     }
     'DisableWindowsSuggestions'
+    {
+        RegImport "> Disabling tips, tricks and suggestions in the startmenu and settings, and ads in windows explorer..." $PSScriptRoot\Regfiles\Disable_Windows_Suggestions.reg
+    }
+    'DisableSuggestions'
     {
         RegImport "> Disabling tips, tricks and suggestions in the startmenu and settings, and ads in windows explorer..." $PSScriptRoot\Regfiles\Disable_Windows_Suggestions.reg
     }

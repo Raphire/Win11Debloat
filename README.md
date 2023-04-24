@@ -34,19 +34,22 @@ Disclaimer: I believe this script to be completely safe to run, but use this scr
 ### Easy method:
 1. [Download the latest version of the script](https://github.com/Raphire/Win10Debloat/archive/master.zip), and extract the .ZIP file to your desired location.
 2. Navigate to the Win10Debloat folder
-3. Double click the 'Run.bat' file to start the script.
+3. Double click the 'Run.bat' file to start the script. Note: If the console window immediately closes and nothing happens, try the advanced method below.
 4. Accept the windows UAC prompt to run the script as administrator, this is required for the script to function.
-5. Select either default, or custom setup depending on what changes you want to make. Custom setup will allow you to choose exactly which changes you want to make, and which changes you want to skip.
+5. A new powershell window will now open, showing the Win10Debloat menu. Select either the default or custom setup to continue. 
 
 ### Advanced method:
-This method gives you the option to run the script with certain arguments to tailor the behaviour of the script to your needs without requiring any user input during runtime, making it quicker and easier to deploy on a large number of systems.
+This method gives you the option to run the script with certain parameters to tailor the behaviour of the script to your needs without requiring any user input during runtime, making it quicker and easier to deploy on a large number of systems.
 1. [Download the latest version of the script](https://github.com/Raphire/Win10Debloat/archive/master.zip), and extract the .ZIP file to your desired location.
 2. Open powershell as an administrator.
 3. Enable powershell execution by entering the following command: <code>Set-ExecutionPolicy Unrestricted -Force</code>
 4. In powershell, navigate to the directory where the files were extracted. Example: <code>cd c:\\Win10Debloat</code>
-5. Enter this into powershell to run the script: <code>.\Win10Debloat.ps1</code> To run the script without any user input you can add arguments at the end, for example: <code>.\Win10Debloat.ps1 -RemoveApps -DisableBing</code>
+5. Enter this into powershell to run the script: <code>.\Win10Debloat.ps1</code> 
+6. A menu will now open. Select either the default or custom setup to continue.
 
-| Argument | Description |
+To run the script without any user input, simply add parameters at the end, example: <code>.\Win10Debloat.ps1 -RemoveApps -DisableBing</code>
+
+| Parameter | Description |
 | --------- | ----------- |
 | -RunDefaults                  |    Run the script with windows 10 default settings. |
 | -RunWin11Defaults             |    Run the script with windows 11 default settings. |
@@ -54,7 +57,7 @@ This method gives you the option to run the script with certain arguments to tai
 | -DisableTelemetry             |    Disable telemetry, diagnostic data & targeted ads. |
 | -DisableBing                  |    Disable bing & cortana in windows search. |
 | -DisableLockscreenTips        |    Disable tips & tricks on the lockscreen. |
-| -DisableWindowsSuggestions    |    Disable tips, tricks and suggestions in the startmenu and settings, and sync provider ads in windows explorer. |
+| -DisableSuggestions           |    Disable tips, tricks and suggestions in the startmenu and settings, and sync provider ads in windows explorer. |
 | -DisableChat                  |    Hide the chat (meet now) icon on the taskbar. |
 | -DisableWidgets               |    Hide the widget (news and interests) icon on the taskbar. |
 | -DisableOnedrive              |    Hide the onedrive folder in the windows explorer sidepanel. |

@@ -136,7 +136,7 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
     }
     else {
         Do { 
-            Clear
+            Clear-Host
             Write-Output "-------------------------------------------------------------------------------------------"
             Write-Output " Win10Debloat Script - Setup"
             Write-Output "-------------------------------------------------------------------------------------------"
@@ -150,7 +150,7 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
             $Mode = Read-Host "Please select an option (1/2/3/0)" 
 
             if ($Mode -eq '0') {
-                Clear
+                Clear-Host
                 Write-Output "-------------------------------------------------------------------------------------------"
                 Write-Output " Win10Debloat - Information"
                 Write-Output "-------------------------------------------------------------------------------------------"
@@ -194,7 +194,7 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
     # Add execution parameters based on the mode
     switch ($Mode) {
         '1' { 
-            Clear
+            Clear-Host
             Write-Output "-------------------------------------------------------------------------------------------"
             Write-Output " Win10Debloat Script - Windows 10 Default Configuration"
             Write-Output "-------------------------------------------------------------------------------------------"
@@ -212,7 +212,7 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
         }
 
         '2' { 
-            Clear
+            Clear-Host
             Write-Output "-------------------------------------------------------------------------------------------"
             Write-Output " Win10Debloat Script - Windows 11 Default Configuration"
             Write-Output "-------------------------------------------------------------------------------------------"
@@ -226,7 +226,7 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
         }
 
         '3' { 
-            Clear
+            Clear-Host
             Write-Output "-------------------------------------------------------------------------------------------"
             Write-Output " Win10Debloat Script - Custom Configuration"
             Write-Output "-------------------------------------------------------------------------------------------"
@@ -294,7 +294,7 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
     }
 }
 else {
-    Clear
+    Clear-Host
     Write-Output "-------------------------------------------------------------------------------------------"
     Write-Output " Win10Debloat Script - Custom Configuration"
     Write-Output "-------------------------------------------------------------------------------------------"

@@ -1,9 +1,11 @@
 # Win10Debloat
-Win10Debloat is a simple and lightweight powershell script that removes pre-installed windows 10/11 bloatware apps, disables telemetry and declutters the experience by disabling or removing intrusive interface elements, ads and context menu items. No need to painstakingly go through all the settings yourself, or removing apps one by one. Win10Debloat makes the process quick and simple! 
+
+Win10Debloat is a simple and lightweight powershell script that removes pre-installed windows 10/11 bloatware apps, disables telemetry and declutters the experience by disabling or removing intrusive interface elements, ads and context menu items. No need to painstakingly go through all the settings yourself, or removing apps one by one. Win10Debloat makes the process quick and simple!
 
 You can pick and choose exactly which modifications you want the script to make, but the default settings should be fine for most people. All of the changes can be easily reverted using the registry files that are included in the 'Regfiles' folder, and all of the apps that are removed by default can be reinstalled from the microsoft store.
 
-### The windows 10 default settings will:
+## The windows 10 default settings will
+
 - Remove all bloatware apps from [this list](#these-apps-will-be-deleted-by-default).
 - Disable telemetry, diagnostic data & targeted ads.
 - Disable bing & cortana in windows search.
@@ -15,7 +17,8 @@ You can pick and choose exactly which modifications you want the script to make,
 - Disable the 'Give access to' from context menu.
 - Disable the 'Share' from context menu. (Does not remove the onedrive share option)
 
-### The windows 11 default settings will:
+## The windows 11 default settings will
+
 - Remove all bloatware apps from [this list](#these-apps-will-be-deleted-by-default).
 - Disable telemetry, diagnostic data & targeted ads.
 - Disable bing & cortana in windows search.
@@ -23,31 +26,36 @@ You can pick and choose exactly which modifications you want the script to make,
 - Disable tips, tricks and suggestions in the startmenu and settings, and sync provider ads in windows explorer.
 - Hide the Chat & Widget icons from the taskbar.
 
-### Or select the 'Custom' option in the menu to customize the script to your needs.
+## Or select the 'Custom' option in the menu to customize the script to your needs
 
 ## Donate a cup of coffee to support my work
+
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/M4M5C6UPC)
 
 ## Usage
+
 Disclaimer: I believe this script to be completely safe to run, but use this script at your own risk!
 
-### Easy method:
+### Easy method
+
 1. [Download the latest version of the script](https://github.com/Raphire/Win10Debloat/archive/master.zip), and extract the .ZIP file to your desired location.
 2. Navigate to the Win10Debloat folder
 3. Double click the 'Run.bat' file to start the script. Note: If the console window immediately closes and nothing happens, try the advanced method below.
 4. Accept the windows UAC prompt to run the script as administrator, this is required for the script to function.
-5. A new powershell window will now open, showing the Win10Debloat menu. Select either the default or custom setup to continue. 
+5. A new powershell window will now open, showing the Win10Debloat menu. Select either the default or custom setup to continue.
 
-### Advanced method:
+### Advanced method
+
 This method gives you the option to run the script with certain parameters to tailor the behaviour of the script to your needs without requiring any user input during runtime, making it quicker and easier to deploy on a large number of systems.
+
 1. [Download the latest version of the script](https://github.com/Raphire/Win10Debloat/archive/master.zip), and extract the .ZIP file to your desired location.
 2. Open powershell as an administrator.
-3. Enable powershell execution by entering the following command: <code>Set-ExecutionPolicy Unrestricted -Force</code>
-4. In powershell, navigate to the directory where the files were extracted. Example: <code>cd c:\\Win10Debloat</code>
-5. Enter this into powershell to run the script: <code>.\Win10Debloat.ps1</code> 
+3. Enable powershell execution by entering the following command: `Set-ExecutionPolicy Unrestricted -Force`
+4. In powershell, navigate to the directory where the files were extracted. Example: `cd c:\\Win10Debloat`
+5. Enter this into powershell to run the script: `.\Win10Debloat.ps1`
 6. A menu will now open. Select either the default or custom setup to continue.
 
-To run the script without any user input, simply add parameters at the end, example: <code>.\Win10Debloat.ps1 -RemoveApps -DisableBing</code>
+To run the script without any user input, simply add parameters at the end, example: `.\Win10Debloat.ps1 -RemoveApps -DisableBing`
 
 | Parameter | Description |
 | --------- | ----------- |
@@ -68,9 +76,11 @@ To run the script without any user input, simply add parameters at the end, exam
 | -DisableShare                 |    Disable the 'Share' option in the context menu. |
 
 ## Debloat Windows 10/11
+
 By default, this script only removes apps that most people are unlikely to ever need or use. You can of course customize which apps are removed by this script by editing the apps list found in the 'Win10Debloat.ps1' file.
 
-### These apps will be deleted by default:
+### These apps will be deleted by default
+
 - AdobeSystemsIncorporated.AdobePhotoshopExpress
 - Clipchamp.Clipchamp
 - Dolby
@@ -120,7 +130,8 @@ By default, this script only removes apps that most people are unlikely to ever 
 - king.com.CandyCrushSaga
 - king.com.CandyCrushSodaSaga
 
-### These apps will NOT be deleted by default:
+### These apps will NOT be deleted by default
+
 - Microsoft.GamingApp
 - Microsoft.MSPaint (Paint 3D)
 - Microsoft.People
@@ -140,7 +151,9 @@ By default, this script only removes apps that most people are unlikely to ever 
 - Microsoft.YourPhone
 
 ## Declutter Windows 10/11
+
 This script can also make various changes to declutter windows 10/11, such as:
+
 - Disable telemetry, diagnostic data & targeted ads.
 - Disable bing & cortana in windows search.
 - Disable tips & tricks on the lockscreen. (This changes your lockscreen wallpaper to the windows default)

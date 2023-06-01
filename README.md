@@ -2,13 +2,17 @@
 
 Win10Debloat is a simple and lightweight powershell script that removes pre-installed windows 10/11 bloatware apps, disables telemetry and declutters the experience by disabling or removing intrusive interface elements, ads and context menu items. No need to painstakingly go through all the settings yourself, or removing apps one by one. Win10Debloat makes the process quick and simple!
 
-You can pick and choose exactly which modifications you want the script to make, but the default settings should be fine for most people. All of the changes can be easily reverted using the registry files that are included in the 'Regfiles' folder, and all of the apps that are removed by default can be reinstalled from the microsoft store.
+You can pick and choose exactly which modifications you want the script to make, or use the default settings for your specific windows version which should be fine for most people. If you are unhappy with any of the changes you can easily revert them by using the registry files that are included in the 'Regfiles' folder, and all of the apps that are removed by default can be reinstalled from the microsoft store.
+
+#### Did my script help you? Please consider buying me a cup of coffee to support my work
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/M4M5C6UPC)
 
 ## The windows 10 default settings will
 
 - Remove all bloatware apps from [this list](#these-apps-will-be-deleted-by-default).
 - Disable telemetry, diagnostic data & targeted ads.
-- Disable bing & cortana in windows search.
+- Disable bing search & cortana in windows search.
 - Disable tips & tricks on the lockscreen. (This may change your lockscreen wallpaper to the windows default)
 - Disable tips, tricks and suggestions in the startmenu and settings, and sync provider ads in windows explorer.
 - Hide the Chat (meet now) & Widget (news and interests) icons from the taskbar.
@@ -21,16 +25,13 @@ You can pick and choose exactly which modifications you want the script to make,
 
 - Remove all bloatware apps from [this list](#these-apps-will-be-deleted-by-default).
 - Disable telemetry, diagnostic data & targeted ads.
-- Disable bing & cortana in windows search.
+- Disable bing search, bing AI & cortana in windows search.
 - Disable tips & tricks on the lockscreen. (This may change your lockscreen wallpaper to the windows default)
 - Disable tips, tricks and suggestions in the startmenu and settings, and sync provider ads in windows explorer.
 - Hide the Chat & Widget icons from the taskbar.
 
-## Or select the 'Custom' option in the menu to customize the script to your needs
-
-## Donate a cup of coffee to support my work
-
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/M4M5C6UPC)
+## The 'Custom' option allows you to customize the script to your exact needs
+A full list of what changes this script can make can be found [here](https://github.com/Raphire/Win10Debloat#improve-your-windows-1011-experience). 
 
 ## Usage
 
@@ -63,7 +64,7 @@ To run the script without any user input, simply add parameters at the end, exam
 | -RunWin11Defaults             |    Run the script with windows 11 default settings. |
 | -RemoveApps                   |    Remove all bloatware apps from [this list](#these-apps-will-be-deleted-by-default). |
 | -DisableTelemetry             |    Disable telemetry, diagnostic data & targeted ads. |
-| -DisableBing                  |    Disable bing & cortana in windows search. |
+| -DisableBing                  |    Disable bing search, bing AI & cortana in windows search. |
 | -DisableLockscreenTips        |    Disable tips & tricks on the lockscreen. |
 | -DisableSuggestions           |    Disable tips, tricks and suggestions in the startmenu and settings, and sync provider ads in windows explorer. |
 | -DisableChat                  |    Hide the chat (meet now) icon on the taskbar. |
@@ -77,7 +78,7 @@ To run the script without any user input, simply add parameters at the end, exam
 
 ## Debloat Windows 10/11
 
-By default, this script only removes apps that most people are unlikely to ever need or use. You can of course customize which apps are removed by this script by editing the apps list found in the 'Win10Debloat.ps1' file.
+By default, this script only removes preinstalled apps that most people are unlikely to ever need or use. You can of course customize which apps are removed by this script by editing the apps list found in the 'Win10Debloat.ps1' file.
 
 ### These apps will be deleted by default
 
@@ -150,12 +151,12 @@ By default, this script only removes apps that most people are unlikely to ever 
 - Microsoft.XboxSpeechToTextOverlay (NOTE: This app cannot be reinstalled from the microsoft store!)
 - Microsoft.YourPhone
 
-## Declutter Windows 10/11
+## Improve your Windows 10/11 experience
 
-This script can also make various changes to declutter windows 10/11, such as:
+This script can also make various changes to declutter & improve your overall windows 10/11 experience, and protect your privacy. These changes include:
 
 - Disable telemetry, diagnostic data & targeted ads.
-- Disable bing & cortana in windows search.
+- Disable bing search, bing AI & cortana in windows search.
 - Disable tips & tricks on the lockscreen. (This changes your lockscreen wallpaper to the windows default)
 - Disable tips, tricks and suggestions in the startmenu and settings, and sync provider ads in windows explorer.
 - Hide the chat (meet now) icon on the taskbar.
@@ -167,4 +168,4 @@ This script can also make various changes to declutter windows 10/11, such as:
 - Disable the 'Give access to' option in the context menu.
 - Disable the 'Share' from context menu. (Does not remove the onedrive share option)
 
-All of these changes can be reverted with the registry files that are included in the 'Regfiles' folder.
+All of these changes can be individually reverted with the registry files that are included in the 'Regfiles' folder.

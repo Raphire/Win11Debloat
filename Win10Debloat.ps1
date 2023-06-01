@@ -24,7 +24,7 @@ param
 
 # Removes all apps in the list
 function RemoveApps {
-    Write-Output "> Removing pre-installed windows 10 apps..."
+    Write-Output "> Removing pre-installed windows apps..."
 
     $apps = @(
         # These apps will be uninstalled by default:
@@ -164,7 +164,7 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
                 Write-Output "-------------------------------------------------------------------------------------------"
                 Write-Output "- Remove bloatware apps, full list can be found on github. (github.com/raphire/win10debloat)"
                 Write-Output "- Disable telemetry, diagnostic data & targeted ads."
-                Write-Output "- Disable bing & cortana in windows search."
+                Write-Output "- Disable bing search & cortana in windows search."
                 Write-Output "- Disable tips & tricks on the lockscreen. (This may change your lockscreen wallpaper to the default)"
                 Write-Output "- Disable tips, tricks and suggestions in the startmenu and settings, and ads in windows explorer."
                 Write-Output "- Hide the Chat (meet now) & Widget (news and interests) icons from the taskbar."
@@ -178,7 +178,7 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
                 Write-Output "-------------------------------------------------------------------------------------------"
                 Write-Output "- Remove bloatware apps, full list can be found on github. (github.com/raphire/win10debloat)"
                 Write-Output "- Disable telemetry, diagnostic data & targeted ads."
-                Write-Output "- Disable bing & cortana in windows search."
+                Write-Output "- Disable bing search, bing AI & cortana in windows search."
                 Write-Output "- Disable tips & tricks on the lockscreen. (This may change your lockscreen wallpaper to the default)"
                 Write-Output "- Disable tips, tricks and suggestions in the startmenu and settings, and ads in windows explorer."
                 Write-Output "- Hide the Chat & Widget icons from the taskbar."
@@ -231,7 +231,7 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
             Write-Output " Win10Debloat Script - Custom Configuration"
             Write-Output "-------------------------------------------------------------------------------------------"
 
-            if ($( Read-Host -Prompt "Remove the pre-installed windows 10 apps? (y/n)" ) -eq 'y') {
+            if ($( Read-Host -Prompt "Remove the pre-installed windows apps? (y/n)" ) -eq 'y') {
                 $PSBoundParameters.Add('RemoveApps', $RemoveApps)   
             }
 
@@ -239,7 +239,7 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
                 $PSBoundParameters.Add('DisableTelemetry', $DisableTelemetry)   
             }
 
-            if ($( Read-Host -Prompt "Disable bing & cortana in windows search? (y/n)" ) -eq 'y') {
+            if ($( Read-Host -Prompt "Disable bing search, bing AI & cortana in windows search? (y/n)" ) -eq 'y') {
                 $PSBoundParameters.Add('DisableBing', $DisableBing)   
             }
 
@@ -266,26 +266,32 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
                     $PSBoundParameters.Add('DisableOnedrive', $DisableOnedrive)   
                 }
 
-                if ($( Read-Host -Prompt "Hide the 3D objects folder in windows explorer? (y/n)" ) -eq 'y') {
-                    $PSBoundParameters.Add('Disable3dObjects', $Disable3dObjects)   
-                }
+                # Only show option for disabling these specific folders in windows 10
+                if (get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'"){
+                    if ($( Read-Host -Prompt "Hide the 3D objects folder in windows explorer? (y/n)" ) -eq 'y') {
+                        $PSBoundParameters.Add('Disable3dObjects', $Disable3dObjects)   
+                    }
 
-                if ($( Read-Host -Prompt "Hide the music folder in windows explorer? (y/n)" ) -eq 'y') {
-                    $PSBoundParameters.Add('DisableMusic', $DisableMusic)   
+                    if ($( Read-Host -Prompt "Hide the music folder in windows explorer? (y/n)" ) -eq 'y') {
+                        $PSBoundParameters.Add('DisableMusic', $DisableMusic)   
+                    }
                 }
             }
 
-            if ($( Read-Host -Prompt "Do you want to disable any context menu options? (y/n)" ) -eq 'y') {
-                if ($( Read-Host -Prompt "Disable the 'Include in library' option in the context menu? (y/n)" ) -eq 'y') {
-                    $PSBoundParameters.Add('DisableIncludeInLibrary', $DisableIncludeInLibrary)   
-                }
+            # Only show option for disabling context menu items in windows 10
+            if (get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'"){
+                if ($( Read-Host -Prompt "Do you want to disable any context menu options? (y/n)" ) -eq 'y') {
+                    if ($( Read-Host -Prompt "Disable the 'Include in library' option in the context menu? (y/n)" ) -eq 'y') {
+                        $PSBoundParameters.Add('DisableIncludeInLibrary', $DisableIncludeInLibrary)   
+                    }
 
-                if ($( Read-Host -Prompt "Disable the 'Give access to' option in the context menu? (y/n)" ) -eq 'y') {
-                    $PSBoundParameters.Add('DisableGiveAccessTo', $DisableGiveAccessTo)   
-                }
+                    if ($( Read-Host -Prompt "Disable the 'Give access to' option in the context menu? (y/n)" ) -eq 'y') {
+                        $PSBoundParameters.Add('DisableGiveAccessTo', $DisableGiveAccessTo)   
+                    }
 
-                if ($( Read-Host -Prompt "Disable the 'Share' option in the context menu? (y/n)" ) -eq 'y') {
-                    $PSBoundParameters.Add('DisableShare', $DisableShare)   
+                    if ($( Read-Host -Prompt "Disable the 'Share' option in the context menu? (y/n)" ) -eq 'y') {
+                        $PSBoundParameters.Add('DisableShare', $DisableShare)   
+                    }
                 }
             }
 
@@ -309,10 +315,10 @@ switch ($PSBoundParameters.Keys) {
         RegImport "> Disabling telemetry, diagnostic data and targeted ads..." $PSScriptRoot\Regfiles\Disable_Telemetry.reg
     }
     'DisableBingSearches' {
-        RegImport "> Disabling bing & cortana in windows search..." $PSScriptRoot\Regfiles\Disable_Bing_Cortana_In_Search.reg
+        RegImport "> Disabling bing search, bing AI & cortana in windows search..." $PSScriptRoot\Regfiles\Disable_Bing_Cortana_In_Search.reg
     }
     'DisableBing' {
-        RegImport "> Disabling bing & cortana in windows search..." $PSScriptRoot\Regfiles\Disable_Bing_Cortana_In_Search.reg
+        RegImport "> Disabling bing search, bing AI & cortana in windows search..." $PSScriptRoot\Regfiles\Disable_Bing_Cortana_In_Search.reg
     }
     'DisableLockscreenTips' {
         RegImport "> Disabling tips & tricks on the lockscreen..." $PSScriptRoot\Regfiles\Disable_Lockscreen_Tips.reg

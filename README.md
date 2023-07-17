@@ -15,7 +15,8 @@ You can pick and choose exactly which modifications you want the script to make,
 - Disable bing search & cortana in windows search.
 - Disable tips & tricks on the lockscreen. (This may change your lockscreen wallpaper to the windows default)
 - Disable tips, tricks and suggestions in the startmenu and settings, and sync provider ads in windows explorer.
-- Hide the Chat (meet now) & Widget (news and interests) icons from the taskbar.
+- Disable the widget service & hide the widget (news and interests) icon on the taskbar. 
+- Hide the Chat (meet now) icon from the taskbar.
 - Hide the 3D objects folder under 'This pc' in windows explorer.
 - Disable the 'Include in library' from context menu.
 - Disable the 'Give access to' from context menu.
@@ -28,7 +29,8 @@ You can pick and choose exactly which modifications you want the script to make,
 - Disable bing search, bing AI & cortana in windows search.
 - Disable tips & tricks on the lockscreen. (This may change your lockscreen wallpaper to the windows default)
 - Disable tips, tricks and suggestions in the startmenu and settings, and sync provider ads in windows explorer.
-- Hide the Chat & Widget icons from the taskbar.
+- Disable the widget service & hide the widget icon on the taskbar. 
+- Hide the Chat icon from the taskbar.
 
 ## The 'Custom' option allows you to customize the script to your exact needs
 A full list of what changes this script can make can be found [here](https://github.com/Raphire/Win10Debloat#improve-your-windows-1011-experience). 
@@ -67,8 +69,9 @@ To run the script without any user input, simply add parameters at the end, exam
 | -DisableBing                  |    Disable bing search, bing AI & cortana in windows search. |
 | -DisableLockscreenTips        |    Disable tips & tricks on the lockscreen. |
 | -DisableSuggestions           |    Disable tips, tricks and suggestions in the startmenu and settings, and sync provider ads in windows explorer. |
+| -TaskbarAlignLeft             |    Align taskbar icons to the left. (Windows 11 only) |
+| -DisableWidgets               |    Disable the widget service & hide the widget (news and interests) icon on the taskbar. |
 | -DisableChat                  |    Hide the chat (meet now) icon on the taskbar. |
-| -DisableWidgets               |    Hide the widget (news and interests) icon on the taskbar. |
 | -DisableOnedrive              |    Hide the onedrive folder in the windows explorer sidepanel. |
 | -Disable3dObjects             |    Hide the 3D objects folder under 'This pc' in windows explorer. |
 | -DisableMusic                 |    Hide the music folder under 'This pc' in windows explorer. |
@@ -153,19 +156,20 @@ By default, this script only removes preinstalled apps that most people are unli
 
 ## Improve your Windows 10/11 experience
 
-This script can also make various changes to declutter & improve your overall windows 10/11 experience, and protect your privacy. These changes include:
+This script can also make various changes to declutter & improve your overall windows 10/11 experience, and protect your privacy. Such as:
 
 - Disable telemetry, diagnostic data & targeted ads.
 - Disable bing search, bing AI & cortana in windows search.
 - Disable tips & tricks on the lockscreen. (This changes your lockscreen wallpaper to the windows default)
 - Disable tips, tricks and suggestions in the startmenu and settings, and sync provider ads in windows explorer.
+- Align taskbar icons to the left. (Windows 11 only)
+- Disable the widget service & hide the widget (news and interests) icon on the taskbar.
 - Hide the chat (meet now) icon on the taskbar.
-- Hide the widget (news and interests) icon on the taskbar.
-- Hide the onedrive folder in the windows explorer sidepanel.
-- Hide the 3D objects folder under 'This pc' in windows explorer.
-- Hide the music folder under 'This pc' in windows explorer.
-- Disable the 'Include in library' option in the context menu.
-- Disable the 'Give access to' option in the context menu.
-- Disable the 'Share' from context menu. (Does not remove the onedrive share option)
+- Hide the onedrive folder in the windows explorer sidepanel. (Windows 10 only)
+- Hide the 3D objects folder under 'This pc' in windows explorer. (Windows 10 only)
+- Hide the music folder under 'This pc' in windows explorer. (Windows 10 only)
+- Disable the 'Include in library' option in the context menu. (Windows 10 only)
+- Disable the 'Give access to' option in the context menu. (Windows 10 only)
+- Disable the 'Share' from context menu. (Windows 10 only)
 
 All of these changes can be individually reverted with the registry files that are included in the 'Regfiles' folder.

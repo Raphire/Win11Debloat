@@ -12,8 +12,9 @@ param
     [Parameter(ValueFromPipeline = $true)][switch]$DisableLockscreenTips,
     [Parameter(ValueFromPipeline = $true)][switch]$DisableWindowsSuggestions,
     [Parameter(ValueFromPipeline = $true)][switch]$DisableSuggestions,
-    [Parameter(ValueFromPipeline = $true)][switch]$DisableChat,
     [Parameter(ValueFromPipeline = $true)][switch]$DisableWidgets,
+    [Parameter(ValueFromPipeline = $true)][switch]$DisableChat,
+    [Parameter(ValueFromPipeline = $true)][switch]$TaskbarAlignLeft,
     [Parameter(ValueFromPipeline = $true)][switch]$DisableOnedrive,
     [Parameter(ValueFromPipeline = $true)][switch]$Disable3dObjects,
     [Parameter(ValueFromPipeline = $true)][switch]$DisableMusic,
@@ -167,7 +168,8 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
                 Write-Output "- Disable bing search & cortana in windows search."
                 Write-Output "- Disable tips & tricks on the lockscreen. (This may change your lockscreen wallpaper to the default)"
                 Write-Output "- Disable tips, tricks and suggestions in the startmenu and settings, and ads in windows explorer."
-                Write-Output "- Hide the Chat (meet now) & Widget (news and interests) icons from the taskbar."
+                Write-Output "- Disable the widget service & hide the widget (news and interests) icon on the taskbar. "
+                Write-Output "- Hide the Chat (meet now) icon from the taskbar."
                 Write-Output "- Hide the 3D objects folder under 'This pc' in windows explorer."
                 Write-Output "- Disable the 'Include in library' from context menu."
                 Write-Output "- Disable the 'Give access to' from context menu."
@@ -181,7 +183,8 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
                 Write-Output "- Disable bing search, bing AI & cortana in windows search."
                 Write-Output "- Disable tips & tricks on the lockscreen. (This may change your lockscreen wallpaper to the default)"
                 Write-Output "- Disable tips, tricks and suggestions in the startmenu and settings, and ads in windows explorer."
-                Write-Output "- Hide the Chat & Widget icons from the taskbar."
+                Write-Output "- Disable the widget service & hide the widget icon on the taskbar."
+                Write-Output "- Hide the Chat icon from the taskbar."
                 Write-Output ""
                 Write-Output ""
                 Write-Output "Press any key to go back..."
@@ -235,44 +238,78 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
                 $PSBoundParameters.Add('RemoveApps', $RemoveApps)   
             }
 
+            Write-Output ""
+
             if ($( Read-Host -Prompt "Disable telemetry, diagnostic data and targeted ads? (y/n)" ) -eq 'y') {
                 $PSBoundParameters.Add('DisableTelemetry', $DisableTelemetry)   
             }
+
+            Write-Output ""
 
             if ($( Read-Host -Prompt "Disable bing search, bing AI & cortana in windows search? (y/n)" ) -eq 'y') {
                 $PSBoundParameters.Add('DisableBing', $DisableBing)   
             }
 
+            Write-Output ""
+
             if ($( Read-Host -Prompt "Disable tips & tricks on the lockscreen? (y/n)" ) -eq 'y') {
                 $PSBoundParameters.Add('DisableLockscreenTips', $DisableLockscreenTips)   
             } 
+
+            Write-Output ""
 
             if ($( Read-Host -Prompt "Disable tips, tricks and suggestions in the startmenu and settings, and ads in windows explorer? (y/n)" ) -eq 'y') {
                 $PSBoundParameters.Add('DisableSuggestions', $DisableSuggestions)   
             }
 
-            if ($( Read-Host -Prompt "Do you want to hide any icons from the taskbar? (y/n)" ) -eq 'y') {
-                if ($( Read-Host -Prompt "Hide the chat (meet now) icon on the taskbar? (y/n)" ) -eq 'y') {
-                    $PSBoundParameters.Add('DisableChat', $DisableChat)   
+            Write-Output ""
+
+            if ($( Read-Host -Prompt "Do you want to make any changes to the taskbar? (y/n)" ) -eq 'y') {
+                # Only show option for taskbar alignment in windows 11
+                if (get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 11%'"){
+
+                    Write-Output ""
+
+                    if ($( Read-Host -Prompt "   Align taskbar buttons to left side? (y/n)" ) -eq 'y') {
+                        $PSBoundParameters.Add('TaskbarAlignLeft', $TaskbarAlignLeft)   
+                    }
                 }
 
-                if ($( Read-Host -Prompt "Hide the widget (news and interests) icon on the taskbar? (y/n)" ) -eq 'y') {
+                Write-Output ""
+
+                if ($( Read-Host -Prompt "   Disable the widgets service and hide the widget (news and interests) icon on the taskbar? (y/n)" ) -eq 'y') {
                     $PSBoundParameters.Add('DisableWidgets', $DisableWidgets)   
+                }
+
+                Write-Output ""
+
+                if ($( Read-Host -Prompt "   Hide the chat (meet now) icon on the taskbar? (y/n)" ) -eq 'y') {
+                    $PSBoundParameters.Add('DisableChat', $DisableChat)   
                 }
             }
 
-            if ($( Read-Host -Prompt "Do you want to hide any folders from the windows explorer sidepanel? (y/n)" ) -eq 'y') {
-                if ($( Read-Host -Prompt "Hide the onedrive folder in windows explorer? (y/n)" ) -eq 'y') {
-                    $PSBoundParameters.Add('DisableOnedrive', $DisableOnedrive)   
-                }
+            # Only show option for disabling these specific folders in windows 10
+            if (get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'"){
 
-                # Only show option for disabling these specific folders in windows 10
-                if (get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'"){
-                    if ($( Read-Host -Prompt "Hide the 3D objects folder in windows explorer? (y/n)" ) -eq 'y') {
-                        $PSBoundParameters.Add('Disable3dObjects', $Disable3dObjects)   
+                Write-Output ""
+
+                if ($( Read-Host -Prompt "Do you want to hide any folders from the windows explorer sidepanel? (y/n)" ) -eq 'y') {
+
+                    Write-Output ""
+
+                    if ($( Read-Host -Prompt "   Hide the onedrive folder in windows explorer? (y/n)" ) -eq 'y') {
+                        $PSBoundParameters.Add('DisableOnedrive', $DisableOnedrive)   
                     }
 
-                    if ($( Read-Host -Prompt "Hide the music folder in windows explorer? (y/n)" ) -eq 'y') {
+                    Write-Output ""
+                    
+                    if ($( Read-Host -Prompt "   Hide the 3D objects folder in windows explorer? (y/n)" ) -eq 'y') {
+                        $PSBoundParameters.Add('Disable3dObjects', $Disable3dObjects)   
+                    }
+                    
+                    Write-Output ""
+
+                    if ($( Read-Host -Prompt "   Hide the music folder in windows explorer? (y/n)" ) -eq 'y') {
                         $PSBoundParameters.Add('DisableMusic', $DisableMusic)   
                     }
                 }
@@ -280,16 +317,26 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
 
             # Only show option for disabling context menu items in windows 10
             if (get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'"){
+
+                Write-Output ""
+
                 if ($( Read-Host -Prompt "Do you want to disable any context menu options? (y/n)" ) -eq 'y') {
-                    if ($( Read-Host -Prompt "Disable the 'Include in library' option in the context menu? (y/n)" ) -eq 'y') {
+
+                    Write-Output ""
+
+                    if ($( Read-Host -Prompt "   Disable the 'Include in library' option in the context menu? (y/n)" ) -eq 'y') {
                         $PSBoundParameters.Add('DisableIncludeInLibrary', $DisableIncludeInLibrary)   
                     }
 
-                    if ($( Read-Host -Prompt "Disable the 'Give access to' option in the context menu? (y/n)" ) -eq 'y') {
+                    Write-Output ""
+
+                    if ($( Read-Host -Prompt "   Disable the 'Give access to' option in the context menu? (y/n)" ) -eq 'y') {
                         $PSBoundParameters.Add('DisableGiveAccessTo', $DisableGiveAccessTo)   
                     }
 
-                    if ($( Read-Host -Prompt "Disable the 'Share' option in the context menu? (y/n)" ) -eq 'y') {
+                    Write-Output ""
+
+                    if ($( Read-Host -Prompt "   Disable the 'Share' option in the context menu? (y/n)" ) -eq 'y') {
                         $PSBoundParameters.Add('DisableShare', $DisableShare)   
                     }
                 }
@@ -329,11 +376,14 @@ switch ($PSBoundParameters.Keys) {
     'DisableSuggestions' {
         RegImport "> Disabling tips, tricks and suggestions in the startmenu and settings, and ads in windows explorer..." $PSScriptRoot\Regfiles\Disable_Windows_Suggestions.reg
     }
-    'DisableChat' {
-        RegImport "> Hiding the chat icon on the taskbar..." $PSScriptRoot\Regfiles\Disable_Chat_Taskbar.reg
+    'TaskbarAlignLeft' {
+        RegImport "> Aligning taskbar buttons to the left..." $PSScriptRoot\Regfiles\Align_Taskbar_Left.reg
     }
     'DisableWidgets' {
-        RegImport "> Hiding the widget icon on the taskbar..." $PSScriptRoot\Regfiles\Disable_Widgets_Taskbar.reg
+        RegImport "> Disabling the widget service and hiding the widget icon on the taskbar..." $PSScriptRoot\Regfiles\Disable_Widgets_Taskbar.reg
+    }
+    'DisableChat' {
+        RegImport "> Hiding the chat icon on the taskbar..." $PSScriptRoot\Regfiles\Disable_Chat_Taskbar.reg
     }
     'DisableOnedrive' {
         RegImport "> Hiding the onedrive folder in windows explorer..." $PSScriptRoot\Regfiles\Hide_Onedrive_Folder.reg
@@ -355,6 +405,7 @@ switch ($PSBoundParameters.Keys) {
     }
 }
 
+Write-Output ""
 Write-Output ""
 Write-Output "Script completed! Please restart your PC to make sure all changes are properly applied."
 Write-Output ""

@@ -1,16 +1,16 @@
 # Win10Debloat
 
-Win10Debloat is a simple and lightweight powershell script that removes pre-installed windows 10/11 bloatware apps, disables telemetry and declutters the experience by disabling or removing intrusive interface elements, ads and context menu items. No need to painstakingly go through all the settings yourself, or removing apps one by one. Win10Debloat makes the process quick and simple!
+Win10Debloat is a simple and lightweight powershell script that removes pre-installed windows bloatware apps, disables telemetry and declutters the experience by disabling or removing intrusive interface elements, ads and context menu items. No need to painstakingly go through all the settings yourself, or removing apps one by one. Win10Debloat makes the process quick and simple!
 
 You can pick and choose exactly which modifications you want the script to make, or use the default settings for your specific windows version which should be fine for most people. If you are unhappy with any of the changes you can easily revert them by using the registry files that are included in the 'Regfiles' folder, and all of the apps that are removed by default can be reinstalled from the microsoft store.
 
-#### Did my script help you? Please consider buying me a cup of coffee to support my work
+#### Did this script help you? Please consider buying me a cup of coffee to support my work
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/M4M5C6UPC)
 
 ## The windows 10 default settings will
 
-- Remove all bloatware apps from [this list](#these-apps-will-be-deleted-by-default).
+- Remove all bloatware apps from [this list](#click-here-to-see-what-microsoft-apps-will-be-removed).
 - Disable telemetry, diagnostic data & targeted ads.
 - Disable bing search & cortana in windows search.
 - Disable tips & tricks on the lockscreen. (This may change your lockscreen wallpaper to the windows default)
@@ -18,13 +18,11 @@ You can pick and choose exactly which modifications you want the script to make,
 - Disable the widget service & hide the widget (news and interests) icon on the taskbar. 
 - Hide the Chat (meet now) icon from the taskbar.
 - Hide the 3D objects folder under 'This pc' in windows explorer.
-- Disable the 'Include in library' from context menu.
-- Disable the 'Give access to' from context menu.
-- Disable the 'Share' from context menu. (Does not remove the onedrive share option)
+- Hide the 'Include in library', 'Give access to' and 'Share' options in the context menu.
 
 ## The windows 11 default settings will
 
-- Remove all bloatware apps from [this list](#these-apps-will-be-deleted-by-default).
+- Remove all bloatware apps from [this list](#click-here-to-see-what-microsoft-apps-will-be-removed).
 - Disable telemetry, diagnostic data & targeted ads.
 - Disable bing search, bing AI & cortana in windows search.
 - Disable tips & tricks on the lockscreen. (This may change your lockscreen wallpaper to the windows default)
@@ -64,7 +62,7 @@ To run the script without any user input, simply add parameters at the end, exam
 | --------- | ----------- |
 | -RunDefaults                  |    Run the script with windows 10 default settings. |
 | -RunWin11Defaults             |    Run the script with windows 11 default settings. |
-| -RemoveApps                   |    Remove all bloatware apps from [this list](#these-apps-will-be-deleted-by-default). |
+| -RemoveApps                   |    Remove all bloatware apps from [this list](#click-here-to-see-what-microsoft-apps-will-be-removed). |
 | -DisableTelemetry             |    Disable telemetry, diagnostic data & targeted ads. |
 | -DisableBing                  |    Disable bing search, bing AI & cortana in windows search. |
 | -DisableLockscreenTips        |    Disable tips & tricks on the lockscreen. |
@@ -79,84 +77,134 @@ To run the script without any user input, simply add parameters at the end, exam
 | -DisableGiveAccessTo          |    Disable the 'Give access to' option in the context menu. |
 | -DisableShare                 |    Disable the 'Share' option in the context menu. |
 
-## Debloat Windows 10/11
+## Debloat Windows
 
-By default, this script only removes preinstalled apps that most people are unlikely to ever need or use. You can of course customize which apps are removed by this script by editing the apps list found in the 'Win10Debloat.ps1' file.
+By default, this script removes a large selection preinstalled apps that most people are unlikely to ever need or use. All apps that are removed can easily be reinstalled through the microsoft store. You can of course customize which apps are removed by this script by editing the apps list found in the 'Win10Debloat.ps1' file.
 
-### These apps will be deleted by default
+<details>
+  <summary><h4>Click here to see what microsoft apps will be removed</h4></summary>
+  <blockquote>
+    
+    - Microsoft.3DBuilder  
+    - Microsoft.549981C3F5F10 (Cortana app)
+    - Microsoft.Asphalt8Airborne  
+    - Microsoft.BingFinance  
+    - Microsoft.BingFoodAndDrink-     
+    - Microsoft.BingHealthAndFitness-  
+    - Microsoft.BingNews  
+    - Microsoft.BingSports  
+    - Microsoft.BingTranslator  
+    - Microsoft.BingTravel   
+    - Microsoft.BingWeather  
+    - Microsoft.GetHelp  
+    - Microsoft.Getstarted (Cannot be uninstalled in Windows 11)
+    - Microsoft.Messaging  
+    - Microsoft.Microsoft3DViewer  
+    - Microsoft.MicrosoftOfficeHub  
+    - Microsoft.MicrosoftPowerBIForWindows  
+    - Microsoft.MicrosoftSolitaireCollection  
+    - Microsoft.MicrosoftStickyNotes  
+    - Microsoft.MixedReality.Portal  
+    - Microsoft.NetworkSpeedTest  
+    - Microsoft.News  
+    - Microsoft.Office.OneNote  
+    - Microsoft.Office.Sway  
+    - Microsoft.OneConnect  
+    - Microsoft.Print3D  
+    - Microsoft.RemoteDesktop  
+    - Microsoft.SkypeApp  
+    - Microsoft.Todos  
+    - Microsoft.WindowsAlarms  
+    - Microsoft.WindowsFeedbackHub  
+    - Microsoft.WindowsMaps  
+    - Microsoft.WindowsSoundRecorder  
+    - Microsoft.ZuneMusic  
+    - Microsoft.ZuneVideo  
+    - MicrosoftTeams  
+  </blockquote>
+</details>
 
-- AdobeSystemsIncorporated.AdobePhotoshopExpress
-- Clipchamp.Clipchamp
-- Dolby
-- Duolingo-LearnLanguagesforFree
-- Facebook
-- Flipboard
-- HULULLC.HULUPLUS
-- Microsoft.3DBuilder
-- Microsoft.549981C3F5F10 (Cortana)
-- Microsoft.Asphalt8Airborne
-- Microsoft.BingFinance
-- Microsoft.BingNews
-- Microsoft.BingSports
-- Microsoft.BingTranslator
-- Microsoft.BingWeather
-- Microsoft.GetHelp
-- Microsoft.Getstarted
-- Microsoft.Messaging
-- Microsoft.Microsoft3DViewer
-- Microsoft.MicrosoftOfficeHub
-- Microsoft.MicrosoftSolitaireCollection
-- Microsoft.MicrosoftStickyNotes
-- Microsoft.MixedReality.Portal
-- Microsoft.NetworkSpeedTest
-- Microsoft.News
-- Microsoft.Office.OneNote
-- Microsoft.Office.Sway
-- Microsoft.OneConnect
-- Microsoft.Print3D
-- Microsoft.RemoteDesktop
-- Microsoft.SkypeApp
-- Microsoft.Todos
-- Microsoft.WindowsAlarms
-- Microsoft.WindowsFeedbackHub
-- Microsoft.WindowsMaps
-- Microsoft.WindowsSoundRecorder
-- Microsoft.ZuneMusic
-- Microsoft.ZuneVideo
-- PandoraMediaInc
-- Picsart-Photostudio
-- Royal Revolt
-- Speed test
-- Spotify
-- Twitter
-- Wunderlist
-- king.com.BubbleWitch3Saga
-- king.com.CandyCrushSaga
-- king.com.CandyCrushSodaSaga
+<details>
+  <summary><h4>Click here to see what third party apps will be removed</h4></summary>
+  <blockquote>
+  
+    - ACGMediaPlayer  
+    - ActiproSoftwareLLC  
+    - AdobeSystemsIncorporated.AdobePhotoshopExpress  
+    - Amazon.com.Amazon  
+    - Asphalt8Airborne   
+    - AutodeskSketchBook  
+    - CaesarsSlotsFreeCasino  
+    - Clipchamp.Clipchamp  
+    - COOKINGFEVER  
+    - CyberLinkMediaSuiteEssentials  
+    - DisneyMagicKingdoms  
+    - Dolby  
+    - DrawboardPDF  
+    - Duolingo-LearnLanguagesforFree  
+    - EclipseManager  
+    - Facebook  
+    - FarmVille2CountryEscape  
+    - fitbit  
+    - Flipboard  
+    - HiddenCity  
+    - HULULLC.HULUPLUS  
+    - iHeartRadio  
+    - king.com.BubbleWitch3Saga  
+    - king.com.CandyCrushSaga  
+    - king.com.CandyCrushSodaSaga  
+    - LinkedInforWindows  
+    - MarchofEmpires  
+    - Netflix  
+    - NYTCrossword  
+    - OneCalendar  
+    - PandoraMediaInc  
+    - PhototasticCollage  
+    - PicsArt-PhotoStudio  
+    - Plex  
+    - PolarrPhotoEditorAcademicEdition  
+    - Royal Revolt  
+    - Shazam  
+    - Sidia.LiveWallpaper  
+    - SlingTV  
+    - Speed Test  
+    - Spotify  
+    - TuneInRadio  
+    - Twitter  
+    - Viber  
+    - WinZipUniversal  
+    - Wunderlist  
+    - XING
+  </blockquote>
+</details>
 
-### These apps will NOT be deleted by default
+<details>
+  <summary><h4>Click here to see what apps will NOT be removed</h4></summary>
+  <blockquote>
+    
+    - Microsoft.GamingApp
+    - Microsoft.MSPaint (Paint 3D)
+    - Microsoft.People
+    - Microsoft.PowerAutomateDesktop
+    - Microsoft.ScreenSketch
+    - Microsoft.Windows.Photos
+    - Microsoft.WindowsCalculator
+    - Microsoft.WindowsCamera
+    - microsoft.windowscommunicationsapps (Mail & Calendar)
+    - Microsoft.WindowsStore (NOTE: This app cannot be reinstalled!)
+    - Microsoft.Xbox.TCUI
+    - Microsoft.XboxApp
+    - Microsoft.XboxGameOverlay
+    - Microsoft.XboxGamingOverlay
+    - Microsoft.XboxIdentityProvider
+    - Microsoft.XboxSpeechToTextOverlay (NOTE: This app cannot be reinstalled from the microsoft store!)
+    - Microsoft.YourPhone
+  </blockquote>
+</details>
 
-- Microsoft.GamingApp
-- Microsoft.MSPaint (Paint 3D)
-- Microsoft.People
-- Microsoft.PowerAutomateDesktop
-- Microsoft.ScreenSketch
-- Microsoft.Windows.Photos
-- Microsoft.WindowsCalculator
-- Microsoft.WindowsCamera
-- microsoft.windowscommunicationsapps (Mail & Calendar)
-- Microsoft.WindowsStore (NOTE: This app cannot be reinstalled!)
-- Microsoft.Xbox.TCUI
-- Microsoft.XboxApp
-- Microsoft.XboxGameOverlay
-- Microsoft.XboxGamingOverlay
-- Microsoft.XboxIdentityProvider
-- Microsoft.XboxSpeechToTextOverlay (NOTE: This app cannot be reinstalled from the microsoft store!)
-- Microsoft.YourPhone
+## Improve your Windows experience
 
-## Improve your Windows 10/11 experience
-
-This script can also make various changes to declutter & improve your overall windows 10/11 experience, and protect your privacy. Such as:
+This script can also make various changes to declutter & improve your overall windows experience, and protect your privacy. Such as:
 
 - Disable telemetry, diagnostic data & targeted ads.
 - Disable bing search, bing AI & cortana in windows search.
@@ -166,10 +214,7 @@ This script can also make various changes to declutter & improve your overall wi
 - Disable the widget service & hide the widget (news and interests) icon on the taskbar.
 - Hide the chat (meet now) icon on the taskbar.
 - Hide the onedrive folder in the windows explorer sidepanel. (Windows 10 only)
-- Hide the 3D objects folder under 'This pc' in windows explorer. (Windows 10 only)
-- Hide the music folder under 'This pc' in windows explorer. (Windows 10 only)
-- Disable the 'Include in library' option in the context menu. (Windows 10 only)
-- Disable the 'Give access to' option in the context menu. (Windows 10 only)
-- Disable the 'Share' from context menu. (Windows 10 only)
+- Hide the 3D objects and/or music folders under 'This pc' in windows explorer. (Windows 10 only)
+- Hide the 'Include in library', 'Give access to' and 'Share' options in the context menu. (Windows 10 only)
 
 All of these changes can be individually reverted with the registry files that are included in the 'Regfiles' folder.

@@ -65,7 +65,6 @@ function RemoveApps {
         "*Microsoft.WindowsFeedbackHub*"
         "*Microsoft.WindowsMaps*"
         "*Microsoft.WindowsSoundRecorder*"
-        "*Microsoft.ZuneMusic*"
         "*Microsoft.ZuneVideo*"
         "*MicrosoftTeams*"
 
@@ -123,24 +122,25 @@ function RemoveApps {
         # 
         # If you wish to REMOVE any of the apps below simply remove the # character
         # in front of the specific app in the list below.
-        #"*Microsoft.GamingApp*"
-        #"*Microsoft.MSPaint*"   # Paint 3D
-        #"*Microsoft.People*"
+        #"*Microsoft.GamingApp*"                    # Modern Xbox Gaming App, required for installing some PC games
+        #"*Microsoft.MSPaint*"                      # Paint 3D
+        #"*Microsoft.People*"                       # Required with Mail & Calendar
         #"*Microsoft.PowerAutomateDesktop*"
-        #"*Microsoft.ScreenSketch*"
-        #"*Microsoft.Whiteboard*"
+        #"*Microsoft.ScreenSketch*"                 # Snipping Tool
+        #"*Microsoft.Whiteboard*"                   # Only preinstalled on devices with touchscreen and/or pen support
         #"*Microsoft.Windows.Photos*"
         #"*Microsoft.WindowsCalculator*"
         #"*Microsoft.WindowsCamera*"
-        #"*Microsoft.WindowsStore*"   # NOTE: This app cannot be reinstalled!
+        #"*Microsoft.windowscommunicationsapps*"    # Mail & Calendar
+        #"*Microsoft.WindowsStore*"                 # Microsoft Store, WARNING: This app cannot be reinstalled!
         #"*Microsoft.Xbox.TCUI*"
-        #"*Microsoft.XboxApp*"
+        #"*Microsoft.XboxApp*"                      # Old Xbox Console Companion App, no longer preinstalled
         #"*Microsoft.XboxGameOverlay*"
         #"*Microsoft.XboxGamingOverlay*"
         #"*Microsoft.XboxIdentityProvider*"
-        #"*Microsoft.XboxSpeechToTextOverlay*"   # NOTE: This app may not be able to be reinstalled!
-        #"*Microsoft.YourPhone*"
-        #"*microsoft.windowscommunicationsapps*"   # Mail & Calendar
+        #"*Microsoft.XboxSpeechToTextOverlay*"      # WARNING: This app cannot be reinstalled!
+        #"*Microsoft.YourPhone*"                    # Phone link
+        #"*Microsoft.ZuneMusic*"                    # Modern Media Player
     )
 
     foreach ($app in $apps) {

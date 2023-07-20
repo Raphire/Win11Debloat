@@ -1,8 +1,8 @@
 # Win10Debloat
 
-Win10Debloat is a simple and lightweight powershell script that removes pre-installed windows bloatware apps, disables telemetry and declutters the experience by disabling or removing intrusive interface elements, ads and context menu items. No need to painstakingly go through all the settings yourself, or removing apps one by one. Win10Debloat makes the process quick and simple!
+Win10Debloat is a simple and lightweight powershell script that removes pre-installed windows bloatware apps, disables telemetry and declutters the experience by disabling or removing intrusive interface elements, ads and context menu items. No need to painstakingly go through all the settings yourself, or remove apps one by one. Win10Debloat makes the process quick and simple!
 
-You can pick and choose exactly which modifications you want the script to make, or use the default settings for your specific windows version which should be fine for most people. If you are unhappy with any of the changes you can easily revert them by using the registry files that are included in the 'Regfiles' folder, and all of the apps that are removed by default can be reinstalled from the microsoft store.
+You can pick and choose exactly which modifications you want the script to make, or use the default settings for your specific windows version. If you are unhappy with any of the changes you can easily revert them by using the registry files that are included in the 'Regfiles' folder, all of the apps that are removed can be reinstalled from the Microsoft store.
 
 #### Did this script help you? Please consider buying me a cup of coffee to support my work
 
@@ -10,7 +10,7 @@ You can pick and choose exactly which modifications you want the script to make,
 
 ## The windows 10 default settings will
 
-- Remove all bloatware apps from [this list](#click-here-to-see-what-microsoft-apps-will-be-removed).
+- Remove all bloatware apps from [this list](#click-for-list-of-bloat-that-is-removed).
 - Disable telemetry, diagnostic data & targeted ads.
 - Disable bing search & cortana in windows search.
 - Disable tips & tricks on the lockscreen. (This may change your lockscreen wallpaper to the windows default)
@@ -22,7 +22,7 @@ You can pick and choose exactly which modifications you want the script to make,
 
 ## The windows 11 default settings will
 
-- Remove all bloatware apps from [this list](#click-here-to-see-what-microsoft-apps-will-be-removed).
+- Remove all bloatware apps from [this list](#click-for-list-of-bloat-that-is-removed).
 - Disable telemetry, diagnostic data & targeted ads.
 - Disable bing search, bing AI & cortana in windows search.
 - Disable tips & tricks on the lockscreen. (This may change your lockscreen wallpaper to the windows default)
@@ -31,7 +31,7 @@ You can pick and choose exactly which modifications you want the script to make,
 - Hide the Chat icon from the taskbar.
 
 ## The 'Custom' option allows you to customize the script to your exact needs
-A full list of what changes this script can make can be found [here](https://github.com/Raphire/Win10Debloat#improve-your-windows-1011-experience). 
+A full list of what changes this script can make can be found [here](#improve-your-windows-experience). 
 
 ## Usage
 
@@ -62,7 +62,7 @@ To run the script without any user input, simply add parameters at the end, exam
 | --------- | ----------- |
 | -RunDefaults                  |    Run the script with windows 10 default settings. |
 | -RunWin11Defaults             |    Run the script with windows 11 default settings. |
-| -RemoveApps                   |    Remove all bloatware apps from [this list](#click-here-to-see-what-microsoft-apps-will-be-removed). |
+| -RemoveApps                   |    Remove all bloatware apps from [this list](#click-for-list-of-bloat-that-is-removed). |
 | -DisableTelemetry             |    Disable telemetry, diagnostic data & targeted ads. |
 | -DisableBing                  |    Disable bing search, bing AI & cortana in windows search. |
 | -DisableLockscreenTips        |    Disable tips & tricks on the lockscreen. |
@@ -79,18 +79,19 @@ To run the script without any user input, simply add parameters at the end, exam
 
 ## Debloat Windows
 
-By default, this script removes a large selection preinstalled apps that most people are unlikely to ever need or use. All apps that are removed can easily be reinstalled through the microsoft store. You can of course customize which apps are removed by this script by editing the apps list found in the 'Win10Debloat.ps1' file.
+By default, this script removes a large selection preinstalled bloatware, while preserving actually useful apps like the calculator, mail, mediaplayer and photos. If you do need end up needing any of the removed apps in the future you can easily reinstall them through the Microsoft store. A full list of what is and isn't removed can be found below, but if you're unhappy with the default selection you can customize exactly which apps are removed by the script by editing the apps list found in the ['Win10Debloat.ps1'](https://github.com/Raphire/Win10Debloat/blob/master/Win10Debloat.ps1) file.
 
 <details>
-  <summary><h4>Click here to see what microsoft apps will be removed</h4></summary>
+  <summary><h4>Click for list of bloat that is removed</h4></summary>
   <blockquote>
-    
+
+    Microsoft bloat:
     - Microsoft.3DBuilder  
     - Microsoft.549981C3F5F10 (Cortana app)
     - Microsoft.Asphalt8Airborne  
     - Microsoft.BingFinance  
-    - Microsoft.BingFoodAndDrink-     
-    - Microsoft.BingHealthAndFitness-  
+    - Microsoft.BingFoodAndDrink 
+    - Microsoft.BingHealthAndFitness
     - Microsoft.BingNews  
     - Microsoft.BingSports  
     - Microsoft.BingTranslator  
@@ -120,14 +121,9 @@ By default, this script removes a large selection preinstalled apps that most pe
     - Microsoft.WindowsSoundRecorder  
     - Microsoft.ZuneMusic  
     - Microsoft.ZuneVideo  
-    - MicrosoftTeams  
-  </blockquote>
-</details>
+    - MicrosoftTeams
 
-<details>
-  <summary><h4>Click here to see what third party apps will be removed</h4></summary>
-  <blockquote>
-  
+    Third party bloat:
     - ACGMediaPlayer  
     - ActiproSoftwareLLC  
     - AdobeSystemsIncorporated.AdobePhotoshopExpress  
@@ -179,26 +175,30 @@ By default, this script removes a large selection preinstalled apps that most pe
 </details>
 
 <details>
-  <summary><h4>Click here to see what apps will NOT be removed</h4></summary>
+  <summary><h4>Click for list of what is NOT removed</h4></summary>
   <blockquote>
     
-    - Microsoft.GamingApp
+    Required or useful apps for regular desktop usage:
     - Microsoft.MSPaint (Paint 3D)
-    - Microsoft.People
-    - Microsoft.PowerAutomateDesktop
-    - Microsoft.ScreenSketch
+    - Microsoft.People (Required with Mail & Calendar)
+    - Microsoft.ScreenSketch (Snipping Tool)
+    - Microsoft.Whiteboard (Only preinstalled on devices with touchscreen and/or pen support)
     - Microsoft.Windows.Photos
     - Microsoft.WindowsCalculator
     - Microsoft.WindowsCamera
-    - microsoft.windowscommunicationsapps (Mail & Calendar)
-    - Microsoft.WindowsStore (NOTE: This app cannot be reinstalled!)
+    - Microsoft.windowscommunicationsapps (Mail & Calendar)
+    - Microsoft.WindowsStore (Microsoft Store, NOTE: This app cannot be reinstalled!)
+    - Microsoft.YourPhone (Phone Link)
+    - Microsoft.ZuneMusic (Modern Media Player)
+
+    Required or useful apps for Microsoft store games:
+    - Microsoft.GamingApp (Modern Xbox Gaming App, required for installing some PC games)
     - Microsoft.Xbox.TCUI
-    - Microsoft.XboxApp
+    - Microsoft.XboxApp (Old Xbox Console Companion App)
     - Microsoft.XboxGameOverlay
     - Microsoft.XboxGamingOverlay
     - Microsoft.XboxIdentityProvider
-    - Microsoft.XboxSpeechToTextOverlay (NOTE: This app cannot be reinstalled from the microsoft store!)
-    - Microsoft.YourPhone
+    - Microsoft.XboxSpeechToTextOverlay (NOTE: This app cannot be reinstalled!)
   </blockquote>
 </details>
 

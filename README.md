@@ -69,17 +69,17 @@ To run the script without any user input, simply add parameters at the end, exam
 | -DisableSuggestions           |    Disable tips, tricks and suggestions in the startmenu and settings, and sync provider ads in windows explorer. |
 | -TaskbarAlignLeft             |    Align taskbar icons to the left. (Windows 11 only) |
 | -DisableWidgets               |    Disable the widget service & hide the widget (news and interests) icon on the taskbar. |
-| -DisableChat                  |    Hide the chat (meet now) icon on the taskbar. |
-| -DisableOnedrive              |    Hide the onedrive folder in the windows explorer sidepanel. |
-| -Disable3dObjects             |    Hide the 3D objects folder under 'This pc' in windows explorer. |
-| -DisableMusic                 |    Hide the music folder under 'This pc' in windows explorer. |
-| -DisableIncludeInLibrary      |    Disable the 'Include in library' option in the context menu. |
-| -DisableGiveAccessTo          |    Disable the 'Give access to' option in the context menu. |
-| -DisableShare                 |    Disable the 'Share' option in the context menu. |
+| -HideChat                     |    Hide the chat (meet now) icon on the taskbar. |
+| -HideOnedrive                 |    Hide the onedrive folder in the windows explorer sidepanel. |
+| -Hide3dObjects                |    Hide the 3D objects folder under 'This pc' in windows explorer. |
+| -HideMusic                    |    Hide the music folder under 'This pc' in windows explorer. |
+| -HideIncludeInLibrary         |    Hide the 'Include in library' option in the context menu. |
+| -HideGiveAccessTo             |    Hide the 'Give access to' option in the context menu. |
+| -HideShare                    |    Hide the 'Share' option in the context menu. |
 
 ## Debloat Windows
 
-By default, this script removes a large selection preinstalled bloatware, while preserving actually useful apps like the calculator, mail, mediaplayer and photos. If you do need end up needing any of the removed apps in the future you can easily reinstall them through the Microsoft store. A full list of what is and isn't removed can be found below, but if you're unhappy with the default selection you can customize exactly which apps are removed by the script by editing the apps list found in the ['Win11Debloat.ps1'](https://github.com/Raphire/Win11Debloat/blob/master/Win11Debloat.ps1) file.
+By default, this script removes a large selection preinstalled bloatware, while preserving actually useful apps like the calculator, mail, mediaplayer and photos. If you do end up needing any of the removed apps in the future you can easily reinstall them through the Microsoft store. A full list of what is and isn't removed can be found below, but if you're unhappy with the default selection you can customize exactly which apps are removed by the script by editing the apps list found in the ['Win11Debloat.ps1'](https://github.com/Raphire/Win11Debloat/blob/master/Win11Debloat.ps1) file.
 
 <details>
   <summary><h4>Click for list of bloat that is removed</h4></summary>

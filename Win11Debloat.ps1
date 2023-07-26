@@ -13,14 +13,22 @@ param
     [Parameter(ValueFromPipeline = $true)][switch]$DisableWindowsSuggestions,
     [Parameter(ValueFromPipeline = $true)][switch]$DisableSuggestions,
     [Parameter(ValueFromPipeline = $true)][switch]$DisableWidgets,
+    [Parameter(ValueFromPipeline = $true)][switch]$HideWidgets,
     [Parameter(ValueFromPipeline = $true)][switch]$DisableChat,
+    [Parameter(ValueFromPipeline = $true)][switch]$HideChat,
     [Parameter(ValueFromPipeline = $true)][switch]$TaskbarAlignLeft,
     [Parameter(ValueFromPipeline = $true)][switch]$DisableOnedrive,
+    [Parameter(ValueFromPipeline = $true)][switch]$HideOnedrive,
     [Parameter(ValueFromPipeline = $true)][switch]$Disable3dObjects,
+    [Parameter(ValueFromPipeline = $true)][switch]$Hide3dObjects,
     [Parameter(ValueFromPipeline = $true)][switch]$DisableMusic,
+    [Parameter(ValueFromPipeline = $true)][switch]$HideMusic,
     [Parameter(ValueFromPipeline = $true)][switch]$DisableIncludeInLibrary,
+    [Parameter(ValueFromPipeline = $true)][switch]$HideIncludeInLibrary,
     [Parameter(ValueFromPipeline = $true)][switch]$DisableGiveAccessTo,
-    [Parameter(ValueFromPipeline = $true)][switch]$DisableShare
+    [Parameter(ValueFromPipeline = $true)][switch]$HideGiveAccessTo,
+    [Parameter(ValueFromPipeline = $true)][switch]$DisableShare,
+    [Parameter(ValueFromPipeline = $true)][switch]$HideShare
 )
 
 # Removes all apps in the list
@@ -244,11 +252,11 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
             $PSBoundParameters.Add('DisableLockscreenTips', $DisableLockscreenTips)  
             $PSBoundParameters.Add('DisableSuggestions', $DisableSuggestions)  
             $PSBoundParameters.Add('DisableWidgets', $DisableWidgets) 
-            $PSBoundParameters.Add('DisableChat', $DisableChat) 
-            $PSBoundParameters.Add('Disable3dObjects', $Disable3dObjects)   
-            $PSBoundParameters.Add('DisableIncludeInLibrary', $DisableIncludeInLibrary)   
-            $PSBoundParameters.Add('DisableGiveAccessTo', $DisableGiveAccessTo)  
-            $PSBoundParameters.Add('DisableShare', $DisableShare)  
+            $PSBoundParameters.Add('HideChat', $HideChat) 
+            $PSBoundParameters.Add('Hide3dObjects', $Hide3dObjects)   
+            $PSBoundParameters.Add('HideIncludeInLibrary', $HideIncludeInLibrary)   
+            $PSBoundParameters.Add('HideGiveAccessTo', $HideGiveAccessTo)  
+            $PSBoundParameters.Add('HideShare', $HideShare)  
         }
 
         '2' { 
@@ -262,7 +270,7 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
             $PSBoundParameters.Add('DisableLockscreenTips', $DisableLockscreenTips)  
             $PSBoundParameters.Add('DisableSuggestions', $DisableSuggestions) 
             $PSBoundParameters.Add('DisableWidgets', $DisableWidgets) 
-            $PSBoundParameters.Add('DisableChat', $DisableChat) 
+            $PSBoundParameters.Add('HideChat', $HideChat) 
         }
 
         '3' { 
@@ -321,7 +329,7 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
                 Write-Output ""
 
                 if ($( Read-Host -Prompt "   Hide the chat (meet now) icon on the taskbar? (y/n)" ) -eq 'y') {
-                    $PSBoundParameters.Add('DisableChat', $DisableChat)   
+                    $PSBoundParameters.Add('HideChat', $HideChat)   
                 }
             }
 
@@ -335,19 +343,19 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
                     Write-Output ""
 
                     if ($( Read-Host -Prompt "   Hide the onedrive folder in windows explorer? (y/n)" ) -eq 'y') {
-                        $PSBoundParameters.Add('DisableOnedrive', $DisableOnedrive)   
+                        $PSBoundParameters.Add('HideOnedrive', $HideOnedrive)   
                     }
 
                     Write-Output ""
                     
                     if ($( Read-Host -Prompt "   Hide the 3D objects folder in windows explorer? (y/n)" ) -eq 'y') {
-                        $PSBoundParameters.Add('Disable3dObjects', $Disable3dObjects)   
+                        $PSBoundParameters.Add('Hide3dObjects', $Hide3dObjects)   
                     }
                     
                     Write-Output ""
 
                     if ($( Read-Host -Prompt "   Hide the music folder in windows explorer? (y/n)" ) -eq 'y') {
-                        $PSBoundParameters.Add('DisableMusic', $DisableMusic)   
+                        $PSBoundParameters.Add('HideMusic', $HideMusic)   
                     }
                 }
             }
@@ -361,20 +369,20 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
 
                     Write-Output ""
 
-                    if ($( Read-Host -Prompt "   Disable the 'Include in library' option in the context menu? (y/n)" ) -eq 'y') {
-                        $PSBoundParameters.Add('DisableIncludeInLibrary', $DisableIncludeInLibrary)   
+                    if ($( Read-Host -Prompt "   Hide the 'Include in library' option in the context menu? (y/n)" ) -eq 'y') {
+                        $PSBoundParameters.Add('HideIncludeInLibrary', $HideIncludeInLibrary)   
                     }
 
                     Write-Output ""
 
-                    if ($( Read-Host -Prompt "   Disable the 'Give access to' option in the context menu? (y/n)" ) -eq 'y') {
-                        $PSBoundParameters.Add('DisableGiveAccessTo', $DisableGiveAccessTo)   
+                    if ($( Read-Host -Prompt "   Hide the 'Give access to' option in the context menu? (y/n)" ) -eq 'y') {
+                        $PSBoundParameters.Add('HideGiveAccessTo', $HideGiveAccessTo)   
                     }
 
                     Write-Output ""
 
-                    if ($( Read-Host -Prompt "   Disable the 'Share' option in the context menu? (y/n)" ) -eq 'y') {
-                        $PSBoundParameters.Add('DisableShare', $DisableShare)   
+                    if ($( Read-Host -Prompt "   Hide the 'Share' option in the context menu? (y/n)" ) -eq 'y') {
+                        $PSBoundParameters.Add('HideShare', $HideShare)   
                     }
                 }
             }
@@ -394,51 +402,78 @@ else {
 switch ($PSBoundParameters.Keys) {
     'RemoveApps' {
         RemoveApps
+        Write-Output ""
+        continue
     }
     'DisableTelemetry' {
         RegImport "> Disabling telemetry, diagnostic data and targeted ads..." $PSScriptRoot\Regfiles\Disable_Telemetry.reg
+        Write-Output ""
+        continue
     }
     'DisableBingSearches' {
         RegImport "> Disabling bing search, bing AI & cortana in windows search..." $PSScriptRoot\Regfiles\Disable_Bing_Cortana_In_Search.reg
+        Write-Output ""
+        continue
     }
     'DisableBing' {
         RegImport "> Disabling bing search, bing AI & cortana in windows search..." $PSScriptRoot\Regfiles\Disable_Bing_Cortana_In_Search.reg
+        Write-Output ""
+        continue
     }
     'DisableLockscreenTips' {
         RegImport "> Disabling tips & tricks on the lockscreen..." $PSScriptRoot\Regfiles\Disable_Lockscreen_Tips.reg
+        Write-Output ""
+        continue
     }
-    'DisableWindowsSuggestions' {
+    {$_ -in "DisableSuggestions", "DisableWindowsSuggestions"} {
         RegImport "> Disabling tips, tricks and suggestions in the startmenu and settings, and ads in windows explorer..." $PSScriptRoot\Regfiles\Disable_Windows_Suggestions.reg
+        Write-Output ""
+        continue
     }
-    'DisableSuggestions' {
-        RegImport "> Disabling tips, tricks and suggestions in the startmenu and settings, and ads in windows explorer..." $PSScriptRoot\Regfiles\Disable_Windows_Suggestions.reg
+    {$_ -in "HideWidgets", "DisableWidgets"} {
+        RegImport "> Disabling the widget service and hiding the widget icon on the taskbar..." $PSScriptRoot\Regfiles\Disable_Widgets_Taskbar.reg
+        Write-Output ""
+        continue
+    }
+    {$_ -in "HideChat", "DisableChat"} {
+        RegImport "> Hiding the chat icon on the taskbar..." $PSScriptRoot\Regfiles\Disable_Chat_Taskbar.reg
+        Write-Output ""
+        continue
     }
     'TaskbarAlignLeft' {
         RegImport "> Aligning taskbar buttons to the left..." $PSScriptRoot\Regfiles\Align_Taskbar_Left.reg
+        Write-Output ""
+        continue
     }
-    'DisableWidgets' {
-        RegImport "> Disabling the widget service and hiding the widget icon on the taskbar..." $PSScriptRoot\Regfiles\Disable_Widgets_Taskbar.reg
-    }
-    'DisableChat' {
-        RegImport "> Hiding the chat icon on the taskbar..." $PSScriptRoot\Regfiles\Disable_Chat_Taskbar.reg
-    }
-    'DisableOnedrive' {
+    {$_ -in "HideOnedrive", "DisableOnedrive"} {
         RegImport "> Hiding the onedrive folder in windows explorer..." $PSScriptRoot\Regfiles\Hide_Onedrive_Folder.reg
+        Write-Output ""
+        continue
     }
-    'Disable3dObjects' {
+    {$_ -in "Hide3dObjects", "Disable3dObjects"} {
         RegImport "> Hiding the 3D objects folder in windows explorer..." $PSScriptRoot\Regfiles\Hide_3D_Objects_Folder.reg
+        Write-Output ""
+        continue
     }
-    'DisableMusic' {
+    {$_ -in "HideMusic", "DisableMusic"} {
         RegImport "> Hiding the music folder in windows explorer..." $PSScriptRoot\Regfiles\Hide_Music_folder.reg
+        Write-Output ""
+        continue
     }
-    'DisableIncludeInLibrary' {
-        RegImport "> Disabling 'Include in library' in the context menu..." $PSScriptRoot\Regfiles\Disable_Include_in_library_from_context_menu.reg
+    {$_ -in "HideIncludeInLibrary", "DisableIncludeInLibrary"} {
+        RegImport "> Hiding 'Include in library' in the context menu..." $PSScriptRoot\Regfiles\Disable_Include_in_library_from_context_menu.reg
+        Write-Output ""
+        continue
     }
-    'DisableGiveAccessTo' {
-        RegImport "> Disabling 'Give access to' in the context menu..." $PSScriptRoot\Regfiles\Disable_Give_access_to_context_menu.reg
+    {$_ -in "HideGiveAccessTo", "DisableGiveAccessTo"} {
+        RegImport "> Hiding 'Give access to' in the context menu..." $PSScriptRoot\Regfiles\Disable_Give_access_to_context_menu.reg
+        Write-Output ""
+        continue
     }
-    'DisableShare' {
-        RegImport "> Disabling 'Share' in the context menu..." $PSScriptRoot\Regfiles\Disable_Share_from_context_menu.reg
+    {$_ -in "HideShare", "DisableShare"} {
+        RegImport "> Hiding 'Share' in the context menu..." $PSScriptRoot\Regfiles\Disable_Share_from_context_menu.reg
+        Write-Output ""
+        continue
     }
 }
 

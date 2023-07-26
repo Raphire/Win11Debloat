@@ -1,6 +1,6 @@
-# Win10Debloat
+# Win11Debloat
 
-Win10Debloat is a simple and lightweight powershell script that removes pre-installed windows bloatware apps, disables telemetry and declutters the experience by disabling or removing intrusive interface elements, ads and context menu items. No need to painstakingly go through all the settings yourself, or remove apps one by one. Win10Debloat makes the process quick and simple!
+Win11Debloat is a simple and lightweight powershell script that removes pre-installed windows bloatware apps, disables telemetry and declutters the experience by disabling or removing intrusive interface elements, ads and context menu items. No need to painstakingly go through all the settings yourself, or remove apps one by one. Win11Debloat makes the process quick and simple!
 
 You can pick and choose exactly which modifications you want the script to make, or use the default settings for your specific windows version. If you are unhappy with any of the changes you can easily revert them by using the registry files that are included in the 'Regfiles' folder, all of the apps that are removed can be reinstalled from the Microsoft store.
 
@@ -39,24 +39,24 @@ Disclaimer: I believe this script to be completely safe to run, but use this scr
 
 ### Easy method
 
-1. [Download the latest version of the script](https://github.com/Raphire/Win10Debloat/archive/master.zip), and extract the .ZIP file to your desired location.
-2. Navigate to the Win10Debloat folder
+1. [Download the latest version of the script](https://github.com/Raphire/Win11Debloat/archive/master.zip), and extract the .ZIP file to your desired location.
+2. Navigate to the Win11Debloat folder
 3. Double click the 'Run.bat' file to start the script. Note: If the console window immediately closes and nothing happens, try the advanced method below.
 4. Accept the windows UAC prompt to run the script as administrator, this is required for the script to function.
-5. A new powershell window will now open, showing the Win10Debloat menu. Select either the default or custom setup to continue.
+5. A new powershell window will now open, showing the Win11Debloat menu. Select either the default or custom setup to continue.
 
 ### Advanced method
 
 This method gives you the option to run the script with certain parameters to tailor the behaviour of the script to your needs without requiring any user input during runtime, making it quicker and easier to deploy on a large number of systems.
 
-1. [Download the latest version of the script](https://github.com/Raphire/Win10Debloat/archive/master.zip), and extract the .ZIP file to your desired location.
+1. [Download the latest version of the script](https://github.com/Raphire/Win11Debloat/archive/master.zip), and extract the .ZIP file to your desired location.
 2. Open powershell as an administrator.
 3. Enable powershell execution by entering the following command: `Set-ExecutionPolicy Unrestricted -Force`
-4. In powershell, navigate to the directory where the files were extracted. Example: `cd c:\\Win10Debloat`
-5. Enter this into powershell to run the script: `.\Win10Debloat.ps1`
+4. In powershell, navigate to the directory where the files were extracted. Example: `cd c:\\Win11Debloat`
+5. Enter this into powershell to run the script: `.\Win11Debloat.ps1`
 6. A menu will now open. Select either the default or custom setup to continue.
 
-To run the script without any user input, simply add parameters at the end, example: `.\Win10Debloat.ps1 -RemoveApps -DisableBing`
+To run the script without any user input, simply add parameters at the end, example: `.\Win11Debloat.ps1 -RemoveApps -DisableBing`
 
 | Parameter | Description |
 | --------- | ----------- |
@@ -79,7 +79,7 @@ To run the script without any user input, simply add parameters at the end, exam
 
 ## Debloat Windows
 
-By default, this script removes a large selection preinstalled bloatware, while preserving actually useful apps like the calculator, mail, mediaplayer and photos. If you do need end up needing any of the removed apps in the future you can easily reinstall them through the Microsoft store. A full list of what is and isn't removed can be found below, but if you're unhappy with the default selection you can customize exactly which apps are removed by the script by editing the apps list found in the ['Win10Debloat.ps1'](https://github.com/Raphire/Win10Debloat/blob/master/Win10Debloat.ps1) file.
+By default, this script removes a large selection preinstalled bloatware, while preserving actually useful apps like the calculator, mail, mediaplayer and photos. If you do need end up needing any of the removed apps in the future you can easily reinstall them through the Microsoft store. A full list of what is and isn't removed can be found below, but if you're unhappy with the default selection you can customize exactly which apps are removed by the script by editing the apps list found in the ['Win11Debloat.ps1'](https://github.com/Raphire/Win11Debloat/blob/master/Win11Debloat.ps1) file.
 
 <details>
   <summary><h4>Click for list of bloat that is removed</h4></summary>

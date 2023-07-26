@@ -176,11 +176,11 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
         Do { 
             Clear-Host
             Write-Output "-------------------------------------------------------------------------------------------"
-            Write-Output " Win10Debloat Script - Setup"
+            Write-Output " Win11Debloat Script - Setup"
             Write-Output "-------------------------------------------------------------------------------------------"
-            Write-Output "(1) Run Win10Debloat with the Windows 10 default settings"
-            Write-Output "(2) Run Win10Debloat with the Windows 11 default settings"
-            Write-Output "(3) Custom mode: Select which changes you want Win10Debloat to make"
+            Write-Output "(1) Run Win11Debloat with the Windows 10 default settings"
+            Write-Output "(2) Run Win11Debloat with the Windows 11 default settings"
+            Write-Output "(3) Custom mode: Select which changes you want Win11Debloat to make"
             Write-Output ""
             Write-Output "(0) Show information about the script"
             Write-Output ""
@@ -190,17 +190,17 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
             if ($Mode -eq '0') {
                 Clear-Host
                 Write-Output "-------------------------------------------------------------------------------------------"
-                Write-Output " Win10Debloat - Information"
+                Write-Output " Win11Debloat - Information"
                 Write-Output "-------------------------------------------------------------------------------------------"
-                Write-Output "Win10Debloat is a simple and lightweight powershell script that removes pre-installed"
-                Write-Output "windows 10/11 bloatware apps, disables telemetry and declutters the experience by disabling"
+                Write-Output "Win11Debloat is a simple and lightweight powershell script that removes pre-installed"
+                Write-Output "windows bloatware apps, disables telemetry and declutters the experience by disabling"
                 Write-Output "or removing intrusive interface elements, ads and context menu items. No need to"
                 Write-Output "painstakingly go through all the settings yourself, or removing apps one by one!"
                 Write-Output ""
                 Write-Output "-------------------------------------------------------------------------------------------"
                 Write-Output " Windows 10 default settings will:"
                 Write-Output "-------------------------------------------------------------------------------------------"
-                Write-Output "- Remove bloatware apps, full list can be found on github. (github.com/raphire/win10debloat)"
+                Write-Output "- Remove bloatware apps, full list can be found on github. (github.com/raphire/win11debloat)"
                 Write-Output "- Disable telemetry, diagnostic data & targeted ads."
                 Write-Output "- Disable bing search & cortana in windows search."
                 Write-Output "- Disable tips & tricks on the lockscreen. (This may change your lockscreen wallpaper to the default)"
@@ -215,7 +215,7 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
                 Write-Output "-------------------------------------------------------------------------------------------"
                 Write-Output " Windows 11 default settings will:"
                 Write-Output "-------------------------------------------------------------------------------------------"
-                Write-Output "- Remove bloatware apps, full list can be found on github. (github.com/raphire/win10debloat)"
+                Write-Output "- Remove bloatware apps, full list can be found on github. (github.com/raphire/win11debloat)"
                 Write-Output "- Disable telemetry, diagnostic data & targeted ads."
                 Write-Output "- Disable bing search, bing AI & cortana in windows search."
                 Write-Output "- Disable tips & tricks on the lockscreen. (This may change your lockscreen wallpaper to the default)"
@@ -236,15 +236,15 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
         '1' { 
             Clear-Host
             Write-Output "-------------------------------------------------------------------------------------------"
-            Write-Output " Win10Debloat Script - Windows 10 Default Configuration"
+            Write-Output " Win11Debloat Script - Windows 10 Default Configuration"
             Write-Output "-------------------------------------------------------------------------------------------"
             $PSBoundParameters.Add('RemoveApps', $RemoveApps) 
             $PSBoundParameters.Add('DisableTelemetry', $DisableTelemetry)  
             $PSBoundParameters.Add('DisableBing', $DisableBing) 
             $PSBoundParameters.Add('DisableLockscreenTips', $DisableLockscreenTips)  
             $PSBoundParameters.Add('DisableSuggestions', $DisableSuggestions)  
-            $PSBoundParameters.Add('DisableChat', $DisableChat) 
             $PSBoundParameters.Add('DisableWidgets', $DisableWidgets) 
+            $PSBoundParameters.Add('DisableChat', $DisableChat) 
             $PSBoundParameters.Add('Disable3dObjects', $Disable3dObjects)   
             $PSBoundParameters.Add('DisableIncludeInLibrary', $DisableIncludeInLibrary)   
             $PSBoundParameters.Add('DisableGiveAccessTo', $DisableGiveAccessTo)  
@@ -254,21 +254,21 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
         '2' { 
             Clear-Host
             Write-Output "-------------------------------------------------------------------------------------------"
-            Write-Output " Win10Debloat Script - Windows 11 Default Configuration"
+            Write-Output " Win11Debloat Script - Windows 11 Default Configuration"
             Write-Output "-------------------------------------------------------------------------------------------"
             $PSBoundParameters.Add('RemoveApps', $RemoveApps) 
             $PSBoundParameters.Add('DisableTelemetry', $DisableTelemetry)  
             $PSBoundParameters.Add('DisableBing', $DisableBing) 
             $PSBoundParameters.Add('DisableLockscreenTips', $DisableLockscreenTips)  
             $PSBoundParameters.Add('DisableSuggestions', $DisableSuggestions) 
-            $PSBoundParameters.Add('DisableChat', $DisableChat) 
             $PSBoundParameters.Add('DisableWidgets', $DisableWidgets) 
+            $PSBoundParameters.Add('DisableChat', $DisableChat) 
         }
 
         '3' { 
             Clear-Host
             Write-Output "-------------------------------------------------------------------------------------------"
-            Write-Output " Win10Debloat Script - Custom Configuration"
+            Write-Output " Win11Debloat Script - Custom Configuration"
             Write-Output "-------------------------------------------------------------------------------------------"
 
             if ($( Read-Host -Prompt "Remove the pre-installed windows apps? (y/n)" ) -eq 'y') {
@@ -386,7 +386,7 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
 else {
     Clear-Host
     Write-Output "-------------------------------------------------------------------------------------------"
-    Write-Output " Win10Debloat Script - Custom Configuration"
+    Write-Output " Win11Debloat Script - Custom Configuration"
     Write-Output "-------------------------------------------------------------------------------------------"
 }
 

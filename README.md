@@ -119,6 +119,7 @@ By default, this script removes a large selection preinstalled bloatware, while 
     - Microsoft.WindowsFeedbackHub  
     - Microsoft.WindowsMaps  
     - Microsoft.WindowsSoundRecorder  
+    - Microsoft.XboxApp (Old Xbox Console Companion App, no longer supported)
     - Microsoft.ZuneMusic  
     - Microsoft.ZuneVideo  
     - MicrosoftTeams
@@ -188,17 +189,18 @@ By default, this script removes a large selection preinstalled bloatware, while 
     - Microsoft.WindowsCamera
     - Microsoft.windowscommunicationsapps (Mail & Calendar)
     - Microsoft.WindowsStore (Microsoft Store, NOTE: This app cannot be reinstalled!)
+    - Microsoft.WindowsTerminal (New default terminal app in windows 11)
     - Microsoft.YourPhone (Phone Link)
     - Microsoft.ZuneMusic (Modern Media Player)
 
     Required or useful apps for Microsoft store games:
-    - Microsoft.GamingApp (Modern Xbox Gaming App, required for installing some PC games)
-    - Microsoft.Xbox.TCUI
-    - Microsoft.XboxApp (Old Xbox Console Companion App)
-    - Microsoft.XboxGameOverlay
-    - Microsoft.XboxGamingOverlay
-    - Microsoft.XboxIdentityProvider
-    - Microsoft.XboxSpeechToTextOverlay (NOTE: This app cannot be reinstalled!)
+    - Microsoft.GamingApp (Modern Xbox Gaming App, required for installing some games)
+    - Microsoft.Xbox.TCUI (UI framework, removing this may break microsoft store, photos and certain games)
+    - Microsoft.XboxGameCallableUI (UI framework, required for some games)
+    - Microsoft.XboxGameOverlay (Game overlay, required for some games)
+    - Microsoft.XboxGamingOverlay (Game overlay, required for some games)
+    - Microsoft.XboxIdentityProvider (Xbox sign-in framework, required for some games)
+    - Microsoft.XboxSpeechToTextOverlay (Might be required for some games, NOTE: This app cannot be reinstalled!)
   </blockquote>
 </details>
 

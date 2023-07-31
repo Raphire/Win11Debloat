@@ -73,6 +73,7 @@ function RemoveApps {
         "*Microsoft.WindowsFeedbackHub*"
         "*Microsoft.WindowsMaps*"
         "*Microsoft.WindowsSoundRecorder*"
+        "*Microsoft.XboxApp*"   # Old Xbox Console Companion App, no longer supported
         "*Microsoft.ZuneVideo*"
         "*MicrosoftTeams*"
 
@@ -141,12 +142,13 @@ function RemoveApps {
         #"*Microsoft.WindowsCamera*"
         #"*Microsoft.windowscommunicationsapps*"    # Mail & Calendar
         #"*Microsoft.WindowsStore*"                 # Microsoft Store, WARNING: This app cannot be reinstalled!
-        #"*Microsoft.Xbox.TCUI*"
-        #"*Microsoft.XboxApp*"                      # Old Xbox Console Companion App, no longer preinstalled
-        #"*Microsoft.XboxGameOverlay*"
-        #"*Microsoft.XboxGamingOverlay*"
-        #"*Microsoft.XboxIdentityProvider*"
-        #"*Microsoft.XboxSpeechToTextOverlay*"      # WARNING: This app cannot be reinstalled!
+        #"*Microsoft.WindowsTerminal*"              # New default terminal app in windows 11
+        #"*Microsoft.Xbox.TCUI*"                    # UI framework, seems to be required for MS store, photos and certain games
+        #"*Microsoft.XboxGameCallableUI*"           # UI framework, required for some games
+        #"*Microsoft.XboxGameOverlay*"              # Game overlay, required/useful for some games
+        #"*Microsoft.XboxGamingOverlay*"            # Game overlay, required/useful for some games
+        #"*Microsoft.XboxIdentityProvider*"         # Xbox sign-in framework, required for some games
+        #"*Microsoft.XboxSpeechToTextOverlay*"      # Might be required for some games, WARNING: This app cannot be reinstalled!
         #"*Microsoft.YourPhone*"                    # Phone link
         #"*Microsoft.ZuneMusic*"                    # Modern Media Player
     )

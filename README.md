@@ -18,7 +18,6 @@ You can pick and choose exactly which modifications you want the script to make,
 - Disable the widget service & hide the widget (news and interests) icon on the taskbar. 
 - Hide the Chat (meet now) icon from the taskbar.
 - Hide the 3D objects folder under 'This pc' in windows explorer.
-- Hide the 'Include in library', 'Give access to' and 'Share' options in the context menu.
 
 ## The windows 11 default settings will
 

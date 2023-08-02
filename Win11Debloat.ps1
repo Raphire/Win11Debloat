@@ -111,9 +111,6 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
                 Write-Output "- Disable the widget service & hide the widget (news and interests) icon on the taskbar. "
                 Write-Output "- Hide the Chat (meet now) icon from the taskbar."
                 Write-Output "- Hide the 3D objects folder under 'This pc' in windows explorer."
-                Write-Output "- Disable the 'Include in library' from context menu."
-                Write-Output "- Disable the 'Give access to' from context menu."
-                Write-Output "- Disable the 'Share' from context menu. (Does not remove the onedrive share option)"
                 Write-Output ""
                 Write-Output "-------------------------------------------------------------------------------------------"
                 Write-Output " Windows 11 default settings will:"
@@ -148,10 +145,7 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
             $PSBoundParameters.Add('DisableSuggestions', $DisableSuggestions)  
             $PSBoundParameters.Add('DisableWidgets', $DisableWidgets) 
             $PSBoundParameters.Add('HideChat', $HideChat) 
-            $PSBoundParameters.Add('Hide3dObjects', $Hide3dObjects)   
-            $PSBoundParameters.Add('HideIncludeInLibrary', $HideIncludeInLibrary)   
-            $PSBoundParameters.Add('HideGiveAccessTo', $HideGiveAccessTo)  
-            $PSBoundParameters.Add('HideShare', $HideShare)  
+            $PSBoundParameters.Add('Hide3dObjects', $Hide3dObjects)
         }
 
         '2' { 

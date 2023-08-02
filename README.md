@@ -51,8 +51,8 @@ This method gives you the option to run the script with certain parameters to ta
 
 1. [Download the latest version of the script](https://github.com/Raphire/Win11Debloat/archive/master.zip), and extract the .ZIP file to your desired location.
 2. Open powershell as an administrator.
-3. Enable powershell execution by entering the following command: `Set-ExecutionPolicy Unrestricted -Force`
-4. In powershell, navigate to the directory where the files were extracted. Example: `cd c:\\Win11Debloat`
+3. Enable powershell execution by entering the following command: `Set-ExecutionPolicy Unrestricted -Scope Process`
+4. In powershell, navigate to the directory where the files were extracted. Example: `cd c:\Win11Debloat`
 5. Enter this into powershell to run the script: `.\Win11Debloat.ps1`
 6. A menu will now open. Select either the default or custom setup to continue.
 
@@ -120,7 +120,6 @@ By default, this script removes a large selection preinstalled bloatware, while 
     - Microsoft.WindowsMaps  
     - Microsoft.WindowsSoundRecorder  
     - Microsoft.XboxApp (Old Xbox Console Companion App, no longer supported)
-    - Microsoft.ZuneMusic  
     - Microsoft.ZuneVideo  
     - MicrosoftTeams
 

@@ -1,0 +1,7 @@
+# The apps below this line will only be uninstalled if selected in custom mode or when launching  
+#  the script with the '-RemoveGamingApps' parameter. If you wish to KEEP any of the apps below 
+#  simply add a # character in front of the specific app in the list below.
+#
+*Microsoft.GamingApp*                    # Modern Xbox Gaming App, required for installing some PC games
+*Microsoft.XboxGameOverlay*              # Game overlay, required/useful for some games
+*Microsoft.XboxGamingOverlay*            # Game overlay, required/useful for some games

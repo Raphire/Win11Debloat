@@ -1,14 +1,14 @@
 # Win11Debloat
 
-Win11Debloat is a simple and lightweight powershell script that removes pre-installed windows bloatware apps, disables telemetry and declutters the experience by disabling or removing intrusive interface elements, ads and context menu items. No need to painstakingly go through all the settings yourself, or remove apps one by one. Win11Debloat makes the process quick and simple!
+Win11Debloat is a simple and lightweight powershell script that removes pre-installed windows bloatware apps, disables telemetry and declutters the experience by disabling or removing intrusive interface elements, ads and more. No need to painstakingly go through all the settings yourself, or remove apps one by one. Win11Debloat makes the process quick and easy!
 
-You can pick and choose exactly which modifications you want the script to make, or use the default settings for your specific windows version. If you are unhappy with any of the changes you can easily revert them by using the registry files that are included in the 'Regfiles' folder, all of the apps that are removed can be reinstalled from the Microsoft store.
+You can pick and choose exactly which modifications you want the script to make, or use the default settings. If you are unhappy with any of the changes you can easily revert them by using the registry files that are included in the 'Regfiles' folder, all of the apps that are removed can be reinstalled from the Microsoft store.
 
 #### Did this script help you? Please consider buying me a cup of coffee to support my work
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/M4M5C6UPC)
 
-## The windows 10 default settings will
+## Selecting the default settings will
 
 - Remove all bloatware apps from [this list](#click-for-list-of-bloat-that-is-removed).
 - Disable telemetry, diagnostic data & targeted ads.
@@ -17,24 +17,14 @@ You can pick and choose exactly which modifications you want the script to make,
 - Disable tips, tricks and suggestions in the startmenu and settings, and sync provider ads in windows explorer.
 - Disable the widget service & hide the widget (news and interests) icon on the taskbar. 
 - Hide the Chat (meet now) icon from the taskbar.
-- Hide the 3D objects folder under 'This pc' in windows explorer.
+- Hide the 3D objects folder under 'This pc' in windows explorer. (Windows 10 only)
 
-## The windows 11 default settings will
-
-- Remove all bloatware apps from [this list](#click-for-list-of-bloat-that-is-removed).
-- Disable telemetry, diagnostic data & targeted ads.
-- Disable bing search, bing AI & cortana in windows search.
-- Disable tips & tricks on the lockscreen. (This may change your lockscreen wallpaper to the windows default)
-- Disable tips, tricks and suggestions in the startmenu and settings, and sync provider ads in windows explorer.
-- Disable the widget service & hide the widget icon on the taskbar. 
-- Hide the Chat icon from the taskbar.
-
-## The 'Custom' option allows you to customize the script to your exact needs
-A full list of what changes this script can make can be found [here](#improve-your-windows-experience). 
+## Selecting the custom configuration will
+Give you access to even more options and allow you to customize the script to your exact needs. A full list of what this script can do can be found [here](#improve-your-windows-experience). 
 
 ## Usage
 
-Disclaimer: I believe this script to be completely safe to run, but use this script at your own risk!
+Disclaimer: I believe this script to be completely safe to run, in fact, great care went into making sure this script does not break any OS functionality. But use this script at your own risk!
 
 ### Easy method
 
@@ -59,9 +49,9 @@ To run the script without any user input, simply add parameters at the end, exam
 
 | Parameter | Description |
 | --------- | ----------- |
-| -RunDefaults                  |    Run the script with windows 10 default settings. |
-| -RunWin11Defaults             |    Run the script with windows 11 default settings. |
+| -RunDefaults                  |    Run the script with the default settings. |
 | -RemoveApps                   |    Remove all bloatware apps from [this list](#click-for-list-of-bloat-that-is-removed). |
+| -RemoveGamingApps             |    Remove the Xbox App and Xbox Gamebar. |
 | -DisableTelemetry             |    Disable telemetry, diagnostic data & targeted ads. |
 | -DisableBing                  |    Disable bing search, bing AI & cortana in windows search. |
 | -DisableLockscreenTips        |    Disable tips & tricks on the lockscreen. |
@@ -78,9 +68,9 @@ To run the script without any user input, simply add parameters at the end, exam
 
 ## Debloat Windows
 
-By default, this script removes a large selection preinstalled bloatware, while preserving actually useful apps like the calculator, mail, mediaplayer and photos. If you do end up needing any of the removed apps in the future you can easily reinstall them through the Microsoft store. A full list of what is and isn't removed can be found below, but if you're unhappy with the default selection you can customize exactly which apps are removed by the script by editing the apps list found in the ['Appslist.txt'](https://github.com/Raphire/Win11Debloat/blob/master/Appslist.txt) file.
+By default, this script removes a large selection preinstalled bloatware, while preserving actually useful apps like the calculator, mail, media player and photos. If you do end up needing any of the removed apps in the future you can easily reinstall them through the Microsoft store. A full list of what is and isn't removed can be found below, but if you're unhappy with the default selection you can customize exactly which apps are removed by the script by editing the apps list found in the ['Appslist.txt'](https://github.com/Raphire/Win11Debloat/blob/master/Appslist.txt) and ['GamingAppslist.txt'](https://github.com/Raphire/Win11Debloat/blob/master/GamingAppslist.txt) files.
 
-<details>
+<details open>
   <summary><h4>Click for list of bloat that is removed</h4></summary>
   <blockquote>
 
@@ -107,11 +97,10 @@ By default, this script removes a large selection preinstalled bloatware, while 
     - Microsoft.MixedReality.Portal  
     - Microsoft.NetworkSpeedTest  
     - Microsoft.News  
-    - Microsoft.Office.OneNote  
+    - Microsoft.Office.OneNote (Discontinued UWP version only, does not remove new MS365 versions)
     - Microsoft.Office.Sway  
     - Microsoft.OneConnect  
     - Microsoft.Print3D  
-    - Microsoft.RemoteDesktop  
     - Microsoft.SkypeApp  
     - Microsoft.Todos  
     - Microsoft.WindowsAlarms  
@@ -120,7 +109,7 @@ By default, this script removes a large selection preinstalled bloatware, while 
     - Microsoft.WindowsSoundRecorder  
     - Microsoft.XboxApp (Old Xbox Console Companion App, no longer supported)
     - Microsoft.ZuneVideo  
-    - MicrosoftTeams
+    - MicrosoftTeams (Personal version only, does not remove MS teams for business/enterprise)
 
     Third party bloat:
     - ACGMediaPlayer  
@@ -180,6 +169,7 @@ By default, this script removes a large selection preinstalled bloatware, while 
     Required or useful apps for regular desktop usage:
     - Microsoft.MSPaint (Paint 3D)
     - Microsoft.People (Required with Mail & Calendar)
+    - Microsoft.RemoteDesktop  
     - Microsoft.ScreenSketch (Snipping Tool)
     - Microsoft.Whiteboard (Only preinstalled on devices with touchscreen and/or pen support)
     - Microsoft.Windows.Photos
@@ -189,16 +179,17 @@ By default, this script removes a large selection preinstalled bloatware, while 
     - Microsoft.WindowsStore (Microsoft Store, NOTE: This app cannot be reinstalled!)
     - Microsoft.WindowsTerminal (New default terminal app in windows 11)
     - Microsoft.YourPhone (Phone Link)
+    - Microsoft.Xbox.TCUI (UI framework, removing this may break MS store, photos and certain games)
     - Microsoft.ZuneMusic (Modern Media Player)
 
     Required or useful apps for Microsoft store games:
-    - Microsoft.GamingApp (Modern Xbox Gaming App, required for installing some games)
-    - Microsoft.Xbox.TCUI (UI framework, removing this may break microsoft store, photos and certain games)
-    - Microsoft.XboxGameCallableUI (UI framework, required for some games)
-    - Microsoft.XboxGameOverlay (Game overlay, required for some games)
-    - Microsoft.XboxGamingOverlay (Game overlay, required for some games)
+    - Microsoft.GamingApp* (Modern Xbox Gaming App, required for installing some games)
+    - Microsoft.XboxGameOverlay* (Game overlay, required for some games)
+    - Microsoft.XboxGamingOverlay* (Game overlay, required for some games)
     - Microsoft.XboxIdentityProvider (Xbox sign-in framework, required for some games)
     - Microsoft.XboxSpeechToTextOverlay (Might be required for some games, NOTE: This app cannot be reinstalled!)
+
+    * Can be removed in custom mode or by running the script with the '-RemoveGamingApps' parameter.
   </blockquote>
 </details>
 

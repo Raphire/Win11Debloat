@@ -1,5 +1,5 @@
 # The apps below this line WILL be uninstalled. If you wish to KEEP any of the apps below
-# simply add a # character in front of the specific app in the list below.
+#  simply add a # character in front of the specific app in the list below.
 #
 *Microsoft.3DBuilder*
 *Microsoft.549981C3F5F10*   #Cortana app
@@ -27,7 +27,6 @@
 *Microsoft.Office.Sway*
 *Microsoft.OneConnect*
 *Microsoft.Print3D*
-*Microsoft.RemoteDesktop*
 *Microsoft.SkypeApp*
 *Microsoft.Todos*
 *Microsoft.WindowsAlarms*
@@ -36,7 +35,7 @@
 *Microsoft.WindowsSoundRecorder*
 *Microsoft.XboxApp*   # Old Xbox Console Companion App, no longer supported
 *Microsoft.ZuneVideo*
-*MicrosoftTeams*
+*MicrosoftTeams*   # Only removes the personal version (MS Store), does not remove business/enterprise version of teams
 
 *ACGMediaPlayer*
 *ActiproSoftwareLLC*
@@ -90,12 +89,12 @@
 
 
 # The apps below this line will NOT be uninstalled. If you wish to REMOVE any of the apps below 
-# simply remove the # character in front of the specific app.
+#  simply remove the # character in front of the specific app.
 #
-#*Microsoft.GamingApp*                    # Modern Xbox Gaming App, required for installing some PC games
 #*Microsoft.MSPaint*                      # Paint 3D
 #*Microsoft.People*                       # Required with Mail & Calendar
 #*Microsoft.PowerAutomateDesktop*
+#*Microsoft.RemoteDesktop*
 #*Microsoft.ScreenSketch*                 # Snipping Tool
 #*Microsoft.Whiteboard*                   # Only preinstalled on devices with touchscreen and/or pen support
 #*Microsoft.Windows.Photos*
@@ -105,10 +104,14 @@
 #*Microsoft.WindowsStore*                 # Microsoft Store, WARNING: This app cannot be reinstalled!
 #*Microsoft.WindowsTerminal*              # New default terminal app in windows 11
 #*Microsoft.Xbox.TCUI*                    # UI framework, seems to be required for MS store, photos and certain games
-#*Microsoft.XboxGameCallableUI*           # UI framework, required for some games
-#*Microsoft.XboxGameOverlay*              # Game overlay, required/useful for some games
-#*Microsoft.XboxGamingOverlay*            # Game overlay, required/useful for some games
 #*Microsoft.XboxIdentityProvider*         # Xbox sign-in framework, required for some games
 #*Microsoft.XboxSpeechToTextOverlay*      # Might be required for some games, WARNING: This app cannot be reinstalled!
 #*Microsoft.YourPhone*                    # Phone link
 #*Microsoft.ZuneMusic*                    # Modern Media Player
+
+# The apps below will NOT be uninstalled unless selected during the custom setup selection or when
+#  launching the script with the '-RemoveGamingApps' parameter. 
+#
+#*Microsoft.GamingApp*                    # Modern Xbox Gaming App, required for installing some PC games
+#*Microsoft.XboxGameOverlay*              # Game overlay, required/useful for some games
+#*Microsoft.XboxGamingOverlay*            # Game overlay, required/useful for some games

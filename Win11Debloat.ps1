@@ -6,6 +6,7 @@ param
     [Parameter(ValueFromPipeline = $true)][switch]$RunDefaults,
     [Parameter(ValueFromPipeline = $true)][switch]$RunWin11Defaults,
     [Parameter(ValueFromPipeline = $true)][switch]$RemoveApps,
+    [Parameter(ValueFromPipeline = $true)][switch]$RemoveGamingApps,
     [Parameter(ValueFromPipeline = $true)][switch]$DisableTelemetry,
     [Parameter(ValueFromPipeline = $true)][switch]$DisableBingSearches,
     [Parameter(ValueFromPipeline = $true)][switch]$DisableBing,
@@ -33,8 +34,12 @@ param
 
 # Removes all apps in the list
 function RemoveApps {
-    $appsFile = "$PSScriptRoot/Appslist.txt"
-    Write-Output "> Removing pre-installed windows apps..."
+    param(
+        $appsFile,
+        $message
+    )
+
+    Write-Output $message
 
     Foreach ($app in (Get-Content -Path $appsFile | Where-Object { $_ -notmatch '^#.*' -and $_ -notmatch '^\s*$' } )) 
     { 
@@ -69,11 +74,8 @@ function RegImport {
 
 # Change mode based on provided parameters or user input
 if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (($PSBoundParameters.Count -eq 1) -and ($PSBoundParameters.ContainsKey('WhatIf') -or $PSBoundParameters.ContainsKey('Confirm') -or $PSBoundParameters.ContainsKey('Verbose')))) {
-    if ($RunDefaults) {
+    if ($RunDefaults -or $RunWin11Defaults) {
         $Mode = '1';
-    }
-    elseif ($RunWin11Defaults) {
-        $Mode = '2';
     }
     else {
         Do { 
@@ -81,14 +83,13 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
             Write-Output "-------------------------------------------------------------------------------------------"
             Write-Output " Win11Debloat Script - Setup"
             Write-Output "-------------------------------------------------------------------------------------------"
-            Write-Output "(1) Run Win11Debloat with the Windows 10 default settings"
-            Write-Output "(2) Run Win11Debloat with the Windows 11 default settings"
-            Write-Output "(3) Custom mode: Select which changes you want Win11Debloat to make"
+            Write-Output "(1) Run Win11Debloat with the default settings"
+            Write-Output "(2) Custom mode: Select which changes you want Win11Debloat to make"
             Write-Output ""
             Write-Output "(0) Show information about the script"
             Write-Output ""
             Write-Output ""
-            $Mode = Read-Host "Please select an option (1/2/3/0)" 
+            $Mode = Read-Host "Please select an option (1/2/0)" 
 
             if ($Mode -eq '0') {
                 Clear-Host
@@ -128,7 +129,7 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
                 $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
             }
         }
-        while ($Mode -ne '1' -and $Mode -ne '2' -and $Mode -ne '3') 
+        while ($Mode -ne '1' -and $Mode -ne '2') 
     }
 
     # Add execution parameters based on the mode
@@ -145,24 +146,14 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
             $PSBoundParameters.Add('DisableSuggestions', $DisableSuggestions)  
             $PSBoundParameters.Add('DisableWidgets', $DisableWidgets) 
             $PSBoundParameters.Add('HideChat', $HideChat) 
-            $PSBoundParameters.Add('Hide3dObjects', $Hide3dObjects)
+
+            # Only add option for windows 10 users
+            if (get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'"){
+                $PSBoundParameters.Add('Hide3dObjects', $Hide3dObjects)
+            }
         }
 
         '2' { 
-            Clear-Host
-            Write-Output "-------------------------------------------------------------------------------------------"
-            Write-Output " Win11Debloat Script - Windows 11 Default Configuration"
-            Write-Output "-------------------------------------------------------------------------------------------"
-            $PSBoundParameters.Add('RemoveApps', $RemoveApps) 
-            $PSBoundParameters.Add('DisableTelemetry', $DisableTelemetry)  
-            $PSBoundParameters.Add('DisableBing', $DisableBing) 
-            $PSBoundParameters.Add('DisableLockscreenTips', $DisableLockscreenTips)  
-            $PSBoundParameters.Add('DisableSuggestions', $DisableSuggestions) 
-            $PSBoundParameters.Add('DisableWidgets', $DisableWidgets) 
-            $PSBoundParameters.Add('HideChat', $HideChat) 
-        }
-
-        '3' { 
             Clear-Host
             Write-Output "-------------------------------------------------------------------------------------------"
             Write-Output " Win11Debloat Script - Custom Configuration"
@@ -170,6 +161,12 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
 
             if ($( Read-Host -Prompt "Remove the pre-installed windows apps? (y/n)" ) -eq 'y') {
                 $PSBoundParameters.Add('RemoveApps', $RemoveApps)   
+
+                Write-Output ""
+
+                if ($( Read-Host -Prompt "   Also remove gaming-related apps such as the Xbox App and Xbox Gamebar? (y/n)" ) -eq 'y') {
+                    $PSBoundParameters.Add('RemoveGamingApps', $RemoveGamingApps)
+                }
             }
 
             Write-Output ""
@@ -199,7 +196,7 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
             Write-Output ""
 
             if ($( Read-Host -Prompt "Do you want to make any changes to the taskbar? (y/n)" ) -eq 'y') {
-                # Only show option for taskbar alignment in windows 11
+                # Only show option for taskbar alignment for windows 11 users
                 if (get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 11%'"){
 
                     Write-Output ""
@@ -222,7 +219,7 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
                 }
             }
 
-            # Only show option for disabling these specific folders in windows 10
+            # Only show option for disabling these specific folders for windows 10 users
             if (get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'"){
 
                 Write-Output ""
@@ -249,7 +246,7 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
                 }
             }
 
-            # Only show option for disabling context menu items in windows 10
+            # Only show option for disabling context menu items for windows 10 users
             if (get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'"){
 
                 Write-Output ""
@@ -290,7 +287,12 @@ else {
 # Execute all selected/provided parameters
 switch ($PSBoundParameters.Keys) {
     'RemoveApps' {
-        RemoveApps
+        RemoveApps "$PSScriptRoot/Appslist.txt" "> Removing pre-installed windows apps..."
+        Write-Output ""
+        continue
+    }
+    'RemoveGamingApps' {
+        RemoveApps "$PSScriptRoot/GamingAppslist.txt" "> Removing gaming-related windows apps..."
         Write-Output ""
         continue
     }

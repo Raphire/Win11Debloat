@@ -1,0 +1,114 @@
+# The apps below this line WILL be uninstalled. If you wish to KEEP any of the apps below
+# simply add a # character in front of the specific app in the list below.
+#
+*Microsoft.3DBuilder*
+*Microsoft.549981C3F5F10*   #Cortana app
+*Microsoft.Asphalt8Airborne*
+*Microsoft.BingFinance*
+*Microsoft.BingFoodAndDrink*            
+*Microsoft.BingHealthAndFitness*         
+*Microsoft.BingNews*
+*Microsoft.BingSports*
+*Microsoft.BingTranslator*
+*Microsoft.BingTravel* 
+*Microsoft.BingWeather*
+*Microsoft.GetHelp*
+*Microsoft.Getstarted*   # Cannot be uninstalled in Windows 11
+*Microsoft.Messaging*
+*Microsoft.Microsoft3DViewer*
+*Microsoft.MicrosoftOfficeHub*
+*Microsoft.MicrosoftPowerBIForWindows*
+*Microsoft.MicrosoftSolitaireCollection*
+*Microsoft.MicrosoftStickyNotes*
+*Microsoft.MixedReality.Portal*
+*Microsoft.NetworkSpeedTest*
+*Microsoft.News*
+*Microsoft.Office.OneNote*
+*Microsoft.Office.Sway*
+*Microsoft.OneConnect*
+*Microsoft.Print3D*
+*Microsoft.RemoteDesktop*
+*Microsoft.SkypeApp*
+*Microsoft.Todos*
+*Microsoft.WindowsAlarms*
+*Microsoft.WindowsFeedbackHub*
+*Microsoft.WindowsMaps*
+*Microsoft.WindowsSoundRecorder*
+*Microsoft.XboxApp*   # Old Xbox Console Companion App, no longer supported
+*Microsoft.ZuneVideo*
+*MicrosoftTeams*
+
+*ACGMediaPlayer*
+*ActiproSoftwareLLC*
+*AdobeSystemsIncorporated.AdobePhotoshopExpress*
+*Amazon.com.Amazon*
+*Asphalt8Airborne* 
+*AutodeskSketchBook*
+*CaesarsSlotsFreeCasino*
+*Clipchamp.Clipchamp*
+*COOKINGFEVER*
+*CyberLinkMediaSuiteEssentials*
+*DisneyMagicKingdoms*
+*Dolby*
+*DrawboardPDF*
+*Duolingo-LearnLanguagesforFree*
+*EclipseManager*
+*Facebook*
+*FarmVille2CountryEscape*
+*fitbit*
+*Flipboard*
+*HiddenCity*
+*HULULLC.HULUPLUS*
+*iHeartRadio*
+*king.com.BubbleWitch3Saga*
+*king.com.CandyCrushSaga*
+*king.com.CandyCrushSodaSaga*
+*LinkedInforWindows*
+*MarchofEmpires*
+*Netflix*
+*NYTCrossword*
+*OneCalendar*
+*PandoraMediaInc*
+*PhototasticCollage*
+*PicsArt-PhotoStudio*
+*Plex*
+*PolarrPhotoEditorAcademicEdition*
+*Royal Revolt*
+*Shazam*
+*Sidia.LiveWallpaper*
+*SlingTV*
+*Speed Test*
+*Spotify*
+*TuneInRadio*
+*Twitter*
+*Viber*
+*WinZipUniversal*
+*Wunderlist*
+*XING*
+
+
+
+
+# The apps below this line will NOT be uninstalled. If you wish to REMOVE any of the apps below 
+# simply remove the # character in front of the specific app.
+#
+#*Microsoft.GamingApp*                    # Modern Xbox Gaming App, required for installing some PC games
+#*Microsoft.MSPaint*                      # Paint 3D
+#*Microsoft.People*                       # Required with Mail & Calendar
+#*Microsoft.PowerAutomateDesktop*
+#*Microsoft.ScreenSketch*                 # Snipping Tool
+#*Microsoft.Whiteboard*                   # Only preinstalled on devices with touchscreen and/or pen support
+#*Microsoft.Windows.Photos*
+#*Microsoft.WindowsCalculator*
+#*Microsoft.WindowsCamera*
+#*Microsoft.windowscommunicationsapps*    # Mail & Calendar
+#*Microsoft.WindowsStore*                 # Microsoft Store, WARNING: This app cannot be reinstalled!
+#*Microsoft.WindowsTerminal*              # New default terminal app in windows 11
+#*Microsoft.Xbox.TCUI*                    # UI framework, seems to be required for MS store, photos and certain games
+#*Microsoft.XboxGameCallableUI*           # UI framework, required for some games
+#*Microsoft.XboxGameOverlay*              # Game overlay, required/useful for some games
+#*Microsoft.XboxGamingOverlay*            # Game overlay, required/useful for some games
+#*Microsoft.XboxIdentityProvider*         # Xbox sign-in framework, required for some games
+#*Microsoft.XboxSpeechToTextOverlay*      # Might be required for some games, WARNING: This app cannot be reinstalled!
+#*Microsoft.YourPhone*                    # Phone link
+#*Microsoft.ZuneMusic*                    # Modern Media Player

@@ -79,7 +79,7 @@ To run the script without any user input, simply add parameters at the end, exam
 
 ## Debloat Windows
 
-By default, this script removes a large selection preinstalled bloatware, while preserving actually useful apps like the calculator, mail, mediaplayer and photos. If you do end up needing any of the removed apps in the future you can easily reinstall them through the Microsoft store. A full list of what is and isn't removed can be found below, but if you're unhappy with the default selection you can customize exactly which apps are removed by the script by editing the apps list found in the ['Win11Debloat.ps1'](https://github.com/Raphire/Win11Debloat/blob/master/Win11Debloat.ps1) file.
+By default, this script removes a large selection preinstalled bloatware, while preserving actually useful apps like the calculator, mail, mediaplayer and photos. If you do end up needing any of the removed apps in the future you can easily reinstall them through the Microsoft store. A full list of what is and isn't removed can be found below, but if you're unhappy with the default selection you can customize exactly which apps are removed by the script by editing the apps list found in the ['Appslist.txt'](https://github.com/Raphire/Win11Debloat/blob/master/Appslist.txt) file.
 
 <details>
   <summary><h4>Click for list of bloat that is removed</h4></summary>

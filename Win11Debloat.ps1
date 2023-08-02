@@ -33,127 +33,20 @@ param
 
 # Removes all apps in the list
 function RemoveApps {
+    $appsFile = "$PSScriptRoot/Appslist.txt"
     Write-Output "> Removing pre-installed windows apps..."
 
-    $apps = @(
-        # These apps will be uninstalled by default:
-        #
-        # If you wish to KEEP any of the apps below simply add a # character
-        # in front of the specific app in the list below.
-        "*Microsoft.3DBuilder*"
-        "*Microsoft.549981C3F5F10*"   #Cortana app
-        "*Microsoft.Asphalt8Airborne*"
-        "*Microsoft.BingFinance*"
-        "*Microsoft.BingFoodAndDrink*"            
-        "*Microsoft.BingHealthAndFitness*"         
-        "*Microsoft.BingNews*"
-        "*Microsoft.BingSports*"
-        "*Microsoft.BingTranslator*"
-        "*Microsoft.BingTravel* "
-        "*Microsoft.BingWeather*"
-        "*Microsoft.GetHelp*"
-        "*Microsoft.Getstarted*"   # Cannot be uninstalled in Windows 11
-        "*Microsoft.Messaging*"
-        "*Microsoft.Microsoft3DViewer*"
-        "*Microsoft.MicrosoftOfficeHub*"
-        "*Microsoft.MicrosoftPowerBIForWindows*"
-        "*Microsoft.MicrosoftSolitaireCollection*"
-        "*Microsoft.MicrosoftStickyNotes*"
-        "*Microsoft.MixedReality.Portal*"
-        "*Microsoft.NetworkSpeedTest*"
-        "*Microsoft.News*"
-        "*Microsoft.Office.OneNote*"
-        "*Microsoft.Office.Sway*"
-        "*Microsoft.OneConnect*"
-        "*Microsoft.Print3D*"
-        "*Microsoft.RemoteDesktop*"
-        "*Microsoft.SkypeApp*"
-        "*Microsoft.Todos*"
-        "*Microsoft.WindowsAlarms*"
-        "*Microsoft.WindowsFeedbackHub*"
-        "*Microsoft.WindowsMaps*"
-        "*Microsoft.WindowsSoundRecorder*"
-        "*Microsoft.XboxApp*"   # Old Xbox Console Companion App, no longer supported
-        "*Microsoft.ZuneVideo*"
-        "*MicrosoftTeams*"
+    Foreach ($app in (Get-Content -Path $appsFile | Where-Object { $_ -notmatch '^#.*' -and $_ -notmatch '^\s*$' } )) 
+    { 
+        $app = $app.Trim()
 
-        "*ACGMediaPlayer*"
-        "*ActiproSoftwareLLC*"
-        "*AdobeSystemsIncorporated.AdobePhotoshopExpress*"
-        "*Amazon.com.Amazon*"
-        "*Asphalt8Airborne*" 
-        "*AutodeskSketchBook*"
-        "*CaesarsSlotsFreeCasino*"
-        "*Clipchamp.Clipchamp*"
-        "*COOKINGFEVER*"
-        "*CyberLinkMediaSuiteEssentials*"
-        "*DisneyMagicKingdoms*"
-        "*Dolby*"
-        "*DrawboardPDF*"
-        "*Duolingo-LearnLanguagesforFree*"
-        "*EclipseManager*"
-        "*Facebook*"
-        "*FarmVille2CountryEscape*"
-        "*fitbit*"
-        "*Flipboard*"
-        "*HiddenCity*"
-        "*HULULLC.HULUPLUS*"
-        "*iHeartRadio*"
-        "*king.com.BubbleWitch3Saga*"
-        "*king.com.CandyCrushSaga*"
-        "*king.com.CandyCrushSodaSaga*"
-        "*LinkedInforWindows*"
-        "*MarchofEmpires*"
-        "*Netflix*"
-        "*NYTCrossword*"
-        "*OneCalendar*"
-        "*PandoraMediaInc*"
-        "*PhototasticCollage*"
-        "*PicsArt-PhotoStudio*"
-        "*Plex*"
-        "*PolarrPhotoEditorAcademicEdition*"
-        "*Royal Revolt*"
-        "*Shazam*"
-        "*Sidia.LiveWallpaper*"
-        "*SlingTV*"
-        "*Speed Test*"
-        "*Spotify*"
-        "*TuneInRadio*"
-        "*Twitter*"
-        "*Viber*"
-        "*WinZipUniversal*"
-        "*Wunderlist*"
-        "*XING*"
+        if (-Not ($app.IndexOf('#') -eq -1)) {
+            $app = $app.Substring(0, $app.IndexOf('#'))
+        }
+        if (-Not ($app.IndexOf(' ') -eq -1)) {
+            $app = $app.Substring(0, $app.IndexOf(' '))
+        }
         
-
-
-        # These apps will NOT be uninstalled by default:
-        # 
-        # If you wish to REMOVE any of the apps below simply remove the # character
-        # in front of the specific app in the list below.
-        #"*Microsoft.GamingApp*"                    # Modern Xbox Gaming App, required for installing some PC games
-        #"*Microsoft.MSPaint*"                      # Paint 3D
-        #"*Microsoft.People*"                       # Required with Mail & Calendar
-        #"*Microsoft.PowerAutomateDesktop*"
-        #"*Microsoft.ScreenSketch*"                 # Snipping Tool
-        #"*Microsoft.Whiteboard*"                   # Only preinstalled on devices with touchscreen and/or pen support
-        #"*Microsoft.Windows.Photos*"
-        #"*Microsoft.WindowsCalculator*"
-        #"*Microsoft.WindowsCamera*"
-        #"*Microsoft.windowscommunicationsapps*"    # Mail & Calendar
-        #"*Microsoft.WindowsStore*"                 # Microsoft Store, WARNING: This app cannot be reinstalled!
-        #"*Microsoft.WindowsTerminal*"              # New default terminal app in windows 11
-        #"*Microsoft.Xbox.TCUI*"                    # UI framework, seems to be required for MS store, photos and certain games
-        #"*Microsoft.XboxGameCallableUI*"           # UI framework, required for some games
-        #"*Microsoft.XboxGameOverlay*"              # Game overlay, required/useful for some games
-        #"*Microsoft.XboxGamingOverlay*"            # Game overlay, required/useful for some games
-        #"*Microsoft.XboxIdentityProvider*"         # Xbox sign-in framework, required for some games
-        #"*Microsoft.XboxSpeechToTextOverlay*"      # Might be required for some games, WARNING: This app cannot be reinstalled!
-        #"*Microsoft.YourPhone*"                    # Phone link
-        #"*Microsoft.ZuneMusic*"                    # Modern Media Player
-    )
-
-    foreach ($app in $apps) {
         Write-Output "Attempting to remove $app"
 
         Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage

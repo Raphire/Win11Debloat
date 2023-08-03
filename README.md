@@ -13,15 +13,34 @@ You can pick and choose exactly which modifications you want the script to make,
 - Remove all bloatware apps from [this list](#click-for-list-of-bloat-that-is-removed).
 - Disable telemetry, diagnostic data & targeted ads.
 - Disable bing search & cortana in windows search.
-- Disable tips & tricks on the lockscreen. (This may change your lockscreen wallpaper to the windows default)
+- Disable tips & tricks on the lockscreen. (This may change your lockscreen wallpaper)
 - Disable tips, tricks and suggestions in the start menu and settings, and sync provider ads in windows explorer.
 - Show file extensions for known file types.
 - Disable the widget service & hide the widget (news and interests) icon from the taskbar. 
 - Hide the Chat (meet now) icon from the taskbar.
 - Hide the 3D objects folder under 'This pc' in windows explorer. (Windows 10 only)
 
-## Selecting the custom configuration will
-Give you access to even more options and allow you to customize the script to your exact needs. A full list of what this script can do can be found [here](#improve-your-windows-experience). 
+## Selecting the custom configuration mode will
+
+Give you access to even more options and allow you to customize the script to your exact needs. 
+
+In this mode you'll be able to make any of the following changes:
+- Remove all bloatware apps from [this list](#click-for-list-of-bloat-that-is-removed) and optionally also remove gaming-related apps.
+- Disable telemetry, diagnostic data & targeted ads.
+- Disable bing search, bing AI & cortana in windows search.
+- Disable tips & tricks on the lockscreen. (This may change your lockscreen wallpaper)
+- Disable tips, tricks and suggestions in the start menu and settings, and sync provider ads in windows explorer.
+- Show hidden files, folders and drives.
+- Show file extensions for known file types.
+- Align taskbar icons to the left. (Windows 11 only)
+- Hide or change the search icon/box on the taskbar. (Windows 11 only)
+- Disable the widget service & hide the widget (news and interests) icon from the taskbar.
+- Hide the chat (meet now) icon from the taskbar.
+- Hide the 3D objects, music or onedrive folder in the windows explorer sidepanel. (Windows 10 only)
+- Hide the 'Include in library', 'Give access to' and 'Share' options in the context menu. (Windows 10 only)
+
+
+All of these changes can be individually reverted with the registry files that are included in the 'Regfiles' folder.
 
 ## Usage
 
@@ -199,22 +218,3 @@ By default, this script removes a large selection preinstalled bloatware, while 
     * Can be removed in custom mode or by running the script with the '-RemoveGamingApps' parameter.
   </blockquote>
 </details>
-
-## Improve your Windows experience
-
-This script can also make various changes to declutter & improve your overall windows experience, and protect your privacy. Such as:
-
-- Disable telemetry, diagnostic data & targeted ads.
-- Disable bing search, bing AI & cortana in windows search.
-- Disable tips & tricks on the lockscreen. (This changes your lockscreen wallpaper to the windows default)
-- Disable tips, tricks and suggestions in the start menu and settings, and sync provider ads in windows explorer.
-- Show hidden files, folders and drives.
-- Show file extensions for known file types.
-- Align taskbar icons to the left. (Windows 11 only)
-- Hide or change the search icon/box on the taskbar. (Windows 11 only)
-- Disable the widget service & hide the widget (news and interests) icon from the taskbar.
-- Hide the chat (meet now) icon from the taskbar.
-- Hide the 3D objects, music or onedrive folder in the windows explorer sidepanel. (Windows 10 only)
-- Hide the 'Include in library', 'Give access to' and 'Share' options in the context menu. (Windows 10 only)
-
-All of these changes can be individually reverted with the registry files that are included in the 'Regfiles' folder.

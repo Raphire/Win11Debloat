@@ -38,7 +38,8 @@ param
     [Parameter(ValueFromPipeline = $true)][switch]$HideShare
 )
 
-# Removes all apps in the list
+
+# Reads list of apps from file and removes them for all user accounts and from the OS image.
 function RemoveApps {
     param(
         $appsFile,
@@ -47,24 +48,31 @@ function RemoveApps {
 
     Write-Output $message
 
+    # Get list of apps from file at the path provided, and remove them one by one
     Foreach ($app in (Get-Content -Path $appsFile | Where-Object { $_ -notmatch '^#.*' -and $_ -notmatch '^\s*$' } )) 
     { 
+        # Remove any spaces before and after the Appname
         $app = $app.Trim()
 
+        # Remove any comments from the Appname
         if (-Not ($app.IndexOf('#') -eq -1)) {
             $app = $app.Substring(0, $app.IndexOf('#'))
         }
+        # Remove any remaining spaces from the Appname
         if (-Not ($app.IndexOf(' ') -eq -1)) {
             $app = $app.Substring(0, $app.IndexOf(' '))
         }
         
         Write-Output "Attempting to remove $app"
 
+        # Remove installed app for all existing users
         Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage
 
+        # Remove provisioned app from OS image, so the app won't be installed for any new users
         Get-AppxProvisionedPackage -Online | Where-Object { $_.PackageName -like $app } | ForEach-Object { Remove-ProvisionedAppxPackage -Online -AllUsers -PackageName $_.PackageName }
     }
 }
+
 
 # Import & execute regfile
 function RegImport {
@@ -78,68 +86,45 @@ function RegImport {
     reg import $path
 }
 
-# Change mode based on provided parameters or user input
+
+# Change script mode based on provided parameters or user input
 if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (($PSBoundParameters.Count -eq 1) -and ($PSBoundParameters.ContainsKey('WhatIf') -or $PSBoundParameters.ContainsKey('Confirm') -or $PSBoundParameters.ContainsKey('Verbose')))) {
     if ($RunDefaults -or $RunWin11Defaults) {
         $Mode = '1';
     }
     else {
+        # Show menu and wait for user input, loops until valid input is provided
         Do { 
             Clear-Host
-            Write-Output "-------------------------------------------------------------------------------------------"
-            Write-Output " Win11Debloat Script - Setup"
-            Write-Output "-------------------------------------------------------------------------------------------"
-            Write-Output "(1) Run Win11Debloat with the default settings"
-            Write-Output "(2) Custom mode: Select which changes you want Win11Debloat to make"
-            Write-Output ""
-            Write-Output "(0) Show information about the script"
-            Write-Output ""
-            Write-Output ""
+
+            # Get & print script menu from file
+            Foreach ($line in (Get-Content -Path "$PSScriptRoot/Menus/Menu.txt" )) {   
+                Write-Output $line
+            }
+
             $Mode = Read-Host "Please select an option (1/2/0)" 
 
+            # Show information based on user input
             if ($Mode -eq '0') {
                 Clear-Host
-                Write-Output "-------------------------------------------------------------------------------------------"
-                Write-Output " Win11Debloat - Information"
-                Write-Output "-------------------------------------------------------------------------------------------"
-                Write-Output "Win11Debloat is a simple and lightweight powershell script that removes pre-installed"
-                Write-Output "windows bloatware apps, disables telemetry and declutters the experience by disabling"
-                Write-Output "or removing intrusive interface elements, ads and context menu items. No need to"
-                Write-Output "painstakingly go through all the settings yourself, or removing apps one by one!"
-                Write-Output ""
-                Write-Output "-------------------------------------------------------------------------------------------"
-                Write-Output " The default settings will"
-                Write-Output "-------------------------------------------------------------------------------------------"
-                Write-Output "- Remove bloatware apps, the list can be found in the 'Appslist.txt' file."
-                Write-Output "- Disable telemetry, diagnostic data & targeted ads."
-                Write-Output "- Disable bing search & cortana in windows search."
-                Write-Output "- Disable tips & tricks on the lockscreen. (This may change your lockscreen wallpaper to the default)"
-                Write-Output "- Disable tips, tricks and suggestions in the start menu and settings, and ads in windows explorer."
-                Write-Output "- Show file extensions for known file types."
-                Write-Output "- Disable the widget service & hide the widget (news and interests) icon from the taskbar. "
-                Write-Output "- Hide the Chat (meet now) icon from the taskbar."
-                Write-Output "- Hide the 3D objects folder in windows explorer. (Windows 10 only)"
-                Write-Output ""
-                Write-Output "-------------------------------------------------------------------------------------------"
-                Write-Output " The custom mode has more options, in custom mode you can"
-                Write-Output "-------------------------------------------------------------------------------------------"
-                Write-Output "- Remove bloatware apps, the list can be found in the 'Appslist.txt' file."
-                Write-Output "- Remove gaming-related apps, the list can be found in the 'GamingAppslist.txt' file."
-                Write-Output "- Disable telemetry, diagnostic data & targeted ads."
-                Write-Output "- Disable bing search & cortana in windows search."
-                Write-Output "- Disable tips & tricks on the lockscreen. (This may change your lockscreen wallpaper to the default)"
-                Write-Output "- Disable tips, tricks and suggestions in the start menu and settings, and ads in windows explorer."
-                Write-Output "- Show hidden files, folders and drives."
-                Write-Output "- Show file extensions for known file types."
-                Write-Output "- Align taskbar icons to the left. (Windows 11 only)"
-                Write-Output "- Hide or change the search icon/box on the taskbar. (Windows 11 only)"
-                Write-Output "- Disable the widget service & hide the widget (news and interests) icon from the taskbar. "
-                Write-Output "- Hide the Chat (meet now) icon from the taskbar."
-                Write-Output "- Hide the 3D objects, music or onedrive folders in windows explorer. (Windows 10 only)"
-                Write-Output "- Hide the 'Include in library', 'Give access to' and 'Share' options in the context menu. (Windows 10 only)"
-                Write-Output ""
-                Write-Output ""
+
+                # Get & print script information from file
+                Foreach ($line in (Get-Content -Path "$PSScriptRoot/Menus/Info.txt" )) {   
+                    Write-Output $line
+                }
+
                 Write-Output "Press any key to go back..."
+                $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+            }
+            elseif ($Mode -eq '1') {
+                Clear-Host
+
+                # Get & print default settings info from file
+                Foreach ($line in (Get-Content -Path "$PSScriptRoot/Menus/DefaultSettings.txt" )) {   
+                    Write-Output $line
+                }
+
+                Write-Output "Press any key to start..."
                 $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
             }
         }
@@ -148,6 +133,7 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
 
     # Add execution parameters based on the mode
     switch ($Mode) {
+        # Default mode, no user input required, all (relevant) options are added
         '1' { 
             Clear-Host
             Write-Output "-------------------------------------------------------------------------------------------"
@@ -162,12 +148,13 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
             $PSBoundParameters.Add('DisableWidgets', $DisableWidgets) 
             $PSBoundParameters.Add('HideChat', $HideChat) 
 
-            # Only add option for windows 10 users
+            # Only add this option for windows 10 users
             if (get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'"){
                 $PSBoundParameters.Add('Hide3dObjects', $Hide3dObjects)
             }
         }
 
+        # Custom mode, add options based on user input
         '2' { 
             Clear-Host
             Write-Output "-------------------------------------------------------------------------------------------"
@@ -211,7 +198,7 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
             Write-Output ""
 
             if ($( Read-Host -Prompt "Do you want to make any changes to the taskbar and start menu? (y/n)" ) -eq 'y') {
-                # Only show option for taskbar alignment for windows 11 users
+                # Only show these specific options for windows 11 users
                 if (get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 11%'"){
                     Write-Output ""
 
@@ -262,12 +249,16 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
                 }
             }
 
+            Write-Output ""
+
             if ($( Read-Host -Prompt "Do you want to make any changes to windows explorer? (y/n)" ) -eq 'y') {
                 Write-Output ""
 
                 if ($( Read-Host -Prompt "   Show hidden files, folders and drives? (y/n)" ) -eq 'y') {
                     $PSBoundParameters.Add('ShowHiddenFolders', $ShowHiddenFolders)   
                 }
+
+                Write-Output ""
 
                 if ($( Read-Host -Prompt "   Show file extensions for known file types? (y/n)" ) -eq 'y') {
                     $PSBoundParameters.Add('ShowKnownFileExt', $ShowKnownFileExt)   
@@ -334,6 +325,7 @@ else {
     Write-Output " Win11Debloat Script - Custom Configuration"
     Write-Output "-------------------------------------------------------------------------------------------"
 }
+
 
 # Execute all selected/provided parameters
 switch ($PSBoundParameters.Keys) {
@@ -448,6 +440,7 @@ switch ($PSBoundParameters.Keys) {
         continue
     }
 }
+
 
 Write-Output ""
 Write-Output ""

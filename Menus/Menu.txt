@@ -1,0 +1,9 @@
+-------------------------------------------------------------------------------------------
+ Win11Debloat Script - Setup
+-------------------------------------------------------------------------------------------
+(1) Run Win11Debloat with the default settings
+(2) Custom mode: Manually select what changes you want Win11Debloat to make
+
+(0) Show information about the script
+
+

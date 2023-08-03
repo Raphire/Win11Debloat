@@ -1,0 +1,40 @@
+-------------------------------------------------------------------------------------------
+ Win11Debloat - Information
+-------------------------------------------------------------------------------------------
+Win11Debloat is a simple and lightweight powershell script that removes pre-installed
+windows bloatware apps, disables telemetry and declutters the experience by disabling
+or removing intrusive interface elements, ads and context menu items. No need to
+painstakingly go through all the settings yourself, or removing apps one by one!
+
+-------------------------------------------------------------------------------------------
+ Using the default configuration the script will
+-------------------------------------------------------------------------------------------
+- Remove bloatware apps, the list can be found in the 'Appslist.txt' file.
+- Disable telemetry, diagnostic data & targeted ads.
+- Disable bing search & cortana in windows search.
+- Disable tips & tricks on the lockscreen. (This may change your lockscreen wallpaper to the default)
+- Disable tips, tricks and suggestions in the start menu and settings, and ads in windows explorer.
+- Show file extensions for known file types.
+- Disable the widget service & hide the widget (news and interests) icon from the taskbar. 
+- Hide the Chat (meet now) icon from the taskbar.
+- Hide the 3D objects folder in windows explorer. (Windows 10 only)
+
+-------------------------------------------------------------------------------------------
+ Using the custom mode you can
+-------------------------------------------------------------------------------------------
+- Remove bloatware apps, the list can be found in the 'Appslist.txt' file.
+- Remove gaming-related apps, the list can be found in the 'GamingAppslist.txt' file.
+- Disable telemetry, diagnostic data & targeted ads.
+- Disable bing search & cortana in windows search.
+- Disable tips & tricks on the lockscreen. (This may change your lockscreen wallpaper to the default)
+- Disable tips, tricks and suggestions in the start menu and settings, and ads in windows explorer.
+- Show hidden files, folders and drives.
+- Show file extensions for known file types.
+- Align taskbar icons to the left. (Windows 11 only)
+- Hide or change the search icon/box on the taskbar. (Windows 11 only)
+- Disable the widget service & hide the widget (news and interests) icon from the taskbar. 
+- Hide the Chat (meet now) icon from the taskbar.
+- Hide the 3D objects, music or onedrive folders in windows explorer. (Windows 10 only)
+- Hide the 'Include in library', 'Give access to' and 'Share' options in the context menu. (Windows 10 only)
+
+

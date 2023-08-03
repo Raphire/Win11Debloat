@@ -63,7 +63,8 @@ function RemoveApps {
             $app = $app.Substring(0, $app.IndexOf(' '))
         }
         
-        Write-Output "Attempting to remove $app"
+        $appString = $app.Trim('*')
+        Write-Output "Attempting to remove $appString..."
 
         # Remove installed app for all existing users
         Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage
@@ -315,7 +316,15 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
                 }
             }
 
-            Write-Output "" 
+            Write-Output ""
+            Write-Output ""
+            Write-Output ""
+            Write-Output "Press any key to confirm your choices and execute the script..."
+            $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+            Clear-Host
+            Write-Output "-------------------------------------------------------------------------------------------"
+            Write-Output " Win11Debloat Script - Custom Configuration"
+            Write-Output "-------------------------------------------------------------------------------------------"
         }
     }
 }

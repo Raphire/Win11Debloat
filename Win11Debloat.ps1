@@ -13,11 +13,17 @@ param
     [Parameter(ValueFromPipeline = $true)][switch]$DisableLockscreenTips,
     [Parameter(ValueFromPipeline = $true)][switch]$DisableWindowsSuggestions,
     [Parameter(ValueFromPipeline = $true)][switch]$DisableSuggestions,
+    [Parameter(ValueFromPipeline = $true)][switch]$ShowHiddenFolders,
+    [Parameter(ValueFromPipeline = $true)][switch]$ShowKnownFileExt,
+    [Parameter(ValueFromPipeline = $true)][switch]$TaskbarAlignLeft,
+    [Parameter(ValueFromPipeline = $true)][switch]$HideSearchTb,
+    [Parameter(ValueFromPipeline = $true)][switch]$ShowSearchIconTb,
+    [Parameter(ValueFromPipeline = $true)][switch]$ShowSearchLabelTb,
+    [Parameter(ValueFromPipeline = $true)][switch]$ShowSearchBoxTb,
     [Parameter(ValueFromPipeline = $true)][switch]$DisableWidgets,
     [Parameter(ValueFromPipeline = $true)][switch]$HideWidgets,
     [Parameter(ValueFromPipeline = $true)][switch]$DisableChat,
     [Parameter(ValueFromPipeline = $true)][switch]$HideChat,
-    [Parameter(ValueFromPipeline = $true)][switch]$TaskbarAlignLeft,
     [Parameter(ValueFromPipeline = $true)][switch]$DisableOnedrive,
     [Parameter(ValueFromPipeline = $true)][switch]$HideOnedrive,
     [Parameter(ValueFromPipeline = $true)][switch]$Disable3dObjects,
@@ -102,27 +108,35 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
                 Write-Output "painstakingly go through all the settings yourself, or removing apps one by one!"
                 Write-Output ""
                 Write-Output "-------------------------------------------------------------------------------------------"
-                Write-Output " Windows 10 default settings will:"
+                Write-Output " The default settings will"
                 Write-Output "-------------------------------------------------------------------------------------------"
-                Write-Output "- Remove bloatware apps, full list can be found on github. (github.com/raphire/win11debloat)"
+                Write-Output "- Remove bloatware apps, the list can be found in the 'Appslist.txt' file."
                 Write-Output "- Disable telemetry, diagnostic data & targeted ads."
                 Write-Output "- Disable bing search & cortana in windows search."
                 Write-Output "- Disable tips & tricks on the lockscreen. (This may change your lockscreen wallpaper to the default)"
-                Write-Output "- Disable tips, tricks and suggestions in the startmenu and settings, and ads in windows explorer."
-                Write-Output "- Disable the widget service & hide the widget (news and interests) icon on the taskbar. "
+                Write-Output "- Disable tips, tricks and suggestions in the start menu and settings, and ads in windows explorer."
+                Write-Output "- Show file extensions for known file types."
+                Write-Output "- Disable the widget service & hide the widget (news and interests) icon from the taskbar. "
                 Write-Output "- Hide the Chat (meet now) icon from the taskbar."
-                Write-Output "- Hide the 3D objects folder under 'This pc' in windows explorer."
+                Write-Output "- Hide the 3D objects folder in windows explorer. (Windows 10 only)"
                 Write-Output ""
                 Write-Output "-------------------------------------------------------------------------------------------"
-                Write-Output " Windows 11 default settings will:"
+                Write-Output " The custom mode has more options, in custom mode you can"
                 Write-Output "-------------------------------------------------------------------------------------------"
-                Write-Output "- Remove bloatware apps, full list can be found on github. (github.com/raphire/win11debloat)"
+                Write-Output "- Remove bloatware apps, the list can be found in the 'Appslist.txt' file."
+                Write-Output "- Remove gaming-related apps, the list can be found in the 'GamingAppslist.txt' file."
                 Write-Output "- Disable telemetry, diagnostic data & targeted ads."
-                Write-Output "- Disable bing search, bing AI & cortana in windows search."
+                Write-Output "- Disable bing search & cortana in windows search."
                 Write-Output "- Disable tips & tricks on the lockscreen. (This may change your lockscreen wallpaper to the default)"
-                Write-Output "- Disable tips, tricks and suggestions in the startmenu and settings, and ads in windows explorer."
-                Write-Output "- Disable the widget service & hide the widget icon on the taskbar."
-                Write-Output "- Hide the Chat icon from the taskbar."
+                Write-Output "- Disable tips, tricks and suggestions in the start menu and settings, and ads in windows explorer."
+                Write-Output "- Show hidden files, folders and drives."
+                Write-Output "- Show file extensions for known file types."
+                Write-Output "- Align taskbar icons to the left. (Windows 11 only)"
+                Write-Output "- Hide or change the search icon/box on the taskbar. (Windows 11 only)"
+                Write-Output "- Disable the widget service & hide the widget (news and interests) icon from the taskbar. "
+                Write-Output "- Hide the Chat (meet now) icon from the taskbar."
+                Write-Output "- Hide the 3D objects, music or onedrive folders in windows explorer. (Windows 10 only)"
+                Write-Output "- Hide the 'Include in library', 'Give access to' and 'Share' options in the context menu. (Windows 10 only)"
                 Write-Output ""
                 Write-Output ""
                 Write-Output "Press any key to go back..."
@@ -144,6 +158,7 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
             $PSBoundParameters.Add('DisableBing', $DisableBing) 
             $PSBoundParameters.Add('DisableLockscreenTips', $DisableLockscreenTips)  
             $PSBoundParameters.Add('DisableSuggestions', $DisableSuggestions)  
+            $PSBoundParameters.Add('ShowKnownFileExt', $ShowKnownFileExt) 
             $PSBoundParameters.Add('DisableWidgets', $DisableWidgets) 
             $PSBoundParameters.Add('HideChat', $HideChat) 
 
@@ -183,49 +198,87 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
 
             Write-Output ""
 
+            if ($( Read-Host -Prompt "Disable tips, tricks and suggestions in the start menu, settings and windows explorer? (y/n)" ) -eq 'y') {
+                $PSBoundParameters.Add('DisableSuggestions', $DisableSuggestions)   
+            }
+
+            Write-Output ""
+
             if ($( Read-Host -Prompt "Disable tips & tricks on the lockscreen? (y/n)" ) -eq 'y') {
                 $PSBoundParameters.Add('DisableLockscreenTips', $DisableLockscreenTips)   
             } 
 
             Write-Output ""
 
-            if ($( Read-Host -Prompt "Disable tips, tricks and suggestions in the startmenu and settings, and ads in windows explorer? (y/n)" ) -eq 'y') {
-                $PSBoundParameters.Add('DisableSuggestions', $DisableSuggestions)   
-            }
-
-            Write-Output ""
-
-            if ($( Read-Host -Prompt "Do you want to make any changes to the taskbar? (y/n)" ) -eq 'y') {
+            if ($( Read-Host -Prompt "Do you want to make any changes to the taskbar and start menu? (y/n)" ) -eq 'y') {
                 # Only show option for taskbar alignment for windows 11 users
                 if (get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 11%'"){
-
                     Write-Output ""
 
                     if ($( Read-Host -Prompt "   Align taskbar buttons to left side? (y/n)" ) -eq 'y') {
                         $PSBoundParameters.Add('TaskbarAlignLeft', $TaskbarAlignLeft)   
                     }
+
+                    Do {
+                        Write-Output ""
+                        Write-Output "   Options:"
+                        Write-Output "    (0) No change"
+                        Write-Output "    (1) Hide search icon from the taskbar"
+                        Write-Output "    (2) Show search icon on the taskbar"
+                        Write-Output "    (3) Show search icon with label on the taskbar"
+                        Write-Output "    (4) Show search box on the taskbar"
+                        $TbSearchInput = Read-Host "   Hide or change the search icon on the taskbar? (0/1/2/3/4)" 
+                    }
+                    while ($TbSearchInput -ne 'n' -and $TbSearchInput -ne '0' -and $TbSearchInput -ne '1' -and $TbSearchInput -ne '2' -and $TbSearchInput -ne '3' -and $TbSearchInput -ne '4') 
+
+                    # Select correct taskbar search option based on user input
+                    switch ($TbSearchInput) {
+                        '1' {
+                            $PSBoundParameters.Add('HideSearchTb', $HideSearchTb) 
+                        }
+                        '2' {
+                            $PSBoundParameters.Add('ShowSearchIconTb', $ShowSearchIconTb) 
+                        }
+                        '3' {
+                            $PSBoundParameters.Add('ShowSearchLabelTb', $ShowSearchLabelTb) 
+                        }
+                        '4' {
+                            $PSBoundParameters.Add('ShowSearchBoxTb', $ShowSearchBoxTb) 
+                        }
+
+                    }
                 }
 
                 Write-Output ""
 
-                if ($( Read-Host -Prompt "   Disable the widgets service and hide the widget (news and interests) icon on the taskbar? (y/n)" ) -eq 'y') {
+                if ($( Read-Host -Prompt "   Disable the widgets service and hide the widget (news and interests) icon from the taskbar? (y/n)" ) -eq 'y') {
                     $PSBoundParameters.Add('DisableWidgets', $DisableWidgets)   
                 }
 
                 Write-Output ""
 
-                if ($( Read-Host -Prompt "   Hide the chat (meet now) icon on the taskbar? (y/n)" ) -eq 'y') {
+                if ($( Read-Host -Prompt "   Hide the chat (meet now) icon from the taskbar? (y/n)" ) -eq 'y') {
                     $PSBoundParameters.Add('HideChat', $HideChat)   
+                }
+            }
+
+            if ($( Read-Host -Prompt "Do you want to make any changes to windows explorer? (y/n)" ) -eq 'y') {
+                Write-Output ""
+
+                if ($( Read-Host -Prompt "   Show hidden files, folders and drives? (y/n)" ) -eq 'y') {
+                    $PSBoundParameters.Add('ShowHiddenFolders', $ShowHiddenFolders)   
+                }
+
+                if ($( Read-Host -Prompt "   Show file extensions for known file types? (y/n)" ) -eq 'y') {
+                    $PSBoundParameters.Add('ShowKnownFileExt', $ShowKnownFileExt)   
                 }
             }
 
             # Only show option for disabling these specific folders for windows 10 users
             if (get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'"){
-
                 Write-Output ""
 
                 if ($( Read-Host -Prompt "Do you want to hide any folders from the windows explorer sidepanel? (y/n)" ) -eq 'y') {
-
                     Write-Output ""
 
                     if ($( Read-Host -Prompt "   Hide the onedrive folder in windows explorer? (y/n)" ) -eq 'y') {
@@ -248,11 +301,9 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
 
             # Only show option for disabling context menu items for windows 10 users
             if (get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'"){
-
                 Write-Output ""
 
                 if ($( Read-Host -Prompt "Do you want to disable any context menu options? (y/n)" ) -eq 'y') {
-
                     Write-Output ""
 
                     if ($( Read-Host -Prompt "   Hide the 'Include in library' option in the context menu? (y/n)" ) -eq 'y') {
@@ -317,22 +368,52 @@ switch ($PSBoundParameters.Keys) {
         continue
     }
     {$_ -in "DisableSuggestions", "DisableWindowsSuggestions"} {
-        RegImport "> Disabling tips, tricks and suggestions in the startmenu and settings, and ads in windows explorer..." $PSScriptRoot\Regfiles\Disable_Windows_Suggestions.reg
-        Write-Output ""
-        continue
-    }
-    {$_ -in "HideWidgets", "DisableWidgets"} {
-        RegImport "> Disabling the widget service and hiding the widget icon on the taskbar..." $PSScriptRoot\Regfiles\Disable_Widgets_Taskbar.reg
-        Write-Output ""
-        continue
-    }
-    {$_ -in "HideChat", "DisableChat"} {
-        RegImport "> Hiding the chat icon on the taskbar..." $PSScriptRoot\Regfiles\Disable_Chat_Taskbar.reg
+        RegImport "> Disabling tips, tricks and suggestions in the start menu, settings and  windows explorer..." $PSScriptRoot\Regfiles\Disable_Windows_Suggestions.reg
         Write-Output ""
         continue
     }
     'TaskbarAlignLeft' {
         RegImport "> Aligning taskbar buttons to the left..." $PSScriptRoot\Regfiles\Align_Taskbar_Left.reg
+        Write-Output ""
+        continue
+    }
+    'HideSearchTb' {
+        RegImport "> Hiding the search icon from the taskbar..." $PSScriptRoot\Regfiles\Hide_Search_Taskbar.reg
+        Write-Output ""
+        continue
+    }
+    'ShowSearchIconTb' {
+        RegImport "> Changing taskbar search to icon only..." $PSScriptRoot\Regfiles\Show_Search_Icon.reg
+        Write-Output ""
+        continue
+    }
+    'ShowSearchLabelTb' {
+        RegImport "> Changing taskbar search to icon with label..." $PSScriptRoot\Regfiles\Show_Search_Icon_And_Label.reg
+        Write-Output ""
+        continue
+    }
+    'ShowSearchBoxTb' {
+        RegImport "> Changing taskbar search to search box..." $PSScriptRoot\Regfiles\Show_Search_Box.reg
+        Write-Output ""
+        continue
+    }
+    {$_ -in "HideWidgets", "DisableWidgets"} {
+        RegImport "> Disabling the widget service and hiding the widget icon from the taskbar..." $PSScriptRoot\Regfiles\Disable_Widgets_Taskbar.reg
+        Write-Output ""
+        continue
+    }
+    {$_ -in "HideChat", "DisableChat"} {
+        RegImport "> Hiding the chat icon from the taskbar..." $PSScriptRoot\Regfiles\Disable_Chat_Taskbar.reg
+        Write-Output ""
+        continue
+    }
+    'ShowHiddenFolders' {
+        RegImport "> Unhiding hidden files, folders and drives..." $PSScriptRoot\Regfiles\Show_Hidden_Folders.reg
+        Write-Output ""
+        continue
+    }
+    'ShowKnownFileExt' {
+        RegImport "> Enabling file extensions for known file types..." $PSScriptRoot\Regfiles\Show_Extensions_For_Known_File_Types.reg
         Write-Output ""
         continue
     }

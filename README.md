@@ -14,8 +14,9 @@ You can pick and choose exactly which modifications you want the script to make,
 - Disable telemetry, diagnostic data & targeted ads.
 - Disable bing search & cortana in windows search.
 - Disable tips & tricks on the lockscreen. (This may change your lockscreen wallpaper to the windows default)
-- Disable tips, tricks and suggestions in the startmenu and settings, and sync provider ads in windows explorer.
-- Disable the widget service & hide the widget (news and interests) icon on the taskbar. 
+- Disable tips, tricks and suggestions in the start menu and settings, and sync provider ads in windows explorer.
+- Show file extensions for known file types.
+- Disable the widget service & hide the widget (news and interests) icon from the taskbar. 
 - Hide the Chat (meet now) icon from the taskbar.
 - Hide the 3D objects folder under 'This pc' in windows explorer. (Windows 10 only)
 
@@ -55,10 +56,16 @@ To run the script without any user input, simply add parameters at the end, exam
 | -DisableTelemetry             |    Disable telemetry, diagnostic data & targeted ads. |
 | -DisableBing                  |    Disable bing search, bing AI & cortana in windows search. |
 | -DisableLockscreenTips        |    Disable tips & tricks on the lockscreen. |
-| -DisableSuggestions           |    Disable tips, tricks and suggestions in the startmenu and settings, and sync provider ads in windows explorer. |
+| -DisableSuggestions           |    Disable tips, tricks and suggestions in the start menu and settings, and sync provider ads in windows explorer. |
+| -ShowHiddenFolders            |    Show hidden files, folders and drives. |
+| -ShowKnownFileExt             |    Show file extensions for known file types. |
 | -TaskbarAlignLeft             |    Align taskbar icons to the left. (Windows 11 only) |
-| -DisableWidgets               |    Disable the widget service & hide the widget (news and interests) icon on the taskbar. |
-| -HideChat                     |    Hide the chat (meet now) icon on the taskbar. |
+| -HideSearchTb                 |    Hide search icon from the taskbar. (Windows 11 only) |
+| -ShowSearchIconTb             |    Show search icon on the taskbar. (Windows 11 only) |
+| -ShowSearchLabelTb            |    Show search icon with label on the taskbar. (Windows 11 only) |
+| -ShowSearchBoxTb              |    Show search box on the taskbar. (Windows 11 only) |
+| -DisableWidgets               |    Disable the widget service & hide the widget (news and interests) icon from the taskbar. |
+| -HideChat                     |    Hide the chat (meet now) icon from the taskbar. |
 | -HideOnedrive                 |    Hide the onedrive folder in the windows explorer sidepanel. |
 | -Hide3dObjects                |    Hide the 3D objects folder under 'This pc' in windows explorer. |
 | -HideMusic                    |    Hide the music folder under 'This pc' in windows explorer. |
@@ -200,12 +207,14 @@ This script can also make various changes to declutter & improve your overall wi
 - Disable telemetry, diagnostic data & targeted ads.
 - Disable bing search, bing AI & cortana in windows search.
 - Disable tips & tricks on the lockscreen. (This changes your lockscreen wallpaper to the windows default)
-- Disable tips, tricks and suggestions in the startmenu and settings, and sync provider ads in windows explorer.
+- Disable tips, tricks and suggestions in the start menu and settings, and sync provider ads in windows explorer.
+- Show hidden files, folders and drives.
+- Show file extensions for known file types.
 - Align taskbar icons to the left. (Windows 11 only)
-- Disable the widget service & hide the widget (news and interests) icon on the taskbar.
-- Hide the chat (meet now) icon on the taskbar.
-- Hide the onedrive folder in the windows explorer sidepanel. (Windows 10 only)
-- Hide the 3D objects and/or music folders under 'This pc' in windows explorer. (Windows 10 only)
+- Hide or change the search icon/box on the taskbar. (Windows 11 only)
+- Disable the widget service & hide the widget (news and interests) icon from the taskbar.
+- Hide the chat (meet now) icon from the taskbar.
+- Hide the 3D objects, music or onedrive folder in the windows explorer sidepanel. (Windows 10 only)
 - Hide the 'Include in library', 'Give access to' and 'Share' options in the context menu. (Windows 10 only)
 
 All of these changes can be individually reverted with the registry files that are included in the 'Regfiles' folder.

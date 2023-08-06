@@ -11,7 +11,7 @@ You can pick and choose exactly which modifications you want the script to make,
 ## Selecting the default settings will
 
 - Remove all bloatware apps from [this list](#click-for-list-of-bloat-that-is-removed).
-- Disable telemetry, diagnostic data & targeted ads.
+- Disable telemetry, diagnostic data, app-launch tracking & targeted ads.
 - Disable bing search & cortana in windows search.
 - Disable tips & tricks on the lockscreen. (This may change your lockscreen wallpaper)
 - Disable tips, tricks and suggestions in the start menu and settings, and sync provider ads in windows explorer.
@@ -26,7 +26,7 @@ Give you access to even more options and allow you to customize the script to yo
 
 In this mode you'll be able to make any of the following changes:
 - Remove all bloatware apps from [this list](#click-for-list-of-bloat-that-is-removed) and optionally also remove gaming-related apps.
-- Disable telemetry, diagnostic data & targeted ads.
+- Disable telemetry, diagnostic data, app-launch tracking & targeted ads.
 - Disable bing search, bing AI & cortana in windows search.
 - Disable tips & tricks on the lockscreen. (This may change your lockscreen wallpaper)
 - Disable tips, tricks and suggestions in the start menu and settings, and sync provider ads in windows explorer.

@@ -175,7 +175,7 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
 
             Write-Output ""
 
-            if ($( Read-Host -Prompt "Disable telemetry, diagnostic data and targeted ads? (y/n)" ) -eq 'y') {
+            if ($( Read-Host -Prompt "Disable telemetry, diagnostic data, app-launch tracking and targeted ads? (y/n)" ) -eq 'y') {
                 $PSBoundParameters.Add('DisableTelemetry', $DisableTelemetry)   
             }
 
@@ -356,16 +356,11 @@ switch ($PSBoundParameters.Keys) {
         continue
     }
     'DisableTelemetry' {
-        RegImport "> Disabling telemetry, diagnostic data and targeted ads..." $PSScriptRoot\Regfiles\Disable_Telemetry.reg
+        RegImport "> Disabling telemetry, diagnostic data, app-launch tracking and targeted ads..." $PSScriptRoot\Regfiles\Disable_Telemetry.reg
         Write-Output ""
         continue
     }
-    'DisableBingSearches' {
-        RegImport "> Disabling bing search, bing AI & cortana in windows search..." $PSScriptRoot\Regfiles\Disable_Bing_Cortana_In_Search.reg
-        Write-Output ""
-        continue
-    }
-    'DisableBing' {
+    {$_ -in "DisableBingSearches", "DisableBing"} {
         RegImport "> Disabling bing search, bing AI & cortana in windows search..." $PSScriptRoot\Regfiles\Disable_Bing_Cortana_In_Search.reg
         Write-Output ""
         continue

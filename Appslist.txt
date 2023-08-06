@@ -48,6 +48,7 @@
 *COOKINGFEVER*
 *CyberLinkMediaSuiteEssentials*
 *DisneyMagicKingdoms*
+*Disney*
 *Dolby*
 *DrawboardPDF*
 *Duolingo-LearnLanguagesforFree*
@@ -59,6 +60,7 @@
 *HiddenCity*
 *HULULLC.HULUPLUS*
 *iHeartRadio*
+*Instagram*
 *king.com.BubbleWitch3Saga*
 *king.com.CandyCrushSaga*
 *king.com.CandyCrushSodaSaga*
@@ -78,6 +80,7 @@
 *SlingTV*
 *Speed Test*
 *Spotify*
+*TikTok*
 *TuneInRadio*
 *Twitter*
 *Viber*

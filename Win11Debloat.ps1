@@ -20,6 +20,7 @@ param
     [Parameter(ValueFromPipeline = $true)][switch]$ShowSearchIconTb,
     [Parameter(ValueFromPipeline = $true)][switch]$ShowSearchLabelTb,
     [Parameter(ValueFromPipeline = $true)][switch]$ShowSearchBoxTb,
+    [Parameter(ValueFromPipeline = $true)][switch]$HideTaskview,
     [Parameter(ValueFromPipeline = $true)][switch]$DisableWidgets,
     [Parameter(ValueFromPipeline = $true)][switch]$HideWidgets,
     [Parameter(ValueFromPipeline = $true)][switch]$DisableChat,
@@ -88,7 +89,7 @@ function RegImport {
 }
 
 
-# Change script mode based on provided parameters or user input
+# Change script execution based on provided parameters or user input
 if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (($PSBoundParameters.Count -eq 1) -and ($PSBoundParameters.ContainsKey('WhatIf') -or $PSBoundParameters.ContainsKey('Confirm') -or $PSBoundParameters.ContainsKey('Verbose')))) {
     if ($RunDefaults -or $RunWin11Defaults) {
         $Mode = '1';
@@ -207,6 +208,7 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
                         $PSBoundParameters.Add('TaskbarAlignLeft', $TaskbarAlignLeft)   
                     }
 
+                    # Show options for search icon on taskbar, only continue on valid input
                     Do {
                         Write-Output ""
                         Write-Output "   Options:"
@@ -233,7 +235,12 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
                         '4' {
                             $PSBoundParameters.Add('ShowSearchBoxTb', $ShowSearchBoxTb) 
                         }
+                    }
 
+                    Write-Output ""
+
+                    if ($( Read-Host -Prompt "   Hide the taskview button from the taskbar? (y/n)" ) -eq 'y') {
+                        $PSBoundParameters.Add('HideTaskview', $HideTaskview)   
                     }
                 }
 
@@ -395,6 +402,11 @@ switch ($PSBoundParameters.Keys) {
     }
     'ShowSearchBoxTb' {
         RegImport "> Changing taskbar search to search box..." $PSScriptRoot\Regfiles\Show_Search_Box.reg
+        Write-Output ""
+        continue
+    }
+    'HideTaskview' {
+        RegImport "> Hiding the taskview button from the taskbar..." $PSScriptRoot\Regfiles\Hide_Taskview_Taskbar.reg
         Write-Output ""
         continue
     }

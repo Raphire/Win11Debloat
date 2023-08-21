@@ -34,7 +34,7 @@ In this mode you'll be able to make any of the following changes:
 - Show file extensions for known file types.
 - Align taskbar icons to the left. (Windows 11 only)
 - Hide or change the search icon/box on the taskbar. (Windows 11 only)
-- Hide the taskview button from the taskbar.
+- Hide the taskview button from the taskbar. (Windows 11 only)
 - Disable the widget service & hide the widget (news and interests) icon from the taskbar.
 - Hide the chat (meet now) icon from the taskbar.
 - Hide the 3D objects, music or onedrive folder in the windows explorer sidepanel. (Windows 10 only)

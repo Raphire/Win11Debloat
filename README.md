@@ -143,6 +143,7 @@ By default, this script removes a large selection preinstalled bloatware, while 
     - ActiproSoftwareLLC  
     - AdobeSystemsIncorporated.AdobePhotoshopExpress  
     - Amazon.com.Amazon  
+    - AmazonVideo.PrimeVideo
     - Asphalt8Airborne   
     - AutodeskSketchBook  
     - CaesarsSlotsFreeCasino  

@@ -1,9 +1,9 @@
 # The apps below this line WILL be uninstalled. If you wish to KEEP any of the apps below
 #  simply add a # character in front of the specific app in the list below.
 #
+*Clipchamp.Clipchamp*
 *Microsoft.3DBuilder*
 *Microsoft.549981C3F5F10*   #Cortana app
-*Microsoft.Asphalt8Airborne*
 *Microsoft.BingFinance*
 *Microsoft.BingFoodAndDrink*            
 *Microsoft.BingHealthAndFitness*         
@@ -44,7 +44,6 @@
 *Asphalt8Airborne* 
 *AutodeskSketchBook*
 *CaesarsSlotsFreeCasino*
-*Clipchamp.Clipchamp*
 *COOKINGFEVER*
 *CyberLinkMediaSuiteEssentials*
 *DisneyMagicKingdoms*
@@ -96,7 +95,8 @@
 #
 #*Microsoft.GetHelp*                      # Required for some Windows 11 Troubleshooters
 #*Microsoft.MSPaint*                      # Paint 3D
-#*Microsoft.People*                       # Required with Mail & Calendar
+#*Microsoft.Paint*                        # Classic Paint
+#*Microsoft.People*                       # Required for & included with Mail & Calendar
 #*Microsoft.PowerAutomateDesktop*
 #*Microsoft.RemoteDesktop*
 #*Microsoft.ScreenSketch*                 # Snipping Tool

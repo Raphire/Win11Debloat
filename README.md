@@ -102,9 +102,9 @@ By default, this script removes a large selection preinstalled bloatware, while 
   <blockquote>
 
     Microsoft bloat:
+    - Clipchamp.Clipchamp  
     - Microsoft.3DBuilder  
     - Microsoft.549981C3F5F10 (Cortana app)
-    - Microsoft.Asphalt8Airborne  
     - Microsoft.BingFinance  
     - Microsoft.BingFoodAndDrink 
     - Microsoft.BingHealthAndFitness
@@ -146,7 +146,6 @@ By default, this script removes a large selection preinstalled bloatware, while 
     - Asphalt8Airborne   
     - AutodeskSketchBook  
     - CaesarsSlotsFreeCasino  
-    - Clipchamp.Clipchamp  
     - COOKINGFEVER  
     - CyberLinkMediaSuiteEssentials  
     - DisneyMagicKingdoms  
@@ -197,9 +196,10 @@ By default, this script removes a large selection preinstalled bloatware, while 
   <blockquote>
     
     Apps that are required or useful for most users:
-    - Microsoft.GetHelp  
+    - Microsoft.GetHelp (Required for some Windows 11 Troubleshooters)
     - Microsoft.MSPaint (Paint 3D)
-    - Microsoft.People (Required with Mail & Calendar)
+    - Microsoft.Paint (Classic Paint)
+    - Microsoft.People (Required for & included with Mail & Calendar)
     - Microsoft.RemoteDesktop  
     - Microsoft.ScreenSketch (Snipping Tool)
     - Microsoft.Whiteboard (Only preinstalled on devices with touchscreen and/or pen support)

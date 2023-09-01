@@ -12,7 +12,6 @@
 *Microsoft.BingTranslator*
 *Microsoft.BingTravel* 
 *Microsoft.BingWeather*
-*Microsoft.GetHelp*
 *Microsoft.Getstarted*   # Cannot be uninstalled in Windows 11
 *Microsoft.Messaging*
 *Microsoft.Microsoft3DViewer*
@@ -95,6 +94,7 @@
 # The apps below this line will NOT be uninstalled. If you wish to REMOVE any of the apps below 
 #  simply remove the # character in front of the specific app.
 #
+#*Microsoft.GetHelp*                      # Required for some Windows 11 Troubleshooters
 #*Microsoft.MSPaint*                      # Paint 3D
 #*Microsoft.People*                       # Required with Mail & Calendar
 #*Microsoft.PowerAutomateDesktop*

@@ -113,7 +113,6 @@ By default, this script removes a large selection preinstalled bloatware, while 
     - Microsoft.BingTranslator  
     - Microsoft.BingTravel   
     - Microsoft.BingWeather  
-    - Microsoft.GetHelp  
     - Microsoft.Getstarted (Cannot be uninstalled in Windows 11)
     - Microsoft.Messaging  
     - Microsoft.Microsoft3DViewer  
@@ -197,7 +196,8 @@ By default, this script removes a large selection preinstalled bloatware, while 
   <summary><h4>Click for list of what is NOT removed</h4></summary>
   <blockquote>
     
-    Required or useful apps for regular desktop usage:
+    Apps that are required or useful for most users:
+    - Microsoft.GetHelp  
     - Microsoft.MSPaint (Paint 3D)
     - Microsoft.People (Required with Mail & Calendar)
     - Microsoft.RemoteDesktop  
@@ -213,7 +213,7 @@ By default, this script removes a large selection preinstalled bloatware, while 
     - Microsoft.Xbox.TCUI (UI framework, removing this may break MS store, photos and certain games)
     - Microsoft.ZuneMusic (Modern Media Player)
 
-    Required or useful apps for Microsoft store games:
+    Apps that are required or useful for gaming:
     - Microsoft.GamingApp* (Modern Xbox Gaming App, required for installing some games)
     - Microsoft.XboxGameOverlay* (Game overlay, required for some games)
     - Microsoft.XboxGamingOverlay* (Game overlay, required for some games)

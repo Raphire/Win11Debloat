@@ -114,7 +114,7 @@ function ClearStartMenu {
     Write-Output $message
 
     # Path to start menu template
-    $startmenuTemplate = "./Start/start2.bin"
+    $startmenuTemplate = "$PSScriptRoot/Start/start2.bin"
 
     # Get all user profile folders
     $usersStartMenu = get-childitem -path "C:\Users\*\AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState"
@@ -199,7 +199,7 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
         '1' { 
             Clear-Host
             Write-Output "-------------------------------------------------------------------------------------------"
-            Write-Output " Win11Debloat Script - Windows 10 Default Configuration"
+            Write-Output " Win11Debloat Script - Default Configuration"
             Write-Output "-------------------------------------------------------------------------------------------"
             $PSBoundParameters.Add('RemoveApps', $RemoveApps) 
             $PSBoundParameters.Add('DisableTelemetry', $DisableTelemetry)  
@@ -223,7 +223,7 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
             Write-Output " Win11Debloat Script - Custom Configuration"
             Write-Output "-------------------------------------------------------------------------------------------"
 
-            if ($( Read-Host -Prompt "Remove the pre-installed windows apps? (y/n)" ) -eq 'y') {
+            if ($( Read-Host -Prompt "Remove pre-installed bloatware apps? (y/n)" ) -eq 'y') {
                 $PSBoundParameters.Add('RemoveApps', $RemoveApps)   
 
                 Write-Output ""
@@ -261,7 +261,7 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
 
             # Only show this option for windows 11 users
             if (get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 11%'"){
-                if ($( Read-Host -Prompt "Remove all pinned apps from the start menu? (y/n)" ) -eq 'y') {
+                if ($( Read-Host -Prompt "Remove all pinned apps from the start menu? This applies to all existing and new users (y/n)" ) -eq 'y') {
                     $PSBoundParameters.Add('ClearStart', $ClearStart)   
                 }
             }

@@ -32,7 +32,7 @@ In this mode you'll be able to make any of the following changes:
 - Disable tips, tricks and suggestions in the start menu and settings, and sync provider ads in windows explorer.
 - Show hidden files, folders and drives.
 - Show file extensions for known file types.
-- Remove all pinned apps from the start menu (Windows 11 update 22H2 or later only)
+- Remove all pinned apps from the start menu. NOTE: This applies to all existing and new users. (Windows 11 update 22H2 or later only)
 - Align taskbar icons to the left. (Windows 11 only)
 - Hide or change the search icon/box on the taskbar. (Windows 11 only)
 - Hide the taskview button from the taskbar. (Windows 11 only)
@@ -87,7 +87,7 @@ To run the script without any user input, simply add parameters at the end, exam
 | -ShowSearchBoxTb              |    Show search box on the taskbar. (Windows 11 only) |
 | -DisableWidgets               |    Disable the widget service & hide the widget (news and interests) icon from the taskbar. |
 | -HideChat                     |    Hide the chat (meet now) icon from the taskbar. |
-| -ClearStart                   |    Remove all pinned apps from the start menu. (Windows 11 update 22H2 or later only) |
+| -ClearStart                   |    Remove all pinned apps from the start menu. NOTE: This applies to all existing and new users. (Windows 11 update 22H2 or later only) |
 | -HideOnedrive                 |    Hide the onedrive folder in the windows explorer sidepanel. (Windows 10 only) |
 | -Hide3dObjects                |    Hide the 3D objects folder under 'This pc' in windows explorer. (Windows 10 only) |
 | -HideMusic                    |    Hide the music folder under 'This pc' in windows explorer. (Windows 10 only) |

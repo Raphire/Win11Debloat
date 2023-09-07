@@ -25,6 +25,7 @@ param
     [Parameter(ValueFromPipeline = $true)][switch]$HideWidgets,
     [Parameter(ValueFromPipeline = $true)][switch]$DisableChat,
     [Parameter(ValueFromPipeline = $true)][switch]$HideChat,
+    [Parameter(ValueFromPipeline = $true)][switch]$ClearStart,
     [Parameter(ValueFromPipeline = $true)][switch]$DisableOnedrive,
     [Parameter(ValueFromPipeline = $true)][switch]$HideOnedrive,
     [Parameter(ValueFromPipeline = $true)][switch]$Disable3dObjects,
@@ -86,6 +87,65 @@ function RegImport {
 
     Write-Output $Message
     reg import $path
+}
+
+
+# Stop & Restart the windows explorer process
+function RestartExplorer {
+    Write-Output "> Restarting windows explorer to apply all changes."
+
+    Start-Sleep 0.5
+
+    taskkill /f /im explorer.exe
+
+    Start-Process explorer.exe
+
+    Write-Output ""
+}
+
+
+# Clear all pinned apps from the start menu. 
+# Credit: https://lazyadmin.nl/win-11/customize-windows-11-start-menu-layout/
+function ClearStartMenu {
+    param(
+        $message
+    )
+
+    Write-Output $message
+
+    # Path to start menu template
+    $startmenuTemplate = "./Start/start2.bin"
+
+    # Get all user profile folders
+    $usersStartMenu = get-childitem -path "C:\Users\*\AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState"
+
+    # Copy Start menu to all users folders
+    ForEach ($startmenu in $usersStartMenu) {
+        $startmenuBinFile = $startmenu.Fullname + "\start2.bin"
+
+        # Check if bin file exists
+        if(Test-Path $startmenuBinFile) {
+            Copy-Item -Path $startmenuTemplate -Destination $startmenu -Force
+        }
+        else {
+            # Bin file doesn't exist, indicating the user is not running the correct version of windows. Exit function
+            Write-Output "  Error: Start menu file not found. Please make sure you're running Windows 11 22H2 or later"
+            return
+        }
+    }
+
+    # Also apply start menu template to the default profile
+
+    # Path to default profile
+    $defaultProfile = "C:\Users\default\AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState"
+
+    # Create folder if it doesn't exist
+    if(-not(Test-Path $defaultProfile)) {
+        new-item $defaultProfile -ItemType Directory -Force
+    }
+
+    # Copy template to default profile
+    Copy-Item -Path $startmenuTemplate -Destination $defaultProfile -Force
 }
 
 
@@ -199,7 +259,16 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
 
             Write-Output ""
 
-            if ($( Read-Host -Prompt "Do you want to make any changes to the taskbar and start menu? (y/n)" ) -eq 'y') {
+            # Only show this option for windows 11 users
+            if (get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 11%'"){
+                if ($( Read-Host -Prompt "Remove all pinned apps from the start menu? (y/n)" ) -eq 'y') {
+                    $PSBoundParameters.Add('ClearStart', $ClearStart)   
+                }
+            }
+
+            Write-Output ""
+
+            if ($( Read-Host -Prompt "Do you want to make any changes to the taskbar? (y/n)" ) -eq 'y') {
                 # Only show these specific options for windows 11 users
                 if (get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 11%'"){
                     Write-Output ""
@@ -415,6 +484,11 @@ switch ($PSBoundParameters.Keys) {
         Write-Output ""
         continue
     }
+    'ClearStart' {
+        ClearStartMenu "> Removing all pinned apps from the start menu..."
+        Write-Output ""
+        continue
+    }
     'ShowHiddenFolders' {
         RegImport "> Unhiding hidden files, folders and drives..." $PSScriptRoot\Regfiles\Show_Hidden_Folders.reg
         Write-Output ""
@@ -457,10 +531,11 @@ switch ($PSBoundParameters.Keys) {
     }
 }
 
+RestartExplorer
 
 Write-Output ""
 Write-Output ""
-Write-Output "Script completed! Please restart your PC to make sure all changes are properly applied."
+Write-Output "Script completed!"
 Write-Output ""
 Write-Output ""
 Write-Output "Press any key to continue..."

@@ -126,10 +126,13 @@ function ClearStartMenu {
         # Check if bin file exists
         if(Test-Path $startmenuBinFile) {
             Copy-Item -Path $startmenuTemplate -Destination $startmenu -Force
+
+            $cpyMsg = "Replaced start menu for user " + $startmenu.Fullname.Split("\")[2]
+            Write-Output $cpyMsg
         }
         else {
             # Bin file doesn't exist, indicating the user is not running the correct version of windows. Exit function
-            Write-Output "  Error: Start menu file not found. Please make sure you're running Windows 11 22H2 or later"
+            Write-Output "Error: Start menu file not found. Please make sure you're running Windows 11 22H2 or later"
             return
         }
     }
@@ -141,11 +144,13 @@ function ClearStartMenu {
 
     # Create folder if it doesn't exist
     if(-not(Test-Path $defaultProfile)) {
-        new-item $defaultProfile -ItemType Directory -Force
+        new-item $defaultProfile -ItemType Directory -Force | Out-Null
+        Write-Output "Created LocalState folder for default user"
     }
 
     # Copy template to default profile
     Copy-Item -Path $startmenuTemplate -Destination $defaultProfile -Force
+    Write-Output "Copied start menu template to default user folder"
 }
 
 

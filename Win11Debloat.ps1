@@ -21,6 +21,7 @@ param
     [Parameter(ValueFromPipeline = $true)][switch]$ShowSearchLabelTb,
     [Parameter(ValueFromPipeline = $true)][switch]$ShowSearchBoxTb,
     [Parameter(ValueFromPipeline = $true)][switch]$HideTaskview,
+    [Parameter(ValueFromPipeline = $true)][switch]$DisableCopilot,
     [Parameter(ValueFromPipeline = $true)][switch]$DisableWidgets,
     [Parameter(ValueFromPipeline = $true)][switch]$HideWidgets,
     [Parameter(ValueFromPipeline = $true)][switch]$DisableChat,
@@ -252,15 +253,10 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
 
             Write-Output ""
 
-            if ($( Read-Host -Prompt "Disable tips, tricks and suggestions in the start menu, settings and windows explorer? (y/n)" ) -eq 'y') {
+            if ($( Read-Host -Prompt "Disable tips, tricks, suggestions and ads in start, settings, notifications, windows explorer and on the lockscreen? (y/n)" ) -eq 'y') {
                 $PSBoundParameters.Add('DisableSuggestions', $DisableSuggestions)   
+                $PSBoundParameters.Add('DisableLockscreenTips', $DisableLockscreenTips) 
             }
-
-            Write-Output ""
-
-            if ($( Read-Host -Prompt "Disable tips & tricks on the lockscreen? (y/n)" ) -eq 'y') {
-                $PSBoundParameters.Add('DisableLockscreenTips', $DisableLockscreenTips)   
-            } 
 
             Write-Output ""
 
@@ -273,7 +269,7 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
 
             Write-Output ""
 
-            if ($( Read-Host -Prompt "Do you want to make any changes to the taskbar? (y/n)" ) -eq 'y') {
+            if ($( Read-Host -Prompt "Do you want to make any changes to the taskbar and related services? (y/n)" ) -eq 'y') {
                 # Only show these specific options for windows 11 users
                 if (get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 11%'"){
                     Write-Output ""
@@ -315,6 +311,12 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
 
                     if ($( Read-Host -Prompt "   Hide the taskview button from the taskbar? (y/n)" ) -eq 'y') {
                         $PSBoundParameters.Add('HideTaskview', $HideTaskview)   
+                    }
+                    
+                    Write-Output ""
+
+                    if ($( Read-Host -Prompt "   Disable Windows copilot and hide it from the taskbar? (y/n)" ) -eq 'y') {
+                        $PSBoundParameters.Add('DisableCopilot', $DisableCopilot)   
                     }
                 }
 
@@ -445,7 +447,7 @@ switch ($PSBoundParameters.Keys) {
         continue
     }
     {$_ -in "DisableSuggestions", "DisableWindowsSuggestions"} {
-        RegImport "> Disabling tips, tricks and suggestions in the start menu, settings and  windows explorer..." $PSScriptRoot\Regfiles\Disable_Windows_Suggestions.reg
+        RegImport "> Disabling tips, tricks, suggestions and ads in start, settings, notifications and windows explorer..." $PSScriptRoot\Regfiles\Disable_Windows_Suggestions.reg
         Write-Output ""
         continue
     }
@@ -476,6 +478,11 @@ switch ($PSBoundParameters.Keys) {
     }
     'HideTaskview' {
         RegImport "> Hiding the taskview button from the taskbar..." $PSScriptRoot\Regfiles\Hide_Taskview_Taskbar.reg
+        Write-Output ""
+        continue
+    }
+    'DisableCopilot' {
+        RegImport "> Disabling Windows copilot..." $PSScriptRoot\Regfiles\Disable_Copilot.reg
         Write-Output ""
         continue
     }

@@ -13,8 +13,7 @@ You can pick and choose exactly which modifications you want the script to make,
 - Remove all bloatware apps from [this list](#click-for-list-of-bloat-that-is-removed).
 - Disable telemetry, diagnostic data, app-launch tracking & targeted ads.
 - Disable bing search & cortana in windows search.
-- Disable tips & tricks on the lockscreen. (This may change your lockscreen wallpaper)
-- Disable tips, tricks and suggestions in the start menu and settings, and sync provider ads in windows explorer.
+- Disable tips, tricks, suggestions and ads in start, settings, notifications, windows explorer, and on the lockscreen.
 - Show file extensions for known file types.
 - Disable the widget service & hide the widget (news and interests) icon from the taskbar. 
 - Hide the Chat (meet now) icon from the taskbar.
@@ -28,19 +27,18 @@ In this mode you'll be able to make any of the following changes:
 - Remove all bloatware apps from [this list](#click-for-list-of-bloat-that-is-removed) and optionally also remove gaming-related apps.
 - Disable telemetry, diagnostic data, app-launch tracking & targeted ads.
 - Disable bing search, bing AI & cortana in windows search.
-- Disable tips & tricks on the lockscreen. (This may change your lockscreen wallpaper)
-- Disable tips, tricks and suggestions in the start menu and settings, and sync provider ads in windows explorer.
+- Disable tips, tricks, suggestions and ads in start, settings, notifications, windows explorer, and on the lockscreen.
 - Show hidden files, folders and drives.
 - Show file extensions for known file types.
 - Remove all pinned apps from the start menu. NOTE: This applies to all existing and new users. (Windows 11 update 22H2 or later only)
 - Align taskbar icons to the left. (Windows 11 only)
 - Hide or change the search icon/box on the taskbar. (Windows 11 only)
 - Hide the taskview button from the taskbar. (Windows 11 only)
+- Disable Windows copilot. (Windows 11 only)
 - Disable the widget service & hide the widget (news and interests) icon from the taskbar.
 - Hide the chat (meet now) icon from the taskbar.
 - Hide the 3D objects, music or onedrive folder in the windows explorer sidepanel. (Windows 10 only)
 - Hide the 'Include in library', 'Give access to' and 'Share' options in the context menu. (Windows 10 only)
-
 
 All of these changes can be individually reverted with the registry files that are included in the 'Regfiles' folder.
 
@@ -77,7 +75,7 @@ To run the script without any user input, simply add parameters at the end, exam
 | -DisableTelemetry             |    Disable telemetry, diagnostic data & targeted ads. |
 | -DisableBing                  |    Disable bing search, bing AI & cortana in windows search. |
 | -DisableLockscreenTips        |    Disable tips & tricks on the lockscreen. |
-| -DisableSuggestions           |    Disable tips, tricks and suggestions in the start menu and settings, and sync provider ads in windows explorer. |
+| -DisableSuggestions           |    Disable tips, tricks, suggestions and ads in start, settings, notifications and windows explorer. |
 | -ShowHiddenFolders            |    Show hidden files, folders and drives. |
 | -ShowKnownFileExt             |    Show file extensions for known file types. |
 | -TaskbarAlignLeft             |    Align taskbar icons to the left. (Windows 11 only) |
@@ -85,6 +83,8 @@ To run the script without any user input, simply add parameters at the end, exam
 | -ShowSearchIconTb             |    Show search icon on the taskbar. (Windows 11 only) |
 | -ShowSearchLabelTb            |    Show search icon with label on the taskbar. (Windows 11 only) |
 | -ShowSearchBoxTb              |    Show search box on the taskbar. (Windows 11 only) |
+| -HideTaskview                 |    Hide the taskview button from the taskbar. (Windows 11 only) |
+| -DisableCopilot               |    Disable Windows copilot (Windows 11 only) |
 | -DisableWidgets               |    Disable the widget service & hide the widget (news and interests) icon from the taskbar. |
 | -HideChat                     |    Hide the chat (meet now) icon from the taskbar. |
 | -ClearStart                   |    Remove all pinned apps from the start menu. NOTE: This applies to all existing and new users. (Windows 11 update 22H2 or later only) |
@@ -200,6 +200,7 @@ By default, this script removes a large selection preinstalled bloatware, while 
     Apps that are required or useful for most users:
     - Microsoft.GetHelp (Required for some Windows 11 Troubleshooters)
     - Microsoft.MSPaint (Paint 3D)
+    - Microsoft.OutlookForWindows (New mail app)
     - Microsoft.Paint (Classic Paint)
     - Microsoft.People (Required for & included with Mail & Calendar)
     - Microsoft.RemoteDesktop  

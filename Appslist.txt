@@ -95,6 +95,7 @@
 #
 #*Microsoft.GetHelp*                      # Required for some Windows 11 Troubleshooters
 #*Microsoft.MSPaint*                      # Paint 3D
+#*Microsoft.OutlookForWindows*            # New mail app
 #*Microsoft.Paint*                        # Classic Paint
 #*Microsoft.People*                       # Required for & included with Mail & Calendar
 #*Microsoft.PowerAutomateDesktop*

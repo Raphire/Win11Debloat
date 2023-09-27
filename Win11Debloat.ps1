@@ -3,6 +3,7 @@
 [CmdletBinding(SupportsShouldProcess)]
 param 
 (
+    [Parameter(ValueFromPipeline = $true)][switch]$Silent,
     [Parameter(ValueFromPipeline = $true)][switch]$RunDefaults,
     [Parameter(ValueFromPipeline = $true)][switch]$RunWin11Defaults,
     [Parameter(ValueFromPipeline = $true)][switch]$RemoveApps,
@@ -144,7 +145,7 @@ function ClearStartMenu {
     $defaultProfile = "C:\Users\default\AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState"
 
     # Create folder if it doesn't exist
-    if(-not(Test-Path $defaultProfile)) {
+    if(-Not(Test-Path $defaultProfile)) {
         new-item $defaultProfile -ItemType Directory -Force | Out-Null
         Write-Output "Created LocalState folder for default user"
     }
@@ -155,8 +156,17 @@ function ClearStartMenu {
 }
 
 
+$SPParams = 'WhatIf', 'Confirm', 'Verbose'
+$SPParamCount = 0
+
+foreach ($param in $SPParams) {
+    if ($PSBoundParameters.ContainsKey($param)) {
+        $SPParamCount++
+    }
+}
+
 # Change script execution based on provided parameters or user input
-if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (($PSBoundParameters.Count -eq 1) -and ($PSBoundParameters.ContainsKey('WhatIf') -or $PSBoundParameters.ContainsKey('Confirm') -or $PSBoundParameters.ContainsKey('Verbose')))) {
+if ((-Not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPParamCount -eq $PSBoundParameters.Count)) {
     if ($RunDefaults -or $RunWin11Defaults) {
         $Mode = '1';
     }
@@ -253,7 +263,7 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
 
             Write-Output ""
 
-            if ($( Read-Host -Prompt "Disable tips, tricks, suggestions and ads in start, settings, notifications, windows explorer and on the lockscreen? (y/n)" ) -eq 'y') {
+            if ($( Read-Host -Prompt "Disable tips, tricks, suggestions and ads in start, settings, notifications, explorer and lockscreen? (y/n)" ) -eq 'y') {
                 $PSBoundParameters.Add('DisableSuggestions', $DisableSuggestions)   
                 $PSBoundParameters.Add('DisableLockscreenTips', $DisableLockscreenTips) 
             }
@@ -262,7 +272,7 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
 
             # Only show this option for windows 11 users
             if (get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 11%'"){
-                if ($( Read-Host -Prompt "Remove all pinned apps from the start menu? This applies to all existing and new users (y/n)" ) -eq 'y') {
+                if ($( Read-Host -Prompt "Remove all pinned apps from the start menu? This applies to all existing and new users and can't be reverted (y/n)" ) -eq 'y') {
                     $PSBoundParameters.Add('ClearStart', $ClearStart)   
                 }
             }
@@ -404,6 +414,7 @@ if ((-NOT $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
             Write-Output ""
             Write-Output "Press any key to confirm your choices and execute the script..."
             $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+
             Clear-Host
             Write-Output "-------------------------------------------------------------------------------------------"
             Write-Output " Win11Debloat Script - Custom Configuration"
@@ -447,7 +458,7 @@ switch ($PSBoundParameters.Keys) {
         continue
     }
     {$_ -in "DisableSuggestions", "DisableWindowsSuggestions"} {
-        RegImport "> Disabling tips, tricks, suggestions and ads in start, settings, notifications and windows explorer..." $PSScriptRoot\Regfiles\Disable_Windows_Suggestions.reg
+        RegImport "> Disabling tips, tricks, suggestions and ads across Windows..." $PSScriptRoot\Regfiles\Disable_Windows_Suggestions.reg
         Write-Output ""
         continue
     }
@@ -547,8 +558,12 @@ RestartExplorer
 
 Write-Output ""
 Write-Output ""
-Write-Output "Script completed!"
-Write-Output ""
-Write-Output ""
-Write-Output "Press any key to continue..."
-$null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+Write-Output "Script completed successfully!"
+
+# Suppress prompt if Silent parameter was passed
+if(-Not $Silent) {
+    Write-Output ""
+    Write-Output "Press any key to exit..."
+    $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+}
+

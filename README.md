@@ -56,7 +56,7 @@ Disclaimer: I believe this script to be completely safe to run, in fact, great c
 
 ### Advanced method
 
-This method gives you the option to run the script with certain parameters to tailor the behaviour of the script to your needs without requiring any user input during runtime, making it quicker and easier to deploy on a large number of systems.
+This method gives you the option to run the script with certain parameters to tailor the behaviour of the script to your needs and it allows you to run the script without requiring any user input during runtime, making it quicker and easier to deploy on a large number of systems.
 
 1. [Download the latest version of the script](https://github.com/Raphire/Win11Debloat/archive/master.zip), and extract the .ZIP file to your desired location.
 2. Open powershell as an administrator.
@@ -65,10 +65,11 @@ This method gives you the option to run the script with certain parameters to ta
 5. Enter this into powershell to run the script: `.\Win11Debloat.ps1`
 6. A menu will now open. Select either the default or custom setup to continue.
 
-To run the script without any user input, simply add parameters at the end, example: `.\Win11Debloat.ps1 -RemoveApps -DisableBing`
+To run the script without any user input, simply add parameters at the end, example: `.\Win11Debloat.ps1 -RemoveApps -DisableBing -Silent`
 
 | Parameter | Description |
 | --------- | ----------- |
+| -Silent                       |    Suppresses all interactive prompts, so the script will run without requiring any user input. |
 | -RunDefaults                  |    Run the script with the default settings. |
 | -RemoveApps                   |    Remove all bloatware apps from [this list](#click-for-list-of-bloat-that-is-removed). |
 | -RemoveGamingApps             |    Remove the Xbox App and Xbox Gamebar. |

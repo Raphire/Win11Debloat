@@ -156,7 +156,7 @@ function ClearStartMenu {
 }
 
 
-$SPParams = 'WhatIf', 'Confirm', 'Verbose'
+$SPParams = 'WhatIf', 'Confirm', 'Verbose', 'Silent'
 $SPParamCount = 0
 
 foreach ($param in $SPParams) {
@@ -182,7 +182,7 @@ if ((-Not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
 
             $Mode = Read-Host "Please select an option (1/2/0)" 
 
-            # Show information based on user input
+            # Show information based on user input, Suppress user prompt if Silent parameter was passed
             if ($Mode -eq '0') {
                 Clear-Host
 
@@ -194,7 +194,7 @@ if ((-Not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
                 Write-Output "Press any key to go back..."
                 $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
             }
-            elseif ($Mode -eq '1') {
+            elseif (-Not $Silent -and ($Mode -eq '1')) {
                 Clear-Host
 
                 # Get & print default settings info from file
@@ -409,11 +409,14 @@ if ((-Not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
                 }
             }
 
-            Write-Output ""
-            Write-Output ""
-            Write-Output ""
-            Write-Output "Press any key to confirm your choices and execute the script..."
-            $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+            # Suppress prompt if Silent parameter was passed
+            if (-Not $Silent) {
+                Write-Output ""
+                Write-Output ""
+                Write-Output ""
+                Write-Output "Press any key to confirm your choices and execute the script..."
+                $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+            }
 
             Clear-Host
             Write-Output "-------------------------------------------------------------------------------------------"
@@ -430,140 +433,151 @@ else {
 }
 
 
-# Execute all selected/provided parameters
-switch ($PSBoundParameters.Keys) {
-    'RemoveApps' {
-        RemoveApps "$PSScriptRoot/Appslist.txt" "> Removing pre-installed windows apps..."
+if ($SPParamCount -eq $PSBoundParameters.Keys.Count) {
+    Write-Output "The script completed without making any changes."
+    
+    # Suppress prompt if Silent parameter was passed
+    if(-Not $Silent) {
         Write-Output ""
-        continue
-    }
-    'RemoveGamingApps' {
-        RemoveApps "$PSScriptRoot/GamingAppslist.txt" "> Removing gaming-related windows apps..."
-        Write-Output ""
-        continue
-    }
-    'DisableTelemetry' {
-        RegImport "> Disabling telemetry, diagnostic data, app-launch tracking and targeted ads..." $PSScriptRoot\Regfiles\Disable_Telemetry.reg
-        Write-Output ""
-        continue
-    }
-    {$_ -in "DisableBingSearches", "DisableBing"} {
-        RegImport "> Disabling bing search, bing AI & cortana in windows search..." $PSScriptRoot\Regfiles\Disable_Bing_Cortana_In_Search.reg
-        Write-Output ""
-        continue
-    }
-    'DisableLockscreenTips' {
-        RegImport "> Disabling tips & tricks on the lockscreen..." $PSScriptRoot\Regfiles\Disable_Lockscreen_Tips.reg
-        Write-Output ""
-        continue
-    }
-    {$_ -in "DisableSuggestions", "DisableWindowsSuggestions"} {
-        RegImport "> Disabling tips, tricks, suggestions and ads across Windows..." $PSScriptRoot\Regfiles\Disable_Windows_Suggestions.reg
-        Write-Output ""
-        continue
-    }
-    'TaskbarAlignLeft' {
-        RegImport "> Aligning taskbar buttons to the left..." $PSScriptRoot\Regfiles\Align_Taskbar_Left.reg
-        Write-Output ""
-        continue
-    }
-    'HideSearchTb' {
-        RegImport "> Hiding the search icon from the taskbar..." $PSScriptRoot\Regfiles\Hide_Search_Taskbar.reg
-        Write-Output ""
-        continue
-    }
-    'ShowSearchIconTb' {
-        RegImport "> Changing taskbar search to icon only..." $PSScriptRoot\Regfiles\Show_Search_Icon.reg
-        Write-Output ""
-        continue
-    }
-    'ShowSearchLabelTb' {
-        RegImport "> Changing taskbar search to icon with label..." $PSScriptRoot\Regfiles\Show_Search_Icon_And_Label.reg
-        Write-Output ""
-        continue
-    }
-    'ShowSearchBoxTb' {
-        RegImport "> Changing taskbar search to search box..." $PSScriptRoot\Regfiles\Show_Search_Box.reg
-        Write-Output ""
-        continue
-    }
-    'HideTaskview' {
-        RegImport "> Hiding the taskview button from the taskbar..." $PSScriptRoot\Regfiles\Hide_Taskview_Taskbar.reg
-        Write-Output ""
-        continue
-    }
-    'DisableCopilot' {
-        RegImport "> Disabling Windows copilot..." $PSScriptRoot\Regfiles\Disable_Copilot.reg
-        Write-Output ""
-        continue
-    }
-    {$_ -in "HideWidgets", "DisableWidgets"} {
-        RegImport "> Disabling the widget service and hiding the widget icon from the taskbar..." $PSScriptRoot\Regfiles\Disable_Widgets_Taskbar.reg
-        Write-Output ""
-        continue
-    }
-    {$_ -in "HideChat", "DisableChat"} {
-        RegImport "> Hiding the chat icon from the taskbar..." $PSScriptRoot\Regfiles\Disable_Chat_Taskbar.reg
-        Write-Output ""
-        continue
-    }
-    'ClearStart' {
-        ClearStartMenu "> Removing all pinned apps from the start menu..."
-        Write-Output ""
-        continue
-    }
-    'ShowHiddenFolders' {
-        RegImport "> Unhiding hidden files, folders and drives..." $PSScriptRoot\Regfiles\Show_Hidden_Folders.reg
-        Write-Output ""
-        continue
-    }
-    'ShowKnownFileExt' {
-        RegImport "> Enabling file extensions for known file types..." $PSScriptRoot\Regfiles\Show_Extensions_For_Known_File_Types.reg
-        Write-Output ""
-        continue
-    }
-    {$_ -in "HideOnedrive", "DisableOnedrive"} {
-        RegImport "> Hiding the onedrive folder in windows explorer..." $PSScriptRoot\Regfiles\Hide_Onedrive_Folder.reg
-        Write-Output ""
-        continue
-    }
-    {$_ -in "Hide3dObjects", "Disable3dObjects"} {
-        RegImport "> Hiding the 3D objects folder in windows explorer..." $PSScriptRoot\Regfiles\Hide_3D_Objects_Folder.reg
-        Write-Output ""
-        continue
-    }
-    {$_ -in "HideMusic", "DisableMusic"} {
-        RegImport "> Hiding the music folder in windows explorer..." $PSScriptRoot\Regfiles\Hide_Music_folder.reg
-        Write-Output ""
-        continue
-    }
-    {$_ -in "HideIncludeInLibrary", "DisableIncludeInLibrary"} {
-        RegImport "> Hiding 'Include in library' in the context menu..." $PSScriptRoot\Regfiles\Disable_Include_in_library_from_context_menu.reg
-        Write-Output ""
-        continue
-    }
-    {$_ -in "HideGiveAccessTo", "DisableGiveAccessTo"} {
-        RegImport "> Hiding 'Give access to' in the context menu..." $PSScriptRoot\Regfiles\Disable_Give_access_to_context_menu.reg
-        Write-Output ""
-        continue
-    }
-    {$_ -in "HideShare", "DisableShare"} {
-        RegImport "> Hiding 'Share' in the context menu..." $PSScriptRoot\Regfiles\Disable_Share_from_context_menu.reg
-        Write-Output ""
-        continue
+        Write-Output "Press any key to exit..."
+        $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
     }
 }
+else {
+    # Execute all selected/provided parameters
+    switch ($PSBoundParameters.Keys) {
+        'RemoveApps' {
+            RemoveApps "$PSScriptRoot/Appslist.txt" "> Removing pre-installed windows apps..."
+            Write-Output ""
+            continue
+        }
+        'RemoveGamingApps' {
+            RemoveApps "$PSScriptRoot/GamingAppslist.txt" "> Removing gaming-related windows apps..."
+            Write-Output ""
+            continue
+        }
+        'DisableTelemetry' {
+            RegImport "> Disabling telemetry, diagnostic data, app-launch tracking and targeted ads..." $PSScriptRoot\Regfiles\Disable_Telemetry.reg
+            Write-Output ""
+            continue
+        }
+        {$_ -in "DisableBingSearches", "DisableBing"} {
+            RegImport "> Disabling bing search, bing AI & cortana in windows search..." $PSScriptRoot\Regfiles\Disable_Bing_Cortana_In_Search.reg
+            Write-Output ""
+            continue
+        }
+        'DisableLockscreenTips' {
+            RegImport "> Disabling tips & tricks on the lockscreen..." $PSScriptRoot\Regfiles\Disable_Lockscreen_Tips.reg
+            Write-Output ""
+            continue
+        }
+        {$_ -in "DisableSuggestions", "DisableWindowsSuggestions"} {
+            RegImport "> Disabling tips, tricks, suggestions and ads across Windows..." $PSScriptRoot\Regfiles\Disable_Windows_Suggestions.reg
+            Write-Output ""
+            continue
+        }
+        'TaskbarAlignLeft' {
+            RegImport "> Aligning taskbar buttons to the left..." $PSScriptRoot\Regfiles\Align_Taskbar_Left.reg
+            Write-Output ""
+            continue
+        }
+        'HideSearchTb' {
+            RegImport "> Hiding the search icon from the taskbar..." $PSScriptRoot\Regfiles\Hide_Search_Taskbar.reg
+            Write-Output ""
+            continue
+        }
+        'ShowSearchIconTb' {
+            RegImport "> Changing taskbar search to icon only..." $PSScriptRoot\Regfiles\Show_Search_Icon.reg
+            Write-Output ""
+            continue
+        }
+        'ShowSearchLabelTb' {
+            RegImport "> Changing taskbar search to icon with label..." $PSScriptRoot\Regfiles\Show_Search_Icon_And_Label.reg
+            Write-Output ""
+            continue
+        }
+        'ShowSearchBoxTb' {
+            RegImport "> Changing taskbar search to search box..." $PSScriptRoot\Regfiles\Show_Search_Box.reg
+            Write-Output ""
+            continue
+        }
+        'HideTaskview' {
+            RegImport "> Hiding the taskview button from the taskbar..." $PSScriptRoot\Regfiles\Hide_Taskview_Taskbar.reg
+            Write-Output ""
+            continue
+        }
+        'DisableCopilot' {
+            RegImport "> Disabling Windows copilot..." $PSScriptRoot\Regfiles\Disable_Copilot.reg
+            Write-Output ""
+            continue
+        }
+        {$_ -in "HideWidgets", "DisableWidgets"} {
+            RegImport "> Disabling the widget service and hiding the widget icon from the taskbar..." $PSScriptRoot\Regfiles\Disable_Widgets_Taskbar.reg
+            Write-Output ""
+            continue
+        }
+        {$_ -in "HideChat", "DisableChat"} {
+            RegImport "> Hiding the chat icon from the taskbar..." $PSScriptRoot\Regfiles\Disable_Chat_Taskbar.reg
+            Write-Output ""
+            continue
+        }
+        'ClearStart' {
+            ClearStartMenu "> Removing all pinned apps from the start menu..."
+            Write-Output ""
+            continue
+        }
+        'ShowHiddenFolders' {
+            RegImport "> Unhiding hidden files, folders and drives..." $PSScriptRoot\Regfiles\Show_Hidden_Folders.reg
+            Write-Output ""
+            continue
+        }
+        'ShowKnownFileExt' {
+            RegImport "> Enabling file extensions for known file types..." $PSScriptRoot\Regfiles\Show_Extensions_For_Known_File_Types.reg
+            Write-Output ""
+            continue
+        }
+        {$_ -in "HideOnedrive", "DisableOnedrive"} {
+            RegImport "> Hiding the onedrive folder in windows explorer..." $PSScriptRoot\Regfiles\Hide_Onedrive_Folder.reg
+            Write-Output ""
+            continue
+        }
+        {$_ -in "Hide3dObjects", "Disable3dObjects"} {
+            RegImport "> Hiding the 3D objects folder in windows explorer..." $PSScriptRoot\Regfiles\Hide_3D_Objects_Folder.reg
+            Write-Output ""
+            continue
+        }
+        {$_ -in "HideMusic", "DisableMusic"} {
+            RegImport "> Hiding the music folder in windows explorer..." $PSScriptRoot\Regfiles\Hide_Music_folder.reg
+            Write-Output ""
+            continue
+        }
+        {$_ -in "HideIncludeInLibrary", "DisableIncludeInLibrary"} {
+            RegImport "> Hiding 'Include in library' in the context menu..." $PSScriptRoot\Regfiles\Disable_Include_in_library_from_context_menu.reg
+            Write-Output ""
+            continue
+        }
+        {$_ -in "HideGiveAccessTo", "DisableGiveAccessTo"} {
+            RegImport "> Hiding 'Give access to' in the context menu..." $PSScriptRoot\Regfiles\Disable_Give_access_to_context_menu.reg
+            Write-Output ""
+            continue
+        }
+        {$_ -in "HideShare", "DisableShare"} {
+            RegImport "> Hiding 'Share' in the context menu..." $PSScriptRoot\Regfiles\Disable_Share_from_context_menu.reg
+            Write-Output ""
+            continue
+        }
+    }
 
-RestartExplorer
+    RestartExplorer
 
-Write-Output ""
-Write-Output ""
-Write-Output "Script completed successfully!"
-
-# Suppress prompt if Silent parameter was passed
-if(-Not $Silent) {
     Write-Output ""
-    Write-Output "Press any key to exit..."
-    $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
-}
+    Write-Output ""
+    Write-Output "Script completed successfully!"
 
+    # Suppress prompt if Silent parameter was passed
+    if(-Not $Silent) {
+        Write-Output ""
+        Write-Output "Press any key to exit..."
+        $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+    }
+}

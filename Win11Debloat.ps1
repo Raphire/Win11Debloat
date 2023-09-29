@@ -59,11 +59,11 @@ function RemoveApps {
         $app = $app.Trim()
 
         # Remove any comments from the Appname
-        if (-Not ($app.IndexOf('#') -eq -1)) {
+        if (-not ($app.IndexOf('#') -eq -1)) {
             $app = $app.Substring(0, $app.IndexOf('#'))
         }
         # Remove any remaining spaces from the Appname
-        if (-Not ($app.IndexOf(' ') -eq -1)) {
+        if (-not ($app.IndexOf(' ') -eq -1)) {
             $app = $app.Substring(0, $app.IndexOf(' '))
         }
         
@@ -145,7 +145,7 @@ function ClearStartMenu {
     $defaultProfile = "C:\Users\default\AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState"
 
     # Create folder if it doesn't exist
-    if(-Not(Test-Path $defaultProfile)) {
+    if(-not(Test-Path $defaultProfile)) {
         new-item $defaultProfile -ItemType Directory -Force | Out-Null
         Write-Output "Created LocalState folder for default user"
     }
@@ -166,7 +166,7 @@ foreach ($param in $SPParams) {
 }
 
 # Change script execution based on provided parameters or user input
-if ((-Not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPParamCount -eq $PSBoundParameters.Count)) {
+if ((-not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPParamCount -eq $PSBoundParameters.Count)) {
     if ($RunDefaults -or $RunWin11Defaults) {
         $Mode = '1';
     }
@@ -194,7 +194,7 @@ if ((-Not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
                 Write-Output "Press any key to go back..."
                 $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
             }
-            elseif (-Not $Silent -and ($Mode -eq '1')) {
+            elseif (-not $Silent -and ($Mode -eq '1')) {
                 Clear-Host
 
                 # Get & print default settings info from file
@@ -217,17 +217,18 @@ if ((-Not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
             Write-Output "-------------------------------------------------------------------------------------------"
             Write-Output " Win11Debloat Script - Default Configuration"
             Write-Output "-------------------------------------------------------------------------------------------"
-            $PSBoundParameters.Add('RemoveApps', $RemoveApps) 
-            $PSBoundParameters.Add('DisableTelemetry', $DisableTelemetry)  
-            $PSBoundParameters.Add('DisableBing', $DisableBing) 
-            $PSBoundParameters.Add('DisableLockscreenTips', $DisableLockscreenTips)  
-            $PSBoundParameters.Add('DisableSuggestions', $DisableSuggestions)  
-            $PSBoundParameters.Add('ShowKnownFileExt', $ShowKnownFileExt) 
-            $PSBoundParameters.Add('DisableWidgets', $DisableWidgets) 
-            $PSBoundParameters.Add('HideChat', $HideChat) 
 
-            # Only add this option for windows 10 users
-            if (get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'"){
+            # Add default parameters if they don't already exist
+            $DefaultParameterNames = 'RemoveApps','DisableTelemetry','DisableBing','DisableLockscreenTips','DisableSuggestions','ShowKnownFileExt','DisableWidgets','HideChat'
+            
+            foreach ($ParameterName in $DefaultParameterNames) {
+                if(-not $PSBoundParameters.ContainsKey($ParameterName)){
+                    $PSBoundParameters.Add($ParameterName, $true)
+                }
+            }
+
+            # Only add this option for windows 10 users, if it doesn't already exist
+            if ((get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'") -and (-not $PSBoundParameters.ContainsKey('Hide3dObjects'))) {
                 $PSBoundParameters.Add('Hide3dObjects', $Hide3dObjects)
             }
         }
@@ -410,7 +411,7 @@ if ((-Not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
             }
 
             # Suppress prompt if Silent parameter was passed
-            if (-Not $Silent) {
+            if (-not $Silent) {
                 Write-Output ""
                 Write-Output ""
                 Write-Output ""
@@ -437,7 +438,7 @@ if ($SPParamCount -eq $PSBoundParameters.Keys.Count) {
     Write-Output "The script completed without making any changes."
     
     # Suppress prompt if Silent parameter was passed
-    if(-Not $Silent) {
+    if(-not $Silent) {
         Write-Output ""
         Write-Output "Press any key to exit..."
         $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
@@ -575,7 +576,7 @@ else {
     Write-Output "Script completed successfully!"
 
     # Suppress prompt if Silent parameter was passed
-    if(-Not $Silent) {
+    if(-not $Silent) {
         Write-Output ""
         Write-Output "Press any key to exit..."
         $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")

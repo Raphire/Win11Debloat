@@ -28,6 +28,7 @@ through all the settings yourself, or removing apps one by one!
 - Disable tips, tricks, suggestions and ads in start, settings, notifications, windows explorer, and on the lockscreen.
 - Show hidden files, folders and drives.
 - Show file extensions for known file types.
+- Hide duplicate removable drive entries from the windows explorer navigation pane, so only the entry under 'This PC' remains.
 - Remove all pinned apps from the start menu. NOTE: This applies to all existing and new users. (Windows 11 update 22H2 or later only)
 - Align taskbar icons to the left. (Windows 11 only)
 - Hide or change the search icon/box on the taskbar. (Windows 11 only)

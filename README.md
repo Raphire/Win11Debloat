@@ -30,6 +30,7 @@ In this mode you'll be able to make any of the following changes:
 - Disable tips, tricks, suggestions and ads in start, settings, notifications, windows explorer, and on the lockscreen.
 - Show hidden files, folders and drives.
 - Show file extensions for known file types.
+- Hide duplicate removable drive entries from the windows explorer navigation pane, so only the entry under 'This PC' remains.
 - Remove all pinned apps from the start menu. NOTE: This applies to all existing and new users. (Windows 11 update 22H2 or later only)
 - Align taskbar icons to the left. (Windows 11 only)
 - Hide or change the search icon/box on the taskbar. (Windows 11 only)
@@ -79,6 +80,7 @@ To run the script without any user input, simply add parameters at the end, exam
 | -DisableSuggestions           |    Disable tips, tricks, suggestions and ads in start, settings, notifications and windows explorer. |
 | -ShowHiddenFolders            |    Show hidden files, folders and drives. |
 | -ShowKnownFileExt             |    Show file extensions for known file types. |
+| -HideDupliDrive               |    Hide duplicate removable drive entries from the windows explorer navigation pane, so only the entry under 'This PC' remains. |
 | -TaskbarAlignLeft             |    Align taskbar icons to the left. (Windows 11 only) |
 | -HideSearchTb                 |    Hide search icon from the taskbar. (Windows 11 only) |
 | -ShowSearchIconTb             |    Show search icon on the taskbar. (Windows 11 only) |

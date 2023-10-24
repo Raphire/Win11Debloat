@@ -15,7 +15,8 @@ You can pick and choose exactly which modifications you want the script to make,
 - Disable bing search & cortana in windows search.
 - Disable tips, tricks, suggestions and ads in start, settings, notifications, windows explorer, and on the lockscreen.
 - Show file extensions for known file types.
-- Disable the widget service & hide the widget (news and interests) icon from the taskbar. 
+- Disable Windows Copilot. (Windows 11 only)
+- Disable the widget service & hide the icon from the taskbar. 
 - Hide the Chat (meet now) icon from the taskbar.
 - Hide the 3D objects folder under 'This pc' in windows explorer. (Windows 10 only)
 
@@ -35,8 +36,8 @@ In this mode you'll be able to make any of the following changes:
 - Align taskbar icons to the left. (Windows 11 only)
 - Hide or change the search icon/box on the taskbar. (Windows 11 only)
 - Hide the taskview button from the taskbar. (Windows 11 only)
-- Disable Windows copilot. (Windows 11 only)
-- Disable the widget service & hide the widget (news and interests) icon from the taskbar.
+- Disable Windows Copilot. (Windows 11 only)
+- Disable the widget service & hide icon from the taskbar.
 - Hide the chat (meet now) icon from the taskbar.
 - Hide the 3D objects, music or onedrive folder in the windows explorer sidepanel. (Windows 10 only)
 - Hide the 'Include in library', 'Give access to' and 'Share' options in the context menu. (Windows 10 only)

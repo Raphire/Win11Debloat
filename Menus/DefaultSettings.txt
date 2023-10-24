@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------------------
- Win11Debloat Script - Setup
+ Win11Debloat - Setup
 -------------------------------------------------------------------------------------------
 Win11Debloat will make the following changes:
 - Remove bloatware apps.
@@ -8,7 +8,8 @@ Win11Debloat will make the following changes:
 - Disable tips & tricks on the lockscreen. (This may change your lockscreen wallpaper)
 - Disable tips, tricks and suggestions in the start menu and settings, and ads in windows explorer.
 - Show file extensions for known file types.
-- Disable the widget service & hide the widget (news and interests) icon from the taskbar. 
+- Disable Windows Copilot. (Windows 11 only)
+- Disable the widget service & hide the icon from the taskbar. 
 - Hide the Chat (meet now) icon from the taskbar.
 - Hide the 3D objects folder in windows explorer. (Windows 10 only)
 

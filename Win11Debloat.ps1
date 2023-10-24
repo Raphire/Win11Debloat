@@ -223,7 +223,7 @@ if ((-not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
             Write-Output "-------------------------------------------------------------------------------------------"
 
             # Add default parameters if they don't already exist
-            $DefaultParameterNames = 'RemoveApps','DisableTelemetry','DisableBing','DisableLockscreenTips','DisableSuggestions','ShowKnownFileExt','DisableWidgets','HideChat'
+            $DefaultParameterNames = 'RemoveApps','DisableTelemetry','DisableBing','DisableLockscreenTips','DisableSuggestions','ShowKnownFileExt','DisableWidgets','HideChat','DisableCopilot'
             
             foreach ($ParameterName in $DefaultParameterNames) {
                 if(-not $PSBoundParameters.ContainsKey($ParameterName)){
@@ -275,8 +275,14 @@ if ((-not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
 
             Write-Output ""
 
-            # Only show this option for windows 11 users
+            # Only show these options for windows 11 users
             if (get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 11%'"){
+                if ($( Read-Host -Prompt "Disable Windows Copilot? This applies to all users (y/n)" ) -eq 'y') {
+                    $PSBoundParameters.Add('DisableCopilot', $DisableCopilot)   
+                }
+
+                Write-Output ""
+
                 if ($( Read-Host -Prompt "Remove all pinned apps from the start menu? This applies to all existing and new users and can't be reverted (y/n)" ) -eq 'y') {
                     $PSBoundParameters.Add('ClearStart', $ClearStart)   
                 }
@@ -327,17 +333,11 @@ if ((-not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
                     if ($( Read-Host -Prompt "   Hide the taskview button from the taskbar? (y/n)" ) -eq 'y') {
                         $PSBoundParameters.Add('HideTaskview', $HideTaskview)   
                     }
-                    
-                    Write-Output ""
-
-                    if ($( Read-Host -Prompt "   Disable Windows copilot and hide it from the taskbar? (y/n)" ) -eq 'y') {
-                        $PSBoundParameters.Add('DisableCopilot', $DisableCopilot)   
-                    }
                 }
 
                 Write-Output ""
 
-                if ($( Read-Host -Prompt "   Disable the widgets service and hide the widget (news and interests) icon from the taskbar? (y/n)" ) -eq 'y') {
+                if ($( Read-Host -Prompt "   Disable the widgets service and hide the icon from the taskbar? (y/n)" ) -eq 'y') {
                     $PSBoundParameters.Add('DisableWidgets', $DisableWidgets)   
                 }
 
@@ -368,29 +368,29 @@ if ((-not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
                 if ($( Read-Host -Prompt "   Hide duplicate removable drive entries from the windows explorer sidepane so they only show under 'This PC'? (y/n)" ) -eq 'y') {
                     $PSBoundParameters.Add('HideDupliDrive', $HideDupliDrive)   
                 }
-            }
 
-            # Only show option for disabling these specific folders for windows 10 users
-            if (get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'"){
-                Write-Output ""
-
-                if ($( Read-Host -Prompt "Do you want to hide any folders from the windows explorer sidepane? (y/n)" ) -eq 'y') {
+                # Only show option for disabling these specific folders for windows 10 users
+                if (get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'"){
                     Write-Output ""
 
-                    if ($( Read-Host -Prompt "   Hide the onedrive folder from the windows explorer sidepane? (y/n)" ) -eq 'y') {
-                        $PSBoundParameters.Add('HideOnedrive', $HideOnedrive)   
-                    }
+                    if ($( Read-Host -Prompt "Do you want to hide any folders from the windows explorer sidepane? (y/n)" ) -eq 'y') {
+                        Write-Output ""
 
-                    Write-Output ""
-                    
-                    if ($( Read-Host -Prompt "   Hide the 3D objects folder from the windows explorer sidepane? (y/n)" ) -eq 'y') {
-                        $PSBoundParameters.Add('Hide3dObjects', $Hide3dObjects)   
-                    }
-                    
-                    Write-Output ""
+                        if ($( Read-Host -Prompt "   Hide the onedrive folder from the windows explorer sidepane? (y/n)" ) -eq 'y') {
+                            $PSBoundParameters.Add('HideOnedrive', $HideOnedrive)   
+                        }
 
-                    if ($( Read-Host -Prompt "   Hide the music folder from the windows explorer sidepane? (y/n)" ) -eq 'y') {
-                        $PSBoundParameters.Add('HideMusic', $HideMusic)   
+                        Write-Output ""
+                        
+                        if ($( Read-Host -Prompt "   Hide the 3D objects folder from the windows explorer sidepane? (y/n)" ) -eq 'y') {
+                            $PSBoundParameters.Add('Hide3dObjects', $Hide3dObjects)   
+                        }
+                        
+                        Write-Output ""
+
+                        if ($( Read-Host -Prompt "   Hide the music folder from the windows explorer sidepane? (y/n)" ) -eq 'y') {
+                            $PSBoundParameters.Add('HideMusic', $HideMusic)   
+                        }
                     }
                 }
             }

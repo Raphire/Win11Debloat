@@ -24,20 +24,20 @@ through all the settings yourself, or removing apps one by one!
 -------------------------------------------------------------------------------------------
 - Remove bloatware apps, the list can be found in the 'Appslist.txt' file.
 - Remove gaming-related apps, the list can be found in the 'GamingAppslist.txt' file.
+- Remove all pinned apps from the start menu. NOTE: This applies to all existing and new users. (Windows 11 build 22621+)
 - Disable telemetry, diagnostic data, app-launch tracking & targeted ads.
 - Disable bing search, bing AI & cortana in windows search.
 - Disable tips, tricks, suggestions and ads in start, settings, notifications, windows explorer, and on the lockscreen.
-- Disable Windows Copilot. (Windows 11 only)
-- Restore the old Windows 10 style context menu (Windows 11 only)
+- Disable Windows Copilot. (Windows 11 build 22621+)
+- Restore the old Windows 10 style context menu. (Windows 11 build 22000+)
 - Show hidden files, folders and drives.
 - Show file extensions for known file types.
 - Hide duplicate removable drive entries from the windows explorer navigation pane, so only the entry under 'This PC' remains.
-- Remove all pinned apps from the start menu. NOTE: This applies to all existing and new users. (Windows 11 update 22H2 or later only)
-- Align taskbar icons to the left. (Windows 11 only)
-- Hide or change the search icon/box on the taskbar. (Windows 11 only)
-- Hide the taskview button from the taskbar. (Windows 11 only)
+- Align taskbar icons to the left. (Windows 11 build 22000+)
+- Hide or change the search icon/box on the taskbar. (Windows 11 build 22000+)
+- Hide the taskview button from the taskbar. (Windows 11 build 22000+)
 - Disable the widget service & hide the icon from the taskbar.
-- Hide the chat (meet now) icon from the taskbar.
+- Hide the chat (meet now) icon from the taskbar. (Up to build 22621)
 - Hide the 3D objects, music or onedrive folder in the windows explorer sidepanel. (Windows 10 only)
 - Hide the 'Include in library', 'Give access to' and 'Share' options in the context menu. (Windows 10 only)
 

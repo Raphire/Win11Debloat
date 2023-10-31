@@ -26,12 +26,12 @@ Give you access to even more options and allow you to customize the script to yo
 
 In this mode you'll be able to make any of the following changes:
 - Remove all bloatware apps from [this list](#click-for-list-of-bloat-that-is-removed) and optionally also remove gaming-related apps.
-- Remove all pinned apps from the start menu. NOTE: This applies to all existing and new users. (Windows 11 update 22H2 or later only)
+- Remove all pinned apps from the start menu. NOTE: This applies to all existing and new users. (Windows 11 only)
 - Disable telemetry, diagnostic data, app-launch tracking & targeted ads.
 - Disable bing search, bing AI & cortana in windows search.
 - Disable tips, tricks, suggestions and ads in start, settings, notifications, windows explorer, and on the lockscreen.
 - Disable Windows Copilot. (Windows 11 only)
-- Restore the old Windows 10 style context menu (Windows 11 only)
+- Restore the old Windows 10 style context menu. (Windows 11 only)
 - Show hidden files, folders and drives.
 - Show file extensions for known file types.
 - Hide duplicate removable drive entries from the windows explorer navigation pane, so only the entry under 'This PC' remains.
@@ -56,6 +56,9 @@ Disclaimer: I believe this script to be completely safe to run, in fact, great c
 3. Double click the 'Run.bat' file to start the script. Note: If the console window immediately closes and nothing happens, try the advanced method below.
 4. Accept the windows UAC prompt to run the script as administrator, this is required for the script to function.
 5. A new powershell window will now open, showing the Win11Debloat menu. Select either the default or custom setup to continue.
+6. Carefully read through and follow the on-screen instructions. 
+
+After making the selected changes the Win11Debloat script will restart the Windows Explorer process to properly apply them. If Windows Explorer does not recover after running the script and your desktop stays black, don't worry. Just press Ctrl + Alt + Del to restart your PC.
 
 ### Advanced method
 
@@ -66,7 +69,7 @@ This method gives you the option to run the script with certain parameters to ta
 3. Enable powershell execution by entering the following command: `Set-ExecutionPolicy Unrestricted -Scope Process`
 4. In powershell, navigate to the directory where the files were extracted. Example: `cd c:\Win11Debloat`
 5. Enter this into powershell to run the script: `.\Win11Debloat.ps1`
-6. A menu will now open. Select either the default or custom setup to continue.
+6. The Win11Debloat menu will now open. Select either the default or custom setup to continue.
 
 To run the script without any user input, simply add parameters at the end, example: `.\Win11Debloat.ps1 -RemoveApps -DisableBing -Silent`
 
@@ -103,7 +106,7 @@ To run the script without any user input, simply add parameters at the end, exam
 
 ## Debloat Windows
 
-By default, this script removes a large selection preinstalled bloatware, while preserving actually useful apps like the calculator, mail, media player and photos. If you do end up needing any of the removed apps in the future you can easily reinstall them through the Microsoft store. A full list of what is and isn't removed can be found below, but if you're unhappy with the default selection you can customize exactly which apps are removed by the script by editing the apps list found in the ['Appslist.txt'](https://github.com/Raphire/Win11Debloat/blob/master/Appslist.txt) and ['GamingAppslist.txt'](https://github.com/Raphire/Win11Debloat/blob/master/GamingAppslist.txt) files.
+By default, this script removes a large selection preinstalled bloatware, while preserving actually useful apps like the calculator, mail, media player and photos. If you do end up needing any of the removed apps in the future you can easily reinstall them through the Microsoft store. A full list of what is and isn't removed can be found below. If you're unhappy with the default selection you can customize exactly which apps are removed by the script by editing the apps list found in the ['Appslist.txt'](https://github.com/Raphire/Win11Debloat/blob/master/Appslist.txt) and ['GamingAppslist.txt'](https://github.com/Raphire/Win11Debloat/blob/master/GamingAppslist.txt) files.
 
 <details open>
   <summary><h4>Click for list of bloat that is removed</h4></summary>

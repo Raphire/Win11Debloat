@@ -7,8 +7,8 @@ Win11Debloat will make the following changes:
 - Disable bing search & cortana in windows search.
 - Disable tips & tricks on the lockscreen. (This may change your lockscreen wallpaper)
 - Disable tips, tricks and suggestions in the start menu and settings, and ads in windows explorer.
+- Disable Windows Copilot. (Windows 11 build 22621+)
 - Show file extensions for known file types.
-- Disable Windows Copilot. (Windows 11 only)
 - Disable the widget service & hide the icon from the taskbar. 
 - Hide the Chat (meet now) icon from the taskbar.
 - Hide the 3D objects folder in windows explorer. (Windows 10 only)

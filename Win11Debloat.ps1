@@ -240,6 +240,9 @@ if ((-not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
 
         # Custom mode, add options based on user input
         '2' { 
+            # Get current windows version to compare against features
+            $winversion = Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' CurrentBuild
+
             Clear-Host
             Write-Output "-------------------------------------------------------------------------------------------"
             Write-Output " Win11Debloat Script - Custom Configuration"
@@ -255,10 +258,10 @@ if ((-not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
                 }
             }
 
-            Write-Output ""
+            # Only show this option for windows 11 users running build 22621 or later
+            if ($winversion -ge 22621){
+                Write-Output ""
 
-            # Only show this options for windows 11 users
-            if (get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 11%'"){
                 if ($( Read-Host -Prompt "Remove all pinned apps from the start menu? This applies to all existing and new users and can't be reverted (y/n)" ) -eq 'y') {
                     $PSBoundParameters.Add('ClearStart', $ClearStart)   
                 }
@@ -283,14 +286,17 @@ if ((-not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
                 $PSBoundParameters.Add('DisableLockscreenTips', $DisableLockscreenTips) 
             }
 
-            Write-Output ""
+            # Only show this option for windows 11 users running build 22621 or later
+            if ($winversion -ge 22621){
+                Write-Output ""
 
-            # Only show these options for windows 11 users
-            if (get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 11%'"){
                 if ($( Read-Host -Prompt "Disable Windows Copilot? This applies to all users (y/n)" ) -eq 'y') {
-                    $PSBoundParameters.Add('DisableCopilot', $DisableCopilot)   
+                    $PSBoundParameters.Add('DisableCopilot', $DisableCopilot)
                 }
+            }
 
+            # Only show this option for windows 11 users running build 22000 or later
+            if ($winversion -ge 22000){
                 Write-Output ""
 
                 if ($( Read-Host -Prompt "Restore the old Windows 10 style context menu? (y/n)" ) -eq 'y') {
@@ -301,8 +307,8 @@ if ((-not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
             Write-Output ""
 
             if ($( Read-Host -Prompt "Do you want to make any changes to the taskbar and related services? (y/n)" ) -eq 'y') {
-                # Only show these specific options for windows 11 users
-                if (get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 11%'"){
+                # Only show these specific options for windows 11 users running build 22000 or later
+                if ($winversion -ge 22000){
                     Write-Output ""
 
                     if ($( Read-Host -Prompt "   Align taskbar buttons to the left side? (y/n)" ) -eq 'y') {
@@ -351,10 +357,13 @@ if ((-not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
                     $PSBoundParameters.Add('DisableWidgets', $DisableWidgets)   
                 }
 
-                Write-Output ""
+                # Only show this options for windows users running build 22621 or earlier
+                if ($winversion -le 22621){
+                    Write-Output ""
 
-                if ($( Read-Host -Prompt "   Hide the chat (meet now) icon from the taskbar? (y/n)" ) -eq 'y') {
-                    $PSBoundParameters.Add('HideChat', $HideChat)   
+                    if ($( Read-Host -Prompt "   Hide the chat (meet now) icon from the taskbar? (y/n)" ) -eq 'y') {
+                        $PSBoundParameters.Add('HideChat', $HideChat)   
+                    }
                 }
             }
 
@@ -375,7 +384,7 @@ if ((-not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
 
                 Write-Output ""
 
-                if ($( Read-Host -Prompt "   Hide duplicate removable drive entries from the windows explorer sidepane so they only show under 'This PC'? (y/n)" ) -eq 'y') {
+                if ($( Read-Host -Prompt "   Hide duplicate removable drive entries from the windows explorer sidepane so they only show under This PC? (y/n)" ) -eq 'y') {
                     $PSBoundParameters.Add('HideDupliDrive', $HideDupliDrive)   
                 }
 

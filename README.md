@@ -14,8 +14,8 @@ You can pick and choose exactly which modifications you want the script to make,
 - Disable telemetry, diagnostic data, app-launch tracking & targeted ads.
 - Disable bing search & cortana in windows search.
 - Disable tips, tricks, suggestions and ads in start, settings, notifications, windows explorer, and on the lockscreen.
-- Show file extensions for known file types.
 - Disable Windows Copilot. (Windows 11 only)
+- Show file extensions for known file types.
 - Disable the widget service & hide the icon from the taskbar. 
 - Hide the Chat (meet now) icon from the taskbar.
 - Hide the 3D objects folder under 'This pc' in windows explorer. (Windows 10 only)
@@ -26,17 +26,18 @@ Give you access to even more options and allow you to customize the script to yo
 
 In this mode you'll be able to make any of the following changes:
 - Remove all bloatware apps from [this list](#click-for-list-of-bloat-that-is-removed) and optionally also remove gaming-related apps.
+- Remove all pinned apps from the start menu. NOTE: This applies to all existing and new users. (Windows 11 update 22H2 or later only)
 - Disable telemetry, diagnostic data, app-launch tracking & targeted ads.
 - Disable bing search, bing AI & cortana in windows search.
 - Disable tips, tricks, suggestions and ads in start, settings, notifications, windows explorer, and on the lockscreen.
+- Disable Windows Copilot. (Windows 11 only)
+- Restore the old Windows 10 style context menu (Windows 11 only)
 - Show hidden files, folders and drives.
 - Show file extensions for known file types.
 - Hide duplicate removable drive entries from the windows explorer navigation pane, so only the entry under 'This PC' remains.
-- Remove all pinned apps from the start menu. NOTE: This applies to all existing and new users. (Windows 11 update 22H2 or later only)
 - Align taskbar icons to the left. (Windows 11 only)
 - Hide or change the search icon/box on the taskbar. (Windows 11 only)
 - Hide the taskview button from the taskbar. (Windows 11 only)
-- Disable Windows Copilot. (Windows 11 only)
 - Disable the widget service & hide icon from the taskbar.
 - Hide the chat (meet now) icon from the taskbar.
 - Hide the 3D objects, music or onedrive folder in the windows explorer sidepanel. (Windows 10 only)
@@ -75,10 +76,12 @@ To run the script without any user input, simply add parameters at the end, exam
 | -RunDefaults                  |    Run the script with the default settings. |
 | -RemoveApps                   |    Remove all bloatware apps from [this list](#click-for-list-of-bloat-that-is-removed). |
 | -RemoveGamingApps             |    Remove the Xbox App and Xbox Gamebar. |
+| -ClearStart                   |    Remove all pinned apps from the start menu. NOTE: This applies to all existing and new users. (Windows 11 update 22H2 or later only) |
 | -DisableTelemetry             |    Disable telemetry, diagnostic data & targeted ads. |
 | -DisableBing                  |    Disable bing search, bing AI & cortana in windows search. |
 | -DisableLockscreenTips        |    Disable tips & tricks on the lockscreen. |
 | -DisableSuggestions           |    Disable tips, tricks, suggestions and ads in start, settings, notifications and windows explorer. |
+| -RevertContextMenu            |    Restore the old Windows 10 style context menu. (Windows 11 only) |
 | -ShowHiddenFolders            |    Show hidden files, folders and drives. |
 | -ShowKnownFileExt             |    Show file extensions for known file types. |
 | -HideDupliDrive               |    Hide duplicate removable drive entries from the windows explorer navigation pane, so only the entry under 'This PC' remains. |
@@ -91,7 +94,6 @@ To run the script without any user input, simply add parameters at the end, exam
 | -DisableCopilot               |    Disable Windows copilot (Windows 11 only) |
 | -DisableWidgets               |    Disable the widget service & hide the widget (news and interests) icon from the taskbar. |
 | -HideChat                     |    Hide the chat (meet now) icon from the taskbar. |
-| -ClearStart                   |    Remove all pinned apps from the start menu. NOTE: This applies to all existing and new users. (Windows 11 update 22H2 or later only) |
 | -HideOnedrive                 |    Hide the onedrive folder in the windows explorer sidepanel. (Windows 10 only) |
 | -Hide3dObjects                |    Hide the 3D objects folder under 'This pc' in windows explorer. (Windows 10 only) |
 | -HideMusic                    |    Hide the music folder under 'This pc' in windows explorer. (Windows 10 only) |

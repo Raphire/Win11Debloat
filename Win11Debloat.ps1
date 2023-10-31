@@ -29,6 +29,7 @@ param
     [Parameter(ValueFromPipeline = $true)][switch]$DisableChat,
     [Parameter(ValueFromPipeline = $true)][switch]$HideChat,
     [Parameter(ValueFromPipeline = $true)][switch]$ClearStart,
+    [Parameter(ValueFromPipeline = $true)][switch]$RevertContextMenu,
     [Parameter(ValueFromPipeline = $true)][switch]$DisableOnedrive,
     [Parameter(ValueFromPipeline = $true)][switch]$HideOnedrive,
     [Parameter(ValueFromPipeline = $true)][switch]$Disable3dObjects,
@@ -256,6 +257,15 @@ if ((-not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
 
             Write-Output ""
 
+            # Only show this options for windows 11 users
+            if (get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 11%'"){
+                if ($( Read-Host -Prompt "Remove all pinned apps from the start menu? This applies to all existing and new users and can't be reverted (y/n)" ) -eq 'y') {
+                    $PSBoundParameters.Add('ClearStart', $ClearStart)   
+                }
+            }
+
+            Write-Output ""
+
             if ($( Read-Host -Prompt "Disable telemetry, diagnostic data, app-launch tracking and targeted ads? (y/n)" ) -eq 'y') {
                 $PSBoundParameters.Add('DisableTelemetry', $DisableTelemetry)   
             }
@@ -283,8 +293,8 @@ if ((-not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
 
                 Write-Output ""
 
-                if ($( Read-Host -Prompt "Remove all pinned apps from the start menu? This applies to all existing and new users and can't be reverted (y/n)" ) -eq 'y') {
-                    $PSBoundParameters.Add('ClearStart', $ClearStart)   
+                if ($( Read-Host -Prompt "Restore the old Windows 10 style context menu? (y/n)" ) -eq 'y') {
+                    $PSBoundParameters.Add('RevertContextMenu', $RevertContextMenu)   
                 }
             }
 
@@ -295,7 +305,7 @@ if ((-not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
                 if (get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 11%'"){
                     Write-Output ""
 
-                    if ($( Read-Host -Prompt "   Align taskbar buttons to left side? (y/n)" ) -eq 'y') {
+                    if ($( Read-Host -Prompt "   Align taskbar buttons to the left side? (y/n)" ) -eq 'y') {
                         $PSBoundParameters.Add('TaskbarAlignLeft', $TaskbarAlignLeft)   
                     }
 
@@ -465,6 +475,10 @@ else {
             RemoveApps "$PSScriptRoot/GamingAppslist.txt" "> Removing gaming-related windows apps..."
             continue
         }
+        'ClearStart' {
+            ClearStartMenu "> Removing all pinned apps from the start menu..."
+            continue
+        }
         'DisableTelemetry' {
             RegImport "> Disabling telemetry, diagnostic data, app-launch tracking and targeted ads..." $PSScriptRoot\Regfiles\Disable_Telemetry.reg
             continue
@@ -479,6 +493,10 @@ else {
         }
         {$_ -in "DisableSuggestions", "DisableWindowsSuggestions"} {
             RegImport "> Disabling tips, tricks, suggestions and ads across Windows..." $PSScriptRoot\Regfiles\Disable_Windows_Suggestions.reg
+            continue
+        }
+        'RevertContextMenu' {
+            RegImport "> Restoring the old Windows 10 style context menu..." $PSScriptRoot\Regfiles\Disable_Show_More_Options_Context_Menu.reg
             continue
         }
         'TaskbarAlignLeft' {
@@ -515,10 +533,6 @@ else {
         }
         {$_ -in "HideChat", "DisableChat"} {
             RegImport "> Hiding the chat icon from the taskbar..." $PSScriptRoot\Regfiles\Disable_Chat_Taskbar.reg
-            continue
-        }
-        'ClearStart' {
-            ClearStartMenu "> Removing all pinned apps from the start menu..."
             continue
         }
         'ShowHiddenFolders' {

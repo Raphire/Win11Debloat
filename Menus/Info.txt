@@ -9,12 +9,12 @@ through all the settings yourself, or removing apps one by one!
 -------------------------------------------------------------------------------------------
  Using the default configuration the script will
 -------------------------------------------------------------------------------------------
-- Remove bloatware apps, the list can be found in the 'Appslist.txt' file.
+- Remove all bloatware apps from [this list](#click-for-list-of-bloat-that-is-removed).
 - Disable telemetry, diagnostic data, app-launch tracking & targeted ads.
 - Disable bing search & cortana in windows search.
 - Disable tips, tricks, suggestions and ads in start, settings, notifications, windows explorer, and on the lockscreen.
-- Show file extensions for known file types.
 - Disable Windows Copilot. (Windows 11 only)
+- Show file extensions for known file types.
 - Disable the widget service & hide the icon from the taskbar. 
 - Hide the Chat (meet now) icon from the taskbar.
 - Hide the 3D objects folder under 'This pc' in windows explorer. (Windows 10 only)
@@ -27,6 +27,8 @@ through all the settings yourself, or removing apps one by one!
 - Disable telemetry, diagnostic data, app-launch tracking & targeted ads.
 - Disable bing search, bing AI & cortana in windows search.
 - Disable tips, tricks, suggestions and ads in start, settings, notifications, windows explorer, and on the lockscreen.
+- Disable Windows Copilot. (Windows 11 only)
+- Restore the old Windows 10 style context menu (Windows 11 only)
 - Show hidden files, folders and drives.
 - Show file extensions for known file types.
 - Hide duplicate removable drive entries from the windows explorer navigation pane, so only the entry under 'This PC' remains.
@@ -34,7 +36,6 @@ through all the settings yourself, or removing apps one by one!
 - Align taskbar icons to the left. (Windows 11 only)
 - Hide or change the search icon/box on the taskbar. (Windows 11 only)
 - Hide the taskview button from the taskbar. (Windows 11 only)
-- Disable Windows Copilot. (Windows 11 only)
 - Disable the widget service & hide the icon from the taskbar.
 - Hide the chat (meet now) icon from the taskbar.
 - Hide the 3D objects, music or onedrive folder in the windows explorer sidepanel. (Windows 10 only)

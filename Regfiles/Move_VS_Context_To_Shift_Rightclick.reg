@@ -1,7 +1,0 @@
-Windows Registry Editor Version 5.00
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Directory\background\shell\AnyCode]
-"Extended"=""
-
-[HKEY_CLASSES_ROOT\Directory\shell\AnyCode]
-"Extended"=""

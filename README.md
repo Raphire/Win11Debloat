@@ -146,6 +146,7 @@ By default, this script removes a large selection preinstalled bloatware, while 
     - Microsoft.WindowsSoundRecorder  
     - Microsoft.XboxApp (Old Xbox Console Companion App, no longer supported)
     - Microsoft.ZuneVideo  
+    - MicrosoftCorporationII.MicrosoftFamily (Microsoft Family Safety)
     - MicrosoftTeams (Personal version only, does not remove MS teams for business/enterprise)
 
     Third party bloat:

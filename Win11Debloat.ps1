@@ -85,6 +85,27 @@ function RemoveApps {
 }
 
 
+# Removes apps specified during function call from all user accounts and from the OS image.
+function RemoveSpecificApps {
+    param 
+    (
+        $appslist
+    )
+
+    Foreach ($app in $appsList) 
+    { 
+        $appString = $app.Trim('*')
+        Write-Output "Attempting to remove $appString..."
+
+        # Remove installed app for all existing users
+        Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage
+
+        # Remove provisioned app from OS image, so the app won't be installed for any new users
+        Get-AppxProvisionedPackage -Online | Where-Object { $_.PackageName -like $app } | ForEach-Object { Remove-ProvisionedAppxPackage -Online -AllUsers -PackageName $_.PackageName }
+    }
+}
+
+
 # Import & execute regfile
 function RegImport {
     param 
@@ -510,38 +531,18 @@ else {
         }
         'RemoveCommApps' {
             Write-Output "> Removing Mail, Calendar and People apps..."
+            
             $appsList = '*Microsoft.windowscommunicationsapps*', '*Microsoft.People*'
-
-            Foreach ($app in $appsList) 
-            { 
-                $appString = $app.Trim('*')
-                Write-Output "Attempting to remove $appString..."
-
-                # Remove installed app for all existing users
-                Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage
-
-                # Remove provisioned app from OS image, so the app won't be installed for any new users
-                Get-AppxProvisionedPackage -Online | Where-Object { $_.PackageName -like $app } | ForEach-Object { Remove-ProvisionedAppxPackage -Online -AllUsers -PackageName $_.PackageName }
-            }
+            RemoveSpecificApps $appsList
 
             Write-Output ""
             continue
         }
         'RemoveW11Outlook' {
             Write-Output "> Removing new Outlook for Windows app..."
+            
             $appsList = '*Microsoft.OutlookForWindows*'
-
-            Foreach ($app in $appsList) 
-            { 
-                $appString = $app.Trim('*')
-                Write-Output "Attempting to remove $appString..."
-
-                # Remove installed app for all existing users
-                Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage
-
-                # Remove provisioned app from OS image, so the app won't be installed for any new users
-                Get-AppxProvisionedPackage -Online | Where-Object { $_.PackageName -like $app } | ForEach-Object { Remove-ProvisionedAppxPackage -Online -AllUsers -PackageName $_.PackageName }
-            }
+            RemoveSpecificApps $appsList
 
             Write-Output ""
             continue

@@ -25,7 +25,7 @@ You can pick and choose exactly which modifications you want the script to make,
 Give you access to even more options and allow you to customize the script to your exact needs. 
 
 In this mode you'll be able to make any of the following changes:
-- Remove all bloatware apps from [this list](#click-for-list-of-bloat-that-is-removed) and optionally also remove gaming-related apps.
+- Remove all bloatware apps from [this list](#click-for-list-of-bloat-that-is-removed) and optionally also remove communication and gaming-related apps.
 - Remove all pinned apps from the start menu. NOTE: This applies to all existing and new users. (Windows 11 only)
 - Disable telemetry, diagnostic data, app-launch tracking & targeted ads.
 - Disable bing search, bing AI & cortana in windows search.
@@ -79,6 +79,8 @@ To run the script without any user input, simply add parameters at the end, exam
 | -RunDefaults                  |    Run the script with the default settings. |
 | -RemoveApps                   |    Remove all bloatware apps from [this list](#click-for-list-of-bloat-that-is-removed). |
 | -RemoveGamingApps             |    Remove the Xbox App and Xbox Gamebar. |
+| -RemoveCommApps               |    Remove the Mail, Calender, and People apps. |
+| -RemoveW11Outlook             |    Remove the new Outlook for Windows app. |
 | -ClearStart                   |    Remove all pinned apps from the start menu. NOTE: This applies to all existing and new users. (Windows 11 update 22H2 or later only) |
 | -DisableTelemetry             |    Disable telemetry, diagnostic data & targeted ads. |
 | -DisableBing                  |    Disable bing search, bing AI & cortana in windows search. |

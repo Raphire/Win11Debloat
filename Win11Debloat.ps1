@@ -8,6 +8,8 @@ param
     [Parameter(ValueFromPipeline = $true)][switch]$RunWin11Defaults,
     [Parameter(ValueFromPipeline = $true)][switch]$RemoveApps,
     [Parameter(ValueFromPipeline = $true)][switch]$RemoveGamingApps,
+    [Parameter(ValueFromPipeline = $true)][switch]$RemoveCommApps,
+    [Parameter(ValueFromPipeline = $true)][switch]$RemoveW11Outlook,
     [Parameter(ValueFromPipeline = $true)][switch]$DisableTelemetry,
     [Parameter(ValueFromPipeline = $true)][switch]$DisableBingSearches,
     [Parameter(ValueFromPipeline = $true)][switch]$DisableBing,
@@ -251,6 +253,32 @@ if ((-not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
             if ($( Read-Host -Prompt "Remove pre-installed bloatware apps? (y/n)" ) -eq 'y') {
                 $PSBoundParameters.Add('RemoveApps', $RemoveApps)   
 
+                # Show options for removing communication-related apps, only continue on valid input
+                Do {
+                    Write-Output ""
+                    Write-Output "   Options:"
+                    Write-Output "    (n) Don't remove communication-related apps"
+                    Write-Output "    (1) Remove Mail, Calender, People and Outlook for Windows apps"
+                    Write-Output "    (2) Only remove Mail, Calender and People apps"
+                    Write-Output "    (3) Only remove Outlook for Windows app"
+                    $RemoveCommAppInput = Read-Host "   Also remove communication-related apps? (n/1/2/3)" 
+                }
+                while ($RemoveCommAppInput -ne 'n' -and $RemoveCommAppInput -ne '0' -and $RemoveCommAppInput -ne '1' -and $RemoveCommAppInput -ne '2' -and $RemoveCommAppInput -ne '3') 
+
+                # Select correct taskbar search option based on user input
+                switch ($RemoveCommAppInput) {
+                    '1' {
+                        $PSBoundParameters.Add('RemoveCommApps', $RemoveCommApps)
+                        $PSBoundParameters.Add('RemoveW11Outlook', $RemoveW11Outlook)
+                    }
+                    '2' {
+                        $PSBoundParameters.Add('RemoveCommApps', $RemoveCommApps)
+                    }
+                    '3' {
+                        $PSBoundParameters.Add('RemoveW11Outlook', $RemoveW11Outlook)
+                    }
+                }
+
                 Write-Output ""
 
                 if ($( Read-Host -Prompt "   Also remove gaming-related apps such as the Xbox App and Xbox Gamebar? (y/n)" ) -eq 'y') {
@@ -319,12 +347,12 @@ if ((-not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
                     Do {
                         Write-Output ""
                         Write-Output "   Options:"
-                        Write-Output "    (0) No change"
+                        Write-Output "    (n) No change"
                         Write-Output "    (1) Hide search icon from the taskbar"
                         Write-Output "    (2) Show search icon on the taskbar"
                         Write-Output "    (3) Show search icon with label on the taskbar"
                         Write-Output "    (4) Show search box on the taskbar"
-                        $TbSearchInput = Read-Host "   Hide or change the search icon on the taskbar? (0/1/2/3/4)" 
+                        $TbSearchInput = Read-Host "   Hide or change the search icon on the taskbar? (n/1/2/3/4)" 
                     }
                     while ($TbSearchInput -ne 'n' -and $TbSearchInput -ne '0' -and $TbSearchInput -ne '1' -and $TbSearchInput -ne '2' -and $TbSearchInput -ne '3' -and $TbSearchInput -ne '4') 
 
@@ -477,7 +505,45 @@ else {
     # Execute all selected/provided parameters
     switch ($PSBoundParameters.Keys) {
         'RemoveApps' {
-            RemoveApps "$PSScriptRoot/Appslist.txt" "> Removing pre-installed windows apps..."
+            RemoveApps "$PSScriptRoot/Appslist.txt" "> Removing pre-installed windows bloatware..."
+            continue
+        }
+        'RemoveCommApps' {
+            Write-Output "> Removing Mail, Calendar and People apps..."
+            $appsList = '*Microsoft.windowscommunicationsapps*', '*Microsoft.People*'
+
+            Foreach ($app in $appsList) 
+            { 
+                $appString = $app.Trim('*')
+                Write-Output "Attempting to remove $appString..."
+
+                # Remove installed app for all existing users
+                Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage
+
+                # Remove provisioned app from OS image, so the app won't be installed for any new users
+                Get-AppxProvisionedPackage -Online | Where-Object { $_.PackageName -like $app } | ForEach-Object { Remove-ProvisionedAppxPackage -Online -AllUsers -PackageName $_.PackageName }
+            }
+
+            Write-Output ""
+            continue
+        }
+        'RemoveW11Outlook' {
+            Write-Output "> Removing new Outlook for Windows app..."
+            $appsList = '*Microsoft.OutlookForWindows*'
+
+            Foreach ($app in $appsList) 
+            { 
+                $appString = $app.Trim('*')
+                Write-Output "Attempting to remove $appString..."
+
+                # Remove installed app for all existing users
+                Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage
+
+                # Remove provisioned app from OS image, so the app won't be installed for any new users
+                Get-AppxProvisionedPackage -Online | Where-Object { $_.PackageName -like $app } | ForEach-Object { Remove-ProvisionedAppxPackage -Online -AllUsers -PackageName $_.PackageName }
+            }
+
+            Write-Output ""
             continue
         }
         'RemoveGamingApps' {

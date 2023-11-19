@@ -96,9 +96,7 @@
 #
 #*Microsoft.GetHelp*                      # Required for some Windows 11 Troubleshooters
 #*Microsoft.MSPaint*                      # Paint 3D
-#*Microsoft.OutlookForWindows*            # New mail app
 #*Microsoft.Paint*                        # Classic Paint
-#*Microsoft.People*                       # Required for & included with Mail & Calendar
 #*Microsoft.PowerAutomateDesktop*
 #*Microsoft.RemoteDesktop*
 #*Microsoft.ScreenSketch*                 # Snipping Tool
@@ -106,7 +104,6 @@
 #*Microsoft.Windows.Photos*
 #*Microsoft.WindowsCalculator*
 #*Microsoft.WindowsCamera*
-#*Microsoft.windowscommunicationsapps*    # Mail & Calendar
 #*Microsoft.WindowsStore*                 # Microsoft Store, WARNING: This app cannot be reinstalled!
 #*Microsoft.WindowsTerminal*              # New default terminal app in windows 11
 #*Microsoft.Xbox.TCUI*                    # UI framework, seems to be required for MS store, photos and certain games
@@ -116,8 +113,11 @@
 #*Microsoft.ZuneMusic*                    # Modern Media Player
 
 # The apps below will NOT be uninstalled unless selected during the custom setup selection or when
-#  launching the script with the '-RemoveGamingApps' parameter. 
+#  launching the script with the specific parameters found in the README.md file. 
 #
 #*Microsoft.GamingApp*                    # Modern Xbox Gaming App, required for installing some PC games
+#*Microsoft.OutlookForWindows*            # New mail app: Outlook for Windows
+#*Microsoft.People*                       # Required for & included with Mail & Calendar
+#*Microsoft.windowscommunicationsapps*    # Mail & Calendar
 #*Microsoft.XboxGameOverlay*              # Game overlay, required/useful for some games
 #*Microsoft.XboxGamingOverlay*            # Game overlay, required/useful for some games

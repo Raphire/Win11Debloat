@@ -8,9 +8,10 @@ You can pick and choose exactly which modifications you want the script to make,
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/M4M5C6UPC)
 
-## Selecting the default settings will
+## Features
 
-- Remove all bloatware apps from [this list](#click-for-list-of-bloat-that-is-removed).
+### The Default Settings Will:
+- Remove all bloatware apps from [this list](#apps-that-are-removed).
 - Disable telemetry, diagnostic data, app-launch tracking & targeted ads.
 - Disable bing search & cortana in windows search.
 - Disable tips, tricks, suggestions and ads in start, settings, notifications, windows explorer, and on the lockscreen.
@@ -20,12 +21,8 @@ You can pick and choose exactly which modifications you want the script to make,
 - Hide the Chat (meet now) icon from the taskbar.
 - Hide the 3D objects folder under 'This pc' in windows explorer. (Windows 10 only)
 
-## Selecting the custom configuration mode will
-
-Give you access to even more options and allow you to customize the script to your exact needs. 
-
-In this mode you'll be able to make any of the following changes:
-- Remove all bloatware apps from [this list](#click-for-list-of-bloat-that-is-removed) and optionally also remove communication and gaming-related apps.
+### Alternatively Custom Mode Will Allow You To:
+- Remove all bloatware apps from [this list](#apps-that-are-removed) and optionally also remove communication and gaming-related apps.
 - Remove all pinned apps from the start menu. NOTE: This applies to all existing and new users. (Windows 11 only)
 - Disable telemetry, diagnostic data, app-launch tracking & targeted ads.
 - Disable bing search, bing AI & cortana in windows search.
@@ -43,77 +40,16 @@ In this mode you'll be able to make any of the following changes:
 - Hide the 3D objects, music or onedrive folder in the windows explorer sidepanel. (Windows 10 only)
 - Hide the 'Include in library', 'Give access to' and 'Share' options in the context menu. (Windows 10 only)
 
-All of these changes can be individually reverted with the registry files that are included in the 'Regfiles' folder.
+<br/>
 
-## Usage
+> [!TIP]
+> You can change what apps are and aren't removed by editing the ['Appslist.txt'](https://github.com/Raphire/Win11Debloat/blob/master/Appslist.txt) and ['GamingAppslist.txt'](https://github.com/Raphire/Win11Debloat/blob/master/GamingAppslist.txt) files.
 
-Disclaimer: I believe this script to be completely safe to run, in fact, great care went into making sure this script does not break any OS functionality. But use this script at your own risk!
-
-### Easy method
-
-1. [Download the latest version of the script](https://github.com/Raphire/Win11Debloat/archive/master.zip), and extract the .ZIP file to your desired location.
-2. Navigate to the Win11Debloat folder
-3. Double click the 'Run.bat' file to start the script. Note: If the console window immediately closes and nothing happens, try the advanced method below.
-4. Accept the windows UAC prompt to run the script as administrator, this is required for the script to function.
-5. A new powershell window will now open, showing the Win11Debloat menu. Select either the default or custom setup to continue.
-6. Carefully read through and follow the on-screen instructions. 
-
-After making the selected changes the Win11Debloat script will restart the Windows Explorer process to properly apply them. If Windows Explorer does not recover after running the script and your desktop stays black, don't worry. Just press Ctrl + Alt + Del to restart your PC.
-
-### Advanced method
-
-This method gives you the option to run the script with certain parameters to tailor the behaviour of the script to your needs and it allows you to run the script without requiring any user input during runtime, making it quicker and easier to deploy on a large number of systems.
-
-1. [Download the latest version of the script](https://github.com/Raphire/Win11Debloat/archive/master.zip), and extract the .ZIP file to your desired location.
-2. Open powershell as an administrator.
-3. Enable powershell execution by entering the following command: `Set-ExecutionPolicy Unrestricted -Scope Process`
-4. In powershell, navigate to the directory where the files were extracted. Example: `cd c:\Win11Debloat`
-5. Enter this into powershell to run the script: `.\Win11Debloat.ps1`
-6. The Win11Debloat menu will now open. Select either the default or custom setup to continue.
-
-To run the script without any user input, simply add parameters at the end, example: `.\Win11Debloat.ps1 -RemoveApps -DisableBing -Silent`
-
-| Parameter | Description |
-| --------- | ----------- |
-| -Silent                       |    Suppresses all interactive prompts, so the script will run without requiring any user input. |
-| -RunDefaults                  |    Run the script with the default settings. |
-| -RemoveApps                   |    Remove all bloatware apps from [this list](#click-for-list-of-bloat-that-is-removed). |
-| -RemoveGamingApps             |    Remove the Xbox App and Xbox Gamebar. |
-| -RemoveCommApps               |    Remove the Mail, Calender, and People apps. |
-| -RemoveW11Outlook             |    Remove the new Outlook for Windows app. |
-| -ClearStart                   |    Remove all pinned apps from the start menu. NOTE: This applies to all existing and new users. (Windows 11 update 22H2 or later only) |
-| -DisableTelemetry             |    Disable telemetry, diagnostic data & targeted ads. |
-| -DisableBing                  |    Disable bing search, bing AI & cortana in windows search. |
-| -DisableLockscreenTips        |    Disable tips & tricks on the lockscreen. |
-| -DisableSuggestions           |    Disable tips, tricks, suggestions and ads in start, settings, notifications and windows explorer. |
-| -RevertContextMenu            |    Restore the old Windows 10 style context menu. (Windows 11 only) |
-| -ShowHiddenFolders            |    Show hidden files, folders and drives. |
-| -ShowKnownFileExt             |    Show file extensions for known file types. |
-| -HideDupliDrive               |    Hide duplicate removable drive entries from the windows explorer navigation pane, so only the entry under 'This PC' remains. |
-| -TaskbarAlignLeft             |    Align taskbar icons to the left. (Windows 11 only) |
-| -HideSearchTb                 |    Hide search icon from the taskbar. (Windows 11 only) |
-| -ShowSearchIconTb             |    Show search icon on the taskbar. (Windows 11 only) |
-| -ShowSearchLabelTb            |    Show search icon with label on the taskbar. (Windows 11 only) |
-| -ShowSearchBoxTb              |    Show search box on the taskbar. (Windows 11 only) |
-| -HideTaskview                 |    Hide the taskview button from the taskbar. (Windows 11 only) |
-| -DisableCopilot               |    Disable Windows copilot (Windows 11 only) |
-| -DisableWidgets               |    Disable the widget service & hide the widget (news and interests) icon from the taskbar. |
-| -HideChat                     |    Hide the chat (meet now) icon from the taskbar. |
-| -HideOnedrive                 |    Hide the onedrive folder in the windows explorer sidepanel. (Windows 10 only) |
-| -Hide3dObjects                |    Hide the 3D objects folder under 'This pc' in windows explorer. (Windows 10 only) |
-| -HideMusic                    |    Hide the music folder under 'This pc' in windows explorer. (Windows 10 only) |
-| -HideIncludeInLibrary         |    Hide the 'Include in library' option in the context menu. (Windows 10 only) |
-| -HideGiveAccessTo             |    Hide the 'Give access to' option in the context menu. (Windows 10 only) |
-| -HideShare                    |    Hide the 'Share' option in the context menu. (Windows 10 only) |
-
-## Debloat Windows
-
-By default, this script removes a large selection preinstalled bloatware, while preserving actually useful apps like the calculator, mail, media player and photos. If you do end up needing any of the removed apps in the future you can easily reinstall them through the Microsoft store. A full list of what is and isn't removed can be found below. If you're unhappy with the default selection you can customize exactly which apps are removed by the script by editing the apps list found in the ['Appslist.txt'](https://github.com/Raphire/Win11Debloat/blob/master/Appslist.txt) and ['GamingAppslist.txt'](https://github.com/Raphire/Win11Debloat/blob/master/GamingAppslist.txt) files.
-
-<details open>
-  <summary><h4>Click for list of bloat that is removed</h4></summary>
+### Apps that ARE removed
+<details>
+  <summary>Click to expand</summary>
   <blockquote>
-
+    
     Microsoft bloat:
     - Clipchamp.Clipchamp  
     - Microsoft.3DBuilder  
@@ -205,23 +141,24 @@ By default, this script removes a large selection preinstalled bloatware, while 
   </blockquote>
 </details>
 
+### Apps that are NOT removed
 <details>
-  <summary><h4>Click for list of what is NOT removed</h4></summary>
+  <summary>Click to expand</summary>
   <blockquote>
     
     Apps that are required or useful for most users:
     - Microsoft.GetHelp (Required for some Windows 11 Troubleshooters)
     - Microsoft.MSPaint (Paint 3D)
-    - Microsoft.OutlookForWindows (New mail app)
+    - Microsoft.OutlookForWindows*** (New mail app)
     - Microsoft.Paint (Classic Paint)
-    - Microsoft.People (Required for & included with Mail & Calendar)
+    - Microsoft.People** (Required for & included with Mail & Calendar)
     - Microsoft.RemoteDesktop  
     - Microsoft.ScreenSketch (Snipping Tool)
     - Microsoft.Whiteboard (Only preinstalled on devices with touchscreen and/or pen support)
     - Microsoft.Windows.Photos
     - Microsoft.WindowsCalculator
     - Microsoft.WindowsCamera
-    - Microsoft.windowscommunicationsapps (Mail & Calendar)
+    - Microsoft.windowscommunicationsapps** (Mail & Calendar)
     - Microsoft.WindowsStore (Microsoft Store, NOTE: This app cannot be reinstalled!)
     - Microsoft.WindowsTerminal (New default terminal app in windows 11)
     - Microsoft.YourPhone (Phone Link)
@@ -236,5 +173,73 @@ By default, this script removes a large selection preinstalled bloatware, while 
     - Microsoft.XboxSpeechToTextOverlay (Might be required for some games, NOTE: This app cannot be reinstalled!)
 
     * Can be removed in custom mode or by running the script with the '-RemoveGamingApps' parameter.
+    ** Can be removed in custom mode or by running the script with the '-RemoveCommApps' parameter.
+    *** Can be removed in custom mode or by running the script with the '-RemoveW11Outlook' parameter.
   </blockquote>
 </details>
+
+## Usage
+
+> [!Warning]
+> Great care went into making sure this script does not break any OS functionality, but use this script at your own risk!
+
+### Easy method
+
+1. [Download the latest version of the script](https://github.com/Raphire/Win11Debloat/archive/master.zip), and extract the .ZIP file to your desired location.
+2. Navigate to the Win11Debloat folder
+3. Double click the 'Run.bat' file to start the script. Note: If the console window immediately closes and nothing happens, try the advanced method below.
+4. Accept the windows UAC prompt to run the script as administrator, this is required for the script to function.
+5. A new powershell window will now open, showing the Win11Debloat menu. Select either the default or custom setup to continue.
+6. Carefully read through and follow the on-screen instructions. 
+
+After making the selected changes the Win11Debloat script will restart the Windows Explorer process to properly apply them. If Windows Explorer does not recover after running the script and your desktop stays black, don't worry. Just press Ctrl + Alt + Del to restart your PC.
+
+### Advanced method
+
+This method gives you the option to run the script with certain parameters to tailor the behaviour of the script to your needs and it allows you to run the script without requiring any user input during runtime, making it quicker and easier to deploy on a large number of systems.
+
+1. [Download the latest version of the script](https://github.com/Raphire/Win11Debloat/archive/master.zip), and extract the .ZIP file to your desired location.
+2. Open powershell as an administrator.
+3. Enable powershell execution by entering the following command: `Set-ExecutionPolicy Unrestricted -Scope Process`
+4. In powershell, navigate to the directory where the files were extracted. Example: `cd c:\Win11Debloat`
+5. Enter this into powershell to run the script: `.\Win11Debloat.ps1`
+6. The Win11Debloat menu will now open. Select either the default or custom setup to continue.
+
+To run the script without any user input, simply add parameters at the end, example: `.\Win11Debloat.ps1 -RemoveApps -DisableBing -Silent`
+
+| Parameter | Description |
+| --------- | ----------- |
+| -Silent                       |    Suppresses all interactive prompts, so the script will run without requiring any user input. |
+| -RunDefaults                  |    Run the script with the default settings. |
+| -RemoveApps                   |    Remove all bloatware apps from [this list](#apps-that-are-removed). |
+| -RemoveGamingApps             |    Remove the Xbox App and Xbox Gamebar. |
+| -RemoveCommApps               |    Remove the Mail, Calender, and People apps. |
+| -RemoveW11Outlook             |    Remove the new Outlook for Windows app. |
+| -ClearStart                   |    Remove all pinned apps from the start menu. NOTE: This applies to all existing and new users. (Windows 11 update 22H2 or later only) |
+| -DisableTelemetry             |    Disable telemetry, diagnostic data & targeted ads. |
+| -DisableBing                  |    Disable bing search, bing AI & cortana in windows search. |
+| -DisableLockscreenTips        |    Disable tips & tricks on the lockscreen. |
+| -DisableSuggestions           |    Disable tips, tricks, suggestions and ads in start, settings, notifications and windows explorer. |
+| -RevertContextMenu            |    Restore the old Windows 10 style context menu. (Windows 11 only) |
+| -ShowHiddenFolders            |    Show hidden files, folders and drives. |
+| -ShowKnownFileExt             |    Show file extensions for known file types. |
+| -HideDupliDrive               |    Hide duplicate removable drive entries from the windows explorer navigation pane, so only the entry under 'This PC' remains. |
+| -TaskbarAlignLeft             |    Align taskbar icons to the left. (Windows 11 only) |
+| -HideSearchTb                 |    Hide search icon from the taskbar. (Windows 11 only) |
+| -ShowSearchIconTb             |    Show search icon on the taskbar. (Windows 11 only) |
+| -ShowSearchLabelTb            |    Show search icon with label on the taskbar. (Windows 11 only) |
+| -ShowSearchBoxTb              |    Show search box on the taskbar. (Windows 11 only) |
+| -HideTaskview                 |    Hide the taskview button from the taskbar. (Windows 11 only) |
+| -DisableCopilot               |    Disable Windows copilot (Windows 11 only) |
+| -DisableWidgets               |    Disable the widget service & hide the widget (news and interests) icon from the taskbar. |
+| -HideChat                     |    Hide the chat (meet now) icon from the taskbar. |
+| -HideOnedrive                 |    Hide the onedrive folder in the windows explorer sidepanel. (Windows 10 only) |
+| -Hide3dObjects                |    Hide the 3D objects folder under 'This pc' in windows explorer. (Windows 10 only) |
+| -HideMusic                    |    Hide the music folder under 'This pc' in windows explorer. (Windows 10 only) |
+| -HideIncludeInLibrary         |    Hide the 'Include in library' option in the context menu. (Windows 10 only) |
+| -HideGiveAccessTo             |    Hide the 'Give access to' option in the context menu. (Windows 10 only) |
+| -HideShare                    |    Hide the 'Share' option in the context menu. (Windows 10 only) |
+
+## Reverting Changes
+
+All changes made by Win11Debloat can be reverted using the registry files in the 'Regfiles' folder and all apps can be reinstalled from the Microsoft Store.

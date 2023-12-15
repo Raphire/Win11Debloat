@@ -110,11 +110,11 @@ function RemoveSpecificApps {
 function RegImport {
     param 
     (
-        $Message,
-        $Path
+        $message,
+        $path
     )
 
-    Write-Output $Message
+    Write-Output $message
     reg import $path
     Write-Output ""
 }
@@ -181,16 +181,78 @@ function ClearStartMenu {
     # Copy template to default profile
     Copy-Item -Path $startmenuTemplate -Destination $defaultProfile -Force
     Write-Output "Copied start menu template to default user folder"
+    Write-Output ""
 }
 
 
+# Add parameter to script and write to file
+function AddParameter {
+    param(
+        $parameterName,
+        $message
+    )
+
+    # Add key if it doesn't already exist
+    if(-not $global:PSBoundParameters.ContainsKey($parameterName)){
+        $global:PSBoundParameters.Add($parameterName, $true)
+    }
+
+    # Create or clear file that stores last used settings
+    if (!(Test-Path "$PSScriptRoot/LastSettings")) {
+        $null = New-Item "$PSScriptRoot/LastSettings"
+    } 
+    elseif ($global:FirstSelection) {
+        $global:FirstSelection = $false
+        $null = Clear-Content "$PSScriptRoot/LastSettings"
+    }
+
+    # Create entry and add it to the file
+    $entry = $parameterName + "#- " + $message
+    Add-Content -Path "$PSScriptRoot/LastSettings" -Value $entry
+}
+
+
+function PrintHeader {
+    param(
+        $title
+    )
+
+    $fullTitle = " Win11Debloat Script - " + $title
+
+    Clear-Host
+    Write-Output "-------------------------------------------------------------------------------------------"
+    Write-Output $fullTitle
+    Write-Output "-------------------------------------------------------------------------------------------"
+}
+
+
+function PrintFromFile {
+    param(
+        $path
+    )
+
+    Clear-Host
+
+    # Get & print script menu from file
+    Foreach ($line in (Get-Content -Path $path )) {   
+        Write-Output $line
+    }
+}
+
+
+$FirstSelection = $true
 $SPParams = 'WhatIf', 'Confirm', 'Verbose', 'Silent'
 $SPParamCount = 0
 
-foreach ($param in $SPParams) {
-    if ($PSBoundParameters.ContainsKey($param)) {
+foreach ($Param in $SPParams) {
+    if ($PSBoundParameters.ContainsKey($Param)) {
         $SPParamCount++
     }
+}
+
+# Remove LastSetting file if it's empty
+if ((Test-Path "$PSScriptRoot/LastSettings") -and ([String]::IsNullOrWhiteSpace((Get-content "$PSScriptRoot/LastSettings")))) {
+    Remove-Item -Path "$PSScriptRoot/LastSettings" -recurse
 }
 
 # Change script execution based on provided parameters or user input
@@ -201,54 +263,81 @@ if ((-not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
     else {
         # Show menu and wait for user input, loops until valid input is provided
         Do { 
-            Clear-Host
+            $ModeSelectionMessage = "Please select an option (1/2/0)" 
 
             # Get & print script menu from file
-            Foreach ($line in (Get-Content -Path "$PSScriptRoot/Menus/Menu.txt" )) {   
-                Write-Output $line
+            PrintFromFile "$PSScriptRoot/Menus/Menu"
+
+            # Only show this option if LastSettings file exists
+            if (Test-Path "$PSScriptRoot/LastSettings") {
+                Write-Output "(3) New: Run the script with the settings from last time"
+                $ModeSelectionMessage = "Please select an option (1/2/3/0)" 
             }
 
-            $Mode = Read-Host "Please select an option (1/2/0)" 
+            Write-Output ""
+            Write-Output "(0) Show information about the script"
+            Write-Output ""
+            Write-Output ""
+
+            $Mode = Read-Host $ModeSelectionMessage
 
             # Show information based on user input, Suppress user prompt if Silent parameter was passed
             if ($Mode -eq '0') {
-                Clear-Host
-
                 # Get & print script information from file
-                Foreach ($line in (Get-Content -Path "$PSScriptRoot/Menus/Info.txt" )) {   
-                    Write-Output $line
-                }
+                PrintFromFile "$PSScriptRoot/Menus/Info"
 
                 Write-Output "Press any key to go back..."
                 $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
             }
             elseif (-not $Silent -and ($Mode -eq '1')) {
-                Clear-Host
-
                 # Get & print default settings info from file
-                Foreach ($line in (Get-Content -Path "$PSScriptRoot/Menus/DefaultSettings.txt" )) {   
-                    Write-Output $line
-                }
+                PrintFromFile "$PSScriptRoot/Menus/DefaultSettings"
 
                 Write-Output "Press any key to start..."
                 $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
             }
+            elseif (($Mode -eq '3')) {
+                if (Test-Path "$PSScriptRoot/LastSettings") {
+                    if(-not $Silent) {
+                        PrintHeader 'Setup'
+                        Write-Output "Win11Debloat will make the following changes:"
+
+                        # Get & print default settings info from file
+                        Foreach ($Line in (Get-Content -Path "$PSScriptRoot/LastSettings" )) { 
+                            # Remove any spaces before and after the Appname
+                            $Line = $Line.Trim()
+                        
+                            # Check if line has # char, show description, add parameter
+                            if (-not ($Line.IndexOf('#') -eq -1)) {
+                                Write-Output $Line.Substring(($Line.IndexOf('#') + 1), ($Line.Length - $Line.IndexOf('#') - 1))
+                                $Line = $Line.Substring(0, $Line.IndexOf('#'))
+
+                                $PSBoundParameters.Add($Line, $true)
+                            }
+                        }
+
+                        Write-Output ""
+                        Write-Output "Press any key to start..."
+                        $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+                    }
+                } 
+                else {
+                    $Mode = $null;
+                }
+            }
         }
-        while ($Mode -ne '1' -and $Mode -ne '2') 
+        while ($Mode -ne '1' -and $Mode -ne '2' -and $Mode -ne '3') 
     }
 
     # Add execution parameters based on the mode
     switch ($Mode) {
         # Default mode, no user input required, all (relevant) options are added
         '1' { 
-            Clear-Host
-            Write-Output "-------------------------------------------------------------------------------------------"
-            Write-Output " Win11Debloat Script - Default Configuration"
-            Write-Output "-------------------------------------------------------------------------------------------"
+            $DefaultParameterNames = 'RemoveApps','DisableTelemetry','DisableBing','DisableLockscreenTips','DisableSuggestions','ShowKnownFileExt','DisableWidgets','HideChat','DisableCopilot'
+
+            PrintHeader 'Default Configuration'
 
             # Add default parameters if they don't already exist
-            $DefaultParameterNames = 'RemoveApps','DisableTelemetry','DisableBing','DisableLockscreenTips','DisableSuggestions','ShowKnownFileExt','DisableWidgets','HideChat','DisableCopilot'
-            
             foreach ($ParameterName in $DefaultParameterNames) {
                 if(-not $PSBoundParameters.ContainsKey($ParameterName)){
                     $PSBoundParameters.Add($ParameterName, $true)
@@ -263,16 +352,13 @@ if ((-not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
 
         # Custom mode, add options based on user input
         '2' { 
-            # Get current windows version to compare against features
-            $winversion = Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' CurrentBuild
+            # Get current Windows build version to compare against features
+            $WinVersion = Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' CurrentBuild
 
-            Clear-Host
-            Write-Output "-------------------------------------------------------------------------------------------"
-            Write-Output " Win11Debloat Script - Custom Configuration"
-            Write-Output "-------------------------------------------------------------------------------------------"
+            PrintHeader 'Custom Configuration'
 
             if ($( Read-Host -Prompt "Remove pre-installed bloatware apps? (y/n)" ) -eq 'y') {
-                $PSBoundParameters.Add('RemoveApps', $RemoveApps)   
+                AddParameter 'RemoveApps' 'Remove bloatware apps'
 
                 # Show options for removing communication-related apps, only continue on valid input
                 Do {
@@ -289,67 +375,67 @@ if ((-not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
                 # Select correct taskbar search option based on user input
                 switch ($RemoveCommAppInput) {
                     '1' {
-                        $PSBoundParameters.Add('RemoveCommApps', $RemoveCommApps)
-                        $PSBoundParameters.Add('RemoveW11Outlook', $RemoveW11Outlook)
+                        AddParameter 'RemoveCommApps' 'Remove the Mail, Calender, and People apps'
+                        AddParameter 'RemoveW11Outlook' 'Remove the new Outlook for Windows app'
                     }
                     '2' {
-                        $PSBoundParameters.Add('RemoveCommApps', $RemoveCommApps)
+                        AddParameter 'RemoveCommApps' 'Remove the Mail, Calender, and People apps'
                     }
                     '3' {
-                        $PSBoundParameters.Add('RemoveW11Outlook', $RemoveW11Outlook)
+                        AddParameter 'RemoveW11Outlook' 'Remove the new Outlook for Windows app'
                     }
                 }
 
                 Write-Output ""
 
                 if ($( Read-Host -Prompt "   Also remove gaming-related apps such as the Xbox App and Xbox Gamebar? (y/n)" ) -eq 'y') {
-                    $PSBoundParameters.Add('RemoveGamingApps', $RemoveGamingApps)
+                    AddParameter 'RemoveGamingApps' 'Remove the Xbox App and Xbox Gamebar'
                 }
             }
 
             # Only show this option for windows 11 users running build 22621 or later
-            if ($winversion -ge 22621){
+            if ($WinVersion -ge 22621){
                 Write-Output ""
 
                 if ($( Read-Host -Prompt "Remove all pinned apps from the start menu? This applies to all existing and new users and can't be reverted (y/n)" ) -eq 'y') {
-                    $PSBoundParameters.Add('ClearStart', $ClearStart)   
+                    AddParameter 'ClearStart' 'Remove all pinned apps from the start menu for new and existing users'
                 }
             }
 
             Write-Output ""
 
             if ($( Read-Host -Prompt "Disable telemetry, diagnostic data, app-launch tracking and targeted ads? (y/n)" ) -eq 'y') {
-                $PSBoundParameters.Add('DisableTelemetry', $DisableTelemetry)   
+                AddParameter 'DisableTelemetry' 'Disable telemetry, diagnostic data & targeted ads'
             }
 
             Write-Output ""
 
             if ($( Read-Host -Prompt "Disable bing search, bing AI & cortana in windows search? (y/n)" ) -eq 'y') {
-                $PSBoundParameters.Add('DisableBing', $DisableBing)   
+                AddParameter 'DisableBing' 'Disable bing search, bing AI & cortana in windows search'
             }
 
             Write-Output ""
 
             if ($( Read-Host -Prompt "Disable tips, tricks, suggestions and ads in start, settings, notifications, explorer and lockscreen? (y/n)" ) -eq 'y') {
-                $PSBoundParameters.Add('DisableSuggestions', $DisableSuggestions)   
-                $PSBoundParameters.Add('DisableLockscreenTips', $DisableLockscreenTips) 
+                AddParameter 'DisableSuggestions' 'Disable tips, tricks, suggestions and ads in start, settings, notifications and windows explorer'
+                AddParameter 'DisableLockscreenTips' 'Disable tips & tricks on the lockscreen'
             }
 
             # Only show this option for windows 11 users running build 22621 or later
-            if ($winversion -ge 22621){
+            if ($WinVersion -ge 22621){
                 Write-Output ""
 
                 if ($( Read-Host -Prompt "Disable Windows Copilot? This applies to all users (y/n)" ) -eq 'y') {
-                    $PSBoundParameters.Add('DisableCopilot', $DisableCopilot)
+                    AddParameter 'DisableCopilot' 'Disable Windows copilot'
                 }
             }
 
             # Only show this option for windows 11 users running build 22000 or later
-            if ($winversion -ge 22000){
+            if ($WinVersion -ge 22000){
                 Write-Output ""
 
                 if ($( Read-Host -Prompt "Restore the old Windows 10 style context menu? (y/n)" ) -eq 'y') {
-                    $PSBoundParameters.Add('RevertContextMenu', $RevertContextMenu)   
+                    AddParameter 'RevertContextMenu' 'Restore the old Windows 10 style context menu'
                 }
             }
 
@@ -357,11 +443,11 @@ if ((-not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
 
             if ($( Read-Host -Prompt "Do you want to make any changes to the taskbar and related services? (y/n)" ) -eq 'y') {
                 # Only show these specific options for windows 11 users running build 22000 or later
-                if ($winversion -ge 22000){
+                if ($WinVersion -ge 22000){
                     Write-Output ""
 
                     if ($( Read-Host -Prompt "   Align taskbar buttons to the left side? (y/n)" ) -eq 'y') {
-                        $PSBoundParameters.Add('TaskbarAlignLeft', $TaskbarAlignLeft)   
+                        AddParameter 'TaskbarAlignLeft' 'Align taskbar icons to the left'
                     }
 
                     # Show options for search icon on taskbar, only continue on valid input
@@ -380,38 +466,38 @@ if ((-not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
                     # Select correct taskbar search option based on user input
                     switch ($TbSearchInput) {
                         '1' {
-                            $PSBoundParameters.Add('HideSearchTb', $HideSearchTb) 
+                            AddParameter 'HideSearchTb' 'Hide search icon from the taskbar'
                         }
                         '2' {
-                            $PSBoundParameters.Add('ShowSearchIconTb', $ShowSearchIconTb) 
+                            AddParameter 'ShowSearchIconTb' 'Show search icon on the taskbar'
                         }
                         '3' {
-                            $PSBoundParameters.Add('ShowSearchLabelTb', $ShowSearchLabelTb) 
+                            AddParameter 'ShowSearchLabelTb' 'Show search icon with label on the taskbar'
                         }
                         '4' {
-                            $PSBoundParameters.Add('ShowSearchBoxTb', $ShowSearchBoxTb) 
+                            AddParameter 'ShowSearchBoxTb' 'Show search box on the taskbar'
                         }
                     }
 
                     Write-Output ""
 
                     if ($( Read-Host -Prompt "   Hide the taskview button from the taskbar? (y/n)" ) -eq 'y') {
-                        $PSBoundParameters.Add('HideTaskview', $HideTaskview)   
+                        AddParameter 'HideTaskview' 'Hide the taskview button from the taskbar'
                     }
                 }
 
                 Write-Output ""
 
                 if ($( Read-Host -Prompt "   Disable the widgets service and hide the icon from the taskbar? (y/n)" ) -eq 'y') {
-                    $PSBoundParameters.Add('DisableWidgets', $DisableWidgets)   
+                    AddParameter 'DisableWidgets' 'Disable the widget service & hide the widget (news and interests) icon from the taskbar'
                 }
 
                 # Only show this options for windows users running build 22621 or earlier
-                if ($winversion -le 22621){
+                if ($WinVersion -le 22621){
                     Write-Output ""
 
                     if ($( Read-Host -Prompt "   Hide the chat (meet now) icon from the taskbar? (y/n)" ) -eq 'y') {
-                        $PSBoundParameters.Add('HideChat', $HideChat)   
+                        AddParameter 'HideChat' 'Hide the chat (meet now) icon from the taskbar'
                     }
                 }
             }
@@ -422,19 +508,19 @@ if ((-not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
                 Write-Output ""
 
                 if ($( Read-Host -Prompt "   Show hidden files, folders and drives? (y/n)" ) -eq 'y') {
-                    $PSBoundParameters.Add('ShowHiddenFolders', $ShowHiddenFolders)   
+                    AddParameter 'ShowHiddenFolders' 'Show hidden files, folders and drives'
                 }
 
                 Write-Output ""
 
                 if ($( Read-Host -Prompt "   Show file extensions for known file types? (y/n)" ) -eq 'y') {
-                    $PSBoundParameters.Add('ShowKnownFileExt', $ShowKnownFileExt)   
+                    AddParameter 'ShowKnownFileExt' 'Show file extensions for known file types'
                 }
 
                 Write-Output ""
 
                 if ($( Read-Host -Prompt "   Hide duplicate removable drive entries from the windows explorer sidepane so they only show under This PC? (y/n)" ) -eq 'y') {
-                    $PSBoundParameters.Add('HideDupliDrive', $HideDupliDrive)   
+                    AddParameter 'HideDupliDrive' 'Hide duplicate removable drive entries from the windows explorer navigation pane'
                 }
 
                 # Only show option for disabling these specific folders for windows 10 users
@@ -445,19 +531,19 @@ if ((-not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
                         Write-Output ""
 
                         if ($( Read-Host -Prompt "   Hide the onedrive folder from the windows explorer sidepane? (y/n)" ) -eq 'y') {
-                            $PSBoundParameters.Add('HideOnedrive', $HideOnedrive)   
+                            AddParameter 'HideOnedrive' 'Hide the onedrive folder in the windows explorer sidepanel'
                         }
 
                         Write-Output ""
                         
                         if ($( Read-Host -Prompt "   Hide the 3D objects folder from the windows explorer sidepane? (y/n)" ) -eq 'y') {
-                            $PSBoundParameters.Add('Hide3dObjects', $Hide3dObjects)   
+                            AddParameter 'Hide3dObjects' "Hide the 3D objects folder under 'This pc' in windows explorer" 
                         }
                         
                         Write-Output ""
 
                         if ($( Read-Host -Prompt "   Hide the music folder from the windows explorer sidepane? (y/n)" ) -eq 'y') {
-                            $PSBoundParameters.Add('HideMusic', $HideMusic)   
+                            AddParameter 'HideMusic' "Hide the music folder under 'This pc' in windows explorer"
                         }
                     }
                 }
@@ -471,19 +557,19 @@ if ((-not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
                     Write-Output ""
 
                     if ($( Read-Host -Prompt "   Hide the 'Include in library' option in the context menu? (y/n)" ) -eq 'y') {
-                        $PSBoundParameters.Add('HideIncludeInLibrary', $HideIncludeInLibrary)   
+                        AddParameter 'HideIncludeInLibrary' "Hide the 'Include in library' option in the context menu"
                     }
 
                     Write-Output ""
 
                     if ($( Read-Host -Prompt "   Hide the 'Give access to' option in the context menu? (y/n)" ) -eq 'y') {
-                        $PSBoundParameters.Add('HideGiveAccessTo', $HideGiveAccessTo)   
+                        AddParameter 'HideGiveAccessTo' "Hide the 'Give access to' option in the context menu"
                     }
 
                     Write-Output ""
 
                     if ($( Read-Host -Prompt "   Hide the 'Share' option in the context menu? (y/n)" ) -eq 'y') {
-                        $PSBoundParameters.Add('HideShare', $HideShare)   
+                        AddParameter 'HideShare' "Hide the 'Share' option in the context menu"
                     }
                 }
             }
@@ -497,18 +583,17 @@ if ((-not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
                 $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
             }
 
-            Clear-Host
-            Write-Output "-------------------------------------------------------------------------------------------"
-            Write-Output " Win11Debloat Script - Custom Configuration"
-            Write-Output "-------------------------------------------------------------------------------------------"
+            PrintHeader 'Custom Configuration'
+        }
+
+        # Run with options from last time, loaded from file
+        '3' {
+            PrintHeader 'Custom Configuration'
         }
     }
 }
 else {
-    Clear-Host
-    Write-Output "-------------------------------------------------------------------------------------------"
-    Write-Output " Win11Debloat Script - Custom Configuration"
-    Write-Output "-------------------------------------------------------------------------------------------"
+    PrintHeader 'Custom Configuration'
 }
 
 
@@ -532,8 +617,8 @@ else {
         'RemoveCommApps' {
             Write-Output "> Removing Mail, Calendar and People apps..."
             
-            $appsList = '*Microsoft.windowscommunicationsapps*', '*Microsoft.People*'
-            RemoveSpecificApps $appsList
+            $AppsList = '*Microsoft.windowscommunicationsapps*', '*Microsoft.People*'
+            RemoveSpecificApps $AppsList
 
             Write-Output ""
             continue
@@ -541,14 +626,20 @@ else {
         'RemoveW11Outlook' {
             Write-Output "> Removing new Outlook for Windows app..."
             
-            $appsList = '*Microsoft.OutlookForWindows*'
-            RemoveSpecificApps $appsList
+            $AppsList = '*Microsoft.OutlookForWindows*'
+            RemoveSpecificApps $AppsList
 
             Write-Output ""
             continue
         }
         'RemoveGamingApps' {
-            RemoveApps "$PSScriptRoot/GamingAppslist.txt" "> Removing gaming-related windows apps..."
+            Write-Output "> Removing gaming related apps..."
+
+            $AppsList = '*Microsoft.GamingApp*', '*Microsoft.XboxGameOverlay*', '*Microsoft.XboxGamingOverlay*'
+            RemoveSpecificApps $AppsList
+
+            Write-Output ""
+
             continue
         }
         'ClearStart' {

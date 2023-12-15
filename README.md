@@ -10,7 +10,8 @@ You can pick and choose exactly which modifications you want the script to make,
 
 ## Features
 
-### The Default Settings Will:
+### Default Settings
+
 - Remove all bloatware apps from [this list](#apps-that-are-removed).
 - Disable telemetry, diagnostic data, app-launch tracking & targeted ads.
 - Disable bing search & cortana in windows search.
@@ -21,7 +22,8 @@ You can pick and choose exactly which modifications you want the script to make,
 - Hide the Chat (meet now) icon from the taskbar.
 - Hide the 3D objects folder under 'This pc' in windows explorer. (Windows 10 only)
 
-### Alternatively Custom Mode Will Allow You To:
+### All Features
+
 - Remove all bloatware apps from [this list](#apps-that-are-removed) and optionally also remove communication and gaming-related apps.
 - Remove all pinned apps from the start menu. NOTE: This applies to all existing and new users. (Windows 11 only)
 - Disable telemetry, diagnostic data, app-launch tracking & targeted ads.
@@ -43,9 +45,10 @@ You can pick and choose exactly which modifications you want the script to make,
 <br/>
 
 > [!TIP]
-> You can change what apps are and aren't removed by editing the ['Appslist.txt'](https://github.com/Raphire/Win11Debloat/blob/master/Appslist.txt) and ['GamingAppslist.txt'](https://github.com/Raphire/Win11Debloat/blob/master/GamingAppslist.txt) files.
+> You can change what apps are and aren't removed by editing the ['Appslist.txt'](https://github.com/Raphire/Win11Debloat/blob/master/Appslist.txt) files.
 
 ### Apps that ARE removed
+
 <details>
   <summary>Click to expand</summary>
   <blockquote>
@@ -142,6 +145,7 @@ You can pick and choose exactly which modifications you want the script to make,
 </details>
 
 ### Apps that are NOT removed
+
 <details>
   <summary>Click to expand</summary>
   <blockquote>
@@ -181,7 +185,7 @@ You can pick and choose exactly which modifications you want the script to make,
 ## Usage
 
 > [!Warning]
-> Great care went into making sure this script does not break any OS functionality, but use this script at your own risk!
+> Great care went into making sure this script does not break any OS functionality, but use at your own risk!
 
 ### Easy method
 
@@ -190,7 +194,7 @@ You can pick and choose exactly which modifications you want the script to make,
 3. Double click the 'Run.bat' file to start the script. Note: If the console window immediately closes and nothing happens, try the advanced method below.
 4. Accept the windows UAC prompt to run the script as administrator, this is required for the script to function.
 5. A new powershell window will now open, showing the Win11Debloat menu. Select either the default or custom setup to continue.
-6. Carefully read through and follow the on-screen instructions. 
+6. Carefully read through and follow the on-screen instructions.
 
 After making the selected changes the Win11Debloat script will restart the Windows Explorer process to properly apply them. If Windows Explorer does not recover after running the script and your desktop stays black, don't worry. Just press Ctrl + Alt + Del to restart your PC.
 
@@ -230,7 +234,7 @@ To run the script without any user input, simply add parameters at the end, exam
 | -ShowSearchLabelTb            |    Show search icon with label on the taskbar. (Windows 11 only) |
 | -ShowSearchBoxTb              |    Show search box on the taskbar. (Windows 11 only) |
 | -HideTaskview                 |    Hide the taskview button from the taskbar. (Windows 11 only) |
-| -DisableCopilot               |    Disable Windows copilot (Windows 11 only) |
+| -DisableCopilot               |    Disable Windows copilot. (Windows 11 only) |
 | -DisableWidgets               |    Disable the widget service & hide the widget (news and interests) icon from the taskbar. |
 | -HideChat                     |    Hide the chat (meet now) icon from the taskbar. |
 | -HideOnedrive                 |    Hide the onedrive folder in the windows explorer sidepanel. (Windows 10 only) |
@@ -239,7 +243,3 @@ To run the script without any user input, simply add parameters at the end, exam
 | -HideIncludeInLibrary         |    Hide the 'Include in library' option in the context menu. (Windows 10 only) |
 | -HideGiveAccessTo             |    Hide the 'Give access to' option in the context menu. (Windows 10 only) |
 | -HideShare                    |    Hide the 'Share' option in the context menu. (Windows 10 only) |
-
-## Reverting Changes
-
-All changes made by Win11Debloat can be reverted using the registry files in the 'Regfiles' folder and all apps can be reinstalled from the Microsoft Store.

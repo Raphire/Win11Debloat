@@ -97,8 +97,6 @@
 #*Microsoft.GetHelp*                      # Required for some Windows 11 Troubleshooters
 #*Microsoft.MSPaint*                      # Paint 3D
 #*Microsoft.Paint*                        # Classic Paint
-#*Microsoft.PowerAutomateDesktop*
-#*Microsoft.RemoteDesktop*
 #*Microsoft.ScreenSketch*                 # Snipping Tool
 #*Microsoft.Whiteboard*                   # Only preinstalled on devices with touchscreen and/or pen support
 #*Microsoft.Windows.Photos*
@@ -118,6 +116,9 @@
 #*Microsoft.GamingApp*                    # Modern Xbox Gaming App, required for installing some PC games
 #*Microsoft.OutlookForWindows*            # New mail app: Outlook for Windows
 #*Microsoft.People*                       # Required for & included with Mail & Calendar
+#*Microsoft.PowerAutomateDesktop*
+#*Microsoft.RemoteDesktop*
 #*Microsoft.windowscommunicationsapps*    # Mail & Calendar
 #*Microsoft.XboxGameOverlay*              # Game overlay, required/useful for some games
 #*Microsoft.XboxGamingOverlay*            # Game overlay, required/useful for some games
+#*Windows.DevHome*

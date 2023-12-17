@@ -9,6 +9,7 @@ param
     [Parameter(ValueFromPipeline = $true)][switch]$RemoveApps,
     [Parameter(ValueFromPipeline = $true)][switch]$RemoveGamingApps,
     [Parameter(ValueFromPipeline = $true)][switch]$RemoveCommApps,
+    [Parameter(ValueFromPipeline = $true)][switch]$RemoveDevApps,
     [Parameter(ValueFromPipeline = $true)][switch]$RemoveW11Outlook,
     [Parameter(ValueFromPipeline = $true)][switch]$DisableTelemetry,
     [Parameter(ValueFromPipeline = $true)][switch]$DisableBingSearches,
@@ -357,39 +358,73 @@ if ((-not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
 
             PrintHeader 'Custom Configuration'
 
-            if ($( Read-Host -Prompt "Remove pre-installed bloatware apps? (y/n)" ) -eq 'y') {
-                AddParameter 'RemoveApps' 'Remove bloatware apps'
+            # Show options for removing apps, only continue on valid input
+            Do {
+                Write-Host "Options:" -ForegroundColor Yellow
+                Write-Host " (n) Don't remove any apps" -ForegroundColor Yellow
+                Write-Host " (1) Only remove the default selection of bloatware apps from 'Appslist.txt'" -ForegroundColor Yellow
+                Write-Host " (2) Remove full selection of bloatware apps including the mail & calendar apps, developer apps and gaming apps"  -ForegroundColor Yellow
+                Write-Host " (3) Specify which appcategories to remove" -ForegroundColor Yellow
+                $RemoveCommAppInput = Read-Host "Remove any pre-installed apps? (n/1/2/3)" 
+            }
+            while ($RemoveCommAppInput -ne 'n' -and $RemoveCommAppInput -ne '0' -and $RemoveCommAppInput -ne '1' -and $RemoveCommAppInput -ne '2' -and $RemoveCommAppInput -ne '3') 
 
-                # Show options for removing communication-related apps, only continue on valid input
-                Do {
-                    Write-Output ""
-                    Write-Output "   Options:"
-                    Write-Output "    (n) Don't remove communication-related apps"
-                    Write-Output "    (1) Remove Mail, Calender, People and Outlook for Windows apps"
-                    Write-Output "    (2) Only remove Mail, Calender and People apps"
-                    Write-Output "    (3) Only remove Outlook for Windows app"
-                    $RemoveCommAppInput = Read-Host "   Also remove communication-related apps? (n/1/2/3)" 
+            # Select correct option based on user input
+            switch ($RemoveCommAppInput) {
+                '1' {
+                    AddParameter 'RemoveApps' 'Remove default selection of bloatware apps'
                 }
-                while ($RemoveCommAppInput -ne 'n' -and $RemoveCommAppInput -ne '0' -and $RemoveCommAppInput -ne '1' -and $RemoveCommAppInput -ne '2' -and $RemoveCommAppInput -ne '3') 
-
-                # Select correct taskbar search option based on user input
-                switch ($RemoveCommAppInput) {
-                    '1' {
-                        AddParameter 'RemoveCommApps' 'Remove the Mail, Calender, and People apps'
-                        AddParameter 'RemoveW11Outlook' 'Remove the new Outlook for Windows app'
-                    }
-                    '2' {
-                        AddParameter 'RemoveCommApps' 'Remove the Mail, Calender, and People apps'
-                    }
-                    '3' {
-                        AddParameter 'RemoveW11Outlook' 'Remove the new Outlook for Windows app'
-                    }
-                }
-
-                Write-Output ""
-
-                if ($( Read-Host -Prompt "   Also remove gaming-related apps such as the Xbox App and Xbox Gamebar? (y/n)" ) -eq 'y') {
+                '2' {
+                    AddParameter 'RemoveApps' 'Remove default selection of bloatware apps'
+                    AddParameter 'RemoveCommApps' 'Remove the Mail, Calender, and People apps'
+                    AddParameter 'RemoveW11Outlook' 'Remove the new Outlook for Windows app'
+                    AddParameter 'RemoveDevApps' 'Remove developer-related apps'
                     AddParameter 'RemoveGamingApps' 'Remove the Xbox App and Xbox Gamebar'
+                }
+                '3' {
+                    Write-Output ""
+
+                    if ($( Read-Host -Prompt "   Remove default selection of bloatware apps from 'Appslist.txt'? (y/n)" ) -eq 'y') {
+                        AddParameter 'RemoveApps' 'Remove default selection of bloatware apps'
+                    }
+
+                    # Show options for removing communication-related apps, only continue on valid input
+                    Do {
+                        Write-Output ""
+                        Write-Host "   Options:" -ForegroundColor Yellow
+                        Write-Host "    (n) Don't remove communication-related apps" -ForegroundColor Yellow
+                        Write-Host "    (1) Remove Mail, Calender, People and Outlook for Windows apps" -ForegroundColor Yellow
+                        Write-Host "    (2) Only remove Mail, Calender and People apps" -ForegroundColor Yellow
+                        Write-Host "    (3) Only remove Outlook for Windows app" -ForegroundColor Yellow
+                        $RemoveCommAppInput = Read-Host "   Remove communication-related apps? (n/1/2/3)" 
+                    }
+                    while ($RemoveCommAppInput -ne 'n' -and $RemoveCommAppInput -ne '0' -and $RemoveCommAppInput -ne '1' -and $RemoveCommAppInput -ne '2' -and $RemoveCommAppInput -ne '3') 
+
+                    # Select correct option based on user input
+                    switch ($RemoveCommAppInput) {
+                        '1' {
+                            AddParameter 'RemoveCommApps' 'Remove the Mail, Calender, and People apps'
+                            AddParameter 'RemoveW11Outlook' 'Remove the new Outlook for Windows app'
+                        }
+                        '2' {
+                            AddParameter 'RemoveCommApps' 'Remove the Mail, Calender, and People apps'
+                        }
+                        '3' {
+                            AddParameter 'RemoveW11Outlook' 'Remove the new Outlook for Windows app'
+                        }
+                    }
+
+                    Write-Output ""
+
+                    if ($( Read-Host -Prompt "   Remove developer-related apps such as Remote Desktop, DevHome and Power Automate? (y/n)" ) -eq 'y') {
+                        AddParameter 'RemoveDevApps' 'Remove developer-related apps'
+                    }
+
+                    Write-Output ""
+
+                    if ($( Read-Host -Prompt "   Remove gaming-related apps such as the Xbox App and Xbox Gamebar? (y/n)" ) -eq 'y') {
+                        AddParameter 'RemoveGamingApps' 'Remove the Xbox App and Xbox Gamebar'
+                    }
                 }
             }
 
@@ -453,12 +488,12 @@ if ((-not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
                     # Show options for search icon on taskbar, only continue on valid input
                     Do {
                         Write-Output ""
-                        Write-Output "   Options:"
-                        Write-Output "    (n) No change"
-                        Write-Output "    (1) Hide search icon from the taskbar"
-                        Write-Output "    (2) Show search icon on the taskbar"
-                        Write-Output "    (3) Show search icon with label on the taskbar"
-                        Write-Output "    (4) Show search box on the taskbar"
+                        Write-Host "   Options:" -ForegroundColor Yellow
+                        Write-Host "    (n) No change" -ForegroundColor Yellow
+                        Write-Host "    (1) Hide search icon from the taskbar" -ForegroundColor Yellow
+                        Write-Host "    (2) Show search icon on the taskbar" -ForegroundColor Yellow
+                        Write-Host "    (3) Show search icon with label on the taskbar" -ForegroundColor Yellow
+                        Write-Host "    (4) Show search box on the taskbar" -ForegroundColor Yellow
                         $TbSearchInput = Read-Host "   Hide or change the search icon on the taskbar? (n/1/2/3/4)" 
                     }
                     while ($TbSearchInput -ne 'n' -and $TbSearchInput -ne '0' -and $TbSearchInput -ne '1' -and $TbSearchInput -ne '2' -and $TbSearchInput -ne '3' -and $TbSearchInput -ne '4') 
@@ -632,6 +667,16 @@ else {
             Write-Output ""
             continue
         }
+        'RemoveDevApps' {
+            Write-Output "> Removing developer-related related apps..."
+
+            $AppsList = '*Microsoft.PowerAutomateDesktop*', '*Microsoft.RemoteDesktop*', '*Windows.DevHome*'
+            RemoveSpecificApps $AppsList
+
+            Write-Output ""
+
+            continue
+        }
         'RemoveGamingApps' {
             Write-Output "> Removing gaming related apps..."
 
@@ -654,7 +699,7 @@ else {
             RegImport "> Disabling bing search, bing AI & cortana in windows search..." $PSScriptRoot\Regfiles\Disable_Bing_Cortana_In_Search.reg
             continue
         }
-        'DisableLockscreenTips' {
+        {$_ -in "DisableLockscrTips", "DisableLockscreenTips"} {
             RegImport "> Disabling tips & tricks on the lockscreen..." $PSScriptRoot\Regfiles\Disable_Lockscreen_Tips.reg
             continue
         }

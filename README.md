@@ -154,9 +154,10 @@ You can pick and choose exactly which modifications you want the script to make,
     - Microsoft.GetHelp (Required for some Windows 11 Troubleshooters)
     - Microsoft.MSPaint (Paint 3D)
     - Microsoft.OutlookForWindows*** (New mail app)
+    - Microsoft.PowerAutomateDesktop****
     - Microsoft.Paint (Classic Paint)
     - Microsoft.People** (Required for & included with Mail & Calendar)
-    - Microsoft.RemoteDesktop  
+    - Microsoft.RemoteDesktop**** 
     - Microsoft.ScreenSketch (Snipping Tool)
     - Microsoft.Whiteboard (Only preinstalled on devices with touchscreen and/or pen support)
     - Microsoft.Windows.Photos
@@ -168,6 +169,7 @@ You can pick and choose exactly which modifications you want the script to make,
     - Microsoft.YourPhone (Phone Link)
     - Microsoft.Xbox.TCUI (UI framework, removing this may break MS store, photos and certain games)
     - Microsoft.ZuneMusic (Modern Media Player)
+    - Windows.DevHome****
 
     Apps that are required or useful for gaming:
     - Microsoft.GamingApp* (Modern Xbox Gaming App, required for installing some games)
@@ -179,6 +181,7 @@ You can pick and choose exactly which modifications you want the script to make,
     * Can be removed in custom mode or by running the script with the '-RemoveGamingApps' parameter.
     ** Can be removed in custom mode or by running the script with the '-RemoveCommApps' parameter.
     *** Can be removed in custom mode or by running the script with the '-RemoveW11Outlook' parameter.
+    **** Can be removed in custom mode or by running the script with the '-RemoveDevApps' parameter.
   </blockquote>
 </details>
 
@@ -216,13 +219,14 @@ To run the script without any user input, simply add parameters at the end, exam
 | -Silent                       |    Suppresses all interactive prompts, so the script will run without requiring any user input. |
 | -RunDefaults                  |    Run the script with the default settings. |
 | -RemoveApps                   |    Remove all bloatware apps from [this list](#apps-that-are-removed). |
-| -RemoveGamingApps             |    Remove the Xbox App and Xbox Gamebar. |
 | -RemoveCommApps               |    Remove the Mail, Calender, and People apps. |
 | -RemoveW11Outlook             |    Remove the new Outlook for Windows app. |
+| -RemoveDevApps                |    Remove developer-related apps such as Remote Desktop, DevHome and Power Automate. |
+| -RemoveGamingApps             |    Remove the Xbox App and Xbox Gamebar. |
 | -ClearStart                   |    Remove all pinned apps from the start menu. NOTE: This applies to all existing and new users. (Windows 11 update 22H2 or later only) |
 | -DisableTelemetry             |    Disable telemetry, diagnostic data & targeted ads. |
 | -DisableBing                  |    Disable bing search, bing AI & cortana in windows search. |
-| -DisableLockscreenTips        |    Disable tips & tricks on the lockscreen. |
+| -DisableLockscrTips           |    Disable tips & tricks on the lockscreen. |
 | -DisableSuggestions           |    Disable tips, tricks, suggestions and ads in start, settings, notifications and windows explorer. |
 | -RevertContextMenu            |    Restore the old Windows 10 style context menu. (Windows 11 only) |
 | -ShowHiddenFolders            |    Show hidden files, folders and drives. |

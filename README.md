@@ -215,35 +215,35 @@ This method gives you the option to run the script with certain parameters to ta
 To run the script without any user input, simply add parameters at the end, example: `.\Win11Debloat.ps1 -RemoveApps -DisableBing -Silent`
 
 | Parameter | Description |
-| --------- | ----------- |
-| -Silent                       |    Suppresses all interactive prompts, so the script will run without requiring any user input. |
-| -RunDefaults                  |    Run the script with the default settings. |
-| -RemoveApps                   |    Remove all bloatware apps from [this list](#apps-that-are-removed). |
-| -RemoveCommApps               |    Remove the Mail, Calender, and People apps. |
-| -RemoveW11Outlook             |    Remove the new Outlook for Windows app. |
-| -RemoveDevApps                |    Remove developer-related apps such as Remote Desktop, DevHome and Power Automate. |
-| -RemoveGamingApps             |    Remove the Xbox App and Xbox Gamebar. |
-| -ClearStart                   |    Remove all pinned apps from the start menu. NOTE: This applies to all existing and new users. (Windows 11 update 22H2 or later only) |
-| -DisableTelemetry             |    Disable telemetry, diagnostic data & targeted ads. |
-| -DisableBing                  |    Disable bing search, bing AI & cortana in windows search. |
-| -DisableLockscrTips           |    Disable tips & tricks on the lockscreen. |
-| -DisableSuggestions           |    Disable tips, tricks, suggestions and ads in start, settings, notifications and windows explorer. |
-| -RevertContextMenu            |    Restore the old Windows 10 style context menu. (Windows 11 only) |
-| -ShowHiddenFolders            |    Show hidden files, folders and drives. |
-| -ShowKnownFileExt             |    Show file extensions for known file types. |
-| -HideDupliDrive               |    Hide duplicate removable drive entries from the windows explorer navigation pane, so only the entry under 'This PC' remains. |
-| -TaskbarAlignLeft             |    Align taskbar icons to the left. (Windows 11 only) |
-| -HideSearchTb                 |    Hide search icon from the taskbar. (Windows 11 only) |
-| -ShowSearchIconTb             |    Show search icon on the taskbar. (Windows 11 only) |
-| -ShowSearchLabelTb            |    Show search icon with label on the taskbar. (Windows 11 only) |
-| -ShowSearchBoxTb              |    Show search box on the taskbar. (Windows 11 only) |
-| -HideTaskview                 |    Hide the taskview button from the taskbar. (Windows 11 only) |
-| -DisableCopilot               |    Disable Windows copilot. (Windows 11 only) |
-| -DisableWidgets               |    Disable the widget service & hide the widget (news and interests) icon from the taskbar. |
-| -HideChat                     |    Hide the chat (meet now) icon from the taskbar. |
-| -HideOnedrive                 |    Hide the onedrive folder in the windows explorer sidepanel. (Windows 10 only) |
-| -Hide3dObjects                |    Hide the 3D objects folder under 'This pc' in windows explorer. (Windows 10 only) |
-| -HideMusic                    |    Hide the music folder under 'This pc' in windows explorer. (Windows 10 only) |
-| -HideIncludeInLibrary         |    Hide the 'Include in library' option in the context menu. (Windows 10 only) |
-| -HideGiveAccessTo             |    Hide the 'Give access to' option in the context menu. (Windows 10 only) |
-| -HideShare                    |    Hide the 'Share' option in the context menu. (Windows 10 only) |
+| :-------: | ----------- |
+| -Silent                            |    Suppresses all interactive prompts, so the script will run without requiring any user input. |
+| -RunDefaults                       |    Run the script with the default settings. |
+| -RemoveApps                        |    Remove all bloatware apps from [this list](#apps-that-are-removed). |
+| -RemoveCommApps                    |    Remove the Mail, Calender, and People apps. |
+| -RemoveW11Outlook                  |    Remove the new Outlook for Windows app. |
+| -RemoveDevApps                     |    Remove developer-related apps such as Remote Desktop, DevHome and Power Automate. |
+| -RemoveGamingApps                  |    Remove the Xbox App and Xbox Gamebar. |
+| -ClearStart                        |    Remove all pinned apps from the start menu. NOTE: This applies to all existing and new users. (Windows 11 update 22H2 or later only) |
+| -DisableTelemetry                  |    Disable telemetry, diagnostic data & targeted ads. |
+| -DisableBing                       |    Disable bing search, bing AI & cortana in windows search. |
+| -DisableSuggestions                |    Disable tips, tricks, suggestions and ads in start, settings, notifications and windows explorer. |
+| <pre>-DisableLockscreenTips</pre>  |    Disable tips & tricks on the lockscreen. |
+| -RevertContextMenu                 |    Restore the old Windows 10 style context menu. (Windows 11 only) |
+| -ShowHiddenFolders                 |    Show hidden files, folders and drives. |
+| -ShowKnownFileExt                  |    Show file extensions for known file types. |
+| -HideDupliDrive                    |    Hide duplicate removable drive entries from the windows explorer navigation pane, so only the entry under 'This PC' remains. |
+| -TaskbarAlignLeft                  |    Align taskbar icons to the left. (Windows 11 only) |
+| -HideSearchTb                      |    Hide search icon from the taskbar. (Windows 11 only) |
+| -ShowSearchIconTb                  |    Show search icon on the taskbar. (Windows 11 only) |
+| -ShowSearchLabelTb                 |    Show search icon with label on the taskbar. (Windows 11 only) |
+| -ShowSearchBoxTb                   |    Show search box on the taskbar. (Windows 11 only) |
+| -HideTaskview                      |    Hide the taskview button from the taskbar. (Windows 11 only) |
+| -DisableCopilot                    |    Disable Windows copilot. (Windows 11 only) |
+| -DisableWidgets                    |    Disable the widget service & hide the widget (news and interests) icon from the taskbar. |
+| -HideChat                          |    Hide the chat (meet now) icon from the taskbar. |
+| -HideOnedrive                      |    Hide the onedrive folder in the windows explorer sidepanel. (Windows 10 only) |
+| -Hide3dObjects                     |    Hide the 3D objects folder under 'This pc' in windows explorer. (Windows 10 only) |
+| -HideMusic                         |    Hide the music folder under 'This pc' in windows explorer. (Windows 10 only) |
+| -HideIncludeInLibrary              |    Hide the 'Include in library' option in the context menu. (Windows 10 only) |
+| -HideGiveAccessTo                  |    Hide the 'Give access to' option in the context menu. (Windows 10 only) |
+| -HideShare                         |    Hide the 'Share' option in the context menu. (Windows 10 only) |

@@ -14,6 +14,7 @@ param
     [Parameter(ValueFromPipeline = $true)][switch]$DisableTelemetry,
     [Parameter(ValueFromPipeline = $true)][switch]$DisableBingSearches,
     [Parameter(ValueFromPipeline = $true)][switch]$DisableBing,
+    [Parameter(ValueFromPipeline = $true)][switch]$DisableLockscrTips,
     [Parameter(ValueFromPipeline = $true)][switch]$DisableLockscreenTips,
     [Parameter(ValueFromPipeline = $true)][switch]$DisableWindowsSuggestions,
     [Parameter(ValueFromPipeline = $true)][switch]$DisableSuggestions,

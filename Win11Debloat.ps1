@@ -1,8 +1,7 @@
 #Requires -RunAsAdministrator
 
 [CmdletBinding(SupportsShouldProcess)]
-param 
-(
+param (
     [Parameter(ValueFromPipeline = $true)][switch]$Silent,
     [Parameter(ValueFromPipeline = $true)][switch]$RunDefaults,
     [Parameter(ValueFromPipeline = $true)][switch]$RunWin11Defaults,
@@ -51,7 +50,7 @@ param
 
 # Reads list of apps from file and removes them for all user accounts and from the OS image.
 function RemoveApps {
-    param(
+    param (
         $appsFile,
         $message
     )
@@ -59,8 +58,7 @@ function RemoveApps {
     Write-Output $message
 
     # Get list of apps from file at the path provided, and remove them one by one
-    Foreach ($app in (Get-Content -Path $appsFile | Where-Object { $_ -notmatch '^#.*' -and $_ -notmatch '^\s*$' } )) 
-    { 
+    Foreach ($app in (Get-Content -Path $appsFile | Where-Object { $_ -notmatch '^#.*' -and $_ -notmatch '^\s*$' } )) { 
         # Remove any spaces before and after the Appname
         $app = $app.Trim()
 
@@ -89,13 +87,11 @@ function RemoveApps {
 
 # Removes apps specified during function call from all user accounts and from the OS image.
 function RemoveSpecificApps {
-    param 
-    (
+    param (
         $appslist
     )
 
-    Foreach ($app in $appsList) 
-    { 
+    Foreach ($app in $appsList) { 
         $appString = $app.Trim('*')
         Write-Output "Attempting to remove $appString..."
 
@@ -110,8 +106,7 @@ function RemoveSpecificApps {
 
 # Import & execute regfile
 function RegImport {
-    param 
-    (
+    param (
         $message,
         $path
     )
@@ -122,9 +117,9 @@ function RegImport {
 }
 
 
-# Stop & Restart the windows explorer process
+# Stop & Restart the Windows explorer process
 function RestartExplorer {
-    Write-Output "> Restarting windows explorer to apply all changes."
+    Write-Output "> Restarting Windows explorer to apply all changes."
 
     Start-Sleep 0.5
 
@@ -139,7 +134,7 @@ function RestartExplorer {
 # Clear all pinned apps from the start menu. 
 # Credit: https://lazyadmin.nl/win-11/customize-windows-11-start-menu-layout/
 function ClearStartMenu {
-    param(
+    param (
         $message
     )
 
@@ -163,7 +158,7 @@ function ClearStartMenu {
             Write-Output $cpyMsg
         }
         else {
-            # Bin file doesn't exist, indicating the user is not running the correct version of windows. Exit function
+            # Bin file doesn't exist, indicating the user is not running the correct version of Windows. Exit function
             Write-Output "Error: Start menu file not found. Please make sure you're running Windows 11 22H2 or later"
             return
         }
@@ -175,7 +170,7 @@ function ClearStartMenu {
     $defaultProfile = "C:\Users\default\AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState"
 
     # Create folder if it doesn't exist
-    if(-not(Test-Path $defaultProfile)) {
+    if (-not(Test-Path $defaultProfile)) {
         new-item $defaultProfile -ItemType Directory -Force | Out-Null
         Write-Output "Created LocalState folder for default user"
     }
@@ -189,13 +184,13 @@ function ClearStartMenu {
 
 # Add parameter to script and write to file
 function AddParameter {
-    param(
+    param (
         $parameterName,
         $message
     )
 
     # Add key if it doesn't already exist
-    if(-not $global:PSBoundParameters.ContainsKey($parameterName)){
+    if (-not $global:PSBoundParameters.ContainsKey($parameterName)) {
         $global:PSBoundParameters.Add($parameterName, $true)
     }
 
@@ -215,7 +210,7 @@ function AddParameter {
 
 
 function PrintHeader {
-    param(
+    param (
         $title
     )
 
@@ -229,7 +224,7 @@ function PrintHeader {
 
 
 function PrintFromFile {
-    param(
+    param (
         $path
     )
 
@@ -346,7 +341,7 @@ if ((-not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
                 }
             }
 
-            # Only add this option for windows 10 users, if it doesn't already exist
+            # Only add this option for Windows 10 users, if it doesn't already exist
             if ((get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'") -and (-not $PSBoundParameters.ContainsKey('Hide3dObjects'))) {
                 $PSBoundParameters.Add('Hide3dObjects', $Hide3dObjects)
             }
@@ -389,36 +384,16 @@ if ((-not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
                         AddParameter 'RemoveApps' 'Remove default selection of bloatware apps'
                     }
 
-                    # Show options for removing communication-related apps, only continue on valid input
-                    Do {
-                        Write-Output ""
-                        Write-Host "   Options:" -ForegroundColor Yellow
-                        Write-Host "    (n) Don't remove communication-related apps" -ForegroundColor Yellow
-                        Write-Host "    (1) Remove Mail, Calender, People and Outlook for Windows apps" -ForegroundColor Yellow
-                        Write-Host "    (2) Only remove Mail, Calender and People apps" -ForegroundColor Yellow
-                        Write-Host "    (3) Only remove Outlook for Windows app" -ForegroundColor Yellow
-                        $RemoveCommAppInput = Read-Host "   Remove communication-related apps? (n/1/2/3)" 
-                    }
-                    while ($RemoveCommAppInput -ne 'n' -and $RemoveCommAppInput -ne '0' -and $RemoveCommAppInput -ne '1' -and $RemoveCommAppInput -ne '2' -and $RemoveCommAppInput -ne '3') 
+                    Write-Output ""
 
-                    # Select correct option based on user input
-                    switch ($RemoveCommAppInput) {
-                        '1' {
-                            AddParameter 'RemoveCommApps' 'Remove the Mail, Calender, and People apps'
-                            AddParameter 'RemoveW11Outlook' 'Remove the new Outlook for Windows app'
-                        }
-                        '2' {
-                            AddParameter 'RemoveCommApps' 'Remove the Mail, Calender, and People apps'
-                        }
-                        '3' {
-                            AddParameter 'RemoveW11Outlook' 'Remove the new Outlook for Windows app'
-                        }
+                    if ($( Read-Host -Prompt "   Remove the Mail, Calender and People apps? (y/n)" ) -eq 'y') {
+                        AddParameter 'RemoveCommApps' 'Remove the Mail, Calender and People apps'
                     }
 
                     Write-Output ""
 
-                    if ($( Read-Host -Prompt "   Remove developer-related apps such as Remote Desktop, DevHome and Power Automate? (y/n)" ) -eq 'y') {
-                        AddParameter 'RemoveDevApps' 'Remove developer-related apps'
+                    if ($( Read-Host -Prompt "   Remove the new Outlook for Windows app? (y/n)" ) -eq 'y') {
+                        AddParameter 'RemoveW11Outlook' 'Remove the new Outlook for Windows app'
                     }
 
                     Write-Output ""
@@ -426,10 +401,16 @@ if ((-not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
                     if ($( Read-Host -Prompt "   Remove gaming-related apps such as the Xbox App and Xbox Gamebar? (y/n)" ) -eq 'y') {
                         AddParameter 'RemoveGamingApps' 'Remove the Xbox App and Xbox Gamebar'
                     }
+
+                    Write-Output ""
+
+                    if ($( Read-Host -Prompt "   Remove developer-related apps such as Remote Desktop, DevHome and Power Automate? (y/n)" ) -eq 'y') {
+                        AddParameter 'RemoveDevApps' 'Remove developer-related apps'
+                    }
                 }
             }
 
-            # Only show this option for windows 11 users running build 22621 or later
+            # Only show this option for Windows 11 users running build 22621 or later
             if ($WinVersion -ge 22621){
                 Write-Output ""
 
@@ -446,18 +427,18 @@ if ((-not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
 
             Write-Output ""
 
-            if ($( Read-Host -Prompt "Disable bing search, bing AI & cortana in windows search? (y/n)" ) -eq 'y') {
-                AddParameter 'DisableBing' 'Disable bing search, bing AI & cortana in windows search'
+            if ($( Read-Host -Prompt "Disable bing search, bing AI & cortana in Windows search? (y/n)" ) -eq 'y') {
+                AddParameter 'DisableBing' 'Disable bing search, bing AI & cortana in Windows search'
             }
 
             Write-Output ""
 
             if ($( Read-Host -Prompt "Disable tips, tricks, suggestions and ads in start, settings, notifications, explorer and lockscreen? (y/n)" ) -eq 'y') {
-                AddParameter 'DisableSuggestions' 'Disable tips, tricks, suggestions and ads in start, settings, notifications and windows explorer'
+                AddParameter 'DisableSuggestions' 'Disable tips, tricks, suggestions and ads in start, settings, notifications and Windows explorer'
                 AddParameter 'DisableLockscreenTips' 'Disable tips & tricks on the lockscreen'
             }
 
-            # Only show this option for windows 11 users running build 22621 or later
+            # Only show this option for Windows 11 users running build 22621 or later
             if ($WinVersion -ge 22621){
                 Write-Output ""
 
@@ -466,7 +447,7 @@ if ((-not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
                 }
             }
 
-            # Only show this option for windows 11 users running build 22000 or later
+            # Only show this option for Windows 11 users running build 22000 or later
             if ($WinVersion -ge 22000){
                 Write-Output ""
 
@@ -478,7 +459,7 @@ if ((-not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
             Write-Output ""
 
             if ($( Read-Host -Prompt "Do you want to make any changes to the taskbar and related services? (y/n)" ) -eq 'y') {
-                # Only show these specific options for windows 11 users running build 22000 or later
+                # Only show these specific options for Windows 11 users running build 22000 or later
                 if ($WinVersion -ge 22000){
                     Write-Output ""
 
@@ -528,7 +509,7 @@ if ((-not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
                     AddParameter 'DisableWidgets' 'Disable the widget service & hide the widget (news and interests) icon from the taskbar'
                 }
 
-                # Only show this options for windows users running build 22621 or earlier
+                # Only show this options for Windows users running build 22621 or earlier
                 if ($WinVersion -le 22621){
                     Write-Output ""
 
@@ -540,7 +521,7 @@ if ((-not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
 
             Write-Output ""
 
-            if ($( Read-Host -Prompt "Do you want to make any changes to windows explorer? (y/n)" ) -eq 'y') {
+            if ($( Read-Host -Prompt "Do you want to make any changes to Windows explorer? (y/n)" ) -eq 'y') {
                 Write-Output ""
 
                 if ($( Read-Host -Prompt "   Show hidden files, folders and drives? (y/n)" ) -eq 'y') {
@@ -555,37 +536,37 @@ if ((-not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
 
                 Write-Output ""
 
-                if ($( Read-Host -Prompt "   Hide duplicate removable drive entries from the windows explorer sidepane so they only show under This PC? (y/n)" ) -eq 'y') {
-                    AddParameter 'HideDupliDrive' 'Hide duplicate removable drive entries from the windows explorer navigation pane'
+                if ($( Read-Host -Prompt "   Hide duplicate removable drive entries from the Windows explorer sidepane so they only show under This PC? (y/n)" ) -eq 'y') {
+                    AddParameter 'HideDupliDrive' 'Hide duplicate removable drive entries from the Windows explorer navigation pane'
                 }
 
-                # Only show option for disabling these specific folders for windows 10 users
+                # Only show option for disabling these specific folders for Windows 10 users
                 if (get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'"){
                     Write-Output ""
 
-                    if ($( Read-Host -Prompt "Do you want to hide any folders from the windows explorer sidepane? (y/n)" ) -eq 'y') {
+                    if ($( Read-Host -Prompt "Do you want to hide any folders from the Windows explorer sidepane? (y/n)" ) -eq 'y') {
                         Write-Output ""
 
-                        if ($( Read-Host -Prompt "   Hide the onedrive folder from the windows explorer sidepane? (y/n)" ) -eq 'y') {
-                            AddParameter 'HideOnedrive' 'Hide the onedrive folder in the windows explorer sidepanel'
+                        if ($( Read-Host -Prompt "   Hide the onedrive folder from the Windows explorer sidepane? (y/n)" ) -eq 'y') {
+                            AddParameter 'HideOnedrive' 'Hide the onedrive folder in the Windows explorer sidepanel'
                         }
 
                         Write-Output ""
                         
-                        if ($( Read-Host -Prompt "   Hide the 3D objects folder from the windows explorer sidepane? (y/n)" ) -eq 'y') {
-                            AddParameter 'Hide3dObjects' "Hide the 3D objects folder under 'This pc' in windows explorer" 
+                        if ($( Read-Host -Prompt "   Hide the 3D objects folder from the Windows explorer sidepane? (y/n)" ) -eq 'y') {
+                            AddParameter 'Hide3dObjects' "Hide the 3D objects folder under 'This pc' in Windows explorer" 
                         }
                         
                         Write-Output ""
 
-                        if ($( Read-Host -Prompt "   Hide the music folder from the windows explorer sidepane? (y/n)" ) -eq 'y') {
-                            AddParameter 'HideMusic' "Hide the music folder under 'This pc' in windows explorer"
+                        if ($( Read-Host -Prompt "   Hide the music folder from the Windows explorer sidepane? (y/n)" ) -eq 'y') {
+                            AddParameter 'HideMusic' "Hide the music folder under 'This pc' in Windows explorer"
                         }
                     }
                 }
             }
 
-            # Only show option for disabling context menu items for windows 10 users
+            # Only show option for disabling context menu items for Windows 10 users
             if (get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'"){
                 Write-Output ""
 
@@ -647,7 +628,7 @@ else {
     # Execute all selected/provided parameters
     switch ($PSBoundParameters.Keys) {
         'RemoveApps' {
-            RemoveApps "$PSScriptRoot/Appslist.txt" "> Removing pre-installed windows bloatware..."
+            RemoveApps "$PSScriptRoot/Appslist.txt" "> Removing pre-installed Windows bloatware..."
             continue
         }
         'RemoveCommApps' {
@@ -697,7 +678,7 @@ else {
             continue
         }
         {$_ -in "DisableBingSearches", "DisableBing"} {
-            RegImport "> Disabling bing search, bing AI & cortana in windows search..." $PSScriptRoot\Regfiles\Disable_Bing_Cortana_In_Search.reg
+            RegImport "> Disabling bing search, bing AI & cortana in Windows search..." $PSScriptRoot\Regfiles\Disable_Bing_Cortana_In_Search.reg
             continue
         }
         {$_ -in "DisableLockscrTips", "DisableLockscreenTips"} {
@@ -757,19 +738,19 @@ else {
             continue
         }
         'HideDupliDrive' {
-            RegImport "> Hiding duplicate removable drive entries from the windows explorer navigation pane..." $PSScriptRoot\Regfiles\Hide_duplicate_removable_drives_from_navigation_pane_of_File_Explorer.reg
+            RegImport "> Hiding duplicate removable drive entries from the Windows explorer navigation pane..." $PSScriptRoot\Regfiles\Hide_duplicate_removable_drives_from_navigation_pane_of_File_Explorer.reg
             continue
         }
         {$_ -in "HideOnedrive", "DisableOnedrive"} {
-            RegImport "> Hiding the onedrive folder from the windows explorer navigation pane..." $PSScriptRoot\Regfiles\Hide_Onedrive_Folder.reg
+            RegImport "> Hiding the onedrive folder from the Windows explorer navigation pane..." $PSScriptRoot\Regfiles\Hide_Onedrive_Folder.reg
             continue
         }
         {$_ -in "Hide3dObjects", "Disable3dObjects"} {
-            RegImport "> Hiding the 3D objects folder from the windows explorer navigation pane..." $PSScriptRoot\Regfiles\Hide_3D_Objects_Folder.reg
+            RegImport "> Hiding the 3D objects folder from the Windows explorer navigation pane..." $PSScriptRoot\Regfiles\Hide_3D_Objects_Folder.reg
             continue
         }
         {$_ -in "HideMusic", "DisableMusic"} {
-            RegImport "> Hiding the music folder from the windows explorer navigation pane..." $PSScriptRoot\Regfiles\Hide_Music_folder.reg
+            RegImport "> Hiding the music folder from the Windows explorer navigation pane..." $PSScriptRoot\Regfiles\Hide_Music_folder.reg
             continue
         }
         {$_ -in "HideIncludeInLibrary", "DisableIncludeInLibrary"} {

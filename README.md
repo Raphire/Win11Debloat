@@ -1,6 +1,6 @@
 # Win11Debloat
 
-Win11Debloat is a simple and lightweight powershell script that removes pre-installed windows bloatware apps, disables telemetry and declutters the experience by disabling or removing intrusive interface elements, ads and more. No need to painstakingly go through all the settings yourself, or remove apps one by one. Win11Debloat makes the process quick and easy!
+Win11Debloat is a simple and lightweight powershell script that removes pre-installed Windows bloatware apps, disables telemetry and declutters the experience by disabling or removing intrusive interface elements, ads and more. No need to painstakingly go through all the settings yourself, or remove apps one by one. Win11Debloat makes the process quick and easy!
 
 You can pick and choose exactly which modifications you want the script to make, or use the default settings. If you are unhappy with any of the changes you can easily revert them by using the registry files that are included in the 'Regfiles' folder, all of the apps that are removed can be reinstalled from the Microsoft store.
 
@@ -14,32 +14,32 @@ You can pick and choose exactly which modifications you want the script to make,
 
 - Remove all bloatware apps from [this list](#apps-that-are-removed).
 - Disable telemetry, diagnostic data, app-launch tracking & targeted ads.
-- Disable bing search & cortana in windows search.
-- Disable tips, tricks, suggestions and ads in start, settings, notifications, windows explorer, and on the lockscreen.
+- Disable bing search & cortana in Windows search.
+- Disable tips, tricks, suggestions and ads in start, settings, notifications, Windows explorer, and on the lockscreen.
 - Disable Windows Copilot. (Windows 11 only)
 - Show file extensions for known file types.
 - Disable the widget service & hide the icon from the taskbar. 
 - Hide the Chat (meet now) icon from the taskbar.
-- Hide the 3D objects folder under 'This pc' in windows explorer. (Windows 10 only)
+- Hide the 3D objects folder under 'This pc' in Windows explorer. (Windows 10 only)
 
 ### All Features
 
 - Remove all bloatware apps from [this list](#apps-that-are-removed) and optionally also remove communication and gaming-related apps.
 - Remove all pinned apps from the start menu. NOTE: This applies to all existing and new users. (Windows 11 only)
 - Disable telemetry, diagnostic data, app-launch tracking & targeted ads.
-- Disable bing search, bing AI & cortana in windows search.
-- Disable tips, tricks, suggestions and ads in start, settings, notifications, windows explorer, and on the lockscreen.
+- Disable bing search, bing AI & cortana in Windows search.
+- Disable tips, tricks, suggestions and ads in start, settings, notifications, Windows explorer, and on the lockscreen.
 - Disable Windows Copilot. (Windows 11 only)
 - Restore the old Windows 10 style context menu. (Windows 11 only)
 - Show hidden files, folders and drives.
 - Show file extensions for known file types.
-- Hide duplicate removable drive entries from the windows explorer navigation pane, so only the entry under 'This PC' remains.
+- Hide duplicate removable drive entries from the Windows explorer navigation pane, so only the entry under 'This PC' remains.
 - Align taskbar icons to the left. (Windows 11 only)
 - Hide or change the search icon/box on the taskbar. (Windows 11 only)
 - Hide the taskview button from the taskbar. (Windows 11 only)
 - Disable the widget service & hide icon from the taskbar.
 - Hide the chat (meet now) icon from the taskbar.
-- Hide the 3D objects, music or onedrive folder in the windows explorer sidepanel. (Windows 10 only)
+- Hide the 3D objects, music or onedrive folder in the Windows explorer sidepanel. (Windows 10 only)
 - Hide the 'Include in library', 'Give access to' and 'Share' options in the context menu. (Windows 10 only)
 
 <br/>
@@ -165,7 +165,7 @@ You can pick and choose exactly which modifications you want the script to make,
     - Microsoft.WindowsCamera
     - Microsoft.windowscommunicationsapps** (Mail & Calendar)
     - Microsoft.WindowsStore (Microsoft Store, NOTE: This app cannot be reinstalled!)
-    - Microsoft.WindowsTerminal (New default terminal app in windows 11)
+    - Microsoft.WindowsTerminal (New default terminal app in Windows 11)
     - Microsoft.YourPhone (Phone Link)
     - Microsoft.Xbox.TCUI (UI framework, removing this may break MS store, photos and certain games)
     - Microsoft.ZuneMusic (Modern Media Player)
@@ -195,7 +195,7 @@ You can pick and choose exactly which modifications you want the script to make,
 1. [Download the latest version of the script](https://github.com/Raphire/Win11Debloat/archive/master.zip), and extract the .ZIP file to your desired location.
 2. Navigate to the Win11Debloat folder
 3. Double click the 'Run.bat' file to start the script. Note: If the console window immediately closes and nothing happens, try the advanced method below.
-4. Accept the windows UAC prompt to run the script as administrator, this is required for the script to function.
+4. Accept the Windows UAC prompt to run the script as administrator, this is required for the script to function.
 5. A new powershell window will now open, showing the Win11Debloat menu. Select either the default or custom setup to continue.
 6. Carefully read through and follow the on-screen instructions.
 
@@ -225,13 +225,13 @@ To run the script without any user input, simply add parameters at the end, exam
 | -RemoveGamingApps                  |    Remove the Xbox App and Xbox Gamebar. |
 | -ClearStart                        |    Remove all pinned apps from the start menu. NOTE: This applies to all existing and new users. (Windows 11 update 22H2 or later only) |
 | -DisableTelemetry                  |    Disable telemetry, diagnostic data & targeted ads. |
-| -DisableBing                       |    Disable bing search, bing AI & cortana in windows search. |
-| -DisableSuggestions                |    Disable tips, tricks, suggestions and ads in start, settings, notifications and windows explorer. |
+| -DisableBing                       |    Disable bing search, bing AI & cortana in Windows search. |
+| -DisableSuggestions                |    Disable tips, tricks, suggestions and ads in start, settings, notifications and Windows explorer. |
 | <pre>-DisableLockscreenTips</pre>  |    Disable tips & tricks on the lockscreen. |
 | -RevertContextMenu                 |    Restore the old Windows 10 style context menu. (Windows 11 only) |
 | -ShowHiddenFolders                 |    Show hidden files, folders and drives. |
 | -ShowKnownFileExt                  |    Show file extensions for known file types. |
-| -HideDupliDrive                    |    Hide duplicate removable drive entries from the windows explorer navigation pane, so only the entry under 'This PC' remains. |
+| -HideDupliDrive                    |    Hide duplicate removable drive entries from the Windows explorer navigation pane, so only the entry under 'This PC' remains. |
 | -TaskbarAlignLeft                  |    Align taskbar icons to the left. (Windows 11 only) |
 | -HideSearchTb                      |    Hide search icon from the taskbar. (Windows 11 only) |
 | -ShowSearchIconTb                  |    Show search icon on the taskbar. (Windows 11 only) |
@@ -241,9 +241,9 @@ To run the script without any user input, simply add parameters at the end, exam
 | -DisableCopilot                    |    Disable Windows copilot. (Windows 11 only) |
 | -DisableWidgets                    |    Disable the widget service & hide the widget (news and interests) icon from the taskbar. |
 | -HideChat                          |    Hide the chat (meet now) icon from the taskbar. |
-| -HideOnedrive                      |    Hide the onedrive folder in the windows explorer sidepanel. (Windows 10 only) |
-| -Hide3dObjects                     |    Hide the 3D objects folder under 'This pc' in windows explorer. (Windows 10 only) |
-| -HideMusic                         |    Hide the music folder under 'This pc' in windows explorer. (Windows 10 only) |
+| -HideOnedrive                      |    Hide the onedrive folder in the Windows explorer sidepanel. (Windows 10 only) |
+| -Hide3dObjects                     |    Hide the 3D objects folder under 'This pc' in Windows explorer. (Windows 10 only) |
+| -HideMusic                         |    Hide the music folder under 'This pc' in Windows explorer. (Windows 10 only) |
 | -HideIncludeInLibrary              |    Hide the 'Include in library' option in the context menu. (Windows 10 only) |
 | -HideGiveAccessTo                  |    Hide the 'Give access to' option in the context menu. (Windows 10 only) |
 | -HideShare                         |    Hide the 'Share' option in the context menu. (Windows 10 only) |

@@ -154,10 +154,8 @@ You can pick and choose exactly which modifications you want the script to make,
     - Microsoft.GetHelp (Required for some Windows 11 Troubleshooters)
     - Microsoft.MSPaint (Paint 3D)
     - Microsoft.OutlookForWindows*** (New mail app)
-    - Microsoft.PowerAutomateDesktop****
     - Microsoft.Paint (Classic Paint)
     - Microsoft.People** (Required for & included with Mail & Calendar)
-    - Microsoft.RemoteDesktop**** 
     - Microsoft.ScreenSketch (Snipping Tool)
     - Microsoft.Whiteboard (Only preinstalled on devices with touchscreen and/or pen support)
     - Microsoft.Windows.Photos
@@ -169,7 +167,6 @@ You can pick and choose exactly which modifications you want the script to make,
     - Microsoft.YourPhone (Phone Link)
     - Microsoft.Xbox.TCUI (UI framework, removing this may break MS store, photos and certain games)
     - Microsoft.ZuneMusic (Modern Media Player)
-    - Windows.DevHome****
 
     Apps that are required or useful for gaming:
     - Microsoft.GamingApp* (Modern Xbox Gaming App, required for installing some games)
@@ -177,6 +174,11 @@ You can pick and choose exactly which modifications you want the script to make,
     - Microsoft.XboxGamingOverlay* (Game overlay, required for some games)
     - Microsoft.XboxIdentityProvider (Xbox sign-in framework, required for some games)
     - Microsoft.XboxSpeechToTextOverlay (Might be required for some games, NOTE: This app cannot be reinstalled!)
+
+    Apps that are required or useful for developers:
+    - Microsoft.PowerAutomateDesktop****
+    - Microsoft.RemoteDesktop**** 
+    - Windows.DevHome****
 
     * Can be removed in custom mode or by running the script with the '-RemoveGamingApps' parameter.
     ** Can be removed in custom mode or by running the script with the '-RemoveCommApps' parameter.

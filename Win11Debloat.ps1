@@ -774,7 +774,7 @@ else {
     Write-Output "Script completed successfully!"
 
     # Suppress prompt if Silent parameter was passed
-    if(-not $Silent) {
+    if (-not $Silent) {
         Write-Output ""
         Write-Output "Press any key to exit..."
         $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")

@@ -119,7 +119,7 @@ function RegImport {
 
 # Stop & Restart the Windows explorer process
 function RestartExplorer {
-    Write-Output "> Restarting Windows explorer to apply all changes."
+    Write-Output "> Restarting Windows explorer to apply all changes. Note: This may cause some flickering."
 
     Start-Sleep 0.5
 
@@ -199,9 +199,10 @@ function AddParameter {
         $null = New-Item "$PSScriptRoot/LastSettings"
     } 
     elseif ($global:FirstSelection) {
-        $global:FirstSelection = $false
         $null = Clear-Content "$PSScriptRoot/LastSettings"
     }
+    
+    $global:FirstSelection = $false
 
     # Create entry and add it to the file
     $entry = $parameterName + "#- " + $message
@@ -427,8 +428,8 @@ if ((-not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
 
             Write-Output ""
 
-            if ($( Read-Host -Prompt "Disable bing search, bing AI & cortana in Windows search? (y/n)" ) -eq 'y') {
-                AddParameter 'DisableBing' 'Disable bing search, bing AI & cortana in Windows search'
+            if ($( Read-Host -Prompt "Disable & remove bing search, bing AI & cortana in Windows search? (y/n)" ) -eq 'y') {
+                AddParameter 'DisableBing' 'Disable & remove bing search, bing AI & cortana in Windows search'
             }
 
             Write-Output ""
@@ -678,6 +679,9 @@ else {
             continue
         }
         {$_ -in "DisableBingSearches", "DisableBing"} {
+            $AppsList = '*Microsoft.BingSearch*'
+            RemoveSpecificApps $AppsList
+
             RegImport "> Disabling bing search, bing AI & cortana in Windows search..." $PSScriptRoot\Regfiles\Disable_Bing_Cortana_In_Search.reg
             continue
         }

@@ -14,11 +14,11 @@ You can pick and choose exactly which modifications you want the script to make,
 
 - Remove all bloatware apps from [this list](#apps-that-are-removed).
 - Disable telemetry, diagnostic data, app-launch tracking & targeted ads.
-- Disable bing search & cortana in Windows search.
+- Disable & remove bing search & cortana in Windows search.
 - Disable tips, tricks, suggestions and ads in start, settings, notifications, Windows explorer, and on the lockscreen.
 - Disable Windows Copilot. (Windows 11 only)
 - Show file extensions for known file types.
-- Disable the widget service & hide the icon from the taskbar. 
+- Disable the widget service & hide the icon from the taskbar.
 - Hide the Chat (meet now) icon from the taskbar.
 - Hide the 3D objects folder under 'This pc' in Windows explorer. (Windows 10 only)
 
@@ -27,7 +27,7 @@ You can pick and choose exactly which modifications you want the script to make,
 - Remove all bloatware apps from [this list](#apps-that-are-removed) and optionally also remove communication and gaming-related apps.
 - Remove all pinned apps from the start menu. NOTE: This applies to all existing and new users. (Windows 11 only)
 - Disable telemetry, diagnostic data, app-launch tracking & targeted ads.
-- Disable bing search, bing AI & cortana in Windows search.
+- Disable & remove bing search & cortana in Windows search.
 - Disable tips, tricks, suggestions and ads in start, settings, notifications, Windows explorer, and on the lockscreen.
 - Disable Windows Copilot. (Windows 11 only)
 - Restore the old Windows 10 style context menu. (Windows 11 only)
@@ -61,6 +61,7 @@ You can pick and choose exactly which modifications you want the script to make,
     - Microsoft.BingFoodAndDrink 
     - Microsoft.BingHealthAndFitness
     - Microsoft.BingNews  
+    - Microsoft.BingSearch* (Bing web search in Windows)
     - Microsoft.BingSports  
     - Microsoft.BingTranslator  
     - Microsoft.BingTravel   
@@ -141,6 +142,8 @@ You can pick and choose exactly which modifications you want the script to make,
     - WinZipUniversal  
     - Wunderlist  
     - XING
+    
+    * App is removed when disabling Bing in Windows search.
   </blockquote>
 </details>
 
@@ -150,40 +153,37 @@ You can pick and choose exactly which modifications you want the script to make,
   <summary>Click to expand</summary>
   <blockquote>
     
-    Apps that are required or useful for most users:
+    General apps that are not removed by default:
     - Microsoft.GetHelp (Required for some Windows 11 Troubleshooters)
     - Microsoft.MSPaint (Paint 3D)
-    - Microsoft.OutlookForWindows*** (New mail app)
+    - Microsoft.OutlookForWindows* (New mail app)
     - Microsoft.Paint (Classic Paint)
-    - Microsoft.People** (Required for & included with Mail & Calendar)
+    - Microsoft.People* (Required for & included with Mail & Calendar)
     - Microsoft.ScreenSketch (Snipping Tool)
     - Microsoft.Whiteboard (Only preinstalled on devices with touchscreen and/or pen support)
     - Microsoft.Windows.Photos
     - Microsoft.WindowsCalculator
     - Microsoft.WindowsCamera
-    - Microsoft.windowscommunicationsapps** (Mail & Calendar)
+    - Microsoft.windowscommunicationsapps* (Mail & Calendar)
     - Microsoft.WindowsStore (Microsoft Store, NOTE: This app cannot be reinstalled!)
     - Microsoft.WindowsTerminal (New default terminal app in Windows 11)
     - Microsoft.YourPhone (Phone Link)
     - Microsoft.Xbox.TCUI (UI framework, removing this may break MS store, photos and certain games)
     - Microsoft.ZuneMusic (Modern Media Player)
 
-    Apps that are required or useful for gaming:
+    Gaming related apps that are not removed by default:
     - Microsoft.GamingApp* (Modern Xbox Gaming App, required for installing some games)
     - Microsoft.XboxGameOverlay* (Game overlay, required for some games)
     - Microsoft.XboxGamingOverlay* (Game overlay, required for some games)
     - Microsoft.XboxIdentityProvider (Xbox sign-in framework, required for some games)
     - Microsoft.XboxSpeechToTextOverlay (Might be required for some games, NOTE: This app cannot be reinstalled!)
 
-    Apps that are required or useful for developers:
-    - Microsoft.PowerAutomateDesktop****
-    - Microsoft.RemoteDesktop**** 
-    - Windows.DevHome****
+    Developer related apps that are not removed by default:
+    - Microsoft.PowerAutomateDesktop*
+    - Microsoft.RemoteDesktop*
+    - Windows.DevHome*
 
-    * Can be removed in custom mode or by running the script with the '-RemoveGamingApps' parameter.
-    ** Can be removed in custom mode or by running the script with the '-RemoveCommApps' parameter.
-    *** Can be removed in custom mode or by running the script with the '-RemoveW11Outlook' parameter.
-    **** Can be removed in custom mode or by running the script with the '-RemoveDevApps' parameter.
+    * Can be removed in custom mode or by running the script with the relevant parameter. (See advanced method)
   </blockquote>
 </details>
 
@@ -227,7 +227,7 @@ To run the script without any user input, simply add parameters at the end, exam
 | -RemoveGamingApps                  |    Remove the Xbox App and Xbox Gamebar. |
 | -ClearStart                        |    Remove all pinned apps from the start menu. NOTE: This applies to all existing and new users. (Windows 11 update 22H2 or later only) |
 | -DisableTelemetry                  |    Disable telemetry, diagnostic data & targeted ads. |
-| -DisableBing                       |    Disable bing search, bing AI & cortana in Windows search. |
+| -DisableBing                       |    Disable & remove bing search, bing AI & cortana in Windows search. |
 | -DisableSuggestions                |    Disable tips, tricks, suggestions and ads in start, settings, notifications and Windows explorer. |
 | <pre>-DisableLockscreenTips</pre>  |    Disable tips & tricks on the lockscreen. |
 | -RevertContextMenu                 |    Restore the old Windows 10 style context menu. (Windows 11 only) |

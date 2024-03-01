@@ -190,8 +190,8 @@ function AddParameter {
     )
 
     # Add key if it doesn't already exist
-    if (-not $global:PSBoundParameters.ContainsKey($parameterName)) {
-        $global:PSBoundParameters.Add($parameterName, $true)
+    if (-not $global:Params.ContainsKey($parameterName)) {
+        $global:Params.Add($parameterName, $true)
     }
 
     # Create or clear file that stores last used settings
@@ -238,12 +238,14 @@ function PrintFromFile {
 }
 
 
-$FirstSelection = $true
+$global:Params = $PSBoundParameters;
+$global:FirstSelection = $true
 $SPParams = 'WhatIf', 'Confirm', 'Verbose', 'Silent'
 $SPParamCount = 0
 
+# Count how many SPParams exist within Params
 foreach ($Param in $SPParams) {
-    if ($PSBoundParameters.ContainsKey($Param)) {
+    if ($global:Params.ContainsKey($Param)) {
         $SPParamCount++
     }
 }
@@ -254,7 +256,7 @@ if ((Test-Path "$PSScriptRoot/LastSettings") -and ([String]::IsNullOrWhiteSpace(
 }
 
 # Change script execution based on provided parameters or user input
-if ((-not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPParamCount -eq $PSBoundParameters.Count)) {
+if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPParamCount -eq $global:Params.Count)) {
     if ($RunDefaults -or $RunWin11Defaults) {
         $Mode = '1';
     }
@@ -310,7 +312,9 @@ if ((-not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
                                 Write-Output $Line.Substring(($Line.IndexOf('#') + 1), ($Line.Length - $Line.IndexOf('#') - 1))
                                 $Line = $Line.Substring(0, $Line.IndexOf('#'))
 
-                                $PSBoundParameters.Add($Line, $true)
+                                if(-not $global:Params.ContainsKey($ParameterName)){
+                                    $global:Params.Add($Line, $true)
+                                }
                             }
                         }
 
@@ -337,14 +341,14 @@ if ((-not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
 
             # Add default parameters if they don't already exist
             foreach ($ParameterName in $DefaultParameterNames) {
-                if(-not $PSBoundParameters.ContainsKey($ParameterName)){
-                    $PSBoundParameters.Add($ParameterName, $true)
+                if(-not $global:Params.ContainsKey($ParameterName)){
+                    $global:Params.Add($ParameterName, $true)
                 }
             }
 
             # Only add this option for Windows 10 users, if it doesn't already exist
-            if ((get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'") -and (-not $PSBoundParameters.ContainsKey('Hide3dObjects'))) {
-                $PSBoundParameters.Add('Hide3dObjects', $Hide3dObjects)
+            if ((get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'") -and (-not $global:Params.ContainsKey('Hide3dObjects'))) {
+                $global:Params.Add('Hide3dObjects', $Hide3dObjects)
             }
         }
 
@@ -604,7 +608,7 @@ if ((-not $PSBoundParameters.Count) -or $RunDefaults -or $RunWin11Defaults -or (
             PrintHeader 'Custom Configuration'
         }
 
-        # Run with options from last time, loaded from file
+        # Run with options from last time, loaded from 'LastSettings' file
         '3' {
             PrintHeader 'Custom Configuration'
         }
@@ -615,7 +619,9 @@ else {
 }
 
 
-if ($SPParamCount -eq $PSBoundParameters.Keys.Count) {
+# If the number of keys in SPParams equals the number of keys in Params then no modifications/changes were selected
+#  or added by the user, and the script can exit without making any changes.
+if ($SPParamCount -eq $global:Params.Keys.Count) {
     Write-Output "The script completed without making any changes."
     
     # Suppress prompt if Silent parameter was passed
@@ -627,7 +633,7 @@ if ($SPParamCount -eq $PSBoundParameters.Keys.Count) {
 }
 else {
     # Execute all selected/provided parameters
-    switch ($PSBoundParameters.Keys) {
+    switch ($global:Params.Keys) {
         'RemoveApps' {
             RemoveApps "$PSScriptRoot/Appslist.txt" "> Removing pre-installed Windows bloatware..."
             continue
@@ -679,10 +685,14 @@ else {
             continue
         }
         {$_ -in "DisableBingSearches", "DisableBing"} {
+            RegImport "> Disabling bing search, bing AI & cortana in Windows search..." $PSScriptRoot\Regfiles\Disable_Bing_Cortana_In_Search.reg
+            
+            # Also remove the app package for bing search
             $AppsList = '*Microsoft.BingSearch*'
             RemoveSpecificApps $AppsList
 
-            RegImport "> Disabling bing search, bing AI & cortana in Windows search..." $PSScriptRoot\Regfiles\Disable_Bing_Cortana_In_Search.reg
+            Write-Output ""
+
             continue
         }
         {$_ -in "DisableLockscrTips", "DisableLockscreenTips"} {

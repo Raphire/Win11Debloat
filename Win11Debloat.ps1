@@ -48,6 +48,156 @@ param (
 )
 
 
+# Shows application selection form that allows the user to select what apps they want to remove or keep
+function ShowAppSelectionForm {
+    [reflection.assembly]::loadwithpartialname("System.Windows.Forms") | Out-Null
+    [reflection.assembly]::loadwithpartialname("System.Drawing") | Out-Null
+
+    # Initialise form objects
+    $form = New-Object System.Windows.Forms.Form
+    $label = New-Object System.Windows.Forms.Label
+    $button1 = New-Object System.Windows.Forms.Button
+    $button2 = New-Object System.Windows.Forms.Button
+    $selectionBox = New-Object System.Windows.Forms.CheckedListBox 
+    $InitialFormWindowState = New-Object System.Windows.Forms.FormWindowState
+
+    # saveButton eventHandler
+    $handler_saveButton_Click= 
+    {
+        $global:SelectedApps = $selectionBox.CheckedItems
+
+        # Create file that stores selected apps if it doesn't exist
+        if (!(Test-Path "$PSScriptRoot/CustomAppsList")) {
+            $null = New-Item "$PSScriptRoot/CustomAppsList"
+        } 
+
+        Set-Content -Path "$PSScriptRoot/CustomAppsList" -Value $global:SelectedApps
+
+        $form.Close()
+    }
+
+    # cancelButton eventHandler
+    $handler_cancelButton_Click= 
+    {
+        $form.Close()
+    }
+
+    # Correct the initial state of the form to prevent the .Net maximized form issue
+    $OnLoadForm_StateCorrection=
+    {
+        $form.WindowState = $InitialFormWindowState
+    }
+
+    $form.Text = "Win11Debloat Application Selection"
+    $form.Name = "appSelectionForm"
+    $form.DataBindings.DefaultDataSourceUpdateMode = 0
+    $form.ClientSize = New-Object System.Drawing.Size(400,486)
+
+    $button1.TabIndex = 4
+    $button1.Name = "saveButton"
+    $button1.DialogResult = [System.Windows.Forms.DialogResult]::OK
+    $button1.UseVisualStyleBackColor = $True
+    $button1.Text = "Save"
+    $button1.Location = New-Object System.Drawing.Point(27,450)
+    $button1.Size = New-Object System.Drawing.Size(75,23)
+    $button1.DataBindings.DefaultDataSourceUpdateMode = 0
+    $button1.add_Click($handler_saveButton_Click)
+
+    $form.Controls.Add($button1)
+
+    $button2.TabIndex = 5
+    $button2.Name = "cancelButton"
+    $button2.DialogResult = [System.Windows.Forms.DialogResult]::Cancel
+    $button2.UseVisualStyleBackColor = $True
+    $button2.Text = "Cancel"
+    $button2.Location = New-Object System.Drawing.Point(129,450)
+    $button2.Size = New-Object System.Drawing.Size(75,23)
+    $button2.DataBindings.DefaultDataSourceUpdateMode = 0
+    $button2.add_Click($handler_cancelButton_Click)
+
+    $form.Controls.Add($button2)
+
+    $label.Location = New-Object System.Drawing.Point(13,0)
+    $label.Size = New-Object System.Drawing.Size(400,20)
+    $label.Text = 'Check all apps that you wish to remove'
+
+    $form.Controls.Add($label)
+
+    $selectionBox.FormattingEnabled = $True
+    $selectionBox.DataBindings.DefaultDataSourceUpdateMode = 0
+    $selectionBox.Name = "selectionBox"
+    $selectionBox.Location = New-Object System.Drawing.Point(13,20)
+    $selectionBox.Size = New-Object System.Drawing.Size(374,424)
+    $selectionBox.TabIndex = 3
+
+    $form.Controls.Add($selectionBox)
+
+    # Keep track of number of checkboxes
+    $selectionBoxItemCounter = 0
+
+    $appsFile = "$PSScriptRoot/Appslist.txt"
+
+    # Go through appslist and add all items that should be checked by default
+    Foreach ($app in (Get-Content -Path $appsFile | Where-Object { $_ -notmatch '^#.*' -and $_ -notmatch '^\s*$' } )) { 
+        # Remove any comments from the Appname
+        if (-not ($app.IndexOf('#') -eq -1)) {
+            $app = $app.Substring(0, $app.IndexOf('#'))
+        }
+        # Remove any remaining spaces from the Appname
+        if (-not ($app.IndexOf(' ') -eq -1)) {
+            $app = $app.Substring(0, $app.IndexOf(' '))
+        }
+
+        $appString = $app.Trim('*')
+
+        if ($appString.length -gt 0) {
+            $selectionBox.Items.Add($appString) | Out-Null
+            $selectionBox.SetItemChecked($selectionBoxItemCounter, $true);
+            $selectionBoxItemCounter++
+        }
+    }
+
+    # Go through appslist and add all items that should NOT be checked by default
+    Foreach ($app in (Get-Content -Path $appsFile | Where-Object { $_ -match '^#.*' -and $_ -notmatch '^\s*$' } )) { 
+        # Remove first #
+        if (-not ($app.IndexOf('#') -eq -1)) {
+            $app = $app.TrimStart("#")
+        }
+        # Remove any comments from the Appname
+        if (-not ($app.IndexOf('#') -eq -1)) {
+            $app = $app.Substring(0, $app.IndexOf('#'))
+        }
+        # Remove any remaining spaces from the Appname
+        if (-not ($app.IndexOf(' ') -eq -1)) {
+            $app = $app.Substring(0, $app.IndexOf(' '))
+        }
+
+        $appString = $app.Trim('*')
+
+        if ($appString.length -gt 0) {
+            $selectionBox.Items.Add($appString) | Out-Null
+            $selectionBox.SetItemChecked($selectionBoxItemCounter, $false);
+            $selectionBoxItemCounter++
+        }
+    }
+
+    # Sort selectionBox alphabetically
+    $selectionBox.Sorted = $true;
+
+    # Save the initial state of the form
+    $InitialFormWindowState = $form.WindowState
+
+    # Init the OnLoad event to correct the initial state of the form
+    $form.add_Load($OnLoadForm_StateCorrection)
+
+    # Focus selectionBox when form opens
+    $form.Add_Shown({$form.Activate(); $selectionBox.Focus()})
+
+    # Show the Form
+    return $form.ShowDialog()
+}
+
+
 # Reads list of apps from file and removes them for all user accounts and from the OS image.
 function RemoveApps {
     param (
@@ -364,9 +514,24 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
                 Write-Host "Options:" -ForegroundColor Yellow
                 Write-Host " (n) Don't remove any apps" -ForegroundColor Yellow
                 Write-Host " (1) Only remove the default selection of bloatware apps from 'Appslist.txt'" -ForegroundColor Yellow
-                Write-Host " (2) Remove full selection of bloatware apps including the mail & calendar apps, developer apps and gaming apps"  -ForegroundColor Yellow
-                Write-Host " (3) Specify which appcategories to remove" -ForegroundColor Yellow
+                Write-Host " (2) Remove default selection of bloatware apps, aswell as mail & calendar apps, developer apps and gaming apps"  -ForegroundColor Yellow
+                Write-Host " (3) Specify which apps to remove and which to keep" -ForegroundColor Yellow
                 $RemoveCommAppInput = Read-Host "Remove any pre-installed apps? (n/1/2/3)" 
+
+                # Show app selection form if user entered option 3
+                if ($RemoveCommAppInput -eq '3') {
+                    $result = ShowAppSelectionForm
+
+                    if($result -ne [System.Windows.Forms.DialogResult]::OK) {
+                        # User cancelled or closed app selection, show error and change RemoveCommAppInput so the menu will be shown again
+                        Write-Output ""
+                        Write-Host "Cancelled application selection, please try again" -ForegroundColor Red
+
+                        $RemoveCommAppInput = 'c'
+                    }
+                    
+                    Write-Output ""
+                }
             }
             while ($RemoveCommAppInput -ne 'n' -and $RemoveCommAppInput -ne '0' -and $RemoveCommAppInput -ne '1' -and $RemoveCommAppInput -ne '2' -and $RemoveCommAppInput -ne '3') 
 
@@ -383,35 +548,9 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
                     AddParameter 'RemoveGamingApps' 'Remove the Xbox App and Xbox Gamebar'
                 }
                 '3' {
-                    Write-Output ""
+                    Write-Output "$($global:SelectedApps.Count) apps have been selected for removal"
 
-                    if ($( Read-Host -Prompt "   Remove default selection of bloatware apps from 'Appslist.txt'? (y/n)" ) -eq 'y') {
-                        AddParameter 'RemoveApps' 'Remove default selection of bloatware apps'
-                    }
-
-                    Write-Output ""
-
-                    if ($( Read-Host -Prompt "   Remove the Mail, Calender and People apps? (y/n)" ) -eq 'y') {
-                        AddParameter 'RemoveCommApps' 'Remove the Mail, Calender and People apps'
-                    }
-
-                    Write-Output ""
-
-                    if ($( Read-Host -Prompt "   Remove the new Outlook for Windows app? (y/n)" ) -eq 'y') {
-                        AddParameter 'RemoveW11Outlook' 'Remove the new Outlook for Windows app'
-                    }
-
-                    Write-Output ""
-
-                    if ($( Read-Host -Prompt "   Remove gaming-related apps such as the Xbox App and Xbox Gamebar? (y/n)" ) -eq 'y') {
-                        AddParameter 'RemoveGamingApps' 'Remove the Xbox App and Xbox Gamebar'
-                    }
-
-                    Write-Output ""
-
-                    if ($( Read-Host -Prompt "   Remove developer-related apps such as Remote Desktop, DevHome and Power Automate? (y/n)" ) -eq 'y') {
-                        AddParameter 'RemoveDevApps' 'Remove developer-related apps'
-                    }
+                    AddParameter 'RemoveAppsCustom' 'Remove custom selection of apps'
                 }
             }
 
@@ -636,6 +775,32 @@ else {
     switch ($global:Params.Keys) {
         'RemoveApps' {
             RemoveApps "$PSScriptRoot/Appslist.txt" "> Removing pre-installed Windows bloatware..."
+            continue
+        }
+        'RemoveAppsCustom' {
+            if ($global:SelectedApps.Count -gt 0) {
+                Write-Output "> Removing custom selection of $($global:SelectedApps.Count) apps..."
+                RemoveSpecificApps $global:SelectedApps
+            } 
+            elseif (Test-Path "$PSScriptRoot/CustomAppsList") {
+                $AppsList = @()
+
+                # Get apps list from file
+                Foreach ($App in (Get-Content -Path "$PSScriptRoot/CustomAppsList" )) { 
+                    # Remove any spaces before and after the app name
+                    $App = $App.Trim()
+
+                    $AppsList += $App
+                }
+
+                Write-Output "> Removing custom selection of $($AppsList.Count) apps..."
+                RemoveSpecificApps $AppsList
+            }
+            else {
+                Write-Host "> Unable to find CustomAppsList file, no apps have been removed!" -ForegroundColor Red
+            }
+
+            Write-Output ""
             continue
         }
         'RemoveCommApps' {

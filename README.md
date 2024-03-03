@@ -24,7 +24,7 @@ You can pick and choose exactly which modifications you want the script to make,
 
 ### All Features
 
-- Remove all bloatware apps from [this list](#apps-that-are-removed) and optionally also remove communication and gaming-related apps.
+- Remove all bloatware apps from [this list](#apps-that-are-removed) or optionally select exactly which apps to remove or keep.
 - Remove all pinned apps from the start menu. NOTE: This applies to all existing and new users. (Windows 11 only)
 - Disable telemetry, diagnostic data, app-launch tracking & targeted ads.
 - Disable & remove bing search & cortana in Windows search.
@@ -45,7 +45,7 @@ You can pick and choose exactly which modifications you want the script to make,
 <br/>
 
 > [!TIP]
-> You can change what apps are and aren't removed by editing the ['Appslist.txt'](https://github.com/Raphire/Win11Debloat/blob/master/Appslist.txt) files.
+> In 'custom mode' you can specify exactly which apps you like to remove and which you want to keep!
 
 ### Apps that ARE removed
 
@@ -183,7 +183,7 @@ You can pick and choose exactly which modifications you want the script to make,
     - Microsoft.RemoteDesktop*
     - Windows.DevHome*
 
-    * Can be removed in custom mode or by running the script with the relevant parameter. (See advanced method)
+    * Can be removed by running the script with the relevant parameter. (See advanced method)
   </blockquote>
 </details>
 
@@ -198,7 +198,7 @@ You can pick and choose exactly which modifications you want the script to make,
 2. Navigate to the Win11Debloat folder
 3. Double click the 'Run.bat' file to start the script. Note: If the console window immediately closes and nothing happens, try the advanced method below.
 4. Accept the Windows UAC prompt to run the script as administrator, this is required for the script to function.
-5. A new powershell window will now open, showing the Win11Debloat menu. Select either the default or custom setup to continue.
+5. A new powershell window will now open, showing the Win11Debloat menu. Select either the default or custom mode to continue.
 6. Carefully read through and follow the on-screen instructions.
 
 After making the selected changes the Win11Debloat script will restart the Windows Explorer process to properly apply them. If Windows Explorer does not recover after running the script and your desktop stays black, don't worry. Just press Ctrl + Alt + Del to restart your PC.

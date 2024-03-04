@@ -12,7 +12,7 @@ You can pick and choose exactly which modifications you want the script to make,
 
 ### Default Settings
 
-- Remove all bloatware apps from [this list](#apps-that-are-removed).
+- Remove the default selection of bloatware apps from [this list](#apps-that-are-removed).
 - Disable telemetry, diagnostic data, app-launch tracking & targeted ads.
 - Disable & remove bing search & cortana in Windows search.
 - Disable tips, tricks, suggestions and ads in start, settings, notifications, Windows explorer, and on the lockscreen.
@@ -24,7 +24,7 @@ You can pick and choose exactly which modifications you want the script to make,
 
 ### All Features
 
-- Remove all bloatware apps from [this list](#apps-that-are-removed) or optionally select exactly which apps to remove or keep.
+- Remove bloatware apps, with the option to select exactly what apps to remove or keep.
 - Remove all pinned apps from the start menu. NOTE: This applies to all existing and new users. (Windows 11 only)
 - Disable telemetry, diagnostic data, app-launch tracking & targeted ads.
 - Disable & remove bing search & cortana in Windows search.
@@ -47,7 +47,7 @@ You can pick and choose exactly which modifications you want the script to make,
 > [!TIP]
 > In 'custom mode' you can specify exactly which apps you like to remove and which you want to keep!
 
-### Apps that ARE removed
+### Apps that ARE removed by default
 
 <details>
   <summary>Click to expand</summary>
@@ -147,7 +147,7 @@ You can pick and choose exactly which modifications you want the script to make,
   </blockquote>
 </details>
 
-### Apps that are NOT removed
+### Apps that are NOT removed by default
 
 <details>
   <summary>Click to expand</summary>
@@ -155,6 +155,7 @@ You can pick and choose exactly which modifications you want the script to make,
     
     General apps that are not removed by default:
     - Microsoft.GetHelp (Required for some Windows 11 Troubleshooters)
+    - Microsoft.MicrosoftEdge.Stable (Edge browser)
     - Microsoft.MSPaint (Paint 3D)
     - Microsoft.OutlookForWindows* (New mail app)
     - Microsoft.Paint (Classic Paint)

@@ -95,6 +95,7 @@
 #  simply remove the # character in front of the specific app.
 #
 #*Microsoft.GetHelp*                      # Required for some Windows 11 Troubleshooters
+#*Microsoft.MicrosoftEdge.Stable*         # Edge browser
 #*Microsoft.MSPaint*                      # Paint 3D
 #*Microsoft.Paint*                        # Classic Paint
 #*Microsoft.ScreenSketch*                 # Snipping Tool

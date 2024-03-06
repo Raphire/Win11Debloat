@@ -293,9 +293,11 @@ function RegImport {
 function RestartExplorer {
     Write-Output "> Restarting Windows explorer to apply all changes. Note: This may cause some flickering."
 
-    Start-Sleep 0.5
+    Start-Sleep 0.3
 
     taskkill /f /im explorer.exe
+
+    Start-Sleep 0.3
 
     Start-Process explorer.exe
 
@@ -445,7 +447,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
 
             # Only show this option if LastSettings file exists
             if (Test-Path "$PSScriptRoot/LastSettings") {
-                Write-Output "(3) New: Run the script with the settings from last time"
+                Write-Output "(3) Run the script with the settings from last time"
                 $ModeSelectionMessage = "Please select an option (1/2/3/0)" 
             }
 
@@ -487,19 +489,27 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
                                 Write-Output $line.Substring(($line.IndexOf('#') + 1), ($line.Length - $line.IndexOf('#') - 1))
                                 $paramName = $line.Substring(0, $line.IndexOf('#'))
 
-                                # Print list of apps slated for removal if paramName is RemoveAppsCustom and CustomAppsList exists
-                                if(($paramName -eq "RemoveAppsCustom") -and (Test-Path "$PSScriptRoot/CustomAppsList")) {
-                                    $appsList = @()
+                                if($paramName -eq "RemoveAppsCustom") {
+                                    # If paramName is RemoveAppsCustom, check if CustomAppsFile exists
+                                    if(Test-Path "$PSScriptRoot/CustomAppsList") {
+                                        # Apps file exists, print list of apps
+                                        $appsList = @()
 
-                                    # Get apps list from file
-                                    Foreach ($app in (Get-Content -Path "$PSScriptRoot/CustomAppsList" )) { 
-                                        # Remove any spaces before and after the app name
-                                        $app = $app.Trim()
-
-                                        $appsList += $app
+                                        # Get apps list from file
+                                        Foreach ($app in (Get-Content -Path "$PSScriptRoot/CustomAppsList" )) { 
+                                            # Remove any spaces before and after the app name
+                                            $app = $app.Trim()
+    
+                                            $appsList += $app
+                                        }
+    
+                                        Write-Host $appsList -ForegroundColor DarkGray
                                     }
-
-                                    Write-Host $appsList -ForegroundColor Gray
+                                    else {
+                                        # Apps file does not exist, print error and continue to next item
+                                        Write-Host "Could not load apps from file, no apps will be removed" -ForegroundColor Red
+                                        continue
+                                    }
                                 }
 
                                 if(-not $global:Params.ContainsKey($ParameterName)){
@@ -750,8 +760,8 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
                 }
             }
 
-            # Only show option for disabling context menu items for Windows 10 users
-            if (get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'"){
+            # Only show option for disabling context menu items for Windows 10 users or if the user opted to restore the Windows 10 context menu
+            if ((get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'") -or $global:Params.ContainsKey('RevertContextMenu')){
                 Write-Output ""
 
                 if ($( Read-Host -Prompt "Do you want to disable any context menu options? (y/n)" ) -eq 'y') {

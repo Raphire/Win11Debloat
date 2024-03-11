@@ -1,6 +1,6 @@
 # Win11Debloat
 
-Win11Debloat is a simple and lightweight powershell script that removes pre-installed Windows bloatware apps, disables telemetry and declutters the experience by disabling or removing intrusive interface elements, ads and more. No need to painstakingly go through all the settings yourself, or remove apps one by one. Win11Debloat makes the process quick and easy!
+Win11Debloat is a simple, easy to use and lightweight powershell script that can remove pre-installed Windows bloatware apps, disable telemetry and declutter the experience by disabling or removing intrusive interface elements, ads and more. No need to painstakingly go through all the settings yourself, or remove apps one by one. Win11Debloat makes the process quick and easy!
 
 You can pick and choose exactly which modifications you want the script to make, or use the default settings. If you are unhappy with any of the changes you can easily revert them by using the registry files that are included in the 'Regfiles' folder, all of the apps that are removed can be reinstalled from the Microsoft store.
 
@@ -10,9 +10,11 @@ You can pick and choose exactly which modifications you want the script to make,
 
 ## Features
 
+Win11Debloat has many options, but not all of these options are executed when running the script with the default settings. Select 'Custom mode' in the script menu if you want more granular control over the script or if you want to access all of Win11Debloat's features.
+
 ### Default Settings
 
-- Remove the default selection of bloatware apps from [this list](#apps-that-are-removed).
+- Remove the default selection of bloatware apps from [this list](#apps-that-are-removed-by-default).
 - Disable telemetry, diagnostic data, app-launch tracking & targeted ads.
 - Disable & remove bing search & cortana in Windows search.
 - Disable tips, tricks, suggestions and ads in start, settings, notifications, Windows explorer, and on the lockscreen.
@@ -45,7 +47,7 @@ You can pick and choose exactly which modifications you want the script to make,
 <br/>
 
 > [!TIP]
-> In 'custom mode' you can specify exactly which apps you like to remove and which you want to keep!
+> In 'custom mode' you can select exactly which apps to remove and which you want to keep!
 
 ### Apps that ARE removed by default
 
@@ -191,7 +193,7 @@ You can pick and choose exactly which modifications you want the script to make,
 ## Usage
 
 > [!Warning]
-> Great care went into making sure this script does not break any OS functionality, but use at your own risk!
+> Great care went into making sure this script does not unintentionally break any OS functionality, but use at your own risk!
 
 ### Easy method
 
@@ -202,7 +204,7 @@ You can pick and choose exactly which modifications you want the script to make,
 5. A new powershell window will now open, showing the Win11Debloat menu. Select either the default or custom mode to continue.
 6. Carefully read through and follow the on-screen instructions.
 
-After making the selected changes the Win11Debloat script will restart the Windows Explorer process to properly apply them. If Windows Explorer does not recover after running the script and your desktop stays black, don't worry. Just press Ctrl + Alt + Del to restart your PC.
+After making the selected changes the Win11Debloat script will restart the Windows Explorer process to properly apply them. If Windows Explorer does not recover after running the script and your desktop stays black, don't worry. Just press Ctrl + Alt + Del and restart your PC.
 
 ### Advanced method
 
@@ -215,13 +217,17 @@ This method gives you the option to run the script with certain parameters to ta
 5. Enter this into powershell to run the script: `.\Win11Debloat.ps1`
 6. The Win11Debloat menu will now open. Select either the default or custom setup to continue.
 
-To run the script without any user input, simply add parameters at the end, example: `.\Win11Debloat.ps1 -RemoveApps -DisableBing -Silent`
+To run the script with parameters simply execute the script as explained above, but add the parameters at the end with spaces in between. Example: `.\Win11Debloat.ps1 -RemoveApps -DisableBing -Silent`
+
+A full list of parameters and what they do can be found below.
 
 | Parameter | Description |
 | :-------: | ----------- |
 | -Silent                            |    Suppresses all interactive prompts, so the script will run without requiring any user input. |
 | -RunDefaults                       |    Run the script with the default settings. |
-| -RemoveApps                        |    Remove all bloatware apps from [this list](#apps-that-are-removed). |
+| -RemoveApps                        |    Remove all bloatware apps from [this list](#apps-that-are-removed-by-default). |
+| -RemoveAppsCustom                  |    Remove all apps from the 'CustomAppsList' file. IMPORTANT: Run the script with the `-RunAppConfigurator` parameter to create this file first. No apps will be removed if this file does not exist! |
+| -RunAppConfigurator                |    Run the app configurator to create a 'CustomAppsList' file. Run the script with the `-RemoveAppsCustom` parameter to remove these apps. |
 | -RemoveCommApps                    |    Remove the Mail, Calender, and People apps. |
 | -RemoveW11Outlook                  |    Remove the new Outlook for Windows app. |
 | -RemoveDevApps                     |    Remove developer-related apps such as Remote Desktop, DevHome and Power Automate. |

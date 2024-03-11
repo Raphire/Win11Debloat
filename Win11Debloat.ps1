@@ -2,49 +2,38 @@
 
 [CmdletBinding(SupportsShouldProcess)]
 param (
-    [Parameter(ValueFromPipeline = $true)][switch]$Silent,
-    [Parameter(ValueFromPipeline = $true)][switch]$RunDefaults,
-    [Parameter(ValueFromPipeline = $true)][switch]$RunWin11Defaults,
-    [Parameter(ValueFromPipeline = $true)][switch]$RemoveApps,
-    [Parameter(ValueFromPipeline = $true)][switch]$RemoveGamingApps,
-    [Parameter(ValueFromPipeline = $true)][switch]$RemoveCommApps,
-    [Parameter(ValueFromPipeline = $true)][switch]$RemoveDevApps,
-    [Parameter(ValueFromPipeline = $true)][switch]$RemoveW11Outlook,
-    [Parameter(ValueFromPipeline = $true)][switch]$DisableTelemetry,
-    [Parameter(ValueFromPipeline = $true)][switch]$DisableBingSearches,
-    [Parameter(ValueFromPipeline = $true)][switch]$DisableBing,
-    [Parameter(ValueFromPipeline = $true)][switch]$DisableLockscrTips,
-    [Parameter(ValueFromPipeline = $true)][switch]$DisableLockscreenTips,
-    [Parameter(ValueFromPipeline = $true)][switch]$DisableWindowsSuggestions,
-    [Parameter(ValueFromPipeline = $true)][switch]$DisableSuggestions,
-    [Parameter(ValueFromPipeline = $true)][switch]$ShowHiddenFolders,
-    [Parameter(ValueFromPipeline = $true)][switch]$ShowKnownFileExt,
-    [Parameter(ValueFromPipeline = $true)][switch]$HideDupliDrive,
-    [Parameter(ValueFromPipeline = $true)][switch]$TaskbarAlignLeft,
-    [Parameter(ValueFromPipeline = $true)][switch]$HideSearchTb,
-    [Parameter(ValueFromPipeline = $true)][switch]$ShowSearchIconTb,
-    [Parameter(ValueFromPipeline = $true)][switch]$ShowSearchLabelTb,
-    [Parameter(ValueFromPipeline = $true)][switch]$ShowSearchBoxTb,
-    [Parameter(ValueFromPipeline = $true)][switch]$HideTaskview,
-    [Parameter(ValueFromPipeline = $true)][switch]$DisableCopilot,
-    [Parameter(ValueFromPipeline = $true)][switch]$DisableWidgets,
-    [Parameter(ValueFromPipeline = $true)][switch]$HideWidgets,
-    [Parameter(ValueFromPipeline = $true)][switch]$DisableChat,
-    [Parameter(ValueFromPipeline = $true)][switch]$HideChat,
-    [Parameter(ValueFromPipeline = $true)][switch]$ClearStart,
-    [Parameter(ValueFromPipeline = $true)][switch]$RevertContextMenu,
-    [Parameter(ValueFromPipeline = $true)][switch]$DisableOnedrive,
-    [Parameter(ValueFromPipeline = $true)][switch]$HideOnedrive,
-    [Parameter(ValueFromPipeline = $true)][switch]$Disable3dObjects,
-    [Parameter(ValueFromPipeline = $true)][switch]$Hide3dObjects,
-    [Parameter(ValueFromPipeline = $true)][switch]$DisableMusic,
-    [Parameter(ValueFromPipeline = $true)][switch]$HideMusic,
-    [Parameter(ValueFromPipeline = $true)][switch]$DisableIncludeInLibrary,
-    [Parameter(ValueFromPipeline = $true)][switch]$HideIncludeInLibrary,
-    [Parameter(ValueFromPipeline = $true)][switch]$DisableGiveAccessTo,
-    [Parameter(ValueFromPipeline = $true)][switch]$HideGiveAccessTo,
-    [Parameter(ValueFromPipeline = $true)][switch]$DisableShare,
-    [Parameter(ValueFromPipeline = $true)][switch]$HideShare
+    [switch]$Silent,
+    [switch]$RunAppConfigurator,
+    [switch]$RunDefaults, [switch]$RunWin11Defaults,
+    [switch]$RemoveApps, 
+    [switch]$RemoveAppsCustom,
+    [switch]$RemoveGamingApps,
+    [switch]$RemoveCommApps,
+    [switch]$RemoveDevApps,
+    [switch]$RemoveW11Outlook,
+    [switch]$DisableTelemetry,
+    [switch]$DisableBingSearches, [switch]$DisableBing,
+    [switch]$DisableLockscrTips, [switch]$DisableLockscreenTips,
+    [switch]$DisableWindowsSuggestions, [switch]$DisableSuggestions,
+    [switch]$ShowHiddenFolders,
+    [switch]$ShowKnownFileExt,
+    [switch]$HideDupliDrive,
+    [switch]$TaskbarAlignLeft,
+    [switch]$HideSearchTb, [switch]$ShowSearchIconTb, [switch]$ShowSearchLabelTb, [switch]$ShowSearchBoxTb,
+    [switch]$HideTaskview,
+    [switch]$DisableCopilot,
+    [switch]$DisableWidgets,
+    [switch]$HideWidgets,
+    [switch]$DisableChat,
+    [switch]$HideChat,
+    [switch]$ClearStart,
+    [switch]$RevertContextMenu,
+    [switch]$DisableOnedrive, [switch]$HideOnedrive,
+    [switch]$Disable3dObjects, [switch]$Hide3dObjects,
+    [switch]$DisableMusic, [switch]$HideMusic,
+    [switch]$DisableIncludeInLibrary, [switch]$HideIncludeInLibrary,
+    [switch]$DisableGiveAccessTo, [switch]$HideGiveAccessTo,
+    [switch]$DisableShare, [switch]$HideShare
 )
 
 
@@ -432,6 +421,32 @@ if ((Test-Path "$PSScriptRoot/LastSettings") -and ([String]::IsNullOrWhiteSpace(
     Remove-Item -Path "$PSScriptRoot/LastSettings" -recurse
 }
 
+# Only run the app selection form if the 'RunAppConfigurator' parameter was passed to the script
+if($RunAppConfigurator) {
+    $result = ShowAppSelectionForm
+
+    PrintHeader "App Configurator"
+
+    # Show different message based on whether the app selection was saved or cancelled
+    if($result -ne [System.Windows.Forms.DialogResult]::OK) {
+        Write-Host "App configurator was closed without saving." -ForegroundColor Red
+    }
+    else {
+        Write-Output "Your app selection was saved to the 'CustomAppsList' file in the root folder of the script."
+    }
+
+    Write-Output ""
+
+    # Suppress prompt if Silent parameter was passed
+    if (-not $Silent) {
+        Write-Output "Press any key to exit..."
+        $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+    }
+
+    # Exit script
+    Exit
+}
+
 # Change script execution based on provided parameters or user input
 if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPParamCount -eq $global:Params.Count)) {
     if ($RunDefaults -or $RunWin11Defaults) {
@@ -507,7 +522,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
                                     }
                                     else {
                                         # Apps file does not exist, print error and continue to next item
-                                        Write-Host "Could not load apps from file, no apps will be removed" -ForegroundColor Red
+                                        Write-Host "Could not load custom apps list from file, no apps will be removed!" -ForegroundColor Red
                                         continue
                                     }
                                 }
@@ -565,7 +580,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
                 Write-Host " (n) Don't remove any apps" -ForegroundColor Yellow
                 Write-Host " (1) Only remove the default selection of bloatware apps from 'Appslist.txt'" -ForegroundColor Yellow
                 Write-Host " (2) Remove default selection of bloatware apps, aswell as mail & calendar apps, developer apps and gaming apps"  -ForegroundColor Yellow
-                Write-Host " (3) Specify which apps to remove and which to keep" -ForegroundColor Yellow
+                Write-Host " (3) Select which apps to remove and which to keep" -ForegroundColor Yellow
                 $RemoveCommAppInput = Read-Host "Remove any pre-installed apps? (n/1/2/3)" 
 
                 # Show app selection form if user entered option 3
@@ -843,7 +858,7 @@ else {
                 RemoveSpecificApps $appsList
             }
             else {
-                Write-Host "> Unable to find CustomAppsList file, no apps have been removed!" -ForegroundColor Red
+                Write-Host "> Could not load custom apps list from file, no apps were removed!" -ForegroundColor Red
             }
 
             Write-Output ""

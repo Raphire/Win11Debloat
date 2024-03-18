@@ -36,6 +36,7 @@ param (
     [switch]$DisableShare, [switch]$HideShare
 )
 
+$global:wingetInstalled = Get-AppxPackage -Name *Microsoft.DesktopAppInstaller*
 
 # Shows application selection form that allows the user to select what apps they want to remove or keep
 function ShowAppSelectionForm {
@@ -87,6 +88,12 @@ function ShowAppSelectionForm {
 
         # Set filePath where Appslist can be found
         $appsFile = "$PSScriptRoot/Appslist.txt"
+        $listOfApps = ""
+
+        if($onlyInstalledCheckBox.Checked -and $global:wingetInstalled) {
+            # Get list of installed apps via winget
+            $listOfApps = winget list --accept-source-agreements
+        }
 
         # Go through appslist and add items one by one to the selectionBox
         Foreach ($app in (Get-Content -Path $appsFile | Where-Object { $_ -notmatch '^\s*$' } )) { 
@@ -110,9 +117,17 @@ function ShowAppSelectionForm {
 
             # Make sure appString is not empty
             if ($appString.length -gt 0) {
-                if($onlyInstalledCheckBox.Checked) {
-                    # onlyInstalledCheckBox is checked, check if app is installed before adding to selectionBox
-                    $installed = Get-AppxPackage -Name $app
+                if ($onlyInstalledCheckBox.Checked) {
+                    # onlyInstalledCheckBox is checked, check if app is installed before adding it to selectionBox
+                    if ($listOfApps -like ("*" + $appString + "*")) {
+                        $installed = "installed"
+                    }
+                    elseif (($appString -eq "Microsoft.Edge") -and ($listOfApps -like "*XPFFTQ037JWMHS*")) {
+                        $installed = "installed"
+                    }
+                    else {
+                        $installed = Get-AppxPackage -Name $app
+                    }
 
                     if($installed.length -eq 0) {
                         # App is not installed, continue to next item without adding this app to the selectionBox
@@ -170,7 +185,7 @@ function ShowAppSelectionForm {
     $form.Controls.Add($label)
 
     $loadingLabel.Location = New-Object System.Drawing.Point(16,28)
-    $loadingLabel.Size = New-Object System.Drawing.Size(200,418)
+    $loadingLabel.Size = New-Object System.Drawing.Size(300,418)
     $loadingLabel.Text = 'Loading...'
     $loadingLabel.BackColor = "White"
     $loadingLabel.Visible = $false
@@ -209,16 +224,17 @@ function ShowAppSelectionForm {
 
 
 # Reads list of apps from file and removes them for all user accounts and from the OS image.
-function RemoveApps {
+function RemoveAppsFromFile {
     param (
-        $appsFile,
-        $message
+        $appsFilePath
     )
 
-    Write-Output $message
+    $appsList = @()
+
+    Write-Output "> Removing pre-installed Windows bloatware..."
 
     # Get list of apps from file at the path provided, and remove them one by one
-    Foreach ($app in (Get-Content -Path $appsFile | Where-Object { $_ -notmatch '^#.*' -and $_ -notmatch '^\s*$' } )) { 
+    Foreach ($app in (Get-Content -Path $appsFilePath | Where-Object { $_ -notmatch '^#.*' -and $_ -notmatch '^\s*$' } )) { 
         # Remove any spaces before and after the Appname
         $app = $app.Trim()
 
@@ -232,21 +248,15 @@ function RemoveApps {
         }
         
         $appString = $app.Trim('*')
-        Write-Output "Attempting to remove $appString..."
-
-        # Remove installed app for all existing users
-        Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage
-
-        # Remove provisioned app from OS image, so the app won't be installed for any new users
-        Get-AppxProvisionedPackage -Online | Where-Object { $_.PackageName -like $app } | ForEach-Object { Remove-ProvisionedAppxPackage -Online -AllUsers -PackageName $_.PackageName }
+        $appsList += $appString
     }
 
-    Write-Output ""
+    RemoveApps $appsList
 }
 
 
 # Removes apps specified during function call from all user accounts and from the OS image.
-function RemoveSpecificApps {
+function RemoveApps {
     param (
         $appslist
     )
@@ -254,13 +264,26 @@ function RemoveSpecificApps {
     Foreach ($app in $appsList) { 
         Write-Output "Attempting to remove $app..."
 
-        $app = '*' + $app + '*'
+        if(($app -eq "Microsoft.OneDrive") -or ($app -eq "Microsoft.Edge")) {
+            # Use winget to remove OneDrive and Edge
+            if($global:wingetInstalled.length -eq 0) {
+                Write-Host "WinGet is not installed, app was not removed" -ForegroundColor Red
+            }
+            else {
+                # Uninstall app via winget
+                winget uninstall --accept-source-agreements --id $app
+            }
+        }
+        else {
+            # Use Remove-AppxPackage to remove all other apps
+            $app = '*' + $app + '*'
 
-        # Remove installed app for all existing users
-        Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage
+            # Remove installed app for all existing users
+            Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage
 
-        # Remove provisioned app from OS image, so the app won't be installed for any new users
-        Get-AppxProvisionedPackage -Online | Where-Object { $_.PackageName -like $app } | ForEach-Object { Remove-ProvisionedAppxPackage -Online -AllUsers -PackageName $_.PackageName }
+            # Remove provisioned app from OS image, so the app won't be installed for any new users
+            Get-AppxProvisionedPackage -Online | Where-Object { $_.PackageName -like $app } | ForEach-Object { Remove-ProvisionedAppxPackage -Online -AllUsers -PackageName $_.PackageName }
+        }
     }
 }
 
@@ -613,7 +636,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
                     AddParameter 'RemoveGamingApps' 'Remove the Xbox App and Xbox Gamebar'
                 }
                 '3' {
-                    Write-Output "$($global:SelectedApps.Count) apps have been selected for removal"
+                    Write-Output "You have selected $($global:SelectedApps.Count) apps for removal"
 
                     AddParameter 'RemoveAppsCustom' "Remove $($global:SelectedApps.Count) apps:"
                 }
@@ -839,7 +862,7 @@ else {
     # Execute all selected/provided parameters
     switch ($global:Params.Keys) {
         'RemoveApps' {
-            RemoveApps "$PSScriptRoot/Appslist.txt" "> Removing pre-installed Windows bloatware..."
+            RemoveAppsFromFile "$PSScriptRoot/Appslist.txt" 
             continue
         }
         'RemoveAppsCustom' {
@@ -855,7 +878,7 @@ else {
                 }
 
                 Write-Output "> Removing $($appsList.Count) apps..."
-                RemoveSpecificApps $appsList
+                RemoveApps $appsList
             }
             else {
                 Write-Host "> Could not load custom apps list from file, no apps were removed!" -ForegroundColor Red
@@ -868,7 +891,7 @@ else {
             Write-Output "> Removing Mail, Calendar and People apps..."
             
             $appsList = 'Microsoft.windowscommunicationsapps', 'Microsoft.People'
-            RemoveSpecificApps $appsList
+            RemoveApps $appsList
 
             Write-Output ""
             continue
@@ -877,7 +900,7 @@ else {
             Write-Output "> Removing new Outlook for Windows app..."
             
             $appsList = 'Microsoft.OutlookForWindows'
-            RemoveSpecificApps $appsList
+            RemoveApps $appsList
 
             Write-Output ""
             continue
@@ -886,7 +909,7 @@ else {
             Write-Output "> Removing developer-related related apps..."
 
             $appsList = 'Microsoft.PowerAutomateDesktop', 'Microsoft.RemoteDesktop', 'Windows.DevHome'
-            RemoveSpecificApps $appsList
+            RemoveApps $appsList
 
             Write-Output ""
 
@@ -896,7 +919,7 @@ else {
             Write-Output "> Removing gaming related apps..."
 
             $appsList = 'Microsoft.GamingApp', 'Microsoft.XboxGameOverlay', 'Microsoft.XboxGamingOverlay'
-            RemoveSpecificApps $appsList
+            RemoveApps $appsList
 
             Write-Output ""
 
@@ -915,7 +938,7 @@ else {
             
             # Also remove the app package for bing search
             $appsList = 'Microsoft.BingSearch'
-            RemoveSpecificApps $appsList
+            RemoveApps $appsList
 
             Write-Output ""
 

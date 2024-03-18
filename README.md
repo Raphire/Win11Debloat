@@ -156,10 +156,13 @@ Win11Debloat has many options, but not all of these options are executed when ru
   <blockquote>
     
     General apps that are not removed by default:
+    - Microsoft.Edge (Edge browser)
     - Microsoft.GetHelp (Required for some Windows 11 Troubleshooters)
     - Microsoft.MicrosoftEdge.Stable (Edge browser)
     - Microsoft.MSPaint (Paint 3D)
     - Microsoft.OutlookForWindows* (New mail app)
+    - Microsoft.OneDrive (OneDrive consumer)
+    - Microsoft.OneDriveSync (OneDrive consumer)
     - Microsoft.Paint (Classic Paint)
     - Microsoft.People* (Required for & included with Mail & Calendar)
     - Microsoft.ScreenSketch (Snipping Tool)

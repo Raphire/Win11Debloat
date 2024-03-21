@@ -15,6 +15,7 @@ Microsoft.BingWeather
 Microsoft.Getstarted   # Cannot be uninstalled in Windows 11
 Microsoft.Messaging
 Microsoft.Microsoft3DViewer
+Microsoft.MicrosoftJournal
 Microsoft.MicrosoftOfficeHub
 Microsoft.MicrosoftPowerBIForWindows
 Microsoft.MicrosoftSolitaireCollection

@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------------------
- Win11Debloat - Setup
+ Win11Debloat Script - Default Mode
 -------------------------------------------------------------------------------------------
 Win11Debloat will make the following changes:
 - Remove the default selection of bloatware apps, the list can be found in the 'Appslist.txt' file.

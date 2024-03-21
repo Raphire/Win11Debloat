@@ -36,7 +36,6 @@ param (
     [switch]$DisableShare, [switch]$HideShare
 )
 
-$global:wingetInstalled = Get-AppxPackage -Name *Microsoft.DesktopAppInstaller*
 
 # Shows application selection form that allows the user to select what apps they want to remove or keep
 function ShowAppSelectionForm {
@@ -90,7 +89,7 @@ function ShowAppSelectionForm {
         $appsFile = "$PSScriptRoot/Appslist.txt"
         $listOfApps = ""
 
-        if($onlyInstalledCheckBox.Checked -and $global:wingetInstalled) {
+        if ($onlyInstalledCheckBox.Checked -and ($global:wingetInstalled -eq $true)) {
             # Get list of installed apps via winget
             $listOfApps = winget list --accept-source-agreements
         }
@@ -129,7 +128,7 @@ function ShowAppSelectionForm {
                         $installed = Get-AppxPackage -Name $app
                     }
 
-                    if($installed.length -eq 0) {
+                    if ($installed.length -eq 0) {
                         # App is not installed, continue to next item without adding this app to the selectionBox
                         continue
                     }
@@ -158,7 +157,7 @@ function ShowAppSelectionForm {
     $button1.Name = "saveButton"
     $button1.DialogResult = [System.Windows.Forms.DialogResult]::OK
     $button1.UseVisualStyleBackColor = $True
-    $button1.Text = "Save"
+    $button1.Text = "Confirm"
     $button1.Location = New-Object System.Drawing.Point(27,454)
     $button1.Size = New-Object System.Drawing.Size(75,23)
     $button1.DataBindings.DefaultDataSourceUpdateMode = 0
@@ -231,7 +230,7 @@ function RemoveAppsFromFile {
 
     $appsList = @()
 
-    Write-Output "> Removing pre-installed Windows bloatware..."
+    Write-Output "> Removing default selection of apps..."
 
     # Get list of apps from file at the path provided, and remove them one by one
     Foreach ($app in (Get-Content -Path $appsFilePath | Where-Object { $_ -notmatch '^#.*' -and $_ -notmatch '^\s*$' } )) { 
@@ -264,9 +263,9 @@ function RemoveApps {
     Foreach ($app in $appsList) { 
         Write-Output "Attempting to remove $app..."
 
-        if(($app -eq "Microsoft.OneDrive") -or ($app -eq "Microsoft.Edge")) {
+        if (($app -eq "Microsoft.OneDrive") -or ($app -eq "Microsoft.Edge")) {
             # Use winget to remove OneDrive and Edge
-            if($global:wingetInstalled.length -eq 0) {
+            if ($global:wingetInstalled -eq $false) {
                 Write-Host "WinGet is not installed, app was not removed" -ForegroundColor Red
             }
             else {
@@ -279,7 +278,7 @@ function RemoveApps {
             $app = '*' + $app + '*'
 
             # Remove installed app for all existing users
-            Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage
+            Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage -AllUsers
 
             # Remove provisioned app from OS image, so the app won't be installed for any new users
             Get-AppxProvisionedPackage -Online | Where-Object { $_.PackageName -like $app } | ForEach-Object { Remove-ProvisionedAppxPackage -Online -AllUsers -PackageName $_.PackageName }
@@ -337,7 +336,7 @@ function ClearStartMenu {
         $startmenuBinFile = $startmenu.Fullname + "\start2.bin"
 
         # Check if bin file exists
-        if(Test-Path $startmenuBinFile) {
+        if (Test-Path $startmenuBinFile) {
             Copy-Item -Path $startmenuTemplate -Destination $startmenu -Force
 
             $cpyMsg = "Replaced start menu for user " + $startmenu.Fullname.Split("\")[2]
@@ -381,18 +380,18 @@ function AddParameter {
     }
 
     # Create or clear file that stores last used settings
-    if (!(Test-Path "$PSScriptRoot/LastSettings")) {
-        $null = New-Item "$PSScriptRoot/LastSettings"
+    if (!(Test-Path "$PSScriptRoot/SavedSettings")) {
+        $null = New-Item "$PSScriptRoot/SavedSettings"
     } 
     elseif ($global:FirstSelection) {
-        $null = Clear-Content "$PSScriptRoot/LastSettings"
+        $null = Clear-Content "$PSScriptRoot/SavedSettings"
     }
     
     $global:FirstSelection = $false
 
     # Create entry and add it to the file
     $entry = $parameterName + "#- " + $message
-    Add-Content -Path "$PSScriptRoot/LastSettings" -Value $entry
+    Add-Content -Path "$PSScriptRoot/SavedSettings" -Value $entry
 }
 
 
@@ -424,6 +423,15 @@ function PrintFromFile {
 }
 
 
+# Check if winget is installed
+try {
+    $global:wingetVersion = winget -v
+    $global:wingetInstalled = $true
+}
+catch {
+    $global:wingetInstalled = $false
+}
+
 # Hide progress bars for app removal, as they block Win11Debloat's output
 $ProgressPreference = 'SilentlyContinue'
 
@@ -439,29 +447,41 @@ foreach ($Param in $SPParams) {
     }
 }
 
-# Remove LastSetting file if it's empty
-if ((Test-Path "$PSScriptRoot/LastSettings") -and ([String]::IsNullOrWhiteSpace((Get-content "$PSScriptRoot/LastSettings")))) {
-    Remove-Item -Path "$PSScriptRoot/LastSettings" -recurse
+# Check if SavedSettings file exists, if it doesn't exist check if SavedSettings file exists
+if (Test-Path "$PSScriptRoot/SavedSettings") {
+    if ([String]::IsNullOrWhiteSpace((Get-content "$PSScriptRoot/SavedSettings"))) {
+        # Remove SavedSettings file if it's empty
+        Remove-Item -Path "$PSScriptRoot/SavedSettings" -recurse
+    }
+}
+elseif (Test-Path "$PSScriptRoot/LastSettings") {
+    if ([String]::IsNullOrWhiteSpace((Get-content "$PSScriptRoot/LastSettings"))) {
+        # Remove LastSettings file if it's empty
+        Remove-Item -Path "$PSScriptRoot/LastSettings" -recurse
+    }
+    else {
+        # Rename LastSettings file if it isn't empty
+        Rename-Item -Path "$PSScriptRoot/LastSettings" -NewName "$PSScriptRoot/SavedSettings"
+    }
 }
 
 # Only run the app selection form if the 'RunAppConfigurator' parameter was passed to the script
-if($RunAppConfigurator) {
+if ($RunAppConfigurator) {
     $result = ShowAppSelectionForm
 
     PrintHeader "App Configurator"
 
     # Show different message based on whether the app selection was saved or cancelled
-    if($result -ne [System.Windows.Forms.DialogResult]::OK) {
+    if ($result -ne [System.Windows.Forms.DialogResult]::OK) {
         Write-Host "App configurator was closed without saving." -ForegroundColor Red
     }
     else {
         Write-Output "Your app selection was saved to the 'CustomAppsList' file in the root folder of the script."
     }
 
-    Write-Output ""
-
     # Suppress prompt if Silent parameter was passed
     if (-not $Silent) {
+        Write-Output ""
         Write-Output "Press any key to exit..."
         $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
     }
@@ -478,15 +498,19 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
     else {
         # Show menu and wait for user input, loops until valid input is provided
         Do { 
-            $ModeSelectionMessage = "Please select an option (1/2/0)" 
+            $ModeSelectionMessage = "Please select an option (1/2/3/0)" 
 
-            # Get & print script menu from file
-            PrintFromFile "$PSScriptRoot/Menus/Menu"
+            PrintHeader 'Menu'
 
-            # Only show this option if LastSettings file exists
-            if (Test-Path "$PSScriptRoot/LastSettings") {
-                Write-Output "(3) Run the script with the settings from last time"
-                $ModeSelectionMessage = "Please select an option (1/2/3/0)" 
+            Write-Output "(1) Default Mode: Apply the default settings"
+            Write-Output "(2) Custom Mode: Modify the script to your needs"
+            Write-Output "(3) Select & remove apps, without making other changes"
+
+            # Only show this option if SavedSettings file exists
+            if (Test-Path "$PSScriptRoot/SavedSettings") {
+                Write-Output "(4) Apply saved custom settings from last time"
+                
+                $ModeSelectionMessage = "Please select an option (1/2/3/4/0)" 
             }
 
             Write-Output ""
@@ -504,82 +528,33 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
                 Write-Output "Press any key to go back..."
                 $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
             }
-            elseif (-not $Silent -and ($Mode -eq '1')) {
-                # Get & print default settings info from file
-                PrintFromFile "$PSScriptRoot/Menus/DefaultSettings"
-
-                Write-Output "Press enter to execute the script or press CTRL+C to quit..."
-                Read-Host | Out-Null
-            }
-            elseif (($Mode -eq '3')) {
-                if (Test-Path "$PSScriptRoot/LastSettings") {
-                    if(-not $Silent) {
-                        PrintHeader 'Setup'
-                        Write-Output "Win11Debloat will make the following changes:"
-
-                        # Get & print default settings info from file
-                        Foreach ($line in (Get-Content -Path "$PSScriptRoot/LastSettings" )) { 
-                            # Remove any spaces before and after the Appname
-                            $line = $line.Trim()
-                        
-                            # Check if line has # char, show description, add parameter
-                            if (-not ($line.IndexOf('#') -eq -1)) {
-                                Write-Output $line.Substring(($line.IndexOf('#') + 1), ($line.Length - $line.IndexOf('#') - 1))
-                                $paramName = $line.Substring(0, $line.IndexOf('#'))
-
-                                if($paramName -eq "RemoveAppsCustom") {
-                                    # If paramName is RemoveAppsCustom, check if CustomAppsFile exists
-                                    if(Test-Path "$PSScriptRoot/CustomAppsList") {
-                                        # Apps file exists, print list of apps
-                                        $appsList = @()
-
-                                        # Get apps list from file
-                                        Foreach ($app in (Get-Content -Path "$PSScriptRoot/CustomAppsList" )) { 
-                                            # Remove any spaces before and after the app name
-                                            $app = $app.Trim()
-    
-                                            $appsList += $app
-                                        }
-    
-                                        Write-Host $appsList -ForegroundColor DarkGray
-                                    }
-                                    else {
-                                        # Apps file does not exist, print error and continue to next item
-                                        Write-Host "Could not load custom apps list from file, no apps will be removed!" -ForegroundColor Red
-                                        continue
-                                    }
-                                }
-
-                                if(-not $global:Params.ContainsKey($ParameterName)){
-                                    $global:Params.Add($paramName, $true)
-                                }
-                            }
-                        }
-
-                        Write-Output ""
-                        Write-Output "Press enter to execute the script or press CTRL+C to quit..."
-                        Read-Host | Out-Null
-                    }
-                } 
-                else {
-                    $Mode = $null;
-                }
+            elseif (($Mode -eq '4')-and -not (Test-Path "$PSScriptRoot/SavedSettings")) {
+                $Mode = $null;
             }
         }
-        while ($Mode -ne '1' -and $Mode -ne '2' -and $Mode -ne '3') 
+        while ($Mode -ne '1' -and $Mode -ne '2' -and $Mode -ne '3' -and $Mode -ne '4') 
     }
 
     # Add execution parameters based on the mode
     switch ($Mode) {
-        # Default mode, no user input required, all (relevant) options are added
+        # Default mode, loads defaults after confirmation
         '1' { 
+            # Print the default settings & require userconfirmation, unless Silent parameter was passed
+            if (-not $Silent) {
+                PrintFromFile "$PSScriptRoot/Menus/DefaultSettings"
+
+                Write-Output ""
+                Write-Output "Press enter to execute the script or press CTRL+C to quit..."
+                Read-Host | Out-Null
+            }
+
             $DefaultParameterNames = 'RemoveApps','DisableTelemetry','DisableBing','DisableLockscreenTips','DisableSuggestions','ShowKnownFileExt','DisableWidgets','HideChat','DisableCopilot'
 
-            PrintHeader 'Default Configuration'
+            PrintHeader 'Default Mode'
 
             # Add default parameters if they don't already exist
             foreach ($ParameterName in $DefaultParameterNames) {
-                if(-not $global:Params.ContainsKey($ParameterName)){
+                if (-not $global:Params.ContainsKey($ParameterName)){
                     $global:Params.Add($ParameterName, $true)
                 }
             }
@@ -595,7 +570,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
             # Get current Windows build version to compare against features
             $WinVersion = Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' CurrentBuild
 
-            PrintHeader 'Custom Configuration'
+            PrintHeader 'Custom Mode'
 
             # Show options for removing apps, only continue on valid input
             Do {
@@ -610,7 +585,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
                 if ($RemoveCommAppInput -eq '3') {
                     $result = ShowAppSelectionForm
 
-                    if($result -ne [System.Windows.Forms.DialogResult]::OK) {
+                    if ($result -ne [System.Windows.Forms.DialogResult]::OK) {
                         # User cancelled or closed app selection, show error and change RemoveCommAppInput so the menu will be shown again
                         Write-Output ""
                         Write-Host "Cancelled application selection, please try again" -ForegroundColor Red
@@ -832,17 +807,92 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
                 Read-Host | Out-Null
             }
 
-            PrintHeader 'Custom Configuration'
+            PrintHeader 'Custom Mode'
         }
 
-        # Run with options from last time, loaded from 'LastSettings' file
+        # App removal, remove apps based on user selection
         '3' {
-            PrintHeader 'Custom Configuration'
+            PrintHeader "App Removal"
+
+            $result = ShowAppSelectionForm
+
+            if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
+                Write-Output "You have selected $($global:SelectedApps.Count) apps for removal"
+                AddParameter 'RemoveAppsCustom' "Remove $($global:SelectedApps.Count) apps:"
+
+                # Suppress prompt if Silent parameter was passed
+                if (-not $Silent) {
+                    Write-Output ""
+                    Write-Output ""
+                    Write-Output ""
+                    Write-Output "Press enter to remove the selected apps or press CTRL+C to quit..."
+                    Read-Host | Out-Null
+                }
+            }
+            else {
+                Write-Host "Selection was cancelled, no apps have been removed!" -ForegroundColor Red
+            }
+
+            Write-Output ""
+        }
+
+        # Load custom options selection from the "SavedSettings" file
+        '4' {
+            if (-not $Silent) {
+                PrintHeader 'Custom Mode'
+                Write-Output "Win11Debloat will make the following changes:"
+
+                # Get & print default settings info from file
+                Foreach ($line in (Get-Content -Path "$PSScriptRoot/SavedSettings" )) { 
+                    # Remove any spaces before and after the Appname
+                    $line = $line.Trim()
+                
+                    # Check if line has # char, show description, add parameter
+                    if (-not ($line.IndexOf('#') -eq -1)) {
+                        Write-Output $line.Substring(($line.IndexOf('#') + 1), ($line.Length - $line.IndexOf('#') - 1))
+                        $paramName = $line.Substring(0, $line.IndexOf('#'))
+
+                        if ($paramName -eq "RemoveAppsCustom") {
+                            # If paramName is RemoveAppsCustom, check if CustomAppsFile exists
+                            if (Test-Path "$PSScriptRoot/CustomAppsList") {
+                                # Apps file exists, print list of apps
+                                $appsList = @()
+
+                                # Get apps list from file
+                                Foreach ($app in (Get-Content -Path "$PSScriptRoot/CustomAppsList" )) { 
+                                    # Remove any spaces before and after the app name
+                                    $app = $app.Trim()
+
+                                    $appsList += $app
+                                }
+
+                                Write-Host $appsList -ForegroundColor DarkGray
+                            }
+                            else {
+                                # Apps file does not exist, print error and continue to next item
+                                Write-Host "Could not load custom apps list from file, no apps will be removed!" -ForegroundColor Red
+                                continue
+                            }
+                        }
+
+                        if (-not $global:Params.ContainsKey($ParameterName)){
+                            $global:Params.Add($paramName, $true)
+                        }
+                    }
+                }
+
+                Write-Output ""
+                Write-Output ""
+                Write-Output "Press enter to execute the script or press CTRL+C to quit..."
+                Read-Host | Out-Null
+            }
+
+            PrintHeader 'Custom Mode'
         }
     }
 }
 else {
-    PrintHeader 'Custom Configuration'
+    PrintHeader 'Custom Mode'
 }
 
 
@@ -852,7 +902,7 @@ if ($SPParamCount -eq $global:Params.Keys.Count) {
     Write-Output "The script completed without making any changes."
     
     # Suppress prompt if Silent parameter was passed
-    if(-not $Silent) {
+    if (-not $Silent) {
         Write-Output ""
         Write-Output "Press any key to exit..."
         $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")

@@ -441,13 +441,14 @@ $SPParams = 'WhatIf', 'Confirm', 'Verbose', 'Silent'
 $SPParamCount = 0
 
 # Count how many SPParams exist within Params
+# This is later used to check if any options were selected
 foreach ($Param in $SPParams) {
     if ($global:Params.ContainsKey($Param)) {
         $SPParamCount++
     }
 }
 
-# Check if SavedSettings file exists, if it doesn't exist check if SavedSettings file exists
+# Check if SavedSettings file exists, if it doesn't exist check if LastSettings file exists
 if (Test-Path "$PSScriptRoot/SavedSettings") {
     if ([String]::IsNullOrWhiteSpace((Get-content "$PSScriptRoot/SavedSettings"))) {
         # Remove SavedSettings file if it's empty
@@ -467,9 +468,9 @@ elseif (Test-Path "$PSScriptRoot/LastSettings") {
 
 # Only run the app selection form if the 'RunAppConfigurator' parameter was passed to the script
 if ($RunAppConfigurator) {
-    $result = ShowAppSelectionForm
-
     PrintHeader "App Configurator"
+
+    $result = ShowAppSelectionForm
 
     # Show different message based on whether the app selection was saved or cancelled
     if ($result -ne [System.Windows.Forms.DialogResult]::OK) {
@@ -525,6 +526,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
                 # Get & print script information from file
                 PrintFromFile "$PSScriptRoot/Menus/Info"
 
+                Write-Output ""
                 Write-Output "Press any key to go back..."
                 $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
             }
@@ -565,7 +567,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
             }
         }
 
-        # Custom mode, add options based on user input
+        # Custom mode, show & add options based on user input
         '2' { 
             # Get current Windows build version to compare against features
             $WinVersion = Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' CurrentBuild

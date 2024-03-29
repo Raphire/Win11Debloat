@@ -505,7 +505,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
 
             Write-Output "(1) Default Mode: Apply the default settings"
             Write-Output "(2) Custom Mode: Modify the script to your needs"
-            Write-Output "(3) Select & remove apps, without making other changes"
+            Write-Output "(3) App removal mode: Select & remove apps, without making other changes"
 
             # Only show this option if SavedSettings file exists
             if (Test-Path "$PSScriptRoot/SavedSettings") {

@@ -71,6 +71,7 @@ Win11Debloat has many options, but not all of these options are executed when ru
     - Microsoft.Getstarted (Cannot be uninstalled in Windows 11)
     - Microsoft.Messaging  
     - Microsoft.Microsoft3DViewer  
+    - Microsoft.MicrosoftJournal
     - Microsoft.MicrosoftOfficeHub  
     - Microsoft.MicrosoftPowerBIForWindows  
     - Microsoft.MicrosoftSolitaireCollection  
@@ -156,10 +157,11 @@ Win11Debloat has many options, but not all of these options are executed when ru
   <blockquote>
     
     General apps that are not removed by default:
+    - Microsoft.Edge (Edge browser, only removeable in the EEA)
     - Microsoft.GetHelp (Required for some Windows 11 Troubleshooters)
-    - Microsoft.MicrosoftEdge.Stable (Edge browser)
     - Microsoft.MSPaint (Paint 3D)
     - Microsoft.OutlookForWindows* (New mail app)
+    - Microsoft.OneDrive (OneDrive consumer)
     - Microsoft.Paint (Classic Paint)
     - Microsoft.People* (Required for & included with Mail & Calendar)
     - Microsoft.ScreenSketch (Snipping Tool)

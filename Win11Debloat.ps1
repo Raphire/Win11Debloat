@@ -91,7 +91,7 @@ function ShowAppSelectionForm {
 
         if ($onlyInstalledCheckBox.Checked -and ($global:wingetInstalled -eq $true)) {
             # Get list of installed apps via winget
-            $listOfApps = winget list --accept-source-agreements
+            $listOfApps = winget list --accept-source-agreements --disable-interactivity
         }
 
         # Go through appslist and add items one by one to the selectionBox
@@ -118,10 +118,10 @@ function ShowAppSelectionForm {
             if ($appString.length -gt 0) {
                 if ($onlyInstalledCheckBox.Checked) {
                     # onlyInstalledCheckBox is checked, check if app is installed before adding it to selectionBox
-                    if ($listOfApps -like ("*" + $appString + "*")) {
+                    if ($listOfApps -like ("* " + $appString + " *")) {
                         $installed = "installed"
                     }
-                    elseif (($appString -eq "Microsoft.Edge") -and ($listOfApps -like "*XPFFTQ037JWMHS*")) {
+                    elseif (($appString -eq "Microsoft.Edge") -and ($listOfApps -like "* XPFFTQ037JWMHS *")) {
                         $installed = "installed"
                     }
                     else {
@@ -185,7 +185,7 @@ function ShowAppSelectionForm {
 
     $loadingLabel.Location = New-Object System.Drawing.Point(16,28)
     $loadingLabel.Size = New-Object System.Drawing.Size(300,418)
-    $loadingLabel.Text = 'Loading...'
+    $loadingLabel.Text = 'Loading apps...'
     $loadingLabel.BackColor = "White"
     $loadingLabel.Visible = $false
 
@@ -461,7 +461,7 @@ elseif (Test-Path "$PSScriptRoot/LastSettings") {
         Remove-Item -Path "$PSScriptRoot/LastSettings" -recurse
     }
     else {
-        # Rename LastSettings file if it isn't empty
+        # Rename LastSettings file to SavedSettings if it isn't empty
         Rename-Item -Path "$PSScriptRoot/LastSettings" -NewName "$PSScriptRoot/SavedSettings"
     }
 }
@@ -824,8 +824,6 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
 
                 # Suppress prompt if Silent parameter was passed
                 if (-not $Silent) {
-                    Write-Output ""
-                    Write-Output ""
                     Write-Output ""
                     Write-Output "Press enter to remove the selected apps or press CTRL+C to quit..."
                     Read-Host | Out-Null

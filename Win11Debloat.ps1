@@ -90,8 +90,18 @@ function ShowAppSelectionForm {
         $listOfApps = ""
 
         if ($onlyInstalledCheckBox.Checked -and ($global:wingetInstalled -eq $true)) {
-            # Get list of installed apps via winget
-            $listOfApps = winget list --accept-source-agreements --disable-interactivity
+            # Attempt to get a list of installed apps via winget, times out after 10 seconds
+            $job = Start-Job { return winget list --accept-source-agreements --disable-interactivity }
+            $jobDone = $job | Wait-Job -TimeOut 10
+
+            if (-not $jobDone) {
+                # Show error that the script was unable to get list of apps from winget
+                [System.Windows.MessageBox]::Show('Unable to load list of installed apps via winget, some apps may not be displayed in the list.','Error','Ok','Error')
+            }
+            else {
+                # Add output of job (list of apps) to $listOfApps
+                $listOfApps = Receive-Job -Job $job
+            }
         }
 
         # Go through appslist and add items one by one to the selectionBox
@@ -270,7 +280,7 @@ function RemoveApps {
             }
             else {
                 # Uninstall app via winget
-                winget uninstall --accept-source-agreements --id $app
+                winget uninstall --accept-source-agreements --disable-interactivity --id $app
             }
         }
         else {
@@ -424,11 +434,10 @@ function PrintFromFile {
 
 
 # Check if winget is installed
-try {
-    $global:wingetVersion = winget -v
+if (Get-AppxPackage -Name "*Microsoft.DesktopAppInstaller*") {
     $global:wingetInstalled = $true
 }
-catch {
+else {
     $global:wingetInstalled = $false
 }
 

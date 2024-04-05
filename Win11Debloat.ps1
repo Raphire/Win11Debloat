@@ -50,7 +50,10 @@ function ShowAppSelectionForm {
     $selectionBox = New-Object System.Windows.Forms.CheckedListBox 
     $loadingLabel = New-Object System.Windows.Forms.Label
     $onlyInstalledCheckBox = New-Object System.Windows.Forms.CheckBox
+    $checkUncheckCheckBox = New-Object System.Windows.Forms.CheckBox
     $initialFormWindowState = New-Object System.Windows.Forms.FormWindowState
+
+    $global:selectionBoxIndex = -1
 
     # saveButton eventHandler
     $handler_saveButton_Click= 
@@ -73,10 +76,51 @@ function ShowAppSelectionForm {
         $form.Close()
     }
 
+    $selectionBox_SelectedIndexChanged= 
+    {
+        $global:selectionBoxIndex = $selectionBox.SelectedIndex
+    }
+
+    $selectionBox_MouseDown=
+    {
+        if ($_.Button -eq [System.Windows.Forms.MouseButtons]::Left) {
+            if([System.Windows.Forms.Control]::ModifierKeys -eq [System.Windows.Forms.Keys]::Shift) {
+                if($global:selectionBoxIndex -ne -1) {
+                    $topIndex = $global:selectionBoxIndex
+
+                    if ($selectionBox.SelectedIndex -gt $topIndex) {
+                        for(($i = ($topIndex)); $i -le $selectionBox.SelectedIndex; $i++){
+                            $selectionBox.SetItemChecked($i, $selectionBox.GetItemChecked($topIndex))
+                        }
+                    }
+                    elseif ($topIndex -gt $selectionBox.SelectedIndex) {
+                        for(($i = ($selectionBox.SelectedIndex)); $i -le $topIndex; $i++){
+                            $selectionBox.SetItemChecked($i, $selectionBox.GetItemChecked($topIndex))
+                        }
+                    }
+                }
+            }
+            elseif($global:selectionBoxIndex -ne $selectionBox.SelectedIndex) {
+                $selectionBox.SetItemChecked($selectionBox.SelectedIndex, -not $selectionBox.GetItemChecked($selectionBox.SelectedIndex))
+            }
+        }
+    }
+
+    $check_All=
+    {
+        for(($i = 0); $i -lt $selectionBox.Items.Count; $i++){
+            $selectionBox.SetItemChecked($i, $checkUncheckCheckBox.Checked)
+        }
+    }
+
     $load_Apps=
     {
         # Correct the initial state of the form to prevent the .Net maximized form issue
         $form.WindowState = $initialFormWindowState
+
+        # Reset state to default before loading appslist again
+        $global:selectionBoxIndex = -1
+        $checkUncheckCheckBox.Checked = $False
 
         # Show loading indicator
         $loadingLabel.Visible = $true
@@ -150,25 +194,25 @@ function ShowAppSelectionForm {
         }
         
         # Hide loading indicator
-        $loadingLabel.Visible = $false
+        $loadingLabel.Visible = $False
 
         # Sort selectionBox alphabetically
-        $selectionBox.Sorted = $true;
+        $selectionBox.Sorted = $True
     }
 
     $form.Text = "Win11Debloat Application Selection"
     $form.Name = "appSelectionForm"
     $form.DataBindings.DefaultDataSourceUpdateMode = 0
-    $form.ClientSize = New-Object System.Drawing.Size(400,485)
+    $form.ClientSize = New-Object System.Drawing.Size(400,502)
     $form.FormBorderStyle = 'FixedDialog'
-    $form.MaximizeBox = $false
+    $form.MaximizeBox = $False
 
     $button1.TabIndex = 4
     $button1.Name = "saveButton"
     $button1.DialogResult = [System.Windows.Forms.DialogResult]::OK
     $button1.UseVisualStyleBackColor = $True
     $button1.Text = "Confirm"
-    $button1.Location = New-Object System.Drawing.Point(27,454)
+    $button1.Location = New-Object System.Drawing.Point(27,472)
     $button1.Size = New-Object System.Drawing.Size(75,23)
     $button1.DataBindings.DefaultDataSourceUpdateMode = 0
     $button1.add_Click($handler_saveButton_Click)
@@ -180,7 +224,7 @@ function ShowAppSelectionForm {
     $button2.DialogResult = [System.Windows.Forms.DialogResult]::Cancel
     $button2.UseVisualStyleBackColor = $True
     $button2.Text = "Cancel"
-    $button2.Location = New-Object System.Drawing.Point(129,454)
+    $button2.Location = New-Object System.Drawing.Point(129,472)
     $button2.Size = New-Object System.Drawing.Size(75,23)
     $button2.DataBindings.DefaultDataSourceUpdateMode = 0
     $button2.add_Click($handler_cancelButton_Click)
@@ -188,12 +232,13 @@ function ShowAppSelectionForm {
     $form.Controls.Add($button2)
 
     $label.Location = New-Object System.Drawing.Point(13,5)
-    $label.Size = New-Object System.Drawing.Size(400,20)
+    $label.Size = New-Object System.Drawing.Size(400,14)
+    $Label.Font = 'Microsoft Sans Serif,8'
     $label.Text = 'Check apps that you wish to remove, uncheck apps that you wish to keep'
 
     $form.Controls.Add($label)
 
-    $loadingLabel.Location = New-Object System.Drawing.Point(16,28)
+    $loadingLabel.Location = New-Object System.Drawing.Point(16,46)
     $loadingLabel.Size = New-Object System.Drawing.Size(300,418)
     $loadingLabel.Text = 'Loading apps...'
     $loadingLabel.BackColor = "White"
@@ -202,19 +247,29 @@ function ShowAppSelectionForm {
     $form.Controls.Add($loadingLabel)
 
     $onlyInstalledCheckBox.TabIndex = 6
-    $onlyInstalledCheckBox.Location = New-Object System.Drawing.Point(230,456)
+    $onlyInstalledCheckBox.Location = New-Object System.Drawing.Point(230,474)
     $onlyInstalledCheckBox.Size = New-Object System.Drawing.Size(150,20)
     $onlyInstalledCheckBox.Text = 'Only show installed apps'
     $onlyInstalledCheckBox.add_CheckedChanged($load_Apps)
 
     $form.Controls.Add($onlyInstalledCheckBox)
 
+    $checkUncheckCheckBox.TabIndex = 7
+    $checkUncheckCheckBox.Location = New-Object System.Drawing.Point(16,22)
+    $checkUncheckCheckBox.Size = New-Object System.Drawing.Size(150,20)
+    $checkUncheckCheckBox.Text = 'Check/Uncheck all'
+    $checkUncheckCheckBox.add_CheckedChanged($check_All)
+
+    $form.Controls.Add($checkUncheckCheckBox)
+
     $selectionBox.FormattingEnabled = $True
     $selectionBox.DataBindings.DefaultDataSourceUpdateMode = 0
     $selectionBox.Name = "selectionBox"
-    $selectionBox.Location = New-Object System.Drawing.Point(13,25)
+    $selectionBox.Location = New-Object System.Drawing.Point(13,43)
     $selectionBox.Size = New-Object System.Drawing.Size(374,424)
     $selectionBox.TabIndex = 3
+    $selectionBox.add_SelectedIndexChanged($selectionBox_SelectedIndexChanged)
+    $selectionBox.add_Click($selectionBox_MouseDown)
 
     $form.Controls.Add($selectionBox)
 
@@ -454,7 +509,7 @@ else {
 # Hide progress bars for app removal, as they block Win11Debloat's output
 $ProgressPreference = 'SilentlyContinue'
 
-$global:Params = $PSBoundParameters;
+$global:Params = $PSBoundParameters
 $global:FirstSelection = $true
 $SPParams = 'WhatIf', 'Confirm', 'Verbose', 'Silent'
 $SPParamCount = 0
@@ -508,7 +563,7 @@ if ($RunAppConfigurator) {
 # Change script execution based on provided parameters or user input
 if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPParamCount -eq $global:Params.Count)) {
     if ($RunDefaults -or $RunWin11Defaults) {
-        $Mode = '1';
+        $Mode = '1'
     }
     else {
         # Show menu and wait for user input, loops until valid input is provided
@@ -545,7 +600,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
                 $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
             }
             elseif (($Mode -eq '4')-and -not (Test-Path "$PSScriptRoot/SavedSettings")) {
-                $Mode = $null;
+                $Mode = $null
             }
         }
         while ($Mode -ne '1' -and $Mode -ne '2' -and $Mode -ne '3' -and $Mode -ne '4') 

@@ -433,6 +433,16 @@ function PrintFromFile {
 }
 
 
+function AwaitKeyToExit {
+    # Suppress prompt if Silent parameter was passed
+    if (-not $Silent) {
+        Write-Output ""
+        Write-Output "Press any key to exit..."
+        $null = [System.Console]::ReadKey()
+    }
+}
+
+
 # Check if winget is installed
 if (Get-AppxPackage -Name "*Microsoft.DesktopAppInstaller*") {
     $global:wingetInstalled = $true
@@ -489,12 +499,7 @@ if ($RunAppConfigurator) {
         Write-Output "Your app selection was saved to the 'CustomAppsList' file in the root folder of the script."
     }
 
-    # Suppress prompt if Silent parameter was passed
-    if (-not $Silent) {
-        Write-Output ""
-        Write-Output "Press any key to exit..."
-        $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
-    }
+    AwaitKeyToExit
 
     # Exit script
     Exit
@@ -910,12 +915,7 @@ else {
 if ($SPParamCount -eq $global:Params.Keys.Count) {
     Write-Output "The script completed without making any changes."
     
-    # Suppress prompt if Silent parameter was passed
-    if (-not $Silent) {
-        Write-Output ""
-        Write-Output "Press any key to exit..."
-        $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
-    }
+    AwaitKeyToExit
 }
 else {
     # Execute all selected/provided parameters
@@ -1095,10 +1095,5 @@ else {
     Write-Output ""
     Write-Output "Script completed successfully!"
 
-    # Suppress prompt if Silent parameter was passed
-    if (-not $Silent) {
-        Write-Output ""
-        Write-Output "Press any key to exit..."
-        $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
-    }
+    AwaitKeyToExit
 }

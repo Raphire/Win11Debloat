@@ -1144,8 +1144,10 @@ else {
         }
     }
 
-    RestartExplorer
-
+    #RestartExplorer
+    Stop-Process -ProcessName explorer -Force
+    Start-Process explorer.exe
+    
     Write-Output ""
     Write-Output ""
     Write-Output "Script completed successfully!"

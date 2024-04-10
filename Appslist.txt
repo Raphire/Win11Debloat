@@ -80,7 +80,7 @@ Shazam
 Sidia.LiveWallpaper
 SlingTV
 Speed Test
-Spotify
+#Spotify
 TikTok
 TuneInRadio
 Twitter
@@ -117,7 +117,7 @@ XING
 #  launching the script with the specific parameters found in the README.md file. 
 #
 #Microsoft.GamingApp                    # Modern Xbox Gaming App, required for installing some PC games
-#Microsoft.OutlookForWindows            # New mail app: Outlook for Windows
+Microsoft.OutlookForWindows            # New mail app: Outlook for Windows
 #Microsoft.People                       # Required for & included with Mail & Calendar
 #Microsoft.PowerAutomateDesktop
 #Microsoft.RemoteDesktop

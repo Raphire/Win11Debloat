@@ -1,8 +1,6 @@
 # Win11Debloater
 
-Win11Debloat is a simple, easy to use and lightweight powershell script that can remove pre-installed Windows bloatware apps, disable telemetry and declutter the experience by disabling or removing intrusive interface elements, ads and more. No need to painstakingly go through all the settings yourself, or remove apps one by one. Win11Debloat makes the process quick and easy!
-
-You can pick and choose exactly which modifications you want the script to make, or use the default settings. If you are unhappy with any of the changes you can easily revert them by using the registry files that are included in the 'Regfiles' folder, all of the apps that are removed can be reinstalled from the Microsoft store.
+This windows debloater is to be ran from Jumpcloud. It will remove the default set of applications. Switches used can also be found on the Jumpcloud command section.
 
 ![Win11Debloat Menu](/Assets/menu.png)
 
@@ -39,9 +37,6 @@ You can pick and choose exactly which modifications you want the script to make,
 - Hide the 'Include in library', 'Give access to' and 'Share' options in the context menu. (Windows 10 only)
 
 <br/>
-
-> [!TIP]
-> In 'custom mode' you can select exactly which apps to remove and which you want to keep!
 
 ### Apps that ARE removed by default
 

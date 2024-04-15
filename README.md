@@ -2,8 +2,6 @@
 
 This windows debloater is to be ran from Jumpcloud. It will remove the default set of applications. Switches used can also be found on the Jumpcloud command section.
 
-![Win11Debloat Menu](/Assets/menu.png)
-
 ### Default Settings
 
 - Remove the default selection of bloatware apps from [this list](#apps-that-are-removed-by-default).

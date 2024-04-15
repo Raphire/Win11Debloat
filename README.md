@@ -1,18 +1,10 @@
-# Win11Debloat
+# Win11Debloater
 
 Win11Debloat is a simple, easy to use and lightweight powershell script that can remove pre-installed Windows bloatware apps, disable telemetry and declutter the experience by disabling or removing intrusive interface elements, ads and more. No need to painstakingly go through all the settings yourself, or remove apps one by one. Win11Debloat makes the process quick and easy!
 
 You can pick and choose exactly which modifications you want the script to make, or use the default settings. If you are unhappy with any of the changes you can easily revert them by using the registry files that are included in the 'Regfiles' folder, all of the apps that are removed can be reinstalled from the Microsoft store.
 
 ![Win11Debloat Menu](/Assets/menu.png)
-
-#### Did this script help you? Please consider buying me a cup of coffee to support my work
-
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/M4M5C6UPC)
-
-## Features
-
-Win11Debloat has many options, but not all of these options are executed when running the script with the default settings. Select 'Custom mode' in the script menu if you want more granular control over the script or if you want to access all of Win11Debloat's features.
 
 ### Default Settings
 
@@ -196,32 +188,6 @@ Win11Debloat has many options, but not all of these options are executed when ru
 
 ## Usage
 
-> [!Warning]
-> Great care went into making sure this script does not unintentionally break any OS functionality, but use at your own risk!
-
-### Easy method
-
-1. [Download the latest version of the script](https://github.com/Raphire/Win11Debloat/archive/master.zip), and extract the .ZIP file to your desired location.
-2. Navigate to the Win11Debloat folder
-3. Double click the 'Run.bat' file to start the script. Note: If the console window immediately closes and nothing happens, try the advanced method below.
-4. Accept the Windows UAC prompt to run the script as administrator, this is required for the script to function.
-5. A new powershell window will now open, showing the Win11Debloat menu. Select either the default or custom mode to continue.
-6. Carefully read through and follow the on-screen instructions.
-
-After making the selected changes the Win11Debloat script will restart the Windows Explorer process to properly apply them. If Windows Explorer does not recover after running the script and your desktop stays black, don't worry. Just press Ctrl + Alt + Del and restart your PC.
-
-### Advanced method
-
-This method gives you the option to run the script with certain parameters to tailor the behaviour of the script to your needs and it allows you to run the script without requiring any user input during runtime, making it quicker and easier to deploy on a large number of systems.
-
-1. [Download the latest version of the script](https://github.com/Raphire/Win11Debloat/archive/master.zip), and extract the .ZIP file to your desired location.
-2. Open powershell as an administrator.
-3. Enable powershell execution by entering the following command: `Set-ExecutionPolicy Unrestricted -Scope Process`
-4. In powershell, navigate to the directory where the files were extracted. Example: `cd c:\Win11Debloat`
-5. Enter this into powershell to run the script: `.\Win11Debloat.ps1`
-6. The Win11Debloat menu will now open. Select either the default or custom setup to continue.
-
-To run the script with parameters simply execute the script as explained above, but add the parameters at the end with spaces in between. Example: `.\Win11Debloat.ps1 -RemoveApps -DisableBing -Silent`
 
 A full list of parameters and what they do can be found below.
 

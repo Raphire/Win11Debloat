@@ -498,16 +498,20 @@ function AwaitKeyToExit {
 }
 
 
-# Check if winget is installed
-if (Get-AppxPackage -Name "*Microsoft.DesktopAppInstaller*") {
+ # Check if winget is installed & if it is, check if the version is at least v1.4
+if ((Get-AppxPackage -Name "*Microsoft.DesktopAppInstaller*") -and ((winget -v) -replace 'v','' -gt 1.4)) {
     $global:wingetInstalled = $true
-    if ((winget -v) -replace 'v','' -lt 1.4) {
-        Write-Output "WinGet is installed, but outdated. Please update to version 1.4 or later."
-        $global:wingetInstalled = $false
-    }
 }
 else {
     $global:wingetInstalled = $false
+
+    # Show warning that requires user confirmation, Suppress confirmation if Silent parameter was passed
+    if (-not $Silent) {
+        Write-Warning "Winget is not installed or outdated. This may prevent Win11Debloat from removing certain apps."
+        Write-Output ""
+        Write-Output "Press any key to continue anyway..."
+        Read-Host | Out-Null
+    }
 }
 
 # Hide progress bars for app removal, as they block Win11Debloat's output

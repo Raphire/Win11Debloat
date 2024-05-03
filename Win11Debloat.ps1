@@ -331,7 +331,7 @@ function RemoveApps {
         if (($app -eq "Microsoft.OneDrive") -or ($app -eq "Microsoft.Edge")) {
             # Use winget to remove OneDrive and Edge
             if ($global:wingetInstalled -eq $false) {
-                Write-Host "WinGet is not installed, app was not removed" -ForegroundColor Red
+                Write-Host "WinGet is either not installed or is outdated, so $app could not be removed" -ForegroundColor Red
             }
             else {
                 # Uninstall app via winget
@@ -501,6 +501,10 @@ function AwaitKeyToExit {
 # Check if winget is installed
 if (Get-AppxPackage -Name "*Microsoft.DesktopAppInstaller*") {
     $global:wingetInstalled = $true
+    if ((winget -v) -replace 'v','' -lt 1.4) {
+        Write-Output "WinGet is installed, but outdated. Please update to version 1.4 or later."
+        $global:wingetInstalled = $false
+    }
 }
 else {
     $global:wingetInstalled = $false

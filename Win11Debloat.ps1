@@ -331,7 +331,7 @@ function RemoveApps {
         if (($app -eq "Microsoft.OneDrive") -or ($app -eq "Microsoft.Edge")) {
             # Use winget to remove OneDrive and Edge
             if ($global:wingetInstalled -eq $false) {
-                Write-Host "WinGet is not installed, app was not removed" -ForegroundColor Red
+                Write-Host "WinGet is either not installed or is outdated, so $app could not be removed" -ForegroundColor Red
             }
             else {
                 # Uninstall app via winget
@@ -498,12 +498,20 @@ function AwaitKeyToExit {
 }
 
 
-# Check if winget is installed
-if (Get-AppxPackage -Name "*Microsoft.DesktopAppInstaller*") {
+ # Check if winget is installed & if it is, check if the version is at least v1.4
+if ((Get-AppxPackage -Name "*Microsoft.DesktopAppInstaller*") -and ((winget -v) -replace 'v','' -gt 1.4)) {
     $global:wingetInstalled = $true
 }
 else {
     $global:wingetInstalled = $false
+
+    # Show warning that requires user confirmation, Suppress confirmation if Silent parameter was passed
+    if (-not $Silent) {
+        Write-Warning "Winget is not installed or outdated. This may prevent Win11Debloat from removing certain apps."
+        Write-Output ""
+        Write-Output "Press any key to continue anyway..."
+        Read-Host | Out-Null
+    }
 }
 
 # Hide progress bars for app removal, as they block Win11Debloat's output

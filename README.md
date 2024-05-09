@@ -199,6 +199,14 @@ Win11Debloat has many options, but not all of these options are executed when ru
 > [!Warning]
 > Great care went into making sure this script does not unintentionally break any OS functionality, but use at your own risk!
 
+### Quick method
+1. Run powershell as admin.
+2. Copy-paste below code and press enter.
+```
+irm https://raw.githubusercontent.com/loadstring1/Win11Debloat/master/get.ps1 | iex
+```
+3. That's all. You will see options on how you want to debloat your system.
+
 ### Easy method
 
 1. [Download the latest version of the script](https://github.com/Raphire/Win11Debloat/archive/master.zip), and extract the .ZIP file to your desired location.

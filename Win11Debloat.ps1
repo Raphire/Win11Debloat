@@ -393,6 +393,13 @@ function ClearStartMenu {
     # Path to start menu template
     $startmenuTemplate = "$PSScriptRoot/Start/start2.bin"
 
+    # Check if template bin file exists, return early if it doesn't
+    if (-not (Test-Path $startmenuTemplate)) {
+        Write-Host "Error: Unable to clear start menu, start2.bin file missing from script folder" -ForegroundColor Red
+        Write-Output ""
+        return
+    }
+
     # Get all user profile folders
     $usersStartMenu = get-childitem -path "C:\Users\*\AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState"
 
@@ -409,7 +416,8 @@ function ClearStartMenu {
         }
         else {
             # Bin file doesn't exist, indicating the user is not running the correct version of Windows. Exit function
-            Write-Output "Error: Start menu file not found. Please make sure you're running Windows 11 22H2 or later"
+            Write-Host "Error: Unable to clear start menu, start2.bin file could not found for user" $startmenu.Fullname.Split("\")[2]  -ForegroundColor Red
+            Write-Output ""
             return
         }
     }
@@ -947,7 +955,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
                             }
                             else {
                                 # Apps file does not exist, print error and continue to next item
-                                Write-Host "Could not load custom apps list from file, no apps will be removed!" -ForegroundColor Red
+                                Write-Host "Error: Could not load custom apps list from file, no apps will be removed!" -ForegroundColor Red
                                 continue
                             }
                         }

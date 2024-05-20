@@ -172,7 +172,7 @@ function ShowAppSelectionForm {
             if ($appString.length -gt 0) {
                 if ($onlyInstalledCheckBox.Checked) {
                     # onlyInstalledCheckBox is checked, check if app is installed before adding it to selectionBox
-                    if ($listOfApps -like ("* " + $appString + " *")) {
+                    if ($listOfApps -like ("*" + $appString + "*")) {
                         $installed = "installed"
                     }
                     elseif (($appString -eq "Microsoft.Edge") -and ($listOfApps -like "* XPFFTQ037JWMHS *")) {

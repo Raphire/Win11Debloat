@@ -42,17 +42,24 @@ Write-Output "------------------------------------------------------------------
 
 # Make sure winget is installed and is at least v1.4
 if ((Get-AppxPackage -Name "*Microsoft.DesktopAppInstaller*") -and ((winget -v) -replace 'v','' -gt 1.4)) {
-    # Install git if it isn't already installed
-    Write-Output "> Installing git..."
-    winget install git.git --accept-package-agreements --accept-source-agreements --disable-interactivity --no-upgrade
+	# Check if git is installed. Install git if it isn't installed yet
+	try
+	{
+		git | Out-Null
+	}
+	catch [System.Management.Automation.CommandNotFoundException]
+	{
+		Write-Output "> Installing git..."
+		winget install git.git --accept-package-agreements --accept-source-agreements --disable-interactivity --no-upgrade
+		
+		Write-Output ""
+	}
 
     # Navigate to user temp directory
     cd $env:TEMP 
 
     # Add default install location of git to path
     $env:Path += ';C:\Program Files\Git\cmd'
-
-    Write-Output ""
 
     # Download Win11Debloat from github
     Write-Output "> Downloading Win11Debloat..."
@@ -75,5 +82,5 @@ if ((Get-AppxPackage -Name "*Microsoft.DesktopAppInstaller*") -and ((winget -v) 
     Remove-Item -LiteralPath "Win11Debloat" -Force -Recurse
 }
 else {
-    Write-Error "Unable to start script, Winget is not installed or outdated."
+    Write-Error "Unable to start script, WinGet is not installed or outdated."
 }

@@ -11,6 +11,7 @@ param (
     [switch]$RemoveCommApps,
     [switch]$RemoveDevApps,
     [switch]$RemoveW11Outlook,
+    [switch]$DisableDVR,
     [switch]$DisableTelemetry,
     [switch]$DisableBingSearches, [switch]$DisableBing,
     [switch]$DisableLockscrTips, [switch]$DisableLockscreenTips,
@@ -406,9 +407,14 @@ function ClearStartMenu {
     # Copy Start menu to all users folders
     ForEach ($startmenu in $usersStartMenu) {
         $startmenuBinFile = $startmenu.Fullname + "\start2.bin"
+        $backupBinFile = $startmenuBinFile + ".bak"
 
         # Check if bin file exists
         if (Test-Path $startmenuBinFile) {
+            # Backup current startmenu file
+            Move-Item -Path $startmenuBinFile -Destination $backupBinFile
+
+            # Copy template file
             Copy-Item -Path $startmenuTemplate -Destination $startmenu -Force
 
             $cpyMsg = "Replaced start menu for user " + $startmenu.Fullname.Split("\")[2]
@@ -696,11 +702,18 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
                     AddParameter 'RemoveW11Outlook' 'Remove the new Outlook for Windows app'
                     AddParameter 'RemoveDevApps' 'Remove developer-related apps'
                     AddParameter 'RemoveGamingApps' 'Remove the Xbox App and Xbox Gamebar'
+                    AddParameter 'DisableDVR' 'Disable Xbox game DVR'
                 }
                 '3' {
                     Write-Output "You have selected $($global:SelectedApps.Count) apps for removal"
 
                     AddParameter 'RemoveAppsCustom' "Remove $($global:SelectedApps.Count) apps:"
+
+                    Write-Output ""
+
+                    if ($( Read-Host -Prompt "Disable Xbox game DVR? (y/n)" ) -eq 'y') {
+                        AddParameter 'DisableDVR' 'Disable Xbox game DVR'
+                    }
                 }
             }
 
@@ -721,15 +734,15 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
 
             Write-Output ""
 
-            if ($( Read-Host -Prompt "Disable & remove bing search, bing AI & cortana in Windows search? (y/n)" ) -eq 'y') {
-                AddParameter 'DisableBing' 'Disable & remove bing search, bing AI & cortana in Windows search'
+            if ($( Read-Host -Prompt "Disable tips, tricks, suggestions and ads in start, settings, notifications, explorer and lockscreen? (y/n)" ) -eq 'y') {
+                AddParameter 'DisableSuggestions' 'Disable tips, tricks, suggestions and ads in start, settings, notifications and Windows explorer'
+                AddParameter 'DisableLockscreenTips' 'Disable tips & tricks on the lockscreen'
             }
 
             Write-Output ""
 
-            if ($( Read-Host -Prompt "Disable tips, tricks, suggestions and ads in start, settings, notifications, explorer and lockscreen? (y/n)" ) -eq 'y') {
-                AddParameter 'DisableSuggestions' 'Disable tips, tricks, suggestions and ads in start, settings, notifications and Windows explorer'
-                AddParameter 'DisableLockscreenTips' 'Disable tips & tricks on the lockscreen'
+            if ($( Read-Host -Prompt "Disable & remove bing search, bing AI & cortana in Windows search? (y/n)" ) -eq 'y') {
+                AddParameter 'DisableBing' 'Disable & remove bing search, bing AI & cortana in Windows search'
             }
 
             # Only show this option for Windows 11 users running build 22621 or later
@@ -1053,6 +1066,10 @@ else {
 
             Write-Output ""
 
+            continue
+        }
+        'DisableDVR' {
+            RegImport "> Disabling Xbox game DVR..." $PSScriptRoot\Regfiles\Disable_DVR.reg
             continue
         }
         'ClearStart' {

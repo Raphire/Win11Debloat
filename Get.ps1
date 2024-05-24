@@ -10,6 +10,7 @@ param (
     [switch]$RemoveCommApps,
     [switch]$RemoveDevApps,
     [switch]$RemoveW11Outlook,
+    [switch]$DisableDVR,
     [switch]$DisableTelemetry,
     [switch]$DisableBingSearches, [switch]$DisableBing,
     [switch]$DisableLockscrTips, [switch]$DisableLockscreenTips,
@@ -51,15 +52,15 @@ if ((Get-AppxPackage -Name "*Microsoft.DesktopAppInstaller*") -and ((winget -v) 
 	{
 		Write-Output "> Installing git..."
 		winget install git.git --accept-package-agreements --accept-source-agreements --disable-interactivity --no-upgrade
+
+        # Add default install location of git to path
+        $env:Path += ';C:\Program Files\Git\cmd'
 		
 		Write-Output ""
 	}
 
     # Navigate to user temp directory
     cd $env:TEMP 
-
-    # Add default install location of git to path
-    $env:Path += ';C:\Program Files\Git\cmd'
 
     # Download Win11Debloat from github
     Write-Output "> Downloading Win11Debloat..."

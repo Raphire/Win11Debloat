@@ -726,6 +726,11 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
                 }
             }
 
+            #allegedly supposed to work on windows 10 and 11 but i didn't test it on windows 10 - loadstring1
+            if ($( Read-Host -Prompt "Force uninstall microsoft edge? - works outside EU (y/n)") -eq 'y') {
+                AddParameter 'EdgeRemove' 'Force remove edge regardless of region settings'
+            }
+
             Write-Output ""
 
             if ($( Read-Host -Prompt "Disable telemetry, diagnostic data, app-launch tracking and targeted ads? (y/n)" ) -eq 'y') {
@@ -987,6 +992,11 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
 
             PrintHeader 'Custom Mode'
         }
+
+        # this was done for testing if it works correctly - loadstring1
+        # '5' {
+        #     AddParameter 'EdgeRemove' 'Force remove edge regardless of region settings'
+        # }
     }
 }
 else {
@@ -1006,6 +1016,72 @@ else {
     switch ($global:Params.Keys) {
         'RemoveApps' {
             RemoveAppsFromFile "$PSScriptRoot/Appslist.txt" 
+            continue
+        }
+        "EdgeRemove" {
+            Write-Output "Attempting to kill all microsoft edge processes."
+            Stop-Process -Name "*edge*"
+
+            # I don't know how these hashes work. I assume those update once microsoft edge updates that will be tons of pain keeping this edge remove function up to date - loadstring1
+            reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run" /v "MicrosoftEdgeAutoLaunch_A9F6DCE4ABADF4F51CF45CD7129E3C6C" /f
+            reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Active Setup\Installed Components\{9459C573-B17A-45AE-9F64-1857B5D58CEE}" /f
+            reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft Edge" /f
+            reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Clients\StartMenuInternet\Microsoft Edge" /f
+            reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Internet Explorer\Low Rights\ElevationPolicy\{c9abcf16-8dc2-4a95-bae3-24fd98f2ed29}" /f
+
+            Write-Output "Attempted to remove microsoft edge from registry"
+
+            $ProgramFiles86=${env:ProgramFiles(x86)}
+            
+            #remove microsoft edge executables
+            
+            if (Test-Path -Path $ProgramFiles86"\Microsoft\Edge") {
+                Remove-Item -Force -Recurse $ProgramFiles86"\Microsoft\Edge"
+                Write-Output "Microsoft edge removed from Program Files x86"
+            }
+
+            if (Test-Path -Path $ProgramFiles86"\Microsoft\EdgeCore") {
+                Remove-Item -Force -Recurse $ProgramFiles86"\Microsoft\EdgeCore"
+                Write-Output "Microsoft edge core removed from Program Files x86"
+            }
+
+            if (Test-Path -Path $ProgramFiles86"\Microsoft\Temp") {
+                Remove-Item -Force -Recurse $ProgramFiles86"\Microsoft\Temp"
+                Write-Output "Microsoft edge temp folder removed from Program Files x86"
+            }
+
+            #remove microsoft edge userdata
+
+            if (Test-Path -Path $env:LOCALAPPDATA"\Microsoft\Edge") {
+                Remove-Item -Force -Recurse $env:LOCALAPPDATA"\Microsoft\Edge"
+                Write-Output "Microsoft edge user data removed from LocalAppdata"
+            }
+
+            if (Test-Path -Path $env:LOCALAPPDATA"\Microsoft\EdgeCore") {
+                Remove-Item -Force -Recurse $env:LOCALAPPDATA"\Microsoft\EdgeCore"
+                Write-Output "Microsoft edge core removed from LocalAppdata"
+            }
+
+            #remove microsoft edge shortcuts
+
+            if (Test-Path -Path $env:ProgramData"\Microsoft\Windows\Start Menu\Programs\Microsoft Edge.lnk") {
+                Remove-item -Force -Recurse $env:ProgramData"\Microsoft\Windows\Start Menu\Programs\Microsoft Edge.lnk"
+                Write-Output "Microsoft edge has been removed from start menu"
+            }
+
+            if (Test-Path -Path $env:APPDATA"\Microsoft\Internet Explorer\Quick Launch\Microsoft Edge.lnk") {
+                Remove-Item -Force -Recurse $env:APPDATA"\Microsoft\Internet Explorer\Quick Launch\Microsoft Edge.lnk"
+                Write-Output "Microsoft edge has been removed from quick launch"
+            }
+
+            if (Test-Path -Path "C:\Users\Public\Desktop\Microsoft Edge.lnk") {
+                Remove-Item -Force -Recurse "C:\Users\Public\Desktop\Microsoft Edge.lnk"
+                Write-Output "Microsoft edge has been removed from desktop"
+            }
+
+            Write-Output "Microsoft edge should be removed from your system."
+            Write-Output "Please keep in mind microsoft edge webview and microsoft edge update has not been uninstalled. You can uninstall those in settings/control panel."
+
             continue
         }
         'RemoveAppsCustom' {

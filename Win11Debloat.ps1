@@ -1021,11 +1021,12 @@ else {
         "EdgeRemove" {
             Write-Output "Edge uninstaller v1.1 - made by loadstring1"
 
-            #give it a chance to uninstall itself before doing it forcefully
 
+            #give it a chance to uninstall itself before doing it forcefully
+            
             if ((Get-AppxPackage -Name "*Microsoft.DesktopAppInstaller*") -and ((winget -v) -replace 'v','' -gt 1.4)) {
                 $edgeNamesGet=@("Microsoft.MicrosoftEdge.Stable_8wekyb3d8bbwe","Microsoft.MicrosoftEdge_8wekyb3d8bbwe","Microsoft.Edge","Microsoft.MicrosoftEdgeDevToolsClient_8wekyb3d8bbwe","Microsoft Edge Update")
-
+            
                 foreach ($edge in $edgeNamesGet) {
                     try {
                         winget uninstall $edge
@@ -1034,29 +1035,29 @@ else {
                         Write-Output "failed to uninstall edge with winget ($edge)"
                     }
                 }
-
+            
                 Write-Output "Attempted to uninstall microsoft edge with winget"
             }else{
                 Write-Output "Looks like you don't have winget installed or your winget version is outdated. Attempting to remove microsoft edge without winget forcefully."
             }
-
+            
             Stop-Process -Name "*edge*"
             Write-Output "Attempted to kill all microsoft edge processes"
-
+            
             # I don't know how these hashes work. I assume those update once microsoft edge updates that will be tons of pain keeping this edge remove function up to date - loadstring1
-
+            
             # my god microsoft edge leaves so much mess in the registry... - loadstring1
-
+            
             # remove ms edge from autostart
             reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run" /v "MicrosoftEdgeAutoLaunch_A9F6DCE4ABADF4F51CF45CD7129E3C6C" /f
             reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run" /v "Microsoft Edge Update" /f
             reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run" /v "MicrosoftEdgeAutoLaunch_A9F6DCE4ABADF4F51CF45CD7129E3C6C" /f
             reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run" /v "Microsoft Edge Update" /f
-
+            
             #remove ms edge from control panel and settings
             reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft Edge" /f
             reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft Edge Update" /f
-
+            
             # remove ms edge leftovers in registry
             reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Active Setup\Installed Components\{9459C573-B17A-45AE-9F64-1857B5D58CEE}" /f
             reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Clients\StartMenuInternet\Microsoft Edge" /f
@@ -1117,14 +1118,30 @@ else {
             reg delete "HKEY_CURRENT_USER\Software\Classes\Local Settings\MrtCache\C:%5CWindows%5CSystemApps%5CMicrosoft.MicrosoftEdgeDevToolsClient_8wekyb3d8bbwe%5Cresources.pri" /f
             reg delete "HKEY_CURRENT_USER\Software\Classes\Local Settings\MrtCache\C:%5CWindows%5CSystemApps%5CMicrosoft.MicrosoftEdge_8wekyb3d8bbwe%5Cresources.pri" /f
             reg delete "HKEY_CURRENT_USER\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppContainer\Storage\microsoft.microsoftedge.stable_8wekyb3d8bbwe" /f
-
+            
             #and there is way more than this i could do this all day but i think its enough i don't want to make this simple script 1k lines of code
-
-
+            
+            
             Write-Output "Attempted to remove microsoft edge from registry"
-
+            
+            #remove leftover services
+            sc.exe delete "edgeupdate"
+            sc.exe delete "edgeupdatem"
+            sc.exe delete "MicrosoftEdgeElevationService"
+            
+            Write-Output "Attempted to remove microsoft edge from services"
+            
+            #remove leftover tasks
+            Unregister-ScheduledTask -TaskName MicrosoftEdgeUpdateBrowserReplacementTask -Confirm:$false
+            Unregister-ScheduledTask -TaskName "MicrosoftEdgeUpdateTaskMachineCore{BEB567CF-A378-44A2-9578-89A3E235F394}" -Confirm:$false
+            Unregister-ScheduledTask -TaskName "MicrosoftEdgeUpdateTaskMachineUA{6D47D77D-DBC2-48D8-9FFC-1346D07E2E8F}" -Confirm:$false
+            Unregister-ScheduledTask -TaskName "MicrosoftEdgeUpdateTaskUserS-1-5-21-2471683600-1030039023-3519664427-1001Core{8205FAB3-AD34-4E03-A2E1-5092347ADEDA}" -Confirm:$false
+            Unregister-ScheduledTask -TaskName "MicrosoftEdgeUpdateTaskUserS-1-5-21-2471683600-1030039023-3519664427-1001UA{ECB907F8-E033-4A73-A66C-8DC70865C0F5}" -Confirm:$false
+            
+            Write-Output "Attempted to remove microsoft edge from task scheduler"
+            
             $ProgramFiles86=${env:ProgramFiles(x86)}
-
+            
             $edgePaths=@(
                 "$ProgramFiles86\Microsoft\Edge",
                 "$ProgramFiles86\Microsoft\EdgeCore",
@@ -1146,8 +1163,8 @@ else {
                     Write-Output "$path doesn't exist. No action was taken."
                 }
             }
-
-
+            
+            
             Write-Output "Microsoft edge should be removed from your system."
             Write-Output "Please keep in mind microsoft edge webview has not been uninstalled. You can uninstall that in settings or control panel."
 

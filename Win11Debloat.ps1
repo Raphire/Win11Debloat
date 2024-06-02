@@ -992,11 +992,6 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
 
             PrintHeader 'Custom Mode'
         }
-
-        # this was done for testing if it works correctly - loadstring1
-        # '5' {
-        #     AddParameter 'EdgeRemove' 'Force remove edge regardless of region settings'
-        # }
     }
 }
 else {
@@ -1020,7 +1015,6 @@ else {
         }
         "EdgeRemove" {
             Write-Output "Edge uninstaller v1.1 - made by loadstring1"
-
             
             #give it a chance to uninstall itself before doing it forcefully
 
@@ -1162,7 +1156,6 @@ else {
                     Write-Output "$path doesn't exist. No action was taken."
                 }
             }
-
 
             Write-Output "Microsoft edge should be removed from your system."
             Write-Output "Please keep in mind microsoft edge webview has not been uninstalled. You can uninstall that in settings or control panel."

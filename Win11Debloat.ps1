@@ -1151,7 +1151,7 @@ else {
                 "$env:ProgramData\Microsoft\EdgeUpdate",
                 "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Microsoft Edge.lnk",
                 "$env:APPDATA\Microsoft\Internet Explorer\Quick Launch\Microsoft Edge.lnk",
-                "$env:APPDATA\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar\Microsoft Edge.lnk"
+                "$env:APPDATA\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar\Microsoft Edge.lnk",
                 "$env:PUBLIC\Desktop\Microsoft Edge.lnk"
             )
             foreach ($path in $edgePaths){

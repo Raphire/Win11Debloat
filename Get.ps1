@@ -60,20 +60,20 @@ if ((Get-AppxPackage -Name "*Microsoft.DesktopAppInstaller*") -and ((winget -v) 
 	}
 
     # Navigate to user temp directory
-    cd $env:TEMP 
+    Set-Location $env:TEMP 
 
     # Download Win11Debloat from github
     Write-Output "> Downloading Win11Debloat..."
     git clone https://github.com/Raphire/Win11Debloat/ 
 
     # Make list of arguments
-    $args = $($PSBoundParameters.GetEnumerator() | ForEach-Object {"-$($_.Key)"})
+    $arguments = $($PSBoundParameters.GetEnumerator() | ForEach-Object {"-$($_.Key)"})
 
     Write-Output ""
 
     # Start & run script with the provided arguments
     Write-Output "> Running Win11Debloat..."
-    $debloatProcess = Start-Process powershell.exe -PassThru -ArgumentList "-executionpolicy bypass -File .\Win11Debloat\Win11Debloat.ps1 $args"
+    $debloatProcess = Start-Process powershell.exe -PassThru -ArgumentList "-executionpolicy bypass -File .\Win11Debloat\Win11Debloat.ps1 $arguments"
     $debloatProcess.WaitForExit()
 
     Write-Output ""

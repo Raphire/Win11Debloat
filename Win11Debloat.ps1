@@ -57,7 +57,7 @@ function ShowAppSelectionForm {
     $global:selectionBoxIndex = -1
 
     # saveButton eventHandler
-    $handler_saveButton_Click= 
+    $handler_saveButton_Click = 
     {
         $global:SelectedApps = $selectionBox.CheckedItems
 
@@ -72,49 +72,49 @@ function ShowAppSelectionForm {
     }
 
     # cancelButton eventHandler
-    $handler_cancelButton_Click= 
+    $handler_cancelButton_Click = 
     {
         $form.Close()
     }
 
-    $selectionBox_SelectedIndexChanged= 
+    $selectionBox_SelectedIndexChanged = 
     {
         $global:selectionBoxIndex = $selectionBox.SelectedIndex
     }
 
-    $selectionBox_MouseDown=
+    $selectionBox_MouseDown =
     {
         if ($_.Button -eq [System.Windows.Forms.MouseButtons]::Left) {
-            if([System.Windows.Forms.Control]::ModifierKeys -eq [System.Windows.Forms.Keys]::Shift) {
-                if($global:selectionBoxIndex -ne -1) {
+            if ([System.Windows.Forms.Control]::ModifierKeys -eq [System.Windows.Forms.Keys]::Shift) {
+                if ($global:selectionBoxIndex -ne -1) {
                     $topIndex = $global:selectionBoxIndex
 
                     if ($selectionBox.SelectedIndex -gt $topIndex) {
-                        for(($i = ($topIndex)); $i -le $selectionBox.SelectedIndex; $i++){
+                        for (($i = ($topIndex)); $i -le $selectionBox.SelectedIndex; $i++) {
                             $selectionBox.SetItemChecked($i, $selectionBox.GetItemChecked($topIndex))
                         }
                     }
                     elseif ($topIndex -gt $selectionBox.SelectedIndex) {
-                        for(($i = ($selectionBox.SelectedIndex)); $i -le $topIndex; $i++){
+                        for (($i = ($selectionBox.SelectedIndex)); $i -le $topIndex; $i++) {
                             $selectionBox.SetItemChecked($i, $selectionBox.GetItemChecked($topIndex))
                         }
                     }
                 }
             }
-            elseif($global:selectionBoxIndex -ne $selectionBox.SelectedIndex) {
+            elseif ($global:selectionBoxIndex -ne $selectionBox.SelectedIndex) {
                 $selectionBox.SetItemChecked($selectionBox.SelectedIndex, -not $selectionBox.GetItemChecked($selectionBox.SelectedIndex))
             }
         }
     }
 
-    $check_All=
+    $check_All =
     {
-        for(($i = 0); $i -lt $selectionBox.Items.Count; $i++){
+        for (($i = 0); $i -lt $selectionBox.Items.Count; $i++) {
             $selectionBox.SetItemChecked($i, $checkUncheckCheckBox.Checked)
         }
     }
 
-    $load_Apps=
+    $load_Apps =
     {
         # Correct the initial state of the form to prevent the .Net maximized form issue
         $form.WindowState = $initialFormWindowState
@@ -141,7 +141,7 @@ function ShowAppSelectionForm {
 
             if (-not $jobDone) {
                 # Show error that the script was unable to get list of apps from winget
-                [System.Windows.MessageBox]::Show('Unable to load list of installed apps via winget, some apps may not be displayed in the list.','Error','Ok','Error')
+                [System.Windows.MessageBox]::Show('Unable to load list of installed apps via winget, some apps may not be displayed in the list.', 'Error', 'Ok', 'Error')
             }
             else {
                 # Add output of job (list of apps) to $listOfApps
@@ -204,7 +204,7 @@ function ShowAppSelectionForm {
     $form.Text = "Win11Debloat Application Selection"
     $form.Name = "appSelectionForm"
     $form.DataBindings.DefaultDataSourceUpdateMode = 0
-    $form.ClientSize = New-Object System.Drawing.Size(400,502)
+    $form.ClientSize = New-Object System.Drawing.Size(400, 502)
     $form.FormBorderStyle = 'FixedDialog'
     $form.MaximizeBox = $False
 
@@ -213,8 +213,8 @@ function ShowAppSelectionForm {
     $button1.DialogResult = [System.Windows.Forms.DialogResult]::OK
     $button1.UseVisualStyleBackColor = $True
     $button1.Text = "Confirm"
-    $button1.Location = New-Object System.Drawing.Point(27,472)
-    $button1.Size = New-Object System.Drawing.Size(75,23)
+    $button1.Location = New-Object System.Drawing.Point(27, 472)
+    $button1.Size = New-Object System.Drawing.Size(75, 23)
     $button1.DataBindings.DefaultDataSourceUpdateMode = 0
     $button1.add_Click($handler_saveButton_Click)
 
@@ -225,22 +225,22 @@ function ShowAppSelectionForm {
     $button2.DialogResult = [System.Windows.Forms.DialogResult]::Cancel
     $button2.UseVisualStyleBackColor = $True
     $button2.Text = "Cancel"
-    $button2.Location = New-Object System.Drawing.Point(129,472)
-    $button2.Size = New-Object System.Drawing.Size(75,23)
+    $button2.Location = New-Object System.Drawing.Point(129, 472)
+    $button2.Size = New-Object System.Drawing.Size(75, 23)
     $button2.DataBindings.DefaultDataSourceUpdateMode = 0
     $button2.add_Click($handler_cancelButton_Click)
 
     $form.Controls.Add($button2)
 
-    $label.Location = New-Object System.Drawing.Point(13,5)
-    $label.Size = New-Object System.Drawing.Size(400,14)
+    $label.Location = New-Object System.Drawing.Point(13, 5)
+    $label.Size = New-Object System.Drawing.Size(400, 14)
     $Label.Font = 'Microsoft Sans Serif,8'
     $label.Text = 'Check apps that you wish to remove, uncheck apps that you wish to keep'
 
     $form.Controls.Add($label)
 
-    $loadingLabel.Location = New-Object System.Drawing.Point(16,46)
-    $loadingLabel.Size = New-Object System.Drawing.Size(300,418)
+    $loadingLabel.Location = New-Object System.Drawing.Point(16, 46)
+    $loadingLabel.Size = New-Object System.Drawing.Size(300, 418)
     $loadingLabel.Text = 'Loading apps...'
     $loadingLabel.BackColor = "White"
     $loadingLabel.Visible = $false
@@ -248,16 +248,16 @@ function ShowAppSelectionForm {
     $form.Controls.Add($loadingLabel)
 
     $onlyInstalledCheckBox.TabIndex = 6
-    $onlyInstalledCheckBox.Location = New-Object System.Drawing.Point(230,474)
-    $onlyInstalledCheckBox.Size = New-Object System.Drawing.Size(150,20)
+    $onlyInstalledCheckBox.Location = New-Object System.Drawing.Point(230, 474)
+    $onlyInstalledCheckBox.Size = New-Object System.Drawing.Size(150, 20)
     $onlyInstalledCheckBox.Text = 'Only show installed apps'
     $onlyInstalledCheckBox.add_CheckedChanged($load_Apps)
 
     $form.Controls.Add($onlyInstalledCheckBox)
 
     $checkUncheckCheckBox.TabIndex = 7
-    $checkUncheckCheckBox.Location = New-Object System.Drawing.Point(16,22)
-    $checkUncheckCheckBox.Size = New-Object System.Drawing.Size(150,20)
+    $checkUncheckCheckBox.Location = New-Object System.Drawing.Point(16, 22)
+    $checkUncheckCheckBox.Size = New-Object System.Drawing.Size(150, 20)
     $checkUncheckCheckBox.Text = 'Check/Uncheck all'
     $checkUncheckCheckBox.add_CheckedChanged($check_All)
 
@@ -266,8 +266,8 @@ function ShowAppSelectionForm {
     $selectionBox.FormattingEnabled = $True
     $selectionBox.DataBindings.DefaultDataSourceUpdateMode = 0
     $selectionBox.Name = "selectionBox"
-    $selectionBox.Location = New-Object System.Drawing.Point(13,43)
-    $selectionBox.Size = New-Object System.Drawing.Size(374,424)
+    $selectionBox.Location = New-Object System.Drawing.Point(13, 43)
+    $selectionBox.Size = New-Object System.Drawing.Size(374, 424)
     $selectionBox.TabIndex = 3
     $selectionBox.add_SelectedIndexChanged($selectionBox_SelectedIndexChanged)
     $selectionBox.add_Click($selectionBox_MouseDown)
@@ -281,7 +281,7 @@ function ShowAppSelectionForm {
     $form.add_Load($load_Apps)
 
     # Focus selectionBox when form opens
-    $form.Add_Shown({$form.Activate(); $selectionBox.Focus()})
+    $form.Add_Shown({ $form.Activate(); $selectionBox.Focus() })
 
     # Show the Form
     return $form.ShowDialog()
@@ -329,15 +329,13 @@ function RemoveApps {
     Foreach ($app in $appsList) { 
         Write-Output "Attempting to remove $app..."
 
-        if (($app -eq "Microsoft.OneDrive") -or ($app -eq "Microsoft.Edge")) {
-            # Use winget to remove OneDrive and Edge
-            if ($global:wingetInstalled -eq $false) {
-                Write-Host "WinGet is either not installed or is outdated, so $app could not be removed" -ForegroundColor Red
-            }
-            else {
-                # Uninstall app via winget
-                winget uninstall --accept-source-agreements --disable-interactivity --id $app
-            }
+        if ($app -eq "Microsoft.OneDrive") {
+            #call remove onedrive function
+            removeOneDrive
+        }
+        elseif ($app -eq 'Microsoft.Edge') {
+            #call remove edge function
+            removeEdge
         }
         else {
             # Use Remove-AppxPackage to remove all other apps
@@ -512,8 +510,164 @@ function AwaitKeyToExit {
 }
 
 
- # Check if winget is installed & if it is, check if the version is at least v1.4
-if ((Get-AppxPackage -Name "*Microsoft.DesktopAppInstaller*") -and ((winget -v) -replace 'v','' -gt 1.4)) {
+
+function removeEdge {
+    #---------------------------------------------- Script Snippet from AveYo fixed by Zoic
+    #remove webview
+    $also_remove_webview = 1
+
+    #allow uninstall
+    reg add 'HKLM\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdateDev' /v 'AllowUninstall' /t REG_SZ /f >$null
+    New-Item -Path "$env:SystemRoot\SystemApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe" -ItemType Directory -ErrorAction SilentlyContinue -Force >$null 
+    New-Item -Path "$env:SystemRoot\SystemApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe" -ItemType File -Name 'MicrosoftEdge.exe' -Force >$null
+
+    $remove_appx = @('MicrosoftEdge'); $remove_win32 = @('Microsoft Edge', 'Microsoft Edge Update'); $skip = @() # @("DevTools")
+    if ($also_remove_webview -eq 1) { $remove_appx += 'Win32WebViewHost'; $remove_win32 += 'Microsoft EdgeWebView' }
+
+
+    $global:WEBV = $also_remove_webview -eq 1
+    $global:IS64 = [Environment]::Is64BitOperatingSystem
+    $global:IFEO = 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options'
+    $global:EDGE_UID = '{56EB18F8-B008-4CBD-B6D2-8C97FE7E9062}'
+    $global:WEBV_UID = '{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}'
+    $global:UPDT_UID = '{F3C4FE00-EFD5-403B-9569-398A20F1BA4A}'
+    $global:PROGRAMS = ($env:ProgramFiles, ${env:ProgramFiles(x86)})[$IS64]
+    $global:SOFTWARE = ('SOFTWARE', 'SOFTWARE\WOW6432Node')[$IS64]
+    $global:ALLHIVES = 'HKCU:\SOFTWARE', 'HKLM:\SOFTWARE', 'HKCU:\SOFTWARE\Policies', 'HKLM:\SOFTWARE\Policies'
+    if ($IS64) { $global:ALLHIVES += "HKCU:\$SOFTWARE", "HKLM:\$SOFTWARE", "HKCU:\$SOFTWARE\Policies", "HKLM:\$SOFTWARE\Policies" }
+    ## -------------------------------------------------------------------------------------------------------------------------------
+
+
+    ## 3 shut down edge & webview clone stuff
+    Set-Location $env:systemdrive; taskkill /im explorer.exe /f 2>&1 >''
+    $shut = 'explorer', 'Widgets', 'widgetservice', 'msedgewebview2', 'MicrosoftEdge*', 'chredge', 'msedge', 'edge'
+    $shut, 'msteams', 'msfamily', 'WebViewHost', 'Clipchamp' | ForEach-Object { Stop-Process -name $_ -force -ea 0 }
+
+    ## clear win32 uninstall block
+    foreach ($name in $remove_win32) {
+        foreach ($sw in $ALLHIVES) {
+            $key = "$sw\Microsoft\Windows\CurrentVersion\Uninstall\$name"; if (-not (test-path $key)) { continue }
+            foreach ($val in 'NoRemove', 'NoModify', 'NoRepair') { Remove-ItemProperty $key $val -force -ErrorAction SilentlyContinue >$null }
+            foreach ($val in 'ForceRemove', 'Delete') { Set-ItemProperty $key $val 1 -type Dword -force -ErrorAction SilentlyContinue >$null }
+        }
+    }
+
+
+    ## find all Edge setup.exe and gather BHO paths for OpenWebSearch / MSEdgeRedirect usage
+    $edges = @(); $bho = @(); $edgeupdates = @(); 'LocalApplicationData', 'ProgramFilesX86', 'ProgramFiles' | ForEach-Object {
+        $folder = [Environment]::GetFolderPath($_); $bho += Get-ChildItem "$folder\Microsoft\Edge*\ie_to_edge_stub.exe" -rec -ea 0
+        if ($WEBV) { $edges += Get-ChildItem "$folder\Microsoft\Edge*\setup.exe" -rec -ea 0 | Where-Object { $_ -like '*EdgeWebView*' } }
+        $edges += Get-ChildItem "$folder\Microsoft\Edge*\setup.exe" -rec -ea 0 | Where-Object { $_ -notlike '*EdgeWebView*' }
+        $edgeupdates += Get-ChildItem "$folder\Microsoft\EdgeUpdate\*.*.*.*\MicrosoftEdgeUpdate.exe" -rec -ea 0
+    }
+
+
+    ## 4 remove found *Edge* appx packages with unblock tricks
+    $provisioned = get-appxprovisionedpackage -online; $appxpackage = get-appxpackage -allusers; $eol = @()
+    $store = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Appx\AppxAllUserStore'
+    $users = @('S-1-5-18'); if (test-path $store) { $users += $((Get-ChildItem $store -ea 0 | Where-Object { $_ -like '*S-1-5-21*' }).PSChildName) }
+    foreach ($choice in $remove_appx) {
+        if ('' -eq $choice.Trim()) { continue }
+        foreach ($appx in $($provisioned | Where-Object { $_.PackageName -like "*$choice*" })) {
+            $next = !1; foreach ($no in $skip) { if ($appx.PackageName -like "*$no*") { $next = !0 } } ; if ($next) { continue }
+            $PackageName = $appx.PackageName; $PackageFamilyName = ($appxpackage | Where-Object { $_.Name -eq $appx.DisplayName }).PackageFamilyName 
+            New-Item "$store\Deprovisioned\$PackageFamilyName" -force >$null   
+            foreach ($sid in $users) { New-Item "$store\EndOfLife\$sid\$PackageName" -force >$null } ; $eol += $PackageName
+            dism /online /set-nonremovableapppolicy /packagefamily:$PackageFamilyName /nonremovable:0 >$null
+            remove-appxprovisionedpackage -packagename $PackageName -online -allusers *>$null
+        }
+        foreach ($appx in $($appxpackage | Where-Object { $_.PackageFullName -like "*$choice*" })) {
+            $next = !1; foreach ($no in $skip) { if ($appx.PackageFullName -like "*$no*") { $next = !0 } } ; if ($next) { continue }
+            $PackageFullName = $appx.PackageFullName; 
+            New-Item "$store\Deprovisioned\$appx.PackageFamilyName" -force >$null 
+            foreach ($sid in $users) { New-Item "$store\EndOfLife\$sid\$PackageFullName" -force >$null } ; $eol += $PackageFullName
+            dism /online /set-nonremovableapppolicy /packagefamily:$PackageFamilyName /nonremovable:0 >$null
+            remove-appxpackage -package $PackageFullName -allusers *>$null
+        }
+    }
+    ## -------------------------------------------------------------------------------------------------------------------------------
+
+    ## 5 run found *Edge* setup.exe with uninstall args and wait in-between
+    foreach ($setup in $edges) {
+        if (-not (test-path $setup)) { continue }
+        if ($setup -like '*EdgeWebView*') { $target = '--msedgewebview' } else { $target = '--msedge' }
+        $sulevel = ('--system-level', '--user-level')[$setup -like '*\AppData\Local\*']
+        $removal = "--uninstall $target $sulevel --verbose-logging --force-uninstall"
+        try { Start-Process -wait $setup -args $removal } catch {}
+        do { Start-Sleep 3 } while ((get-process -name 'setup', 'MicrosoftEdge*' -ea 0).Path -like '*\Microsoft\Edge*')
+    }
+    ## -------------------------------------------------------------------------------------------------------------------------------
+
+
+
+    ## 6 edgeupdate graceful cleanup
+    if ($WEBV) {
+        foreach ($sw in $ALLHIVES) { Remove-Item "$sw\Microsoft\EdgeUpdate" -recurse -force -ErrorAction SilentlyContinue }  
+        foreach ($UPDT in $edgeupdates) { 
+            if (test-path $UPDT) { Start-Process -wait $UPDT -args '/unregsvc' }
+            do { Start-Sleep 3 } while ((get-process -name 'setup', 'MicrosoftEdge*' -ea 0).Path -like '*\Microsoft\Edge*')
+            if (test-path $UPDT) { Start-Process -wait $UPDT -args '/uninstall' }
+            do { Start-Sleep 3 } while ((get-process -name 'setup', 'MicrosoftEdge*' -ea 0).Path -like '*\Microsoft\Edge*')
+        }
+        Unregister-ScheduledTask -TaskName MicrosoftEdgeUpdate* -Confirm:$false -ea 0; Remove-Item "$PROGRAMS\Microsoft\Temp" -recurse -force -ErrorAction SilentlyContinue
+    } 
+
+
+    ## undo eol unblock trick to prevent latest cumulative update (LCU) failing 
+    foreach ($sid in $users) { foreach ($PackageName in $eol) { Remove-Item "$store\EndOfLife\$sid\$PackageName" -force -ErrorAction SilentlyContinue >$null } }
+
+
+    ## -------------------------------------------------------------------------------------------------------------------------------
+
+    if (!(get-process -name 'explorer' -ea 0)) { Start-Process explorer }
+}
+
+
+function removeOneDrive {
+    taskkill.exe /F /IM 'OneDrive.exe' >$null 2>&1
+    taskkill.exe /F /IM 'explorer.exe' >$null 2>&1
+
+    #Uninstall OneDrive
+    if (Test-Path "$env:systemroot\System32\OneDriveSetup.exe") {
+        & "$env:systemroot\System32\OneDriveSetup.exe" /uninstall
+    }
+    if (Test-Path "$env:systemroot\SysWOW64\OneDriveSetup.exe") {
+        & "$env:systemroot\SysWOW64\OneDriveSetup.exe" /uninstall
+    }
+
+    #Removing OneDrive leftovers
+    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue "$env:localappdata\Microsoft\OneDrive"
+    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue "$env:programdata\Microsoft OneDrive"
+    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue "$env:systemdrive\OneDriveTemp"
+    # check if directory is empty before removing:
+    If ((Get-ChildItem "$env:userprofile\OneDrive" -Recurse | Measure-Object).Count -eq 0) {
+        Remove-Item -Recurse -Force -ErrorAction SilentlyContinue "$env:userprofile\OneDrive"
+    }
+
+
+    #Remove Onedrive from explorer sidebar
+    New-PSDrive -PSProvider 'Registry' -Root 'HKEY_CLASSES_ROOT' -Name 'HKCR' | Out-Null
+    mkdir -Force 'HKCR:\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}' | Out-Null
+    Set-ItemProperty -Path 'HKCR:\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}' 'System.IsPinnedToNameSpaceTree' 0 | Out-Null
+    mkdir -Force 'HKCR:\Wow6432Node\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}' *>$null
+    Set-ItemProperty -Path 'HKCR:\Wow6432Node\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}' 'System.IsPinnedToNameSpaceTree' 0 | Out-Null
+    Remove-PSDrive 'HKCR' | Out-Null
+
+    #Removing run hook for new users
+    reg load 'hku\Default' 'C:\Users\Default\NTUSER.DAT' *>$null 
+    reg delete 'HKEY_USERS\Default\SOFTWARE\Microsoft\Windows\CurrentVersion\Run' /v 'OneDriveSetup' /f *>$null
+    reg unload 'hku\Default' *>$null
+
+    Remove-Item -Force -ErrorAction SilentlyContinue "$env:userprofile\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\OneDrive.exe"
+   
+    Start-Process 'explorer.exe'
+}
+
+
+
+
+# Check if winget is installed & if it is, check if the version is at least v1.4
+if ((Get-AppxPackage -Name "*Microsoft.DesktopAppInstaller*") -and ((winget -v) -replace 'v', '' -gt 1.4)) {
     $global:wingetInstalled = $true
 }
 else {
@@ -621,7 +775,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
                 Write-Output "Press any key to go back..."
                 $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
             }
-            elseif (($Mode -eq '4')-and -not (Test-Path "$PSScriptRoot/SavedSettings")) {
+            elseif (($Mode -eq '4') -and -not (Test-Path "$PSScriptRoot/SavedSettings")) {
                 $Mode = $null
             }
         }
@@ -641,13 +795,13 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
                 Read-Host | Out-Null
             }
 
-            $DefaultParameterNames = 'RemoveApps','DisableTelemetry','DisableBing','DisableLockscreenTips','DisableSuggestions','ShowKnownFileExt','DisableWidgets','HideChat','DisableCopilot'
+            $DefaultParameterNames = 'RemoveApps', 'DisableTelemetry', 'DisableBing', 'DisableLockscreenTips', 'DisableSuggestions', 'ShowKnownFileExt', 'DisableWidgets', 'HideChat', 'DisableCopilot'
 
             PrintHeader 'Default Mode'
 
             # Add default parameters if they don't already exist
             foreach ($ParameterName in $DefaultParameterNames) {
-                if (-not $global:Params.ContainsKey($ParameterName)){
+                if (-not $global:Params.ContainsKey($ParameterName)) {
                     $global:Params.Add($ParameterName, $true)
                 }
             }
@@ -718,7 +872,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
             }
 
             # Only show this option for Windows 11 users running build 22621 or later
-            if ($WinVersion -ge 22621){
+            if ($WinVersion -ge 22621) {
                 Write-Output ""
 
                 if ($( Read-Host -Prompt "Remove all pinned apps from the start menu? This applies to all existing and new users and can't be reverted (y/n)" ) -eq 'y') {
@@ -746,7 +900,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
             }
 
             # Only show this option for Windows 11 users running build 22621 or later
-            if ($WinVersion -ge 22621){
+            if ($WinVersion -ge 22621) {
                 Write-Output ""
 
                 if ($( Read-Host -Prompt "Disable Windows Copilot? This applies to all users (y/n)" ) -eq 'y') {
@@ -755,7 +909,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
             }
 
             # Only show this option for Windows 11 users running build 22000 or later
-            if ($WinVersion -ge 22000){
+            if ($WinVersion -ge 22000) {
                 Write-Output ""
 
                 if ($( Read-Host -Prompt "Restore the old Windows 10 style context menu? (y/n)" ) -eq 'y') {
@@ -767,7 +921,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
 
             if ($( Read-Host -Prompt "Do you want to make any changes to the taskbar and related services? (y/n)" ) -eq 'y') {
                 # Only show these specific options for Windows 11 users running build 22000 or later
-                if ($WinVersion -ge 22000){
+                if ($WinVersion -ge 22000) {
                     Write-Output ""
 
                     if ($( Read-Host -Prompt "   Align taskbar buttons to the left side? (y/n)" ) -eq 'y') {
@@ -817,7 +971,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
                 }
 
                 # Only show this options for Windows users running build 22621 or earlier
-                if ($WinVersion -le 22621){
+                if ($WinVersion -le 22621) {
                     Write-Output ""
 
                     if ($( Read-Host -Prompt "   Hide the chat (meet now) icon from the taskbar? (y/n)" ) -eq 'y') {
@@ -848,7 +1002,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
                 }
 
                 # Only show option for disabling these specific folders for Windows 10 users
-                if (get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'"){
+                if (get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'") {
                     Write-Output ""
 
                     if ($( Read-Host -Prompt "Do you want to hide any folders from the Windows explorer sidepane? (y/n)" ) -eq 'y') {
@@ -874,7 +1028,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
             }
 
             # Only show option for disabling context menu items for Windows 10 users or if the user opted to restore the Windows 10 context menu
-            if ((get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'") -or $global:Params.ContainsKey('RevertContextMenu')){
+            if ((get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'") -or $global:Params.ContainsKey('RevertContextMenu')) {
                 Write-Output ""
 
                 if ($( Read-Host -Prompt "Do you want to disable any context menu options? (y/n)" ) -eq 'y') {
@@ -973,7 +1127,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
                             }
                         }
 
-                        if (-not $global:Params.ContainsKey($ParameterName)){
+                        if (-not $global:Params.ContainsKey($ParameterName)) {
                             $global:Params.Add($paramName, $true)
                         }
                     }
@@ -1080,7 +1234,7 @@ else {
             RegImport "> Disabling telemetry, diagnostic data, app-launch tracking and targeted ads..." $PSScriptRoot\Regfiles\Disable_Telemetry.reg
             continue
         }
-        {$_ -in "DisableBingSearches", "DisableBing"} {
+        { $_ -in "DisableBingSearches", "DisableBing" } {
             RegImport "> Disabling bing search, bing AI & cortana in Windows search..." $PSScriptRoot\Regfiles\Disable_Bing_Cortana_In_Search.reg
             
             # Also remove the app package for bing search
@@ -1091,11 +1245,11 @@ else {
 
             continue
         }
-        {$_ -in "DisableLockscrTips", "DisableLockscreenTips"} {
+        { $_ -in "DisableLockscrTips", "DisableLockscreenTips" } {
             RegImport "> Disabling tips & tricks on the lockscreen..." $PSScriptRoot\Regfiles\Disable_Lockscreen_Tips.reg
             continue
         }
-        {$_ -in "DisableSuggestions", "DisableWindowsSuggestions"} {
+        { $_ -in "DisableSuggestions", "DisableWindowsSuggestions" } {
             RegImport "> Disabling tips, tricks, suggestions and ads across Windows..." $PSScriptRoot\Regfiles\Disable_Windows_Suggestions.reg
             continue
         }
@@ -1131,11 +1285,11 @@ else {
             RegImport "> Disabling Windows copilot..." $PSScriptRoot\Regfiles\Disable_Copilot.reg
             continue
         }
-        {$_ -in "HideWidgets", "DisableWidgets"} {
+        { $_ -in "HideWidgets", "DisableWidgets" } {
             RegImport "> Disabling the widget service and hiding the widget icon from the taskbar..." $PSScriptRoot\Regfiles\Disable_Widgets_Taskbar.reg
             continue
         }
-        {$_ -in "HideChat", "DisableChat"} {
+        { $_ -in "HideChat", "DisableChat" } {
             RegImport "> Hiding the chat icon from the taskbar..." $PSScriptRoot\Regfiles\Disable_Chat_Taskbar.reg
             continue
         }
@@ -1151,27 +1305,27 @@ else {
             RegImport "> Hiding duplicate removable drive entries from the Windows explorer navigation pane..." $PSScriptRoot\Regfiles\Hide_duplicate_removable_drives_from_navigation_pane_of_File_Explorer.reg
             continue
         }
-        {$_ -in "HideOnedrive", "DisableOnedrive"} {
+        { $_ -in "HideOnedrive", "DisableOnedrive" } {
             RegImport "> Hiding the onedrive folder from the Windows explorer navigation pane..." $PSScriptRoot\Regfiles\Hide_Onedrive_Folder.reg
             continue
         }
-        {$_ -in "Hide3dObjects", "Disable3dObjects"} {
+        { $_ -in "Hide3dObjects", "Disable3dObjects" } {
             RegImport "> Hiding the 3D objects folder from the Windows explorer navigation pane..." $PSScriptRoot\Regfiles\Hide_3D_Objects_Folder.reg
             continue
         }
-        {$_ -in "HideMusic", "DisableMusic"} {
+        { $_ -in "HideMusic", "DisableMusic" } {
             RegImport "> Hiding the music folder from the Windows explorer navigation pane..." $PSScriptRoot\Regfiles\Hide_Music_folder.reg
             continue
         }
-        {$_ -in "HideIncludeInLibrary", "DisableIncludeInLibrary"} {
+        { $_ -in "HideIncludeInLibrary", "DisableIncludeInLibrary" } {
             RegImport "> Hiding 'Include in library' in the context menu..." $PSScriptRoot\Regfiles\Disable_Include_in_library_from_context_menu.reg
             continue
         }
-        {$_ -in "HideGiveAccessTo", "DisableGiveAccessTo"} {
+        { $_ -in "HideGiveAccessTo", "DisableGiveAccessTo" } {
             RegImport "> Hiding 'Give access to' in the context menu..." $PSScriptRoot\Regfiles\Disable_Give_access_to_context_menu.reg
             continue
         }
-        {$_ -in "HideShare", "DisableShare"} {
+        { $_ -in "HideShare", "DisableShare" } {
             RegImport "> Hiding 'Share' in the context menu..." $PSScriptRoot\Regfiles\Disable_Share_from_context_menu.reg
             continue
         }

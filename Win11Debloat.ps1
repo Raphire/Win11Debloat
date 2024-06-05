@@ -367,7 +367,7 @@ function RegImport {
 }
 
 
-# Stop & Restart the Windows explorer process
+# Restart the Windows explorer process
 function RestartExplorer {
     Write-Output "> Restarting Windows explorer to apply all changes. Note: This may cause some flickering."
 
@@ -375,15 +375,7 @@ function RestartExplorer {
     # Restarting explorer from a 32bit Powershell window will fail on a 64bit OS
     if ([Environment]::Is64BitProcess -eq [Environment]::Is64BitOperatingSystem)
     {
-        Start-Sleep 0.1
-
-        taskkill /f /im explorer.exe
-
-        Start-Sleep 0.3
-
-        Start-Process explorer.exe
-        
-        Write-Output ""
+        Stop-Process -processName: Explorer -Force
     }
     else {
         Write-Warning "Unable to restart Windows Explorer, please manually restart your PC to apply all changes."
@@ -1185,6 +1177,7 @@ else {
 
     RestartExplorer
 
+    Write-Output ""
     Write-Output ""
     Write-Output ""
     Write-Output "Script completed successfully!"

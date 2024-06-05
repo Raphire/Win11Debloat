@@ -1,0 +1,10 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\default\WindowsAI\DisableAIDataAnalysis]
+"value"=dword:00000000
+
+[HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\WindowsAI]
+"DisableAIDataAnalysis"=-
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsAI]
+"DisableAIDataAnalysis"=-

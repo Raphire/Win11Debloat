@@ -23,9 +23,10 @@ You can pick and choose exactly which modifications you want the script to make,
 - Disable telemetry, diagnostic data, app-launch tracking & targeted ads.
 - Disable tips, tricks, suggestions and ads in start, settings, notifications, Windows explorer, and on the lockscreen.
 
-#### Bing & Copilot
+#### Bing, Copilot & More
 - Disable & remove bing search & cortana in Windows search.
 - Disable Windows Copilot. (Windows 11 only)
+- Disable Windows Recall snapshots. (Windows 11 only)
 
 #### Windows Explorer
 - Show hidden files, folders and drives.
@@ -297,6 +298,7 @@ The quick and advanced method support parameters to tailor the behaviour of the 
 | -ShowSearchBoxTb                   |    Show search box on the taskbar. (Windows 11 only) |
 | -HideTaskview                      |    Hide the taskview button from the taskbar. (Windows 11 only) |
 | -DisableCopilot                    |    Disable Windows copilot. (Windows 11 only) |
+| -DisableRecall                     |    Disable Windows Recall snapshots. (Windows 11 only) |
 | -DisableWidgets                    |    Disable the widget service & hide the widget (news and interests) icon from the taskbar. |
 | -HideChat                          |    Hide the chat (meet now) icon from the taskbar. |
 | -HideOnedrive                      |    Hide the onedrive folder in the Windows explorer sidepanel. (Windows 10 only) |

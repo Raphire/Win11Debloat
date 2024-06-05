@@ -108,7 +108,8 @@ The default mode applies the changes that are recommended for most users, expand
       - Microsoft.XboxApp (Old Xbox Console Companion App, no longer supported)
       - Microsoft.ZuneVideo  
       - MicrosoftCorporationII.MicrosoftFamily (Microsoft Family Safety)
-      - MicrosoftTeams (Personal version only, does not remove MS teams for business/enterprise)
+      - MicrosoftTeams (Old personal version of MS Teams from the MS Store)
+      - MSTeams (New MS Teams app)
   
       Third party bloat:
       - ACGMediaPlayer  

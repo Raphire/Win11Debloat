@@ -36,7 +36,8 @@ Microsoft.WindowsSoundRecorder
 Microsoft.XboxApp   # Old Xbox Console Companion App, no longer supported
 Microsoft.ZuneVideo
 MicrosoftCorporationII.MicrosoftFamily   # Family Safety App
-MicrosoftTeams   # Only removes the personal version (MS Store), does not remove business/enterprise version of teams
+MicrosoftTeams   # Old MS Teams personal (MS Store)
+MSTeams   # New MS Teams app
 
 ACGMediaPlayer
 ActiproSoftwareLLC

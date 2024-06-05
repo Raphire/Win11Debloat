@@ -371,15 +371,23 @@ function RegImport {
 function RestartExplorer {
     Write-Output "> Restarting Windows explorer to apply all changes. Note: This may cause some flickering."
 
-    Start-Sleep 0.3
+    # Only restart if the powershell process matches the OS architecture
+    # Restarting explorer from a 32bit Powershell window will fail on a 64bit OS
+    if ([Environment]::Is64BitProcess -eq [Environment]::Is64BitOperatingSystem)
+    {
+        Start-Sleep 0.1
 
-    taskkill /f /im explorer.exe
+        taskkill /f /im explorer.exe
 
-    Start-Sleep 0.3
+        Start-Sleep 0.3
 
-    Start-Process explorer.exe
-
-    Write-Output ""
+        Start-Process explorer.exe
+        
+        Write-Output ""
+    }
+    else {
+        Write-Warning "Unable to restart Windows Explorer, please manually restart your PC to apply all changes."
+    }
 }
 
 
@@ -546,7 +554,7 @@ foreach ($Param in $SPParams) {
 }
 
 # Remove SavedSettings file if it exists and is empty
-if (Test-Path "$PSScriptRoot/SavedSettings" -and [String]::IsNullOrWhiteSpace((Get-content "$PSScriptRoot/SavedSettings"))) {
+if ((Test-Path "$PSScriptRoot/SavedSettings") -and ([String]::IsNullOrWhiteSpace((Get-content "$PSScriptRoot/SavedSettings")))) {
     Remove-Item -Path "$PSScriptRoot/SavedSettings" -recurse
 }
 

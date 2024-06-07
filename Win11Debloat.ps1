@@ -23,6 +23,7 @@ param (
     [switch]$HideSearchTb, [switch]$ShowSearchIconTb, [switch]$ShowSearchLabelTb, [switch]$ShowSearchBoxTb,
     [switch]$HideTaskview,
     [switch]$DisableCopilot,
+    [switch]$DisableRecall,
     [switch]$DisableWidgets,
     [switch]$HideWidgets,
     [switch]$DisableChat,
@@ -366,19 +367,19 @@ function RegImport {
 }
 
 
-# Stop & Restart the Windows explorer process
+# Restart the Windows explorer process
 function RestartExplorer {
     Write-Output "> Restarting Windows explorer to apply all changes. Note: This may cause some flickering."
 
-    Start-Sleep 0.3
-
-    taskkill /f /im explorer.exe
-
-    Start-Sleep 0.3
-
-    Start-Process explorer.exe
-
-    Write-Output ""
+    # Only restart if the powershell process matches the OS architecture
+    # Restarting explorer from a 32bit Powershell window will fail on a 64bit OS
+    if ([Environment]::Is64BitProcess -eq [Environment]::Is64BitOperatingSystem)
+    {
+        Stop-Process -processName: Explorer -Force
+    }
+    else {
+        Write-Warning "Unable to restart Windows Explorer, please manually restart your PC to apply all changes."
+    }
 }
 
 
@@ -544,22 +545,9 @@ foreach ($Param in $SPParams) {
     }
 }
 
-# Check if SavedSettings file exists, if it doesn't exist check if LastSettings file exists
-if (Test-Path "$PSScriptRoot/SavedSettings") {
-    if ([String]::IsNullOrWhiteSpace((Get-content "$PSScriptRoot/SavedSettings"))) {
-        # Remove SavedSettings file if it's empty
-        Remove-Item -Path "$PSScriptRoot/SavedSettings" -recurse
-    }
-}
-elseif (Test-Path "$PSScriptRoot/LastSettings") {
-    if ([String]::IsNullOrWhiteSpace((Get-content "$PSScriptRoot/LastSettings"))) {
-        # Remove LastSettings file if it's empty
-        Remove-Item -Path "$PSScriptRoot/LastSettings" -recurse
-    }
-    else {
-        # Rename LastSettings file to SavedSettings if it isn't empty
-        Rename-Item -Path "$PSScriptRoot/LastSettings" -NewName "$PSScriptRoot/SavedSettings"
-    }
+# Remove SavedSettings file if it exists and is empty
+if ((Test-Path "$PSScriptRoot/SavedSettings") -and ([String]::IsNullOrWhiteSpace((Get-content "$PSScriptRoot/SavedSettings")))) {
+    Remove-Item -Path "$PSScriptRoot/SavedSettings" -recurse
 }
 
 # Only run the app selection form if the 'RunAppConfigurator' parameter was passed to the script
@@ -756,6 +744,12 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
 
                 if ($( Read-Host -Prompt "Disable Windows Copilot? This applies to all users (y/n)" ) -eq 'y') {
                     AddParameter 'DisableCopilot' 'Disable Windows copilot'
+                }
+
+                Write-Output ""
+
+                if ($( Read-Host -Prompt "Disable Windows Recall snapshots? This applies to all users (y/n)" ) -eq 'y') {
+                    AddParameter 'DisableRecall' 'Disable Windows Recall snapshots'
                 }
             }
 
@@ -1284,6 +1278,10 @@ else {
             RegImport "> Disabling Windows copilot..." $PSScriptRoot\Regfiles\Disable_Copilot.reg
             continue
         }
+        'DisableRecall' {
+            RegImport "> Disabling Windows Recall snapshots..." $PSScriptRoot\Regfiles\Disable_AI_Recall.reg
+            continue
+        }
         {$_ -in "HideWidgets", "DisableWidgets"} {
             RegImport "> Disabling the widget service and hiding the widget icon from the taskbar..." $PSScriptRoot\Regfiles\Disable_Widgets_Taskbar.reg
             continue
@@ -1332,6 +1330,7 @@ else {
 
     RestartExplorer
 
+    Write-Output ""
     Write-Output ""
     Write-Output ""
     Write-Output "Script completed successfully!"

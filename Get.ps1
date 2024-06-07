@@ -22,6 +22,7 @@ param (
     [switch]$HideSearchTb, [switch]$ShowSearchIconTb, [switch]$ShowSearchLabelTb, [switch]$ShowSearchBoxTb,
     [switch]$HideTaskview,
     [switch]$DisableCopilot,
+    [switch]$DisableRecall,
     [switch]$DisableWidgets,
     [switch]$HideWidgets,
     [switch]$DisableChat,

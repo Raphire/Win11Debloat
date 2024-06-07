@@ -28,6 +28,7 @@ through all the settings yourself, or removing apps one by one!
 - Disable & remove bing search & cortana in Windows search.
 - Disable tips, tricks, suggestions and ads in start, settings, notifications, windows explorer, and on the lockscreen.
 - Disable Windows Copilot. (Windows 11 build 22621+)
+- Disable Windows Recall snapshots. (Windows 11 build 22621+)
 - Restore the old Windows 10 style context menu. (Windows 11 build 22000+)
 - Show hidden files, folders and drives.
 - Show file extensions for known file types.

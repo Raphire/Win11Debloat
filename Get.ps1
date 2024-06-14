@@ -42,47 +42,32 @@ Write-Output "------------------------------------------------------------------
 Write-Output " Win11Debloat Script - Get"
 Write-Output "-------------------------------------------------------------------------------------------"
 
-# Make sure winget is installed and is at least v1.4
-if ((Get-AppxPackage -Name "*Microsoft.DesktopAppInstaller*") -and ((winget -v) -replace 'v','' -gt 1.4)) {
-	# Check if git is installed. Install git if it isn't installed yet
-	try
-	{
-		git | Out-Null
-	}
-	catch [System.Management.Automation.CommandNotFoundException]
-	{
-		Write-Output "> Installing git..."
-		winget install git.git --accept-package-agreements --accept-source-agreements --disable-interactivity --no-upgrade
+# Navigate to user temp directory
+cd $env:TEMP
 
-        # Add default install location of git to path
-        $env:Path += ';C:\Program Files\Git\cmd'
-		
-		Write-Output ""
-	}
+Write-Output "> Downloading Win11Debloat..."
 
-    # Navigate to user temp directory
-    cd $env:TEMP 
+# Download latest version of Win11Debloat from github as zip archive
+wget http://github.com/raphire/win11debloat/archive/master.zip -O win11debloat-temp.zip
 
-    # Download Win11Debloat from github
-    Write-Output "> Downloading Win11Debloat..."
-    git clone https://github.com/Raphire/Win11Debloat/ 
+# Unzip archive to Win11Debloat folder
+Expand-Archive win11debloat-temp.zip Win11Debloat
 
-    # Make list of arguments
-    $args = $($PSBoundParameters.GetEnumerator() | ForEach-Object {"-$($_.Key)"})
+# Remove archive
+rm win11debloat-temp.zip
 
-    Write-Output ""
+# Make list of arguments to pass on to the script
+$args = $($PSBoundParameters.GetEnumerator() | ForEach-Object {"-$($_.Key)"})
 
-    # Start & run script with the provided arguments
-    Write-Output "> Running Win11Debloat..."
-    $debloatProcess = Start-Process powershell.exe -PassThru -ArgumentList "-executionpolicy bypass -File .\Win11Debloat\Win11Debloat.ps1 $args"
-    $debloatProcess.WaitForExit()
+Write-Output ""
 
-    Write-Output ""
+# Run Win11Debloat script with the provided arguments
+Write-Output "> Running Win11Debloat..."
+$debloatProcess = Start-Process powershell.exe -PassThru -ArgumentList "-executionpolicy bypass -File .\Win11Debloat\Win11Debloat-master\Win11Debloat.ps1 $args"
+$debloatProcess.WaitForExit()
 
-    # Cleanup, remove Win11Debloat directory
-    Write-Output "> Cleaning up..."
-    Remove-Item -LiteralPath "Win11Debloat" -Force -Recurse
-}
-else {
-    Write-Error "Unable to start script, WinGet is not installed or outdated."
-}
+Write-Output ""
+
+# Cleanup, remove Win11Debloat directory
+Write-Output "> Cleaning up..."
+Remove-Item -LiteralPath "Win11Debloat" -Force -Recurse

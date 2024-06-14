@@ -278,7 +278,7 @@ The quick and advanced method support parameters to tailor the behaviour of the 
 | -RemoveApps                        |    Remove the default selection of bloatware apps. |
 | -RemoveAppsCustom                  |    Remove all apps from the 'CustomAppsList' file. IMPORTANT: Run the script with the `-RunAppConfigurator` parameter to create this file first. No apps will be removed if this file does not exist! |
 | -RunAppConfigurator                |    Run the app configurator to create a 'CustomAppsList' file. Run the script with the `-RemoveAppsCustom` parameter to remove these apps. |
-| -RemoveCommApps                    |    Remove the Mail, Calender, and People apps. |
+| -RemoveCommApps                    |    Remove the Mail, Calendar, and People apps. |
 | -RemoveW11Outlook                  |    Remove the new Outlook for Windows app. |
 | -RemoveDevApps                     |    Remove developer-related apps such as Remote Desktop, DevHome and Power Automate. |
 | -RemoveGamingApps                  |    Remove the Xbox App and Xbox Gamebar. |

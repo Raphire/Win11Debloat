@@ -42,32 +42,41 @@ Write-Output "------------------------------------------------------------------
 Write-Output " Win11Debloat Script - Get"
 Write-Output "-------------------------------------------------------------------------------------------"
 
-# Navigate to user temp directory
-cd $env:TEMP
-
 Write-Output "> Downloading Win11Debloat..."
 
 # Download latest version of Win11Debloat from github as zip archive
-wget http://github.com/raphire/win11debloat/archive/master.zip -O win11debloat-temp.zip
+Invoke-WebRequest http://github.com/raphire/win11debloat/archive/master.zip -OutFile "$env:TEMP/win11debloat-temp.zip"
 
-# Unzip archive to Win11Debloat folder
-Expand-Archive win11debloat-temp.zip Win11Debloat
-
-# Remove archive
-rm win11debloat-temp.zip
-
-# Make list of arguments to pass on to the script
-$args = $($PSBoundParameters.GetEnumerator() | ForEach-Object {"-$($_.Key)"})
+# Remove old script folder if it exists
+if(Test-Path "$env:TEMP/Win11Debloat") {
+    Write-Output ""
+    Write-Output "> Cleaning up old Win11Debloat folder..."
+    Remove-Item -LiteralPath "$env:TEMP/Win11Debloat" -Force -Recurse
+}
 
 Write-Output ""
+Write-Output "> Unpacking..."
+
+# Unzip archive to Win11Debloat folder
+Expand-Archive "$env:TEMP/win11debloat-temp.zip" "$env:TEMP/Win11Debloat"
+
+# Remove archive
+Remove-Item "$env:TEMP/win11debloat-temp.zip"
+
+# Make list of arguments to pass on to the script
+$arguments = $($PSBoundParameters.GetEnumerator() | ForEach-Object {"-$($_.Key)"})
+
+Write-Output ""
+Write-Output "> Running Win11Debloat..."
 
 # Run Win11Debloat script with the provided arguments
-Write-Output "> Running Win11Debloat..."
-$debloatProcess = Start-Process powershell.exe -PassThru -ArgumentList "-executionpolicy bypass -File .\Win11Debloat\Win11Debloat-master\Win11Debloat.ps1 $args"
+$debloatProcess = Start-Process powershell.exe -PassThru -ArgumentList "-executionpolicy bypass -File $env:TEMP\Win11Debloat\Win11Debloat-master\Win11Debloat.ps1 $arguments"
 $debloatProcess.WaitForExit()
 
 Write-Output ""
+Write-Output "> Cleaning up..."
 
 # Cleanup, remove Win11Debloat directory
-Write-Output "> Cleaning up..."
-Remove-Item -LiteralPath "Win11Debloat" -Force -Recurse
+Remove-Item -LiteralPath "$env:TEMP/Win11Debloat" -Force -Recurse
+
+Write-Output ""

@@ -1,5 +1,3 @@
-#Requires -RunAsAdministrator
-
 param (
     [switch]$Silent,
     [switch]$RunAppConfigurator,
@@ -70,7 +68,7 @@ Write-Output ""
 Write-Output "> Running Win11Debloat..."
 
 # Run Win11Debloat script with the provided arguments
-$debloatProcess = Start-Process powershell.exe -PassThru -ArgumentList "-executionpolicy bypass -File $env:TEMP\Win11Debloat\Win11Debloat-master\Win11Debloat.ps1 $arguments"
+$debloatProcess = Start-Process powershell.exe -PassThru -ArgumentList "-executionpolicy bypass -File $env:TEMP\Win11Debloat\Win11Debloat-master\Win11Debloat.ps1 $arguments" -Verb RunAs
 $debloatProcess.WaitForExit()
 
 Write-Output ""

@@ -217,14 +217,14 @@ The default mode applies the changes that are recommended for most users, expand
 
 ### Quick method
 
-Download & run the script automatically via powershell. Please note that this will install git if it's not already installed on your system.
+Download & run the script automatically via powershell.
 
 1. Open powershell as an administrator.
 2. Copy and paste the code below into powershell, press enter to run the script:
 ```powershell
 & ([scriptblock]::Create((irm "https://raw.githubusercontent.com/Raphire/Win11Debloat/master/Get.ps1")))
 ```
-3. Wait for the script to automatically install git and download Win11Debloat.
+3. Wait for the script to automatically download Win11Debloat.
 4. A new powershell window will open showing the Win11Debloat menu. Select either the default or custom mode to continue.
 5. Carefully read through and follow the on-screen instructions.
 
@@ -278,7 +278,7 @@ The quick and advanced method support parameters to tailor the behaviour of the 
 | -RemoveApps                        |    Remove the default selection of bloatware apps. |
 | -RemoveAppsCustom                  |    Remove all apps from the 'CustomAppsList' file. IMPORTANT: Run the script with the `-RunAppConfigurator` parameter to create this file first. No apps will be removed if this file does not exist! |
 | -RunAppConfigurator                |    Run the app configurator to create a 'CustomAppsList' file. Run the script with the `-RemoveAppsCustom` parameter to remove these apps. |
-| -RemoveCommApps                    |    Remove the Mail, Calender, and People apps. |
+| -RemoveCommApps                    |    Remove the Mail, Calendar, and People apps. |
 | -RemoveW11Outlook                  |    Remove the new Outlook for Windows app. |
 | -RemoveDevApps                     |    Remove developer-related apps such as Remote Desktop, DevHome and Power Automate. |
 | -RemoveGamingApps                  |    Remove the Xbox App and Xbox Gamebar. |

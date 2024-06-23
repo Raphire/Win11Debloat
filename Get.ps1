@@ -1,5 +1,6 @@
 param (
     [switch]$Silent,
+    [switch]$Sysprep,
     [switch]$RunAppConfigurator,
     [switch]$RunDefaults, [switch]$RunWin11Defaults,
     [switch]$RemoveApps, 

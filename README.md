@@ -17,7 +17,7 @@ You can pick and choose exactly which modifications you want the script to make,
 
 #### App Removal
 - Remove a wide variety of bloatware apps, with the option to select exactly what apps to remove and keep.
-- Remove all pinned apps from the start menu. NOTE: This applies to all existing and new users. (Windows 11 only)
+- Remove all pinned apps from the start menu for the current user, or for all existing and new users. (Windows 11 only)
 
 #### Telemetry & Suggested Content
 - Disable telemetry, diagnostic data, app-launch tracking & targeted ads.
@@ -44,6 +44,9 @@ You can pick and choose exactly which modifications you want the script to make,
 - Restore the old Windows 10 style context menu. (Windows 11 only)
 - Hide the 3D objects, music or onedrive folder in the Windows explorer sidepanel. (Windows 10 only)
 - Hide the 'Include in library', 'Give access to' and 'Share' options in the context menu. (Windows 10 only)
+
+#### Advanced Features
+- Sysprep mode to apply changes to the Windows Default user profile.
 
 ## Default Mode
 
@@ -274,6 +277,7 @@ The quick and advanced method support parameters to tailor the behaviour of the 
 | Parameter | Description |
 | :-------: | ----------- |
 | -Silent                            |    Suppresses all interactive prompts, so the script will run without requiring any user input. |
+| -Sysprep                           |    Run the script in Sysprep mode. All changes will be applied to the Windows default user profile and will only affect new user accounts. |
 | -RunDefaults                       |    Run the script with the default settings. |
 | -RemoveApps                        |    Remove the default selection of bloatware apps. |
 | -RemoveAppsCustom                  |    Remove all apps from the 'CustomAppsList' file. IMPORTANT: Run the script with the `-RunAppConfigurator` parameter to create this file first. No apps will be removed if this file does not exist! |
@@ -283,7 +287,8 @@ The quick and advanced method support parameters to tailor the behaviour of the 
 | -RemoveDevApps                     |    Remove developer-related apps such as Remote Desktop, DevHome and Power Automate. |
 | -RemoveGamingApps                  |    Remove the Xbox App and Xbox Gamebar. |
 | -DisableDVR                        |    Disable Xbox game DVR. |
-| -ClearStart                        |    Remove all pinned apps from the start menu. NOTE: This applies to all existing and new users. (Windows 11 update 22H2 or later only) |
+| -ClearStart                        |    Remove all pinned apps from the start menu for the current user (Windows 11 update 22H2 or later only) |
+| -ClearStartAllUsers                |    Remove all pinned apps from the start menu for all existing and new users. (Windows 11 update 22H2 or later only) |
 | -DisableTelemetry                  |    Disable telemetry, diagnostic data & targeted ads. |
 | -DisableBing                       |    Disable & remove bing search, bing AI & cortana in Windows search. |
 | -DisableSuggestions                |    Disable tips, tricks, suggestions and ads in start, settings, notifications and Windows explorer. |

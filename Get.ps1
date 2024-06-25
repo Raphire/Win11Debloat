@@ -8,6 +8,7 @@ param (
     [switch]$RemoveCommApps,
     [switch]$RemoveDevApps,
     [switch]$RemoveW11Outlook,
+    [switch]$ForceRemoveEdge,
     [switch]$DisableDVR,
     [switch]$DisableTelemetry,
     [switch]$DisableBingSearches, [switch]$DisableBing,

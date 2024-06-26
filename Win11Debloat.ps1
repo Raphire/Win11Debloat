@@ -370,6 +370,7 @@ function RemoveApps {
 
 function ForceRemoveEdge {
     # Based on work from loadstring1 & ave9858
+    Write-Output ""
     Write-Output "> Forcefully uninstalling Microsoft Edge..."
 
     $regView = [Microsoft.Win32.RegistryView]::Registry32
@@ -418,8 +419,7 @@ function ForceRemoveEdge {
         reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run" /v "MicrosoftEdgeAutoLaunch_A9F6DCE4ABADF4F51CF45CD7129E3C6C" /f *>$null
         reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run" /v "Microsoft Edge Update" /f *>$null
 
-        Write-Output ""
-        Write-Output "Microsoft Edge was uninstalled!"
+        Write-Output "Microsoft Edge was uninstalled"
     }
     else {
         Write-Output ""
@@ -1020,13 +1020,13 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
                     Write-Output ""
                     Write-Output "Press enter to remove the selected apps or press CTRL+C to quit..."
                     Read-Host | Out-Null
+                    PrintHeader "App Removal"
                 }
             }
             else {
                 Write-Host "Selection was cancelled, no apps have been removed!" -ForegroundColor Red
+                Write-Output ""
             }
-
-            Write-Output ""
         }
 
         # Load custom options selection from the "SavedSettings" file

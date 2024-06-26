@@ -40,6 +40,16 @@ param (
 )
 
 
+# Show error if current powershell environment does not have LanguageMode set to FullLanguage 
+if ($ExecutionContext.SessionState.LanguageMode -ne "FullLanguage") {
+    Write-Host "Error: Win11Debloat is unable to run on your system. Powershell execution is restricted by security policies" -ForegroundColor Red
+    Write-Output ""
+    Write-Output "Press enter to exit..."
+    Read-Host | Out-Null
+    Exit
+}
+
+
 # Shows application selection form that allows the user to select what apps they want to remove or keep
 function ShowAppSelectionForm {
     [reflection.assembly]::loadwithpartialname("System.Windows.Forms") | Out-Null
@@ -616,7 +626,7 @@ else {
         Write-Warning "Winget is not installed or outdated. This may prevent Win11Debloat from removing certain apps."
         Write-Output ""
         Write-Output "Press any key to continue anyway..."
-        Read-Host | Out-Null
+        $null = [System.Console]::ReadKey()
     }
 }
 
@@ -698,7 +708,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
 
                 Write-Output ""
                 Write-Output "Press any key to go back..."
-                $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+                $null = [System.Console]::ReadKey()
             }
             elseif (($Mode -eq '4')-and -not (Test-Path "$PSScriptRoot/SavedSettings")) {
                 $Mode = $null

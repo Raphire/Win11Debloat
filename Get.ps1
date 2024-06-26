@@ -35,6 +35,15 @@ param (
     [switch]$DisableShare, [switch]$HideShare
 )
 
+# Show error if current powershell environment does not have LanguageMode set to FullLanguage 
+if ($ExecutionContext.SessionState.LanguageMode -ne "FullLanguage") {
+   Write-Host "Error: Win11Debloat is unable to run on your system. Powershell execution is restricted by security policies" -ForegroundColor Red
+   Write-Output ""
+   Write-Output "Press enter to exit..."
+   Read-Host | Out-Null
+   Exit
+}
+
 Clear-Host
 Write-Output "-------------------------------------------------------------------------------------------"
 Write-Output " Win11Debloat Script - Get"

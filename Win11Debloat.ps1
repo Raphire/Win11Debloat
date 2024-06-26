@@ -42,7 +42,7 @@ param (
 
 # Show error if current powershell environment does not have LanguageMode set to FullLanguage 
 if ($ExecutionContext.SessionState.LanguageMode -ne "FullLanguage") {
-    Write-Host "Error: Win11Debloat is unable to run on your system. Powershell execution is restricted by security policies" -ForegroundColor Red
+    Write-Host "Error: Win11Debloat is unable to run on your system, powershell execution is restricted by security policies" -ForegroundColor Red
     Write-Output ""
     Write-Output "Press enter to exit..."
     Read-Host | Out-Null
@@ -374,13 +374,12 @@ function ForceRemoveEdge {
 
     $regView = [Microsoft.Win32.RegistryView]::Registry32
     $hklm = [Microsoft.Win32.RegistryKey]::OpenBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, $regView)
-
     $hklm.CreateSubKey('SOFTWARE\Microsoft\EdgeUpdateDev').SetValue('AllowUninstall', '')
 
     # Create stub (Creating this somehow allows uninstalling edge)
-    $edgeUWP = "$env:SystemRoot\SystemApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe"
-    New-Item $edgeUWP -ItemType Directory | Out-Null
-    New-Item "$edgeUWP\MicrosoftEdge.exe" | Out-Null
+    $edgeStub = "$env:SystemRoot\SystemApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe"
+    New-Item $edgeStub -ItemType Directory | Out-Null
+    New-Item "$edgeStub\MicrosoftEdge.exe" | Out-Null
 
     # Remove edge
     $uninstallRegKey = $hklm.OpenSubKey('SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft Edge')
@@ -401,7 +400,7 @@ function ForceRemoveEdge {
             "$env:USERPROFILE\Desktop\Microsoft Edge.lnk",
             "$appdata\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar\Tombstones\Microsoft Edge.lnk",
             "$appdata\Microsoft\Internet Explorer\Quick Launch\Microsoft Edge.lnk",
-            "$edgeUWP"
+            "$edgeStub"
         )
 
         foreach ($path in $edgePaths){
@@ -424,13 +423,14 @@ function ForceRemoveEdge {
     }
     else {
         Write-Output ""
-        Write-Host "Error: Unable to forcefully uninstall Microsoft Edge!" -ForegroundColor Red
+        Write-Host "Error: Unable to forcefully uninstall Microsoft Edge, uninstaller could not be found" -ForegroundColor Red
     }
+    
     Write-Output ""
 }
 
 
-# Execute commands and strips progress spinners/bars from output
+# Execute provided command and strips progress spinners/bars from console output
 function Strip-Progress {
     param(
         [ScriptBlock]$ScriptBlock

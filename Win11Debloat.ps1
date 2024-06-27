@@ -795,8 +795,8 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
                 Write-Output ""
 
                 if ($global:Params.ContainsKey("Sysprep")) {
-                    if ($( Read-Host -Prompt "Remove all pinned apps from the start menu? This applies to all existing and new users (y/n)" ) -eq 'y') {
-                        AddParameter 'ClearStartAllUsers' 'Remove all pinned apps from the start menu for new and existing users'
+                    if ($( Read-Host -Prompt "Remove all pinned apps from the start menu for all existing and new users? (y/n)" ) -eq 'y') {
+                        AddParameter 'ClearStartAllUsers' 'Remove all pinned apps from the start menu for existing and new users'
                     }
                 }
                 else {
@@ -805,7 +805,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
                         Write-Host " (n) Don't remove any pinned apps from the start menu" -ForegroundColor Yellow
                         Write-Host " (1) Remove all pinned apps from the start menu for this user only ($([Environment]::UserName))" -ForegroundColor Yellow
                         Write-Host " (2) Remove all pinned apps from the start menu for all existing and new users"  -ForegroundColor Yellow
-                        $ClearStartInput = Read-Host "Remove all pinned apps from the start menu? (n/1/2)" 
+                        $ClearStartInput = Read-Host "Remove all pinned apps from the start menu? This cannot be reverted (n/1/2)" 
                         Write-Output ""
                     }
                     while ($ClearStartInput -ne 'n' -and $ClearStartInput -ne '0' -and $ClearStartInput -ne '1' -and $ClearStartInput -ne '2') 

@@ -3,6 +3,7 @@
 [CmdletBinding(SupportsShouldProcess)]
 param (
     [switch]$Silent,
+    [switch]$Sysprep,
     [switch]$RunAppConfigurator,
     [switch]$RunDefaults, [switch]$RunWin11Defaults,
     [switch]$RemoveApps, 
@@ -30,6 +31,7 @@ param (
     [switch]$DisableChat,
     [switch]$HideChat,
     [switch]$ClearStart,
+    [switch]$ClearStartAllUsers,
     [switch]$RevertContextMenu,
     [switch]$DisableOnedrive, [switch]$HideOnedrive,
     [switch]$Disable3dObjects, [switch]$Hide3dObjects,
@@ -470,7 +472,17 @@ function RegImport {
     )
 
     Write-Output $message
-    reg import $path
+
+
+    if (!$global:Params.ContainsKey("Sysprep")) {
+        reg import "$PSScriptRoot\Regfiles\$path"  
+    }
+    else {
+        reg load "HKU\Default" "C:\Users\Default\NTUSER.DAT" | Out-Null
+        reg import "$PSScriptRoot\Regfiles\Sysprep\$path"  
+        reg unload "HKU\Default" | Out-Null
+    }
+
     Write-Output ""
 }
 
@@ -495,7 +507,8 @@ function RestartExplorer {
 # Credit: https://lazyadmin.nl/win-11/customize-windows-11-start-menu-layout/
 function ClearStartMenu {
     param (
-        $message
+        $message,
+        $applyToAllUsers = $True
     )
 
     Write-Output $message
@@ -510,48 +523,73 @@ function ClearStartMenu {
         return
     }
 
-    # Get all user profile folders
-    $usersStartMenu = get-childitem -path "C:\Users\*\AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState"
+    if ($applyToAllUsers) {
+        # Remove startmenu pinned apps for all users
+        # Get all user profile folders
+        $usersStartMenu = get-childitem -path "C:\Users\*\AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState"
 
-    # Copy Start menu to all users folders
-    ForEach ($startmenu in $usersStartMenu) {
-        $startmenuBinFile = $startmenu.Fullname + "\start2.bin"
+        # Copy Start menu to all users folders
+        ForEach ($startmenu in $usersStartMenu) {
+            $startmenuBinFile = $startmenu.Fullname + "\start2.bin"
+            $backupBinFile = $startmenuBinFile + ".bak"
+
+            # Check if bin file exists
+            if (Test-Path $startmenuBinFile) {
+                # Backup current startmenu file
+                Move-Item -Path $startmenuBinFile -Destination $backupBinFile -Force
+
+                # Copy template file
+                Copy-Item -Path $startmenuTemplate -Destination $startmenu -Force
+
+                Write-Output "Replaced start menu for user $($startmenu.Fullname.Split("\")[2])"
+            }
+            else {
+                # Bin file doesn't exist, indicating the user is not running the correct version of Windows. Exit function
+                Write-Host "Error: Unable to clear start menu, start2.bin file could not found for user" $startmenu.Fullname.Split("\")[2]  -ForegroundColor Red
+                Write-Output ""
+                return
+            }
+        }
+
+        # Also apply start menu template to the default profile
+
+        # Path to default profile
+        $defaultProfile = "C:\Users\default\AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState"
+
+        # Create folder if it doesn't exist
+        if (-not(Test-Path $defaultProfile)) {
+            new-item $defaultProfile -ItemType Directory -Force | Out-Null
+            Write-Output "Created LocalState folder for default user"
+        }
+
+        # Copy template to default profile
+        Copy-Item -Path $startmenuTemplate -Destination $defaultProfile -Force
+        Write-Output "Copied start menu template to default user folder"
+        Write-Output ""
+    }
+    else {
+        # Only remove startmenu pinned apps for current logged in user
+        $startmenuBinFile = "C:\Users\$([Environment]::UserName)\AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState\start2.bin"
         $backupBinFile = $startmenuBinFile + ".bak"
 
         # Check if bin file exists
         if (Test-Path $startmenuBinFile) {
             # Backup current startmenu file
-            Move-Item -Path $startmenuBinFile -Destination $backupBinFile
+            Move-Item -Path $startmenuBinFile -Destination $backupBinFile -Force
 
             # Copy template file
-            Copy-Item -Path $startmenuTemplate -Destination $startmenu -Force
+            Copy-Item -Path $startmenuTemplate -Destination $startmenuBinFile -Force
 
-            $cpyMsg = "Replaced start menu for user " + $startmenu.Fullname.Split("\")[2]
-            Write-Output $cpyMsg
+            Write-Output "Replaced start menu for user $([Environment]::UserName)"
+            Write-Output ""
         }
         else {
             # Bin file doesn't exist, indicating the user is not running the correct version of Windows. Exit function
-            Write-Host "Error: Unable to clear start menu, start2.bin file could not found for user" $startmenu.Fullname.Split("\")[2]  -ForegroundColor Red
+            Write-Host "Error: Unable to clear start menu, start2.bin file could not found for user $([Environment]::UserName)" -ForegroundColor Red
             Write-Output ""
             return
         }
     }
-
-    # Also apply start menu template to the default profile
-
-    # Path to default profile
-    $defaultProfile = "C:\Users\default\AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState"
-
-    # Create folder if it doesn't exist
-    if (-not(Test-Path $defaultProfile)) {
-        new-item $defaultProfile -ItemType Directory -Force | Out-Null
-        Write-Output "Created LocalState folder for default user"
-    }
-
-    # Copy template to default profile
-    Copy-Item -Path $startmenuTemplate -Destination $defaultProfile -Force
-    Write-Output "Copied start menu template to default user folder"
-    Write-Output ""
 }
 
 
@@ -578,7 +616,7 @@ function AddParameter {
     $global:FirstSelection = $false
 
     # Create entry and add it to the file
-    $entry = $parameterName + "#- " + $message
+    $entry = "$parameterName#- $message"
     Add-Content -Path "$PSScriptRoot/SavedSettings" -Value $entry
 }
 
@@ -588,7 +626,11 @@ function PrintHeader {
         $title
     )
 
-    $fullTitle = " Win11Debloat Script - " + $title
+    $fullTitle = " Win11Debloat Script - $title"
+
+    if($global:Params.ContainsKey("Sysprep")) {
+        $fullTitle = "$fullTitle (Sysprep mode)"
+    }
 
     Clear-Host
     Write-Output "-------------------------------------------------------------------------------------------"
@@ -621,7 +663,16 @@ function AwaitKeyToExit {
 }
 
 
- # Check if winget is installed & if it is, check if the version is at least v1.4
+
+##################################################################################################################
+#                                                                                                                #
+#                                                  SCRIPT START                                                  #
+#                                                                                                                #
+##################################################################################################################
+
+
+
+# Check if winget is installed & if it is, check if the version is at least v1.4
 if ((Get-AppxPackage -Name "*Microsoft.DesktopAppInstaller*") -and ((winget -v) -replace 'v','' -gt 1.4)) {
     $global:wingetInstalled = $true
 }
@@ -637,12 +688,15 @@ else {
     }
 }
 
+# Get current Windows build version to compare against features
+$WinVersion = Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' CurrentBuild
+
 # Hide progress bars for app removal, as they block Win11Debloat's output
 $ProgressPreference = 'SilentlyContinue'
 
 $global:Params = $PSBoundParameters
 $global:FirstSelection = $true
-$SPParams = 'WhatIf', 'Confirm', 'Verbose', 'Silent'
+$SPParams = 'WhatIf', 'Confirm', 'Verbose', 'Silent', 'Sysprep'
 $SPParamCount = 0
 
 # Count how many SPParams exist within Params
@@ -650,6 +704,21 @@ $SPParamCount = 0
 foreach ($Param in $SPParams) {
     if ($global:Params.ContainsKey($Param)) {
         $SPParamCount++
+    }
+}
+
+if ($global:Params.ContainsKey("Sysprep")) {
+    # Exit script if default user directory or NTUSER.DAT file cannot be found
+    if (-not (Test-Path "C:\Users\Default\NTUSER.DAT")) {
+        Write-Host "Error: Unable to start Win11Debloat in Sysprep mode, cannot find default user folder at 'C:\Users\Default\'" -ForegroundColor Red
+        AwaitKeyToExit
+        Exit
+    }
+    # Exit script if run in Sysprep mode on Windows 10
+    if ($WinVersion -lt 22000) {
+        Write-Host "Error: Win11Debloat Sysprep mode is not supported on Windows 10" -ForegroundColor Red
+        AwaitKeyToExit
+        Exit
     }
 }
 
@@ -674,7 +743,6 @@ if ($RunAppConfigurator) {
 
     AwaitKeyToExit
 
-    # Exit script
     Exit
 }
 
@@ -758,7 +826,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
         '2' { 
             # Get current Windows build version to compare against features
             $WinVersion = Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' CurrentBuild
-
+            
             PrintHeader 'Custom Mode'
 
             # Show options for removing apps, only continue on valid input
@@ -768,27 +836,27 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
                 Write-Host " (1) Only remove the default selection of bloatware apps from 'Appslist.txt'" -ForegroundColor Yellow
                 Write-Host " (2) Remove default selection of bloatware apps, aswell as mail & calendar apps, developer apps and gaming apps"  -ForegroundColor Yellow
                 Write-Host " (3) Select which apps to remove and which to keep" -ForegroundColor Yellow
-                $RemoveCommAppInput = Read-Host "Remove any pre-installed apps? (n/1/2/3)" 
+                $RemoveAppsInput = Read-Host "Remove any pre-installed apps? (n/1/2/3)" 
 
                 # Show app selection form if user entered option 3
-                if ($RemoveCommAppInput -eq '3') {
+                if ($RemoveAppsInput -eq '3') {
                     $result = ShowAppSelectionForm
 
                     if ($result -ne [System.Windows.Forms.DialogResult]::OK) {
-                        # User cancelled or closed app selection, show error and change RemoveCommAppInput so the menu will be shown again
+                        # User cancelled or closed app selection, show error and change RemoveAppsInput so the menu will be shown again
                         Write-Output ""
                         Write-Host "Cancelled application selection, please try again" -ForegroundColor Red
 
-                        $RemoveCommAppInput = 'c'
+                        $RemoveAppsInput = 'c'
                     }
                     
                     Write-Output ""
                 }
             }
-            while ($RemoveCommAppInput -ne 'n' -and $RemoveCommAppInput -ne '0' -and $RemoveCommAppInput -ne '1' -and $RemoveCommAppInput -ne '2' -and $RemoveCommAppInput -ne '3') 
+            while ($RemoveAppsInput -ne 'n' -and $RemoveAppsInput -ne '0' -and $RemoveAppsInput -ne '1' -and $RemoveAppsInput -ne '2' -and $RemoveAppsInput -ne '3') 
 
             # Select correct option based on user input
-            switch ($RemoveCommAppInput) {
+            switch ($RemoveAppsInput) {
                 '1' {
                     AddParameter 'RemoveApps' 'Remove default selection of bloatware apps'
                 }
@@ -817,8 +885,31 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
             if ($WinVersion -ge 22621){
                 Write-Output ""
 
-                if ($( Read-Host -Prompt "Remove all pinned apps from the start menu? This applies to all existing and new users and can't be reverted (y/n)" ) -eq 'y') {
-                    AddParameter 'ClearStart' 'Remove all pinned apps from the start menu for new and existing users'
+                if ($global:Params.ContainsKey("Sysprep")) {
+                    if ($( Read-Host -Prompt "Remove all pinned apps from the start menu for all existing and new users? (y/n)" ) -eq 'y') {
+                        AddParameter 'ClearStartAllUsers' 'Remove all pinned apps from the start menu for existing and new users'
+                    }
+                }
+                else {
+                    Do {
+                        Write-Host "Options:" -ForegroundColor Yellow
+                        Write-Host " (n) Don't remove any pinned apps from the start menu" -ForegroundColor Yellow
+                        Write-Host " (1) Remove all pinned apps from the start menu for this user only ($([Environment]::UserName))" -ForegroundColor Yellow
+                        Write-Host " (2) Remove all pinned apps from the start menu for all existing and new users"  -ForegroundColor Yellow
+                        $ClearStartInput = Read-Host "Remove all pinned apps from the start menu? This cannot be reverted (n/1/2)" 
+                        Write-Output ""
+                    }
+                    while ($ClearStartInput -ne 'n' -and $ClearStartInput -ne '0' -and $ClearStartInput -ne '1' -and $ClearStartInput -ne '2') 
+    
+                    # Select correct option based on user input
+                    switch ($ClearStartInput) {
+                        '1' {
+                            AddParameter 'ClearStart' "Remove all pinned apps from the start menu for this user only"
+                        }
+                        '2' {
+                            AddParameter 'ClearStartAllUsers' "Remove all pinned apps from the start menu for all existing and new users"
+                        }
+                    }
                 }
             }
 
@@ -1175,19 +1266,23 @@ else {
             continue
         }
         'DisableDVR' {
-            RegImport "> Disabling Xbox game/screen recording..." $PSScriptRoot\Regfiles\Disable_DVR.reg
+            RegImport "> Disabling Xbox game/screen recording..." "Disable_DVR.reg"
             continue
         }
         'ClearStart' {
-            ClearStartMenu "> Removing all pinned apps from the start menu..."
+            ClearStartMenu "> Removing all pinned apps from the start menu..." $False
+            continue
+        }
+        'ClearStartAllUsers' {
+            ClearStartMenu "> Removing all pinned apps from the start menu for all users..."
             continue
         }
         'DisableTelemetry' {
-            RegImport "> Disabling telemetry, diagnostic data, app-launch tracking and targeted ads..." $PSScriptRoot\Regfiles\Disable_Telemetry.reg
+            RegImport "> Disabling telemetry, diagnostic data, app-launch tracking and targeted ads..." "Disable_Telemetry.reg"
             continue
         }
         {$_ -in "DisableBingSearches", "DisableBing"} {
-            RegImport "> Disabling bing search, bing AI & cortana in Windows search..." $PSScriptRoot\Regfiles\Disable_Bing_Cortana_In_Search.reg
+            RegImport "> Disabling bing search, bing AI & cortana in Windows search..." "Disable_Bing_Cortana_In_Search.reg"
             
             # Also remove the app package for bing search
             $appsList = 'Microsoft.BingSearch'
@@ -1198,91 +1293,92 @@ else {
             continue
         }
         {$_ -in "DisableLockscrTips", "DisableLockscreenTips"} {
-            RegImport "> Disabling tips & tricks on the lockscreen..." $PSScriptRoot\Regfiles\Disable_Lockscreen_Tips.reg
+            RegImport "> Disabling tips & tricks on the lockscreen..." "Disable_Lockscreen_Tips.reg"
             continue
         }
         {$_ -in "DisableSuggestions", "DisableWindowsSuggestions"} {
-            RegImport "> Disabling tips, tricks, suggestions and ads across Windows..." $PSScriptRoot\Regfiles\Disable_Windows_Suggestions.reg
+            RegImport "> Disabling tips, tricks, suggestions and ads across Windows..." "Disable_Windows_Suggestions.reg"
             continue
         }
         'RevertContextMenu' {
-            RegImport "> Restoring the old Windows 10 style context menu..." $PSScriptRoot\Regfiles\Disable_Show_More_Options_Context_Menu.reg
+            RegImport "> Restoring the old Windows 10 style context menu..." "Disable_Show_More_Options_Context_Menu.reg"
             continue
         }
         'TaskbarAlignLeft' {
-            RegImport "> Aligning taskbar buttons to the left..." $PSScriptRoot\Regfiles\Align_Taskbar_Left.reg
+            RegImport "> Aligning taskbar buttons to the left..." "Align_Taskbar_Left.reg"
+
             continue
         }
         'HideSearchTb' {
-            RegImport "> Hiding the search icon from the taskbar..." $PSScriptRoot\Regfiles\Hide_Search_Taskbar.reg
+            RegImport "> Hiding the search icon from the taskbar..." "Hide_Search_Taskbar.reg"
             continue
         }
         'ShowSearchIconTb' {
-            RegImport "> Changing taskbar search to icon only..." $PSScriptRoot\Regfiles\Show_Search_Icon.reg
+            RegImport "> Changing taskbar search to icon only..." "Show_Search_Icon.reg"
             continue
         }
         'ShowSearchLabelTb' {
-            RegImport "> Changing taskbar search to icon with label..." $PSScriptRoot\Regfiles\Show_Search_Icon_And_Label.reg
+            RegImport "> Changing taskbar search to icon with label..." "Show_Search_Icon_And_Label.reg"
             continue
         }
         'ShowSearchBoxTb' {
-            RegImport "> Changing taskbar search to search box..." $PSScriptRoot\Regfiles\Show_Search_Box.reg
+            RegImport "> Changing taskbar search to search box..." "Show_Search_Box.reg"
             continue
         }
         'HideTaskview' {
-            RegImport "> Hiding the taskview button from the taskbar..." $PSScriptRoot\Regfiles\Hide_Taskview_Taskbar.reg
+            RegImport "> Hiding the taskview button from the taskbar..." "Hide_Taskview_Taskbar.reg"
             continue
         }
         'DisableCopilot' {
-            RegImport "> Disabling Windows copilot..." $PSScriptRoot\Regfiles\Disable_Copilot.reg
+            RegImport "> Disabling Windows copilot..." "Disable_Copilot.reg"
             continue
         }
         'DisableRecall' {
-            RegImport "> Disabling Windows Recall snapshots..." $PSScriptRoot\Regfiles\Disable_AI_Recall.reg
+            RegImport "> Disabling Windows Recall snapshots..." "Disable_AI_Recall.reg"
             continue
         }
         {$_ -in "HideWidgets", "DisableWidgets"} {
-            RegImport "> Disabling the widget service and hiding the widget icon from the taskbar..." $PSScriptRoot\Regfiles\Disable_Widgets_Taskbar.reg
+            RegImport "> Disabling the widget service and hiding the widget icon from the taskbar..." "Disable_Widgets_Taskbar.reg"
             continue
         }
         {$_ -in "HideChat", "DisableChat"} {
-            RegImport "> Hiding the chat icon from the taskbar..." $PSScriptRoot\Regfiles\Disable_Chat_Taskbar.reg
+            RegImport "> Hiding the chat icon from the taskbar..." "Disable_Chat_Taskbar.reg"
             continue
         }
         'ShowHiddenFolders' {
-            RegImport "> Unhiding hidden files, folders and drives..." $PSScriptRoot\Regfiles\Show_Hidden_Folders.reg
+            RegImport "> Unhiding hidden files, folders and drives..." "Show_Hidden_Folders.reg"
             continue
         }
         'ShowKnownFileExt' {
-            RegImport "> Enabling file extensions for known file types..." $PSScriptRoot\Regfiles\Show_Extensions_For_Known_File_Types.reg
+            RegImport "> Enabling file extensions for known file types..." "Show_Extensions_For_Known_File_Types.reg"
             continue
         }
         'HideDupliDrive' {
-            RegImport "> Hiding duplicate removable drive entries from the Windows explorer navigation pane..." $PSScriptRoot\Regfiles\Hide_duplicate_removable_drives_from_navigation_pane_of_File_Explorer.reg
+            RegImport "> Hiding duplicate removable drive entries from the Windows explorer navigation pane..." "Hide_duplicate_removable_drives_from_navigation_pane_of_File_Explorer.reg"
             continue
         }
         {$_ -in "HideOnedrive", "DisableOnedrive"} {
-            RegImport "> Hiding the onedrive folder from the Windows explorer navigation pane..." $PSScriptRoot\Regfiles\Hide_Onedrive_Folder.reg
+            RegImport "> Hiding the onedrive folder from the Windows explorer navigation pane..." "Hide_Onedrive_Folder.reg"
             continue
         }
         {$_ -in "Hide3dObjects", "Disable3dObjects"} {
-            RegImport "> Hiding the 3D objects folder from the Windows explorer navigation pane..." $PSScriptRoot\Regfiles\Hide_3D_Objects_Folder.reg
+            RegImport "> Hiding the 3D objects folder from the Windows explorer navigation pane..." "Hide_3D_Objects_Folder.reg"
             continue
         }
         {$_ -in "HideMusic", "DisableMusic"} {
-            RegImport "> Hiding the music folder from the Windows explorer navigation pane..." $PSScriptRoot\Regfiles\Hide_Music_folder.reg
+            RegImport "> Hiding the music folder from the Windows explorer navigation pane..." "Hide_Music_folder.reg"
             continue
         }
         {$_ -in "HideIncludeInLibrary", "DisableIncludeInLibrary"} {
-            RegImport "> Hiding 'Include in library' in the context menu..." $PSScriptRoot\Regfiles\Disable_Include_in_library_from_context_menu.reg
+            RegImport "> Hiding 'Include in library' in the context menu..." "Disable_Include_in_library_from_context_menu.reg"
             continue
         }
         {$_ -in "HideGiveAccessTo", "DisableGiveAccessTo"} {
-            RegImport "> Hiding 'Give access to' in the context menu..." $PSScriptRoot\Regfiles\Disable_Give_access_to_context_menu.reg
+            RegImport "> Hiding 'Give access to' in the context menu..." "Disable_Give_access_to_context_menu.reg"
             continue
         }
         {$_ -in "HideShare", "DisableShare"} {
-            RegImport "> Hiding 'Share' in the context menu..." $PSScriptRoot\Regfiles\Disable_Share_from_context_menu.reg
+            RegImport "> Hiding 'Share' in the context menu..." "Disable_Share_from_context_menu.reg"
             continue
         }
     }

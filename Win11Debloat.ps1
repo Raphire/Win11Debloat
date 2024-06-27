@@ -357,7 +357,14 @@ function RemoveApps {
             $app = '*' + $app + '*'
 
             # Remove installed app for all existing users
-            Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage -AllUsers
+            if ($WinVersion -ge 22000){
+                # Windows 11 build 22000 or later
+                Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage -AllUsers
+            }
+            else {
+                # Windows 10
+                Get-AppxPackage -Name $app -PackageTypeFilter Main, Bundle, Resource -AllUsers | Remove-AppxPackage -AllUsers
+            }
 
             # Remove provisioned app from OS image, so the app won't be installed for any new users
             Get-AppxProvisionedPackage -Online | Where-Object { $_.PackageName -like $app } | ForEach-Object { Remove-ProvisionedAppxPackage -Online -AllUsers -PackageName $_.PackageName }
@@ -768,7 +775,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
                     AddParameter 'RemoveW11Outlook' 'Remove the new Outlook for Windows app'
                     AddParameter 'RemoveDevApps' 'Remove developer-related apps'
                     AddParameter 'RemoveGamingApps' 'Remove the Xbox App and Xbox Gamebar'
-                    AddParameter 'DisableDVR' 'Disable Xbox game DVR'
+                    AddParameter 'DisableDVR' 'Disable Xbox game/screen recording'
                 }
                 '3' {
                     Write-Output "You have selected $($global:SelectedApps.Count) apps for removal"
@@ -777,8 +784,8 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
 
                     Write-Output ""
 
-                    if ($( Read-Host -Prompt "Disable Xbox game DVR? (y/n)" ) -eq 'y') {
-                        AddParameter 'DisableDVR' 'Disable Xbox game DVR'
+                    if ($( Read-Host -Prompt "Disable Xbox game/screen recording? Also stops gaming overlay popups (y/n)" ) -eq 'y') {
+                        AddParameter 'DisableDVR' 'Disable Xbox game/screen recording'
                     }
                 }
             }
@@ -1164,7 +1171,7 @@ else {
             continue
         }
         'DisableDVR' {
-            RegImport "> Disabling Xbox game DVR..." "Disable_DVR.reg"
+            RegImport "> Disabling Xbox game/screen recording..." "Disable_DVR.reg"
             continue
         }
         'ClearStart' {

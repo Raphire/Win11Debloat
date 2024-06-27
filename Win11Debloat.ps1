@@ -700,7 +700,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
                     AddParameter 'RemoveW11Outlook' 'Remove the new Outlook for Windows app'
                     AddParameter 'RemoveDevApps' 'Remove developer-related apps'
                     AddParameter 'RemoveGamingApps' 'Remove the Xbox App and Xbox Gamebar'
-                    AddParameter 'DisableDVR' 'Disable Xbox game DVR'
+                    AddParameter 'DisableDVR' 'Disable Xbox game/screen recording'
                 }
                 '3' {
                     Write-Output "You have selected $($global:SelectedApps.Count) apps for removal"
@@ -709,8 +709,8 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
 
                     Write-Output ""
 
-                    if ($( Read-Host -Prompt "Disable Xbox game DVR? (y/n)" ) -eq 'y') {
-                        AddParameter 'DisableDVR' 'Disable Xbox game DVR'
+                    if ($( Read-Host -Prompt "Disable Xbox game/screen recording? Also stops gaming overlay popups (y/n)" ) -eq 'y') {
+                        AddParameter 'DisableDVR' 'Disable Xbox game/screen recording'
                     }
                 }
             }
@@ -1073,7 +1073,7 @@ else {
             continue
         }
         'DisableDVR' {
-            RegImport "> Disabling Xbox game DVR..." $PSScriptRoot\Regfiles\Disable_DVR.reg
+            RegImport "> Disabling Xbox game/screen recording..." $PSScriptRoot\Regfiles\Disable_DVR.reg
             continue
         }
         'ClearStart' {

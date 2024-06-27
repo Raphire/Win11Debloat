@@ -1,0 +1,13 @@
+Windows Registry Editor Version 5.00
+
+; Disable Copilot button on taskbar
+[hkey_users\default\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
+"ShowCopilotButton"=dword:00000000
+
+; Disable Copilot service for current user
+[hkey_users\default\Software\Policies\Microsoft\Windows\WindowsCopilot]
+"TurnOffWindowsCopilot"=dword:00000001
+
+; Disable Copilot service for all users
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsCopilot]
+"TurnOffWindowsCopilot"=dword:00000001

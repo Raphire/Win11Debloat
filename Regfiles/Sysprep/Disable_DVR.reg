@@ -1,0 +1,7 @@
+Windows Registry Editor Version 5.00
+
+[hkey_users\default\System\GameConfigStore]
+"GameDVR_Enabled"=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\GameDVR]
+"AllowGameDVR"=dword:00000000

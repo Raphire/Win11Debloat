@@ -283,7 +283,7 @@ The quick and advanced method support parameters to tailor the behaviour of the 
 | -RemoveDevApps                     |    Remove developer-related apps such as Remote Desktop, DevHome and Power Automate. |
 | -RemoveGamingApps                  |    Remove the Xbox App and Xbox Gamebar. |
 | -ForceRemoveEdge                   |    Forcefully remove Microsoft Edge. NOT RECOMMENDED! |
-| -DisableDVR                        |    Disable Xbox game DVR. |
+| -DisableDVR                        |    Disable Xbox game/screen recording feature & stop gaming overlay popups. |
 | -ClearStart                        |    Remove all pinned apps from the start menu. NOTE: This applies to all existing and new users. (Windows 11 update 22H2 or later only) |
 | -DisableTelemetry                  |    Disable telemetry, diagnostic data & targeted ads. |
 | -DisableBing                       |    Disable & remove bing search, bing AI & cortana in Windows search. |

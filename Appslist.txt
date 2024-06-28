@@ -36,6 +36,7 @@ Microsoft.WindowsSoundRecorder
 Microsoft.XboxApp   # Old Xbox Console Companion App, no longer supported
 Microsoft.ZuneVideo
 MicrosoftCorporationII.MicrosoftFamily   # Family Safety App
+MicrosoftCorporationII.QuickAssist
 MicrosoftTeams   # Old MS Teams personal (MS Store)
 MSTeams   # New MS Teams app
 

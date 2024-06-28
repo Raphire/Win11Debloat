@@ -7,36 +7,53 @@ or removing intrusive interface elements, ads and more. No need to painstakingly
 through all the settings yourself, or removing apps one by one!
 
 -------------------------------------------------------------------------------------------
- Using the default mode the script will
+ All Features
 -------------------------------------------------------------------------------------------
+App Removal
+- Remove a wide variety of bloatware apps
+- Remove all pinned apps from start for the current user, or for all new & existing users. (Windows 11 only)
+
+Telemetry & Suggested Content
+- Disable telemetry, diagnostic data, app-launch tracking & targeted ads.
+- Disable tips, tricks, suggestions & ads across Windows.
+
+Bing, Copilot & More
+- Disable & remove bing search & cortana in Windows search.
+- Disable Windows Copilot. (Windows 11 only)
+- Disable Windows Recall snapshots. (Windows 11 only)
+
+Windows Explorer
+- Show hidden files, folders & drives.
+- Show file extensions for known file types.
+- Hide duplicate removable drive entries from the Windows explorer navigation pane.
+
+Taskbar
+- Align taskbar icons to the left. (Windows 11 only)
+- Hide or change the search icon/box on the taskbar. (Windows 11 only)
+- Hide the taskview button from the taskbar. (Windows 11 only)
+- Disable the widgets service & hide icon from the taskbar.
+- Hide the chat (meet now) icon from the taskbar.
+
+Context menu
+- Restore the old Windows 10 style context menu. (Windows 11 only)
+- Hide the 3D objects, music or onedrive folder in the Windows explorer sidepanel. (Windows 10 only)
+- Hide the 'Include in library', 'Give access to' & 'Share' options in the context menu. (Windows 10 only)
+
+Advanced Features
+- Sysprep mode to apply changes to the Windows Default user profile.
+
+-------------------------------------------------------------------------------------------
+ Default mode
+-------------------------------------------------------------------------------------------
+The default mode applies the changes that are recommended for most users, this includes:
 - Remove the default selection of apps, the list can be found in the 'Appslist.txt' file.
 - Disable telemetry, diagnostic data, app-launch tracking & targeted ads.
 - Disable & remove bing search & cortana in Windows search.
-- Disable tips, tricks, suggestions and ads in start, settings, notifications and more.
+- Disable tips, tricks, suggestions & ads across Windows.
 - Disable Windows Copilot. (Windows 11 only)
 - Show file extensions for known file types.
 - Disable the widget service & hide the icon from the taskbar. 
 - Hide the Chat (meet now) icon from the taskbar.
 - Hide the 3D objects folder under 'This pc' in windows explorer. (Windows 10 only)
-
--------------------------------------------------------------------------------------------
- Using the custom mode you can
--------------------------------------------------------------------------------------------
-- Remove bloatware apps, with the option to select exactly what apps to remove or keep.
-- Remove all pinned apps from the start menu for the current user, or for all existing and new users. (Windows 11 only)
-- Disable telemetry, diagnostic data, app-launch tracking & targeted ads.
-- Disable & remove bing search & cortana in Windows search.
-- Disable tips, tricks, suggestions and ads in start, settings, notifications, windows explorer, and on the lockscreen.
-- Disable Windows Copilot. (Windows 11 only)
-- Disable Windows Recall snapshots. (Windows 11 only)
-- Restore the old Windows 10 style context menu. (Windows 11 only)
-- Show hidden files, folders and drives.
-- Show file extensions for known file types.
-- Hide duplicate removable drive entries from the windows explorer sidepane, so only the entry under 'This PC' remains.
-- Align taskbar icons to the left. (Windows 11 only)
-- Hide or change the search icon/box on the taskbar. (Windows 11 only)
-- Hide the taskview button from the taskbar. (Windows 11 only)
-- Disable the widget service & hide the icon from the taskbar.
-- Hide the 3D objects, music or onedrive folder in the windows explorer sidepanel. (Windows 10 only)
 - Hide the 'Include in library', 'Give access to' and 'Share' options in the context menu. (Windows 10 only)
 

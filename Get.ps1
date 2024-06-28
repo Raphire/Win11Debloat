@@ -27,6 +27,7 @@ param (
     [switch]$DisableChat,
     [switch]$HideChat,
     [switch]$ClearStart,
+    [switch]$ClearStartAllUsers,
     [switch]$RevertContextMenu,
     [switch]$DisableOnedrive, [switch]$HideOnedrive,
     [switch]$Disable3dObjects, [switch]$Hide3dObjects,

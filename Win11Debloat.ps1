@@ -837,8 +837,8 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
 
             Write-Output ""
 
-            if ($( Read-Host -Prompt "Disable & remove bing search, bing AI & cortana in Windows search? (y/n)" ) -eq 'y') {
-                AddParameter 'DisableBing' 'Disable & remove bing search, bing AI & cortana in Windows search'
+            if ($( Read-Host -Prompt "Disable & remove bing web search, bing AI & cortana in Windows search? (y/n)" ) -eq 'y') {
+                AddParameter 'DisableBing' 'Disable & remove bing web search, bing AI & cortana in Windows search'
             }
 
             # Only show this option for Windows 11 users running build 22621 or later
@@ -1187,7 +1187,7 @@ else {
             continue
         }
         {$_ -in "DisableBingSearches", "DisableBing"} {
-            RegImport "> Disabling bing search, bing AI & cortana in Windows search..." "Disable_Bing_Cortana_In_Search.reg"
+            RegImport "> Disabling bing web search, bing AI & cortana in Windows search..." "Disable_Bing_Cortana_In_Search.reg"
             
             # Also remove the app package for bing search
             $appsList = 'Microsoft.BingSearch'

@@ -16,14 +16,14 @@ You can pick and choose exactly which modifications you want the script to make,
 > Select the custom mode to customize the script to your needs or select the [default mode](#default-mode) to apply the recommended changes.
 
 #### App Removal
-- Remove a wide variety of bloatware apps, with the option to select exactly what apps to remove and keep.
-- Remove all pinned apps from the start menu for the current user, or for all existing and new users. (Windows 11 only)
+- Remove a wide variety of bloatware apps
+- Remove all pinned apps from start for the current user, or for all existing & new users. (Windows 11 only)
 
 #### Telemetry & Suggested Content
 - Disable telemetry, diagnostic data, app-launch tracking & targeted ads.
 - Disable tips, tricks, suggestions and ads in start, settings, notifications, Windows explorer, and on the lockscreen.
 
-#### Bing, Copilot & More
+#### Bing Web Search, Copilot & More
 - Disable & remove bing search & cortana in Windows search.
 - Disable Windows Copilot. (Windows 11 only)
 - Disable Windows Recall snapshots. (Windows 11 only)
@@ -44,6 +44,9 @@ You can pick and choose exactly which modifications you want the script to make,
 - Restore the old Windows 10 style context menu. (Windows 11 only)
 - Hide the 3D objects, music or onedrive folder in the Windows explorer sidepanel. (Windows 10 only)
 - Hide the 'Include in library', 'Give access to' and 'Share' options in the context menu. (Windows 10 only)
+
+#### Other
+- Disable Xbox game/screen recording (Also stops gaming overlay popups)
 
 #### Advanced Features
 - Sysprep mode to apply changes to the Windows Default user profile.
@@ -287,10 +290,10 @@ The quick and advanced method support parameters to tailor the behaviour of the 
 | -RemoveDevApps                     |    Remove developer-related apps such as Remote Desktop, DevHome and Power Automate. |
 | -RemoveGamingApps                  |    Remove the Xbox App and Xbox Gamebar. |
 | -DisableDVR                        |    Disable Xbox game/screen recording feature & stop gaming overlay popups. |
-| -ClearStart                        |    Remove all pinned apps from the start menu for the current user (Windows 11 update 22H2 or later only) |
-| -ClearStartAllUsers                |    Remove all pinned apps from the start menu for all existing and new users. (Windows 11 update 22H2 or later only) |
+| -ClearStart                        |    Remove all pinned apps from start for the current user (Windows 11 update 22H2 or later only) |
+| -ClearStartAllUsers                |    Remove all pinned apps from start for all existing and new users. (Windows 11 update 22H2 or later only) |
 | -DisableTelemetry                  |    Disable telemetry, diagnostic data & targeted ads. |
-| -DisableBing                       |    Disable & remove bing search, bing AI & cortana in Windows search. |
+| -DisableBing                       |    Disable & remove bing web search, bing AI & cortana in Windows search. |
 | -DisableSuggestions                |    Disable tips, tricks, suggestions and ads in start, settings, notifications and Windows explorer. |
 | <pre>-DisableLockscreenTips</pre>  |    Disable tips & tricks on the lockscreen. |
 | -RevertContextMenu                 |    Restore the old Windows 10 style context menu. (Windows 11 only) |
@@ -303,10 +306,10 @@ The quick and advanced method support parameters to tailor the behaviour of the 
 | -ShowSearchLabelTb                 |    Show search icon with label on the taskbar. (Windows 11 only) |
 | -ShowSearchBoxTb                   |    Show search box on the taskbar. (Windows 11 only) |
 | -HideTaskview                      |    Hide the taskview button from the taskbar. (Windows 11 only) |
+| -HideChat                          |    Hide the chat (meet now) icon from the taskbar. |
+| -DisableWidgets                    |    Disable the widget service & hide the widget (news and interests) icon from the taskbar. |
 | -DisableCopilot                    |    Disable Windows copilot. (Windows 11 only) |
 | -DisableRecall                     |    Disable Windows Recall snapshots. (Windows 11 only) |
-| -DisableWidgets                    |    Disable the widget service & hide the widget (news and interests) icon from the taskbar. |
-| -HideChat                          |    Hide the chat (meet now) icon from the taskbar. |
 | -HideOnedrive                      |    Hide the onedrive folder in the Windows explorer sidepanel. (Windows 10 only) |
 | -Hide3dObjects                     |    Hide the 3D objects folder under 'This pc' in Windows explorer. (Windows 10 only) |
 | -HideMusic                         |    Hide the music folder under 'This pc' in Windows explorer. (Windows 10 only) |

@@ -32,6 +32,7 @@ param (
     [switch]$ClearStart,
     [switch]$ClearStartAllUsers,
     [switch]$RevertContextMenu,
+    [switch]$HideGallery,
     [switch]$DisableOnedrive, [switch]$HideOnedrive,
     [switch]$Disable3dObjects, [switch]$Hide3dObjects,
     [switch]$DisableMusic, [switch]$HideMusic,
@@ -396,9 +397,9 @@ function RegImport {
 }
 
 
-# Restart the Windows explorer process
+# Restart the Windows Explorer process
 function RestartExplorer {
-    Write-Output "> Restarting Windows explorer to apply all changes. Note: This may cause some flickering."
+    Write-Output "> Restarting Windows Explorer process to apply all changes... (This may cause some flickering)"
 
     # Only restart if the powershell process matches the OS architecture
     # Restarting explorer from a 32bit Powershell window will fail on a 64bit OS
@@ -407,7 +408,7 @@ function RestartExplorer {
         Stop-Process -processName: Explorer -Force
     }
     else {
-        Write-Warning "Unable to restart Windows Explorer, please manually restart your PC to apply all changes."
+        Write-Warning "Unable to restart Windows Explorer process, please manually restart your PC to apply all changes."
     }
 }
 
@@ -806,7 +807,6 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
                         Write-Host " (1) Remove all pinned apps from the start menu for this user only ($([Environment]::UserName))" -ForegroundColor Yellow
                         Write-Host " (2) Remove all pinned apps from the start menu for all existing and new users"  -ForegroundColor Yellow
                         $ClearStartInput = Read-Host "Remove all pinned apps from the start menu? This cannot be reverted (n/1/2)" 
-                        Write-Output ""
                     }
                     while ($ClearStartInput -ne 'n' -and $ClearStartInput -ne '0' -and $ClearStartInput -ne '1' -and $ClearStartInput -ne '2') 
     
@@ -824,14 +824,14 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
 
             Write-Output ""
 
-            if ($( Read-Host -Prompt "Disable telemetry, diagnostic data, app-launch tracking and targeted ads? (y/n)" ) -eq 'y') {
-                AddParameter 'DisableTelemetry' 'Disable telemetry, diagnostic data & targeted ads'
+            if ($( Read-Host -Prompt "Disable telemetry, diagnostic data, activity history, app-launch tracking and targeted ads? (y/n)" ) -eq 'y') {
+                AddParameter 'DisableTelemetry' 'Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads'
             }
 
             Write-Output ""
 
             if ($( Read-Host -Prompt "Disable tips, tricks, suggestions and ads in start, settings, notifications, explorer and lockscreen? (y/n)" ) -eq 'y') {
-                AddParameter 'DisableSuggestions' 'Disable tips, tricks, suggestions and ads in start, settings, notifications and Windows explorer'
+                AddParameter 'DisableSuggestions' 'Disable tips, tricks, suggestions and ads in start, settings, notifications and File Explorer'
                 AddParameter 'DisableLockscreenTips' 'Disable tips & tricks on the lockscreen'
             }
 
@@ -930,7 +930,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
 
             Write-Output ""
 
-            if ($( Read-Host -Prompt "Do you want to make any changes to Windows explorer? (y/n)" ) -eq 'y') {
+            if ($( Read-Host -Prompt "Do you want to make any changes to File Explorer? (y/n)" ) -eq 'y') {
                 Write-Output ""
 
                 if ($( Read-Host -Prompt "   Show hidden files, folders and drives? (y/n)" ) -eq 'y') {
@@ -943,33 +943,42 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
                     AddParameter 'ShowKnownFileExt' 'Show file extensions for known file types'
                 }
 
+                # Only show this option for Windows 11 users running build 22000 or later
+                if ($WinVersion -ge 22000){
+                    Write-Output ""
+
+                    if ($( Read-Host -Prompt "   Hide the gallery section from the File Explorer sidepanel? (y/n)" ) -eq 'y') {
+                        AddParameter 'HideGallery' 'Hide the gallery section from the File Explorer sidepanel'
+                    }
+                }
+
                 Write-Output ""
 
-                if ($( Read-Host -Prompt "   Hide duplicate removable drive entries from the Windows explorer sidepane so they only show under This PC? (y/n)" ) -eq 'y') {
-                    AddParameter 'HideDupliDrive' 'Hide duplicate removable drive entries from the Windows explorer navigation pane'
+                if ($( Read-Host -Prompt "   Hide duplicate removable drive entries from the File Explorer sidepanel so they only show under This PC? (y/n)" ) -eq 'y') {
+                    AddParameter 'HideDupliDrive' 'Hide duplicate removable drive entries from the File Explorer sidepanel'
                 }
 
                 # Only show option for disabling these specific folders for Windows 10 users
                 if (get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'"){
                     Write-Output ""
 
-                    if ($( Read-Host -Prompt "Do you want to hide any folders from the Windows explorer sidepane? (y/n)" ) -eq 'y') {
+                    if ($( Read-Host -Prompt "Do you want to hide any folders from the File Explorer sidepanel? (y/n)" ) -eq 'y') {
                         Write-Output ""
 
-                        if ($( Read-Host -Prompt "   Hide the onedrive folder from the Windows explorer sidepane? (y/n)" ) -eq 'y') {
-                            AddParameter 'HideOnedrive' 'Hide the onedrive folder in the Windows explorer sidepanel'
+                        if ($( Read-Host -Prompt "   Hide the onedrive folder from the File Explorer sidepanel? (y/n)" ) -eq 'y') {
+                            AddParameter 'HideOnedrive' 'Hide the onedrive folder in the File Explorer sidepanel'
                         }
 
                         Write-Output ""
                         
-                        if ($( Read-Host -Prompt "   Hide the 3D objects folder from the Windows explorer sidepane? (y/n)" ) -eq 'y') {
-                            AddParameter 'Hide3dObjects' "Hide the 3D objects folder under 'This pc' in Windows explorer" 
+                        if ($( Read-Host -Prompt "   Hide the 3D objects folder from the File Explorer sidepanel? (y/n)" ) -eq 'y') {
+                            AddParameter 'Hide3dObjects' "Hide the 3D objects folder under 'This pc' in File Explorer" 
                         }
                         
                         Write-Output ""
 
-                        if ($( Read-Host -Prompt "   Hide the music folder from the Windows explorer sidepane? (y/n)" ) -eq 'y') {
-                            AddParameter 'HideMusic' "Hide the music folder under 'This pc' in Windows explorer"
+                        if ($( Read-Host -Prompt "   Hide the music folder from the File Explorer sidepanel? (y/n)" ) -eq 'y') {
+                            AddParameter 'HideMusic' "Hide the music folder under 'This pc' in File Explorer"
                         }
                     }
                 }
@@ -1183,7 +1192,7 @@ else {
             continue
         }
         'DisableTelemetry' {
-            RegImport "> Disabling telemetry, diagnostic data, app-launch tracking and targeted ads..." "Disable_Telemetry.reg"
+            RegImport "> Disabling telemetry, diagnostic data, activity history, app-launch tracking and targeted ads..." "Disable_Telemetry.reg"
             continue
         }
         {$_ -in "DisableBingSearches", "DisableBing"} {
@@ -1258,20 +1267,24 @@ else {
             RegImport "> Enabling file extensions for known file types..." "Show_Extensions_For_Known_File_Types.reg"
             continue
         }
+        'HideGallery' {
+            RegImport "> Hiding the gallery section from the File Explorer navigation pane..." "Hide_Gallery_from_Explorer.reg"
+            continue
+        }
         'HideDupliDrive' {
-            RegImport "> Hiding duplicate removable drive entries from the Windows explorer navigation pane..." "Hide_duplicate_removable_drives_from_navigation_pane_of_File_Explorer.reg"
+            RegImport "> Hiding duplicate removable drive entries from the File Explorer navigation pane..." "Hide_duplicate_removable_drives_from_navigation_pane_of_File_Explorer.reg"
             continue
         }
         {$_ -in "HideOnedrive", "DisableOnedrive"} {
-            RegImport "> Hiding the onedrive folder from the Windows explorer navigation pane..." "Hide_Onedrive_Folder.reg"
+            RegImport "> Hiding the onedrive folder from the File Explorer navigation pane..." "Hide_Onedrive_Folder.reg"
             continue
         }
         {$_ -in "Hide3dObjects", "Disable3dObjects"} {
-            RegImport "> Hiding the 3D objects folder from the Windows explorer navigation pane..." "Hide_3D_Objects_Folder.reg"
+            RegImport "> Hiding the 3D objects folder from the File Explorer navigation pane..." "Hide_3D_Objects_Folder.reg"
             continue
         }
         {$_ -in "HideMusic", "DisableMusic"} {
-            RegImport "> Hiding the music folder from the Windows explorer navigation pane..." "Hide_Music_folder.reg"
+            RegImport "> Hiding the music folder from the File Explorer navigation pane..." "Hide_Music_folder.reg"
             continue
         }
         {$_ -in "HideIncludeInLibrary", "DisableIncludeInLibrary"} {

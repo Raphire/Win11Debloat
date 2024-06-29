@@ -10,22 +10,24 @@ through all the settings yourself, or removing apps one by one!
  All Features
 -------------------------------------------------------------------------------------------
 App Removal
-- Remove a wide variety of bloatware apps
+- Remove a wide variety of bloatware apps.
 - Remove all pinned apps from start for the current user, or for all new & existing users. (Windows 11 only)
 
-Telemetry & Suggested Content
-- Disable telemetry, diagnostic data, app-launch tracking & targeted ads.
+Telemetry, Tracking & Suggested Content
+- Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads.
 - Disable tips, tricks, suggestions & ads across Windows.
 
 Bing, Copilot & More
-- Disable & remove bing search & cortana in Windows search.
+- Disable & remove bing web search & cortana from Windows search.
 - Disable Windows Copilot. (Windows 11 only)
 - Disable Windows Recall snapshots. (Windows 11 only)
 
-Windows Explorer
+File Explorer
 - Show hidden files, folders & drives.
 - Show file extensions for known file types.
-- Hide duplicate removable drive entries from the Windows explorer navigation pane.
+- Hide the gallery section from the File Explorer sidepanel. (Windows 11 only)
+- Hide the 3D objects, music or onedrive folder from the File Explorer sidepanel. (Windows 10 only)
+- Hide duplicate removable drive entries from the File Explorer sidepanel.
 
 Taskbar
 - Align taskbar icons to the left. (Windows 11 only)
@@ -36,8 +38,10 @@ Taskbar
 
 Context menu
 - Restore the old Windows 10 style context menu. (Windows 11 only)
-- Hide the 3D objects, music or onedrive folder in the Windows explorer sidepanel. (Windows 10 only)
-- Hide the 'Include in library', 'Give access to' & 'Share' options in the context menu. (Windows 10 only)
+- Hide the 'Include in library', 'Give access to' & 'Share' options from the context menu. (Windows 10 only)
+
+Other
+- Disable Xbox game/screen recording (Also stops gaming overlay popups)
 
 Advanced Features
 - Sysprep mode to apply changes to the Windows Default user profile.
@@ -47,13 +51,13 @@ Advanced Features
 -------------------------------------------------------------------------------------------
 The default mode applies the changes that are recommended for most users, this includes:
 - Remove the default selection of apps, the list can be found in the 'Appslist.txt' file.
-- Disable telemetry, diagnostic data, app-launch tracking & targeted ads.
-- Disable & remove bing search & cortana in Windows search.
+- Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads.
+- Disable & remove bing web search & cortana from Windows search.
 - Disable tips, tricks, suggestions & ads across Windows.
 - Disable Windows Copilot. (Windows 11 only)
 - Show file extensions for known file types.
 - Disable the widget service & hide the icon from the taskbar. 
 - Hide the Chat (meet now) icon from the taskbar.
-- Hide the 3D objects folder under 'This pc' in windows explorer. (Windows 10 only)
-- Hide the 'Include in library', 'Give access to' and 'Share' options in the context menu. (Windows 10 only)
+- Hide the 3D objects folder under 'This pc' from File Explorer. (Windows 10 only)
+- Hide the 'Include in library', 'Give access to' and 'Share' options from the context menu. (Windows 10 only)
 

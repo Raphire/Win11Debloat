@@ -306,6 +306,7 @@ The quick and advanced method support parameters to tailor the behaviour of the 
 | -RemoveW11Outlook                  |    Remove the new Outlook for Windows app. |
 | -RemoveDevApps                     |    Remove developer-related apps such as Remote Desktop, DevHome and Power Automate. |
 | -RemoveGamingApps                  |    Remove the Xbox App and Xbox Gamebar. |
+| -ForceRemoveEdge                   |    Forcefully remove Microsoft Edge. NOT RECOMMENDED! |
 | -DisableDVR                        |    Disable Xbox game/screen recording feature & stop gaming overlay popups. |
 | -ClearStart                        |    Remove all pinned apps from start for the current user (Windows 11 update 22H2 or later only) |
 | -ClearStartAllUsers                |    Remove all pinned apps from start for all existing and new users. (Windows 11 update 22H2 or later only) |

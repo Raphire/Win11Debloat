@@ -352,6 +352,7 @@ function RemoveApps {
                     Write-Output ""
 
                     if ($( Read-Host -Prompt "Would you like to forcefully uninstall Edge? NOT RECOMMENDED! (y/n)" ) -eq 'y') {
+                        Write-Output ""
                         ForceRemoveEdge
                     }
                 }
@@ -380,7 +381,6 @@ function RemoveApps {
 
 function ForceRemoveEdge {
     # Based on work from loadstring1 & ave9858
-    Write-Output ""
     Write-Output "> Forcefully uninstalling Microsoft Edge..."
 
     $regView = [Microsoft.Win32.RegistryView]::Registry32

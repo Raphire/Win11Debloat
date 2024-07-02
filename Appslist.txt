@@ -52,7 +52,6 @@ COOKINGFEVER
 CyberLinkMediaSuiteEssentials
 DisneyMagicKingdoms
 Disney
-Dolby
 DrawboardPDF
 Duolingo-LearnLanguagesforFree
 EclipseManager

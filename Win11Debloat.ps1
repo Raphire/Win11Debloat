@@ -863,7 +863,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
                 }
                 '2' {
                     AddParameter 'RemoveApps' 'Remove default selection of bloatware apps'
-                    AddParameter 'RemoveCommApps' 'Remove the Mail, Calender, and People apps'
+                    AddParameter 'RemoveCommApps' 'Remove the Mail, Calendar, and People apps'
                     AddParameter 'RemoveW11Outlook' 'Remove the new Outlook for Windows app'
                     AddParameter 'RemoveDevApps' 'Remove developer-related apps'
                     AddParameter 'RemoveGamingApps' 'Remove the Xbox App and Xbox Gamebar'

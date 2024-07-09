@@ -4,12 +4,12 @@
 Win11Debloat will make the following changes:
 - Remove the default selection of apps, the list can be found in the 'Appslist.txt' file.
 - Disable telemetry, diagnostic data, app-launch tracking & targeted ads.
-- Disable & remove bing search & cortana in Windows search.
+- Disable & remove Bing search & Cortana in Windows search.
 - Disable tips & tricks on the lockscreen. (This may change your lockscreen wallpaper)
 - Disable tips, tricks, suggestions and ads in start, settings, notifications and more.
 - Disable Windows Copilot. (Windows 11 build 22621+)
 - Show file extensions for known file types.
 - Disable the widget service & hide the icon from the taskbar. 
 - Hide the Chat (meet now) icon from the taskbar.
-- Hide the 3D objects folder in windows explorer. (Windows 10 only)
+- Hide the 3D objects folder in Windows Explorer. (Windows 10 only)
 

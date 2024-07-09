@@ -1,10 +1,10 @@
 -------------------------------------------------------------------------------------------
  Win11Debloat Script - Information
 -------------------------------------------------------------------------------------------
-Win11Debloat is a simple and lightweight powershell script that removes pre-installed
-windows bloatware apps, disables telemetry and declutters the experience by disabling
-or removing intrusive interface elements, ads and more. No need to painstakingly go
-through all the settings yourself, or removing apps one by one!
+Win11Debloat is a simple, easy to use and lightweight PowerShell script that can remove
+pre-installed Windows bloatware apps, disable telemetry and declutter the experience by
+disabling or removing intrusive interface elements, ads and more. No need to go through
+all the settings yourself, or remove apps one by one.
 
 -------------------------------------------------------------------------------------------
  All Features
@@ -18,7 +18,7 @@ Telemetry, Tracking & Suggested Content
 - Disable tips, tricks, suggestions & ads across Windows.
 
 Bing, Copilot & More
-- Disable & remove bing web search & cortana from Windows search.
+- Disable & remove Bing web search & Cortana from Windows search.
 - Disable Windows Copilot. (Windows 11 only)
 - Disable Windows Recall snapshots. (Windows 11 only)
 
@@ -52,7 +52,7 @@ Advanced Features
 The default mode applies the changes that are recommended for most users, this includes:
 - Remove the default selection of apps, the list can be found in the 'Appslist.txt' file.
 - Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads.
-- Disable & remove bing web search & cortana from Windows search.
+- Disable & remove Bing web search & Cortana from Windows search.
 - Disable tips, tricks, suggestions & ads across Windows.
 - Disable Windows Copilot. (Windows 11 only)
 - Show file extensions for known file types.

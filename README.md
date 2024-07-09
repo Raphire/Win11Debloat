@@ -1,6 +1,6 @@
 # Win11Debloat
 
-Win11Debloat is a simple, easy to use and lightweight powershell script that can remove pre-installed Windows bloatware apps, disable telemetry and declutter the experience by disabling or removing intrusive interface elements, ads and more. No need to painstakingly go through all the settings yourself, or remove apps one by one. Win11Debloat makes the process quick and easy!
+Win11Debloat is a simple, easy to use and lightweight PowerShell script that can remove pre-installed Windows bloatware apps, disable telemetry and declutter the experience by disabling or removing intrusive interface elements, ads and more. No need to painstakingly go through all the settings yourself, or remove apps one by one. Win11Debloat makes the process quick and easy!
 
 You can pick and choose exactly which modifications you want the script to make, or use the default settings. If you are unhappy with any of the changes you can easily revert them by using the registry files that are included in the 'Regfiles' folder. All of the apps that are removed can be reinstalled from the Microsoft store.
 
@@ -27,7 +27,7 @@ You can pick and choose exactly which modifications you want the script to make,
 
 #### Bing Web Search, Copilot & More
 
-- Disable & remove bing web search & cortana from Windows search.
+- Disable & remove Bing web search & Cortana from Windows search.
 - Disable Windows Copilot. (Windows 11 only)
 - Disable Windows Recall snapshots. (Windows 11 only)
 
@@ -72,7 +72,7 @@ The default mode applies the changes that are recommended for most users, expand
     - Remove the default selection of bloatware apps. (See below for full list)
     - Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads.
     - Disable tips, tricks, suggestions and ads in start, settings, notifications, File Explorer, and on the lockscreen.
-    - Disable & remove bing web search & cortana from Windows search.
+    - Disable & remove Bing web search & Cortana from Windows search.
     - Disable Windows Copilot. (Windows 11 only)
     - Show file extensions for known file types.
     - Hide the 3D objects folder under 'This pc' from File Explorer. (Windows 10 only)
@@ -232,23 +232,23 @@ The default mode applies the changes that are recommended for most users, expand
 
 ### Quick method
 
-Download & run the script automatically via powershell.
+Download & run the script automatically via PowerShell.
 
-1. Open powershell as an administrator.
-2. Copy and paste the code below into powershell, press enter to run the script:
+1. Open PowerShell as an administrator.
+2. Copy and paste the code below into PowerShell, press enter to run the script:
 
-```powershell
-& ([scriptblock]::Create((irm "https://raw.githubusercontent.com/Raphire/Win11Debloat/master/Get.ps1")))
+```PowerShell
+& ([scriptblock]::Create((irm "https://win11debloat.raphi.re/")))
 ```
 
 3. Wait for the script to automatically download Win11Debloat.
-4. A new powershell window will open showing the Win11Debloat menu. Select either the default or custom mode to continue.
+4. A new PowerShell window will open showing the Win11Debloat menu. Select either the default or custom mode to continue.
 5. Carefully read through and follow the on-screen instructions.
 
 This method supports [parameters](#parameters). To use parameters simply run the script as explained above, but add the parameters at the end with spaces in between. Example:
 
-```powershell
-& ([scriptblock]::Create((irm "https://raw.githubusercontent.com/Raphire/Win11Debloat/master/Get.ps1"))) -RunDefaults -Silent
+```PowerShell
+& ([scriptblock]::Create((irm "https://win11debloat.raphi.re/"))) -RunDefaults -Silent
 ```
 
 ### Traditional method
@@ -259,25 +259,25 @@ Manually download & run the script.
 2. Navigate to the Win11Debloat folder
 3. Double click the `Run.bat` file to start the script. NOTE: If the console window immediately closes and nothing happens, try the advanced method below.
 4. Accept the Windows UAC prompt to run the script as administrator, this is required for the script to function.
-5. A new powershell window will now open showing the Win11Debloat menu. Select either the default or custom mode to continue.
+5. A new PowerShell window will now open showing the Win11Debloat menu. Select either the default or custom mode to continue.
 6. Carefully read through and follow the on-screen instructions.
 
 ### Advanced method
 
-Manually download the script & run the script via powershell. Only recommended for advanced users.
+Manually download the script & run the script via PowerShell. Only recommended for advanced users.
 
 1. [Download the latest version of the script](https://github.com/Raphire/Win11Debloat/archive/master.zip), and extract the .ZIP file to your desired location.
-2. Open powershell as an administrator.
-3. Enable powershell execution by entering the following command:
+2. Open PowerShell as an administrator.
+3. Enable PowerShell execution by entering the following command:
 
-```powershell
+```PowerShell
 Set-ExecutionPolicy Unrestricted -Scope Process
 ```
 
-4. In powershell, navigate to the directory where the files were extracted. Example: `cd c:\Win11Debloat`
+4. In PowerShell, navigate to the directory where the files were extracted. Example: `cd c:\Win11Debloat`
 5. Now run the script by entering the following command:
 
-```powershell
+```PowerShell
 .\Win11Debloat.ps1
 ```
 
@@ -286,7 +286,7 @@ Set-ExecutionPolicy Unrestricted -Scope Process
 
 This method supports [parameters](#parameters). To use parameters simply run the script as explained above, but add the parameters at the end with spaces in between. Example:
 
-```powershell
+```PowerShell
 .\Win11Debloat.ps1 -RemoveApps -DisableBing -Silent
 ```
 
@@ -306,12 +306,12 @@ The quick and advanced method support parameters to tailor the behaviour of the 
 | -RemoveW11Outlook                  |    Remove the new Outlook for Windows app. |
 | -RemoveDevApps                     |    Remove developer-related apps such as Remote Desktop, DevHome and Power Automate. |
 | -RemoveGamingApps                  |    Remove the Xbox App and Xbox Gamebar. |
-| -ForceRemoveEdge                   |    Forcefully remove Microsoft Edge. NOT RECOMMENDED! |
+| -ForceRemoveEdge                   |    Forcefully remove Microsoft Edge, this option leaves Core, WebView and Update components installed for compatibility. NOT RECOMMENDED! |
 | -DisableDVR                        |    Disable Xbox game/screen recording feature & stop gaming overlay popups. |
 | -ClearStart                        |    Remove all pinned apps from start for the current user (Windows 11 update 22H2 or later only) |
 | -ClearStartAllUsers                |    Remove all pinned apps from start for all existing and new users. (Windows 11 update 22H2 or later only) |
 | -DisableTelemetry                  |    Disable telemetry, diagnostic data & targeted ads. |
-| -DisableBing                       |    Disable & remove bing web search, bing AI & cortana in Windows search. |
+| -DisableBing                       |    Disable & remove Bing web search, Bing AI & Cortana in Windows search. |
 | -DisableSuggestions                |    Disable tips, tricks, suggestions and ads in start, settings, notifications and File Explorer. |
 | <pre>-DisableLockscreenTips</pre>  |    Disable tips & tricks on the lockscreen. |
 | -RevertContextMenu                 |    Restore the old Windows 10 style context menu. (Windows 11 only) |

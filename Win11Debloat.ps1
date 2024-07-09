@@ -771,7 +771,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
             }
 
             Write-Output ""
-            Write-Output "(0) Show information about the script"
+            Write-Output "(0) Show more information"
             Write-Output ""
             Write-Output ""
 

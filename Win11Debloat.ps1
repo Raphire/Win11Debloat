@@ -632,6 +632,9 @@ function PrintHeader {
     if($global:Params.ContainsKey("Sysprep")) {
         $fullTitle = "$fullTitle (Sysprep mode)"
     }
+    else {
+        $fullTitle = "$fullTitle (User: $Env:UserName)"
+    }
 
     Clear-Host
     Write-Output "-------------------------------------------------------------------------------------------"

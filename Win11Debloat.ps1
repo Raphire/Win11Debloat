@@ -297,35 +297,29 @@ function ShowAppSelectionForm {
 }
 
 
-# Reads list of apps from file and removes them for all user accounts and from the OS image.
-function RemoveAppsFromFile {
+# Returns list of apps from the specified file, it trims the app names and removes any comments
+function ReadAppslistFromFile {
     param (
         $appsFilePath
     )
 
     $appsList = @()
 
-    Write-Output "> Removing default selection of apps..."
-
     # Get list of apps from file at the path provided, and remove them one by one
     Foreach ($app in (Get-Content -Path $appsFilePath | Where-Object { $_ -notmatch '^#.*' -and $_ -notmatch '^\s*$' } )) { 
-        # Remove any spaces before and after the Appname
-        $app = $app.Trim()
-
         # Remove any comments from the Appname
         if (-not ($app.IndexOf('#') -eq -1)) {
             $app = $app.Substring(0, $app.IndexOf('#'))
         }
-        # Remove any remaining spaces from the Appname
-        if (-not ($app.IndexOf(' ') -eq -1)) {
-            $app = $app.Substring(0, $app.IndexOf(' '))
-        }
+
+        # Remove any spaces before and after the Appname
+        $app = $app.Trim()
         
         $appString = $app.Trim('*')
         $appsList += $appString
     }
 
-    RemoveApps $appsList
+    return $appsList
 }
 
 
@@ -341,14 +335,14 @@ function RemoveApps {
         if (($app -eq "Microsoft.OneDrive") -or ($app -eq "Microsoft.Edge")) {
             # Use winget to remove OneDrive and Edge
             if ($global:wingetInstalled -eq $false) {
-                Write-Host "WinGet is either not installed or is outdated, so $app could not be removed" -ForegroundColor Red
+                Write-Host "Error: WinGet is either not installed or is outdated, $app could not be removed" -ForegroundColor Red
             }
             else {
                 # Uninstall app via winget
                 Strip-Progress -ScriptBlock { winget uninstall --accept-source-agreements --disable-interactivity --id $app } | Tee-Object -Variable wingetOutput 
 
                 If (($app -eq "Microsoft.Edge") -and (Select-String -InputObject $wingetOutput -Pattern "93")) {
-                    Write-Host "Error: Unable to uninstall Microsoft Edge via Winget" -ForegroundColor Red
+                    Write-Host "Unable to uninstall Microsoft Edge via Winget" -ForegroundColor Red
                     Write-Output ""
 
                     if ($( Read-Host -Prompt "Would you like to forcefully uninstall Edge? NOT RECOMMENDED! (y/n)" ) -eq 'y') {
@@ -376,9 +370,12 @@ function RemoveApps {
             Get-AppxProvisionedPackage -Online | Where-Object { $_.PackageName -like $app } | ForEach-Object { Remove-ProvisionedAppxPackage -Online -AllUsers -PackageName $_.PackageName }
         }
     }
+            
+    Write-Output ""
 }
 
 
+# Forcefully removes Microsoft Edge using it's uninstaller
 function ForceRemoveEdge {
     # Based on work from loadstring1 & ave9858
     Write-Output "> Forcefully uninstalling Microsoft Edge..."
@@ -1134,7 +1131,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
                 }
             }
             else {
-                Write-Host "Selection was cancelled, no apps have been removed!" -ForegroundColor Red
+                Write-Host "Selection was cancelled, no apps have been removed" -ForegroundColor Red
                 Write-Output ""
             }
         }
@@ -1147,39 +1144,30 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
 
                 # Get & print default settings info from file
                 Foreach ($line in (Get-Content -Path "$PSScriptRoot/SavedSettings" )) { 
-                    # Remove any spaces before and after the Appname
+                    # Remove any spaces before and after the line
                     $line = $line.Trim()
                 
-                    # Check if line has # char, show description, add parameter
+                    # Check if the line contains a comment
                     if (-not ($line.IndexOf('#') -eq -1)) {
-                        Write-Output $line.Substring(($line.IndexOf('#') + 1), ($line.Length - $line.IndexOf('#') - 1))
-                        $paramName = $line.Substring(0, $line.IndexOf('#'))
+                        $parameterName = $line.Substring(0, $line.IndexOf('#'))
 
-                        if ($paramName -eq "RemoveAppsCustom") {
-                            # If paramName is RemoveAppsCustom, check if CustomAppsFile exists
-                            if (Test-Path "$PSScriptRoot/CustomAppsList") {
-                                # Apps file exists, print list of apps
-                                $appsList = @()
-
-                                # Get apps list from file
-                                Foreach ($app in (Get-Content -Path "$PSScriptRoot/CustomAppsList" )) { 
-                                    # Remove any spaces before and after the app name
-                                    $app = $app.Trim()
-
-                                    $appsList += $app
-                                }
-
-                                Write-Host $appsList -ForegroundColor DarkGray
-                            }
-                            else {
-                                # Apps file does not exist, print error and continue to next item
-                                Write-Host "Error: Could not load custom apps list from file, no apps will be removed!" -ForegroundColor Red
+                        # Print parameter description and add parameter to Params list
+                        if ($parameterName -eq "RemoveAppsCustom") {
+                            if (-not (Test-Path "$PSScriptRoot/CustomAppsList")) {
+                                # Apps file does not exist, skip
                                 continue
                             }
+                            
+                            $appsList = ReadAppslistFromFile "$PSScriptRoot/CustomAppsList"
+                            Write-Output "- Remove $($appsList.Count) apps:"
+                            Write-Host $appsList -ForegroundColor DarkGray
+                        }
+                        else {
+                            Write-Output $line.Substring(($line.IndexOf('#') + 1), ($line.Length - $line.IndexOf('#') - 1))
                         }
 
-                        if (-not $global:Params.ContainsKey($ParameterName)){
-                            $global:Params.Add($paramName, $true)
+                        if (-not $global:Params.ContainsKey($parameterName)){
+                            $global:Params.Add($parameterName, $true)
                         }
                     }
                 }
@@ -1203,36 +1191,28 @@ else {
 #  or added by the user, and the script can exit without making any changes.
 if ($SPParamCount -eq $global:Params.Keys.Count) {
     Write-Output "The script completed without making any changes."
-    
+
     AwaitKeyToExit
 }
 else {
     # Execute all selected/provided parameters
     switch ($global:Params.Keys) {
         'RemoveApps' {
-            RemoveAppsFromFile "$PSScriptRoot/Appslist.txt" 
+            Write-Output "> Removing default selection of apps..."
+
+            $appsList = ReadAppslistFromFile "$PSScriptRoot/Appslist.txt" 
+            RemoveApps $appsList
             continue
         }
         'RemoveAppsCustom' {
-            if (Test-Path "$PSScriptRoot/CustomAppsList") {
-                $appsList = @()
-
-                # Get apps list from file
-                Foreach ($app in (Get-Content -Path "$PSScriptRoot/CustomAppsList" )) { 
-                    # Remove any spaces before and after the app name
-                    $app = $app.Trim()
-
-                    $appsList += $app
-                }
-
-                Write-Output "> Removing $($appsList.Count) apps..."
-                RemoveApps $appsList
+            if (-not (Test-Path "$PSScriptRoot/CustomAppsList")) {
+                Write-Host "> Error: Could not load custom apps list from file, no apps were removed" -ForegroundColor Red
+                continue
             }
-            else {
-                Write-Host "> Could not load custom apps list from file, no apps were removed!" -ForegroundColor Red
-            }
-
-            Write-Output ""
+            
+            $appsList = ReadAppslistFromFile "$PSScriptRoot/CustomAppsList"
+            Write-Output "> Removing $($appsList.Count) apps..."
+            RemoveApps $appsList
             continue
         }
         'RemoveCommApps' {
@@ -1240,8 +1220,6 @@ else {
             
             $appsList = 'Microsoft.windowscommunicationsapps', 'Microsoft.People'
             RemoveApps $appsList
-
-            Write-Output ""
             continue
         }
         'RemoveW11Outlook' {
@@ -1249,8 +1227,6 @@ else {
             
             $appsList = 'Microsoft.OutlookForWindows'
             RemoveApps $appsList
-
-            Write-Output ""
             continue
         }
         'RemoveDevApps' {
@@ -1258,9 +1234,6 @@ else {
 
             $appsList = 'Microsoft.PowerAutomateDesktop', 'Microsoft.RemoteDesktop', 'Windows.DevHome'
             RemoveApps $appsList
-
-            Write-Output ""
-
             continue
         }
         'RemoveGamingApps' {
@@ -1268,9 +1241,6 @@ else {
 
             $appsList = 'Microsoft.GamingApp', 'Microsoft.XboxGameOverlay', 'Microsoft.XboxGamingOverlay'
             RemoveApps $appsList
-
-            Write-Output ""
-
             continue
         }
         "ForceRemoveEdge" {
@@ -1299,9 +1269,6 @@ else {
             # Also remove the app package for bing search
             $appsList = 'Microsoft.BingSearch'
             RemoveApps $appsList
-
-            Write-Output ""
-
             continue
         }
         {$_ -in "DisableLockscrTips", "DisableLockscreenTips"} {

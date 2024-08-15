@@ -501,93 +501,76 @@ function RestartExplorer {
 }
 
 
-# Clear all pinned apps from the start menu. 
+# Replace the startmenu for all users, when using the default startmenuTemplate this clears all pinned apps
 # Credit: https://lazyadmin.nl/win-11/customize-windows-11-start-menu-layout/
-function ClearStartMenu {
+function ReplaceStartMenuForAllUsers {
     param (
-        $message,
-        $applyToAllUsers = $True
+        $startMenuTemplate = "$PSScriptRoot/Start/start2.bin"
     )
 
-    Write-Output $message
-
-    # Path to start menu template
-    $startmenuTemplate = "$PSScriptRoot/Start/start2.bin"
+    Write-Output "> Removing all pinned apps from the start menu for all users..."
 
     # Check if template bin file exists, return early if it doesn't
-    if (-not (Test-Path $startmenuTemplate)) {
+    if (-not (Test-Path $startMenuTemplate)) {
         Write-Host "Error: Unable to clear start menu, start2.bin file missing from script folder" -ForegroundColor Red
-        Write-Output ""
         return
     }
 
-    if ($applyToAllUsers) {
-        # Remove startmenu pinned apps for all users
-        # Get all user profile folders
-        $usersStartMenu = get-childitem -path "C:\Users\*\AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState"
+    # Get path to start menu file for all users
+    $usersStartMenuPaths = get-childitem -path "C:\Users\*\AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState"
 
-        # Copy Start menu to all users folders
-        ForEach ($startmenu in $usersStartMenu) {
-            $startmenuBinFile = $startmenu.Fullname + "\start2.bin"
-            $backupBinFile = $startmenuBinFile + ".bak"
-
-            # Check if bin file exists
-            if (Test-Path $startmenuBinFile) {
-                # Backup current startmenu file
-                Move-Item -Path $startmenuBinFile -Destination $backupBinFile -Force
-
-                # Copy template file
-                Copy-Item -Path $startmenuTemplate -Destination $startmenu -Force
-
-                Write-Output "Replaced start menu for user $($startmenu.Fullname.Split("\")[2])"
-            }
-            else {
-                # Bin file doesn't exist, indicating the user is not running the correct version of Windows. Exit function
-                Write-Host "Error: Unable to clear start menu, start2.bin file could not found for user" $startmenu.Fullname.Split("\")[2]  -ForegroundColor Red
-                Write-Output ""
-                return
-            }
-        }
-
-        # Also apply start menu template to the default profile
-
-        # Path to default profile
-        $defaultProfile = "C:\Users\default\AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState"
-
-        # Create folder if it doesn't exist
-        if (-not(Test-Path $defaultProfile)) {
-            new-item $defaultProfile -ItemType Directory -Force | Out-Null
-            Write-Output "Created LocalState folder for default user"
-        }
-
-        # Copy template to default profile
-        Copy-Item -Path $startmenuTemplate -Destination $defaultProfile -Force
-        Write-Output "Copied start menu template to default user folder"
-        Write-Output ""
+    # Go through all users and replace the start menu file
+    ForEach ($startMenuPath in $usersStartMenuPaths) {
+        ReplaceStartMenu "$($startMenuPath.Fullname)\start2.bin" $startMenuTemplate
     }
-    else {
-        # Only remove startmenu pinned apps for current logged in user
-        $startmenuBinFile = "C:\Users\$([Environment]::UserName)\AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState\start2.bin"
-        $backupBinFile = $startmenuBinFile + ".bak"
 
-        # Check if bin file exists
-        if (Test-Path $startmenuBinFile) {
-            # Backup current startmenu file
-            Move-Item -Path $startmenuBinFile -Destination $backupBinFile -Force
+    # Also replace the start menu file for the default user profile
+    $defaultProfile = "C:\Users\default\AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState"
 
-            # Copy template file
-            Copy-Item -Path $startmenuTemplate -Destination $startmenuBinFile -Force
-
-            Write-Output "Replaced start menu for user $([Environment]::UserName)"
-            Write-Output ""
-        }
-        else {
-            # Bin file doesn't exist, indicating the user is not running the correct version of Windows. Exit function
-            Write-Host "Error: Unable to clear start menu, start2.bin file could not found for user $([Environment]::UserName)" -ForegroundColor Red
-            Write-Output ""
-            return
-        }
+    # Create folder if it doesn't exist
+    if (-not(Test-Path $defaultProfile)) {
+        new-item $defaultProfile -ItemType Directory -Force | Out-Null
+        Write-Output "Created LocalState folder for default user"
     }
+
+    # Copy template to default profile
+    Copy-Item -Path $startMenuTemplate -Destination $defaultProfile -Force
+    Write-Output "Replaced start menu for the default user profile"
+    Write-Output ""
+}
+
+
+# Replace the startmenu for all users, when using the default startmenuTemplate this clears all pinned apps
+# Credit: https://lazyadmin.nl/win-11/customize-windows-11-start-menu-layout/
+function ReplaceStartMenu {
+    param (
+        $startMenuBinFile = "C:\Users\$([Environment]::UserName)\AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState\start2.bin",
+        $startMenuTemplate = "$PSScriptRoot/Start/start2.bin"
+    )
+
+    $userName = $startMenuBinFile.Split("\")[2]
+
+    # Check if template bin file exists, return early if it doesn't
+    if (-not (Test-Path $startMenuTemplate)) {
+        Write-Host "Error: Unable to clear start menu, start2.bin file missing from script folder" -ForegroundColor Red
+        return
+    }
+
+    # Check if bin file exists, return early if it doesn't
+    if (-not (Test-Path $startMenuBinFile)) {
+        Write-Host "Error: Unable to clear start menu for user $userName, start2.bin file could not found" -ForegroundColor Red
+        return
+    }
+
+    $backupBinFile = $startMenuBinFile + ".bak"
+
+    # Backup current start menu file
+    Move-Item -Path $startMenuBinFile -Destination $backupBinFile -Force
+
+    # Copy template file
+    Copy-Item -Path $startMenuTemplate -Destination $startMenuBinFile -Force
+
+    Write-Output "Replaced start menu for user $userName"
 }
 
 
@@ -897,7 +880,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
                         Write-Host " (n) Don't remove any pinned apps from the start menu" -ForegroundColor Yellow
                         Write-Host " (1) Remove all pinned apps from the start menu for this user only ($([Environment]::UserName))" -ForegroundColor Yellow
                         Write-Host " (2) Remove all pinned apps from the start menu for all existing and new users"  -ForegroundColor Yellow
-                        $ClearStartInput = Read-Host "Remove all pinned apps from the start menu? This cannot be reverted (n/1/2)" 
+                        $ClearStartInput = Read-Host "Remove all pinned apps from the start menu? (n/1/2)" 
                     }
                     while ($ClearStartInput -ne 'n' -and $ClearStartInput -ne '0' -and $ClearStartInput -ne '1' -and $ClearStartInput -ne '2') 
     
@@ -1198,9 +1181,8 @@ else {
     # Execute all selected/provided parameters
     switch ($global:Params.Keys) {
         'RemoveApps' {
-            Write-Output "> Removing default selection of apps..."
-
             $appsList = ReadAppslistFromFile "$PSScriptRoot/Appslist.txt" 
+            Write-Output "> Removing default selection of $($appsList.Count) apps..."
             RemoveApps $appsList
             continue
         }
@@ -1223,23 +1205,20 @@ else {
             continue
         }
         'RemoveW11Outlook' {
-            Write-Output "> Removing new Outlook for Windows app..."
-            
             $appsList = 'Microsoft.OutlookForWindows'
+            Write-Output "> Removing new Outlook for Windows app..."
             RemoveApps $appsList
             continue
         }
         'RemoveDevApps' {
-            Write-Output "> Removing developer-related related apps..."
-
             $appsList = 'Microsoft.PowerAutomateDesktop', 'Microsoft.RemoteDesktop', 'Windows.DevHome'
+            Write-Output "> Removing developer-related related apps..."
             RemoveApps $appsList
             continue
         }
         'RemoveGamingApps' {
-            Write-Output "> Removing gaming related apps..."
-
             $appsList = 'Microsoft.GamingApp', 'Microsoft.XboxGameOverlay', 'Microsoft.XboxGamingOverlay'
+            Write-Output "> Removing gaming related apps..."
             RemoveApps $appsList
             continue
         }
@@ -1252,11 +1231,13 @@ else {
             continue
         }
         'ClearStart' {
-            ClearStartMenu "> Removing all pinned apps from the start menu..." $False
+            Write-Output "> Removing all pinned apps from the start menu for user $([Environment]::UserName)..."
+            ReplaceStartMenu
+            Write-Output ""
             continue
         }
         'ClearStartAllUsers' {
-            ClearStartMenu "> Removing all pinned apps from the start menu for all users..."
+            ReplaceStartMenuForAllUsers
             continue
         }
         'DisableTelemetry' {

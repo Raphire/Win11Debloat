@@ -100,23 +100,23 @@ function ShowAppSelectionForm {
     $selectionBox_MouseDown=
     {
         if ($_.Button -eq [System.Windows.Forms.MouseButtons]::Left) {
-            if([System.Windows.Forms.Control]::ModifierKeys -eq [System.Windows.Forms.Keys]::Shift) {
-                if($global:selectionBoxIndex -ne -1) {
+            if ([System.Windows.Forms.Control]::ModifierKeys -eq [System.Windows.Forms.Keys]::Shift) {
+                if ($global:selectionBoxIndex -ne -1) {
                     $topIndex = $global:selectionBoxIndex
 
                     if ($selectionBox.SelectedIndex -gt $topIndex) {
-                        for(($i = ($topIndex)); $i -le $selectionBox.SelectedIndex; $i++){
+                        for (($i = ($topIndex)); $i -le $selectionBox.SelectedIndex; $i++){
                             $selectionBox.SetItemChecked($i, $selectionBox.GetItemChecked($topIndex))
                         }
                     }
                     elseif ($topIndex -gt $selectionBox.SelectedIndex) {
-                        for(($i = ($selectionBox.SelectedIndex)); $i -le $topIndex; $i++){
+                        for (($i = ($selectionBox.SelectedIndex)); $i -le $topIndex; $i++){
                             $selectionBox.SetItemChecked($i, $selectionBox.GetItemChecked($topIndex))
                         }
                     }
                 }
             }
-            elseif($global:selectionBoxIndex -ne $selectionBox.SelectedIndex) {
+            elseif ($global:selectionBoxIndex -ne $selectionBox.SelectedIndex) {
                 $selectionBox.SetItemChecked($selectionBox.SelectedIndex, -not $selectionBox.GetItemChecked($selectionBox.SelectedIndex))
             }
         }
@@ -124,7 +124,7 @@ function ShowAppSelectionForm {
 
     $check_All=
     {
-        for(($i = 0); $i -lt $selectionBox.Items.Count; $i++){
+        for (($i = 0); $i -lt $selectionBox.Items.Count; $i++){
             $selectionBox.SetItemChecked($i, $checkUncheckCheckBox.Checked)
         }
     }
@@ -391,7 +391,7 @@ function ForceRemoveEdge {
 
     # Remove edge
     $uninstallRegKey = $hklm.OpenSubKey('SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft Edge')
-    if($uninstallRegKey -ne $null) {
+    if ($null -ne $uninstallRegKey) {
         Write-Output "Running uninstaller..."
         $uninstallString = $uninstallRegKey.GetValue('UninstallString') + ' --force-uninstall'
         Start-Process cmd.exe "/c $uninstallString" -WindowStyle Hidden -Wait
@@ -513,6 +513,7 @@ function ReplaceStartMenuForAllUsers {
     # Check if template bin file exists, return early if it doesn't
     if (-not (Test-Path $startMenuTemplate)) {
         Write-Host "Error: Unable to clear start menu, start2.bin file missing from script folder" -ForegroundColor Red
+        Write-Output ""
         return
     }
 
@@ -609,7 +610,7 @@ function PrintHeader {
 
     $fullTitle = " Win11Debloat Script - $title"
 
-    if($global:Params.ContainsKey("Sysprep")) {
+    if ($global:Params.ContainsKey("Sysprep")) {
         $fullTitle = "$fullTitle (Sysprep mode)"
     }
     else {
@@ -675,9 +676,6 @@ else {
 # Get current Windows build version to compare against features
 $WinVersion = Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' CurrentBuild
 
-# Hide progress bars for app removal, as they block Win11Debloat's output
-$ProgressPreference = 'SilentlyContinue'
-
 $global:Params = $PSBoundParameters
 $global:FirstSelection = $true
 $SPParams = 'WhatIf', 'Confirm', 'Verbose', 'Silent', 'Sysprep'
@@ -689,6 +687,11 @@ foreach ($Param in $SPParams) {
     if ($global:Params.ContainsKey($Param)) {
         $SPParamCount++
     }
+}
+
+# Hide progress bars for app removal, as they block Win11Debloat's output
+if (-not ($global:Params.ContainsKey("Verbose"))) {
+    $ProgressPreference = 'SilentlyContinue'
 }
 
 if ($global:Params.ContainsKey("Sysprep")) {

@@ -59,7 +59,7 @@ Write-Output "> Downloading Win11Debloat..."
 Invoke-WebRequest http://github.com/raphire/win11debloat/archive/master.zip -OutFile "$env:TEMP/win11debloat-temp.zip"
 
 # Remove old script folder if it exists
-if(Test-Path "$env:TEMP/Win11Debloat") {
+if (Test-Path "$env:TEMP/Win11Debloat") {
     Write-Output ""
     Write-Output "> Cleaning up old Win11Debloat folder..."
     Remove-Item -LiteralPath "$env:TEMP/Win11Debloat" -Force -Recurse
@@ -84,7 +84,7 @@ Write-Output "> Running Win11Debloat..."
 $debloatProcess = Start-Process powershell.exe -PassThru -ArgumentList "-executionpolicy bypass -File $env:TEMP\Win11Debloat\Win11Debloat-master\Win11Debloat.ps1 $arguments" -Verb RunAs
 
 # Wait for the process to finish before continuing
-if($debloatProcess -ne $null) {
+if ($null -ne $debloatProcess) {
     $debloatProcess.WaitForExit()
 }
 

@@ -1196,6 +1196,7 @@ else {
         'RemoveAppsCustom' {
             if (-not (Test-Path "$PSScriptRoot/CustomAppsList")) {
                 Write-Host "> Error: Could not load custom apps list from file, no apps were removed" -ForegroundColor Red
+                Write-Output ""
                 continue
             }
             

@@ -1,6 +1,7 @@
-# The apps below this line WILL be uninstalled. If you wish to KEEP any of the apps below
-#  simply add a # character in front of the specific app in the list below.
-#
+# -------------------------------------------------------------------------------------------------------------- #
+#  The apps below this line WILL be uninstalled by default. Add a # character in front of any app you want to    #
+#   KEEP installed by default.                                                                                   #
+# -------------------------------------------------------------------------------------------------------------- #
 Clipchamp.Clipchamp
 Microsoft.3DBuilder
 Microsoft.549981C3F5F10   #Cortana app
@@ -92,9 +93,10 @@ XING
 
 
 
-# The apps below this line will NOT be uninstalled. If you wish to REMOVE any of the apps below 
-#  simply remove the # character in front of the specific app.
-#
+# ------------------------------------------------------------------------------------------------------------- #
+#  The apps below this line will NOT be uninstalled by default. Remove the # character in front of any app you  #
+#   want to UNINSTALL by default.                                                                               #
+# ------------------------------------------------------------------------------------------------------------- #
 #Microsoft.BingSearch                   # Web Search from Microsoft Bing (Integrates into Windows Search)
 #Microsoft.Edge                         # Edge browser (Can only be uninstalled in European Economic Area)
 #Microsoft.GetHelp                      # Required for some Windows 11 Troubleshooters
@@ -114,9 +116,14 @@ XING
 #Microsoft.YourPhone                    # Phone link
 #Microsoft.ZuneMusic                    # Modern Media Player
 
-# The apps below will NOT be uninstalled unless selected during the custom setup selection or when
-#  launching the script with the specific parameters found in the README.md file. 
-#
+
+
+
+# --------------------------------------------------------------------------------------------------------------- #
+#  The apps below this line will NOT be uninstalled by default, unless selected during custom mode app selection  #
+#   or when launching the script with the specific parameters found in the README.md. Remove the # character in   #
+#   front of any app you want to UNINSTALL by default.                                                            #
+# --------------------------------------------------------------------------------------------------------------- #
 #Microsoft.GamingApp                    # Modern Xbox Gaming App, required for installing some PC games
 #Microsoft.OutlookForWindows            # New mail app: Outlook for Windows
 #Microsoft.People                       # Required for & included with Mail & Calendar

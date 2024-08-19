@@ -165,30 +165,29 @@ function ShowAppSelectionForm {
         }
 
         # Go through appslist and add items one by one to the selectionBox
-        Foreach ($app in (Get-Content -Path $appsFile | Where-Object { $_ -notmatch '^\s*$' } )) { 
+        Foreach ($app in (Get-Content -Path $appsFile | Where-Object { $_ -notmatch '^\s*$' -and $_ -notmatch '^#  .*' -and $_ -notmatch '^# -* #' } )) { 
             $appChecked = $true
 
-            # Remove first # if it exists and set AppChecked to false
+            # Remove first # if it exists and set appChecked to false
             if ($app.StartsWith('#')) {
                 $app = $app.TrimStart("#")
                 $appChecked = $false
             }
+
             # Remove any comments from the Appname
             if (-not ($app.IndexOf('#') -eq -1)) {
                 $app = $app.Substring(0, $app.IndexOf('#'))
             }
-            # Remove any remaining spaces from the Appname
-            if (-not ($app.IndexOf(' ') -eq -1)) {
-                $app = $app.Substring(0, $app.IndexOf(' '))
-            }
-
+            
+            # Remove leading and trailing spaces and `*` characters from Appname
+            $app = $app.Trim()
             $appString = $app.Trim('*')
 
             # Make sure appString is not empty
             if ($appString.length -gt 0) {
                 if ($onlyInstalledCheckBox.Checked) {
                     # onlyInstalledCheckBox is checked, check if app is installed before adding it to selectionBox
-                   if (-not ($listOfApps -like ("*$appString*")) -and -not (Get-AppxPackage -Name $app)) {
+                    if (-not ($listOfApps -like ("*$appString*")) -and -not (Get-AppxPackage -Name $app)) {
                         # App is not installed, continue with next item
                         continue
                     }

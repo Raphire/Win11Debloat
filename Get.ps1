@@ -75,6 +75,14 @@ Expand-Archive "$env:TEMP/win11debloat-temp.zip" "$env:TEMP/Win11Debloat"
 # Remove archive
 Remove-Item "$env:TEMP/win11debloat-temp.zip"
 
+# Copy CustomAppsList to the Win11Debloat folder if it exists
+if (Test-Path "$PSScriptRoot/CustomAppsList") {
+    Write-Output ""
+    Write-Output "> Found CustomAppsList file"
+    Copy-Item "$PSScriptRoot/CustomAppsList" "$env:TEMP/Win11Debloat/CustomAppsList"
+}
+
+
 # Make list of arguments to pass on to the script
 $arguments = $($PSBoundParameters.GetEnumerator() | ForEach-Object {"-$($_.Key)"})
 

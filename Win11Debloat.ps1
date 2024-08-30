@@ -2,6 +2,7 @@
 
 [CmdletBinding(SupportsShouldProcess)]
 param (
+    [switch]$Quiet,
     [switch]$Silent,
     [switch]$Sysprep,
     [switch]$RunAppConfigurator,
@@ -728,8 +729,14 @@ if ($RunAppConfigurator) {
         Write-Host "App configurator was closed without saving." -ForegroundColor Red
     }
     else {
-        Write-Output "Your app selection was saved to $PSScriptRoot\CustomAppsList. " + ` 
-        "If you're using the 'Quick method', be sure to move the file before continuing as the temp folder will be deleted."
+        #  Move the file if running using Quick method which would otherwise delete the folder containing the file
+        if (-not $Quick) {
+            Write-Output "Your app selection was saved to the 'CustomAppsList' file in the root folder of the script."
+        }
+        else {
+            Move-Item "$PSScriptRoot/CustomAppsList" "$env:TEMP/CustomAppsList"
+            Write-Output "Your app selection was saved to '$env:TEMP/CustomAppsList'."
+        }
     }
 
     AwaitKeyToExit

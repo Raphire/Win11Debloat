@@ -129,7 +129,7 @@ XING
 #Microsoft.People                       # Required for & included with Mail & Calendar
 #Microsoft.PowerAutomateDesktop
 #Microsoft.RemoteDesktop
+#Microsoft.Windows.DevHome
 #Microsoft.windowscommunicationsapps    # Mail & Calendar
 #Microsoft.XboxGameOverlay              # Game overlay, required/useful for some games
 #Microsoft.XboxGamingOverlay            # Game overlay, required/useful for some games
-#Windows.DevHome

@@ -33,6 +33,7 @@ param (
     [switch]$ClearStart,
     [switch]$ClearStartAllUsers,
     [switch]$RevertContextMenu,
+    [switch]$HideHome,
     [switch]$HideGallery,
     [switch]$DisableOnedrive, [switch]$HideOnedrive,
     [switch]$Disable3dObjects, [switch]$Hide3dObjects,
@@ -927,8 +928,8 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
             if ($WinVersion -ge 22621){
                 Write-Output ""
 
-                if ($( Read-Host -Prompt "Disable Windows Copilot? This applies to all users (y/n)" ) -eq 'y') {
-                    AddParameter 'DisableCopilot' 'Disable Windows Copilot'
+                if ($( Read-Host -Prompt "Disable and remove Windows Copilot? This applies to all users (y/n)" ) -eq 'y') {
+                    AddParameter 'DisableCopilot' 'Disable and remove Windows Copilot'
                 }
 
                 Write-Output ""
@@ -1029,8 +1030,14 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
                 if ($WinVersion -ge 22000){
                     Write-Output ""
 
-                    if ($( Read-Host -Prompt "   Hide the gallery section from the File Explorer sidepanel? (y/n)" ) -eq 'y') {
-                        AddParameter 'HideGallery' 'Hide the gallery section from the File Explorer sidepanel'
+                    if ($( Read-Host -Prompt "   Hide the Home section from the File Explorer sidepanel? (y/n)" ) -eq 'y') {
+                        AddParameter 'HideHome' 'Hide the Home section from the File Explorer sidepanel'
+                    }
+
+                    Write-Output ""
+
+                    if ($( Read-Host -Prompt "   Hide the Gallery section from the File Explorer sidepanel? (y/n)" ) -eq 'y') {
+                        AddParameter 'HideGallery' 'Hide the Gallery section from the File Explorer sidepanel'
                     }
                 }
 
@@ -1047,8 +1054,8 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
                     if ($( Read-Host -Prompt "Do you want to hide any folders from the File Explorer sidepanel? (y/n)" ) -eq 'y') {
                         Write-Output ""
 
-                        if ($( Read-Host -Prompt "   Hide the onedrive folder from the File Explorer sidepanel? (y/n)" ) -eq 'y') {
-                            AddParameter 'HideOnedrive' 'Hide the onedrive folder in the File Explorer sidepanel'
+                        if ($( Read-Host -Prompt "   Hide the OneDrive folder from the File Explorer sidepanel? (y/n)" ) -eq 'y') {
+                            AddParameter 'HideOnedrive' 'Hide the OneDrive folder in the File Explorer sidepanel'
                         }
 
                         Write-Output ""
@@ -1326,6 +1333,10 @@ else {
             RegImport "> Enabling file extensions for known file types..." "Show_Extensions_For_Known_File_Types.reg"
             continue
         }
+        'HideHome' {
+            RegImport "> Hiding the home section from the File Explorer navigation pane..." "Hide_Home_from_Explorer.reg"
+            continue
+        }
         'HideGallery' {
             RegImport "> Hiding the gallery section from the File Explorer navigation pane..." "Hide_Gallery_from_Explorer.reg"
             continue
@@ -1335,7 +1346,7 @@ else {
             continue
         }
         {$_ -in "HideOnedrive", "DisableOnedrive"} {
-            RegImport "> Hiding the onedrive folder from the File Explorer navigation pane..." "Hide_Onedrive_Folder.reg"
+            RegImport "> Hiding the OneDrive folder from the File Explorer navigation pane..." "Hide_Onedrive_Folder.reg"
             continue
         }
         {$_ -in "Hide3dObjects", "Disable3dObjects"} {

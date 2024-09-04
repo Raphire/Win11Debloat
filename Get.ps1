@@ -31,6 +31,7 @@ param (
     [switch]$ClearStart,
     [switch]$ClearStartAllUsers,
     [switch]$RevertContextMenu,
+    [switch]$HideHome,
     [switch]$HideGallery,
     [switch]$DisableOnedrive, [switch]$HideOnedrive,
     [switch]$Disable3dObjects, [switch]$Hide3dObjects,

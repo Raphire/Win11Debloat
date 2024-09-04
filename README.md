@@ -35,9 +35,9 @@ You can pick and choose exactly which modifications you want the script to make,
 
 - Show hidden files, folders and drives.
 - Show file extensions for known file types.
-- Hide the gallery section from the File Explorer sidepanel. (Windows 11 only)
-- Hide the 3D objects, music or onedrive folder from the File Explorer sidepanel. (Windows 10 only)
-- Hide duplicate removable drive entries from the File Explorer sidepanel, so only the entry under 'This PC' remains.
+- Hide the Home or Gallery section from the File Explorer navigation pane. (Windows 11 only)
+- Hide the 3D objects, music or OneDrive folder from the File Explorer navigation pane. (Windows 10 only)
+- Hide duplicate removable drive entries from the File Explorer navigation pane, so only the entry under 'This PC' remains.
 
 #### Taskbar
 
@@ -317,7 +317,7 @@ The quick and advanced method support parameters to tailor the behaviour of the 
 | -RevertContextMenu                 |    Restore the old Windows 10 style context menu. (Windows 11 only) |
 | -ShowHiddenFolders                 |    Show hidden files, folders and drives. |
 | -ShowKnownFileExt                  |    Show file extensions for known file types. |
-| -HideDupliDrive                    |    Hide duplicate removable drive entries from the File Explorer sidepanel, so only the entry under 'This PC' remains. |
+| -HideDupliDrive                    |    Hide duplicate removable drive entries from the File Explorer navigation pane, so only the entry under 'This PC' remains. |
 | -TaskbarAlignLeft                  |    Align taskbar icons to the left. (Windows 11 only) |
 | -HideSearchTb                      |    Hide search icon from the taskbar. (Windows 11 only) |
 | -ShowSearchIconTb                  |    Show search icon on the taskbar. (Windows 11 only) |
@@ -326,10 +326,11 @@ The quick and advanced method support parameters to tailor the behaviour of the 
 | -HideTaskview                      |    Hide the taskview button from the taskbar. (Windows 11 only) |
 | -HideChat                          |    Hide the chat (meet now) icon from the taskbar. |
 | -DisableWidgets                    |    Disable the widget service & hide the widget (news and interests) icon from the taskbar. |
-| -DisableCopilot                    |    Disable Windows copilot. (Windows 11 only) |
+| -DisableCopilot                    |    Disable and remove Windows Copilot. (Windows 11 only) |
 | -DisableRecall                     |    Disable Windows Recall snapshots. (Windows 11 only) |
-| -HideGallery                       |    Hide the gallery section from the File Explorer sidepanel. (Windows 11 only) |
-| -HideOnedrive                      |    Hide the onedrive folder from the File Explorer sidepanel. (Windows 10 only) |
+| -HideHome                          |    Hide the home section from the File Explorer navigation pane and adds a toggle in the File Explorer folder options. (Windows 11 only) |
+| -HideGallery                       |    Hide the gallery section from the File Explorer navigation pane and adds a toggle in the File Explorer folder options. (Windows 11 only) |
+| -HideOnedrive                      |    Hide the OneDrive folder from the File Explorer navigation pane. (Windows 10 only) |
 | -Hide3dObjects                     |    Hide the 3D objects folder under 'This pc' in File Explorer. (Windows 10 only) |
 | -HideMusic                         |    Hide the music folder under 'This pc' in File Explorer. (Windows 10 only) |
 | -HideIncludeInLibrary              |    Hide the 'Include in library' option in the context menu. (Windows 10 only) |

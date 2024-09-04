@@ -358,7 +358,7 @@ function RemoveApps {
             # Remove installed app for all existing users
             if ($WinVersion -ge 22000){
                 # Windows 11 build 22000 or later
-                Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage -AllUsers
+                Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage -AllUsers -ErrorAction Continue
             }
             else {
                 # Windows 10
@@ -928,7 +928,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
                 Write-Output ""
 
                 if ($( Read-Host -Prompt "Disable Windows Copilot? This applies to all users (y/n)" ) -eq 'y') {
-                    AddParameter 'DisableCopilot' 'Disable Windows copilot'
+                    AddParameter 'DisableCopilot' 'Disable Windows Copilot'
                 }
 
                 Write-Output ""
@@ -1299,7 +1299,11 @@ else {
             continue
         }
         'DisableCopilot' {
-            RegImport "> Disabling Windows copilot..." "Disable_Copilot.reg"
+            RegImport "> Disabling & removing Windows Copilot..." "Disable_Copilot.reg"
+
+            # Also remove the app package for bing search
+            $appsList = 'Microsoft.Copilot'
+            RemoveApps $appsList
             continue
         }
         'DisableRecall' {

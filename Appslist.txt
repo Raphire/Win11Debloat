@@ -98,6 +98,7 @@ XING
 #   want to UNINSTALL by default.                                                                               #
 # ------------------------------------------------------------------------------------------------------------- #
 #Microsoft.BingSearch                   # Web Search from Microsoft Bing (Integrates into Windows Search)
+#Microsoft.Copilot                      # New Windows Copilot app
 #Microsoft.Edge                         # Edge browser (Can only be uninstalled in European Economic Area)
 #Microsoft.GetHelp                      # Required for some Windows 11 Troubleshooters
 #Microsoft.MSPaint                      # Paint 3D

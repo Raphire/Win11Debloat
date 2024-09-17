@@ -1,8 +1,8 @@
 # Win11Debloat
 
-Win11Debloat is a simple, easy to use and lightweight PowerShell script that can remove pre-installed Windows bloatware apps, disable telemetry and declutter the experience by disabling or removing intrusive interface elements, ads and more. No need to painstakingly go through all the settings yourself, or remove apps one by one. Win11Debloat makes the process quick and easy!
+Win11Debloat is a simple, easy to use and lightweight PowerShell script that can remove pre-installed Windows bloatware apps, disable telemetry and declutter the experience by disabling or removing intrusive interface elements, ads and more. No need to painstakingly go through all the settings yourself or remove apps one by one. Win11Debloat makes the process quick and easy!
 
-You can pick and choose exactly which modifications you want the script to make, or use the default settings. If you are unhappy with any of the changes you can easily revert them by using the registry files that are included in the 'Regfiles' folder. All of the apps that are removed can be reinstalled from the Microsoft store.
+The script also includes many features that system administrators will enjoy. Such as support for Windows Audit mode and the ability to run the script without requiring user input during runtime.
 
 ![Win11Debloat Menu](/Assets/menu.png)
 
@@ -13,7 +13,7 @@ You can pick and choose exactly which modifications you want the script to make,
 ## Features
 
 > [!Tip]
-> Select the custom mode to customize the script to your needs or select the [default mode](#default-mode) to apply the recommended changes.
+> All of the changes made by Win11Debloat can easily be reverted and almost all of the apps can be reinstalled through the Microsoft Store. A full guide on how to revert changes can be found [here](https://github.com/Raphire/Win11Debloat/discussions/114).
 
 #### App Removal
 
@@ -28,7 +28,7 @@ You can pick and choose exactly which modifications you want the script to make,
 #### Bing Web Search, Copilot & More
 
 - Disable & remove Bing web search & Cortana from Windows search.
-- Disable Windows Copilot. (Windows 11 only)
+- Disable & remove Windows Copilot. (Windows 11 only)
 - Disable Windows Recall snapshots. (Windows 11 only)
 
 #### File Explorer
@@ -54,10 +54,7 @@ You can pick and choose exactly which modifications you want the script to make,
 
 #### Other
 
-- Disable Xbox game/screen recording (Also stops gaming overlay popups)
-
-#### Advanced Features
-
+- Disable Xbox game/screen recording. (Also stops gaming overlay popups)
 - Sysprep mode to apply changes to the Windows Default user profile.
 
 ## Default Mode
@@ -207,6 +204,7 @@ The default mode applies the changes that are recommended for most users, expand
       - Microsoft.YourPhone (Phone Link)
       - Microsoft.Xbox.TCUI (UI framework, removing this may break MS store, photos and certain games)
       - Microsoft.ZuneMusic (Modern Media Player)
+      - MicrosoftWindows.CrossDevice (Phone integration within File Explorer, Camera and more)
   
       Gaming related apps that are not removed by default:
       - Microsoft.GamingApp* (Modern Xbox Gaming App, required for installing some games)
@@ -232,7 +230,7 @@ The default mode applies the changes that are recommended for most users, expand
 
 ### Quick method
 
-Download & run the script automatically via PowerShell.
+Download & run the script automatically via PowerShell. All traces of the script are removed automatically after execution.
 
 1. Open PowerShell as an administrator.
 2. Copy and paste the code below into PowerShell, press enter to run the script:
@@ -268,7 +266,7 @@ Manually download the script & run the script via PowerShell. Only recommended f
 
 1. [Download the latest version of the script](https://github.com/Raphire/Win11Debloat/archive/master.zip), and extract the .ZIP file to your desired location.
 2. Open PowerShell as an administrator.
-3. Enable PowerShell execution by entering the following command:
+3. Temporarily enable PowerShell execution by entering the following command:
 
 ```PowerShell
 Set-ExecutionPolicy Unrestricted -Scope Process
@@ -292,7 +290,7 @@ This method supports [parameters](#parameters). To use parameters simply run the
 
 ### Parameters
 
-The quick and advanced method support parameters to tailor the behaviour of the script to your needs. A list of all the supported parameters and what they do can be found below.
+The quick and advanced usage methods support switch parameters. A table of all the supported parameters and what they do can be found below.
 
 | Parameter | Description |
 | :-------: | ----------- |
@@ -300,8 +298,8 @@ The quick and advanced method support parameters to tailor the behaviour of the 
 | -Sysprep                           |    Run the script in Sysprep mode. All changes will be applied to the Windows default user profile and will only affect new user accounts. |
 | -RunDefaults                       |    Run the script with the default settings. |
 | -RemoveApps                        |    Remove the default selection of bloatware apps. |
-| -RemoveAppsCustom                  |    Remove all apps from the 'CustomAppsList' file. IMPORTANT: Run the script with the `-RunAppConfigurator` parameter to create this file first. No apps will be removed if this file does not exist! |
-| -RunAppConfigurator                |    Run the app configurator to create a 'CustomAppsList' file. Run the script with the `-RemoveAppsCustom` parameter to remove these apps. |
+| -RemoveAppsCustom                  |    Remove all apps specified in the 'CustomAppsList' file. IMPORTANT: You can generate your custom list by running the script with the `-RunAppConfigurator` parameter. No apps will be removed if this file does not exist! |
+| -RunAppConfigurator                |    Run the app configurator to generate a list of apps to remove, the list is saved to the 'CustomAppsList' file. Running the script with the `-RemoveAppsCustom` parameter will remove the selected apps. |
 | -RemoveCommApps                    |    Remove the Mail, Calendar, and People apps. |
 | -RemoveW11Outlook                  |    Remove the new Outlook for Windows app. |
 | -RemoveDevApps                     |    Remove developer-related apps such as Remote Desktop, DevHome and Power Automate. |
@@ -328,8 +326,8 @@ The quick and advanced method support parameters to tailor the behaviour of the 
 | -DisableWidgets                    |    Disable the widget service & hide the widget (news and interests) icon from the taskbar. |
 | -DisableCopilot                    |    Disable and remove Windows Copilot. (Windows 11 only) |
 | -DisableRecall                     |    Disable Windows Recall snapshots. (Windows 11 only) |
-| -HideHome                          |    Hide the home section from the File Explorer navigation pane and adds a toggle in the File Explorer folder options. (Windows 11 only) |
-| -HideGallery                       |    Hide the gallery section from the File Explorer navigation pane and adds a toggle in the File Explorer folder options. (Windows 11 only) |
+| -HideHome                          |    Hide the home section from the File Explorer navigation pane and add a toggle in the File Explorer folder options. (Windows 11 only) |
+| -HideGallery                       |    Hide the gallery section from the File Explorer navigation pane and add a toggle in the File Explorer folder options. (Windows 11 only) |
 | -HideOnedrive                      |    Hide the OneDrive folder from the File Explorer navigation pane. (Windows 10 only) |
 | -Hide3dObjects                     |    Hide the 3D objects folder under 'This pc' in File Explorer. (Windows 10 only) |
 | -HideMusic                         |    Hide the music folder under 'This pc' in File Explorer. (Windows 10 only) |

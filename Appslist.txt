@@ -116,6 +116,7 @@ XING
 #Microsoft.XboxSpeechToTextOverlay      # Might be required for some games, WARNING: This app cannot be reinstalled!
 #Microsoft.YourPhone                    # Phone link
 #Microsoft.ZuneMusic                    # Modern Media Player
+#MicrosoftWindows.CrossDevice           # Phone integration within File Explorer, Camera and more
 
 
 

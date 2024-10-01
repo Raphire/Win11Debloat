@@ -367,15 +367,41 @@ function RemoveApps {
             # Remove installed app for all existing users
             if ($WinVersion -ge 22000){
                 # Windows 11 build 22000 or later
-                Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage -AllUsers -ErrorAction Continue
+                try {
+                    Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage -AllUsers -ErrorAction Continue
+                }
+                catch {
+                    Write-Host "Unable to remove $app for all users" -ForegroundColor Yellow
+                    Write-Host $psitem.Exception.StackTrace -ForegroundColor Gray
+                }
             }
             else {
                 # Windows 10
-                Get-AppxPackage -Name $app -PackageTypeFilter Main, Bundle, Resource -AllUsers | Remove-AppxPackage -AllUsers
+                try {
+                    Get-AppxPackage -Name $app | Remove-AppxPackage -ErrorAction SilentlyContinue
+                }
+                catch {
+                    Write-Host "Unable to remove $app for current user" -ForegroundColor Yellow
+                    Write-Host $psitem.Exception.StackTrace -ForegroundColor Gray
+                }
+                
+                try {
+                    Get-AppxPackage -Name $app -PackageTypeFilter Main, Bundle, Resource -AllUsers | Remove-AppxPackage -AllUsers -ErrorAction SilentlyContinue
+                }
+                catch {
+                    Write-Host "Unable to remove $app for all users" -ForegroundColor Yellow
+                    Write-Host $psitem.Exception.StackTrace -ForegroundColor Gray
+                }
             }
 
             # Remove provisioned app from OS image, so the app won't be installed for any new users
-            Get-AppxProvisionedPackage -Online | Where-Object { $_.PackageName -like $app } | ForEach-Object { Remove-ProvisionedAppxPackage -Online -AllUsers -PackageName $_.PackageName }
+            try {
+                Get-AppxProvisionedPackage -Online | Where-Object { $_.PackageName -like $app } | ForEach-Object { Remove-ProvisionedAppxPackage -Online -AllUsers -PackageName $_.PackageName }
+            }
+            catch {
+                Write-Host "Unable to remove $app from windows image" -ForegroundColor Yellow
+                Write-Host $psitem.Exception.StackTrace -ForegroundColor Gray
+            }
         }
     }
             

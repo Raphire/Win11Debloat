@@ -371,7 +371,19 @@ function RemoveApps {
             }
             else {
                 # Windows 10
-                Get-AppxPackage -Name $app -PackageTypeFilter Main, Bundle, Resource -AllUsers | Remove-AppxPackage -AllUsers
+                try {
+                    Get-AppxPackage -Name $app | Remove-AppxPackage -ErrorAction SilentlyContinue
+                }
+                catch {
+                    Write-Host "Unable to remove $app for current user: $($psitem.Exception.StackTrace)"  -ForegroundColor Yellow
+                }
+                
+                try {
+                    Get-AppxPackage -Name $app -PackageTypeFilter Main, Bundle, Resource -AllUsers | Remove-AppxPackage -AllUsers -ErrorAction SilentlyContinue
+                }
+                catch {
+                    Write-Host "Unable to remove $app for all users: $($psitem.Exception.StackTrace)"  -ForegroundColor Yellow
+                }
             }
 
             # Remove provisioned app from OS image, so the app won't be installed for any new users

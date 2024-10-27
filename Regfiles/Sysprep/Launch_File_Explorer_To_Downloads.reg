@@ -1,0 +1,4 @@
+Windows Registry Editor Version 5.00
+
+[hkey_users\default\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
+"LaunchTo"=dword:00000003

@@ -23,6 +23,7 @@ Bing, Copilot & More
 - Disable Windows Recall snapshots. (Windows 11 only)
 
 File Explorer
+- Change the default location that File Explorer opens to.
 - Show hidden files, folders & drives.
 - Show file extensions for known file types.
 - Hide the gallery section from the File Explorer sidepanel. (Windows 11 only)

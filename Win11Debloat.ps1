@@ -35,6 +35,10 @@ param (
     [switch]$RevertContextMenu,
     [switch]$HideHome,
     [switch]$HideGallery,
+    [switch]$ExplorerToHome,
+    [switch]$ExplorerToThisPC,
+    [switch]$ExplorerToDownloads,
+    [switch]$ExplorerToOneDrive,
     [switch]$DisableOnedrive, [switch]$HideOnedrive,
     [switch]$Disable3dObjects, [switch]$Hide3dObjects,
     [switch]$DisableMusic, [switch]$HideMusic,
@@ -1048,6 +1052,35 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
             Write-Output ""
 
             if ($( Read-Host -Prompt "Do you want to make any changes to File Explorer? (y/n)" ) -eq 'y') {
+                # Show options for changing the File Explorer default location
+                Do {
+                    Write-Output ""
+                    Write-Host "   Options:" -ForegroundColor Yellow
+                    Write-Host "    (n) No change" -ForegroundColor Yellow
+                    Write-Host "    (1) Open File Explorer to 'Home'" -ForegroundColor Yellow
+                    Write-Host "    (2) Open File Explorer to 'This PC'" -ForegroundColor Yellow
+                    Write-Host "    (3) Open File Explorer to 'Downloads'" -ForegroundColor Yellow
+                    Write-Host "    (4) Open File Explorer to 'OneDrive'" -ForegroundColor Yellow
+                    $ExplSearchInput = Read-Host "   Change the default location that File Explorer opens to? (n/1/2/3/4)" 
+                }
+                while ($ExplSearchInput -ne 'n' -and $ExplSearchInput -ne '0' -and $ExplSearchInput -ne '1' -and $ExplSearchInput -ne '2' -and $ExplSearchInput -ne '3' -and $ExplSearchInput -ne '4') 
+
+                # Select correct taskbar search option based on user input
+                switch ($ExplSearchInput) {
+                    '1' {
+                        AddParameter 'ExplorerToHome' "Change the default location that File Explorer opens to 'Home'"
+                    }
+                    '2' {
+                        AddParameter 'ExplorerToThisPC' "Change the default location that File Explorer opens to 'This PC'"
+                    }
+                    '3' {
+                        AddParameter 'ExplorerToDownloads' "Change the default location that File Explorer opens to 'Downloads'"
+                    }
+                    '4' {
+                        AddParameter 'ExplorerToOneDrive' "Change the default location that File Explorer opens to 'OneDrive'"
+                    }
+                }
+
                 Write-Output ""
 
                 if ($( Read-Host -Prompt "   Show hidden files, folders and drives? (y/n)" ) -eq 'y') {
@@ -1373,6 +1406,22 @@ else {
         }
         'HideGallery' {
             RegImport "> Hiding the gallery section from the File Explorer navigation pane..." "Hide_Gallery_from_Explorer.reg"
+            continue
+        }
+        'ExplorerToHome' {
+            RegImport "> Changing the default location that File Explorer opens to `Home`..." "Launch_File_Explorer_To_Home.reg"
+            continue
+        }
+        'ExplorerToThisPC' {
+            RegImport "> Changing the default location that File Explorer opens to `This PC`..." "Launch_File_Explorer_To_This_PC.reg"
+            continue
+        }
+        'ExplorerToDownloads' {
+            RegImport "> Changing the default location that File Explorer opens to `Downloads`..." "Launch_File_Explorer_To_Downloads.reg"
+            continue
+        }
+        'ExplorerToOneDrive' {
+            RegImport "> Changing the default location that File Explorer opens to `OneDrive`..." "Launch_File_Explorer_To_OneDrive.reg"
             continue
         }
         'HideDupliDrive' {

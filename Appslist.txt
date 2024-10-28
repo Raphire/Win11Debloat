@@ -1,19 +1,19 @@
 # -------------------------------------------------------------------------------------------------------------- #
-#  The apps below this line WILL be uninstalled by default. Add a # character in front of any app you want to    #
-#   KEEP installed by default.                                                                                   #
+#  Os aplicativos abaixo desta linha SERAO desinstalados por padrao. Adicione um caractere # na frente de    #
+#   qualquer aplicativo que voce deseja MANTER instalado por padrao.                                                 #
 # -------------------------------------------------------------------------------------------------------------- #
 Clipchamp.Clipchamp
 Microsoft.3DBuilder
-Microsoft.549981C3F5F10   #Cortana app
+Microsoft.549981C3F5F10   #Aplicativo Cortana
 Microsoft.BingFinance
-Microsoft.BingFoodAndDrink            
-Microsoft.BingHealthAndFitness         
+Microsoft.BingFoodAndDrink
+Microsoft.BingHealthAndFitness
 Microsoft.BingNews
 Microsoft.BingSports
 Microsoft.BingTranslator
-Microsoft.BingTravel 
+Microsoft.BingTravel
 Microsoft.BingWeather
-Microsoft.Getstarted   # Cannot be uninstalled in Windows 11
+Microsoft.Getstarted   # Nao pode ser desinstalado no Windows 11
 Microsoft.Messaging
 Microsoft.Microsoft3DViewer
 Microsoft.MicrosoftJournal
@@ -34,19 +34,19 @@ Microsoft.WindowsAlarms
 Microsoft.WindowsFeedbackHub
 Microsoft.WindowsMaps
 Microsoft.WindowsSoundRecorder
-Microsoft.XboxApp   # Old Xbox Console Companion App, no longer supported
+Microsoft.XboxApp   # Antigo aplicativo Xbox Console Companion, nao eh mais compativel
 Microsoft.ZuneVideo
-MicrosoftCorporationII.MicrosoftFamily   # Family Safety App
+MicrosoftCorporationII.MicrosoftFamily   # Aplicativo de seguranca parental
 MicrosoftCorporationII.QuickAssist
-MicrosoftTeams   # Old MS Teams personal (MS Store)
-MSTeams   # New MS Teams app
+MicrosoftTeams   # Antigo MS Teams pessoal (MS Store)
+MSTeams   # Novo aplicativo MS Teams
 
 ACGMediaPlayer
 ActiproSoftwareLLC
 AdobeSystemsIncorporated.AdobePhotoshopExpress
 Amazon.com.Amazon
 AmazonVideo.PrimeVideo
-Asphalt8Airborne 
+Asphalt8Airborne
 AutodeskSketchBook
 CaesarsSlotsFreeCasino
 COOKINGFEVER
@@ -94,29 +94,29 @@ XING
 
 
 # ------------------------------------------------------------------------------------------------------------- #
-#  The apps below this line will NOT be uninstalled by default. Remove the # character in front of any app you  #
-#   want to UNINSTALL by default.                                                                               #
-# ------------------------------------------------------------------------------------------------------------- #
-#Microsoft.BingSearch                   # Web Search from Microsoft Bing (Integrates into Windows Search)
-#Microsoft.Copilot                      # New Windows Copilot app
-#Microsoft.Edge                         # Edge browser (Can only be uninstalled in European Economic Area)
-#Microsoft.GetHelp                      # Required for some Windows 11 Troubleshooters
+#  Os aplicativos abaixo desta linha NaO serao desinstalados por padrao. Remova o caractere # na frente de  #
+#   qualquer aplicativo que voce deseja DESINSTALAR por padrao.                                                                               #
+# ------------------------------------------------------------------------------------------------------------ #
+#Microsoft.BingSearch                   # Pesquisa na Web do Microsoft Bing (integra-se ao Windows Search)
+#Microsoft.Copilot                      # Novo aplicativo Windows Copilot
+#Microsoft.Edge                         # Navegador Edge (so pode ser desinstalado no Espaco Economico Europeu)
+#Microsoft.GetHelp                      # Necessario para alguns solucionadores de problemas do Windows 11
 #Microsoft.MSPaint                      # Paint 3D
-#Microsoft.OneDrive                     # OneDrive consumer
-#Microsoft.Paint                        # Classic Paint
-#Microsoft.ScreenSketch                 # Snipping Tool
-#Microsoft.Whiteboard                   # Only preinstalled on devices with touchscreen and/or pen support
+#Microsoft.OneDrive                     # Cliente OneDrive
+#Microsoft.Paint                        # Paint classico
+#Microsoft.ScreenSketch                 # Ferramenta de recorte
+#Microsoft.Whiteboard                   #Pre-instalado apenas em dispositivos com tela sensivel ao toque e/ou suporte para caneta
 #Microsoft.Windows.Photos
 #Microsoft.WindowsCalculator
 #Microsoft.WindowsCamera
-#Microsoft.WindowsStore                 # Microsoft Store, WARNING: This app cannot be reinstalled!
+#Microsoft.WindowsStore                 # Microsoft Store, AVISO: Este aplicativo nao pode ser reinstalado!
 #Microsoft.WindowsTerminal              # New default terminal app in windows 11
 #Microsoft.Xbox.TCUI                    # UI framework, seems to be required for MS store, photos and certain games
 #Microsoft.XboxIdentityProvider         # Xbox sign-in framework, required for some games
 #Microsoft.XboxSpeechToTextOverlay      # Might be required for some games, WARNING: This app cannot be reinstalled!
-#Microsoft.YourPhone                    # Phone link
-#Microsoft.ZuneMusic                    # Modern Media Player
-#MicrosoftWindows.CrossDevice           # Phone integration within File Explorer, Camera and more
+#Microsoft.YourPhone                    # Ligacao telefonica
+#Microsoft.ZuneMusic                    # Reprodutor de midia moderno
+#MicrosoftWindows.CrossDevice           # Integracao do telefone com o Explorador de Arquivos, Camera e muito mais
 
 
 

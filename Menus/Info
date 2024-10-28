@@ -1,64 +1,63 @@
 -------------------------------------------------------------------------------------------
- Win11Debloat Script - Information
+Script Win11Debloat - Informacoes
 -------------------------------------------------------------------------------------------
-Win11Debloat is a simple, easy to use and lightweight PowerShell script that can remove
-pre-installed Windows bloatware apps, disable telemetry and declutter the experience by
-disabling or removing intrusive interface elements, ads and more. No need to go through
-all the settings yourself, or remove apps one by one.
-
--------------------------------------------------------------------------------------------
- All Features
--------------------------------------------------------------------------------------------
-App Removal
-- Remove a wide variety of bloatware apps.
-- Remove all pinned apps from start for the current user, or for all new & existing users. (Windows 11 only)
-
-Telemetry, Tracking & Suggested Content
-- Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads.
-- Disable tips, tricks, suggestions & ads across Windows.
-
-Bing, Copilot & More
-- Disable & remove Bing web search & Cortana from Windows search.
-- Disable Windows Copilot. (Windows 11 only)
-- Disable Windows Recall snapshots. (Windows 11 only)
-
-File Explorer
-- Change the default location that File Explorer opens to.
-- Show hidden files, folders & drives.
-- Show file extensions for known file types.
-- Hide the gallery section from the File Explorer sidepanel. (Windows 11 only)
-- Hide the 3D objects, music or onedrive folder from the File Explorer sidepanel. (Windows 10 only)
-- Hide duplicate removable drive entries from the File Explorer sidepanel.
-
-Taskbar
-- Align taskbar icons to the left. (Windows 11 only)
-- Hide or change the search icon/box on the taskbar. (Windows 11 only)
-- Hide the taskview button from the taskbar. (Windows 11 only)
-- Disable the widgets service & hide icon from the taskbar.
-- Hide the chat (meet now) icon from the taskbar.
-
-Context menu
-- Restore the old Windows 10 style context menu. (Windows 11 only)
-- Hide the 'Include in library', 'Give access to' & 'Share' options from the context menu. (Windows 10 only)
-
-Other
-- Disable Xbox game/screen recording (Also stops gaming overlay popups)
-
-Advanced Features
-- Sysprep mode to apply changes to the Windows Default user profile.
+O Win11Debloat eh um script PowerShell simples, facil de usar e leve que pode remover
+aplicativos de bloatware pre-instalados do Windows, desabilitar a telemetria e desobstruir a experiencia
+desabilitando ou removendo elementos intrusivos da interface, anuncios e muito mais. Nao eh preciso passar por
+todas as configuracoes sozinho ou remover os aplicativos um por um.
 
 -------------------------------------------------------------------------------------------
- Default mode
+Todos os recursos
 -------------------------------------------------------------------------------------------
-The default mode applies the changes that are recommended for most users, this includes:
-- Remove the default selection of apps, the list can be found in the 'Appslist.txt' file.
-- Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads.
-- Disable & remove Bing web search & Cortana from Windows search.
-- Disable tips, tricks, suggestions & ads across Windows.
-- Disable Windows Copilot. (Windows 11 only)
-- Show file extensions for known file types.
-- Disable the widget service & hide the icon from the taskbar. 
-- Hide the Chat (meet now) icon from the taskbar.
-- Hide the 3D objects folder under 'This pc' from File Explorer. (Windows 10 only)
-- Hide the 'Include in library', 'Give access to' and 'Share' options from the context menu. (Windows 10 only)
+Remocao de aplicativos
+- Remova uma grande variedade de aplicativos de bloatware.
+- Remova todos os aplicativos fixados do inicio para o usuario atual ou para todos os usuarios novos e existentes. (Somente Windows 11)
 
+Telemetria, rastreamento e conteudo sugerido
+- Desabilite telemetria, dados de diagnostico, historico de atividades, rastreamento de inicializacao de aplicativos e anuncios direcionados.
+- Desabilite dicas, truques, sugestoes e anuncios no Windows.
+
+Bing, Copilot e muito mais
+- Desabilite e remova a pesquisa na web do Bing e a Cortana da pesquisa do Windows.
+- Desabilitar o Windows Copilot. (somente Windows 11)
+- Desabilitar os instantaneos do Windows Recall. (somente Windows 11)
+
+Explorador de Arquivos
+- Alterar o local padrao para o qual o Explorador de Arquivos abre.
+- Mostrar arquivos, pastas e unidades ocultas.
+- Mostrar extensoes de arquivo para tipos de arquivo conhecidos.
+- Ocultar a secao de galeria do painel lateral do Explorador de Arquivos. (somente Windows 11)
+- Ocultar os objetos 3D, musica ou pasta do OneDrive do painel lateral do Explorador de Arquivos. (somente Windows 10)
+- Ocultar entradas duplicadas de unidade removivel do painel lateral do Explorador de Arquivos.
+
+Barra de Tarefas
+- Alinhar os icones da barra de tarefas a esquerda. (somente Windows 11)
+- Ocultar ou alterar o icone/caixa de pesquisa na barra de tarefas. (somente Windows 11)
+- Ocultar o botao taskview da barra de tarefas. (somente Windows 11)
+- Desabilitar o servico de widgets e ocultar o icone da barra de tarefas.
+- Ocultar o icone de bate-papo (meet now) da barra de tarefas.
+
+Menu de contexto
+- Restaurar o antigo menu de contexto do estilo do Windows 10. (Somente Windows 11)
+- Oculte as opcoes 'Incluir na biblioteca', 'Dar acesso a' e 'Compartilhar' do menu de contexto. (Somente Windows 10)
+
+Outros
+- Desabilite a gravacao de tela/jogo do Xbox (tambem interrompe pop-ups de sobreposicao de jogos)
+
+Recursos avancados
+- Modo Sysprep para aplicar alteracoes ao perfil de usuario padrao do Windows.
+
+-------------------------------------------------------------------------------------------
+Modo padrao
+------------------------------------------------------------------------------------------
+O modo padrao aplica as alteracoes recomendadas para a maioria dos usuarios, incluindo:
+- Remova a selecao padrao de aplicativos, a lista pode ser encontrada no arquivo 'Appslist.txt'.
+- Desabilite a telemetria, os dados de diagnostico, o historico de atividades, o rastreamento de inicializacao de aplicativos e os anuncios direcionados.
+- Desabilite e remova a pesquisa na Web do Bing e a Cortana da pesquisa do Windows.
+- Desabilite dicas, truques, sugestoes e anuncios no Windows.
+- Desabilite o Windows Copilot. (Somente Windows 11)
+- Mostre extensoes de arquivo para tipos de arquivo conhecidos.
+- Desabilite o servico de widget e oculte o icone da barra de tarefas.
+- Oculte o icone do Chat (meet now) da barra de tarefas.
+- Oculte a pasta de objetos 3D em 'Este Computador' do Explorador de Arquivos. (Somente Windows 10)
+- Oculte as opcoes 'Incluir na biblioteca', 'Dar acesso a' e 'Compartilhar' do menu de contexto. (Somente Windows 10)

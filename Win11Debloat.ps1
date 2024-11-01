@@ -373,28 +373,46 @@ function RemoveApps {
                 # Windows 11 build 22000 or later
                 try {
                     Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage -AllUsers -ErrorAction Continue
+
+                    if($DebugPreference -ne "SilentlyContinue") {
+                        Write-Host "Removed $app for all users" -ForegroundColor DarkGray
+                    }
                 }
                 catch {
-                    Write-Host "Unable to remove $app for all users" -ForegroundColor Yellow
-                    Write-Host $psitem.Exception.StackTrace -ForegroundColor Gray
+                    if($DebugPreference -ne "SilentlyContinue") {
+                        Write-Host "Unable to remove $app for all users" -ForegroundColor Yellow
+                        Write-Host $psitem.Exception.StackTrace -ForegroundColor Gray
+                    }
                 }
             }
             else {
                 # Windows 10
                 try {
                     Get-AppxPackage -Name $app | Remove-AppxPackage -ErrorAction SilentlyContinue
+                    
+                    if($DebugPreference -ne "SilentlyContinue") {
+                        Write-Host "Removed $app for current user" -ForegroundColor DarkGray
+                    }
                 }
                 catch {
-                    Write-Host "Unable to remove $app for current user" -ForegroundColor Yellow
-                    Write-Host $psitem.Exception.StackTrace -ForegroundColor Gray
+                    if($DebugPreference -ne "SilentlyContinue") {
+                        Write-Host "Unable to remove $app for current user" -ForegroundColor Yellow
+                        Write-Host $psitem.Exception.StackTrace -ForegroundColor Gray
+                    }
                 }
                 
                 try {
                     Get-AppxPackage -Name $app -PackageTypeFilter Main, Bundle, Resource -AllUsers | Remove-AppxPackage -AllUsers -ErrorAction SilentlyContinue
+                    
+                    if($DebugPreference -ne "SilentlyContinue") {
+                        Write-Host "Removed $app for all users" -ForegroundColor DarkGray
+                    }
                 }
                 catch {
-                    Write-Host "Unable to remove $app for all users" -ForegroundColor Yellow
-                    Write-Host $psitem.Exception.StackTrace -ForegroundColor Gray
+                    if($DebugPreference -ne "SilentlyContinue") {
+                        Write-Host "Unable to remove $app for all users" -ForegroundColor Yellow
+                        Write-Host $psitem.Exception.StackTrace -ForegroundColor Gray
+                    }
                 }
             }
 
@@ -716,7 +734,7 @@ $WinVersion = Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\Current
 
 $global:Params = $PSBoundParameters
 $global:FirstSelection = $true
-$SPParams = 'WhatIf', 'Confirm', 'Verbose', 'Silent', 'Sysprep'
+$SPParams = 'WhatIf', 'Confirm', 'Verbose', 'Silent', 'Sysprep', 'Debug'
 $SPParamCount = 0
 
 # Count how many SPParams exist within Params

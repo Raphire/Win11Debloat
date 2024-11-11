@@ -109,6 +109,7 @@ XING
 #Microsoft.Windows.Photos
 #Microsoft.WindowsCalculator
 #Microsoft.WindowsCamera
+#Microsoft.WindowsNotepad
 #Microsoft.WindowsStore                 # Microsoft Store, WARNING: This app cannot be reinstalled!
 #Microsoft.WindowsTerminal              # New default terminal app in windows 11
 #Microsoft.Xbox.TCUI                    # UI framework, seems to be required for MS store, photos and certain games

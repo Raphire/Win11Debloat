@@ -199,6 +199,7 @@ The default mode applies the changes that are recommended for most users, expand
       - Microsoft.Windows.Photos
       - Microsoft.WindowsCalculator
       - Microsoft.WindowsCamera
+      - Microsoft.WindowsNotepad
       - Microsoft.windowscommunicationsapps* (Mail & Calendar)
       - Microsoft.WindowsStore (Microsoft Store, NOTE: This app cannot be reinstalled!)
       - Microsoft.WindowsTerminal (New default terminal app in Windows 11)

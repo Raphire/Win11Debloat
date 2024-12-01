@@ -221,6 +221,7 @@ Win11Debloat 是一个简洁、易用、轻量的 PowerShell 脚本，可以删�
 	- Windows.DevHome *
 
 > 标注 * 的应用可以通过在运行脚本时使用相关参数来删除。（请参见下方参数部分）
+</details>
 
 ---
 

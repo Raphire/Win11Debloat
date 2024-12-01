@@ -68,7 +68,7 @@ Win11Debloat 是一个简洁、易用、轻量的 PowerShell 脚本，可以删�
 
 <details>
   <summary>点击展开</summary>
-  <blockquote>  
+  <blockquote>
     默认模式应用以下更改：
     - 删除默认选择的垃圾软件应用。（下方有完整列表）
     - 禁用遥测、诊断数据、活动历史记录、应用启动跟踪和定向广告。
@@ -80,6 +80,8 @@ Win11Debloat 是一个简洁、易用、轻量的 PowerShell 脚本，可以删�
     - 禁用小工具服务并隐藏图标。
     - 隐藏任务栏中的聊天（即“立即会议”）图标。
   </blockquote>
+</details>
+
 
 #### 默认删除的应用
 
@@ -206,24 +208,10 @@ Win11Debloat 是一个简洁、易用、轻量的 PowerShell 脚本，可以删�
     - Microsoft.YourPhone（手机链接）
     - Microsoft.Xbox.TCUI（UI 框架，删除此应用可能会导致 Microsoft Store、照片和某些游戏功能丧失）
     - Microsoft.ZuneMusic（现代媒体播放器）
-    - MicrosoftWindows.CrossDevice（文件资源管理器中的手机集成功能）
-    
-	默认未删除的游戏相关应用：
-	- Microsoft.GamingApp *（现代 Xbox 游戏应用，安装某些游戏所需）
-	- Microsoft.XboxGameOverlay *（游戏覆盖层，某些游戏所需）
-	- Microsoft.XboxGamingOverlay *（游戏覆盖层，某些游戏所需）
-	- Microsoft.XboxIdentityProvider *（Xbox 登录框架，某些游戏所需）
-	- Microsoft.XboxSpeechToTextOverlay *（可能是某些游戏所需，注意：此应用无法重新安装！）
-
-	默认未删除的开发者相关应用：
-	- Microsoft.PowerAutomateDesktop *
-	- Microsoft.RemoteDesktop *
-	- Windows.DevHome *
-
-> 标注 * 的应用可以通过在运行脚本时使用相关参数来删除。（请参见下方参数部分）
+    - MicrosoftWindows.CrossDevice（文件流动）
+    - MicrosoftWindows.Terminal（Windows 终端）
+  </blockquote>
 </details>
-
----
 
 ## 使用方法
 

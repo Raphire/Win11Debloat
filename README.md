@@ -58,27 +58,25 @@ The script also includes many features that system administrators will enjoy. Su
 - Disable Xbox game/screen recording. (Also stops gaming overlay popups)
 - Sysprep mode to apply changes to the Windows Default user profile.
 
-## Default Mode
+### Default Settings
 
-The default mode applies the changes that are recommended for most users, expand the section below for more info.
+The default mode allows you to easily and quickly apply the changes that are recommended for most users, expand the section below for more info.
 
 <details>
   <summary>Click to expand</summary>
-  <blockquote>
-    
-    Default mode applies the following changes:
-    - Remove the default selection of bloatware apps. (See below for full list)
-    - Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads.
-    - Disable tips, tricks, suggestions and ads in start, settings, notifications, File Explorer, and on the lockscreen.
-    - Disable & remove Bing web search & Cortana from Windows search.
-    - Disable Windows Copilot. (Windows 11 only)
-    - Show file extensions for known file types.
-    - Hide the 3D objects folder under 'This pc' from File Explorer. (Windows 10 only)
-    - Disable the widget service & hide the icon from the taskbar.
-    - Hide the Chat (meet now) icon from the taskbar.
-  </blockquote>
+  
+  #### Default mode applies the following changes:
+  - Remove the default selection of bloatware apps. (See below for full list)
+  - Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads.
+  - Disable tips, tricks, suggestions and ads in start, settings, notifications, File Explorer, and on the lockscreen.
+  - Disable & remove Bing web search & Cortana from Windows search.
+  - Disable Windows Copilot. (Windows 11 only)
+  - Show file extensions for known file types.
+  - Hide the 3D objects folder under 'This pc' from File Explorer. (Windows 10 only)
+  - Disable the widget service & hide the icon from the taskbar.
+  - Hide the Chat (meet now) icon from the taskbar.
 
-  #### Apps that ARE removed by default
+  #### Apps that ARE removed as part of the default mode
   
   <details>
     <summary>Click to expand</summary>
@@ -180,7 +178,7 @@ The default mode applies the changes that are recommended for most users, expand
   </blockquote>
   </details>
   
-  #### Apps that are NOT removed by default
+  #### Apps that are NOT removed as part of the default mode
   
   <details>
     <summary>Click to expand</summary>
@@ -232,9 +230,9 @@ The default mode applies the changes that are recommended for most users, expand
 
 ### Quick method
 
-Download & run the script automatically via PowerShell. All traces of the script are removed automatically after execution.
+Download & run the script automatically via PowerShell. All files related to the script are saved to `%temp%/Win11Debloat`, if you wish to inspect them. The script automatically cleans up the files after execution.
 
-1. Open PowerShell as an administrator.
+1. Open PowerShell, preferably as an administrator.
 2. Copy and paste the code below into PowerShell, press enter to run the script:
 
 ```PowerShell

@@ -605,7 +605,7 @@ function ReplaceStartMenu {
         $startMenuTemplate = "$PSScriptRoot/Start/start2.bin"
     )
 
-    $userName = $startMenuBinFile.Split("\")[2]
+    $userName = $env:USERNAME
 
     # Check if template bin file exists, return early if it doesn't
     if (-not (Test-Path $startMenuTemplate)) {

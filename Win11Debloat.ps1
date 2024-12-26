@@ -16,6 +16,7 @@ param (
     [switch]$DisableDVR,
     [switch]$DisableTelemetry,
     [switch]$DisableBingSearches, [switch]$DisableBing,
+    [switch]$DisableDesktopSpotlight,
     [switch]$DisableLockscrTips, [switch]$DisableLockscreenTips,
     [switch]$DisableWindowsSuggestions, [switch]$DisableSuggestions,
     [switch]$ShowHiddenFolders,
@@ -971,6 +972,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
 
             if ($( Read-Host -Prompt "Disable tips, tricks, suggestions and ads in start, settings, notifications, explorer and lockscreen? (y/n)" ) -eq 'y') {
                 AddParameter 'DisableSuggestions' 'Disable tips, tricks, suggestions and ads in start, settings, notifications and File Explorer'
+                AddParameter 'DisableDesktopSpotlight' 'Disable the Windows Spotlight desktop background option.'
                 AddParameter 'DisableLockscreenTips' 'Disable tips & tricks on the lockscreen'
             }
 
@@ -1351,6 +1353,10 @@ else {
             # Also remove the app package for bing search
             $appsList = 'Microsoft.BingSearch'
             RemoveApps $appsList
+            continue
+        }
+        'DisableDesktopSpotlight' {
+            RegImport "> Disabling the 'Windows Spotlight' desktop background option..." "Disable_Desktop_Spotlight.reg"
             continue
         }
         {$_ -in "DisableLockscrTips", "DisableLockscreenTips"} {

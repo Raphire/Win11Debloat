@@ -24,6 +24,7 @@ The script also includes many features that system administrators will enjoy. Su
 
 - Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads.
 - Disable tips, tricks, suggestions and ads in start, settings, notifications, File Explorer, and on the lockscreen.
+- Disable the 'Windows Spotlight' desktop background option.
 
 #### Bing Web Search, Copilot & More
 
@@ -311,6 +312,7 @@ The quick and advanced usage methods support switch parameters. A table of all t
 | -DisableTelemetry                  |    Disable telemetry, diagnostic data & targeted ads. |
 | -DisableBing                       |    Disable & remove Bing web search, Bing AI & Cortana in Windows search. |
 | -DisableSuggestions                |    Disable tips, tricks, suggestions and ads in start, settings, notifications and File Explorer. |
+| -DisableDesktopSpotlight           |    Disable the 'Windows Spotlight' desktop background option. |
 | <pre>-DisableLockscreenTips</pre>  |    Disable tips & tricks on the lockscreen. |
 | -RevertContextMenu                 |    Restore the old Windows 10 style context menu. (Windows 11 only) |
 | -ShowHiddenFolders                 |    Show hidden files, folders and drives. |

@@ -574,7 +574,7 @@ function ReplaceStartMenuForAllUsers {
     }
 
     # Get path to start menu file for all users
-    $userPathString = $env:USERPROFILE.Replace($env:USERNAME, "*\AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState")
+    $userPathString = $env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), "*\AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState"
     $usersStartMenuPaths = get-childitem -path $userPathString
 
     # Go through all users and replace the start menu file

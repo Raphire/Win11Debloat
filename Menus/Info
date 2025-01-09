@@ -11,23 +11,24 @@ all the settings yourself, or remove apps one by one.
 -------------------------------------------------------------------------------------------
 App Removal
 - Remove a wide variety of bloatware apps.
-- Remove all pinned apps from start for the current user, or for all new & existing users. (Windows 11 only)
+- Remove all pinned apps from start for the current user, or for all existing & new users. (Windows 11 only)
 
 Telemetry, Tracking & Suggested Content
 - Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads.
 - Disable tips, tricks, suggestions & ads across Windows.
+- Disable the 'Windows Spotlight' desktop background option.
 
 Bing, Copilot & More
 - Disable & remove Bing web search & Cortana from Windows search.
-- Disable Windows Copilot. (Windows 11 only)
+- Disable & remove Windows Copilot. (Windows 11 only)
 - Disable Windows Recall snapshots. (Windows 11 only)
 
 File Explorer
 - Change the default location that File Explorer opens to.
 - Show hidden files, folders & drives.
 - Show file extensions for known file types.
-- Hide the gallery section from the File Explorer sidepanel. (Windows 11 only)
-- Hide the 3D objects, music or onedrive folder from the File Explorer sidepanel. (Windows 10 only)
+- Hide the Home or Gallery section from the File Explorer navigation pane. (Windows 11 only)
+- Hide the 3D objects, music or OneDrive folder from the File Explorer sidepanel. (Windows 10 only)
 - Hide duplicate removable drive entries from the File Explorer sidepanel.
 
 Taskbar
@@ -42,9 +43,7 @@ Context menu
 - Hide the 'Include in library', 'Give access to' & 'Share' options from the context menu. (Windows 10 only)
 
 Other
-- Disable Xbox game/screen recording (Also stops gaming overlay popups)
-
-Advanced Features
+- Disable Xbox game/screen recording. (Also stops gaming overlay popups)
 - Sysprep mode to apply changes to the Windows Default user profile.
 
 -------------------------------------------------------------------------------------------

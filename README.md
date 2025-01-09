@@ -298,6 +298,7 @@ The quick and advanced usage methods support switch parameters. A table of all t
 | -Silent                            |    Suppresses all interactive prompts, so the script will run without requiring any user input. |
 | -Sysprep                           |    Run the script in Sysprep mode. All changes will be applied to the Windows default user profile and will only affect new user accounts. |
 | -RunDefaults                       |    Run the script with the default settings. |
+| -RunSavedSettings                  |    Run the script with the saved custom settings from last time. These settings are saved to and read from the `SavedSettings` file in the root folder of the script. |
 | -RemoveApps                        |    Remove the default selection of bloatware apps. |
 | -RemoveAppsCustom                  |    Remove all apps specified in the 'CustomAppsList' file. IMPORTANT: You can generate your custom list by running the script with the `-RunAppConfigurator` parameter. No apps will be removed if this file does not exist! |
 | -RunAppConfigurator                |    Run the app configurator to generate a list of apps to remove, the list is saved to the 'CustomAppsList' file. Running the script with the `-RemoveAppsCustom` parameter will remove the selected apps. |

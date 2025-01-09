@@ -6,6 +6,7 @@ param (
     [switch]$Sysprep,
     [switch]$RunAppConfigurator,
     [switch]$RunDefaults, [switch]$RunWin11Defaults,
+    [switch]$RunSavedSettings,
     [switch]$RemoveApps, 
     [switch]$RemoveAppsCustom,
     [switch]$RemoveGamingApps,
@@ -792,14 +793,23 @@ if ($RunAppConfigurator) {
     }
 
     AwaitKeyToExit
-
     Exit
 }
 
 # Change script execution based on provided parameters or user input
-if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPParamCount -eq $global:Params.Count)) {
+if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunSavedSettings -or ($SPParamCount -eq $global:Params.Count)) {
     if ($RunDefaults -or $RunWin11Defaults) {
         $Mode = '1'
+    }
+    elseif ($RunSavedSettings) {
+        if(-not (Test-Path "$PSScriptRoot/SavedSettings")) {
+            PrintHeader 'Custom Mode'
+            Write-Host "Error: No saved settings found, no changes were made" -ForegroundColor Red
+            AwaitKeyToExit
+            Exit
+        }
+
+        $Mode = '4'
     }
     else {
         # Show menu and wait for user input, loops until valid input is provided
@@ -970,7 +980,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
 
             Write-Output ""
 
-            if ($( Read-Host -Prompt "Disable tips, tricks, suggestions and ads in start, settings, notifications, explorer and lockscreen? (y/n)" ) -eq 'y') {
+            if ($( Read-Host -Prompt "Disable tips, tricks, suggestions and ads in start, settings, notifications, explorer, desktop and lockscreen? (y/n)" ) -eq 'y') {
                 AddParameter 'DisableSuggestions' 'Disable tips, tricks, suggestions and ads in start, settings, notifications and File Explorer'
                 AddParameter 'DisableDesktopSpotlight' 'Disable the Windows Spotlight desktop background option.'
                 AddParameter 'DisableLockscreenTips' 'Disable tips & tricks on the lockscreen'
@@ -1223,40 +1233,40 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or ($SPP
 
         # Load custom options selection from the "SavedSettings" file
         '4' {
-            if (-not $Silent) {
-                PrintHeader 'Custom Mode'
-                Write-Output "Win11Debloat will make the following changes:"
+            PrintHeader 'Custom Mode'
+            Write-Output "Win11Debloat will make the following changes:"
 
-                # Get & print default settings info from file
-                Foreach ($line in (Get-Content -Path "$PSScriptRoot/SavedSettings" )) { 
-                    # Remove any spaces before and after the line
-                    $line = $line.Trim()
-                
-                    # Check if the line contains a comment
-                    if (-not ($line.IndexOf('#') -eq -1)) {
-                        $parameterName = $line.Substring(0, $line.IndexOf('#'))
+            # Get & print default settings info from file
+            Foreach ($line in (Get-Content -Path "$PSScriptRoot/SavedSettings" )) { 
+                # Remove any spaces before and after the line
+                $line = $line.Trim()
+            
+                # Check if the line contains a comment
+                if (-not ($line.IndexOf('#') -eq -1)) {
+                    $parameterName = $line.Substring(0, $line.IndexOf('#'))
 
-                        # Print parameter description and add parameter to Params list
-                        if ($parameterName -eq "RemoveAppsCustom") {
-                            if (-not (Test-Path "$PSScriptRoot/CustomAppsList")) {
-                                # Apps file does not exist, skip
-                                continue
-                            }
-                            
-                            $appsList = ReadAppslistFromFile "$PSScriptRoot/CustomAppsList"
-                            Write-Output "- Remove $($appsList.Count) apps:"
-                            Write-Host $appsList -ForegroundColor DarkGray
+                    # Print parameter description and add parameter to Params list
+                    if ($parameterName -eq "RemoveAppsCustom") {
+                        if (-not (Test-Path "$PSScriptRoot/CustomAppsList")) {
+                            # Apps file does not exist, skip
+                            continue
                         }
-                        else {
-                            Write-Output $line.Substring(($line.IndexOf('#') + 1), ($line.Length - $line.IndexOf('#') - 1))
-                        }
+                        
+                        $appsList = ReadAppslistFromFile "$PSScriptRoot/CustomAppsList"
+                        Write-Output "- Remove $($appsList.Count) apps:"
+                        Write-Host $appsList -ForegroundColor DarkGray
+                    }
+                    else {
+                        Write-Output $line.Substring(($line.IndexOf('#') + 1), ($line.Length - $line.IndexOf('#') - 1))
+                    }
 
-                        if (-not $global:Params.ContainsKey($parameterName)){
-                            $global:Params.Add($parameterName, $true)
-                        }
+                    if (-not $global:Params.ContainsKey($parameterName)){
+                        $global:Params.Add($parameterName, $true)
                     }
                 }
+            }
 
+            if (-not $Silent) {
                 Write-Output ""
                 Write-Output ""
                 Write-Output "Press enter to execute the script or press CTRL+C to quit..."

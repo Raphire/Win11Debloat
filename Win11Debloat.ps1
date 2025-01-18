@@ -818,8 +818,8 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunS
 
             PrintHeader 'Menu'
 
-            Write-Output "(1) Default Mode: Apply the default settings"
-            Write-Output "(2) Custom Mode: Modify the script to your needs"
+            Write-Output "(1) Default mode: Apply the default settings"
+            Write-Output "(2) Custom mode: Modify the script to your needs"
             Write-Output "(3) App removal mode: Select & remove apps, without making other changes"
 
             # Only show this option if SavedSettings file exists
@@ -839,7 +839,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunS
             # Show information based on user input, Suppress user prompt if Silent parameter was passed
             if ($Mode -eq '0') {
                 # Get & print script information from file
-                PrintFromFile "$PSScriptRoot/Menus/Info"
+                PrintFromFile "$PSScriptRoot/Assets/Menus/Info"
 
                 Write-Output ""
                 Write-Output "Press any key to go back..."
@@ -858,7 +858,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunS
         '1' { 
             # Print the default settings & require userconfirmation, unless Silent parameter was passed
             if (-not $Silent) {
-                PrintFromFile "$PSScriptRoot/Menus/DefaultSettings"
+                PrintFromFile "$PSScriptRoot/Assets/Menus/DefaultSettings"
 
                 Write-Output ""
                 Write-Output "Press enter to execute the script or press CTRL+C to quit..."

@@ -29,30 +29,30 @@ The script also includes many features that system administrators will enjoy. Su
 #### Bing Web Search, Copilot & More
 
 - Disable & remove Bing web search & Cortana from Windows search.
-- Disable & remove Windows Copilot. (Windows 11 only)
-- Disable Windows Recall snapshots. (Windows 11 only)
+- Disable & remove Windows Copilot. (W11 only)
+- Disable Windows Recall snapshots. (W11 only)
 
 #### File Explorer
 
 - Change the default location that File Explorer opens to.
 - Show hidden files, folders and drives.
 - Show file extensions for known file types.
-- Hide the Home or Gallery section from the File Explorer navigation pane. (Windows 11 only)
-- Hide the 3D objects, music or OneDrive folder from the File Explorer navigation pane. (Windows 10 only)
+- Hide the Home or Gallery section from the File Explorer navigation pane. (W11 only)
+- Hide the 3D objects, music or OneDrive folder from the File Explorer navigation pane. (W10 only)
 - Hide duplicate removable drive entries from the File Explorer navigation pane, so only the entry under 'This PC' remains.
 
 #### Taskbar
 
-- Align taskbar icons to the left. (Windows 11 only)
-- Hide or change the search icon/box on the taskbar. (Windows 11 only)
-- Hide the taskview button from the taskbar. (Windows 11 only)
+- Align taskbar icons to the left. (W11 only)
+- Hide or change the search icon/box on the taskbar. (W11 only)
+- Hide the taskview button from the taskbar. (W11 only)
 - Disable the widgets service & hide icon from the taskbar.
 - Hide the chat (meet now) icon from the taskbar.
 
 #### Context Menu
 
-- Restore the old Windows 10 style context menu. (Windows 11 only)
-- Hide the 'Include in library', 'Give access to' and 'Share' options from the context menu. (Windows 10 only)
+- Restore the old Windows 10 style context menu. (W11 only)
+- Hide the 'Include in library', 'Give access to' and 'Share' options from the context menu. (W10 only)
 
 #### Other
 
@@ -61,7 +61,7 @@ The script also includes many features that system administrators will enjoy. Su
 
 ### Default Settings
 
-The default mode allows you to easily and quickly apply the changes that are recommended for most users, expand the section below for more info.
+The default mode allows you to quickly and easily apply the changes that are recommended for most users. Expand the section below for more info.
 
 <details>
   <summary>Click to expand</summary>
@@ -231,13 +231,13 @@ The default mode allows you to easily and quickly apply the changes that are rec
 
 ### Quick method
 
-Download & run the script automatically via PowerShell. All files related to the script are saved to `%temp%/Win11Debloat`, if you wish to inspect them. The script automatically cleans up the files after execution.
+Download & run the script automatically via PowerShell. All files related to the script are saved to `%temp%/Win11Debloat` if you wish to inspect them. The script automatically cleans up the files after execution.
 
 1. Open PowerShell, preferably as an administrator.
 2. Copy and paste the code below into PowerShell, press enter to run the script:
 
 ```PowerShell
-& ([scriptblock]::Create((irm "https://win11debloat.raphi.re/")))
+& ([scriptblock]::Create((irm "https://debloat.raphi.re/")))
 ```
 
 3. Wait for the script to automatically download Win11Debloat.
@@ -247,7 +247,7 @@ Download & run the script automatically via PowerShell. All files related to the
 This method supports [parameters](#parameters). To use parameters simply run the script as explained above, but add the parameters at the end with spaces in between. Example:
 
 ```PowerShell
-& ([scriptblock]::Create((irm "https://win11debloat.raphi.re/"))) -RunDefaults -Silent
+& ([scriptblock]::Create((irm "https://debloat.raphi.re/"))) -RunDefaults -Silent
 ```
 
 ### Traditional method
@@ -263,7 +263,7 @@ Manually download & run the script.
 
 ### Advanced method
 
-Manually download the script & run the script via PowerShell. Only recommended for advanced users.
+Manually download the script & run the script via PowerShell. Recommended for advanced users.
 
 1. [Download the latest version of the script](https://github.com/Raphire/Win11Debloat/archive/master.zip), and extract the .ZIP file to your desired location.
 2. Open PowerShell as an administrator.
@@ -280,7 +280,7 @@ Set-ExecutionPolicy Unrestricted -Scope Process
 .\Win11Debloat.ps1
 ```
 
-6. The Win11Debloat menu will now open. Select either the default or custom setup to continue.
+6. The Win11Debloat menu will now open. Select either the default or custom mode to continue.
 7. Carefully read through and follow the on-screen instructions.
 
 This method supports [parameters](#parameters). To use parameters simply run the script as explained above, but add the parameters at the end with spaces in between. Example:

@@ -1,0 +1,3 @@
+The `start2.bin` file is used by Windows 11 to save the apps or app stubs that are pinned to the start menu. 
+
+This file is a binary that cannot be easily edited. For this reason Win11Debloat includes a version of this binary file that has no apps pinned at all, allowing Win11Debloat to clear the start menu pinned apps for you.

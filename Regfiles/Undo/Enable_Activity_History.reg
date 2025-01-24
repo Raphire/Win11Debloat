@@ -1,0 +1,5 @@
+Windows Registry Editor Version 5.00
+
+; Enable Activity History
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System]
+"PublishUserActivities"=-

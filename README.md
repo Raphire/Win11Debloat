@@ -41,13 +41,14 @@ The script also includes many features that system administrators will enjoy. Su
 - Hide the 3D objects, music or OneDrive folder from the File Explorer navigation pane. (W10 only)
 - Hide duplicate removable drive entries from the File Explorer navigation pane, so only the entry under 'This PC' remains.
 
-#### Taskbar
+#### Taskbar & Start
 
 - Align taskbar icons to the left. (W11 only)
 - Hide or change the search icon/box on the taskbar. (W11 only)
 - Hide the taskview button from the taskbar. (W11 only)
 - Disable the widgets service & hide icon from the taskbar.
 - Hide the chat (meet now) icon from the taskbar.
+- Disable & hide the recommended section in the start menu.
 
 #### Context Menu
 
@@ -327,14 +328,15 @@ The quick and advanced usage methods support switch parameters. A table of all t
 | -HideTaskview                      |    Hide the taskview button from the taskbar. (Windows 11 only) |
 | -HideChat                          |    Hide the chat (meet now) icon from the taskbar. |
 | -DisableWidgets                    |    Disable the widget service & hide the widget (news and interests) icon from the taskbar. |
+| -DisableStartRecommended           |    Disable & hide the recommended section in the start menu. This will also change the start menu layout to `More pins`. |
 | -DisableCopilot                    |    Disable and remove Windows Copilot. (Windows 11 only) |
 | -DisableRecall                     |    Disable Windows Recall snapshots. (Windows 11 only) |
 | -HideHome                          |    Hide the home section from the File Explorer navigation pane and add a toggle in the File Explorer folder options. (Windows 11 only) |
 | -HideGallery                       |    Hide the gallery section from the File Explorer navigation pane and add a toggle in the File Explorer folder options. (Windows 11 only) |
-| -ExplorerToHome                    |    Changes the page that File Explorer opens to to `Home` |
-| -ExplorerToThisPC                  |    Changes the page that File Explorer opens to to `This PC` |
-| -ExplorerToDownloads               |    Changes the page that File Explorer opens to to `Downloads` |
-| -ExplorerToOneDrive                |    Changes the page that File Explorer opens to to `OneDrive` |
+| -ExplorerToHome                    |    Changes the page that File Explorer opens to to `Home`. |
+| -ExplorerToThisPC                  |    Changes the page that File Explorer opens to to `This PC`. |
+| -ExplorerToDownloads               |    Changes the page that File Explorer opens to to `Downloads`. |
+| -ExplorerToOneDrive                |    Changes the page that File Explorer opens to to `OneDrive`. |
 | -HideOnedrive                      |    Hide the OneDrive folder from the File Explorer navigation pane. (Windows 10 only) |
 | -Hide3dObjects                     |    Hide the 3D objects folder under 'This pc' in File Explorer. (Windows 10 only) |
 | -HideMusic                         |    Hide the music folder under 'This pc' in File Explorer. (Windows 10 only) |

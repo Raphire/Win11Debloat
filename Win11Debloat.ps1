@@ -1018,7 +1018,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunS
 
             Write-Output ""
 
-            if ($( Read-Host -Prompt "Do you want to make any changes to the taskbar and related services? (y/n)" ) -eq 'y') {
+            if ($( Read-Host -Prompt "Do you want to make any changes to the taskbar, start menu and related services? (y/n)" ) -eq 'y') {
                 # Only show these specific options for Windows 11 users running build 22000 or later
                 if ($WinVersion -ge 22000){
                     Write-Output ""
@@ -1075,6 +1075,14 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunS
 
                     if ($( Read-Host -Prompt "   Hide the chat (meet now) icon from the taskbar? (y/n)" ) -eq 'y') {
                         AddParameter 'HideChat' 'Hide the chat (meet now) icon from the taskbar'
+                    }
+                }
+
+                if ($WinVersion -ge 22000){
+                    Write-Output ""
+
+                    if ($( Read-Host -Prompt "   Disable & hide the recommended section in the start menu? This applies to all users (y/n)" ) -eq 'y') {
+                        AddParameter 'DisableStartRecommended' 'Disable & hide the recommended section in the start menu.'
                     }
                 }
             }
@@ -1404,6 +1412,10 @@ else {
         }
         'HideTaskview' {
             RegImport "> Hiding the taskview button from the taskbar..." "Hide_Taskview_Taskbar.reg"
+            continue
+        }
+        'DisableStartRecommended' {
+            RegImport "> Disabling and hiding the start menu recommended section..." "Disable_Start_Recommended.reg"
             continue
         }
         'DisableCopilot' {

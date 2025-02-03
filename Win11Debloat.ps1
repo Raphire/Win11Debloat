@@ -26,6 +26,7 @@ param (
     [switch]$TaskbarAlignLeft,
     [switch]$HideSearchTb, [switch]$ShowSearchIconTb, [switch]$ShowSearchLabelTb, [switch]$ShowSearchBoxTb,
     [switch]$HideTaskview,
+    [switch]$DisableStartRecommended,
     [switch]$DisableCopilot,
     [switch]$DisableRecall,
     [switch]$DisableWidgets,

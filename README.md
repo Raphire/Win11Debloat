@@ -48,7 +48,7 @@ The script also includes many features that system administrators will enjoy. Su
 - Hide the taskview button from the taskbar. (W11 only)
 - Disable the widgets service & hide icon from the taskbar.
 - Hide the chat (meet now) icon from the taskbar.
-- Disable & hide the recommended section in the start menu.
+- Disable & hide the recommended section in the start menu. (W11 only)
 
 #### Context Menu
 

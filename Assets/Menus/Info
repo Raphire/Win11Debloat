@@ -11,7 +11,7 @@ all the settings yourself, or remove apps one by one.
 -------------------------------------------------------------------------------------------
 App Removal
 - Remove a wide variety of bloatware apps.
-- Remove all pinned apps from start for the current user, or for all existing & new users. (Windows 11 only)
+- Remove all pinned apps from start for the current user, or for all existing & new users. (W11 only)
 
 Telemetry, Tracking & Suggested Content
 - Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads.
@@ -20,27 +20,28 @@ Telemetry, Tracking & Suggested Content
 
 Bing, Copilot & More
 - Disable & remove Bing web search & Cortana from Windows search.
-- Disable & remove Windows Copilot. (Windows 11 only)
-- Disable Windows Recall snapshots. (Windows 11 only)
+- Disable & remove Windows Copilot. (W11 only)
+- Disable Windows Recall snapshots. (W11 only)
 
 File Explorer
 - Change the default location that File Explorer opens to.
 - Show hidden files, folders & drives.
 - Show file extensions for known file types.
-- Hide the Home or Gallery section from the File Explorer navigation pane. (Windows 11 only)
-- Hide the 3D objects, music or OneDrive folder from the File Explorer sidepanel. (Windows 10 only)
+- Hide the Home or Gallery section from the File Explorer navigation pane. (W11 only)
+- Hide the 3D objects, music or OneDrive folder from the File Explorer sidepanel. (W10 only)
 - Hide duplicate removable drive entries from the File Explorer sidepanel.
 
-Taskbar
-- Align taskbar icons to the left. (Windows 11 only)
-- Hide or change the search icon/box on the taskbar. (Windows 11 only)
-- Hide the taskview button from the taskbar. (Windows 11 only)
+Taskbar & Start
+- Align taskbar icons to the left. (W11 only)
+- Hide or change the search icon/box on the taskbar. (W11 only)
+- Hide the taskview button from the taskbar. (W11 only)
 - Disable the widgets service & hide icon from the taskbar.
 - Hide the chat (meet now) icon from the taskbar.
+- Disable & hide the recommended section in the start menu. (W11 only)
 
 Context menu
-- Restore the old Windows 10 style context menu. (Windows 11 only)
-- Hide the 'Include in library', 'Give access to' & 'Share' options from the context menu. (Windows 10 only)
+- Restore the old Windows 10 style context menu. (W11 only)
+- Hide the 'Include in library', 'Give access to' & 'Share' options from the context menu. (W10 only)
 
 Other
 - Disable Xbox game/screen recording. (Also stops gaming overlay popups)
@@ -49,15 +50,15 @@ Other
 -------------------------------------------------------------------------------------------
  Default mode
 -------------------------------------------------------------------------------------------
-The default mode applies the changes that are recommended for most users, this includes:
+The default mode applies the changes that are recommended for most users. This includes:
 - Remove the default selection of apps, the list can be found in the 'Appslist.txt' file.
 - Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads.
 - Disable & remove Bing web search & Cortana from Windows search.
 - Disable tips, tricks, suggestions & ads across Windows.
-- Disable Windows Copilot. (Windows 11 only)
+- Disable Windows Copilot. (W11 only)
 - Show file extensions for known file types.
 - Disable the widget service & hide the icon from the taskbar. 
 - Hide the Chat (meet now) icon from the taskbar.
-- Hide the 3D objects folder under 'This pc' from File Explorer. (Windows 10 only)
-- Hide the 'Include in library', 'Give access to' and 'Share' options from the context menu. (Windows 10 only)
+- Hide the 3D objects folder under 'This pc' from File Explorer. (W10 only)
+- Hide the 'Include in library', 'Give access to' and 'Share' options from the context menu. (W10 only)
 

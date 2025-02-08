@@ -942,37 +942,6 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunS
                 }
             }
 
-            # Only show this option for Windows 11 users running build 22621 or later
-            if ($WinVersion -ge 22621){
-                Write-Output ""
-
-                if ($global:Params.ContainsKey("Sysprep")) {
-                    if ($( Read-Host -Prompt "Remove all pinned apps from the start menu for all existing and new users? (y/n)" ) -eq 'y') {
-                        AddParameter 'ClearStartAllUsers' 'Remove all pinned apps from the start menu for existing and new users'
-                    }
-                }
-                else {
-                    Do {
-                        Write-Host "Options:" -ForegroundColor Yellow
-                        Write-Host " (n) Don't remove any pinned apps from the start menu" -ForegroundColor Yellow
-                        Write-Host " (1) Remove all pinned apps from the start menu for this user only ($env:USERNAME)" -ForegroundColor Yellow
-                        Write-Host " (2) Remove all pinned apps from the start menu for all existing and new users"  -ForegroundColor Yellow
-                        $ClearStartInput = Read-Host "Remove all pinned apps from the start menu? (n/1/2)" 
-                    }
-                    while ($ClearStartInput -ne 'n' -and $ClearStartInput -ne '0' -and $ClearStartInput -ne '1' -and $ClearStartInput -ne '2') 
-    
-                    # Select correct option based on user input
-                    switch ($ClearStartInput) {
-                        '1' {
-                            AddParameter 'ClearStart' "Remove all pinned apps from the start menu for this user only"
-                        }
-                        '2' {
-                            AddParameter 'ClearStartAllUsers' "Remove all pinned apps from the start menu for all existing and new users"
-                        }
-                    }
-                }
-            }
-
             Write-Output ""
 
             if ($( Read-Host -Prompt "Disable telemetry, diagnostic data, activity history, app-launch tracking and targeted ads? (y/n)" ) -eq 'y') {
@@ -997,7 +966,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunS
             if ($WinVersion -ge 22621){
                 Write-Output ""
 
-                if ($( Read-Host -Prompt "Disable and remove Windows Copilot? This applies to all users (y/n)" ) -eq 'y') {
+                if ($( Read-Host -Prompt "Disable & remove Windows Copilot? This applies to all users (y/n)" ) -eq 'y') {
                     AddParameter 'DisableCopilot' 'Disable and remove Windows Copilot'
                 }
 
@@ -1017,9 +986,50 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunS
                 }
             }
 
+            # Only show this option for Windows 11 users running build 22621 or later
+            if ($WinVersion -ge 22621){
+                Write-Output ""
+
+                if ($( Read-Host -Prompt "Do you want to make any changes to the start menu? (y/n)" ) -eq 'y') {
+                    Write-Output ""
+
+                    if ($global:Params.ContainsKey("Sysprep")) {
+                        if ($( Read-Host -Prompt "Remove all pinned apps from the start menu for all existing and new users? (y/n)" ) -eq 'y') {
+                            AddParameter 'ClearStartAllUsers' 'Remove all pinned apps from the start menu for existing and new users'
+                        }
+                    }
+                    else {
+                        Do {
+                            Write-Host "   Options:" -ForegroundColor Yellow
+                            Write-Host "    (n) Don't remove any pinned apps from the start menu" -ForegroundColor Yellow
+                            Write-Host "    (1) Remove all pinned apps from the start menu for this user only ($env:USERNAME)" -ForegroundColor Yellow
+                            Write-Host "    (2) Remove all pinned apps from the start menu for all existing and new users"  -ForegroundColor Yellow
+                            $ClearStartInput = Read-Host "   Remove all pinned apps from the start menu? (n/1/2)" 
+                        }
+                        while ($ClearStartInput -ne 'n' -and $ClearStartInput -ne '0' -and $ClearStartInput -ne '1' -and $ClearStartInput -ne '2') 
+        
+                        # Select correct option based on user input
+                        switch ($ClearStartInput) {
+                            '1' {
+                                AddParameter 'ClearStart' "Remove all pinned apps from the start menu for this user only"
+                            }
+                            '2' {
+                                AddParameter 'ClearStartAllUsers' "Remove all pinned apps from the start menu for all existing and new users"
+                            }
+                        }
+                    }
+
+                    Write-Output ""
+
+                    if ($( Read-Host -Prompt "   Disable & hide the recommended section in the start menu? This applies to all users (y/n)" ) -eq 'y') {
+                        AddParameter 'DisableStartRecommended' 'Disable & hide the recommended section in the start menu.'
+                    }
+                }
+            }
+
             Write-Output ""
 
-            if ($( Read-Host -Prompt "Do you want to make any changes to the taskbar, start menu and related services? (y/n)" ) -eq 'y') {
+            if ($( Read-Host -Prompt "Do you want to make any changes to the taskbar and related services? (y/n)" ) -eq 'y') {
                 # Only show these specific options for Windows 11 users running build 22000 or later
                 if ($WinVersion -ge 22000){
                     Write-Output ""
@@ -1076,14 +1086,6 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunS
 
                     if ($( Read-Host -Prompt "   Hide the chat (meet now) icon from the taskbar? (y/n)" ) -eq 'y') {
                         AddParameter 'HideChat' 'Hide the chat (meet now) icon from the taskbar'
-                    }
-                }
-
-                if ($WinVersion -ge 22000){
-                    Write-Output ""
-
-                    if ($( Read-Host -Prompt "   Disable & hide the recommended section in the start menu? This applies to all users (y/n)" ) -eq 'y') {
-                        AddParameter 'DisableStartRecommended' 'Disable & hide the recommended section in the start menu.'
                     }
                 }
             }

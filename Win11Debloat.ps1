@@ -551,7 +551,7 @@ function RestartExplorer {
 
     Write-Output "> Restarting Windows Explorer process to apply all changes... (This may cause some flickering)"
 
-    # Only restart if the powershell process matches the OS architecture and not not in sysprep mode.
+    # Only restart if the powershell process matches the OS architecture.
     # Restarting explorer from a 32bit Powershell window will fail on a 64bit OS
     if ([Environment]::Is64BitProcess -eq [Environment]::Is64BitOperatingSystem) {
         Stop-Process -processName: Explorer -Force

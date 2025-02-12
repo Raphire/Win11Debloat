@@ -545,16 +545,19 @@ function RegImport {
 
 # Restart the Windows Explorer process
 function RestartExplorer {
+    if ($global:Params.ContainsKey("Sysprep")) {
+        return
+    }
+
     Write-Output "> Restarting Windows Explorer process to apply all changes... (This may cause some flickering)"
 
     # Only restart if the powershell process matches the OS architecture and not not in sysprep mode.
     # Restarting explorer from a 32bit Powershell window will fail on a 64bit OS
-    if ( ([Environment]::Is64BitProcess -eq [Environment]::Is64BitOperatingSystem) -and (-not $global:Params.ContainsKey("Sysprep")) )
-    {
+    if ([Environment]::Is64BitProcess -eq [Environment]::Is64BitOperatingSystem) {
         Stop-Process -processName: Explorer -Force
     }
     else {
-        Write-Warning "Not restarting Windows Explorer process, please manually restart your PC to apply all changes."
+        Write-Warning "Unable to restart Windows Explorer process, please manually restart your PC to apply all changes."
     }
 }
 

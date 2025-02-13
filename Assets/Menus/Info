@@ -44,7 +44,8 @@ Context menu
 - Hide the 'Include in library', 'Give access to' & 'Share' options from the context menu. (W10 only)
 
 Other
-- Disable Xbox game/screen recording. (Also stops gaming overlay popups)
+- Disable Xbox game/screen recording, this also stops gaming overlay popups.
+- Turn off Enhance Pointer Precision, also known as mouse acceleration.
 - Sysprep mode to apply changes to the Windows Default user profile.
 
 -------------------------------------------------------------------------------------------

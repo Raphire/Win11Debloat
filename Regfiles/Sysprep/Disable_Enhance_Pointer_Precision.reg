@@ -1,0 +1,6 @@
+Windows Registry Editor Version 5.00
+
+[hkey_users\default\Control Panel\Mouse]
+"MouseSpeed"="0"
+"MouseThreshold1"="0"
+"MouseThreshold2"="0"

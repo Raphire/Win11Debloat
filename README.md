@@ -57,7 +57,8 @@ The script also includes many features that system administrators will enjoy. Su
 
 #### Other
 
-- Disable Xbox game/screen recording. (Also stops gaming overlay popups)
+- Disable Xbox game/screen recording, this also stops gaming overlay popups.
+- Turn off Enhance Pointer Precision, also known as mouse acceleration.
 - Sysprep mode to apply changes to the Windows Default user profile.
 
 ### Default Settings
@@ -312,11 +313,14 @@ The quick and advanced usage methods support switch parameters. A table of all t
 | -ClearStart                         |    Remove all pinned apps from start for the current user (Windows 11 update 22H2 or later only) |
 | -ClearStartAllUsers                 |    Remove all pinned apps from start for all existing and new users. (Windows 11 update 22H2 or later only) |
 | -DisableTelemetry                   |    Disable telemetry, diagnostic data & targeted ads. |
-| -DisableBing                        |    Disable & remove Bing web search, Bing AI & Cortana in Windows search. |
 | -DisableSuggestions                 |    Disable tips, tricks, suggestions and ads in start, settings, notifications and File Explorer. |
 | -DisableDesktopSpotlight            |    Disable the 'Windows Spotlight' desktop background option. |
 | -DisableLockscreenTips              |    Disable tips & tricks on the lockscreen. |
+| -DisableBing                        |    Disable & remove Bing web search, Bing AI & Cortana in Windows search. |
+| -DisableCopilot                     |    Disable and remove Windows Copilot. (Windows 11 only) |
+| -DisableRecall                      |    Disable Windows Recall snapshots. (Windows 11 only) |
 | -RevertContextMenu                  |    Restore the old Windows 10 style context menu. (Windows 11 only) |
+| -DisableMouseAcceleration           |    Turn off Enhance Pointer Precision, also known as mouse acceleration. Requires reboot to apply. |
 | -ShowHiddenFolders                  |    Show hidden files, folders and drives. |
 | -ShowKnownFileExt                   |    Show file extensions for known file types. |
 | -HideDupliDrive                     |    Hide duplicate removable drive entries from the File Explorer navigation pane, so only the entry under 'This PC' remains. |
@@ -329,8 +333,6 @@ The quick and advanced usage methods support switch parameters. A table of all t
 | -HideChat                           |    Hide the chat (meet now) icon from the taskbar. |
 | -DisableWidgets                     |    Disable the widget service & hide the widget (news and interests) icon from the taskbar. |
 | <pre>-DisableStartRecommended</pre> |    Disable & hide the recommended section in the start menu. This will also change the start menu layout to `More pins`. |
-| -DisableCopilot                     |    Disable and remove Windows Copilot. (Windows 11 only) |
-| -DisableRecall                      |    Disable Windows Recall snapshots. (Windows 11 only) |
 | -HideHome                           |    Hide the home section from the File Explorer navigation pane and add a toggle in the File Explorer folder options. (Windows 11 only) |
 | -HideGallery                        |    Hide the gallery section from the File Explorer navigation pane and add a toggle in the File Explorer folder options. (Windows 11 only) |
 | -ExplorerToHome                     |    Changes the page that File Explorer opens to `Home`. |

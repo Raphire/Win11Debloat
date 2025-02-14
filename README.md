@@ -59,11 +59,11 @@ The script also includes many features that system administrators will enjoy. Su
 
 - Disable Xbox game/screen recording, this also stops gaming overlay popups.
 - Turn off Enhance Pointer Precision, also known as mouse acceleration.
-- Sysprep mode to apply changes to the Windows Default user profile.
+- Sysprep mode to apply changes to the Windows Default user profile. Afterwards, all new users will have the changes automatically applied to them.
 
 ### Default Settings
 
-The default mode allows you to quickly and easily apply the changes that are recommended for most users. Expand the section below for more info.
+The script allows you to select exactly what changes you want to make, but it also provides a 1-click default mode. The default mode allows you to quickly and easily apply the changes that are recommended for most users. Expand the section below for more info.
 
 <details>
   <summary>Click to expand</summary>

@@ -6,10 +6,6 @@ The script also includes many features that system administrators will enjoy. Su
 
 ![Win11Debloat Menu](/Assets/menu.png)
 
-#### Did this script help you? Please consider buying me a cup of coffee to support my work
-
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/M4M5C6UPC)
-
 ## Features
 
 > [!Tip]

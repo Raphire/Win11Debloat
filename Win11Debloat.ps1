@@ -1064,7 +1064,7 @@ function DisplayCustomModeOptions {
 
 
 # Check if winget is installed & if it is, check if the version is at least v1.4
-if ((Get-AppxPackage -Name "*Microsoft.DesktopAppInstaller*") -and ((winget -v) -replace 'v','' -gt 1.4)) {
+if ((Get-AppxPackage -Name "*Microsoft.DesktopAppInstaller*") -and ([int](((winget -v) -replace 'v','').split('.')[0..1] -join '') -gt 14)) {
     $global:wingetInstalled = $true
 }
 else {

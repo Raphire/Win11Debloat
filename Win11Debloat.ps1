@@ -4,6 +4,7 @@
 param (
     [switch]$Silent,
     [switch]$Sysprep,
+    [string]$User,
     [switch]$RunAppConfigurator,
     [switch]$RunDefaults, [switch]$RunWin11Defaults,
     [switch]$RunSavedSettings,
@@ -526,16 +527,23 @@ function RegImport {
 
     Write-Output $message
 
-
-    if (!$global:Params.ContainsKey("Sysprep")) {
-        reg import "$PSScriptRoot\Regfiles\$path"  
-    }
-    else {
+    if ($global:Params.ContainsKey("Sysprep")) {
         $defaultUserPath = $env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), '\Default\NTUSER.DAT'
         
         reg load "HKU\Default" $defaultUserPath | Out-Null
-        reg import "$PSScriptRoot\Regfiles\Sysprep\$path"  
+        reg import "$PSScriptRoot\Regfiles\Sysprep\$path"
         reg unload "HKU\Default" | Out-Null
+    }
+    elseif ($global:Params.ContainsKey("User")) {
+        $userPath = $env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), "\$($global:Params.Item("User"))\NTUSER.DAT"
+        
+        reg load "HKU\Default" $userPath | Out-Null
+        reg import "$PSScriptRoot\Regfiles\Sysprep\$path"
+        reg unload "HKU\Default" | Out-Null
+        
+    }
+    else {
+        reg import "$PSScriptRoot\Regfiles\$path"  
     }
 
     Write-Output ""
@@ -677,6 +685,9 @@ function PrintHeader {
 
     if ($global:Params.ContainsKey("Sysprep")) {
         $fullTitle = "$fullTitle (Sysprep mode)"
+    }
+    elseif ($global:Params.ContainsKey("User")) {
+        $fullTitle = "$fullTitle (User: $($global:Params.Item("User")))"
     }
     else {
         $fullTitle = "$fullTitle (User: $Env:UserName)"
@@ -1084,7 +1095,7 @@ $WinVersion = Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\Current
 
 $global:Params = $PSBoundParameters
 $global:FirstSelection = $true
-$SPParams = 'WhatIf', 'Confirm', 'Verbose', 'Silent', 'Sysprep', 'Debug'
+$SPParams = 'WhatIf', 'Confirm', 'Verbose', 'Silent', 'Sysprep', 'Debug', 'User'
 $SPParamCount = 0
 
 # Count how many SPParams exist within Params
@@ -1104,6 +1115,7 @@ else {
     $ProgressPreference = 'Continue'
 }
 
+# Make sure all requirements for Sysprep are met, if Sysprep is enabled
 if ($global:Params.ContainsKey("Sysprep")) {
     $defaultUserPath = $env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), '\Default\NTUSER.DAT'
 
@@ -1116,6 +1128,18 @@ if ($global:Params.ContainsKey("Sysprep")) {
     # Exit script if run in Sysprep mode on Windows 10
     if ($WinVersion -lt 22000) {
         Write-Host "Error: Win11Debloat Sysprep mode is not supported on Windows 10" -ForegroundColor Red
+        AwaitKeyToExit
+        Exit
+    }
+}
+
+# Make sure all requirements for User mode are met, if User is specified
+if ($global:Params.ContainsKey("User")) {
+    $userPath = $env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), "\$($global:Params.Item("User"))\NTUSER.DAT"
+
+    # Exit script if user directory or NTUSER.DAT file cannot be found
+    if (-not (Test-Path "$userPath")) {
+        Write-Host "Error: Unable to run Win11Debloat for user $($global:Params.Item("User")), cannot find user folder at '$userPath'" -ForegroundColor Red
         AwaitKeyToExit
         Exit
     }

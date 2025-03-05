@@ -1565,7 +1565,7 @@ else {
     Write-Output ""
     Write-Output ""
     Write-Output ""
-    Write-Output "Script completed successfully!"
+    Write-Output "Script completed! Please check above for any errors."
 
     AwaitKeyToExit
 }

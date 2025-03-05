@@ -552,7 +552,7 @@ function RegImport {
 
 # Restart the Windows Explorer process
 function RestartExplorer {
-    if ($global:Params.ContainsKey("Sysprep")) {
+    if ($global:Params.ContainsKey("Sysprep") -or $global:Params.ContainsKey("User")) {
         return
     }
 
@@ -622,6 +622,7 @@ function ReplaceStartMenu {
         $startMenuTemplate = "$PSScriptRoot/Start/start2.bin"
     )
 
+    # Change path to correct user if a user was specified
     if ($global:Params.ContainsKey("User")) {
         $startMenuBinFile = $env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), "\$(GetUserName)\AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState\start2.bin"
     }
@@ -1151,7 +1152,7 @@ if ($global:Params.ContainsKey("User")) {
 
     # Exit script if user directory or NTUSER.DAT file cannot be found
     if (-not (Test-Path "$userPath")) {
-        Write-Host "Error: Unable to run Win11Debloat for user $($global:Params.Item("User")), cannot find user folder at '$userPath'" -ForegroundColor Red
+        Write-Host "Error: Unable to run Win11Debloat for user $($global:Params.Item("User")), cannot find user data at '$userPath'" -ForegroundColor Red
         AwaitKeyToExit
         Exit
     }

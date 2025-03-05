@@ -646,7 +646,7 @@ function ReplaceStartMenu {
     # Copy template file
     Copy-Item -Path $startMenuTemplate -Destination $startMenuBinFile -Force
 
-     Write-Output "Replaced start menu for user$(GetUserName)"
+    Write-Output "Replaced start menu for user $(GetUserName)"
 }
 
 

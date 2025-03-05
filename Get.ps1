@@ -84,7 +84,14 @@ Expand-Archive "$env:TEMP/win11debloat-temp.zip" "$env:TEMP/Win11Debloat"
 Remove-Item "$env:TEMP/win11debloat-temp.zip"
 
 # Make list of arguments to pass on to the script
-$arguments = $($PSBoundParameters.GetEnumerator() | ForEach-Object {"-$($_.Key)"})
+$arguments = $($PSBoundParameters.GetEnumerator() | ForEach-Object {
+    if ($_.Value -eq $true) {
+        "-$($_.Key)"
+    } 
+    else {
+         "-$($_.Key) ""$($_.Value)"""
+    }
+})
 
 Write-Output ""
 Write-Output "> Running Win11Debloat..."

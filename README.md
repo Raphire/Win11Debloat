@@ -300,7 +300,7 @@ The quick and advanced usage methods support switch parameters. A table of all t
 | :-------: | ----------- |
 | -Silent                             |    Suppresses all interactive prompts, so the script will run without requiring any user input. |
 | -Sysprep                            |    Run the script in Sysprep mode. All changes will be applied to the Windows default user profile and will only affect new user accounts. |
-| -User <USERNAME>                    |    Run the script for the specified user, instead of the logged in user. This user must have logged on atleast once, and cannot be logged at the time the script is run. |
+| -User `<USERNAME>`                  |    Run the script for the specified user, instead of the logged in user. This user must have logged on atleast once, and cannot be logged at the time the script is run. |
 | -RunDefaults                        |    Run the script with the default settings. |
 | -RunSavedSettings                   |    Run the script with the saved custom settings from last time. These settings are saved to and read from the `SavedSettings` file in the root folder of the script. |
 | -RemoveApps                         |    Remove the default selection of bloatware apps. |

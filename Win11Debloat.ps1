@@ -4,6 +4,7 @@
 param (
     [switch]$Silent,
     [switch]$Sysprep,
+    [string]$User,
     [switch]$RunAppConfigurator,
     [switch]$RunDefaults, [switch]$RunWin11Defaults,
     [switch]$RunSavedSettings,
@@ -526,16 +527,23 @@ function RegImport {
 
     Write-Output $message
 
-
-    if (!$global:Params.ContainsKey("Sysprep")) {
-        reg import "$PSScriptRoot\Regfiles\$path"  
-    }
-    else {
+    if ($global:Params.ContainsKey("Sysprep")) {
         $defaultUserPath = $env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), '\Default\NTUSER.DAT'
         
         reg load "HKU\Default" $defaultUserPath | Out-Null
-        reg import "$PSScriptRoot\Regfiles\Sysprep\$path"  
+        reg import "$PSScriptRoot\Regfiles\Sysprep\$path"
         reg unload "HKU\Default" | Out-Null
+    }
+    elseif ($global:Params.ContainsKey("User")) {
+        $userPath = $env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), "\$($global:Params.Item("User"))\NTUSER.DAT"
+        
+        reg load "HKU\Default" $userPath | Out-Null
+        reg import "$PSScriptRoot\Regfiles\Sysprep\$path"
+        reg unload "HKU\Default" | Out-Null
+        
+    }
+    else {
+        reg import "$PSScriptRoot\Regfiles\$path"  
     }
 
     Write-Output ""
@@ -544,7 +552,7 @@ function RegImport {
 
 # Restart the Windows Explorer process
 function RestartExplorer {
-    if ($global:Params.ContainsKey("Sysprep")) {
+    if ($global:Params.ContainsKey("Sysprep") -or $global:Params.ContainsKey("User")) {
         return
     }
 
@@ -614,7 +622,10 @@ function ReplaceStartMenu {
         $startMenuTemplate = "$PSScriptRoot/Start/start2.bin"
     )
 
-    $userName = $env:USERNAME
+    # Change path to correct user if a user was specified
+    if ($global:Params.ContainsKey("User")) {
+        $startMenuBinFile = $env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), "\$(GetUserName)\AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState\start2.bin"
+    }
 
     # Check if template bin file exists, return early if it doesn't
     if (-not (Test-Path $startMenuTemplate)) {
@@ -624,7 +635,7 @@ function ReplaceStartMenu {
 
     # Check if bin file exists, return early if it doesn't
     if (-not (Test-Path $startMenuBinFile)) {
-        Write-Host "Error: Unable to clear start menu for user $userName, start2.bin file could not found" -ForegroundColor Red
+        Write-Host "Error: Unable to clear start menu for user $(GetUserName), start2.bin file could not found" -ForegroundColor Red
         return
     }
 
@@ -636,7 +647,7 @@ function ReplaceStartMenu {
     # Copy template file
     Copy-Item -Path $startMenuTemplate -Destination $startMenuBinFile -Force
 
-    Write-Output "Replaced start menu for user $userName"
+    Write-Output "Replaced start menu for user $(GetUserName)"
 }
 
 
@@ -678,6 +689,9 @@ function PrintHeader {
     if ($global:Params.ContainsKey("Sysprep")) {
         $fullTitle = "$fullTitle (Sysprep mode)"
     }
+    elseif ($global:Params.ContainsKey("User")) {
+        $fullTitle = "$fullTitle (User: $($global:Params.Item("User")))"
+    }
     else {
         $fullTitle = "$fullTitle (User: $Env:UserName)"
     }
@@ -709,6 +723,16 @@ function AwaitKeyToExit {
         Write-Output ""
         Write-Output "Press any key to exit..."
         $null = [System.Console]::ReadKey()
+    }
+}
+
+
+function GetUserName {
+    if ($global:Params.ContainsKey("User")) { 
+        return $global:Params.Item("User") 
+    } 
+    else { 
+        return $env:USERNAME 
     }
 }
 
@@ -862,7 +886,7 @@ function DisplayCustomModeOptions {
                 Do {
                     Write-Host "   Options:" -ForegroundColor Yellow
                     Write-Host "    (n) Don't remove any pinned apps from the start menu" -ForegroundColor Yellow
-                    Write-Host "    (1) Remove all pinned apps from the start menu for this user only ($env:USERNAME)" -ForegroundColor Yellow
+                    Write-Host "    (1) Remove all pinned apps from the start menu for this user only ($(GetUserName))" -ForegroundColor Yellow
                     Write-Host "    (2) Remove all pinned apps from the start menu for all existing and new users"  -ForegroundColor Yellow
                     $ClearStartInput = Read-Host "   Remove all pinned apps from the start menu? (n/1/2)" 
                 }
@@ -1084,7 +1108,7 @@ $WinVersion = Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\Current
 
 $global:Params = $PSBoundParameters
 $global:FirstSelection = $true
-$SPParams = 'WhatIf', 'Confirm', 'Verbose', 'Silent', 'Sysprep', 'Debug'
+$SPParams = 'WhatIf', 'Confirm', 'Verbose', 'Silent', 'Sysprep', 'Debug', 'User'
 $SPParamCount = 0
 
 # Count how many SPParams exist within Params
@@ -1104,6 +1128,7 @@ else {
     $ProgressPreference = 'Continue'
 }
 
+# Make sure all requirements for Sysprep are met, if Sysprep is enabled
 if ($global:Params.ContainsKey("Sysprep")) {
     $defaultUserPath = $env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), '\Default\NTUSER.DAT'
 
@@ -1116,6 +1141,18 @@ if ($global:Params.ContainsKey("Sysprep")) {
     # Exit script if run in Sysprep mode on Windows 10
     if ($WinVersion -lt 22000) {
         Write-Host "Error: Win11Debloat Sysprep mode is not supported on Windows 10" -ForegroundColor Red
+        AwaitKeyToExit
+        Exit
+    }
+}
+
+# Make sure all requirements for User mode are met, if User is specified
+if ($global:Params.ContainsKey("User")) {
+    $userPath = $env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), "\$($global:Params.Item("User"))\NTUSER.DAT"
+
+    # Exit script if user directory or NTUSER.DAT file cannot be found
+    if (-not (Test-Path "$userPath")) {
+        Write-Host "Error: Unable to run Win11Debloat for user $($global:Params.Item("User")), cannot find user data at '$userPath'" -ForegroundColor Red
         AwaitKeyToExit
         Exit
     }
@@ -1416,7 +1453,7 @@ else {
             continue
         }
         'ClearStart' {
-            Write-Output "> Removing all pinned apps from the start menu for user $env:USERNAME..."
+            Write-Output "> Removing all pinned apps from the start menu for user $(GetUserName)..."
             ReplaceStartMenu
             Write-Output ""
             continue
@@ -1431,7 +1468,6 @@ else {
         }
         'TaskbarAlignLeft' {
             RegImport "> Aligning taskbar buttons to the left..." "Align_Taskbar_Left.reg"
-
             continue
         }
         'HideSearchTb' {
@@ -1529,7 +1565,7 @@ else {
     Write-Output ""
     Write-Output ""
     Write-Output ""
-    Write-Output "Script completed successfully!"
+    Write-Output "Script completed! Please check above for any errors."
 
     AwaitKeyToExit
 }

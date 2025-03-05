@@ -2,6 +2,7 @@ param (
     [switch]$Silent,
     [switch]$Verbose,
     [switch]$Sysprep,
+    [string]$User,
     [switch]$RunAppConfigurator,
     [switch]$RunDefaults, [switch]$RunWin11Defaults,
     [switch]$RunSavedSettings,

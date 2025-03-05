@@ -2,7 +2,7 @@
 
 Win11Debloat is a simple, easy to use and lightweight PowerShell script that can remove pre-installed Windows bloatware apps, disable telemetry and declutter the experience by disabling or removing intrusive interface elements, ads and more. No need to painstakingly go through all the settings yourself or remove apps one by one. Win11Debloat makes the process quick and easy!
 
-The script also includes many features that system administrators will enjoy. Such as support for Windows Audit mode and the ability to run the script without requiring user input during runtime.
+ The script also includes many features that system administrators will enjoy. Such as support for Windows Audit mode, the option to make changes to other Windows users and the ability to run the script without requiring user input during runtime.
 
 ![Win11Debloat Menu](/Assets/menu.png)
 
@@ -59,6 +59,7 @@ The script also includes many features that system administrators will enjoy. Su
 
 - Disable Xbox game/screen recording, this also stops gaming overlay popups.
 - Turn off Enhance Pointer Precision, also known as mouse acceleration.
+- Option to apply changes to a different user, instead of the currently logged on user.
 - Sysprep mode to apply changes to the Windows Default user profile. Afterwards, all new users will have the changes automatically applied to them.
 
 ### Default Settings
@@ -299,6 +300,7 @@ The quick and advanced usage methods support switch parameters. A table of all t
 | :-------: | ----------- |
 | -Silent                             |    Suppresses all interactive prompts, so the script will run without requiring any user input. |
 | -Sysprep                            |    Run the script in Sysprep mode. All changes will be applied to the Windows default user profile and will only affect new user accounts. |
+| -User <USERNAME>                    |    Run the script for the specified user, instead of the logged in user. This user must have logged on atleast once, and cannot be logged at the time the script is run. |
 | -RunDefaults                        |    Run the script with the default settings. |
 | -RunSavedSettings                   |    Run the script with the saved custom settings from last time. These settings are saved to and read from the `SavedSettings` file in the root folder of the script. |
 | -RemoveApps                         |    Remove the default selection of bloatware apps. |

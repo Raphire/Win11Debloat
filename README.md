@@ -305,7 +305,7 @@ The quick and advanced usage methods support switch parameters. A table of all t
 | -RunSavedSettings                   |    Run the script with the saved custom settings from last time. These settings are saved to and read from the `SavedSettings` file in the root folder of the script. |
 | -RemoveApps                         |    Remove the default selection of bloatware apps. |
 | -RemoveAppsCustom                   |    Remove all apps specified in the 'CustomAppsList' file. IMPORTANT: You can generate your custom list by running the script with the `-RunAppConfigurator` parameter. No apps will be removed if this file does not exist! |
-| -RunAppConfigurator                 |    Run the app configurator to generate a list of apps to remove, the list is saved to the 'CustomAppsList' file. Running the script with the `-RemoveAppsCustom` parameter will remove the selected apps. |
+| -RunAppConfigurator                 |    Run the app configurator to generate a list of apps to remove, the list is saved to the 'CustomAppsList' file inside the root folder of the script. Running the script with the `-RemoveAppsCustom` parameter will remove the selected apps. |
 | -RemoveCommApps                     |    Remove the Mail, Calendar, and People apps. |
 | -RemoveW11Outlook                   |    Remove the new Outlook for Windows app. |
 | -RemoveDevApps                      |    Remove developer-related apps such as Remote Desktop, DevHome and Power Automate. |

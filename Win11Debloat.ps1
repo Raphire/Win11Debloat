@@ -1171,7 +1171,8 @@ if ($RunAppConfigurator) {
         Write-Host "App configurator was closed without saving." -ForegroundColor Red
     }
     else {
-        Write-Output "Your app selection was saved to the 'CustomAppsList' file in the root folder of the script."
+        Write-Output "Your app selection was saved to the 'CustomAppsList' file, found at:"
+        Write-Host "$PSScriptRoot" -ForegroundColor Yellow
     }
 
     AwaitKeyToExit

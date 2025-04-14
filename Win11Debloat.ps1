@@ -17,6 +17,7 @@ param (
     [switch]$ForceRemoveEdge,
     [switch]$DisableDVR,
     [switch]$DisableTelemetry,
+    [switch]$DisableFastStartup,
     [switch]$DisableBingSearches, [switch]$DisableBing,
     [switch]$DisableDesktopSpotlight,
     [switch]$DisableLockscrTips, [switch]$DisableLockscreenTips,
@@ -1062,6 +1063,13 @@ function DisplayCustomModeOptions {
         }
     }
 
+    # Add Fast Boot prompt
+    Write-Output ""
+
+    if ($( Read-Host -Prompt "Disable Fast Startup? (y/n)" ) -eq 'y') {
+        AddParameter 'DisableFastStartup' 'Disable Fast Startup'
+    }
+
     # Suppress prompt if Silent parameter was passed
     if (-not $Silent) {
         Write-Output ""
@@ -1248,7 +1256,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunS
                 Read-Host | Out-Null
             }
 
-            $DefaultParameterNames = 'RemoveApps','DisableTelemetry','DisableBing','DisableLockscreenTips','DisableSuggestions','ShowKnownFileExt','DisableWidgets','HideChat','DisableCopilot'
+            $DefaultParameterNames = 'RemoveApps','DisableTelemetry','DisableBing','DisableLockscreenTips','DisableSuggestions','ShowKnownFileExt','DisableWidgets','HideChat','DisableCopilot','DisableFastStartup'
 
             PrintHeader 'Default Mode'
 
@@ -1408,6 +1416,10 @@ else {
         }
         'DisableTelemetry' {
             RegImport "> Disabling telemetry, diagnostic data, activity history, app-launch tracking and targeted ads..." "Disable_Telemetry.reg"
+            continue
+        }
+        'DisableFastStartup' {
+            RegImport "> Disabling Fast Startup..." "Disable_Fast_Startup.reg"
             continue
         }
         {$_ -in "DisableSuggestions", "DisableWindowsSuggestions"} {

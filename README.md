@@ -49,6 +49,7 @@ The script also includes many features that system administrators will enjoy. Su
 - Disable the widgets service & hide icon from the taskbar.
 - Hide the chat (meet now) icon from the taskbar.
 - Disable & hide the recommended section in the start menu. (W11 only)
+- Enable the 'End Task' option in the taskbar right click menu. (W11 only)
 
 #### Context Menu
 
@@ -334,6 +335,7 @@ The quick and advanced usage methods support switch parameters. A table of all t
 | -HideTaskview                       |    Hide the taskview button from the taskbar. (Windows 11 only) |
 | -HideChat                           |    Hide the chat (meet now) icon from the taskbar. |
 | -DisableWidgets                     |    Disable the widget service & hide the widget (news and interests) icon from the taskbar. |
+| -EnableEndTask                      |    Enable the 'End Task' option in the taskbar right click menu. |
 | <pre>-DisableStartRecommended</pre> |    Disable & hide the recommended section in the start menu. This will also change the start menu layout to `More pins`. |
 | -HideHome                           |    Hide the home section from the File Explorer navigation pane and add a toggle in the File Explorer folder options. (Windows 11 only) |
 | -HideGallery                        |    Hide the gallery section from the File Explorer navigation pane and add a toggle in the File Explorer folder options. (Windows 11 only) |

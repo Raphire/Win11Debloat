@@ -32,6 +32,7 @@ param (
     [switch]$DisableRecall,
     [switch]$DisableWidgets, [switch]$HideWidgets,
     [switch]$DisableChat, [switch]$HideChat,
+    [switch]$EnableEndTask,
     [switch]$ClearStart,
     [switch]$ClearStartAllUsers,
     [switch]$RevertContextMenu,
@@ -969,6 +970,15 @@ function DisplayCustomModeOptions {
                 AddParameter 'HideChat' 'Hide the chat (meet now) icon from the taskbar'
             }
         }
+        
+        # Only show this options for Windows users running build 22631 or later
+        if ($WinVersion -ge 22631){
+            Write-Output ""
+
+            if ($( Read-Host -Prompt "   Enable the 'End Task' option in the taskbar right click menu? (y/n)" ) -eq 'y') {
+                AddParameter 'EnableEndTask' "Enable the 'End Task' option in the taskbar right click menu"
+            }
+        }
     }
 
     Write-Output ""
@@ -1494,6 +1504,10 @@ else {
         }
         {$_ -in "HideChat", "DisableChat"} {
             RegImport "> Hiding the chat icon from the taskbar..." "Disable_Chat_Taskbar.reg"
+            continue
+        }
+        'EnableEndTask' {
+            RegImport "> Enabling the 'End Task' option in the taskbar right click menu..." "Enable_End_Task.reg"
             continue
         }
         'ExplorerToHome' {

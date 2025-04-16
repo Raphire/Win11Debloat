@@ -30,6 +30,7 @@ param (
     [switch]$DisableRecall,
     [switch]$DisableWidgets, [switch]$HideWidgets,
     [switch]$DisableChat, [switch]$HideChat,
+    [switch]$EnableEndTask,
     [switch]$ClearStart,
     [switch]$ClearStartAllUsers,
     [switch]$RevertContextMenu,

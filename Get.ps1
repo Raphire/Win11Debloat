@@ -35,6 +35,7 @@ param (
     [switch]$ClearStartAllUsers,
     [switch]$RevertContextMenu,
     [switch]$DisableMouseAcceleration,
+    [switch]$DisableStickyKeys,
     [switch]$HideHome,
     [switch]$HideGallery,
     [switch]$ExplorerToHome,

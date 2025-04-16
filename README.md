@@ -60,6 +60,7 @@ The script also includes many features that system administrators will enjoy. Su
 
 - Disable Xbox game/screen recording, this also stops gaming overlay popups.
 - Turn off Enhance Pointer Precision, also known as mouse acceleration.
+- Disable the Sticky Keys keyboard shortcut. (W11 only)
 - Option to apply changes to a different user, instead of the currently logged in user.
 - Sysprep mode to apply changes to the Windows Default user profile. Afterwards, all new users will have the changes automatically applied to them.
 
@@ -324,6 +325,7 @@ The quick and advanced usage methods support switch parameters. A table of all t
 | -DisableRecall                      |    Disable Windows Recall snapshots. (Windows 11 only) |
 | -RevertContextMenu                  |    Restore the old Windows 10 style context menu. (Windows 11 only) |
 | -DisableMouseAcceleration           |    Turn off Enhance Pointer Precision, also known as mouse acceleration. Requires reboot to apply. |
+| -DisableStickyKeys                  |    Disable the Sticky Keys keyboard shortcut. |
 | -ShowHiddenFolders                  |    Show hidden files, folders and drives. |
 | -ShowKnownFileExt                   |    Show file extensions for known file types. |
 | -HideDupliDrive                     |    Hide duplicate removable drive entries from the File Explorer navigation pane, so only the entry under 'This PC' remains. |

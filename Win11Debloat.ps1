@@ -37,6 +37,7 @@ param (
     [switch]$ClearStartAllUsers,
     [switch]$RevertContextMenu,
     [switch]$DisableMouseAcceleration,
+    [switch]$DisableStickyKeys,
     [switch]$HideHome,
     [switch]$HideGallery,
     [switch]$ExplorerToHome,
@@ -560,7 +561,11 @@ function RestartExplorer {
     Write-Output "> Restarting Windows Explorer process to apply all changes... (This may cause some flickering)"
 
     if ($global:Params.ContainsKey("DisableMouseAcceleration")) {
-        Write-Host "Warning: The Enhance Pointer Precision setting has been changed, this setting will only take effect after a reboot" -ForegroundColor Yellow
+        Write-Host "Warning: The Enhance Pointer Precision setting changes will only take effect after a reboot" -ForegroundColor Yellow
+    }
+
+    if ($global:Params.ContainsKey("DisableStickyKeys")) {
+        Write-Host "Warning: The Sticky Keys setting changes will only take effect after a reboot" -ForegroundColor Yellow
     }
 
     # Only restart if the powershell process matches the OS architecture.
@@ -841,6 +846,15 @@ function DisplayCustomModeOptions {
 
     if ($( Read-Host -Prompt "Turn off Enhance Pointer Precision, also known as mouse acceleration? (y/n)" ) -eq 'y') {
         AddParameter 'DisableMouseAcceleration' 'Turn off Enhance Pointer Precision (mouse acceleration)'
+    }
+
+    # Only show this option for Windows 11 users running build 26100 or later
+    if ($WinVersion -ge 26100){
+        Write-Output ""
+
+        if ($( Read-Host -Prompt "Disable the Sticky Keys keyboard shortcut? (y/n)" ) -eq 'y') {
+            AddParameter 'DisableStickyKeys' 'Disable the Sticky Keys keyboard shortcut'
+        }
     }
 
     # Only show option for disabling context menu items for Windows 10 users or if the user opted to restore the Windows 10 context menu
@@ -1458,6 +1472,10 @@ else {
         }
         'DisableMouseAcceleration' {
             RegImport "> Turning off Enhanced Pointer Precision..." "Disable_Enhance_Pointer_Precision.reg"
+            continue
+        }
+        'DisableStickyKeys' {
+            RegImport "> Disabling the Sticky Keys keyboard shortcut..." "Disable_Sticky_Keys_Shortcut.reg"
             continue
         }
         'ClearStart' {

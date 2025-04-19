@@ -822,14 +822,9 @@ function DisplayCustomModeOptions {
     if ($WinVersion -ge 22621){
         Write-Output ""
 
-        if ($( Read-Host -Prompt "Disable & remove Windows Copilot? This applies to all users (y/n)" ) -eq 'y') {
+        if ($( Read-Host -Prompt "Disable & remove Windows Copilot and Windows Recall snapshots? This applies to all users (y/n)" ) -eq 'y') {
             AddParameter 'DisableCopilot' 'Disable and remove Windows Copilot'
-        }
-
-        Write-Output ""
-
-        if ($( Read-Host -Prompt "Disable Windows Recall snapshots? This applies to all users (y/n)" ) -eq 'y') {
-            AddParameter 'DisableRecall' 'Disable Windows Recall snapshots'
+            AddParameter 'DisableRecall' 'Disable and remove Windows Recall snapshots'
         }
     }
 

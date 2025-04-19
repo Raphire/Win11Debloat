@@ -1457,7 +1457,7 @@ else {
         'DisableCopilot' {
             RegImport "> Disabling & removing Windows Copilot..." "Disable_Copilot.reg"
 
-            # Also remove the app package for bing search
+            # Also remove the app package for copilot
             $appsList = 'Microsoft.Copilot'
             RemoveApps $appsList
             continue

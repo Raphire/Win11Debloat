@@ -101,6 +101,7 @@ The script allows you to select exactly what changes you want to make, but it al
       - Microsoft.BingTranslator  
       - Microsoft.BingTravel   
       - Microsoft.BingWeather  
+      - Microsoft.Copilot
       - Microsoft.Getstarted (Cannot be uninstalled in Windows 11)
       - Microsoft.Messaging  
       - Microsoft.Microsoft3DViewer  

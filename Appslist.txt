@@ -13,6 +13,7 @@ Microsoft.BingSports
 Microsoft.BingTranslator
 Microsoft.BingTravel 
 Microsoft.BingWeather
+Microsoft.Copilot
 Microsoft.Getstarted   # Cannot be uninstalled in Windows 11
 Microsoft.Messaging
 Microsoft.Microsoft3DViewer

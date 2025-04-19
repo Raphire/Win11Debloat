@@ -5,7 +5,7 @@ param (
     [switch]$Silent,
     [switch]$Sysprep,
     [string]$User,
-    [switch]$RunAppConfigurator,
+    [switch]$RunAppsListGenerator, [switch]$RunAppConfigurator,
     [switch]$RunDefaults, [switch]$RunWin11Defaults,
     [switch]$RunSavedSettings,
     [switch]$RemoveApps, 
@@ -1184,15 +1184,15 @@ if ((Test-Path "$PSScriptRoot/SavedSettings") -and ([String]::IsNullOrWhiteSpace
     Remove-Item -Path "$PSScriptRoot/SavedSettings" -recurse
 }
 
-# Only run the app selection form if the 'RunAppConfigurator' parameter was passed to the script
-if ($RunAppConfigurator) {
-    PrintHeader "App Configurator"
+# Only run the app selection form if the 'RunAppsListGenerator' parameter was passed to the script
+if ($RunAppConfigurator -or $RunAppsListGenerator) {
+    PrintHeader "Custom Apps List Generator"
 
     $result = ShowAppSelectionForm
 
     # Show different message based on whether the app selection was saved or cancelled
     if ($result -ne [System.Windows.Forms.DialogResult]::OK) {
-        Write-Host "App configurator was closed without saving." -ForegroundColor Red
+        Write-Host "Application selection window was closed without saving." -ForegroundColor Red
     }
     else {
         Write-Output "Your app selection was saved to the 'CustomAppsList' file, found at:"

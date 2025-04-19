@@ -76,9 +76,9 @@ The script allows you to select exactly what changes you want to make, but it al
   - Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads.
   - Disable tips, tricks, suggestions and ads in start, settings, notifications, File Explorer, and on the lockscreen.
   - Disable & remove Bing web search & Cortana from Windows search.
-  - Disable Windows Copilot. (Windows 11 only)
+  - Disable Windows Copilot. (W11 only)
   - Show file extensions for known file types.
-  - Hide the 3D objects folder under 'This pc' from File Explorer. (Windows 10 only)
+  - Hide the 3D objects folder under 'This pc' from File Explorer. (W10 only)
   - Disable the widget service & hide the icon from the taskbar.
   - Hide the Chat (meet now) icon from the taskbar.
 
@@ -306,8 +306,8 @@ The quick and advanced usage methods support switch parameters. A table of all t
 | -RunDefaults                        |    Run the script with the default settings. |
 | -RunSavedSettings                   |    Run the script with the saved custom settings from last time. These settings are saved to and read from the `SavedSettings` file in the root folder of the script. |
 | -RemoveApps                         |    Remove the default selection of bloatware apps. |
-| -RemoveAppsCustom                   |    Remove all apps specified in the 'CustomAppsList' file. IMPORTANT: You can generate your custom list by running the script with the `-RunAppConfigurator` parameter. No apps will be removed if this file does not exist! |
-| -RunAppConfigurator                 |    Run the app configurator to generate a list of apps to remove, the list is saved to the 'CustomAppsList' file inside the root folder of the script. Running the script with the `-RemoveAppsCustom` parameter will remove the selected apps. |
+| -RemoveAppsCustom                   |    Remove all apps specified in the 'CustomAppsList' file. IMPORTANT: You can generate your custom list by running the script with the `-RunAppsListGenerator` parameter. No apps will be removed if this file does not exist. |
+| -RunAppsListGenerator               |    Run the apps list generator to generate a custom list of apps to remove, the list is saved to the 'CustomAppsList' file inside the root folder of the script. Running the script with the `-RemoveAppsCustom` parameter will remove the selected apps. |
 | -RemoveCommApps                     |    Remove the Mail, Calendar, and People apps. |
 | -RemoveW11Outlook                   |    Remove the new Outlook for Windows app. |
 | -RemoveDevApps                      |    Remove developer-related apps such as Remote Desktop, DevHome and Power Automate. |
@@ -341,10 +341,10 @@ The quick and advanced usage methods support switch parameters. A table of all t
 | <pre>-DisableStartRecommended</pre> |    Disable & hide the recommended section in the start menu. This will also change the start menu layout to `More pins`. |
 | -HideHome                           |    Hide the home section from the File Explorer navigation pane and add a toggle in the File Explorer folder options. (Windows 11 only) |
 | -HideGallery                        |    Hide the gallery section from the File Explorer navigation pane and add a toggle in the File Explorer folder options. (Windows 11 only) |
-| -ExplorerToHome                     |    Changes the page that File Explorer opens to `Home`. |
-| -ExplorerToThisPC                   |    Changes the page that File Explorer opens to `This PC`. |
-| -ExplorerToDownloads                |    Changes the page that File Explorer opens to `Downloads`. |
-| -ExplorerToOneDrive                 |    Changes the page that File Explorer opens to `OneDrive`. |
+| -ExplorerToHome                     |    Change File Explorer to open to `Home`. |
+| -ExplorerToThisPC                   |    Change File Explorer to open to `This PC`. |
+| -ExplorerToDownloads                |    Change File Explorer to open to `Downloads`. |
+| -ExplorerToOneDrive                 |    Change File Explorer to open to `OneDrive`. |
 | -HideOnedrive                       |    Hide the OneDrive folder from the File Explorer navigation pane. (Windows 10 only) |
 | -Hide3dObjects                      |    Hide the 3D objects folder under 'This pc' in File Explorer. (Windows 10 only) |
 | -HideMusic                          |    Hide the music folder under 'This pc' in File Explorer. (Windows 10 only) |

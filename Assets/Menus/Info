@@ -20,7 +20,7 @@ Telemetry, Tracking & Suggested Content
 
 Bing, Copilot & More
 - Disable & remove Bing web search & Cortana from Windows search.
-- Disable & remove Windows Copilot. (W11 only)
+- Disable & remove Microsoft Copilot. (W11 only)
 - Disable Windows Recall snapshots. (W11 only)
 
 File Explorer
@@ -59,7 +59,7 @@ The default mode applies the changes that are recommended for most users. This i
 - Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads.
 - Disable & remove Bing web search & Cortana from Windows search.
 - Disable tips, tricks, suggestions & ads across Windows.
-- Disable Windows Copilot. (W11 only)
+- Disable Microsoft Copilot. (W11 only)
 - Show file extensions for known file types.
 - Disable the widget service & hide the icon from the taskbar. 
 - Hide the Chat (meet now) icon from the taskbar.

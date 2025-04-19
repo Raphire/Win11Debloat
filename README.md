@@ -29,7 +29,7 @@ The script also includes many features that system administrators will enjoy. Su
 #### Bing Web Search, Copilot & More
 
 - Disable & remove Bing web search & Cortana from Windows search.
-- Disable & remove Windows Copilot. (W11 only)
+- Disable & remove Microsoft Copilot. (W11 only)
 - Disable Windows Recall snapshots. (W11 only)
 
 #### File Explorer
@@ -76,7 +76,7 @@ The script allows you to select exactly what changes you want to make, but it al
   - Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads.
   - Disable tips, tricks, suggestions and ads in start, settings, notifications, File Explorer, and on the lockscreen.
   - Disable & remove Bing web search & Cortana from Windows search.
-  - Disable Windows Copilot. (W11 only)
+  - Disable Microsoft Copilot. (W11 only)
   - Show file extensions for known file types.
   - Hide the 3D objects folder under 'This pc' from File Explorer. (W10 only)
   - Disable the widget service & hide the icon from the taskbar.
@@ -322,7 +322,7 @@ The quick and advanced usage methods support switch parameters. A table of all t
 | -DisableDesktopSpotlight            |    Disable the 'Windows Spotlight' desktop background option. |
 | -DisableLockscreenTips              |    Disable tips & tricks on the lockscreen. |
 | -DisableBing                        |    Disable & remove Bing web search, Bing AI & Cortana in Windows search. |
-| -DisableCopilot                     |    Disable and remove Windows Copilot. (Windows 11 only) |
+| -DisableCopilot                     |    Disable and remove Microsoft Copilot. (Windows 11 only) |
 | -DisableRecall                      |    Disable Windows Recall snapshots. (Windows 11 only) |
 | -RevertContextMenu                  |    Restore the old Windows 10 style context menu. (Windows 11 only) |
 | -DisableMouseAcceleration           |    Turn off Enhance Pointer Precision, also known as mouse acceleration. Requires reboot to apply. |

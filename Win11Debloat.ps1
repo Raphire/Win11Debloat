@@ -822,8 +822,8 @@ function DisplayCustomModeOptions {
     if ($WinVersion -ge 22621){
         Write-Output ""
 
-        if ($( Read-Host -Prompt "Disable & remove Windows Copilot and Windows Recall snapshots? This applies to all users (y/n)" ) -eq 'y') {
-            AddParameter 'DisableCopilot' 'Disable and remove Windows Copilot'
+        if ($( Read-Host -Prompt "Disable & remove Microsoft Copilot and Windows Recall snapshots? This applies to all users (y/n)" ) -eq 'y') {
+            AddParameter 'DisableCopilot' 'Disable and remove Microsoft Copilot'
             AddParameter 'DisableRecall' 'Disable and remove Windows Recall snapshots'
         }
     }
@@ -1450,7 +1450,7 @@ else {
             continue
         }
         'DisableCopilot' {
-            RegImport "> Disabling & removing Windows Copilot..." "Disable_Copilot.reg"
+            RegImport "> Disabling & removing Microsoft Copilot..." "Disable_Copilot.reg"
 
             # Also remove the app package for copilot
             $appsList = 'Microsoft.Copilot'

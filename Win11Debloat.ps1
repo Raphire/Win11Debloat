@@ -17,6 +17,7 @@ param (
     [switch]$ForceRemoveEdge,
     [switch]$DisableDVR,
     [switch]$DisableTelemetry,
+    [switch]$DisableFastStartup,
     [switch]$DisableBingSearches, [switch]$DisableBing,
     [switch]$DisableDesktopSpotlight,
     [switch]$DisableLockscrTips, [switch]$DisableLockscreenTips,
@@ -852,6 +853,12 @@ function DisplayCustomModeOptions {
         }
     }
 
+    Write-Output ""
+
+    if ($( Read-Host -Prompt "Disable Fast Start-up? (y/n)" ) -eq 'y') {
+        AddParameter 'DisableFastStartup' 'Disable Fast Start-up'
+    }
+
     # Only show option for disabling context menu items for Windows 10 users or if the user opted to restore the Windows 10 context menu
     if ((get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'") -or $global:Params.ContainsKey('RevertContextMenu')){
         Write-Output ""
@@ -1267,7 +1274,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunS
                 Read-Host | Out-Null
             }
 
-            $DefaultParameterNames = 'RemoveApps','DisableTelemetry','DisableBing','DisableLockscreenTips','DisableSuggestions','ShowKnownFileExt','DisableWidgets','HideChat','DisableCopilot'
+            $DefaultParameterNames = 'RemoveApps','DisableTelemetry','DisableBing','DisableLockscreenTips','DisableSuggestions','ShowKnownFileExt','DisableWidgets','HideChat','DisableCopilot','DisableFastStartup'
 
             PrintHeader 'Default Mode'
 
@@ -1471,6 +1478,10 @@ else {
         }
         'DisableStickyKeys' {
             RegImport "> Disabling the Sticky Keys keyboard shortcut..." "Disable_Sticky_Keys_Shortcut.reg"
+            continue
+        }
+        'DisableFastStartup' {
+            RegImport "> Disabling Fast Start-up..." "Disable_Fast_Startup.reg"
             continue
         }
         'ClearStart' {

@@ -60,7 +60,7 @@ The script also includes many features that system administrators will enjoy. Su
 
 - Disable Xbox game/screen recording, this also stops gaming overlay popups.
 - Turn off Enhance Pointer Precision, also known as mouse acceleration.
-- Disable Fast Startup to ensure a full shutdown.
+- Disable Fast Start-up to ensure a full shutdown.
 - Disable the Sticky Keys keyboard shortcut. (W11 only)
 - Option to apply changes to a different user, instead of the currently logged in user.
 - Sysprep mode to apply changes to the Windows Default user profile. Afterwards, all new users will have the changes automatically applied to them.
@@ -78,7 +78,7 @@ The script allows you to select exactly what changes you want to make, but it al
   - Disable tips, tricks, suggestions and ads in start, settings, notifications, File Explorer, and on the lockscreen.
   - Disable & remove Bing web search & Cortana from Windows search.
   - Disable Microsoft Copilot. (W11 only)
-  - Disable Fast Startup to ensure a full shutdown.
+  - Disable Fast Start-up to ensure a full shutdown.
   - Show file extensions for known file types.
   - Hide the 3D objects folder under 'This pc' from File Explorer. (W10 only)
   - Disable the widget service & hide the icon from the taskbar.
@@ -307,7 +307,7 @@ The quick and advanced usage methods support switch parameters. A table of all t
 | -Sysprep                            |    Run the script in Sysprep mode. All changes will be applied to the Windows default user profile and will only affect new user accounts. |
 | -User `<USERNAME>`                  |    Run the script for the specified user, instead of the currently logged in user. This user must have logged on atleast once, and cannot be logged in at the time the script is run. |
 | -RunDefaults                        |    Run the script with the default settings. |
-| -DisableFastStartup                 |    Disables Fast Startup to ensure a full shutdown. |
+| -DisableFastStartup                 |    Disables Fast Start-up to ensure a full shutdown. |
 | -RunSavedSettings                   |    Run the script with the saved custom settings from last time. These settings are saved to and read from the `SavedSettings` file in the root folder of the script. |
 | -RemoveApps                         |    Remove the default selection of bloatware apps. |
 | -RemoveAppsCustom                   |    Remove all apps specified in the 'CustomAppsList' file. IMPORTANT: You can generate your custom list by running the script with the `-RunAppsListGenerator` parameter. No apps will be removed if this file does not exist. |

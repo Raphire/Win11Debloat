@@ -853,6 +853,12 @@ function DisplayCustomModeOptions {
         }
     }
 
+    Write-Output ""
+
+    if ($( Read-Host -Prompt "Disable Fast Start-up? (y/n)" ) -eq 'y') {
+        AddParameter 'DisableFastStartup' 'Disable Fast Start-up'
+    }
+
     # Only show option for disabling context menu items for Windows 10 users or if the user opted to restore the Windows 10 context menu
     if ((get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'") -or $global:Params.ContainsKey('RevertContextMenu')){
         Write-Output ""
@@ -1080,13 +1086,6 @@ function DisplayCustomModeOptions {
                 }
             }
         }
-    }
-
-    # Add Fast Boot prompt
-    Write-Output ""
-
-    if ($( Read-Host -Prompt "Disable Fast Startup? (y/n)" ) -eq 'y') {
-        AddParameter 'DisableFastStartup' 'Disable Fast Startup'
     }
 
     # Suppress prompt if Silent parameter was passed
@@ -1437,10 +1436,6 @@ else {
             RegImport "> Disabling telemetry, diagnostic data, activity history, app-launch tracking and targeted ads..." "Disable_Telemetry.reg"
             continue
         }
-        'DisableFastStartup' {
-            RegImport "> Disabling Fast Startup..." "Disable_Fast_Startup.reg"
-            continue
-        }
         {$_ -in "DisableSuggestions", "DisableWindowsSuggestions"} {
             RegImport "> Disabling tips, tricks, suggestions and ads across Windows..." "Disable_Windows_Suggestions.reg"
             continue
@@ -1483,6 +1478,10 @@ else {
         }
         'DisableStickyKeys' {
             RegImport "> Disabling the Sticky Keys keyboard shortcut..." "Disable_Sticky_Keys_Shortcut.reg"
+            continue
+        }
+        'DisableFastStartup' {
+            RegImport "> Disabling Fast Start-up..." "Disable_Fast_Startup.reg"
             continue
         }
         'ClearStart' {

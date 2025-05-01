@@ -20,7 +20,7 @@ Telemetry, Tracking & Suggested Content
 
 Bing, Copilot & More
 - Disable & remove Bing web search & Cortana from Windows search.
-- Disable & remove Windows Copilot. (W11 only)
+- Disable & remove Microsoft Copilot. (W11 only)
 - Disable Windows Recall snapshots. (W11 only)
 
 File Explorer
@@ -38,6 +38,7 @@ Taskbar & Start
 - Disable the widgets service & hide icon from the taskbar.
 - Hide the chat (meet now) icon from the taskbar.
 - Disable & hide the recommended section in the start menu. (W11 only)
+- Enable the 'End Task' option in the taskbar right click menu. (W11 only)
 
 Context menu
 - Restore the old Windows 10 style context menu. (W11 only)
@@ -46,6 +47,8 @@ Context menu
 Other
 - Disable Xbox game/screen recording, this also stops gaming overlay popups.
 - Turn off Enhance Pointer Precision, also known as mouse acceleration.
+- Disable the Sticky Keys keyboard shortcut. (W11 only)
+- Option to apply changes to a different user, instead of the currently logged in user.
 - Sysprep mode to apply changes to the Windows Default user profile.
 
 -------------------------------------------------------------------------------------------
@@ -56,7 +59,7 @@ The default mode applies the changes that are recommended for most users. This i
 - Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads.
 - Disable & remove Bing web search & Cortana from Windows search.
 - Disable tips, tricks, suggestions & ads across Windows.
-- Disable Windows Copilot. (W11 only)
+- Disable Microsoft Copilot. (W11 only)
 - Show file extensions for known file types.
 - Disable the widget service & hide the icon from the taskbar. 
 - Hide the Chat (meet now) icon from the taskbar.

@@ -5,7 +5,7 @@ param (
     [switch]$Silent,
     [switch]$Sysprep,
     [string]$User,
-    [switch]$RunAppConfigurator,
+    [switch]$RunAppsListGenerator, [switch]$RunAppConfigurator,
     [switch]$RunDefaults, [switch]$RunWin11Defaults,
     [switch]$RunSavedSettings,
     [switch]$RemoveApps, 
@@ -33,10 +33,12 @@ param (
     [switch]$DisableRecall,
     [switch]$DisableWidgets, [switch]$HideWidgets,
     [switch]$DisableChat, [switch]$HideChat,
+    [switch]$EnableEndTask,
     [switch]$ClearStart,
     [switch]$ClearStartAllUsers,
     [switch]$RevertContextMenu,
     [switch]$DisableMouseAcceleration,
+    [switch]$DisableStickyKeys,
     [switch]$HideHome,
     [switch]$HideGallery,
     [switch]$ExplorerToHome,
@@ -560,7 +562,11 @@ function RestartExplorer {
     Write-Output "> Restarting Windows Explorer process to apply all changes... (This may cause some flickering)"
 
     if ($global:Params.ContainsKey("DisableMouseAcceleration")) {
-        Write-Host "Warning: The Enhance Pointer Precision setting has been changed, this setting will only take effect after a reboot" -ForegroundColor Yellow
+        Write-Host "Warning: The Enhance Pointer Precision setting changes will only take effect after a reboot" -ForegroundColor Yellow
+    }
+
+    if ($global:Params.ContainsKey("DisableStickyKeys")) {
+        Write-Host "Warning: The Sticky Keys setting changes will only take effect after a reboot" -ForegroundColor Yellow
     }
 
     # Only restart if the powershell process matches the OS architecture.
@@ -817,14 +823,9 @@ function DisplayCustomModeOptions {
     if ($WinVersion -ge 22621){
         Write-Output ""
 
-        if ($( Read-Host -Prompt "Disable & remove Windows Copilot? This applies to all users (y/n)" ) -eq 'y') {
-            AddParameter 'DisableCopilot' 'Disable and remove Windows Copilot'
-        }
-
-        Write-Output ""
-
-        if ($( Read-Host -Prompt "Disable Windows Recall snapshots? This applies to all users (y/n)" ) -eq 'y') {
-            AddParameter 'DisableRecall' 'Disable Windows Recall snapshots'
+        if ($( Read-Host -Prompt "Disable & remove Microsoft Copilot and Windows Recall snapshots? This applies to all users (y/n)" ) -eq 'y') {
+            AddParameter 'DisableCopilot' 'Disable and remove Microsoft Copilot'
+            AddParameter 'DisableRecall' 'Disable and remove Windows Recall snapshots'
         }
     }
 
@@ -841,6 +842,15 @@ function DisplayCustomModeOptions {
 
     if ($( Read-Host -Prompt "Turn off Enhance Pointer Precision, also known as mouse acceleration? (y/n)" ) -eq 'y') {
         AddParameter 'DisableMouseAcceleration' 'Turn off Enhance Pointer Precision (mouse acceleration)'
+    }
+
+    # Only show this option for Windows 11 users running build 26100 or later
+    if ($WinVersion -ge 26100){
+        Write-Output ""
+
+        if ($( Read-Host -Prompt "Disable the Sticky Keys keyboard shortcut? (y/n)" ) -eq 'y') {
+            AddParameter 'DisableStickyKeys' 'Disable the Sticky Keys keyboard shortcut'
+        }
     }
 
     # Only show option for disabling context menu items for Windows 10 users or if the user opted to restore the Windows 10 context menu
@@ -968,6 +978,15 @@ function DisplayCustomModeOptions {
 
             if ($( Read-Host -Prompt "   Hide the chat (meet now) icon from the taskbar? (y/n)" ) -eq 'y') {
                 AddParameter 'HideChat' 'Hide the chat (meet now) icon from the taskbar'
+            }
+        }
+        
+        # Only show this options for Windows users running build 22631 or later
+        if ($WinVersion -ge 22631){
+            Write-Output ""
+
+            if ($( Read-Host -Prompt "   Enable the 'End Task' option in the taskbar right click menu? (y/n)" ) -eq 'y') {
+                AddParameter 'EnableEndTask' "Enable the 'End Task' option in the taskbar right click menu"
             }
         }
     }
@@ -1168,18 +1187,19 @@ if ((Test-Path "$PSScriptRoot/SavedSettings") -and ([String]::IsNullOrWhiteSpace
     Remove-Item -Path "$PSScriptRoot/SavedSettings" -recurse
 }
 
-# Only run the app selection form if the 'RunAppConfigurator' parameter was passed to the script
-if ($RunAppConfigurator) {
-    PrintHeader "App Configurator"
+# Only run the app selection form if the 'RunAppsListGenerator' parameter was passed to the script
+if ($RunAppConfigurator -or $RunAppsListGenerator) {
+    PrintHeader "Custom Apps List Generator"
 
     $result = ShowAppSelectionForm
 
     # Show different message based on whether the app selection was saved or cancelled
     if ($result -ne [System.Windows.Forms.DialogResult]::OK) {
-        Write-Host "App configurator was closed without saving." -ForegroundColor Red
+        Write-Host "Application selection window was closed without saving." -ForegroundColor Red
     }
     else {
-        Write-Output "Your app selection was saved to the 'CustomAppsList' file in the root folder of the script."
+        Write-Output "Your app selection was saved to the 'CustomAppsList' file, found at:"
+        Write-Host "$PSScriptRoot" -ForegroundColor Yellow
     }
 
     AwaitKeyToExit
@@ -1442,9 +1462,9 @@ else {
             continue
         }
         'DisableCopilot' {
-            RegImport "> Disabling & removing Windows Copilot..." "Disable_Copilot.reg"
+            RegImport "> Disabling & removing Microsoft Copilot..." "Disable_Copilot.reg"
 
-            # Also remove the app package for bing search
+            # Also remove the app package for copilot
             $appsList = 'Microsoft.Copilot'
             RemoveApps $appsList
             continue
@@ -1459,6 +1479,10 @@ else {
         }
         'DisableMouseAcceleration' {
             RegImport "> Turning off Enhanced Pointer Precision..." "Disable_Enhance_Pointer_Precision.reg"
+            continue
+        }
+        'DisableStickyKeys' {
+            RegImport "> Disabling the Sticky Keys keyboard shortcut..." "Disable_Sticky_Keys_Shortcut.reg"
             continue
         }
         'ClearStart' {
@@ -1505,6 +1529,10 @@ else {
         }
         {$_ -in "HideChat", "DisableChat"} {
             RegImport "> Hiding the chat icon from the taskbar..." "Disable_Chat_Taskbar.reg"
+            continue
+        }
+        'EnableEndTask' {
+            RegImport "> Enabling the 'End Task' option in the taskbar right click menu..." "Enable_End_Task.reg"
             continue
         }
         'ExplorerToHome' {

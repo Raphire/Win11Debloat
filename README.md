@@ -29,7 +29,7 @@ The script also includes many features that system administrators will enjoy. Su
 #### Bing Web Search, Copilot & More
 
 - Disable & remove Bing web search & Cortana from Windows search.
-- Disable & remove Windows Copilot. (W11 only)
+- Disable & remove Microsoft Copilot. (W11 only)
 - Disable Windows Recall snapshots. (W11 only)
 
 #### File Explorer
@@ -49,6 +49,7 @@ The script also includes many features that system administrators will enjoy. Su
 - Disable the widgets service & hide icon from the taskbar.
 - Hide the chat (meet now) icon from the taskbar.
 - Disable & hide the recommended section in the start menu. (W11 only)
+- Enable the 'End Task' option in the taskbar right click menu. (W11 only)
 
 #### Context Menu
 
@@ -60,6 +61,7 @@ The script also includes many features that system administrators will enjoy. Su
 - Disable Xbox game/screen recording, this also stops gaming overlay popups.
 - Turn off Enhance Pointer Precision, also known as mouse acceleration.
 - Disable Fast Startup to ensure a full shutdown.
+- Disable the Sticky Keys keyboard shortcut. (W11 only)
 - Option to apply changes to a different user, instead of the currently logged in user.
 - Sysprep mode to apply changes to the Windows Default user profile. Afterwards, all new users will have the changes automatically applied to them.
 
@@ -75,10 +77,10 @@ The script allows you to select exactly what changes you want to make, but it al
   - Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads.
   - Disable tips, tricks, suggestions and ads in start, settings, notifications, File Explorer, and on the lockscreen.
   - Disable & remove Bing web search & Cortana from Windows search.
-  - Disable Windows Copilot. (Windows 11 only)
+  - Disable Microsoft Copilot. (W11 only)
   - Disable Fast Startup to ensure a full shutdown.
   - Show file extensions for known file types.
-  - Hide the 3D objects folder under 'This pc' from File Explorer. (Windows 10 only)
+  - Hide the 3D objects folder under 'This pc' from File Explorer. (W10 only)
   - Disable the widget service & hide the icon from the taskbar.
   - Hide the Chat (meet now) icon from the taskbar.
 
@@ -101,6 +103,7 @@ The script allows you to select exactly what changes you want to make, but it al
       - Microsoft.BingTranslator  
       - Microsoft.BingTravel   
       - Microsoft.BingWeather  
+      - Microsoft.Copilot
       - Microsoft.Getstarted (Cannot be uninstalled in Windows 11)
       - Microsoft.Messaging  
       - Microsoft.Microsoft3DViewer  
@@ -307,8 +310,8 @@ The quick and advanced usage methods support switch parameters. A table of all t
 | -DisableFastStartup                 |    Disables Fast Startup to ensure a full shutdown. |
 | -RunSavedSettings                   |    Run the script with the saved custom settings from last time. These settings are saved to and read from the `SavedSettings` file in the root folder of the script. |
 | -RemoveApps                         |    Remove the default selection of bloatware apps. |
-| -RemoveAppsCustom                   |    Remove all apps specified in the 'CustomAppsList' file. IMPORTANT: You can generate your custom list by running the script with the `-RunAppConfigurator` parameter. No apps will be removed if this file does not exist! |
-| -RunAppConfigurator                 |    Run the app configurator to generate a list of apps to remove, the list is saved to the 'CustomAppsList' file. Running the script with the `-RemoveAppsCustom` parameter will remove the selected apps. |
+| -RemoveAppsCustom                   |    Remove all apps specified in the 'CustomAppsList' file. IMPORTANT: You can generate your custom list by running the script with the `-RunAppsListGenerator` parameter. No apps will be removed if this file does not exist. |
+| -RunAppsListGenerator               |    Run the apps list generator to generate a custom list of apps to remove, the list is saved to the 'CustomAppsList' file inside the root folder of the script. Running the script with the `-RemoveAppsCustom` parameter will remove the selected apps. |
 | -RemoveCommApps                     |    Remove the Mail, Calendar, and People apps. |
 | -RemoveW11Outlook                   |    Remove the new Outlook for Windows app. |
 | -RemoveDevApps                      |    Remove developer-related apps such as Remote Desktop, DevHome and Power Automate. |
@@ -322,10 +325,11 @@ The quick and advanced usage methods support switch parameters. A table of all t
 | -DisableDesktopSpotlight            |    Disable the 'Windows Spotlight' desktop background option. |
 | -DisableLockscreenTips              |    Disable tips & tricks on the lockscreen. |
 | -DisableBing                        |    Disable & remove Bing web search, Bing AI & Cortana in Windows search. |
-| -DisableCopilot                     |    Disable and remove Windows Copilot. (Windows 11 only) |
+| -DisableCopilot                     |    Disable and remove Microsoft Copilot. (Windows 11 only) |
 | -DisableRecall                      |    Disable Windows Recall snapshots. (Windows 11 only) |
 | -RevertContextMenu                  |    Restore the old Windows 10 style context menu. (Windows 11 only) |
 | -DisableMouseAcceleration           |    Turn off Enhance Pointer Precision, also known as mouse acceleration. Requires reboot to apply. |
+| -DisableStickyKeys                  |    Disable the Sticky Keys keyboard shortcut. |
 | -ShowHiddenFolders                  |    Show hidden files, folders and drives. |
 | -ShowKnownFileExt                   |    Show file extensions for known file types. |
 | -HideDupliDrive                     |    Hide duplicate removable drive entries from the File Explorer navigation pane, so only the entry under 'This PC' remains. |
@@ -337,13 +341,14 @@ The quick and advanced usage methods support switch parameters. A table of all t
 | -HideTaskview                       |    Hide the taskview button from the taskbar. (Windows 11 only) |
 | -HideChat                           |    Hide the chat (meet now) icon from the taskbar. |
 | -DisableWidgets                     |    Disable the widget service & hide the widget (news and interests) icon from the taskbar. |
+| -EnableEndTask                      |    Enable the 'End Task' option in the taskbar right click menu. |
 | <pre>-DisableStartRecommended</pre> |    Disable & hide the recommended section in the start menu. This will also change the start menu layout to `More pins`. |
 | -HideHome                           |    Hide the home section from the File Explorer navigation pane and add a toggle in the File Explorer folder options. (Windows 11 only) |
 | -HideGallery                        |    Hide the gallery section from the File Explorer navigation pane and add a toggle in the File Explorer folder options. (Windows 11 only) |
-| -ExplorerToHome                     |    Changes the page that File Explorer opens to `Home`. |
-| -ExplorerToThisPC                   |    Changes the page that File Explorer opens to `This PC`. |
-| -ExplorerToDownloads                |    Changes the page that File Explorer opens to `Downloads`. |
-| -ExplorerToOneDrive                 |    Changes the page that File Explorer opens to `OneDrive`. |
+| -ExplorerToHome                     |    Change File Explorer to open to `Home`. |
+| -ExplorerToThisPC                   |    Change File Explorer to open to `This PC`. |
+| -ExplorerToDownloads                |    Change File Explorer to open to `Downloads`. |
+| -ExplorerToOneDrive                 |    Change File Explorer to open to `OneDrive`. |
 | -HideOnedrive                       |    Hide the OneDrive folder from the File Explorer navigation pane. (Windows 10 only) |
 | -Hide3dObjects                      |    Hide the 3D objects folder under 'This pc' in File Explorer. (Windows 10 only) |
 | -HideMusic                          |    Hide the music folder under 'This pc' in File Explorer. (Windows 10 only) |

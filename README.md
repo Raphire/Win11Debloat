@@ -317,11 +317,11 @@ The quick and advanced usage methods support switch parameters. A table of all t
 
 | Parameter | Description |
 | :-------: | ----------- |
+| -CreateRestorePoint                 |    Create a system restore point before making any changes. Unless a restore point was already created in the last 24 hours. |
 | -Silent                             |    Suppresses all interactive prompts, so the script will run without requiring any user input. |
 | -Sysprep                            |    Run the script in Sysprep mode. All changes will be applied to the Windows default user profile and will only affect new user accounts. |
 | -User `<USERNAME>`                  |    Run the script for the specified user, instead of the currently logged in user. This user must have logged on atleast once, and cannot be logged in at the time the script is run. |
 | -RunDefaults                        |    Run the script with the default settings. |
-| -DisableFastStartup                 |    Disables Fast Start-up to ensure a full shutdown. |
 | -RunSavedSettings                   |    Run the script with the saved custom settings from last time. These settings are saved to and read from the `SavedSettings` file in the root folder of the script. |
 | -RemoveApps                         |    Remove the default selection of bloatware apps. |
 | -RemoveAppsCustom                   |    Remove all apps specified in the 'CustomAppsList' file. IMPORTANT: You can generate your custom list by running the script with the `-RunAppsListGenerator` parameter. No apps will be removed if this file does not exist. |
@@ -344,6 +344,7 @@ The quick and advanced usage methods support switch parameters. A table of all t
 | -RevertContextMenu                  |    Restore the old Windows 10 style context menu. (Windows 11 only) |
 | -DisableMouseAcceleration           |    Turn off Enhance Pointer Precision, also known as mouse acceleration. Requires reboot to apply. |
 | -DisableStickyKeys                  |    Disable the Sticky Keys keyboard shortcut. |
+| -DisableFastStartup                 |    Disables Fast Start-up to ensure a full shutdown. |
 | -ShowHiddenFolders                  |    Show hidden files, folders and drives. |
 | -ShowKnownFileExt                   |    Show file extensions for known file types. |
 | -HideDupliDrive                     |    Hide duplicate removable drive entries from the File Explorer navigation pane, so only the entry under 'This PC' remains. |

@@ -5,6 +5,7 @@ param (
     [switch]$Silent,
     [switch]$Sysprep,
     [string]$User,
+    [switch]$CreateRestorePoint,
     [switch]$RunAppsListGenerator, [switch]$RunAppConfigurator,
     [switch]$RunDefaults, [switch]$RunWin11Defaults,
     [switch]$RunSavedSettings,
@@ -741,11 +742,41 @@ function GetUserName {
 }
 
 
+function CreateSystemRestorePoint {
+    Write-Output "> Creating system restore point..."
+
+    # Find existing restore points that are less than 24 hours old
+    try {
+        $recentRestorePoints = Get-ComputerRestorePoint | Where-Object { (Get-Date) - [System.Management.ManagementDateTimeConverter]::ToDateTime($_.CreationTime) -le (New-TimeSpan -Hours 24) }
+    } catch {
+        Write-Host "Error: Unable to retrieve existing restore points: $_" -ForegroundColor Red
+        Write-Output ""
+        return
+    }
+
+    if ($recentRestorePoints.Count -eq 0) {
+        Checkpoint-Computer -Description "Restore point created by Win11Debloat" -RestorePointType "MODIFY_SETTINGS"
+        Write-Output "System restore point created successfully"
+    }
+    else {
+        Write-Host "A recent restore point already exists, no new restore point was created." -ForegroundColor Yellow
+    }
+
+    Write-Output ""
+}
+
+
 function DisplayCustomModeOptions {
     # Get current Windows build version to compare against features
     $WinVersion = Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' CurrentBuild
             
     PrintHeader 'Custom Mode'
+
+    if ($( Read-Host -Prompt "Do you wish to create a system restore point? (y/n)" ) -eq 'y') {
+        AddParameter 'CreateRestorePoint' 'Create a system restore point'
+    }
+
+    Write-Output ""
 
     # Show options for removing apps, only continue on valid input
     Do {
@@ -1131,7 +1162,7 @@ $WinVersion = Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\Current
 
 $global:Params = $PSBoundParameters
 $global:FirstSelection = $true
-$SPParams = 'WhatIf', 'Confirm', 'Verbose', 'Silent', 'Sysprep', 'Debug', 'User'
+$SPParams = 'WhatIf', 'Confirm', 'Verbose', 'Silent', 'Sysprep', 'Debug', 'User', 'CreateRestorePoint'
 $SPParamCount = 0
 
 # Count how many SPParams exist within Params
@@ -1274,7 +1305,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunS
                 Read-Host | Out-Null
             }
 
-            $DefaultParameterNames = 'RemoveApps','DisableTelemetry','DisableBing','DisableLockscreenTips','DisableSuggestions','ShowKnownFileExt','DisableWidgets','HideChat','DisableCopilot','DisableFastStartup'
+            $DefaultParameterNames = 'CreateRestorePoint','RemoveApps','DisableTelemetry','DisableBing','DisableLockscreenTips','DisableSuggestions','ShowKnownFileExt','DisableWidgets','HideChat','DisableCopilot','DisableFastStartup'
 
             PrintHeader 'Default Mode'
 
@@ -1381,6 +1412,10 @@ if ($SPParamCount -eq $global:Params.Keys.Count) {
 else {
     # Execute all selected/provided parameters
     switch ($global:Params.Keys) {
+        'CreateRestorePoint' {
+            CreateSystemRestorePoint
+            continue
+        }
         'RemoveApps' {
             $appsList = ReadAppslistFromFile "$PSScriptRoot/Appslist.txt" 
             Write-Output "> Removing default selection of $($appsList.Count) apps..."

@@ -3,6 +3,7 @@ param (
     [switch]$Verbose,
     [switch]$Sysprep,
     [string]$User,
+    [switch]$CreateRestorePoint,
     [switch]$RunAppsListGenerator, [switch]$RunAppConfigurator,
     [switch]$RunDefaults, [switch]$RunWin11Defaults,
     [switch]$RunSavedSettings,

@@ -31,7 +31,7 @@ The script also includes many features that system administrators will enjoy. Su
 
 #### App Removal
 
-- Remove a wide variety of preinstalled apps.
+- Remove a wide variety of preinstalled apps. Click [here](https://github.com/Raphire/Win11Debloat/discussions/230) for more info.
 - Remove all pinned apps from start for the current user, or for all existing & new users. (Windows 11 only)
 
 #### Telemetry, Tracking & Suggested Content
@@ -345,10 +345,10 @@ The quick and advanced usage methods support switch parameters. A table of all t
 | -User `<USERNAME>`                  |    Run the script for the specified user, instead of the currently logged in user. This user must have logged on atleast once, and cannot be logged in at the time the script is run. |
 | -RunDefaults                        |    Run the script with the default settings. |
 | -RunSavedSettings                   |    Run the script with the saved custom settings from last time. These settings are saved to and read from the `SavedSettings` file in the root folder of the script. |
-| -RemoveApps                         |    Remove the default selection of bloatware apps. |
+| -RemoveApps                         |    Remove the [default selection](https://github.com/Raphire/Win11Debloat/discussions/230#default-apps) of bloatware apps. |
 | -RemoveAppsCustom                   |    Remove all apps specified in the 'CustomAppsList' file. IMPORTANT: You can generate your custom list by running the script with the `-RunAppsListGenerator` parameter. No apps will be removed if this file does not exist. |
 | -RunAppsListGenerator               |    Run the apps list generator to generate a custom list of apps to remove, the list is saved to the 'CustomAppsList' file inside the root folder of the script. Running the script with the `-RemoveAppsCustom` parameter will remove the selected apps. |
-| -RemoveHPApps                       |    Remove preinstalled HP apps. |
+| -RemoveHPApps                       |    Remove preinstalled HP apps. Click [here](https://github.com/Raphire/Win11Debloat/discussions/230#hp-apps) for a full list. |
 | -RemoveCommApps                     |    Remove the Mail, Calendar, and People apps. |
 | -RemoveW11Outlook                   |    Remove the new Outlook for Windows app. |
 | -RemoveDevApps                      |    Remove developer-related apps such as Remote Desktop, DevHome and Power Automate. |

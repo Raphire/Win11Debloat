@@ -756,8 +756,14 @@ function CreateSystemRestorePoint {
     }
 
     if ($recentRestorePoints.Count -eq 0) {
-        Checkpoint-Computer -Description "Restore point created by Win11Debloat" -RestorePointType "MODIFY_SETTINGS"
-        Write-Output "System restore point created successfully"
+            
+        try {
+            Checkpoint-Computer -Description "Restore point created by Win11Debloat" -RestorePointType "MODIFY_SETTINGS"
+            Write-Output "System restore point created successfully"                
+        } catch {
+            Write-Host "Error: Unable to create restore point: $_" -ForegroundColor Red
+            return
+        }
     }
     else {
         Write-Host "A recent restore point already exists, no new restore point was created." -ForegroundColor Yellow

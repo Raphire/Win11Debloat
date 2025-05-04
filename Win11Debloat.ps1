@@ -736,40 +736,40 @@ function AwaitKeyToExit {
 function GetUserName {
     if ($global:Params.ContainsKey("User")) { 
         return $global:Params.Item("User") 
-    } 
-    else { 
-        return $env:USERNAME 
     }
+    
+    return $env:USERNAME
 }
 
 
 function CreateSystemRestorePoint {
     Write-Output "> Creating system restore point..."
 
+    # Check if the System Restore service is running
+    $service = Get-Service -Name 'srservice' -ErrorAction SilentlyContinue
+    if (-not $service -or $service.Status -ne 'Running') {
+        Write-Host "Error: System Restore service is not running. Please enable it before proceeding." -ForegroundColor Red
+        return
+    }
+
     # Find existing restore points that are less than 24 hours old
     try {
         $recentRestorePoints = Get-ComputerRestorePoint | Where-Object { (Get-Date) - [System.Management.ManagementDateTimeConverter]::ToDateTime($_.CreationTime) -le (New-TimeSpan -Hours 24) }
     } catch {
         Write-Host "Error: Unable to retrieve existing restore points: $_" -ForegroundColor Red
-        Write-Output ""
         return
     }
 
     if ($recentRestorePoints.Count -eq 0) {
-            
         try {
             Checkpoint-Computer -Description "Restore point created by Win11Debloat" -RestorePointType "MODIFY_SETTINGS"
-            Write-Output "System restore point created successfully"                
+            Write-Output "System restore point created successfully"
         } catch {
             Write-Host "Error: Unable to create restore point: $_" -ForegroundColor Red
-            return
         }
-    }
-    else {
+    } else {
         Write-Host "A recent restore point already exists, no new restore point was created." -ForegroundColor Yellow
     }
-
-    Write-Output ""
 }
 
 
@@ -1408,248 +1408,247 @@ else {
     PrintHeader 'Custom Mode'
 }
 
-
 # If the number of keys in SPParams equals the number of keys in Params then no modifications/changes were selected
 #  or added by the user, and the script can exit without making any changes.
 if ($SPParamCount -eq $global:Params.Keys.Count) {
     Write-Output "The script completed without making any changes."
 
     AwaitKeyToExit
+    Exit
 }
-else {
-    # Execute all selected/provided parameters
-    switch ($global:Params.Keys) {
-        'CreateRestorePoint' {
-            CreateSystemRestorePoint
-            continue
-        }
-        'RemoveApps' {
-            $appsList = ReadAppslistFromFile "$PSScriptRoot/Appslist.txt" 
-            Write-Output "> Removing default selection of $($appsList.Count) apps..."
-            RemoveApps $appsList
-            continue
-        }
-        'RemoveAppsCustom' {
-            if (-not (Test-Path "$PSScriptRoot/CustomAppsList")) {
-                Write-Host "> Error: Could not load custom apps list from file, no apps were removed" -ForegroundColor Red
-                Write-Output ""
-                continue
-            }
-            
-            $appsList = ReadAppslistFromFile "$PSScriptRoot/CustomAppsList"
-            Write-Output "> Removing $($appsList.Count) apps..."
-            RemoveApps $appsList
-            continue
-        }
-        'RemoveCommApps' {
-            Write-Output "> Removing Mail, Calendar and People apps..."
-            
-            $appsList = 'Microsoft.windowscommunicationsapps', 'Microsoft.People'
-            RemoveApps $appsList
-            continue
-        }
-        'RemoveW11Outlook' {
-            $appsList = 'Microsoft.OutlookForWindows'
-            Write-Output "> Removing new Outlook for Windows app..."
-            RemoveApps $appsList
-            continue
-        }
-        'RemoveDevApps' {
-            $appsList = 'Microsoft.PowerAutomateDesktop', 'Microsoft.RemoteDesktop', 'Windows.DevHome'
-            Write-Output "> Removing developer-related related apps..."
-            RemoveApps $appsList
-            continue
-        }
-        'RemoveGamingApps' {
-            $appsList = 'Microsoft.GamingApp', 'Microsoft.XboxGameOverlay', 'Microsoft.XboxGamingOverlay'
-            Write-Output "> Removing gaming related apps..."
-            RemoveApps $appsList
-            continue
-        }
-        'RemoveHPApps' {
-            $appsList = 'AD2F1837.HPAIExperienceCenter', 'AD2F1837.HPJumpStarts', 'AD2F1837.HPPCHardwareDiagnosticsWindows', 'AD2F1837.HPPowerManager', 'AD2F1837.HPPrivacySettings', 'AD2F1837.HPSupportAssistant', 'AD2F1837.HPSureShieldAI', 'AD2F1837.HPSystemInformation', 'AD2F1837.HPQuickDrop', 'AD2F1837.HPWorkWell', 'AD2F1837.myHP', 'AD2F1837.HPDesktopSupportUtilities', 'AD2F1837.HPQuickTouch', 'AD2F1837.HPEasyClean', 'AD2F1837.HPConnectedMusic', 'AD2F1837.HPFileViewer', 'AD2F1837.HPRegistration', 'AD2F1837.HPWelcome', 'AD2F1837.HPConnectedPhotopoweredbySnapfish', 'AD2F1837.HPPrinterControl'
-            Write-Output "> Removing HP apps..."
-            RemoveApps $appsList
-            continue
-        }
-        "ForceRemoveEdge" {
-            ForceRemoveEdge
-            continue
-        }
-        'DisableDVR' {
-            RegImport "> Disabling Xbox game/screen recording..." "Disable_DVR.reg"
-            continue
-        }
-        'DisableTelemetry' {
-            RegImport "> Disabling telemetry, diagnostic data, activity history, app-launch tracking and targeted ads..." "Disable_Telemetry.reg"
-            continue
-        }
-        {$_ -in "DisableSuggestions", "DisableWindowsSuggestions"} {
-            RegImport "> Disabling tips, tricks, suggestions and ads across Windows..." "Disable_Windows_Suggestions.reg"
-            continue
-        }
-        'DisableDesktopSpotlight' {
-            RegImport "> Disabling the 'Windows Spotlight' desktop background option..." "Disable_Desktop_Spotlight.reg"
-            continue
-        }
-        {$_ -in "DisableLockscrTips", "DisableLockscreenTips"} {
-            RegImport "> Disabling tips & tricks on the lockscreen..." "Disable_Lockscreen_Tips.reg"
-            continue
-        }
-        {$_ -in "DisableBingSearches", "DisableBing"} {
-            RegImport "> Disabling bing web search, bing AI & cortana in Windows search..." "Disable_Bing_Cortana_In_Search.reg"
-            
-            # Also remove the app package for bing search
-            $appsList = 'Microsoft.BingSearch'
-            RemoveApps $appsList
-            continue
-        }
-        'DisableCopilot' {
-            RegImport "> Disabling & removing Microsoft Copilot..." "Disable_Copilot.reg"
 
-            # Also remove the app package for copilot
-            $appsList = 'Microsoft.Copilot'
-            RemoveApps $appsList
-            continue
-        }
-        'DisableRecall' {
-            RegImport "> Disabling Windows Recall snapshots..." "Disable_AI_Recall.reg"
-            continue
-        }
-        'RevertContextMenu' {
-            RegImport "> Restoring the old Windows 10 style context menu..." "Disable_Show_More_Options_Context_Menu.reg"
-            continue
-        }
-        'DisableMouseAcceleration' {
-            RegImport "> Turning off Enhanced Pointer Precision..." "Disable_Enhance_Pointer_Precision.reg"
-            continue
-        }
-        'DisableStickyKeys' {
-            RegImport "> Disabling the Sticky Keys keyboard shortcut..." "Disable_Sticky_Keys_Shortcut.reg"
-            continue
-        }
-        'DisableFastStartup' {
-            RegImport "> Disabling Fast Start-up..." "Disable_Fast_Startup.reg"
-            continue
-        }
-        'ClearStart' {
-            Write-Output "> Removing all pinned apps from the start menu for user $(GetUserName)..."
-            ReplaceStartMenu
+# Execute all selected/provided parameters
+switch ($global:Params.Keys) {
+    'CreateRestorePoint' {
+        CreateSystemRestorePoint
+        continue
+    }
+    'RemoveApps' {
+        $appsList = ReadAppslistFromFile "$PSScriptRoot/Appslist.txt" 
+        Write-Output "> Removing default selection of $($appsList.Count) apps..."
+        RemoveApps $appsList
+        continue
+    }
+    'RemoveAppsCustom' {
+        if (-not (Test-Path "$PSScriptRoot/CustomAppsList")) {
+            Write-Host "> Error: Could not load custom apps list from file, no apps were removed" -ForegroundColor Red
             Write-Output ""
             continue
         }
-        'ClearStartAllUsers' {
-            ReplaceStartMenuForAllUsers
-            continue
-        }
-        'DisableStartRecommended' {
-            RegImport "> Disabling and hiding the start menu recommended section..." "Disable_Start_Recommended.reg"
-            continue
-        }
-        'TaskbarAlignLeft' {
-            RegImport "> Aligning taskbar buttons to the left..." "Align_Taskbar_Left.reg"
-            continue
-        }
-        'HideSearchTb' {
-            RegImport "> Hiding the search icon from the taskbar..." "Hide_Search_Taskbar.reg"
-            continue
-        }
-        'ShowSearchIconTb' {
-            RegImport "> Changing taskbar search to icon only..." "Show_Search_Icon.reg"
-            continue
-        }
-        'ShowSearchLabelTb' {
-            RegImport "> Changing taskbar search to icon with label..." "Show_Search_Icon_And_Label.reg"
-            continue
-        }
-        'ShowSearchBoxTb' {
-            RegImport "> Changing taskbar search to search box..." "Show_Search_Box.reg"
-            continue
-        }
-        'HideTaskview' {
-            RegImport "> Hiding the taskview button from the taskbar..." "Hide_Taskview_Taskbar.reg"
-            continue
-        }
-        {$_ -in "HideWidgets", "DisableWidgets"} {
-            RegImport "> Disabling the widget service and hiding the widget icon from the taskbar..." "Disable_Widgets_Taskbar.reg"
-            continue
-        }
-        {$_ -in "HideChat", "DisableChat"} {
-            RegImport "> Hiding the chat icon from the taskbar..." "Disable_Chat_Taskbar.reg"
-            continue
-        }
-        'EnableEndTask' {
-            RegImport "> Enabling the 'End Task' option in the taskbar right click menu..." "Enable_End_Task.reg"
-            continue
-        }
-        'ExplorerToHome' {
-            RegImport "> Changing the default location that File Explorer opens to `Home`..." "Launch_File_Explorer_To_Home.reg"
-            continue
-        }
-        'ExplorerToThisPC' {
-            RegImport "> Changing the default location that File Explorer opens to `This PC`..." "Launch_File_Explorer_To_This_PC.reg"
-            continue
-        }
-        'ExplorerToDownloads' {
-            RegImport "> Changing the default location that File Explorer opens to `Downloads`..." "Launch_File_Explorer_To_Downloads.reg"
-            continue
-        }
-        'ExplorerToOneDrive' {
-            RegImport "> Changing the default location that File Explorer opens to `OneDrive`..." "Launch_File_Explorer_To_OneDrive.reg"
-            continue
-        }
-        'ShowHiddenFolders' {
-            RegImport "> Unhiding hidden files, folders and drives..." "Show_Hidden_Folders.reg"
-            continue
-        }
-        'ShowKnownFileExt' {
-            RegImport "> Enabling file extensions for known file types..." "Show_Extensions_For_Known_File_Types.reg"
-            continue
-        }
-        'HideHome' {
-            RegImport "> Hiding the home section from the File Explorer navigation pane..." "Hide_Home_from_Explorer.reg"
-            continue
-        }
-        'HideGallery' {
-            RegImport "> Hiding the gallery section from the File Explorer navigation pane..." "Hide_Gallery_from_Explorer.reg"
-            continue
-        }
-        'HideDupliDrive' {
-            RegImport "> Hiding duplicate removable drive entries from the File Explorer navigation pane..." "Hide_duplicate_removable_drives_from_navigation_pane_of_File_Explorer.reg"
-            continue
-        }
-        {$_ -in "HideOnedrive", "DisableOnedrive"} {
-            RegImport "> Hiding the OneDrive folder from the File Explorer navigation pane..." "Hide_Onedrive_Folder.reg"
-            continue
-        }
-        {$_ -in "Hide3dObjects", "Disable3dObjects"} {
-            RegImport "> Hiding the 3D objects folder from the File Explorer navigation pane..." "Hide_3D_Objects_Folder.reg"
-            continue
-        }
-        {$_ -in "HideMusic", "DisableMusic"} {
-            RegImport "> Hiding the music folder from the File Explorer navigation pane..." "Hide_Music_folder.reg"
-            continue
-        }
-        {$_ -in "HideIncludeInLibrary", "DisableIncludeInLibrary"} {
-            RegImport "> Hiding 'Include in library' in the context menu..." "Disable_Include_in_library_from_context_menu.reg"
-            continue
-        }
-        {$_ -in "HideGiveAccessTo", "DisableGiveAccessTo"} {
-            RegImport "> Hiding 'Give access to' in the context menu..." "Disable_Give_access_to_context_menu.reg"
-            continue
-        }
-        {$_ -in "HideShare", "DisableShare"} {
-            RegImport "> Hiding 'Share' in the context menu..." "Disable_Share_from_context_menu.reg"
-            continue
-        }
+        
+        $appsList = ReadAppslistFromFile "$PSScriptRoot/CustomAppsList"
+        Write-Output "> Removing $($appsList.Count) apps..."
+        RemoveApps $appsList
+        continue
     }
+    'RemoveCommApps' {
+        Write-Output "> Removing Mail, Calendar and People apps..."
+        
+        $appsList = 'Microsoft.windowscommunicationsapps', 'Microsoft.People'
+        RemoveApps $appsList
+        continue
+    }
+    'RemoveW11Outlook' {
+        $appsList = 'Microsoft.OutlookForWindows'
+        Write-Output "> Removing new Outlook for Windows app..."
+        RemoveApps $appsList
+        continue
+    }
+    'RemoveDevApps' {
+        $appsList = 'Microsoft.PowerAutomateDesktop', 'Microsoft.RemoteDesktop', 'Windows.DevHome'
+        Write-Output "> Removing developer-related related apps..."
+        RemoveApps $appsList
+        continue
+    }
+    'RemoveGamingApps' {
+        $appsList = 'Microsoft.GamingApp', 'Microsoft.XboxGameOverlay', 'Microsoft.XboxGamingOverlay'
+        Write-Output "> Removing gaming related apps..."
+        RemoveApps $appsList
+        continue
+    }
+    'RemoveHPApps' {
+        $appsList = 'AD2F1837.HPAIExperienceCenter', 'AD2F1837.HPJumpStarts', 'AD2F1837.HPPCHardwareDiagnosticsWindows', 'AD2F1837.HPPowerManager', 'AD2F1837.HPPrivacySettings', 'AD2F1837.HPSupportAssistant', 'AD2F1837.HPSureShieldAI', 'AD2F1837.HPSystemInformation', 'AD2F1837.HPQuickDrop', 'AD2F1837.HPWorkWell', 'AD2F1837.myHP', 'AD2F1837.HPDesktopSupportUtilities', 'AD2F1837.HPQuickTouch', 'AD2F1837.HPEasyClean', 'AD2F1837.HPConnectedMusic', 'AD2F1837.HPFileViewer', 'AD2F1837.HPRegistration', 'AD2F1837.HPWelcome', 'AD2F1837.HPConnectedPhotopoweredbySnapfish', 'AD2F1837.HPPrinterControl'
+        Write-Output "> Removing HP apps..."
+        RemoveApps $appsList
+        continue
+    }
+    "ForceRemoveEdge" {
+        ForceRemoveEdge
+        continue
+    }
+    'DisableDVR' {
+        RegImport "> Disabling Xbox game/screen recording..." "Disable_DVR.reg"
+        continue
+    }
+    'DisableTelemetry' {
+        RegImport "> Disabling telemetry, diagnostic data, activity history, app-launch tracking and targeted ads..." "Disable_Telemetry.reg"
+        continue
+    }
+    {$_ -in "DisableSuggestions", "DisableWindowsSuggestions"} {
+        RegImport "> Disabling tips, tricks, suggestions and ads across Windows..." "Disable_Windows_Suggestions.reg"
+        continue
+    }
+    'DisableDesktopSpotlight' {
+        RegImport "> Disabling the 'Windows Spotlight' desktop background option..." "Disable_Desktop_Spotlight.reg"
+        continue
+    }
+    {$_ -in "DisableLockscrTips", "DisableLockscreenTips"} {
+        RegImport "> Disabling tips & tricks on the lockscreen..." "Disable_Lockscreen_Tips.reg"
+        continue
+    }
+    {$_ -in "DisableBingSearches", "DisableBing"} {
+        RegImport "> Disabling bing web search, bing AI & cortana in Windows search..." "Disable_Bing_Cortana_In_Search.reg"
+        
+        # Also remove the app package for bing search
+        $appsList = 'Microsoft.BingSearch'
+        RemoveApps $appsList
+        continue
+    }
+    'DisableCopilot' {
+        RegImport "> Disabling & removing Microsoft Copilot..." "Disable_Copilot.reg"
 
-    RestartExplorer
-
-    Write-Output ""
-    Write-Output ""
-    Write-Output ""
-    Write-Output "Script completed! Please check above for any errors."
-
-    AwaitKeyToExit
+        # Also remove the app package for copilot
+        $appsList = 'Microsoft.Copilot'
+        RemoveApps $appsList
+        continue
+    }
+    'DisableRecall' {
+        RegImport "> Disabling Windows Recall snapshots..." "Disable_AI_Recall.reg"
+        continue
+    }
+    'RevertContextMenu' {
+        RegImport "> Restoring the old Windows 10 style context menu..." "Disable_Show_More_Options_Context_Menu.reg"
+        continue
+    }
+    'DisableMouseAcceleration' {
+        RegImport "> Turning off Enhanced Pointer Precision..." "Disable_Enhance_Pointer_Precision.reg"
+        continue
+    }
+    'DisableStickyKeys' {
+        RegImport "> Disabling the Sticky Keys keyboard shortcut..." "Disable_Sticky_Keys_Shortcut.reg"
+        continue
+    }
+    'DisableFastStartup' {
+        RegImport "> Disabling Fast Start-up..." "Disable_Fast_Startup.reg"
+        continue
+    }
+    'ClearStart' {
+        Write-Output "> Removing all pinned apps from the start menu for user $(GetUserName)..."
+        ReplaceStartMenu
+        Write-Output ""
+        continue
+    }
+    'ClearStartAllUsers' {
+        ReplaceStartMenuForAllUsers
+        continue
+    }
+    'DisableStartRecommended' {
+        RegImport "> Disabling and hiding the start menu recommended section..." "Disable_Start_Recommended.reg"
+        continue
+    }
+    'TaskbarAlignLeft' {
+        RegImport "> Aligning taskbar buttons to the left..." "Align_Taskbar_Left.reg"
+        continue
+    }
+    'HideSearchTb' {
+        RegImport "> Hiding the search icon from the taskbar..." "Hide_Search_Taskbar.reg"
+        continue
+    }
+    'ShowSearchIconTb' {
+        RegImport "> Changing taskbar search to icon only..." "Show_Search_Icon.reg"
+        continue
+    }
+    'ShowSearchLabelTb' {
+        RegImport "> Changing taskbar search to icon with label..." "Show_Search_Icon_And_Label.reg"
+        continue
+    }
+    'ShowSearchBoxTb' {
+        RegImport "> Changing taskbar search to search box..." "Show_Search_Box.reg"
+        continue
+    }
+    'HideTaskview' {
+        RegImport "> Hiding the taskview button from the taskbar..." "Hide_Taskview_Taskbar.reg"
+        continue
+    }
+    {$_ -in "HideWidgets", "DisableWidgets"} {
+        RegImport "> Disabling the widget service and hiding the widget icon from the taskbar..." "Disable_Widgets_Taskbar.reg"
+        continue
+    }
+    {$_ -in "HideChat", "DisableChat"} {
+        RegImport "> Hiding the chat icon from the taskbar..." "Disable_Chat_Taskbar.reg"
+        continue
+    }
+    'EnableEndTask' {
+        RegImport "> Enabling the 'End Task' option in the taskbar right click menu..." "Enable_End_Task.reg"
+        continue
+    }
+    'ExplorerToHome' {
+        RegImport "> Changing the default location that File Explorer opens to `Home`..." "Launch_File_Explorer_To_Home.reg"
+        continue
+    }
+    'ExplorerToThisPC' {
+        RegImport "> Changing the default location that File Explorer opens to `This PC`..." "Launch_File_Explorer_To_This_PC.reg"
+        continue
+    }
+    'ExplorerToDownloads' {
+        RegImport "> Changing the default location that File Explorer opens to `Downloads`..." "Launch_File_Explorer_To_Downloads.reg"
+        continue
+    }
+    'ExplorerToOneDrive' {
+        RegImport "> Changing the default location that File Explorer opens to `OneDrive`..." "Launch_File_Explorer_To_OneDrive.reg"
+        continue
+    }
+    'ShowHiddenFolders' {
+        RegImport "> Unhiding hidden files, folders and drives..." "Show_Hidden_Folders.reg"
+        continue
+    }
+    'ShowKnownFileExt' {
+        RegImport "> Enabling file extensions for known file types..." "Show_Extensions_For_Known_File_Types.reg"
+        continue
+    }
+    'HideHome' {
+        RegImport "> Hiding the home section from the File Explorer navigation pane..." "Hide_Home_from_Explorer.reg"
+        continue
+    }
+    'HideGallery' {
+        RegImport "> Hiding the gallery section from the File Explorer navigation pane..." "Hide_Gallery_from_Explorer.reg"
+        continue
+    }
+    'HideDupliDrive' {
+        RegImport "> Hiding duplicate removable drive entries from the File Explorer navigation pane..." "Hide_duplicate_removable_drives_from_navigation_pane_of_File_Explorer.reg"
+        continue
+    }
+    {$_ -in "HideOnedrive", "DisableOnedrive"} {
+        RegImport "> Hiding the OneDrive folder from the File Explorer navigation pane..." "Hide_Onedrive_Folder.reg"
+        continue
+    }
+    {$_ -in "Hide3dObjects", "Disable3dObjects"} {
+        RegImport "> Hiding the 3D objects folder from the File Explorer navigation pane..." "Hide_3D_Objects_Folder.reg"
+        continue
+    }
+    {$_ -in "HideMusic", "DisableMusic"} {
+        RegImport "> Hiding the music folder from the File Explorer navigation pane..." "Hide_Music_folder.reg"
+        continue
+    }
+    {$_ -in "HideIncludeInLibrary", "DisableIncludeInLibrary"} {
+        RegImport "> Hiding 'Include in library' in the context menu..." "Disable_Include_in_library_from_context_menu.reg"
+        continue
+    }
+    {$_ -in "HideGiveAccessTo", "DisableGiveAccessTo"} {
+        RegImport "> Hiding 'Give access to' in the context menu..." "Disable_Give_access_to_context_menu.reg"
+        continue
+    }
+    {$_ -in "HideShare", "DisableShare"} {
+        RegImport "> Hiding 'Share' in the context menu..." "Disable_Share_from_context_menu.reg"
+        continue
+    }
 }
+
+RestartExplorer
+
+Write-Output ""
+Write-Output ""
+Write-Output ""
+Write-Output "Script completed! Please check above for any errors."
+
+AwaitKeyToExit

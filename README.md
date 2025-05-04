@@ -198,7 +198,7 @@ The script allows you to select exactly what changes you want to make, but it al
       - XING
       
       * App is removed when disabling Bing in Windows search.
-    </blockquote>
+  </blockquote>
   </details>
   
   #### Apps that are NOT removed as part of the default mode
@@ -206,7 +206,7 @@ The script allows you to select exactly what changes you want to make, but it al
   <details>
     <summary>Click to expand</summary>
     <blockquote>
-      
+
       General apps that are not removed by default:
       - Microsoft.Edge (Edge browser, only removeable in the EEA)
       - Microsoft.GetHelp (Required for some Windows 11 Troubleshooters)
@@ -230,26 +230,26 @@ The script allows you to select exactly what changes you want to make, but it al
       - MicrosoftWindows.CrossDevice (Phone integration within File Explorer, Camera and more)
 
       HP apps that are not removed by default:
-      - AD2F1837.HPAIExperienceCenter
-      - AD2F1837.HPConnectedMusic
-      - AD2F1837.HPConnectedPhotopoweredbySnapfish
-      - AD2F1837.HPDesktopSupportUtilities
-      - AD2F1837.HPEasyClean
-      - AD2F1837.HPFileViewer
-      - AD2F1837.HPJumpStarts
-      - AD2F1837.HPPCHardwareDiagnosticsWindows
-      - AD2F1837.HPPowerManager
-      - AD2F1837.HPPrinterControl
-      - AD2F1837.HPPrivacySettings
-      - AD2F1837.HPQuickDrop
-      - AD2F1837.HPQuickTouch
-      - AD2F1837.HPRegistration
-      - AD2F1837.HPSupportAssistant
-      - AD2F1837.HPSureShieldAI
-      - AD2F1837.HPSystemInformation
-      - AD2F1837.HPWelcome
-      - AD2F1837.HPWorkWell
-      - AD2F1837.myHP
+      - AD2F1837.HPAIExperienceCenter*
+      - AD2F1837.HPConnectedMusic*
+      - AD2F1837.HPConnectedPhotopoweredbySnapfish*
+      - AD2F1837.HPDesktopSupportUtilities*
+      - AD2F1837.HPEasyClean*
+      - AD2F1837.HPFileViewer*
+      - AD2F1837.HPJumpStarts*
+      - AD2F1837.HPPCHardwareDiagnosticsWindows*
+      - AD2F1837.HPPowerManager*
+      - AD2F1837.HPPrinterControl*
+      - AD2F1837.HPPrivacySettings*
+      - AD2F1837.HPQuickDrop*
+      - AD2F1837.HPQuickTouch*
+      - AD2F1837.HPRegistration*
+      - AD2F1837.HPSupportAssistant*
+      - AD2F1837.HPSureShieldAI*
+      - AD2F1837.HPSystemInformation*
+      - AD2F1837.HPWelcome*
+      - AD2F1837.HPWorkWell*
+      - AD2F1837.myHP*
   
       Gaming related apps that are not removed by default:
       - Microsoft.GamingApp* (Modern Xbox Gaming App, required for installing some games)
@@ -264,7 +264,7 @@ The script allows you to select exactly what changes you want to make, but it al
       - Windows.DevHome*
   
       * Can be removed by running the script with the relevant parameter. (See parameters section below)
-    </blockquote>
+  </blockquote>
   </details>
 </details>
 

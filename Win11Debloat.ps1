@@ -743,7 +743,26 @@ function GetUserName {
 
 
 function CreateSystemRestorePoint {
-    Write-Output "> Creating system restore point..."
+    Write-Output "> Attempting to create a system restore point..."
+
+    $SysRestore = Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SystemRestore" -Name "RPSessionInterval"
+
+    if ($SysRestore.RPSessionInterval -eq 0) {
+        if (-not $Silent) {
+            if ($( Read-Host -Prompt "System restore is disabled, would you like to enable it and create a restore point? (y/n)") -eq 'y') {
+                try {
+                    Enable-ComputerRestore -Drive "$env:SystemDrive"
+                } catch {
+                    Write-Host "Error: Failed to enable System Restore: $_" -ForegroundColor Red
+                    Write-Output ""
+                    return
+                }
+            } else {
+                Write-Output ""
+                return
+            }
+        }
+    }
 
     # Find existing restore points that are less than 24 hours old
     try {
@@ -757,13 +776,11 @@ function CreateSystemRestorePoint {
     if ($recentRestorePoints.Count -eq 0) {
         try {
             Checkpoint-Computer -Description "Restore point created by Win11Debloat" -RestorePointType "MODIFY_SETTINGS"
-            Write-Output "System restore point created successfully"                
+            Write-Output "System restore point created successfully"
         } catch {
             Write-Host "Error: Unable to create restore point: $_" -ForegroundColor Red
-            return
         }
-    }
-    else {
+    } else {
         Write-Host "A recent restore point already exists, no new restore point was created." -ForegroundColor Yellow
     }
 
@@ -777,11 +794,7 @@ function DisplayCustomModeOptions {
             
     PrintHeader 'Custom Mode'
 
-    if ($( Read-Host -Prompt "Do you wish to create a system restore point? (y/n)" ) -eq 'y') {
-        AddParameter 'CreateRestorePoint' 'Create a system restore point'
-    }
-
-    Write-Output ""
+    AddParameter 'CreateRestorePoint' 'Create a system restore point'
 
     # Show options for removing apps, only continue on valid input
     Do {

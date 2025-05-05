@@ -743,13 +743,25 @@ function GetUserName {
 
 
 function CreateSystemRestorePoint {
-    Write-Output "> Creating system restore point..."
+    Write-Output "> Attempting to create a system restore point..."
 
-    # Check if the System Restore service is running
-    $service = Get-Service -Name 'srservice' -ErrorAction SilentlyContinue
-    if (-not $service -or $service.Status -ne 'Running') {
-        Write-Host "Error: System Restore service is not running. Please enable it before proceeding." -ForegroundColor Red
-        return
+    $SysRestore = Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SystemRestore" -Name "RPSessionInterval"
+
+    if ($SysRestore.RPSessionInterval -eq 0) {
+        if (-not $Silent) {
+            if ($( Read-Host -Prompt "System restore is disabled, would you like to enable it and create a restore point? (y/n)") -eq 'y') {
+                try {
+                    Enable-ComputerRestore -Drive "$env:SystemDrive"
+                } catch {
+                    Write-Host "Error: Failed to enable System Restore: $_" -ForegroundColor Red
+                    Write-Output ""
+                    return
+                }
+            } else {
+                Write-Output ""
+                return
+            }
+        }
     }
 
     # Find existing restore points that are less than 24 hours old
@@ -757,6 +769,7 @@ function CreateSystemRestorePoint {
         $recentRestorePoints = Get-ComputerRestorePoint | Where-Object { (Get-Date) - [System.Management.ManagementDateTimeConverter]::ToDateTime($_.CreationTime) -le (New-TimeSpan -Hours 24) }
     } catch {
         Write-Host "Error: Unable to retrieve existing restore points: $_" -ForegroundColor Red
+        Write-Output ""
         return
     }
 
@@ -770,6 +783,8 @@ function CreateSystemRestorePoint {
     } else {
         Write-Host "A recent restore point already exists, no new restore point was created." -ForegroundColor Yellow
     }
+
+    Write-Output ""
 }
 
 
@@ -779,11 +794,7 @@ function DisplayCustomModeOptions {
             
     PrintHeader 'Custom Mode'
 
-    if ($( Read-Host -Prompt "Do you wish to create a system restore point? (y/n)" ) -eq 'y') {
-        AddParameter 'CreateRestorePoint' 'Create a system restore point'
-    }
-
-    Write-Output ""
+    AddParameter 'CreateRestorePoint' 'Create a system restore point'
 
     # Show options for removing apps, only continue on valid input
     Do {

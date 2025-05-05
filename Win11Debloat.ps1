@@ -748,19 +748,17 @@ function CreateSystemRestorePoint {
     $SysRestore = Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SystemRestore" -Name "RPSessionInterval"
 
     if ($SysRestore.RPSessionInterval -eq 0) {
-        if (-not $Silent) {
-            if ($( Read-Host -Prompt "System restore is disabled, would you like to enable it and create a restore point? (y/n)") -eq 'y') {
-                try {
-                    Enable-ComputerRestore -Drive "$env:SystemDrive"
-                } catch {
-                    Write-Host "Error: Failed to enable System Restore: $_" -ForegroundColor Red
-                    Write-Output ""
-                    return
-                }
-            } else {
+        if ($Silent -or $( Read-Host -Prompt "System restore is disabled, would you like to enable it and create a restore point? (y/n)") -eq 'y') {
+            try {
+                Enable-ComputerRestore -Drive "$env:SystemDrive"
+            } catch {
+                Write-Host "Error: Failed to enable System Restore: $_" -ForegroundColor Red
                 Write-Output ""
                 return
             }
+        } else {
+            Write-Output ""
+            return
         }
     }
 

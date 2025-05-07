@@ -98,7 +98,7 @@ function ShowAppSelectionForm {
         $global:SelectedApps = $selectionBox.CheckedItems
 
         # Create file that stores selected apps if it doesn't exist
-        if (!(Test-Path "$PSScriptRoot/CustomAppsList")) {
+        if (-not (Test-Path "$PSScriptRoot/CustomAppsList")) {
             $null = New-Item "$PSScriptRoot/CustomAppsList"
         } 
 
@@ -382,12 +382,12 @@ function RemoveApps {
                 try {
                     Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage -AllUsers -ErrorAction Continue
 
-                    if($DebugPreference -ne "SilentlyContinue") {
+                    if ($DebugPreference -ne "SilentlyContinue") {
                         Write-Host "Removed $app for all users" -ForegroundColor DarkGray
                     }
                 }
                 catch {
-                    if($DebugPreference -ne "SilentlyContinue") {
+                    if ($DebugPreference -ne "SilentlyContinue") {
                         Write-Host "Unable to remove $app for all users" -ForegroundColor Yellow
                         Write-Host $psitem.Exception.StackTrace -ForegroundColor Gray
                     }
@@ -398,12 +398,12 @@ function RemoveApps {
                 try {
                     Get-AppxPackage -Name $app | Remove-AppxPackage -ErrorAction SilentlyContinue
                     
-                    if($DebugPreference -ne "SilentlyContinue") {
+                    if ($DebugPreference -ne "SilentlyContinue") {
                         Write-Host "Removed $app for current user" -ForegroundColor DarkGray
                     }
                 }
                 catch {
-                    if($DebugPreference -ne "SilentlyContinue") {
+                    if ($DebugPreference -ne "SilentlyContinue") {
                         Write-Host "Unable to remove $app for current user" -ForegroundColor Yellow
                         Write-Host $psitem.Exception.StackTrace -ForegroundColor Gray
                     }
@@ -412,12 +412,12 @@ function RemoveApps {
                 try {
                     Get-AppxPackage -Name $app -PackageTypeFilter Main, Bundle, Resource -AllUsers | Remove-AppxPackage -AllUsers -ErrorAction SilentlyContinue
                     
-                    if($DebugPreference -ne "SilentlyContinue") {
+                    if ($DebugPreference -ne "SilentlyContinue") {
                         Write-Host "Removed $app for all users" -ForegroundColor DarkGray
                     }
                 }
                 catch {
-                    if($DebugPreference -ne "SilentlyContinue") {
+                    if ($DebugPreference -ne "SilentlyContinue") {
                         Write-Host "Unable to remove $app for all users" -ForegroundColor Yellow
                         Write-Host $psitem.Exception.StackTrace -ForegroundColor Gray
                     }
@@ -611,7 +611,7 @@ function ReplaceStartMenuForAllUsers {
     $defaultStartMenuPath = $env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), '\Default\AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState'
 
     # Create folder if it doesn't exist
-    if (-not(Test-Path $defaultStartMenuPath)) {
+    if (-not (Test-Path $defaultStartMenuPath)) {
         new-item $defaultStartMenuPath -ItemType Directory -Force | Out-Null
         Write-Output "Created LocalState folder for default user profile"
     }
@@ -673,7 +673,7 @@ function AddParameter {
     }
 
     # Create or clear file that stores last used settings
-    if (!(Test-Path "$PSScriptRoot/SavedSettings")) {
+    if (-not (Test-Path "$PSScriptRoot/SavedSettings")) {
         $null = New-Item "$PSScriptRoot/SavedSettings"
     } 
     elseif ($global:FirstSelection) {
@@ -1194,7 +1194,11 @@ if (-not ($global:Params.ContainsKey("Verbose"))) {
     $ProgressPreference = 'SilentlyContinue'
 }
 else {
-    Read-Host "Verbose mode is enabled, press enter to continue"
+    Write-Host "Verbose mode is enabled"
+    Write-Output ""
+    Write-Output "Press any key to continue..."
+    $null = [System.Console]::ReadKey()
+
     $ProgressPreference = 'Continue'
 }
 
@@ -1258,7 +1262,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunS
         $Mode = '1'
     }
     elseif ($RunSavedSettings) {
-        if(-not (Test-Path "$PSScriptRoot/SavedSettings")) {
+        if (-not (Test-Path "$PSScriptRoot/SavedSettings")) {
             PrintHeader 'Custom Mode'
             Write-Host "Error: No saved settings found, no changes were made" -ForegroundColor Red
             AwaitKeyToExit
@@ -1301,7 +1305,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunS
                 Write-Output "Press any key to go back..."
                 $null = [System.Console]::ReadKey()
             }
-            elseif (($Mode -eq '4')-and -not (Test-Path "$PSScriptRoot/SavedSettings")) {
+            elseif (($Mode -eq '4') -and -not (Test-Path "$PSScriptRoot/SavedSettings")) {
                 $Mode = $null
             }
         }
@@ -1355,6 +1359,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunS
 
                 # Suppress prompt if Silent parameter was passed
                 if (-not $Silent) {
+                    Write-Output ""
                     Write-Output ""
                     Write-Output "Press enter to remove the selected apps or press CTRL+C to quit..."
                     Read-Host | Out-Null

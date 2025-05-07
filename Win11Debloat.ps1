@@ -711,10 +711,13 @@ function PrintHeader {
 
 function PrintFromFile {
     param (
-        $path
+        $path,
+        $title
     )
 
     Clear-Host
+
+    PrintHeader $title
 
     # Get & print script menu from file
     Foreach ($line in (Get-Content -Path $path )) {   
@@ -1299,9 +1302,8 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunS
             # Show information based on user input, Suppress user prompt if Silent parameter was passed
             if ($Mode -eq '0') {
                 # Get & print script information from file
-                PrintFromFile "$PSScriptRoot/Assets/Menus/Info"
+                PrintFromFile "$PSScriptRoot/Assets/Menus/Info" "Information"
 
-                Write-Output ""
                 Write-Output "Press any key to go back..."
                 $null = [System.Console]::ReadKey()
             }
@@ -1318,9 +1320,8 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunS
         '1' { 
             # Print the default settings & require userconfirmation, unless Silent parameter was passed
             if (-not $Silent) {
-                PrintFromFile "$PSScriptRoot/Assets/Menus/DefaultSettings"
+                PrintFromFile "$PSScriptRoot/Assets/Menus/DefaultSettings" "Default Mode"
 
-                Write-Output ""
                 Write-Output "Press enter to execute the script or press CTRL+C to quit..."
                 Read-Host | Out-Null
             }

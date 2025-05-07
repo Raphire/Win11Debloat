@@ -1,6 +1,3 @@
--------------------------------------------------------------------------------------------
- Win11Debloat Script - Default Mode
--------------------------------------------------------------------------------------------
 Win11Debloat will make the following changes:
 - Remove the default selection of apps, the list can be found in the 'Appslist.txt' file.
 - Disable telemetry, diagnostic data, app-launch tracking & targeted ads.
@@ -13,4 +10,5 @@ Win11Debloat will make the following changes:
 - Disable the widget service & hide the icon from the taskbar. 
 - Hide the Chat (meet now) icon from the taskbar.
 - Hide the 3D objects folder in Windows Explorer. (Windows 10 only)
+
 

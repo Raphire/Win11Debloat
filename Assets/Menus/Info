@@ -1,6 +1,3 @@
--------------------------------------------------------------------------------------------
- Win11Debloat Script - Information
--------------------------------------------------------------------------------------------
 Win11Debloat is a simple, easy to use and lightweight PowerShell script that can remove
 pre-installed Windows bloatware apps, disable telemetry and declutter the experience by
 disabling or removing intrusive interface elements, ads and more. No need to go through
@@ -67,4 +64,5 @@ The default mode applies the changes that are recommended for most users. This i
 - Hide the Chat (meet now) icon from the taskbar.
 - Hide the 3D objects folder under 'This pc' from File Explorer. (W10 only)
 - Hide the 'Include in library', 'Give access to' and 'Share' options from the context menu. (W10 only)
+
 

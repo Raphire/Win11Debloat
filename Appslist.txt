@@ -104,7 +104,7 @@ Microsoft.GetHelp                      # Required for some Windows 11 Troublesho
 #Microsoft.MSPaint                      # Paint 3D
 Microsoft.OneDrive                     # OneDrive consumer
 #Microsoft.Paint                        # Classic Paint
-Microsoft.ScreenSketch                 # Snipping Tool
+#Microsoft.ScreenSketch                 # Snipping Tool
 Microsoft.Whiteboard                   # Only preinstalled on devices with touchscreen and/or pen support
 #Microsoft.Windows.Photos
 #Microsoft.WindowsCalculator

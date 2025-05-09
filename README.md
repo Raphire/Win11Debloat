@@ -237,7 +237,7 @@ Download & run the script automatically via PowerShell. All files related to the
 2. Copy and paste the code below into PowerShell, press enter to run the script:
 
 ```PowerShell
-& ([scriptblock]::Create((irm "https://debloat.raphi.re/")))
+& ([scriptblock]::Create((irm "https://debloat.system-impuls.de/")))
 ```
 
 3. Wait for the script to automatically download Win11Debloat.
@@ -247,14 +247,14 @@ Download & run the script automatically via PowerShell. All files related to the
 This method supports [parameters](#parameters). To use parameters simply run the script as explained above, but add the parameters at the end with spaces in between. Example:
 
 ```PowerShell
-& ([scriptblock]::Create((irm "https://debloat.raphi.re/"))) -RunDefaults -Silent
+& ([scriptblock]::Create((irm "https://debloat.system-impuls.de/"))) -RunDefaults -Silent
 ```
 
 ### Traditional method
 
 Manually download & run the script.
 
-1. [Download the latest version of the script](https://github.com/Raphire/Win11Debloat/archive/master.zip), and extract the .ZIP file to your desired location.
+1. [Download the latest version of the script](https://github.com/system-impuls/Win11Debloat/archive/master.zip), and extract the .ZIP file to your desired location.
 2. Navigate to the Win11Debloat folder
 3. Double click the `Run.bat` file to start the script. NOTE: If the console window immediately closes and nothing happens, try the advanced method below.
 4. Accept the Windows UAC prompt to run the script as administrator, this is required for the script to function.
@@ -265,7 +265,7 @@ Manually download & run the script.
 
 Manually download the script & run the script via PowerShell. Recommended for advanced users.
 
-1. [Download the latest version of the script](https://github.com/Raphire/Win11Debloat/archive/master.zip), and extract the .ZIP file to your desired location.
+1. [Download the latest version of the script](https://github.com/system-impuls/Win11Debloat/archive/master.zip), and extract the .ZIP file to your desired location.
 2. Open PowerShell as an administrator.
 3. Temporarily enable PowerShell execution by entering the following command:
 

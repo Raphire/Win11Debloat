@@ -47,18 +47,14 @@ param (
     [switch]$DisableIncludeInLibrary, [switch]$HideIncludeInLibrary,
     [switch]$DisableGiveAccessTo, [switch]$HideGiveAccessTo,
     [switch]$DisableShare, [switch]$HideShare,
-	[switch]$SharingWizardOn,
-	[switch]$FullPath,
-	[switch]$NavPaneShowAllFolders,
-	[switch]$AutoSetup,
-	[switch]$DesktopIcons,
-	[switch]$ShowFrequentList,
-	[switch]$StartLayout,
-	[switch]$HiberbootEnabled,
-	[switch]$ACSettingIndexPower,
-	[switch]$ACSettingIndexScreen,
-	[switch]$MicrosoftEdgeAutoLaunch,
-	[switch]$VolumeLabel,
+    [switch]$SharingWizardOn,
+    [switch]$FullPath,
+    [switch]$NavPaneShowAllFolders,
+    [switch]$AutoSetup,
+    [switch]$DesktopIcons,
+    [switch]$ShowFrequentList,
+    [switch]$StartLayout,
+    [switch]$HiberbootEnabled
 )
 
 
@@ -725,7 +721,8 @@ function AwaitKeyToExit {
 #                                                                                                                #
 ##################################################################################################################
 
-
+manage-bde C: -off
+powercfg /change monitor-timeout-ac 60
 
 # Check if winget is installed & if it is, check if the version is at least v1.4
 if ((Get-AppxPackage -Name "*Microsoft.DesktopAppInstaller*") -and ((winget -v) -replace 'v','' -gt 1.4)) {
@@ -877,7 +874,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunS
                 Read-Host | Out-Null
             }
 
-            $DefaultParameterNames = 'RemoveApps','DisableTelemetry','DisableBing','DisableLockscreenTips','DisableSuggestions','ShowKnownFileExt','DisableWidgets','DisableCopilot','DisableDVR','ClearStartAllUsers','DisableRecall','RevertContextMenu','TaskbarAlignLeft','HideSearchTb','HideTaskview','ExplorerToThisPC','HideDupliDrive','SharingWizardOn','FullPath','NavPaneShowAllFolders','AutoSetup','DesktopIcons','ShowFrequentList','StartLayout','HiberbootEnabled','ACSettingIndexPower','ACSettingIndexScreen','MicrosoftEdgeAutoLaunch','VolumeLabel'
+            $DefaultParameterNames = 'RemoveApps','DisableTelemetry','DisableBing','DisableLockscreenTips','DisableSuggestions','ShowKnownFileExt','DisableWidgets','DisableCopilot','DisableDVR','ClearStartAllUsers','DisableRecall','RevertContextMenu','TaskbarAlignLeft','HideSearchTb','HideTaskview','ExplorerToThisPC','HideDupliDrive','SharingWizardOn','FullPath','NavPaneShowAllFolders','AutoSetup','DesktopIcons','ShowFrequentList','StartLayout','HiberbootEnabled'
 
             PrintHeader 'Default Mode'
 
@@ -1469,6 +1466,38 @@ else {
         }
         'HideDupliDrive' {
             RegImport "> Hiding duplicate removable drive entries from the File Explorer navigation pane..." "Hide_duplicate_removable_drives_from_navigation_pane_of_File_Explorer.reg"
+            continue
+        }
+	'SharingWizardOn' {
+            RegImport "> Sharing wizard off..." "Sharing_Wizard_Explorer_Off.reg"
+            continue
+        }
+	'FullPath' {
+            RegImport "> Setting Full Path in explorer option..." "Full_Path_Explorer.reg"
+            continue
+        }
+	'NavPaneShowAllFolders' {
+            RegImport "> Show all folders in navigation panel..." "Show_all_Folders_NavPane.reg"
+            continue
+        }
+	'AutoSetup' {
+            RegImport "> Network Auto Setup..." "Network_Private_Auto_Setup.reg"
+            continue
+        }
+	'DesktopIcons' {
+            RegImport "> Desktop Icons..." "Show_Desktop_Icons_PC_Folder.reg"
+            continue
+        }
+	'ShowFrequentList' {
+            RegImport "> Start Show Frequent list Off..." "Start_Show_Frequent_List_Off.reg"
+            continue
+        }
+	'StartLayout' {
+            RegImport "> Start Layout More Elements..." "Start_Layout_More_Elements.reg"
+            continue
+        }
+	'HiberbootEnabled' {
+            RegImport "> Power Hibernation boot Enabled Off..." "Power_Hibernation_boot_Enabled_Off.reg"
             continue
         }
         {$_ -in "HideOnedrive", "DisableOnedrive"} {

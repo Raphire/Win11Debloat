@@ -46,7 +46,19 @@ param (
     [switch]$DisableMusic, [switch]$HideMusic,
     [switch]$DisableIncludeInLibrary, [switch]$HideIncludeInLibrary,
     [switch]$DisableGiveAccessTo, [switch]$HideGiveAccessTo,
-    [switch]$DisableShare, [switch]$HideShare
+    [switch]$DisableShare, [switch]$HideShare,
+	[switch]$SharingWizardOn,
+	[switch]$FullPath,
+	[switch]$NavPaneShowAllFolders,
+	[switch]$AutoSetup,
+	[switch]$DesktopIcons,
+	[switch]$ShowFrequentList,
+	[switch]$StartLayout,
+	[switch]$HiberbootEnabled,
+	[switch]$ACSettingIndexPower,
+	[switch]$ACSettingIndexScreen,
+	[switch]$MicrosoftEdgeAutoLaunch,
+	[switch]$VolumeLabel,
 )
 
 
@@ -865,7 +877,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunS
                 Read-Host | Out-Null
             }
 
-            $DefaultParameterNames = 'RemoveApps','DisableTelemetry','DisableBing','DisableLockscreenTips','DisableSuggestions','ShowKnownFileExt','DisableWidgets','HideChat','DisableCopilot'
+            $DefaultParameterNames = 'RemoveApps','DisableTelemetry','DisableBing','DisableLockscreenTips','DisableSuggestions','ShowKnownFileExt','DisableWidgets','DisableCopilot','DisableDVR','ClearStartAllUsers','DisableRecall','RevertContextMenu','TaskbarAlignLeft','HideSearchTb','HideTaskview','ExplorerToThisPC','HideDupliDrive','SharingWizardOn','FullPath','NavPaneShowAllFolders','AutoSetup','DesktopIcons','ShowFrequentList','StartLayout','HiberbootEnabled','ACSettingIndexPower','ACSettingIndexScreen','MicrosoftEdgeAutoLaunch','VolumeLabel'
 
             PrintHeader 'Default Mode'
 
@@ -876,10 +888,7 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunS
                 }
             }
 
-            # Only add this option for Windows 10 users, if it doesn't already exist
-            if ((get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'") -and (-not $global:Params.ContainsKey('Hide3dObjects'))) {
-                $global:Params.Add('Hide3dObjects', $Hide3dObjects)
-            }
+           
         }
 
         # Custom mode, show & add options based on user input

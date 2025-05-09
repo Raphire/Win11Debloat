@@ -1,0 +1,5 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run]
+"MicrosoftEdgeAutoLaunch_CA00F531A3CE41346622EA40860419C1"=hex(3):03,00,00,\
+00,36,D4,18,67,65,72,DB,01

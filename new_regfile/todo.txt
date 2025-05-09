@@ -1,0 +1,8 @@
+# skript für msedge autostart --> not working --> to change using command
+# skript für umbennenung C: auf System --> not working --> to change using command
+# Power_AC skripte --> Not Working --> to change --> best way is a powershell command "powercfg /change monitor-timeout-ac 60" (https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/powercfg-command-line-options)
+
+timedate.cpl -> de.pool.ntp.org 
+skalierung --> funktionniert erst nach neustart
+ps command: bde-manage C: -off
+

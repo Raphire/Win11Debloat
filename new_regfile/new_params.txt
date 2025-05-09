@@ -1,0 +1,15 @@
+#AddParameter 'RemoveApps' 'Remove default selection of bloatware apps'
+#AddParameter 'DisableTelemetry' 'Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads'
+#AddParameter 'DisableBing' 'Disable & remove bing web search, bing AI & cortana in Windows search'
+#AddParameter 'DisableCopilot' 'Disable and remove Windows Copilot'
+#AddParameter 'ShowKnownFileExt' 'Show file extensions for known file types'
+
+AddParameter 'DisableDVR' 'Disable Xbox game/screen recording'
+AddParameter 'ClearStartAllUsers' 'Remove all pinned apps from the start menu for existing and new users'
+AddParameter 'DisableRecall' 'Disable Windows Recall snapshots'
+AddParameter 'RevertContextMenu' 'Restore the old Windows 10 style context menu'
+AddParameter 'TaskbarAlignLeft' 'Align taskbar icons to the left'
+AddParameter 'HideSearchTb' 'Hide search icon from the taskbar'
+AddParameter 'HideTaskview' 'Hide the taskview button from the taskbar'
+AddParameter 'ExplorerToThisPC' "Change the default location that File Explorer opens to 'This PC'"
+AddParameter 'HideDupliDrive' 'Hide duplicate removable drive entries from the File Explorer sidepanel'

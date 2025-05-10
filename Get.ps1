@@ -2,6 +2,7 @@ param (
     [switch]$Silent,
     [switch]$Verbose,
     [switch]$Sysprep,
+    [string]$LogPath,
     [string]$User,
     [switch]$CreateRestorePoint,
     [switch]$RunAppsListGenerator, [switch]$RunAppConfigurator,
@@ -76,7 +77,7 @@ Invoke-WebRequest http://github.com/raphire/win11debloat/archive/master.zip -Out
 if (Test-Path "$env:TEMP/Win11Debloat/Win11Debloat-master") {
     Write-Output ""
     Write-Output "> Cleaning up old Win11Debloat folder..."
-    Get-ChildItem -Path "$env:TEMP/Win11Debloat/Win11Debloat-master" -Exclude CustomAppsList,SavedSettings | Remove-Item -Recurse -Force
+    Get-ChildItem -Path "$env:TEMP/Win11Debloat/Win11Debloat-master" -Exclude CustomAppsList,SavedSettings,Win11Debloat.log | Remove-Item -Recurse -Force
 }
 
 Write-Output ""
@@ -115,7 +116,7 @@ if (Test-Path "$env:TEMP/Win11Debloat/Win11Debloat-master") {
     Write-Output "> Cleaning up..."
 
     # Cleanup, remove Win11Debloat directory
-    Get-ChildItem -Path "$env:TEMP/Win11Debloat/Win11Debloat-master" -Exclude CustomAppsList,SavedSettings | Remove-Item -Recurse -Force
+    Get-ChildItem -Path "$env:TEMP/Win11Debloat/Win11Debloat-master" -Exclude CustomAppsList,SavedSettings,Win11Debloat.log | Remove-Item -Recurse -Force
 }
 
 Write-Output ""

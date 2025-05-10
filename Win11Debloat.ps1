@@ -4,6 +4,7 @@
 param (
     [switch]$Silent,
     [switch]$Sysprep,
+    [string]$LogPath,
     [string]$User,
     [switch]$CreateRestorePoint,
     [switch]$RunAppsListGenerator, [switch]$RunAppConfigurator,
@@ -65,6 +66,13 @@ if ($ExecutionContext.SessionState.LanguageMode -ne "FullLanguage") {
     Exit
 }
 
+# Log script output to 'Win11Debloat.log' at the specified path
+if($LogPath -and (Test-Path $LogPath)) {
+    Start-Transcript -Path "$LogPath/Win11Debloat.log" -Append -IncludeInvocationHeader -Force | Out-Null
+}
+else {
+    Start-Transcript -Path "$PSScriptRoot/Win11Debloat.log" -Append -IncludeInvocationHeader -Force | Out-Null
+}
 
 # Shows application selection form that allows the user to select what apps they want to remove or keep
 function ShowAppSelectionForm {
@@ -82,7 +90,7 @@ function ShowAppSelectionForm {
     $checkUncheckCheckBox = New-Object System.Windows.Forms.CheckBox
     $initialFormWindowState = New-Object System.Windows.Forms.FormWindowState
 
-    $global:selectionBoxIndex = -1
+    $script:selectionBoxIndex = -1
 
     # saveButton eventHandler
     $handler_saveButton_Click= 
@@ -95,14 +103,14 @@ function ShowAppSelectionForm {
             }
         }
 
-        $global:SelectedApps = $selectionBox.CheckedItems
+        $script:SelectedApps = $selectionBox.CheckedItems
 
         # Create file that stores selected apps if it doesn't exist
         if (-not (Test-Path "$PSScriptRoot/CustomAppsList")) {
             $null = New-Item "$PSScriptRoot/CustomAppsList"
         } 
 
-        Set-Content -Path "$PSScriptRoot/CustomAppsList" -Value $global:SelectedApps
+        Set-Content -Path "$PSScriptRoot/CustomAppsList" -Value $script:SelectedApps
 
         $form.DialogResult = [System.Windows.Forms.DialogResult]::OK
         $form.Close()
@@ -116,15 +124,15 @@ function ShowAppSelectionForm {
 
     $selectionBox_SelectedIndexChanged= 
     {
-        $global:selectionBoxIndex = $selectionBox.SelectedIndex
+        $script:selectionBoxIndex = $selectionBox.SelectedIndex
     }
 
     $selectionBox_MouseDown=
     {
         if ($_.Button -eq [System.Windows.Forms.MouseButtons]::Left) {
             if ([System.Windows.Forms.Control]::ModifierKeys -eq [System.Windows.Forms.Keys]::Shift) {
-                if ($global:selectionBoxIndex -ne -1) {
-                    $topIndex = $global:selectionBoxIndex
+                if ($script:selectionBoxIndex -ne -1) {
+                    $topIndex = $script:selectionBoxIndex
 
                     if ($selectionBox.SelectedIndex -gt $topIndex) {
                         for (($i = ($topIndex)); $i -le $selectionBox.SelectedIndex; $i++){
@@ -138,7 +146,7 @@ function ShowAppSelectionForm {
                     }
                 }
             }
-            elseif ($global:selectionBoxIndex -ne $selectionBox.SelectedIndex) {
+            elseif ($script:selectionBoxIndex -ne $selectionBox.SelectedIndex) {
                 $selectionBox.SetItemChecked($selectionBox.SelectedIndex, -not $selectionBox.GetItemChecked($selectionBox.SelectedIndex))
             }
         }
@@ -157,7 +165,7 @@ function ShowAppSelectionForm {
         $form.WindowState = $initialFormWindowState
 
         # Reset state to default before loading appslist again
-        $global:selectionBoxIndex = -1
+        $script:selectionBoxIndex = -1
         $checkUncheckCheckBox.Checked = $False
 
         # Show loading indicator
@@ -171,7 +179,7 @@ function ShowAppSelectionForm {
         $appsFile = "$PSScriptRoot/Appslist.txt"
         $listOfApps = ""
 
-        if ($onlyInstalledCheckBox.Checked -and ($global:wingetInstalled -eq $true)) {
+        if ($onlyInstalledCheckBox.Checked -and ($script:wingetInstalled -eq $true)) {
             # Attempt to get a list of installed apps via winget, times out after 10 seconds
             $job = Start-Job { return winget list --accept-source-agreements --disable-interactivity }
             $jobDone = $job | Wait-Job -TimeOut 10
@@ -354,7 +362,7 @@ function RemoveApps {
 
         if (($app -eq "Microsoft.OneDrive") -or ($app -eq "Microsoft.Edge")) {
             # Use winget to remove OneDrive and Edge
-            if ($global:wingetInstalled -eq $false) {
+            if ($script:wingetInstalled -eq $false) {
                 Write-Host "Error: WinGet is either not installed or is outdated, $app could not be removed" -ForegroundColor Red
             }
             else {
@@ -532,15 +540,15 @@ function RegImport {
 
     Write-Output $message
 
-    if ($global:Params.ContainsKey("Sysprep")) {
+    if ($script:Params.ContainsKey("Sysprep")) {
         $defaultUserPath = $env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), '\Default\NTUSER.DAT'
         
         reg load "HKU\Default" $defaultUserPath | Out-Null
         reg import "$PSScriptRoot\Regfiles\Sysprep\$path"
         reg unload "HKU\Default" | Out-Null
     }
-    elseif ($global:Params.ContainsKey("User")) {
-        $userPath = $env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), "\$($global:Params.Item("User"))\NTUSER.DAT"
+    elseif ($script:Params.ContainsKey("User")) {
+        $userPath = $env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), "\$($script:Params.Item("User"))\NTUSER.DAT"
         
         reg load "HKU\Default" $userPath | Out-Null
         reg import "$PSScriptRoot\Regfiles\Sysprep\$path"
@@ -557,17 +565,17 @@ function RegImport {
 
 # Restart the Windows Explorer process
 function RestartExplorer {
-    if ($global:Params.ContainsKey("Sysprep") -or $global:Params.ContainsKey("User")) {
+    if ($script:Params.ContainsKey("Sysprep") -or $script:Params.ContainsKey("User")) {
         return
     }
 
     Write-Output "> Restarting Windows Explorer process to apply all changes... (This may cause some flickering)"
 
-    if ($global:Params.ContainsKey("DisableMouseAcceleration")) {
+    if ($script:Params.ContainsKey("DisableMouseAcceleration")) {
         Write-Host "Warning: The Enhance Pointer Precision setting changes will only take effect after a reboot" -ForegroundColor Yellow
     }
 
-    if ($global:Params.ContainsKey("DisableStickyKeys")) {
+    if ($script:Params.ContainsKey("DisableStickyKeys")) {
         Write-Host "Warning: The Sticky Keys setting changes will only take effect after a reboot" -ForegroundColor Yellow
     }
 
@@ -632,7 +640,7 @@ function ReplaceStartMenu {
     )
 
     # Change path to correct user if a user was specified
-    if ($global:Params.ContainsKey("User")) {
+    if ($script:Params.ContainsKey("User")) {
         $startMenuBinFile = $env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), "\$(GetUserName)\AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState\start2.bin"
     }
 
@@ -668,19 +676,19 @@ function AddParameter {
     )
 
     # Add key if it doesn't already exist
-    if (-not $global:Params.ContainsKey($parameterName)) {
-        $global:Params.Add($parameterName, $true)
+    if (-not $script:Params.ContainsKey($parameterName)) {
+        $script:Params.Add($parameterName, $true)
     }
 
     # Create or clear file that stores last used settings
     if (-not (Test-Path "$PSScriptRoot/SavedSettings")) {
         $null = New-Item "$PSScriptRoot/SavedSettings"
     } 
-    elseif ($global:FirstSelection) {
+    elseif ($script:FirstSelection) {
         $null = Clear-Content "$PSScriptRoot/SavedSettings"
     }
     
-    $global:FirstSelection = $false
+    $script:FirstSelection = $false
 
     # Create entry and add it to the file
     $entry = "$parameterName#- $message"
@@ -695,7 +703,7 @@ function PrintHeader {
 
     $fullTitle = " Win11Debloat Script - $title"
 
-    if ($global:Params.ContainsKey("Sysprep")) {
+    if ($script:Params.ContainsKey("Sysprep")) {
         $fullTitle = "$fullTitle (Sysprep mode)"
     }
     else {
@@ -737,8 +745,8 @@ function AwaitKeyToExit {
 
 
 function GetUserName {
-    if ($global:Params.ContainsKey("User")) { 
-        return $global:Params.Item("User") 
+    if ($script:Params.ContainsKey("User")) { 
+        return $script:Params.Item("User") 
     }
     
     return $env:USERNAME
@@ -837,9 +845,9 @@ function DisplayCustomModeOptions {
             AddParameter 'DisableDVR' 'Disable Xbox game/screen recording'
         }
         '3' {
-            Write-Output "You have selected $($global:SelectedApps.Count) apps for removal"
+            Write-Output "You have selected $($script:SelectedApps.Count) apps for removal"
 
-            AddParameter 'RemoveAppsCustom' "Remove $($global:SelectedApps.Count) apps:"
+            AddParameter 'RemoveAppsCustom' "Remove $($script:SelectedApps.Count) apps:"
 
             Write-Output ""
 
@@ -910,7 +918,7 @@ function DisplayCustomModeOptions {
     }
 
     # Only show option for disabling context menu items for Windows 10 users or if the user opted to restore the Windows 10 context menu
-    if ((get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'") -or $global:Params.ContainsKey('RevertContextMenu')){
+    if ((get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'") -or $script:Params.ContainsKey('RevertContextMenu')){
         Write-Output ""
 
         if ($( Read-Host -Prompt "Do you want to disable any context menu options? (y/n)" ) -eq 'y') {
@@ -941,7 +949,7 @@ function DisplayCustomModeOptions {
         if ($( Read-Host -Prompt "Do you want to make any changes to the start menu? (y/n)" ) -eq 'y') {
             Write-Output ""
 
-            if ($global:Params.ContainsKey("Sysprep")) {
+            if ($script:Params.ContainsKey("Sysprep")) {
                 if ($( Read-Host -Prompt "Remove all pinned apps from the start menu for all existing and new users? (y/n)" ) -eq 'y') {
                     AddParameter 'ClearStartAllUsers' 'Remove all pinned apps from the start menu for existing and new users'
                 }
@@ -1162,10 +1170,10 @@ function DisplayCustomModeOptions {
 
 # Check if winget is installed & if it is, check if the version is at least v1.4
 if ((Get-AppxPackage -Name "*Microsoft.DesktopAppInstaller*") -and ([int](((winget -v) -replace 'v','').split('.')[0..1] -join '') -gt 14)) {
-    $global:wingetInstalled = $true
+    $script:wingetInstalled = $true
 }
 else {
-    $global:wingetInstalled = $false
+    $script:wingetInstalled = $false
 
     # Show warning that requires user confirmation, Suppress confirmation if Silent parameter was passed
     if (-not $Silent) {
@@ -1179,21 +1187,21 @@ else {
 # Get current Windows build version to compare against features
 $WinVersion = Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' CurrentBuild
 
-$global:Params = $PSBoundParameters
-$global:FirstSelection = $true
-$SPParams = 'WhatIf', 'Confirm', 'Verbose', 'Silent', 'Sysprep', 'Debug', 'User', 'CreateRestorePoint'
+$script:Params = $PSBoundParameters
+$script:FirstSelection = $true
+$SPParams = 'WhatIf', 'Confirm', 'Verbose', 'Silent', 'Sysprep', 'Debug', 'User', 'CreateRestorePoint', 'LogPath'
 $SPParamCount = 0
 
 # Count how many SPParams exist within Params
 # This is later used to check if any options were selected
 foreach ($Param in $SPParams) {
-    if ($global:Params.ContainsKey($Param)) {
+    if ($script:Params.ContainsKey($Param)) {
         $SPParamCount++
     }
 }
 
 # Hide progress bars for app removal, as they block Win11Debloat's output
-if (-not ($global:Params.ContainsKey("Verbose"))) {
+if (-not ($script:Params.ContainsKey("Verbose"))) {
     $ProgressPreference = 'SilentlyContinue'
 }
 else {
@@ -1206,7 +1214,7 @@ else {
 }
 
 # Make sure all requirements for Sysprep are met, if Sysprep is enabled
-if ($global:Params.ContainsKey("Sysprep")) {
+if ($script:Params.ContainsKey("Sysprep")) {
     $defaultUserPath = $env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), '\Default\NTUSER.DAT'
 
     # Exit script if default user directory or NTUSER.DAT file cannot be found
@@ -1224,12 +1232,12 @@ if ($global:Params.ContainsKey("Sysprep")) {
 }
 
 # Make sure all requirements for User mode are met, if User is specified
-if ($global:Params.ContainsKey("User")) {
-    $userPath = $env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), "\$($global:Params.Item("User"))\NTUSER.DAT"
+if ($script:Params.ContainsKey("User")) {
+    $userPath = $env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), "\$($script:Params.Item("User"))\NTUSER.DAT"
 
     # Exit script if user directory or NTUSER.DAT file cannot be found
     if (-not (Test-Path "$userPath")) {
-        Write-Host "Error: Unable to run Win11Debloat for user $($global:Params.Item("User")), cannot find user data at '$userPath'" -ForegroundColor Red
+        Write-Host "Error: Unable to run Win11Debloat for user $($script:Params.Item("User")), cannot find user data at '$userPath'" -ForegroundColor Red
         AwaitKeyToExit
         Exit
     }
@@ -1260,7 +1268,7 @@ if ($RunAppConfigurator -or $RunAppsListGenerator) {
 }
 
 # Change script execution based on provided parameters or user input
-if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunSavedSettings -or ($SPParamCount -eq $global:Params.Count)) {
+if ((-not $script:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunSavedSettings -or ($SPParamCount -eq $script:Params.Count)) {
     if ($RunDefaults -or $RunWin11Defaults) {
         $Mode = '1'
     }
@@ -1332,14 +1340,14 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunS
 
             # Add default parameters if they don't already exist
             foreach ($ParameterName in $DefaultParameterNames) {
-                if (-not $global:Params.ContainsKey($ParameterName)){
-                    $global:Params.Add($ParameterName, $true)
+                if (-not $script:Params.ContainsKey($ParameterName)){
+                    $script:Params.Add($ParameterName, $true)
                 }
             }
 
             # Only add this option for Windows 10 users, if it doesn't already exist
-            if ((get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'") -and (-not $global:Params.ContainsKey('Hide3dObjects'))) {
-                $global:Params.Add('Hide3dObjects', $Hide3dObjects)
+            if ((get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'") -and (-not $script:Params.ContainsKey('Hide3dObjects'))) {
+                $script:Params.Add('Hide3dObjects', $Hide3dObjects)
             }
         }
 
@@ -1355,8 +1363,8 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunS
             $result = ShowAppSelectionForm
 
             if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
-                Write-Output "You have selected $($global:SelectedApps.Count) apps for removal"
-                AddParameter 'RemoveAppsCustom' "Remove $($global:SelectedApps.Count) apps:"
+                Write-Output "You have selected $($script:SelectedApps.Count) apps for removal"
+                AddParameter 'RemoveAppsCustom' "Remove $($script:SelectedApps.Count) apps:"
 
                 # Suppress prompt if Silent parameter was passed
                 if (-not $Silent) {
@@ -1402,8 +1410,8 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunS
                         Write-Output $line.Substring(($line.IndexOf('#') + 1), ($line.Length - $line.IndexOf('#') - 1))
                     }
 
-                    if (-not $global:Params.ContainsKey($parameterName)){
-                        $global:Params.Add($parameterName, $true)
+                    if (-not $script:Params.ContainsKey($parameterName)){
+                        $script:Params.Add($parameterName, $true)
                     }
                 }
             }
@@ -1425,7 +1433,7 @@ else {
 
 # If the number of keys in SPParams equals the number of keys in Params then no modifications/changes were selected
 #  or added by the user, and the script can exit without making any changes.
-if ($SPParamCount -eq $global:Params.Keys.Count) {
+if ($SPParamCount -eq $script:Params.Keys.Count) {
     Write-Output "The script completed without making any changes."
 
     AwaitKeyToExit
@@ -1433,7 +1441,7 @@ if ($SPParamCount -eq $global:Params.Keys.Count) {
 }
 
 # Execute all selected/provided parameters
-switch ($global:Params.Keys) {
+switch ($script:Params.Keys) {
     'CreateRestorePoint' {
         CreateSystemRestorePoint
         continue
@@ -1667,3 +1675,5 @@ Write-Output ""
 Write-Output "Script completed! Please check above for any errors."
 
 AwaitKeyToExit
+
+Stop-Transcript

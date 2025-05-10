@@ -60,10 +60,7 @@ param (
 # Show error if current powershell environment is limited by security policies
 if ($ExecutionContext.SessionState.LanguageMode -ne "FullLanguage") {
     Write-Host "Error: Win11Debloat is unable to run on your system, powershell execution is restricted by security policies" -ForegroundColor Red
-    Write-Output ""
-    Write-Output "Press enter to exit..."
-    Read-Host | Out-Null
-    Exit
+    AwaitKeyToExit
 }
 
 # Log script output to 'Win11Debloat.log' at the specified path
@@ -741,6 +738,9 @@ function AwaitKeyToExit {
         Write-Output "Press any key to exit..."
         $null = [System.Console]::ReadKey()
     }
+
+    Stop-Transcript
+    Exit
 }
 
 
@@ -1221,13 +1221,11 @@ if ($script:Params.ContainsKey("Sysprep")) {
     if (-not (Test-Path "$defaultUserPath")) {
         Write-Host "Error: Unable to start Win11Debloat in Sysprep mode, cannot find default user folder at '$defaultUserPath'" -ForegroundColor Red
         AwaitKeyToExit
-        Exit
     }
     # Exit script if run in Sysprep mode on Windows 10
     if ($WinVersion -lt 22000) {
         Write-Host "Error: Win11Debloat Sysprep mode is not supported on Windows 10" -ForegroundColor Red
         AwaitKeyToExit
-        Exit
     }
 }
 
@@ -1239,7 +1237,6 @@ if ($script:Params.ContainsKey("User")) {
     if (-not (Test-Path "$userPath")) {
         Write-Host "Error: Unable to run Win11Debloat for user $($script:Params.Item("User")), cannot find user data at '$userPath'" -ForegroundColor Red
         AwaitKeyToExit
-        Exit
     }
 }
 
@@ -1264,7 +1261,6 @@ if ($RunAppConfigurator -or $RunAppsListGenerator) {
     }
 
     AwaitKeyToExit
-    Exit
 }
 
 # Change script execution based on provided parameters or user input
@@ -1277,7 +1273,6 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunS
             PrintHeader 'Custom Mode'
             Write-Host "Error: No saved settings found, no changes were made" -ForegroundColor Red
             AwaitKeyToExit
-            Exit
         }
 
         $Mode = '4'
@@ -1437,7 +1432,6 @@ if ($SPParamCount -eq $script:Params.Keys.Count) {
     Write-Output "The script completed without making any changes."
 
     AwaitKeyToExit
-    Exit
 }
 
 # Execute all selected/provided parameters
@@ -1465,9 +1459,8 @@ switch ($script:Params.Keys) {
         continue
     }
     'RemoveCommApps' {
-        Write-Output "> Removing Mail, Calendar and People apps..."
-        
         $appsList = 'Microsoft.windowscommunicationsapps', 'Microsoft.People'
+        Write-Output "> Removing Mail, Calendar and People apps..."
         RemoveApps $appsList
         continue
     }
@@ -1675,5 +1668,3 @@ Write-Output ""
 Write-Output "Script completed! Please check above for any errors."
 
 AwaitKeyToExit
-
-Stop-Transcript

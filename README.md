@@ -342,7 +342,7 @@ The quick and advanced usage methods support switch parameters. A table of all t
 | -CreateRestorePoint                 |    Create a system restore point before making any changes. Unless a restore point was already created in the last 24 hours. |
 | -Silent                             |    Suppresses all interactive prompts, so the script will run without requiring any user input. |
 | -Sysprep                            |    Run the script in Sysprep mode. All changes will be applied to the Windows default user profile and will only affect new user accounts. |
-| -LogPath                            |    Specify where Win11Debloat will create the log file, always called `Win11Debloat.log`. The log will be saved to the root folder of the script if the specified path doesn't exist. |
+| -LogPath                            |    Change where the script will save the log file. The log will be saved to the root folder of the script if no path is specified, or if the specified path doesn't exist. |
 | -User `<USERNAME>`                  |    Run the script for the specified user, instead of the currently logged in user. This user must have logged on atleast once, and cannot be logged in at the time the script is run. |
 | -RunDefaults                        |    Run the script with the default settings. |
 | -RunSavedSettings                   |    Run the script with the saved custom settings from last time. These settings are saved to and read from the `SavedSettings` file in the root folder of the script. |

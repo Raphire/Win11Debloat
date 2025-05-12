@@ -26,6 +26,8 @@ The script also includes many features that system administrators will enjoy. Su
 
 ## Features
 
+Below is an overview of the key features and functionality offered by Win11Debloat. For more information about which of these features are included in the default mode please click [here](#default-settings).
+
 > [!Tip]
 > All of the changes made by Win11Debloat can easily be reverted and almost all of the apps can be reinstalled through the Microsoft Store. A full guide on how to revert changes can be found [here](https://github.com/Raphire/Win11Debloat/discussions/114).
 
@@ -81,7 +83,7 @@ The script also includes many features that system administrators will enjoy. Su
 
 ### Default Settings
 
-The script allows you to select exactly what changes you want to make, but it also provides a 1-click default mode. The default mode allows you to quickly and easily apply the changes that are recommended for most users. Expand the section below for more info.
+The default mode allows you to quickly and easily apply the changes that are recommended for most people. This includes uninstalling apps that most would consider bloatware, removing many annoying distractions and disabling telemetry and tracking. Expand the section below for more information.
 
 <details>
   <summary>Click to expand</summary>

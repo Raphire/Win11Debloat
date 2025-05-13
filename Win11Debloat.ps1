@@ -1284,8 +1284,8 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunS
 
             PrintHeader 'Menu'
 
-            Write-Output "(1) Default mode: Apply the default settings"
-            Write-Output "(2) Custom mode: Modify the script to your needs"
+            Write-Output "(1) Default mode: Quickly apply the recommended changes"
+            Write-Output "(2) Custom mode: Manually select what changes to make"
             Write-Output "(3) App removal mode: Select & remove apps, without making other changes"
 
             # Only show this option if SavedSettings file exists

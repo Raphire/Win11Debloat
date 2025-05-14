@@ -14,7 +14,7 @@
 
 # Win11Debloat
 
-Win11Debloat is a simple, easy to use and lightweight PowerShell script that can remove pre-installed Windows bloatware apps, disable telemetry and declutter the experience by disabling or removing intrusive interface elements, ads and more. No need to painstakingly go through all the settings yourself or remove apps one by one. Win11Debloat makes the process quick and easy!
+ Win11Debloat is a simple, easy to use and lightweight PowerShell script that allows you to quickly declutter and improve your Windows experience. It can remove pre-installed bloatware apps, disable telemetry, remove intrusive interface elements and much more. No need to painstakingly go through all the settings yourself or remove apps one by one. Win11Debloat makes the process quick and easy!
 
 The script also includes many features that system administrators will enjoy. Such as support for Windows Audit mode, the option to make changes to other Windows users and the ability to run the script without requiring user input during runtime.
 
@@ -29,11 +29,11 @@ The script also includes many features that system administrators will enjoy. Su
 Below is an overview of the key features and functionality offered by Win11Debloat. For more information about which of these features are included in the default mode please click [here](#default-settings).
 
 > [!Tip]
-> All of the changes made by Win11Debloat can easily be reverted and almost all of the apps can be reinstalled through the Microsoft Store. A full guide on how to revert changes can be found [here](https://github.com/Raphire/Win11Debloat/discussions/114).
+> All of the changes made by Win11Debloat can easily be reverted and almost all of the apps can be reinstalled through the Microsoft Store. A full guide on how to revert changes can be found [here](https://github.com/Raphire/Win11Debloat/wiki/Reverting-Changes).
 
 #### App Removal
 
-- Remove a wide variety of preinstalled apps. Click [here](https://github.com/Raphire/Win11Debloat/discussions/230) for more info.
+- Remove a wide variety of preinstalled apps. Click [here](https://github.com/Raphire/Win11Debloat/wiki/App-Removal) for more info.
 - Remove all pinned apps from start for the current user, or for all existing & new users. (Windows 11 only)
 
 #### Telemetry, Tracking & Suggested Content
@@ -337,21 +337,21 @@ This method supports [parameters](#parameters). To use parameters simply run the
 
 ### Parameters
 
-The quick and advanced usage methods support switch parameters. A table of all the supported parameters and what they do can be found below.
+The quick and advanced usage methods support parameters to customize the behaviour of Win11Debloat. A table of all the supported parameters and what they do can be found below.
 
 | Parameter | Description |
 | :-------: | ----------- |
 | -CreateRestorePoint                 |    Create a system restore point before making any changes. Unless a restore point was already created in the last 24 hours. |
 | -Silent                             |    Suppresses all interactive prompts, so the script will run without requiring any user input. |
 | -Sysprep                            |    Run the script in Sysprep mode. All changes will be applied to the Windows default user profile and will only affect new user accounts. |
-| -LogPath                            |    Change where the script will save the log file. The log will be saved to the root folder of the script if no path is specified, or if the specified path doesn't exist. |
+| -LogPath `<PATH>`                   |    Change where the script will save the log file. The log will be saved to the root folder of the script if no path is specified, or if the specified path doesn't exist. |
 | -User `<USERNAME>`                  |    Run the script for the specified user, instead of the currently logged in user. This user must have logged on atleast once, and cannot be logged in at the time the script is run. |
 | -RunDefaults                        |    Run the script with the default settings. |
 | -RunSavedSettings                   |    Run the script with the saved custom settings from last time. These settings are saved to and read from the `SavedSettings` file in the root folder of the script. |
-| -RemoveApps                         |    Remove the [default selection](https://github.com/Raphire/Win11Debloat/discussions/230#default-apps) of bloatware apps. |
+| -RemoveApps                         |    Remove the [default selection](https://github.com/Raphire/Win11Debloat/wiki/App-Removal#default-apps) of bloatware apps. |
 | -RemoveAppsCustom                   |    Remove all apps specified in the 'CustomAppsList' file. IMPORTANT: You can generate your custom list by running the script with the `-RunAppsListGenerator` parameter. No apps will be removed if this file does not exist. |
 | -RunAppsListGenerator               |    Run the apps list generator to generate a custom list of apps to remove, the list is saved to the 'CustomAppsList' file inside the root folder of the script. Running the script with the `-RemoveAppsCustom` parameter will remove the selected apps. |
-| -RemoveHPApps                       |    Remove preinstalled HP apps. Click [here](https://github.com/Raphire/Win11Debloat/discussions/230#hp-apps) for a full list. |
+| -RemoveHPApps                       |    Remove preinstalled HP apps. Click [here](https://github.com/Raphire/Win11Debloat/wiki/App-Removal#hp-apps) for a full list. |
 | -RemoveCommApps                     |    Remove the Mail, Calendar, and People apps. |
 | -RemoveW11Outlook                   |    Remove the new Outlook for Windows app. |
 | -RemoveDevApps                      |    Remove developer-related apps such as Remote Desktop, DevHome and Power Automate. |

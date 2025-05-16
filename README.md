@@ -287,7 +287,7 @@ Download & run the script automatically via PowerShell. All files related to the
 ```
 
 3. Wait for the script to automatically download Win11Debloat.
-4. A new PowerShell window will open showing the Win11Debloat menu. Select either the default or custom mode to continue.
+4. A new PowerShell window will open showing the Win11Debloat menu, select any option to continue.
 5. Carefully read through and follow the on-screen instructions.
 
 This method supports [parameters](#parameters). To use parameters simply run the script as explained above, but add the parameters at the end with spaces in between. Example:
@@ -304,7 +304,7 @@ Manually download & run the script.
 2. Navigate to the Win11Debloat folder
 3. Double click the `Run.bat` file to start the script. NOTE: If the console window immediately closes and nothing happens, try the advanced method below.
 4. Accept the Windows UAC prompt to run the script as administrator, this is required for the script to function.
-5. A new PowerShell window will now open showing the Win11Debloat menu. Select either the default or custom mode to continue.
+4. A new PowerShell window will open showing the Win11Debloat menu, select any option to continue.
 6. Carefully read through and follow the on-screen instructions.
 
 ### Advanced method
@@ -326,7 +326,7 @@ Set-ExecutionPolicy Unrestricted -Scope Process
 .\Win11Debloat.ps1
 ```
 
-6. The Win11Debloat menu will now open. Select either the default or custom mode to continue.
+6. The Win11Debloat menu will now open, select any option to continue.
 7. Carefully read through and follow the on-screen instructions.
 
 This method supports [parameters](#parameters). To use parameters simply run the script as explained above, but add the parameters at the end with spaces in between. Example:

@@ -132,12 +132,12 @@ function ShowAppSelectionForm {
                     $topIndex = $script:selectionBoxIndex
 
                     if ($selectionBox.SelectedIndex -gt $topIndex) {
-                        for (($i = ($topIndex)); $i -le $selectionBox.SelectedIndex; $i++){
+                        for (($i = ($topIndex)); $i -le $selectionBox.SelectedIndex; $i++) {
                             $selectionBox.SetItemChecked($i, $selectionBox.GetItemChecked($topIndex))
                         }
                     }
                     elseif ($topIndex -gt $selectionBox.SelectedIndex) {
-                        for (($i = ($selectionBox.SelectedIndex)); $i -le $topIndex; $i++){
+                        for (($i = ($selectionBox.SelectedIndex)); $i -le $topIndex; $i++) {
                             $selectionBox.SetItemChecked($i, $selectionBox.GetItemChecked($topIndex))
                         }
                     }
@@ -151,7 +151,7 @@ function ShowAppSelectionForm {
 
     $check_All=
     {
-        for (($i = 0); $i -lt $selectionBox.Items.Count; $i++){
+        for (($i = 0); $i -lt $selectionBox.Items.Count; $i++) {
             $selectionBox.SetItemChecked($i, $checkUncheckCheckBox.Checked)
         }
     }
@@ -382,7 +382,7 @@ function RemoveApps {
             $app = '*' + $app + '*'
 
             # Remove installed app for all existing users
-            if ($WinVersion -ge 22000){
+            if ($WinVersion -ge 22000) {
                 # Windows 11 build 22000 or later
                 try {
                     Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage -AllUsers -ErrorAction Continue
@@ -477,7 +477,7 @@ function ForceRemoveEdge {
             "$edgeStub"
         )
 
-        foreach ($path in $edgePaths){
+        foreach ($path in $edgePaths) {
             if (Test-Path -Path $path) {
                 Remove-Item -Path $path -Force -Recurse -ErrorAction SilentlyContinue
                 Write-Host "  Removed $path" -ForegroundColor DarkGray
@@ -878,7 +878,7 @@ function DisplayCustomModeOptions {
     }
 
     # Only show this option for Windows 11 users running build 22621 or later
-    if ($WinVersion -ge 22621){
+    if ($WinVersion -ge 22621) {
         Write-Output ""
 
         if ($( Read-Host -Prompt "Disable & remove Microsoft Copilot and Windows Recall snapshots? This applies to all users (y/n)" ) -eq 'y') {
@@ -888,7 +888,7 @@ function DisplayCustomModeOptions {
     }
 
     # Only show this option for Windows 11 users running build 22000 or later
-    if ($WinVersion -ge 22000){
+    if ($WinVersion -ge 22000) {
         Write-Output ""
 
         if ($( Read-Host -Prompt "Restore the old Windows 10 style context menu? (y/n)" ) -eq 'y') {
@@ -903,7 +903,7 @@ function DisplayCustomModeOptions {
     }
 
     # Only show this option for Windows 11 users running build 26100 or later
-    if ($WinVersion -ge 26100){
+    if ($WinVersion -ge 26100) {
         Write-Output ""
 
         if ($( Read-Host -Prompt "Disable the Sticky Keys keyboard shortcut? (y/n)" ) -eq 'y') {
@@ -918,7 +918,7 @@ function DisplayCustomModeOptions {
     }
 
     # Only show option for disabling context menu items for Windows 10 users or if the user opted to restore the Windows 10 context menu
-    if ((get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'") -or $script:Params.ContainsKey('RevertContextMenu')){
+    if ((get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'") -or $script:Params.ContainsKey('RevertContextMenu')) {
         Write-Output ""
 
         if ($( Read-Host -Prompt "Do you want to disable any context menu options? (y/n)" ) -eq 'y') {
@@ -943,7 +943,7 @@ function DisplayCustomModeOptions {
     }
 
     # Only show this option for Windows 11 users running build 22621 or later
-    if ($WinVersion -ge 22621){
+    if ($WinVersion -ge 22621) {
         Write-Output ""
 
         if ($( Read-Host -Prompt "Do you want to make any changes to the start menu? (y/n)" ) -eq 'y') {
@@ -987,7 +987,7 @@ function DisplayCustomModeOptions {
 
     if ($( Read-Host -Prompt "Do you want to make any changes to the taskbar and related services? (y/n)" ) -eq 'y') {
         # Only show these specific options for Windows 11 users running build 22000 or later
-        if ($WinVersion -ge 22000){
+        if ($WinVersion -ge 22000) {
             Write-Output ""
 
             if ($( Read-Host -Prompt "   Align taskbar buttons to the left side? (y/n)" ) -eq 'y') {
@@ -1037,7 +1037,7 @@ function DisplayCustomModeOptions {
         }
 
         # Only show this options for Windows users running build 22621 or earlier
-        if ($WinVersion -le 22621){
+        if ($WinVersion -le 22621) {
             Write-Output ""
 
             if ($( Read-Host -Prompt "   Hide the chat (meet now) icon from the taskbar? (y/n)" ) -eq 'y') {
@@ -1046,7 +1046,7 @@ function DisplayCustomModeOptions {
         }
         
         # Only show this options for Windows users running build 22631 or later
-        if ($WinVersion -ge 22631){
+        if ($WinVersion -ge 22631) {
             Write-Output ""
 
             if ($( Read-Host -Prompt "   Enable the 'End Task' option in the taskbar right click menu? (y/n)" ) -eq 'y') {
@@ -1100,7 +1100,7 @@ function DisplayCustomModeOptions {
         }
 
         # Only show this option for Windows 11 users running build 22000 or later
-        if ($WinVersion -ge 22000){
+        if ($WinVersion -ge 22000) {
             Write-Output ""
 
             if ($( Read-Host -Prompt "   Hide the Home section from the File Explorer sidepanel? (y/n)" ) -eq 'y') {
@@ -1121,7 +1121,7 @@ function DisplayCustomModeOptions {
         }
 
         # Only show option for disabling these specific folders for Windows 10 users
-        if (get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'"){
+        if (get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'") {
             Write-Output ""
 
             if ($( Read-Host -Prompt "Do you want to hide any folders from the File Explorer sidepanel? (y/n)" ) -eq 'y') {
@@ -1302,9 +1302,8 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunS
 
             $Mode = Read-Host $ModeSelectionMessage
 
-            # Show information based on user input, Suppress user prompt if Silent parameter was passed
             if ($Mode -eq '0') {
-                # Get & print script information from file
+                # Print information screen from file
                 PrintFromFile "$PSScriptRoot/Assets/Menus/Info" "Information"
 
                 Write-Output "Press any key to go back..."
@@ -1321,7 +1320,7 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunS
     switch ($Mode) {
         # Default mode, loads defaults after confirmation
         '1' { 
-            # Print the default settings & require userconfirmation, unless Silent parameter was passed
+            # Show the default settings with confirmation, unless Silent parameter was passed
             if (-not $Silent) {
                 PrintFromFile "$PSScriptRoot/Assets/Menus/DefaultSettings" "Default Mode"
 
@@ -1333,9 +1332,9 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunS
 
             PrintHeader 'Default Mode'
 
-            # Add default parameters if they don't already exist
+            # Add default parameters, if they don't already exist
             foreach ($ParameterName in $DefaultParameterNames) {
-                if (-not $script:Params.ContainsKey($ParameterName)){
+                if (-not $script:Params.ContainsKey($ParameterName)) {
                     $script:Params.Add($ParameterName, $true)
                 }
             }
@@ -1376,12 +1375,12 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunS
             }
         }
 
-        # Load custom options selection from the "SavedSettings" file
+        # Load custom options from the "SavedSettings" file
         '4' {
             PrintHeader 'Custom Mode'
             Write-Output "Win11Debloat will make the following changes:"
 
-            # Get & print default settings info from file
+            # Print the saved settings info from file
             Foreach ($line in (Get-Content -Path "$PSScriptRoot/SavedSettings" )) { 
                 # Remove any spaces before and after the line
                 $line = $line.Trim()
@@ -1405,7 +1404,7 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunS
                         Write-Output $line.Substring(($line.IndexOf('#') + 1), ($line.Length - $line.IndexOf('#') - 1))
                     }
 
-                    if (-not $script:Params.ContainsKey($parameterName)){
+                    if (-not $script:Params.ContainsKey($parameterName)) {
                         $script:Params.Add($parameterName, $true)
                     }
                 }

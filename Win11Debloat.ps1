@@ -38,7 +38,9 @@ param (
     [switch]$DisableChat, [switch]$HideChat,
     [switch]$EnableEndTask,
     [switch]$ClearStart,
+    [string]$ReplaceStart,
     [switch]$ClearStartAllUsers,
+    [string]$ReplaceStartAllUsers,
     [switch]$RevertContextMenu,
     [switch]$DisableMouseAcceleration,
     [switch]$DisableStickyKeys,
@@ -632,8 +634,8 @@ function ReplaceStartMenuForAllUsers {
 # Credit: https://lazyadmin.nl/win-11/customize-windows-11-start-menu-layout/
 function ReplaceStartMenu {
     param (
-        $startMenuBinFile = "$env:LOCALAPPDATA\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState\start2.bin",
-        $startMenuTemplate = "$PSScriptRoot/Start/start2.bin"
+        $startMenuTemplate = "$PSScriptRoot/Start/start2.bin",
+        $startMenuBinFile = "$env:LOCALAPPDATA\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState\start2.bin"
     )
 
     # Change path to correct user if a user was specified
@@ -643,13 +645,13 @@ function ReplaceStartMenu {
 
     # Check if template bin file exists, return early if it doesn't
     if (-not (Test-Path $startMenuTemplate)) {
-        Write-Host "Error: Unable to clear start menu, start2.bin file missing from script folder" -ForegroundColor Red
+        Write-Host "Error: Unable to replace start menu, template start2.bin file not found" -ForegroundColor Red
         return
     }
 
     # Check if bin file exists, return early if it doesn't
     if (-not (Test-Path $startMenuBinFile)) {
-        Write-Host "Error: Unable to clear start menu for user $(GetUserName), start2.bin file could not found" -ForegroundColor Red
+        Write-Host "Error: Unable to replace start menu for user $(GetUserName), template start2.bin file not found" -ForegroundColor Red
         return
     }
 
@@ -1553,8 +1555,18 @@ switch ($script:Params.Keys) {
         Write-Output ""
         continue
     }
+    'ReplaceStart' {
+        Write-Output "> Replacing the start menu for user $(GetUserName)..."
+        ReplaceStartMenu $script:Params.Item("ReplaceStart")
+        Write-Output ""
+        continue
+    }
     'ClearStartAllUsers' {
         ReplaceStartMenuForAllUsers
+        continue
+    }
+    'ReplaceStartAllUsers' {
+        ReplaceStartMenuForAllUsers $script:Params.Item("ReplaceStartAllUsers")
         continue
     }
     'DisableStartRecommended' {

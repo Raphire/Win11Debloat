@@ -95,7 +95,7 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 #### App Removal
 
 - Remove a wide variety of preinstalled apps. Click [here](https://github.com/Raphire/Win11Debloat/wiki/App-Removal) for more info.
-- Remove all pinned apps from start for the current user, or for all existing & new users. (Windows 11 only)
+- Remove or replace all pinned apps from start for the current user, or for all existing & new users. (Windows 11 only)
 
 #### Telemetry, Tracking & Suggested Content
 

@@ -19,7 +19,7 @@
 
  Win11Debloat is a simple, easy to use and lightweight PowerShell script that allows you to quickly declutter and improve your Windows experience. It can remove pre-installed bloatware apps, disable telemetry, remove intrusive interface elements and much more. No need to painstakingly go through all the settings yourself or remove apps one by one. Win11Debloat makes the process quick and easy!
 
-The script also includes many features that system administrators will enjoy. Such as support for Windows Audit mode, the option to make changes to other Windows users and the ability to run the script without requiring user input during runtime.
+The script also includes many features that system administrators will enjoy. Such as support for Windows Audit mode, the option to make changes to other Windows users and the ability to run the script without requiring user input during runtime. Please refer to our [wiki](https://github.com/Raphire/Win11Debloat/wiki/) for more details.
 
 ![Win11Debloat Menu](/Assets/menu.png)
 
@@ -53,7 +53,7 @@ This method supports parameters to customize the behaviour of the script. Please
 <details>
   <summary>Manually download & run the script.</summary><br/>
 
-  1. [Download the latest version of the script](https://github.com/Raphire/Win11Debloat/archive/master.zip), and extract the .ZIP file to your desired location.
+  1. [Download the latest version of the script](https://github.com/Raphire/Win11Debloat/zipball/master), and extract the .ZIP file to your desired location.
   2. Navigate to the Win11Debloat folder
   3. Double click the `Run.bat` file to start the script. NOTE: If the console window immediately closes and nothing happens, try the advanced method below.
   4. Accept the Windows UAC prompt to run the script as administrator, this is required for the script to function.
@@ -65,7 +65,7 @@ This method supports parameters to customize the behaviour of the script. Please
 <details>
   <summary>Manually download the script & run the script via PowerShell. Recommended for advanced users.</summary><br/>
 
-  1. [Download the latest version of the script](https://github.com/Raphire/Win11Debloat/archive/master.zip), and extract the .ZIP file to your desired location.
+  1. [Download the latest version of the script](https://github.com/Raphire/Win11Debloat/zipball/master), and extract the .ZIP file to your desired location.
   2. Open PowerShell or Terminal as an administrator.
   3. Temporarily enable PowerShell execution by entering the following command:
 
@@ -139,8 +139,8 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 - Turn off Enhance Pointer Precision, also known as mouse acceleration.
 - Disable Fast Start-up to ensure a full shutdown.
 - Disable the Sticky Keys keyboard shortcut. (W11 only)
-- Option to apply changes to a different user, instead of the currently logged in user.
-- Sysprep mode to apply changes to the Windows Default user profile. Afterwards, all new users will have the changes automatically applied to them.
+- Option to [apply changes to a different user](https://github.com/Raphire/Win11Debloat/wiki/Advanced-Features#running-as-another-user), instead of the currently logged in user.
+- [Sysprep mode](https://github.com/Raphire/Win11Debloat/wiki/Advanced-Features#sysprep-mode) to apply changes to the Windows Default user profile. Afterwards, all new users will have the changes automatically applied to them.
 
 ### Default Settings
 

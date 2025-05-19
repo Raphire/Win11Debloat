@@ -645,13 +645,18 @@ function ReplaceStartMenu {
 
     # Check if template bin file exists, return early if it doesn't
     if (-not (Test-Path $startMenuTemplate)) {
-        Write-Host "Error: Unable to replace start menu, template start2.bin file not found" -ForegroundColor Red
+        Write-Host "Error: Unable to replace start menu, template file not found" -ForegroundColor Red
+        return
+    }
+
+    if ([IO.Path]::GetExtension($startMenuTemplate) -ne ".bin" ) {
+        Write-Host "Error: Unable to replace start menu, template file is not a valid .bin file" -ForegroundColor Red
         return
     }
 
     # Check if bin file exists, return early if it doesn't
     if (-not (Test-Path $startMenuBinFile)) {
-        Write-Host "Error: Unable to replace start menu for user $(GetUserName), template start2.bin file not found" -ForegroundColor Red
+        Write-Host "Error: Unable to replace start menu for user $(GetUserName), original start2.bin file not found" -ForegroundColor Red
         return
     }
 

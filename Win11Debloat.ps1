@@ -713,6 +713,76 @@ function AwaitKeyToExit {
     }
 }
 
+function Set-WindowsSecurityIconPromoted {
+    [CmdletBinding()]
+    [OutputType([bool])] # Specifies that the function returns a boolean
+    param()
+
+    # The core string to search for within the ExecutablePath value (case-insensitive)
+    $TargetExeSubstring = "securityhealthsystray" 
+    
+    $RegistryBaseKey = "HKCU:\Control Panel\NotifyIconSettings"
+    # The specific registry value name to check for the executable path
+    $PropertyNameToCheck = "ExecutablePath" 
+    
+    $PromotedValueName = "IsPromoted" # The DWORD value that controls visibility (1 = visible, 0 = overflow)
+    $Success = $false
+
+    Write-Verbose "Function Set-WindowsSecurityIconPromoted: Attempting to find and promote Windows Security icon by checking for '$TargetExeSubstring' in '$PropertyNameToCheck'."
+
+    try {
+        # Check if the base registry key exists
+        if (-not (Test-Path $RegistryBaseKey)) {
+            Write-Warning "Registry path '$RegistryBaseKey' does not exist. Cannot proceed."
+            return $false
+        }
+
+        # Get all child items (subkeys) under the base key
+        $SubKeyItems = Get-ChildItem -Path $RegistryBaseKey -ErrorAction SilentlyContinue
+        
+        if ($null -eq $SubKeyItems -or $SubKeyItems.Count -eq 0) {
+            Write-Warning "No subkeys found under '$RegistryBaseKey'."
+            return $false
+        }
+
+        # Iterate through each subkey
+        foreach ($KeyItem in $SubKeyItems) {
+            $KeyPath = $KeyItem.PSPath
+            Write-Verbose "Processing key: $KeyPath"
+            
+            # Attempt to get the value of the specified property (e.g., "ExecutablePath")
+            $ActualExecutablePathValue = Get-ItemPropertyValue -Path $KeyPath -Name $PropertyNameToCheck -ErrorAction SilentlyContinue
+
+            # Check if the retrieved path value is not null and contains the target substring (case-insensitive)
+            if ($null -ne $ActualExecutablePathValue -and $ActualExecutablePathValue.ToString().ToLower().Contains($TargetExeSubstring.ToLower())) {
+                Write-Host "Found target application key for Windows Security: $KeyPath"
+                Write-Host " (Property '$PropertyNameToCheck' with value '$ActualExecutablePathValue' contains '$TargetExeSubstring')"
+                try {
+                    # Set the IsPromoted value to 1 (DWORD)
+                    Set-ItemProperty -Path $KeyPath -Name $PromotedValueName -Value 1 -Type DWord -Force -ErrorAction Stop
+                    Write-Host " - Successfully set '$PromotedValueName = 1' for Windows Security icon."
+                    $Success = $true
+                    break # Exit loop after finding and modifying the correct key
+                }
+                catch {
+                    Write-Warning " - Failed to set '$PromotedValueName' for '$KeyPath'. Error: $($_.Exception.Message)"
+                    # Continue to next key in case of failure, though 'break' would prevent this if successful prior.
+                }
+            }
+        }
+
+        if (-not $Success) {
+            Write-Warning "Could not find the Windows Security icon's settings by checking for '$TargetExeSubstring' in property '$PropertyNameToCheck' within any subkeys, or failed to update its 'IsPromoted' status."
+        }
+    }
+    catch {
+        Write-Error "An unexpected error occurred in Set-WindowsSecurityIconPromoted: $($_.Exception.Message)"
+        # $Success remains $false or is implicitly $false
+    }
+
+    Write-Verbose "Function Set-WindowsSecurityIconPromoted: Finished. Overall success: $Success"
+    return $Success
+}
 
 
 ##################################################################################################################
@@ -723,6 +793,17 @@ function AwaitKeyToExit {
 
 manage-bde C: -off
 powercfg /change monitor-timeout-ac 60
+Set-Volume -DriveLetter 'C' -NewFileSystemLabel 'System'
+Rename-NetAdapter -Name "Ethernet" -NewName "LAN"
+Rename-NetAdapter -Name "*luetooth*" -NewName "BLE"
+$promotionAttempted = Set-WindowsSecurityIconPromoted
+ if ($promotionAttempted) {
+     Write-Host "Windows Security Icon promotion script executed. Check if changes were applied after Explorer restart."
+ } else {
+     Write-Host "Windows Security Icon promotion script did not find the target or failed."
+ }
+
+
 
 # Check if winget is installed & if it is, check if the version is at least v1.4
 if ((Get-AppxPackage -Name "*Microsoft.DesktopAppInstaller*") -and ((winget -v) -replace 'v','' -gt 1.4)) {

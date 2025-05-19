@@ -53,7 +53,7 @@ This method supports parameters to customize the behaviour of the script. Please
 <details>
   <summary>Manually download & run the script.</summary><br/>
 
-  1. [Download the latest version of the script](https://github.com/Raphire/Win11Debloat/zipball/master), and extract the .ZIP file to your desired location.
+  1. [Download the latest version of the script](https://github.com/Raphire/Win11Debloat/releases/latest), and extract the .ZIP file to your desired location.
   2. Navigate to the Win11Debloat folder
   3. Double click the `Run.bat` file to start the script. NOTE: If the console window immediately closes and nothing happens, try the advanced method below.
   4. Accept the Windows UAC prompt to run the script as administrator, this is required for the script to function.
@@ -65,7 +65,7 @@ This method supports parameters to customize the behaviour of the script. Please
 <details>
   <summary>Manually download the script & run the script via PowerShell. Recommended for advanced users.</summary><br/>
 
-  1. [Download the latest version of the script](https://github.com/Raphire/Win11Debloat/zipball/master), and extract the .ZIP file to your desired location.
+  1. [Download the latest version of the script](https://github.com/Raphire/Win11Debloat/releases/latest), and extract the .ZIP file to your desired location.
   2. Open PowerShell or Terminal as an administrator.
   3. Temporarily enable PowerShell execution by entering the following command:
 

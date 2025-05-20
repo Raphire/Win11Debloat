@@ -26,6 +26,7 @@ param (
     [switch]$DisableLockscrTips, [switch]$DisableLockscreenTips,
     [switch]$DisableWindowsSuggestions, [switch]$DisableSuggestions,
     [switch]$DisableSettings365Ads,
+    [switch]$DisableSettingsHome,
     [switch]$ShowHiddenFolders,
     [switch]$ShowKnownFileExt,
     [switch]$HideDupliDrive,
@@ -875,6 +876,7 @@ function DisplayCustomModeOptions {
 
     if ($( Read-Host -Prompt "Disable tips, tricks, suggestions and ads in start, settings, notifications, explorer and lockscreen? (y/n)" ) -eq 'y') {
         AddParameter 'DisableSuggestions' 'Disable tips, tricks, suggestions and ads in start, settings, notifications and File Explorer'
+        AddParameter 'DisableSettings365Ads' 'Disable Microsoft 365 ads in Settings Home'
         AddParameter 'DisableLockscreenTips' 'Disable tips & tricks on the lockscreen'
     }
 
@@ -1516,12 +1518,20 @@ switch ($script:Params.Keys) {
         RegImport "> Disabling tips, tricks, suggestions and ads across Windows..." "Disable_Windows_Suggestions.reg"
         continue
     }
-    'DisableDesktopSpotlight' {
-        RegImport "> Disabling the 'Windows Spotlight' desktop background option..." "Disable_Desktop_Spotlight.reg"
+    'DisableSettings365Ads' {
+        RegImport "> Disabling Microsoft 365 ads in Settings Home..." "Disable_Settings_365_Ads.reg"
         continue
     }
     {$_ -in "DisableLockscrTips", "DisableLockscreenTips"} {
         RegImport "> Disabling tips & tricks on the lockscreen..." "Disable_Lockscreen_Tips.reg"
+        continue
+    }
+    'DisableDesktopSpotlight' {
+        RegImport "> Disabling the 'Windows Spotlight' desktop background option..." "Disable_Desktop_Spotlight.reg"
+        continue
+    }
+    'DisableSettingsHome' {
+        RegImport "> Disabling the Settings Home page..." "Disable_Settings_Home.reg"
         continue
     }
     {$_ -in "DisableBingSearches", "DisableBing"} {

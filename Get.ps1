@@ -24,6 +24,7 @@ param (
     [switch]$DisableLockscrTips, [switch]$DisableLockscreenTips,
     [switch]$DisableWindowsSuggestions, [switch]$DisableSuggestions,
     [switch]$DisableSettings365Ads,
+    [switch]$DisableSettingsHome,
     [switch]$ShowHiddenFolders,
     [switch]$ShowKnownFileExt,
     [switch]$HideDupliDrive,

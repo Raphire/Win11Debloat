@@ -23,6 +23,7 @@ param (
     [switch]$DisableDesktopSpotlight,
     [switch]$DisableLockscrTips, [switch]$DisableLockscreenTips,
     [switch]$DisableWindowsSuggestions, [switch]$DisableSuggestions,
+    [switch]$DisableSettings365Ads,
     [switch]$ShowHiddenFolders,
     [switch]$ShowKnownFileExt,
     [switch]$HideDupliDrive,

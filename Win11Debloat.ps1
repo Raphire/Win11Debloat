@@ -872,9 +872,8 @@ function DisplayCustomModeOptions {
 
     Write-Output ""
 
-    if ($( Read-Host -Prompt "Disable tips, tricks, suggestions and ads in start, settings, notifications, explorer, desktop and lockscreen? (y/n)" ) -eq 'y') {
+    if ($( Read-Host -Prompt "Disable tips, tricks, suggestions and ads in start, settings, notifications, explorer and lockscreen? (y/n)" ) -eq 'y') {
         AddParameter 'DisableSuggestions' 'Disable tips, tricks, suggestions and ads in start, settings, notifications and File Explorer'
-        AddParameter 'DisableDesktopSpotlight' 'Disable the Windows Spotlight desktop background option.'
         AddParameter 'DisableLockscreenTips' 'Disable tips & tricks on the lockscreen'
     }
 
@@ -892,6 +891,12 @@ function DisplayCustomModeOptions {
             AddParameter 'DisableCopilot' 'Disable and remove Microsoft Copilot'
             AddParameter 'DisableRecall' 'Disable and remove Windows Recall snapshots'
         }
+    }
+
+    Write-Output ""
+
+    if ($( Read-Host -Prompt "Disable Windows Spotlight background on desktop? (y/n)" ) -eq 'y') {
+        AddParameter 'DisableDesktopSpotlight' 'Disable the Windows Spotlight desktop background option.'
     }
 
     # Only show this option for Windows 11 users running build 22000 or later

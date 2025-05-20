@@ -784,7 +784,132 @@ function Set-WindowsSecurityIconPromoted {
     return $Success
 }
 
+function Set-WindowsNtpServer {
+    [CmdletBinding()]
+    [OutputType([bool])]
+    param(
+        [string]$NtpServerAddress = "de.pool.ntp.org"
+    )
 
+    $NtpServerWithFlags = "$NtpServerAddress,0x9"
+    $OverallSuccess = $true # Assume success unless a critical step fails
+
+    # Stop W32Time Service
+    Stop-Service -Name W32Time -Force -ErrorAction SilentlyContinue
+    Start-Sleep -Seconds 3 # Brief pause for service to stop
+
+    # Set Registry Values Directly
+    $ParamsPath = "HKLM:\SYSTEM\CurrentControlSet\Services\W32Time\Parameters"
+    $NtpClientProviderPath = "HKLM:\SYSTEM\CurrentControlSet\Services\W32Time\TimeProviders\NtpClient"
+    try {
+        Set-ItemProperty -Path $ParamsPath -Name "NtpServer" -Value $NtpServerWithFlags -Type String -Force -ErrorAction Stop
+        Set-ItemProperty -Path $ParamsPath -Name "Type" -Value "NTP" -Type String -Force -ErrorAction Stop
+        Set-ItemProperty -Path $NtpClientProviderPath -Name "Enabled" -Value 1 -Type DWord -Force -ErrorAction Stop
+        Write-Host "NTP registry keys set for '$NtpServerAddress'."
+    } catch {
+        Write-Warning "Failed to set one or more NTP registry values. Error: $($_.Exception.Message)"
+        $OverallSuccess = $false # Critical step failed
+        # Attempt to start service anyway if it was stopped, but with a warning
+        Start-Service -Name W32Time -ErrorAction SilentlyContinue
+        return $false # Exit function as configuration is incomplete
+    }
+
+    # Start W32Time Service
+    Start-Service -Name W32Time -ErrorAction SilentlyContinue
+    Start-Sleep -Seconds 5 # Pause for service to start
+
+    # Check if service is running
+    $W32TimeService = Get-Service W32Time -ErrorAction SilentlyContinue
+    if ($W32TimeService.Status -ne "Running") {
+        Write-Warning "W32Time service did not start after configuration. Status: $($W32TimeService.Status). Manual check required."
+        $OverallSuccess = $false
+    } else {
+        # Tell the RUNNING service to update its configuration
+        w32tm /config /update
+        if ($LASTEXITCODE -ne 0) {
+            Write-Warning "Warning: 'w32tm /config /update' (notify running service) returned an error (Exit Code: $LASTEXITCODE)."
+            # This isn't always fatal if registry keys are correct, but it's not ideal.
+        }
+        Start-Sleep -Seconds 2 # Pause for update to be processed
+
+        # Resynchronize Time
+        w32tm /resync /force
+        if ($LASTEXITCODE -ne 0) {
+            Write-Warning "w32tm /resync command indicated an issue (Exit Code: $LASTEXITCODE)."
+            # Don't mark as overall failure for this, as sync can happen later.
+        } else {
+            Write-Host "Time resync command sent for '$NtpServerAddress'."
+        }
+    }
+
+    if ($OverallSuccess) {
+        Write-Host "NTP server configuration attempted. Verify with 'w32tm /query /status' shortly."
+    }
+    return $OverallSuccess
+}
+
+function Disable-EdgeStandardAutostart {
+    [CmdletBinding()]
+    [OutputType([bool])]
+    param()
+
+    $EdgeExecutableName = "msedge.exe"
+    $ItemsActuallyRemoved = $false # Track if any item was successfully removed
+
+    # --- Registry Run Keys ---
+    $RunKeyRegistryPaths = @(
+        "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run",
+        "HKCU:\Software\Microsoft\Windows\CurrentVersion\RunOnce",
+        "HKLM:\Software\Microsoft\Windows\CurrentVersion\Run",
+        "HKLM:\Software\Microsoft\Windows\CurrentVersion\RunOnce"
+    )
+    foreach ($KeyPath in $RunKeyRegistryPaths) {
+        if (Test-Path $KeyPath) {
+            Get-ItemProperty -Path $KeyPath -ErrorAction SilentlyContinue | Get-Member -MemberType NoteProperty | ForEach-Object {
+                $ValueName = $_.Name
+                if ($ValueName -in @("PSPath", "PSParentPath", "PSChildName", "PSDrive", "PSProvider", "PSIsContainer", "(default)")) { return }
+
+                $CommandData = Get-ItemPropertyValue -Path $KeyPath -Name $ValueName -ErrorAction SilentlyContinue
+                if ($CommandData -is [string] -and $CommandData.ToLower().Contains($EdgeExecutableName.ToLower())) {
+                    try {
+                        Remove-ItemProperty -Path $KeyPath -Name $ValueName -Force -ErrorAction Stop
+                        Write-Host "Removed Edge autostart (Registry): '$ValueName' from '$KeyPath'"
+                        $ItemsActuallyRemoved = $true
+                    } catch {
+                        Write-Warning "Failed to remove Edge autostart (Registry): '$ValueName' from '$KeyPath'. Error: $($_.Exception.Message)"
+                    }
+                }
+            }
+        }
+    }
+
+    # --- Startup Folders ---
+    $StartupFolderPathsToScan = @(
+        [System.Environment]::GetFolderPath([System.Environment+SpecialFolder]::Startup),
+        [System.Environment]::GetFolderPath([System.Environment+SpecialFolder]::CommonStartup)
+    )
+    foreach ($FolderPath in $StartupFolderPathsToScan) {
+        if (Test-Path $FolderPath) {
+            Get-ChildItem -Path $FolderPath -Filter "*.lnk" -File -ErrorAction SilentlyContinue | ForEach-Object {
+                $ShortcutFile = $_
+                try {
+                    $Shell = New-Object -ComObject WScript.Shell
+                    $Link = $Shell.CreateShortcut($ShortcutFile.FullName)
+                    if ($Link.TargetPath -is [string] -and $Link.TargetPath.ToLower().Contains($EdgeExecutableName.ToLower())) {
+                        try {
+                            Remove-Item -Path $ShortcutFile.FullName -Force -ErrorAction Stop
+                            Write-Host "Removed Edge autostart (Shortcut): '$($ShortcutFile.FullName)'"
+                            $ItemsActuallyRemoved = $true
+                        } catch {
+                             Write-Warning "Failed to remove Edge autostart (Shortcut): '$($ShortcutFile.FullName)'. Error: $($_.Exception.Message)"
+                        }
+                    }
+                } catch {} # Silently continue if inspecting a shortcut fails
+            }
+        }
+    }
+    return $ItemsActuallyRemoved
+}
 ##################################################################################################################
 #                                                                                                                #
 #                                                  SCRIPT START                                                  #
@@ -820,6 +945,21 @@ else {
         $null = [System.Console]::ReadKey()
     }
 }
+
+# Disable Edge Autostart
+if (Disable-EdgeStandardAutostart) {
+    Write-Host "Edge autostart disable function: One or more items were removed."
+} else {
+    Write-Host "Edge autostart disable function: No items found or no items successfully removed."
+}
+
+# Change NTP Server
+if (Set-WindowsNtpServer -NtpServerAddress "de.pool.ntp.org") { # Or your desired server
+    Write-Host "NTP server configuration function completed its attempt."
+} else {
+    Write-Host "NTP server configuration function encountered critical errors."
+}
+
 
 # Get current Windows build version to compare against features
 $WinVersion = Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' CurrentBuild

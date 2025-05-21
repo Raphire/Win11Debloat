@@ -1620,6 +1620,10 @@ switch ($script:Params.Keys) {
     }
     {$_ -in "HideWidgets", "DisableWidgets"} {
         RegImport "> Disabling the widget service and hiding the widget icon from the taskbar..." "Disable_Widgets_Taskbar.reg"
+
+        # Also remove the app package for Widgets
+        $appsList = 'Microsoft.StartExperiencesApp'
+        RemoveApps $appsList
         continue
     }
     {$_ -in "HideChat", "DisableChat"} {

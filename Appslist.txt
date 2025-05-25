@@ -96,7 +96,7 @@ XING
 
 # ------------------------------------------------------------------------------------------------------------- #
 #  The apps below this line will NOT be uninstalled by default. Remove the # character in front of any app you  #
-#  want to UNINSTALL by default.                                                                                #
+#   want to UNINSTALL by default.                                                                               #
 # ------------------------------------------------------------------------------------------------------------- #
 #Microsoft.BingSearch                   # Web Search from Microsoft Bing (Integrates into Windows Search)
 #Microsoft.Copilot                      # New Microsoft Copilot app

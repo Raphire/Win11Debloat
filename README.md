@@ -144,7 +144,7 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 
 ### Default Settings
 
-The default mode allows you to quickly and easily apply the changes that are recommended for most people. This includes uninstalling apps that most would consider bloatware, removing many annoying distractions and disabling telemetry and tracking. Expand the section below for more information.
+Win11Debloat offers a 1-click default mode that allows you to quickly and easily apply the changes that are recommended for most people. This includes uninstalling apps that most would consider bloatware, removing many annoying distractions and disabling telemetry and tracking. Expand the section below for more information.
 
 <details>
   <summary>Click to expand</summary>
@@ -326,7 +326,7 @@ The default mode allows you to quickly and easily apply the changes that are rec
       - Microsoft.RemoteDesktop*
       - Windows.DevHome*
   
-      * Can be removed by running the script with the relevant parameter. (See parameters section below)
+      * Can be removed by running the script with the relevant parameter. (Please refer to the wiki for more details)
   </blockquote>
   </details>
 </details>

@@ -68,7 +68,7 @@ if ($ExecutionContext.SessionState.LanguageMode -ne "FullLanguage") {
 }
 
 # Log script output to 'Win11Debloat.log' at the specified path
-if($LogPath -and (Test-Path $LogPath)) {
+if ($LogPath -and (Test-Path $LogPath)) {
     Start-Transcript -Path "$LogPath/Win11Debloat.log" -Append -IncludeInvocationHeader -Force | Out-Null
 }
 else {
@@ -581,7 +581,7 @@ function RestartExplorer {
     }
 
     # Only restart if the powershell process matches the OS architecture.
-    # Restarting explorer from a 32bit Powershell window will fail on a 64bit OS
+    # Restarting explorer from a 32bit PowerShell window will fail on a 64bit OS
     if ([Environment]::Is64BitProcess -eq [Environment]::Is64BitOperatingSystem) {
         Stop-Process -processName: Explorer -Force
     }

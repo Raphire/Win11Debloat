@@ -916,8 +916,16 @@ function Disable-EdgeStandardAutostart {
 #                                                                                                                #
 ##################################################################################################################
 
-manage-bde C: -off
-powercfg /change monitor-timeout-ac 60
+$choice = Read-Host "Disable BitLocker on C:? (Enter 0 for YES, 1 for NO)"
+if ($choice -eq '0') {
+    manage-bde C: -off
+}
+
+powercfg /change monitor-timeout-ac 45
+powercfg /change monitor-timeout-dc 15
+powercfg /change standby-timeout-ac 0
+powercfg /change standby-timeout-dc 60
+
 Set-Volume -DriveLetter 'C' -NewFileSystemLabel 'System'
 Rename-NetAdapter -Name "Ethernet" -NewName "LAN"
 Rename-NetAdapter -Name "*luetooth*" -NewName "BLE"

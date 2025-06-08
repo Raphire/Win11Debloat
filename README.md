@@ -103,6 +103,7 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 - Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads.
 - Disable tips, tricks, suggestions and ads in start, settings, notifications, File Explorer, and on the lockscreen.
 - Disable the 'Windows Spotlight' desktop background option.
+- Disable & hide the recommended section in the start menu. (W11 only)
 
 #### Bing Web Search, Copilot & More
 
@@ -119,14 +120,13 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 - Hide the 3D objects, music or OneDrive folder from the File Explorer navigation pane. (W10 only)
 - Hide duplicate removable drive entries from the File Explorer navigation pane, so only the entry under 'This PC' remains.
 
-#### Taskbar & Start
+#### Taskbar
 
 - Align taskbar icons to the left. (W11 only)
 - Hide or change the search icon/box on the taskbar. (W11 only)
 - Hide the taskview button from the taskbar. (W11 only)
 - Disable the widgets service & hide icon from the taskbar.
 - Hide the chat (meet now) icon from the taskbar.
-- Disable & hide the recommended section in the start menu. (W11 only)
 - Enable the 'End Task' option in the taskbar right click menu. (W11 only)
 
 #### Context Menu

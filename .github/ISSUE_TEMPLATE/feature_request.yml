@@ -1,4 +1,4 @@
-name: "Feature request"
+name: "💡 Feature request"
 description: "Suggest a new feature or improvement"
 labels: ["enhancement"]
 
@@ -6,15 +6,16 @@ body:
   - type: markdown
     attributes:
       value: |
-        # **Feature request**
+        # 💡 **Feature request**
         Thanks for taking the time to suggest a feature for Win11Debloat! Please include as much detail as possible to help us understand and evaluate your suggestion.
 
   - type: checkboxes
     id: checklist
     attributes:
       label: Checklist
+      description: Please confirm the following before posting your issue.
       options:
-        - label: I searched for existing issues/discussions and didn't find any similar ones.
+        - label: I have searched for existing issues/discussions and didn't find any similar ones.
           required: true
 
   - type: textarea

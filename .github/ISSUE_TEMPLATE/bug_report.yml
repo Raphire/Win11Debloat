@@ -1,4 +1,4 @@
-name: "Bug report"
+name: "🐞 Bug report"
 description: "Report an issue you encountered"
 labels: ["bug"]
 
@@ -6,15 +6,16 @@ body:
   - type: markdown
     attributes:
       value: |
-        # **Bug report**
+        # 🐞 **Bug report**
         Thanks for taking the time to fill out this bug report! Please provide as much information as possible in your report to help us understand and resolve the issue.
 
   - type: checkboxes
     id: checklist
     attributes:
       label: Checklist
+      description: Please confirm the following before posting your issue.
       options:
-        - label: I searched for existing issues/discussions and didn't find any similar ones.
+        - label: I have searched for existing issues/discussions and didn't find any similar ones.
           required: true
         - label: I haven't used any other scripts, tools or programs that might have caused this issue.
           required: false
@@ -41,7 +42,7 @@ body:
     id: issue_description
     attributes:
       label: Describe the issue
-      description: A clear and detailed description of the issue.
+      description: Provide a clear and detailed description of the issue.
       placeholder: e.g. "When I ran the script I expected [...], but instead [...]. This caused [...]."
     validations:
       required: true
@@ -50,7 +51,7 @@ body:
     id: steps_to_reproduce
     attributes:
       label: Steps to reproduce
-      description: Steps on how to reproduce the behavior.
+      description: How can the behaviour be reproduced? Please provide detailed steps.
       placeholder: |
         1. Open '...'
         2. Select '...'
@@ -63,7 +64,7 @@ body:
     id: error_logs
     attributes:
       label: Error output
-      description: Include any logs or error messages that are relevant to the issue. Please keep in mind that logs can contain information that may be sensitive or personal, so review them before submitting.
+      description: "Include any relevant logs or error messages. Logs can be found in `%temp%/Win11Debloat` or the root folder of the script. Please keep in mind that logs may contain personal information such as usernames and the name of your PC, so review them before submitting."
       placeholder: Include any relevant logs or error messages.
     validations:
       required: false

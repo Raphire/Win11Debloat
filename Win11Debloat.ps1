@@ -819,9 +819,9 @@ function DisplayCustomModeOptions {
         Write-Host "Options:" -ForegroundColor Yellow
         Write-Host " (n) Don't remove any apps" -ForegroundColor Yellow
         Write-Host " (1) Only remove the default selection of bloatware apps from 'Appslist.txt'" -ForegroundColor Yellow
-        Write-Host " (2) Remove default selection of bloatware apps, aswell as mail & calendar apps, developer apps and gaming apps"  -ForegroundColor Yellow
-        Write-Host " (3) Select which apps to remove and which to keep" -ForegroundColor Yellow
-        $RemoveAppsInput = Read-Host "Remove any pre-installed apps? (n/1/2/3)" 
+        Write-Host " (2) Remove default selection of bloatware apps, as well as mail & calendar apps, developer apps and gaming apps"  -ForegroundColor Yellow
+        Write-Host " (3) Manually select which apps to remove and which to keep" -ForegroundColor Yellow
+        $RemoveAppsInput = Read-Host "Do you want to remove any apps? (n/1/2/3)"
 
         # Show app selection form if user entered option 3
         if ($RemoveAppsInput -eq '3') {
@@ -860,7 +860,7 @@ function DisplayCustomModeOptions {
 
             Write-Output ""
 
-            if ($( Read-Host -Prompt "Disable Xbox game/screen recording? Also stops gaming overlay popups (y/n)" ) -eq 'y') {
+            if ($( Read-Host -Prompt "Disable Xbox game/screen recording? This also stops gaming overlay popups (y/n)" ) -eq 'y') {
                 AddParameter 'DisableDVR' 'Disable Xbox game/screen recording'
             }
         }
@@ -928,7 +928,7 @@ function DisplayCustomModeOptions {
 
     Write-Output ""
 
-    if ($( Read-Host -Prompt "Disable Fast Start-up? (y/n)" ) -eq 'y') {
+    if ($( Read-Host -Prompt "Disable Fast Start-up? This applies to all users (y/n)" ) -eq 'y') {
         AddParameter 'DisableFastStartup' 'Disable Fast Start-up'
     }
 

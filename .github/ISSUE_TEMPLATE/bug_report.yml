@@ -1,0 +1,78 @@
+name: "Bug report"
+description: "Report an issue you encountered"
+labels: ["bug"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        # **Bug report**
+        Thanks for taking the time to fill out this bug report! Please provide as much information as possible in your report to help us understand and resolve the issue.
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched for existing issues/discussions and didn't find any similar ones.
+          required: true
+        - label: I haven't used any other scripts, tools or programs that might have caused this issue.
+          required: false
+
+  - type: input
+    id: windows_version
+    attributes:
+      label: Windows version
+      description: What version of Windows are you using?
+      placeholder: e.g. Windows 11 24H2 (26100.4202)
+    validations:
+      required: true
+
+  - type: input
+    id: script_setting
+    attributes:
+      label: Script mode/options
+      description: What mode/options did you use with the script?
+      placeholder: e.g. "Default mode", "Custom mode with options X, Y, Z"
+    validations:
+      required: true
+
+  - type: textarea
+    id: issue_description
+    attributes:
+      label: Describe the issue
+      description: A clear and detailed description of the issue.
+      placeholder: e.g. "When I ran the script I expected [...], but instead [...]. This caused [...]."
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps_to_reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Steps on how to reproduce the behavior.
+      placeholder: |
+        1. Open '...'
+        2. Select '...'
+        3. Wait for '...'
+        4. Etc.
+    validations:
+      required: true
+
+  - type: textarea
+    id: error_logs
+    attributes:
+      label: Error output
+      description: Include any logs or error messages that are relevant to the issue. Please keep in mind that logs can contain information that may be sensitive or personal, so review them before submitting.
+      placeholder: Include any relevant logs or error messages.
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional context
+      description: Add any other context about the problem here.
+      placeholder: e.g. Screenshots, links to related discussions, etc.
+    validations:
+      required: false

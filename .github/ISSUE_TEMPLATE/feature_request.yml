@@ -1,0 +1,45 @@
+name: "Feature request"
+description: "Suggest a new feature or improvement"
+labels: ["enhancement"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        # **Feature request**
+        Thanks for taking the time to suggest a feature for Win11Debloat! Please include as much detail as possible to help us understand and evaluate your suggestion.
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched for existing issues/discussions and didn't find any similar ones.
+          required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the feature or improvement
+      description: Provide a clear and concise description of your suggested feature or improvement. Explain why you think this feature is needed and how it would benefit users.
+      placeholder: Describe the feature or improvement.
+    validations:
+      required: true
+
+  - type: textarea
+    id: examples
+    attributes:
+      label: Examples
+      description: Provide examples of how the feature could work or be implemented.
+      placeholder: e.g. Code snippets, mockups, or links to other implementations of similar features.
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional context
+      description: Add any other context or screenshots about the feature request here.
+      placeholder: e.g. Screenshots, links to related discussions, etc.
+    validations:
+      required: false

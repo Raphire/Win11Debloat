@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Open a discussion
+    url: https://github.com/Raphire/Win11Debloat/discussions
+    about: Discuss anything that is not a bug report or feature request

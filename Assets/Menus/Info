@@ -13,7 +13,6 @@ Telemetry, Tracking & Suggested Content
 - Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads.
 - Disable tips, tricks, suggestions & ads across Windows.
 - Disable the 'Windows Spotlight' desktop background option.
-- Disable & hide the recommended section in the start menu. (W11 only)
 
 Bing, Copilot & More
 - Disable & remove Bing web search, Bing AI and Cortana from Windows search.
@@ -35,6 +34,10 @@ Taskbar
 - Disable the widgets service & hide icon from the taskbar.
 - Hide the chat (meet now) icon from the taskbar.
 - Enable the 'End Task' option in the taskbar right click menu. (W11 only)
+
+Start
+- Disable & hide the recommended section in the start menu. (W11 only)
+- Disable the Phone Link mobile devices integration in the start menu. (W11 only)
 
 Context menu
 - Restore the old Windows 10 style context menu. (W11 only)

@@ -34,6 +34,7 @@ param (
     [switch]$HideSearchTb, [switch]$ShowSearchIconTb, [switch]$ShowSearchLabelTb, [switch]$ShowSearchBoxTb,
     [switch]$HideTaskview,
     [switch]$DisableStartRecommended,
+    [switch]$DisableStartPhoneLink,
     [switch]$DisableCopilot,
     [switch]$DisableRecall,
     [switch]$DisableWidgets, [switch]$HideWidgets,
@@ -995,6 +996,12 @@ function DisplayCustomModeOptions {
             if ($( Read-Host -Prompt "   Disable & hide the recommended section in the start menu? This applies to all users (y/n)" ) -eq 'y') {
                 AddParameter 'DisableStartRecommended' 'Disable & hide the recommended section in the start menu.'
             }
+
+            Write-Output ""
+
+            if ($( Read-Host -Prompt "   Disable the Phone Link mobile devices integration in the start menu? (y/n)" ) -eq 'y') {
+                AddParameter 'DisableStartPhoneLink' 'Disable the Phone Link mobile devices integration in the start menu.'
+            }
         }
     }
 
@@ -1518,16 +1525,16 @@ switch ($script:Params.Keys) {
         RegImport "> Disabling tips, tricks, suggestions and ads across Windows..." "Disable_Windows_Suggestions.reg"
         continue
     }
-    'DisableSettings365Ads' {
-        RegImport "> Disabling Microsoft 365 ads in Settings Home..." "Disable_Settings_365_Ads.reg"
-        continue
-    }
     {$_ -in "DisableLockscrTips", "DisableLockscreenTips"} {
         RegImport "> Disabling tips & tricks on the lockscreen..." "Disable_Lockscreen_Tips.reg"
         continue
     }
     'DisableDesktopSpotlight' {
         RegImport "> Disabling the 'Windows Spotlight' desktop background option..." "Disable_Desktop_Spotlight.reg"
+        continue
+    }
+    'DisableSettings365Ads' {
+        RegImport "> Disabling Microsoft 365 ads in Settings Home..." "Disable_Settings_365_Ads.reg"
         continue
     }
     'DisableSettingsHome' {
@@ -1592,6 +1599,10 @@ switch ($script:Params.Keys) {
     }
     'DisableStartRecommended' {
         RegImport "> Disabling and hiding the start menu recommended section..." "Disable_Start_Recommended.reg"
+        continue
+    }
+    'DisableStartPhoneLink' {
+        RegImport "> Disabling the Phone Link mobile devices integration in the start menu..." "Disable_Phone_Link_In_Start.reg"
         continue
     }
     'TaskbarAlignLeft' {

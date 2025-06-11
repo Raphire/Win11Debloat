@@ -1,0 +1,5 @@
+Windows Registry Editor Version 5.00
+
+; Disable Show mobile device in Start
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Start\Companions\Microsoft.YourPhone_8wekyb3d8bbwe]
+"IsEnabled"=dword:00000000

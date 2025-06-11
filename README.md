@@ -107,7 +107,7 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 
 #### Bing Web Search, Copilot & More
 
-- Disable & remove Bing web search & Cortana from Windows search.
+- Disable & remove Bing web search, Bing AI and Cortana from Windows search.
 - Disable & remove Microsoft Copilot. (W11 only)
 - Disable Windows Recall snapshots. (W11 only)
 
@@ -154,7 +154,7 @@ Win11Debloat offers a 1-click default mode that allows you to quickly and easily
   - Remove the default selection of bloatware apps. (See below for full list)
   - Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads.
   - Disable tips, tricks, suggestions and ads in start, settings, notifications, File Explorer, and on the lockscreen.
-  - Disable & remove Bing web search & Cortana from Windows search.
+  - Disable & remove Bing web search, Bing AI and Cortana from Windows search.
   - Disable Microsoft Copilot. (W11 only)
   - Disable Fast Start-up to ensure a full shutdown.
   - Show file extensions for known file types.

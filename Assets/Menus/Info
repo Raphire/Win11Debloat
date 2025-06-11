@@ -1,7 +1,6 @@
-Win11Debloat is a simple, easy to use and lightweight PowerShell script that can remove
-pre-installed Windows bloatware apps, disable telemetry and declutter the experience by
-disabling or removing intrusive interface elements, ads and more. No need to go through
-all the settings yourself, or remove apps one by one.
+Win11Debloat is a lightweight and easy to use PowerShell script that allows you to quickly
+declutter and improve your Windows experience. It can remove pre-installed bloatware apps,
+disable telemetry, remove intrusive interface elements and much more.
 
 -------------------------------------------------------------------------------------------
  All Features
@@ -17,7 +16,7 @@ Telemetry, Tracking & Suggested Content
 - Disable & hide the recommended section in the start menu. (W11 only)
 
 Bing, Copilot & More
-- Disable & remove Bing web search & Cortana from Windows search.
+- Disable & remove Bing web search, Bing AI and Cortana from Windows search.
 - Disable & remove Microsoft Copilot. (W11 only)
 - Disable Windows Recall snapshots. (W11 only)
 
@@ -54,15 +53,15 @@ Other
 -------------------------------------------------------------------------------------------
 The default mode applies the changes that are recommended for most users. This includes:
 - Remove the default selection of apps, the list can be found in the 'Appslist.txt' file.
-- Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads.
-- Disable & remove Bing web search & Cortana from Windows search.
-- Disable tips, tricks, suggestions & ads across Windows.
-- Disable Microsoft Copilot. (W11 only)
+- Disable telemetry, diagnostic data, app-launch tracking & targeted ads.
+- Disable tips, tricks, suggestions and ads in start, settings, notifications and more.
+- Disable tips & tricks on the lockscreen. (This may change your lockscreen wallpaper)
+- Disable & remove Bing web search, Bing AI and Cortana from Windows search.
+- Disable Microsoft Copilot. (Windows 11 build 22621+)
 - Disable Fast Start-up to ensure a full shutdown.
 - Show file extensions for known file types.
-- Disable the widget service & hide the icon from the taskbar. 
+- Hide the 3D objects folder in Windows Explorer. (Windows 10 only)
+- Disable the widget service & hide the icon from the taskbar.
 - Hide the Chat (meet now) icon from the taskbar.
-- Hide the 3D objects folder under 'This pc' from File Explorer. (W10 only)
-- Hide the 'Include in library', 'Give access to' and 'Share' options from the context menu. (W10 only)
 
 

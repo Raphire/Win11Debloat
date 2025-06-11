@@ -882,8 +882,8 @@ function DisplayCustomModeOptions {
 
     Write-Output ""
 
-    if ($( Read-Host -Prompt "Disable & remove bing web search, bing AI & cortana in Windows search? (y/n)" ) -eq 'y') {
-        AddParameter 'DisableBing' 'Disable & remove bing web search, bing AI & cortana in Windows search'
+    if ($( Read-Host -Prompt "Disable & remove Bing web search, Bing AI and Cortana from Windows search? (y/n)" ) -eq 'y') {
+        AddParameter 'DisableBing' 'Disable & remove Bing web search, Bing AI and Cortana from Windows search'
     }
 
     # Only show this option for Windows 11 users running build 22621 or later
@@ -1535,9 +1535,9 @@ switch ($script:Params.Keys) {
         continue
     }
     {$_ -in "DisableBingSearches", "DisableBing"} {
-        RegImport "> Disabling bing web search, bing AI & cortana in Windows search..." "Disable_Bing_Cortana_In_Search.reg"
+        RegImport "> Disabling Bing web search, Bing AI and Cortana from Windows search..." "Disable_Bing_Cortana_In_Search.reg"
         
-        # Also remove the app package for bing search
+        # Also remove the app package for Bing search
         $appsList = 'Microsoft.BingSearch'
         RemoveApps $appsList
         continue
@@ -1545,7 +1545,7 @@ switch ($script:Params.Keys) {
     'DisableCopilot' {
         RegImport "> Disabling & removing Microsoft Copilot..." "Disable_Copilot.reg"
 
-        # Also remove the app package for copilot
+        # Also remove the app package for Copilot
         $appsList = 'Microsoft.Copilot'
         RemoveApps $appsList
         continue

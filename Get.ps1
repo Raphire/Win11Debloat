@@ -79,7 +79,7 @@ Write-Output "------------------------------------------------------------------
 Write-Output "> Downloading Win11Debloat..."
 
 # Download latest version of Win11Debloat from github as zip archive
-Invoke-WebRequest https://github.com/Raphire/Win11Debloat/zipball/2025.06.11 -OutFile "$env:TEMP/win11debloat-temp.zip"
+Invoke-RestMethod https://api.github.com/repos/Raphire/Win11Debloat/zipball/2025.06.12 -OutFile "$env:TEMP/win11debloat.zip"
 
 # Remove old script folder if it exists, except for CustomAppsList and SavedSettings files
 if (Test-Path "$env:TEMP/Win11Debloat") {
@@ -92,10 +92,10 @@ Write-Output ""
 Write-Output "> Unpacking..."
 
 # Unzip archive to Win11Debloat folder
-Expand-Archive "$env:TEMP/win11debloat-temp.zip" "$env:TEMP/Win11Debloat"
+Expand-Archive "$env:TEMP/win11debloat.zip" "$env:TEMP/Win11Debloat"
 
 # Remove archive
-Remove-Item "$env:TEMP/win11debloat-temp.zip"
+Remove-Item "$env:TEMP/win11debloat.zip"
 
 # Move files
 Get-ChildItem -Path "$env:TEMP/Win11Debloat/Raphire-Win11Debloat-*" -Recurse | Move-Item -Destination "$env:TEMP/Win11Debloat"

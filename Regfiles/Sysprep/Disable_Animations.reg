@@ -1,0 +1,4 @@
+Windows Registry Editor Version 5.00
+
+[hkey_users\default\Control Panel\Desktop]
+"UserPreferencesMask"=hex:90,12,07,80,10,00,00,00

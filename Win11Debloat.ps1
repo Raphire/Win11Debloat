@@ -30,6 +30,9 @@ param (
     [switch]$ShowHiddenFolders,
     [switch]$ShowKnownFileExt,
     [switch]$HideDupliDrive,
+    [switch]$EnableDarkMode,
+    [switch]$DisableTransparency,
+    [switch]$DisableAnimations,
     [switch]$TaskbarAlignLeft,
     [switch]$HideSearchTb, [switch]$ShowSearchIconTb, [switch]$ShowSearchLabelTb, [switch]$ShowSearchBoxTb,
     [switch]$HideTaskview,
@@ -581,6 +584,10 @@ function RestartExplorer {
         Write-Host "Warning: The Sticky Keys setting changes will only take effect after a reboot" -ForegroundColor Yellow
     }
 
+    if ($script:Params.ContainsKey("DisableAnimations")) {
+        Write-Host "Warning: Animations will only be disabled after a reboot" -ForegroundColor Yellow
+    }
+
     # Only restart if the powershell process matches the OS architecture.
     # Restarting explorer from a 32bit PowerShell window will fail on a 64bit OS
     if ([Environment]::Is64BitProcess -eq [Environment]::Is64BitOperatingSystem) {
@@ -901,6 +908,19 @@ function DisplayCustomModeOptions {
 
     if ($( Read-Host -Prompt "Disable Windows Spotlight background on desktop? (y/n)" ) -eq 'y') {
         AddParameter 'DisableDesktopSpotlight' 'Disable the Windows Spotlight desktop background option.'
+    }
+
+    Write-Output ""
+
+    if ($( Read-Host -Prompt "Enable dark mode for system and apps? (y/n)" ) -eq 'y') {
+        AddParameter 'EnableDarkMode' 'Enable dark mode for system and apps'
+    }
+
+    Write-Output ""
+
+    if ($( Read-Host -Prompt "Disable transparency, animations and visual effects? (y/n)" ) -eq 'y') {
+        AddParameter 'DisableTransparency' 'Disable transparency effects'
+        AddParameter 'DisableAnimations' 'Disable animations and visual effects'
     }
 
     # Only show this option for Windows 11 users running build 22000 or later
@@ -1603,6 +1623,18 @@ switch ($script:Params.Keys) {
     }
     'DisableStartPhoneLink' {
         RegImport "> Disabling the Phone Link mobile devices integration in the start menu..." "Disable_Phone_Link_In_Start.reg"
+        continue
+    }
+    'EnableDarkMode' {
+        RegImport "> Enabling dark mode for system and apps..." "Enable_Dark_Mode.reg"
+        continue
+    }
+    'DisableTransparency' {
+        RegImport "> Disabling transparency effects..." "Disable_Transparency.reg"
+        continue
+    }
+    'DisableAnimations' {
+        RegImport "> Disabling animations and visual effects..." "Disable_Animations.reg"
         continue
     }
     'TaskbarAlignLeft' {

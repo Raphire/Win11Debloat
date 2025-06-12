@@ -19,6 +19,14 @@ Bing, Copilot & More
 - Disable & remove Microsoft Copilot. (W11 only)
 - Disable Windows Recall snapshots. (W11 only)
 
+Personalisation
+- Enable Dark Mode.
+- Disable transparency, animations and visual effects.
+- Turn off Enhance Pointer Precision, also known as mouse acceleration.
+- Disable the Sticky Keys keyboard shortcut. (W11 only)
+- Restore the old Windows 10 style context menu. (W11 only)
+- Hide the 'Include in library', 'Give access to' and 'Share' options from the context menu. (W10 only)
+
 File Explorer
 - Change the default location that File Explorer opens to.
 - Show hidden files, folders & drives.
@@ -39,17 +47,11 @@ Start
 - Disable & hide the recommended section in the start menu. (W11 only)
 - Disable the Phone Link mobile devices integration in the start menu. (W11 only)
 
-Context menu
-- Restore the old Windows 10 style context menu. (W11 only)
-- Hide the 'Include in library', 'Give access to' & 'Share' options from the context menu. (W10 only)
-
 Other
 - Disable Xbox game/screen recording, this also stops gaming overlay popups.
-- Turn off Enhance Pointer Precision, also known as mouse acceleration.
 - Disable Fast Start-up to ensure a full shutdown.
-- Disable the Sticky Keys keyboard shortcut. (W11 only)
 - Option to apply changes to a different user, instead of the currently logged in user.
-- Sysprep mode to apply changes to the Windows Default user profile.
+- Sysprep mode to apply changes to the Windows Default user profile. 
 
 -------------------------------------------------------------------------------------------
  Default mode

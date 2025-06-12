@@ -110,6 +110,15 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 - Disable & remove Microsoft Copilot. (W11 only)
 - Disable Windows Recall snapshots. (W11 only)
 
+#### Personalisation
+
+- Enable Dark Mode.
+- Disable transparency, animations and visual effects.
+- Turn off Enhance Pointer Precision, also known as mouse acceleration.
+- Disable the Sticky Keys keyboard shortcut. (W11 only)
+- Restore the old Windows 10 style context menu. (W11 only)
+- Hide the 'Include in library', 'Give access to' and 'Share' options from the context menu. (W10 only)
+
 #### File Explorer
 
 - Change the default location that File Explorer opens to.
@@ -132,17 +141,10 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 - Disable & hide the recommended section in the start menu. (W11 only)
 - Disable the Phone Link mobile devices integration in the start menu. (W11 only)
 
-#### Context Menu
-
-- Restore the old Windows 10 style context menu. (W11 only)
-- Hide the 'Include in library', 'Give access to' and 'Share' options from the context menu. (W10 only)
-
 #### Other
 
 - Disable Xbox game/screen recording, this also stops gaming overlay popups.
-- Turn off Enhance Pointer Precision, also known as mouse acceleration.
 - Disable Fast Start-up to ensure a full shutdown.
-- Disable the Sticky Keys keyboard shortcut. (W11 only)
 - Option to [apply changes to a different user](https://github.com/Raphire/Win11Debloat/wiki/Advanced-Features#running-as-another-user), instead of the currently logged in user.
 - [Sysprep mode](https://github.com/Raphire/Win11Debloat/wiki/Advanced-Features#sysprep-mode) to apply changes to the Windows Default user profile. Afterwards, all new users will have the changes automatically applied to them.
 

@@ -112,7 +112,7 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 
 #### Personalisation
 
-- Enable Dark Mode.
+- Enable dark mode for system and apps.
 - Disable transparency, animations and visual effects.
 - Turn off Enhance Pointer Precision, also known as mouse acceleration.
 - Disable the Sticky Keys keyboard shortcut. (W11 only)

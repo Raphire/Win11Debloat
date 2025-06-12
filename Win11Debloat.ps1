@@ -821,8 +821,8 @@ function DisplayCustomModeOptions {
         Write-Host " (n) Don't remove any apps" -ForegroundColor Yellow
         Write-Host " (1) Only remove the default selection of bloatware apps from 'Appslist.txt'" -ForegroundColor Yellow
         Write-Host " (2) Remove default selection of bloatware apps, as well as mail & calendar apps, developer apps and gaming apps"  -ForegroundColor Yellow
-        Write-Host " (3) Manually select which apps to remove and which to keep" -ForegroundColor Yellow
-        $RemoveAppsInput = Read-Host "Do you want to remove any apps? (n/1/2/3)"
+        Write-Host " (3) Manually select which apps to remove" -ForegroundColor Yellow
+        $RemoveAppsInput = Read-Host "Do you want to remove any apps? Apps will be removed for all users (n/1/2/3)"
 
         # Show app selection form if user entered option 3
         if ($RemoveAppsInput -eq '3') {

@@ -62,10 +62,10 @@ The default mode applies the changes that are recommended for most users. This i
 - Disable tips, tricks, suggestions and ads in start, settings, notifications and more.
 - Disable tips & tricks on the lockscreen. (This may change your lockscreen wallpaper)
 - Disable & remove Bing web search, Bing AI and Cortana from Windows search.
-- Disable Microsoft Copilot. (Windows 11 build 22621+)
+- Disable & remove Microsoft Copilot. (W11 only)
 - Disable Fast Start-up to ensure a full shutdown.
 - Show file extensions for known file types.
-- Hide the 3D objects folder in Windows Explorer. (Windows 10 only)
+- Hide the 3D objects folder in Windows Explorer. (W10 only)
 - Disable the widget service & hide the icon from the taskbar.
 - Hide the Chat (meet now) icon from the taskbar.
 

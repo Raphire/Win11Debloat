@@ -161,7 +161,7 @@ Win11Debloat offers a default mode that allows you to quickly and easily apply t
 - Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads.
 - Disable tips, tricks, suggestions and ads in start, settings, notifications, File Explorer, and on the lockscreen.
 - Disable & remove Bing web search, Bing AI and Cortana from Windows search.
-- Disable Microsoft Copilot. (W11 only)
+- Disable & remove Microsoft Copilot. (W11 only)
 - Disable Fast Start-up to ensure a full shutdown.
 - Show file extensions for known file types.
 - Hide the 3D objects folder under 'This pc' from File Explorer. (W10 only)

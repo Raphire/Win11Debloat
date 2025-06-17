@@ -88,7 +88,7 @@ This method supports parameters to customize the behaviour of the script. Please
 
 ## Features
 
-Below is an overview of the key features and functionality offered by Win11Debloat. For more information about which of these features are included in the default mode please click [here](#default-settings).
+Below is an overview of the key features and functionality offered by Win11Debloat. For more information about what features are included in the default mode please refer to [this section](#default-settings) below.
 
 > [!Tip]
 > All of the changes made by Win11Debloat can easily be reverted and almost all of the apps can be reinstalled through the Microsoft Store. A full guide on how to revert changes can be found [here](https://github.com/Raphire/Win11Debloat/wiki/Reverting-Changes).
@@ -96,7 +96,7 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 #### App Removal
 
 - Remove a wide variety of preinstalled apps. Click [here](https://github.com/Raphire/Win11Debloat/wiki/App-Removal) for more info.
-- Remove or replace all pinned apps from start for the current user, or for all existing & new users. (Windows 11 only)
+- Remove or replace all pinned apps from start for the current user, or for all existing & new users. (W11 only)
 
 #### Telemetry, Tracking & Suggested Content
 
@@ -150,191 +150,191 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 
 ### Default Settings
 
-Win11Debloat offers a 1-click default mode that allows you to quickly and easily apply the changes that are recommended for most people. This includes uninstalling apps that most would consider bloatware, removing many annoying distractions and disabling telemetry and tracking. Expand the section below for more information.
+Win11Debloat offers a default mode that allows you to quickly and easily apply the changes that are recommended for most people. This includes uninstalling apps that most would consider bloatware, removing many annoying distractions and disabling telemetry and tracking. To apply the default settings, launch the script as you normally would and select option `1` in the script menu. Alternatively, you can launch the script with the `-RunDefaults` parameter. Example:
+
+```Powershell
+& ([scriptblock]::Create((irm "https://debloat.raphi.re/"))) -RunDefaults
+```
+  
+#### Changes included in the default mode
+- Remove the default selection of bloatware apps. (See below for full list)
+- Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads.
+- Disable tips, tricks, suggestions and ads in start, settings, notifications, File Explorer, and on the lockscreen.
+- Disable & remove Bing web search, Bing AI and Cortana from Windows search.
+- Disable Microsoft Copilot. (W11 only)
+- Disable Fast Start-up to ensure a full shutdown.
+- Show file extensions for known file types.
+- Hide the 3D objects folder under 'This pc' from File Explorer. (W10 only)
+- Disable the widget service & hide the icon from the taskbar.
+- Hide the Chat (meet now) icon from the taskbar.
+
+#### Apps that ARE removed as part of the default mode
 
 <details>
   <summary>Click to expand</summary>
-  
-  #### Default mode applies the following changes:
-  - Remove the default selection of bloatware apps. (See below for full list)
-  - Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads.
-  - Disable tips, tricks, suggestions and ads in start, settings, notifications, File Explorer, and on the lockscreen.
-  - Disable & remove Bing web search, Bing AI and Cortana from Windows search.
-  - Disable Microsoft Copilot. (W11 only)
-  - Disable Fast Start-up to ensure a full shutdown.
-  - Show file extensions for known file types.
-  - Hide the 3D objects folder under 'This pc' from File Explorer. (W10 only)
-  - Disable the widget service & hide the icon from the taskbar.
-  - Hide the Chat (meet now) icon from the taskbar.
+  <blockquote>
+    
+    Microsoft bloat:
+    - Clipchamp.Clipchamp  
+    - Microsoft.3DBuilder  
+    - Microsoft.549981C3F5F10 (Cortana app)
+    - Microsoft.BingFinance  
+    - Microsoft.BingFoodAndDrink 
+    - Microsoft.BingHealthAndFitness
+    - Microsoft.BingNews  
+    - Microsoft.BingSearch* (Bing web search in Windows)
+    - Microsoft.BingSports  
+    - Microsoft.BingTranslator  
+    - Microsoft.BingTravel   
+    - Microsoft.BingWeather  
+    - Microsoft.Copilot
+    - Microsoft.Getstarted (Cannot be uninstalled in Windows 11)
+    - Microsoft.Messaging  
+    - Microsoft.Microsoft3DViewer  
+    - Microsoft.MicrosoftJournal
+    - Microsoft.MicrosoftOfficeHub  
+    - Microsoft.MicrosoftPowerBIForWindows  
+    - Microsoft.MicrosoftSolitaireCollection  
+    - Microsoft.MicrosoftStickyNotes  
+    - Microsoft.MixedReality.Portal  
+    - Microsoft.NetworkSpeedTest  
+    - Microsoft.News  
+    - Microsoft.Office.OneNote (Discontinued UWP version only, does not remove new MS365 versions)
+    - Microsoft.Office.Sway  
+    - Microsoft.OneConnect  
+    - Microsoft.Print3D  
+    - Microsoft.SkypeApp  
+    - Microsoft.Todos  
+    - Microsoft.WindowsAlarms  
+    - Microsoft.WindowsFeedbackHub  
+    - Microsoft.WindowsMaps  
+    - Microsoft.WindowsSoundRecorder  
+    - Microsoft.XboxApp (Old Xbox Console Companion App, no longer supported)
+    - Microsoft.ZuneVideo  
+    - MicrosoftCorporationII.MicrosoftFamily (Microsoft Family Safety)
+    - MicrosoftTeams (Old personal version of MS Teams from the MS Store)
+    - MSTeams (New MS Teams app)
 
-  #### Apps that ARE removed as part of the default mode
-  
-  <details>
-    <summary>Click to expand</summary>
-    <blockquote>
-      
-      Microsoft bloat:
-      - Clipchamp.Clipchamp  
-      - Microsoft.3DBuilder  
-      - Microsoft.549981C3F5F10 (Cortana app)
-      - Microsoft.BingFinance  
-      - Microsoft.BingFoodAndDrink 
-      - Microsoft.BingHealthAndFitness
-      - Microsoft.BingNews  
-      - Microsoft.BingSearch* (Bing web search in Windows)
-      - Microsoft.BingSports  
-      - Microsoft.BingTranslator  
-      - Microsoft.BingTravel   
-      - Microsoft.BingWeather  
-      - Microsoft.Copilot
-      - Microsoft.Getstarted (Cannot be uninstalled in Windows 11)
-      - Microsoft.Messaging  
-      - Microsoft.Microsoft3DViewer  
-      - Microsoft.MicrosoftJournal
-      - Microsoft.MicrosoftOfficeHub  
-      - Microsoft.MicrosoftPowerBIForWindows  
-      - Microsoft.MicrosoftSolitaireCollection  
-      - Microsoft.MicrosoftStickyNotes  
-      - Microsoft.MixedReality.Portal  
-      - Microsoft.NetworkSpeedTest  
-      - Microsoft.News  
-      - Microsoft.Office.OneNote (Discontinued UWP version only, does not remove new MS365 versions)
-      - Microsoft.Office.Sway  
-      - Microsoft.OneConnect  
-      - Microsoft.Print3D  
-      - Microsoft.SkypeApp  
-      - Microsoft.Todos  
-      - Microsoft.WindowsAlarms  
-      - Microsoft.WindowsFeedbackHub  
-      - Microsoft.WindowsMaps  
-      - Microsoft.WindowsSoundRecorder  
-      - Microsoft.XboxApp (Old Xbox Console Companion App, no longer supported)
-      - Microsoft.ZuneVideo  
-      - MicrosoftCorporationII.MicrosoftFamily (Microsoft Family Safety)
-      - MicrosoftTeams (Old personal version of MS Teams from the MS Store)
-      - MSTeams (New MS Teams app)
-  
-      Third party bloat:
-      - ACGMediaPlayer  
-      - ActiproSoftwareLLC  
-      - AdobeSystemsIncorporated.AdobePhotoshopExpress  
-      - Amazon.com.Amazon  
-      - AmazonVideo.PrimeVideo
-      - Asphalt8Airborne   
-      - AutodeskSketchBook  
-      - CaesarsSlotsFreeCasino  
-      - COOKINGFEVER  
-      - CyberLinkMediaSuiteEssentials  
-      - DisneyMagicKingdoms  
-      - Disney 
-      - Dolby  
-      - DrawboardPDF  
-      - Duolingo-LearnLanguagesforFree  
-      - EclipseManager  
-      - Facebook  
-      - FarmVille2CountryEscape  
-      - fitbit  
-      - Flipboard  
-      - HiddenCity  
-      - HULULLC.HULUPLUS  
-      - iHeartRadio  
-      - Instagram
-      - king.com.BubbleWitch3Saga  
-      - king.com.CandyCrushSaga  
-      - king.com.CandyCrushSodaSaga  
-      - LinkedInforWindows  
-      - MarchofEmpires  
-      - Netflix  
-      - NYTCrossword  
-      - OneCalendar  
-      - PandoraMediaInc  
-      - PhototasticCollage  
-      - PicsArt-PhotoStudio  
-      - Plex  
-      - PolarrPhotoEditorAcademicEdition  
-      - Royal Revolt  
-      - Shazam  
-      - Sidia.LiveWallpaper  
-      - SlingTV  
-      - Speed Test  
-      - Spotify  
-      - TikTok
-      - TuneInRadio  
-      - Twitter  
-      - Viber  
-      - WinZipUniversal  
-      - Wunderlist  
-      - XING
-      
-      * App is removed when disabling Bing in Windows search.
-  </blockquote>
-  </details>
-  
-  #### Apps that are NOT removed as part of the default mode
-  
-  <details>
-    <summary>Click to expand</summary>
-    <blockquote>
+    Third party bloat:
+    - ACGMediaPlayer  
+    - ActiproSoftwareLLC  
+    - AdobeSystemsIncorporated.AdobePhotoshopExpress  
+    - Amazon.com.Amazon  
+    - AmazonVideo.PrimeVideo
+    - Asphalt8Airborne   
+    - AutodeskSketchBook  
+    - CaesarsSlotsFreeCasino  
+    - COOKINGFEVER  
+    - CyberLinkMediaSuiteEssentials  
+    - DisneyMagicKingdoms  
+    - Disney 
+    - Dolby  
+    - DrawboardPDF  
+    - Duolingo-LearnLanguagesforFree  
+    - EclipseManager  
+    - Facebook  
+    - FarmVille2CountryEscape  
+    - fitbit  
+    - Flipboard  
+    - HiddenCity  
+    - HULULLC.HULUPLUS  
+    - iHeartRadio  
+    - Instagram
+    - king.com.BubbleWitch3Saga  
+    - king.com.CandyCrushSaga  
+    - king.com.CandyCrushSodaSaga  
+    - LinkedInforWindows  
+    - MarchofEmpires  
+    - Netflix  
+    - NYTCrossword  
+    - OneCalendar  
+    - PandoraMediaInc  
+    - PhototasticCollage  
+    - PicsArt-PhotoStudio  
+    - Plex  
+    - PolarrPhotoEditorAcademicEdition  
+    - Royal Revolt  
+    - Shazam  
+    - Sidia.LiveWallpaper  
+    - SlingTV  
+    - Speed Test  
+    - Spotify  
+    - TikTok
+    - TuneInRadio  
+    - Twitter  
+    - Viber  
+    - WinZipUniversal  
+    - Wunderlist  
+    - XING
+    
+    * App is removed when disabling Bing in Windows search.
+</blockquote>
+</details>
 
-      General apps that are not removed by default:
-      - Microsoft.Edge (Edge browser, only removeable in the EEA)
-      - Microsoft.GetHelp (Required for some Windows 11 Troubleshooters)
-      - Microsoft.MSPaint (Paint 3D)
-      - Microsoft.OutlookForWindows* (New mail app)
-      - Microsoft.OneDrive (OneDrive consumer)
-      - Microsoft.Paint (Classic Paint)
-      - Microsoft.People* (Required for & included with Mail & Calendar)
-      - Microsoft.ScreenSketch (Snipping Tool)
-      - Microsoft.Whiteboard (Only preinstalled on devices with touchscreen and/or pen support)
-      - Microsoft.Windows.Photos
-      - Microsoft.WindowsCalculator
-      - Microsoft.WindowsCamera
-      - Microsoft.WindowsNotepad
-      - Microsoft.windowscommunicationsapps* (Mail & Calendar)
-      - Microsoft.WindowsStore (Microsoft Store, NOTE: This app cannot be reinstalled!)
-      - Microsoft.WindowsTerminal (New default terminal app in Windows 11)
-      - Microsoft.YourPhone (Phone Link)
-      - Microsoft.Xbox.TCUI (UI framework, removing this may break MS store, photos and certain games)
-      - Microsoft.ZuneMusic (Modern Media Player)
-      - MicrosoftWindows.CrossDevice (Phone integration within File Explorer, Camera and more)
+#### Apps that are NOT removed as part of the default mode
 
-      HP apps that are not removed by default:
-      - AD2F1837.HPAIExperienceCenter*
-      - AD2F1837.HPConnectedMusic*
-      - AD2F1837.HPConnectedPhotopoweredbySnapfish*
-      - AD2F1837.HPDesktopSupportUtilities*
-      - AD2F1837.HPEasyClean*
-      - AD2F1837.HPFileViewer*
-      - AD2F1837.HPJumpStarts*
-      - AD2F1837.HPPCHardwareDiagnosticsWindows*
-      - AD2F1837.HPPowerManager*
-      - AD2F1837.HPPrinterControl*
-      - AD2F1837.HPPrivacySettings*
-      - AD2F1837.HPQuickDrop*
-      - AD2F1837.HPQuickTouch*
-      - AD2F1837.HPRegistration*
-      - AD2F1837.HPSupportAssistant*
-      - AD2F1837.HPSureShieldAI*
-      - AD2F1837.HPSystemInformation*
-      - AD2F1837.HPWelcome*
-      - AD2F1837.HPWorkWell*
-      - AD2F1837.myHP*
-  
-      Gaming related apps that are not removed by default:
-      - Microsoft.GamingApp* (Modern Xbox Gaming App, required for installing some games)
-      - Microsoft.XboxGameOverlay* (Game overlay, required for some games)
-      - Microsoft.XboxGamingOverlay* (Game overlay, required for some games)
-      - Microsoft.XboxIdentityProvider (Xbox sign-in framework, required for some games)
-      - Microsoft.XboxSpeechToTextOverlay (Might be required for some games, NOTE: This app cannot be reinstalled!)
-  
-      Developer related apps that are not removed by default:
-      - Microsoft.PowerAutomateDesktop*
-      - Microsoft.RemoteDesktop*
-      - Windows.DevHome*
-  
-      * Can be removed by running the script with the relevant parameter. (Please refer to the wiki for more details)
-  </blockquote>
-  </details>
+<details>
+  <summary>Click to expand</summary>
+  <blockquote>
+
+    General apps that are not removed by default:
+    - Microsoft.Edge (Edge browser, only removeable in the EEA)
+    - Microsoft.GetHelp (Required for some Windows 11 Troubleshooters)
+    - Microsoft.MSPaint (Paint 3D)
+    - Microsoft.OutlookForWindows* (New mail app)
+    - Microsoft.OneDrive (OneDrive consumer)
+    - Microsoft.Paint (Classic Paint)
+    - Microsoft.People* (Required for & included with Mail & Calendar)
+    - Microsoft.ScreenSketch (Snipping Tool)
+    - Microsoft.Whiteboard (Only preinstalled on devices with touchscreen and/or pen support)
+    - Microsoft.Windows.Photos
+    - Microsoft.WindowsCalculator
+    - Microsoft.WindowsCamera
+    - Microsoft.WindowsNotepad
+    - Microsoft.windowscommunicationsapps* (Mail & Calendar)
+    - Microsoft.WindowsStore (Microsoft Store, NOTE: This app cannot be reinstalled!)
+    - Microsoft.WindowsTerminal (New default terminal app in Windows 11)
+    - Microsoft.YourPhone (Phone Link)
+    - Microsoft.Xbox.TCUI (UI framework, removing this may break MS store, photos and certain games)
+    - Microsoft.ZuneMusic (Modern Media Player)
+    - MicrosoftWindows.CrossDevice (Phone integration within File Explorer, Camera and more)
+
+    HP apps that are not removed by default:
+    - AD2F1837.HPAIExperienceCenter*
+    - AD2F1837.HPConnectedMusic*
+    - AD2F1837.HPConnectedPhotopoweredbySnapfish*
+    - AD2F1837.HPDesktopSupportUtilities*
+    - AD2F1837.HPEasyClean*
+    - AD2F1837.HPFileViewer*
+    - AD2F1837.HPJumpStarts*
+    - AD2F1837.HPPCHardwareDiagnosticsWindows*
+    - AD2F1837.HPPowerManager*
+    - AD2F1837.HPPrinterControl*
+    - AD2F1837.HPPrivacySettings*
+    - AD2F1837.HPQuickDrop*
+    - AD2F1837.HPQuickTouch*
+    - AD2F1837.HPRegistration*
+    - AD2F1837.HPSupportAssistant*
+    - AD2F1837.HPSureShieldAI*
+    - AD2F1837.HPSystemInformation*
+    - AD2F1837.HPWelcome*
+    - AD2F1837.HPWorkWell*
+    - AD2F1837.myHP*
+
+    Gaming related apps that are not removed by default:
+    - Microsoft.GamingApp* (Modern Xbox Gaming App, required for installing some games)
+    - Microsoft.XboxGameOverlay* (Game overlay, required for some games)
+    - Microsoft.XboxGamingOverlay* (Game overlay, required for some games)
+    - Microsoft.XboxIdentityProvider (Xbox sign-in framework, required for some games)
+    - Microsoft.XboxSpeechToTextOverlay (Might be required for some games, NOTE: This app cannot be reinstalled!)
+
+    Developer related apps that are not removed by default:
+    - Microsoft.PowerAutomateDesktop*
+    - Microsoft.RemoteDesktop*
+    - Windows.DevHome*
+
+    * Can be removed by running the script with the relevant parameter. (Please refer to the wiki for more details)
+</blockquote>
 </details>
 
 ## License

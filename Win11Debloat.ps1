@@ -1099,6 +1099,12 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunS
                 PrintFromFile "$PSScriptRoot/Assets/Menus/DefaultSettings"
 
                 Write-Output ""
+                if ((Read-Host "Do you want to remove Microsoft Teams? (y/n)") -eq 'n') {
+                    $global:keepTeams = $true
+                }
+                if ((Read-Host "Do you want to remove Microsoft OneDrive? (y/n)") -eq 'y') {
+                    $global:removeOneDrive = $true
+                }
                 Write-Output "Press enter to execute the script or press CTRL+C to quit..."
                 Read-Host | Out-Null
             }
@@ -1528,7 +1534,13 @@ else {
     # Execute all selected/provided parameters
     switch ($global:Params.Keys) {
         'RemoveApps' {
-            $appsList = ReadAppslistFromFile "$PSScriptRoot/Appslist.txt" 
+            $appsList = ReadAppslistFromFile "$PSScriptRoot/Appslist.txt"
+            if ($global:keepTeams) {
+                $appsList = $appsList | Where-Object { $_ -ne 'MicrosoftTeams' -and $_ -ne 'MSTeams' }
+            }
+            if ($global:removeOneDrive) {
+                $appsList += 'Microsoft.OneDrive'
+            } 
             Write-Output "> Removing default selection of $($appsList.Count) apps..."
             RemoveApps $appsList
             continue

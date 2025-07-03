@@ -376,13 +376,13 @@ function RemoveApps {
         }
         else {
             # Use Remove-AppxPackage to remove all other apps
-            $app = '*' + $app + '*'
+            $appPattern = '*' + $app + '*'
 
             # Remove installed app for all existing users
             if ($WinVersion -ge 22000){
                 # Windows 11 build 22000 or later
                 try {
-                    Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage -AllUsers -ErrorAction Continue
+                    Get-AppxPackage -Name $appPattern -AllUsers | Remove-AppxPackage -AllUsers -ErrorAction Continue
 
                     if($DebugPreference -ne "SilentlyContinue") {
                         Write-Host "Removed $app for all users" -ForegroundColor DarkGray
@@ -398,7 +398,8 @@ function RemoveApps {
             else {
                 # Windows 10
                 try {
-                    Get-AppxPackage -Name $app | Remove-AppxPackage -ErrorAction SilentlyContinue
+                    try {
+                    Get-AppxPackage -Name $appPattern | Remove-AppxPackage -ErrorAction SilentlyContinue
                     
                     if($DebugPreference -ne "SilentlyContinue") {
                         Write-Host "Removed $app for current user" -ForegroundColor DarkGray
@@ -412,7 +413,8 @@ function RemoveApps {
                 }
                 
                 try {
-                    Get-AppxPackage -Name $app -PackageTypeFilter Main, Bundle, Resource -AllUsers | Remove-AppxPackage -AllUsers -ErrorAction SilentlyContinue
+                    try {
+                    Get-AppxPackage -Name $appPattern -PackageTypeFilter Main, Bundle, Resource -AllUsers | Remove-AppxPackage -AllUsers -ErrorAction SilentlyContinue
                     
                     if($DebugPreference -ne "SilentlyContinue") {
                         Write-Host "Removed $app for all users" -ForegroundColor DarkGray
@@ -428,7 +430,8 @@ function RemoveApps {
 
             # Remove provisioned app from OS image, so the app won't be installed for any new users
             try {
-                Get-AppxProvisionedPackage -Online | Where-Object { $_.PackageName -like $app } | ForEach-Object { Remove-ProvisionedAppxPackage -Online -AllUsers -PackageName $_.PackageName }
+                try {
+                Get-AppxProvisionedPackage -Online | Where-Object { $_.PackageName -like $appPattern } | ForEach-Object { Remove-ProvisionedAppxPackage -Online -AllUsers -PackageName $_.PackageName }
             }
             catch {
                 Write-Host "Unable to remove $app from windows image" -ForegroundColor Yellow
@@ -1099,6 +1102,12 @@ if ((-not $global:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunS
                 PrintFromFile "$PSScriptRoot/Assets/Menus/DefaultSettings"
 
                 Write-Output ""
+                if ((Read-Host "Do you want to remove Microsoft Teams? (y/n)") -eq 'n') {
+                    $global:keepTeams = $true
+                }
+                if ((Read-Host "Do you want to remove Microsoft OneDrive? (y/n)") -eq 'y') {
+                    $global:removeOneDrive = $true
+                }
                 Write-Output "Press enter to execute the script or press CTRL+C to quit..."
                 Read-Host | Out-Null
             }
@@ -1528,7 +1537,13 @@ else {
     # Execute all selected/provided parameters
     switch ($global:Params.Keys) {
         'RemoveApps' {
-            $appsList = ReadAppslistFromFile "$PSScriptRoot/Appslist.txt" 
+            $appsList = ReadAppslistFromFile "$PSScriptRoot/Appslist.txt"
+            if ($global:keepTeams) {
+                $appsList = $appsList | Where-Object { $_ -ne 'MicrosoftTeams' -and $_ -ne 'MSTeams' }
+            }
+            if ($global:removeOneDrive) {
+                $appsList += 'Microsoft.OneDrive'
+            } 
             Write-Output "> Removing default selection of $($appsList.Count) apps..."
             RemoveApps $appsList
             continue

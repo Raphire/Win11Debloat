@@ -1,0 +1,4 @@
+Windows Registry Editor Version 5.00
+
+; Prepare system image: reset shortcut arrow overlay to default
+[-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons]

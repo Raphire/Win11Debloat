@@ -26,6 +26,7 @@ Personalisation
 - Disable the Sticky Keys keyboard shortcut. (W11 only)
 - Restore the old Windows 10 style context menu. (W11 only)
 - Hide the 'Include in library', 'Give access to' and 'Share' options from the context menu. (W10 only)
+- Remove the shortcut arrow icon in app icons.
 
 File Explorer
 - Change the default location that File Explorer opens to.

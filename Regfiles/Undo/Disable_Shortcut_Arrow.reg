@@ -1,0 +1,4 @@
+Windows Registry Editor Version 5.00
+
+; Restore default shortcut arrow overlay
+[-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons]

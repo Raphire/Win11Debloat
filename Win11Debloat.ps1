@@ -1098,7 +1098,7 @@ function DisplayCustomModeOptions {
         }
         
         Write-Output ""
-        if ($( Read-Host -Prompt "   Enable the 'Last Active Click' behavior in the taskbar app area, to switch focus on program windows by repeatedly clicking app icons? (y/n)" ) -eq 'y') {
+        if ($( Read-Host -Prompt "   Enable the 'Last Active Click' behavior in the taskbar app area? (y/n)" ) -eq 'y') {
             AddParameter 'EnableLastActiveClick' "Enable the 'Last Active Click' behavior in the taskbar app area"
         }
     }

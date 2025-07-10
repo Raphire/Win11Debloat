@@ -1,0 +1,16 @@
+Windows Registry Editor Version 5.00
+
+; When clicking the icon of a a running application in the taskbar (that
+; currently has multiple windows open), typically a pop-up will appear showing
+; the multiple windows, and you'll have to click a second time to select the
+; window you want to focus on.
+;
+; This registry hack instead turns the icon click into a "focus on the last
+; active window" action. You can click it repeatedly to cycle focus through all
+; the windows open for that application.
+;
+; With this enabled, the pop-up window display will still show if you hover
+; your mouse over the taskbar icon.
+
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
+"LastActiveClick"=dword:00000001

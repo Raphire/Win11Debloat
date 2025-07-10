@@ -1096,7 +1096,8 @@ function DisplayCustomModeOptions {
                 AddParameter 'EnableEndTask' "Enable the 'End Task' option in the taskbar right click menu"
             }
         }
-
+        
+        Write-Output ""
         if ($( Read-Host -Prompt "   Enable the 'Last Active Click' behavior in the taskbar app area, to switch focus on program windows by repeatedly clicking app icons? (y/n)" ) -eq 'y') {
             AddParameter 'EnableLastActiveClick' "Enable the 'Last Active Click' behavior in the taskbar app area"
         }

@@ -1,0 +1,8 @@
+Windows Registry Editor Version 5.00
+
+; This disables the last-active-click action for the taskbar.
+; (Please see the `Enable_Last_Active_Click.reg` file for an
+; explanation of what this undoes.)
+
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
+"LastActiveClick"=-

@@ -43,6 +43,7 @@ param (
     [switch]$DisableWidgets, [switch]$HideWidgets,
     [switch]$DisableChat, [switch]$HideChat,
     [switch]$EnableEndTask,
+    [switch]$EnableLastActiveClick,
     [switch]$ClearStart,
     [string]$ReplaceStart,
     [switch]$ClearStartAllUsers,
@@ -1095,6 +1096,11 @@ function DisplayCustomModeOptions {
                 AddParameter 'EnableEndTask' "Enable the 'End Task' option in the taskbar right click menu"
             }
         }
+        
+        Write-Output ""
+        if ($( Read-Host -Prompt "   Enable the 'Last Active Click' behavior in the taskbar app area? (y/n)" ) -eq 'y') {
+            AddParameter 'EnableLastActiveClick' "Enable the 'Last Active Click' behavior in the taskbar app area"
+        }
     }
 
     Write-Output ""
@@ -1675,6 +1681,10 @@ switch ($script:Params.Keys) {
     }
     'EnableEndTask' {
         RegImport "> Enabling the 'End Task' option in the taskbar right click menu..." "Enable_End_Task.reg"
+        continue
+    }
+    'EnableLastActiveClick' {
+        RegImport "> Enabling the 'Last Active Click' behavior in the taskbar app area..." "Enable_Last_Active_Click.reg"
         continue
     }
     'ExplorerToHome' {

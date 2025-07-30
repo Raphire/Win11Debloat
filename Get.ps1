@@ -41,6 +41,7 @@ param (
     [switch]$DisableWidgets, [switch]$HideWidgets,
     [switch]$DisableChat, [switch]$HideChat,
     [switch]$EnableEndTask,
+    [switch]$EnableLastActiveClick,
     [switch]$ClearStart,
     [string]$ReplaceStart,
     [switch]$ClearStartAllUsers,

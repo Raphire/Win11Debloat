@@ -42,6 +42,7 @@ Taskbar
 - Disable the widgets service & hide icon from the taskbar.
 - Hide the chat (meet now) icon from the taskbar.
 - Enable the 'End Task' option in the taskbar right click menu. (W11 only)
+- Enable the 'Last Active Click' behavior in the taskbar app area.
 
 Start
 - Disable & hide the recommended section in the start menu. (W11 only)

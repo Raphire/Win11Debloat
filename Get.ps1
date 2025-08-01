@@ -38,6 +38,8 @@ param (
     [switch]$DisableStartPhoneLink,
     [switch]$DisableCopilot,
     [switch]$DisableRecall,
+    [switch]$DisablePaintAI,
+    [switch]$DisableNotepadAI,
     [switch]$DisableWidgets, [switch]$HideWidgets,
     [switch]$DisableChat, [switch]$HideChat,
     [switch]$EnableEndTask,

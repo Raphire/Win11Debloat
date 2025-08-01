@@ -14,10 +14,12 @@ Telemetry, Tracking & Suggested Content
 - Disable tips, tricks, suggestions & ads across Windows.
 - Disable the 'Windows Spotlight' desktop background option.
 
-Bing, Copilot & More
+Bing Web Search, Copilot & AI Features
 - Disable & remove Bing web search, Bing AI and Cortana from Windows search.
 - Disable & remove Microsoft Copilot. (W11 only)
 - Disable Windows Recall snapshots. (W11 only)
+- Disable AI Features in Paint (W11 only)
+- Disable AI Features in Notepad (W11 only)
 
 Personalisation
 - Enable dark mode for system and apps.
@@ -45,7 +47,7 @@ Taskbar
 - Enable the 'Last Active Click' behavior in the taskbar app area.
 
 Start
-- Disable & hide the recommended section in the start menu. (W11 only)
+- Disable the recommended section in the start menu. (W11 only)
 - Disable the Phone Link mobile devices integration in the start menu. (W11 only)
 
 Other

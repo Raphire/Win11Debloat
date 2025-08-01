@@ -104,11 +104,13 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 - Disable tips, tricks, suggestions and ads in start, settings, notifications, File Explorer, and on the lockscreen.
 - Disable the 'Windows Spotlight' desktop background option.
 
-#### Bing Web Search, Copilot & More
+#### Bing Web Search, Copilot & AI Features
 
 - Disable & remove Bing web search, Bing AI and Cortana from Windows search.
 - Disable & remove Microsoft Copilot. (W11 only)
 - Disable Windows Recall snapshots. (W11 only)
+- Disable AI Features in Paint (W11 only)
+- Disable AI Features in Notepad (W11 only)
 
 #### Personalisation
 
@@ -139,7 +141,8 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 - Enable the 'Last Active Click' behavior in the taskbar app area. This allows you to repeatedly click on an application's icon in the taskbar to switch focus between multiple active windows for that application.
 
 #### Start
-- Disable & hide the recommended section in the start menu. (W11 only)
+
+- Disable the recommended section in the start menu. (W11 only)
 - Disable the Phone Link mobile devices integration in the start menu. (W11 only)
 
 #### Other

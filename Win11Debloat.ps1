@@ -40,6 +40,8 @@ param (
     [switch]$DisableStartPhoneLink,
     [switch]$DisableCopilot,
     [switch]$DisableRecall,
+    [switch]$DisablePaintAI,
+    [switch]$DisableNotepadAI,
     [switch]$DisableWidgets, [switch]$HideWidgets,
     [switch]$DisableChat, [switch]$HideChat,
     [switch]$EnableEndTask,
@@ -899,9 +901,28 @@ function DisplayCustomModeOptions {
     if ($WinVersion -ge 22621) {
         Write-Output ""
 
-        if ($( Read-Host -Prompt "Disable & remove Microsoft Copilot and Windows Recall snapshots? This applies to all users (y/n)" ) -eq 'y') {
-            AddParameter 'DisableCopilot' 'Disable and remove Microsoft Copilot'
-            AddParameter 'DisableRecall' 'Disable and remove Windows Recall snapshots'
+        # Show options for disabling/removing AI features, only continue on valid input
+        Do {
+            Write-Host "Options:" -ForegroundColor Yellow
+            Write-Host " (n) Don't disable any AI features" -ForegroundColor Yellow
+            Write-Host " (1) Disable Microsoft Copilot and Windows Recall snapshots" -ForegroundColor Yellow
+            Write-Host " (2) Disable Microsoft Copilot, Windows Recall snapshots and AI features in Paint and Notepad"  -ForegroundColor Yellow
+            $DisableAIInput = Read-Host "Do you want to disable any AI features? This applies to all users (n/1/2)"
+        }
+        while ($DisableAIInput -ne 'n' -and $DisableAIInput -ne '0' -and $DisableAIInput -ne '1' -and $DisableAIInput -ne '2') 
+
+        # Select correct option based on user input
+        switch ($DisableAIInput) {
+            '1' {
+                AddParameter 'DisableCopilot' 'Disable & remove Microsoft Copilot'
+                AddParameter 'DisableRecall' 'Disable Windows Recall snapshots'
+            }
+            '2' {
+                AddParameter 'DisableCopilot' 'Disable & remove Microsoft Copilot'
+                AddParameter 'DisableRecall' 'Disable Windows Recall snapshots'
+                AddParameter 'DisablePaintAI' 'Disable AI features in Paint'
+                AddParameter 'DisableNotepadAI' 'Disable AI features in Notepad'
+            }
         }
     }
 
@@ -1014,8 +1035,8 @@ function DisplayCustomModeOptions {
 
             Write-Output ""
 
-            if ($( Read-Host -Prompt "   Disable & hide the recommended section in the start menu? This applies to all users (y/n)" ) -eq 'y') {
-                AddParameter 'DisableStartRecommended' 'Disable & hide the recommended section in the start menu.'
+            if ($( Read-Host -Prompt "   Disable the recommended section in the start menu? This applies to all users (y/n)" ) -eq 'y') {
+                AddParameter 'DisableStartRecommended' 'Disable the recommended section in the start menu.'
             }
 
             Write-Output ""
@@ -1576,7 +1597,7 @@ switch ($script:Params.Keys) {
         continue
     }
     'DisableCopilot' {
-        RegImport "> Disabling & removing Microsoft Copilot..." "Disable_Copilot.reg"
+        RegImport "> Disabling Microsoft Copilot..." "Disable_Copilot.reg"
 
         # Also remove the app package for Copilot
         $appsList = 'Microsoft.Copilot'
@@ -1585,6 +1606,14 @@ switch ($script:Params.Keys) {
     }
     'DisableRecall' {
         RegImport "> Disabling Windows Recall snapshots..." "Disable_AI_Recall.reg"
+        continue
+    }
+    'DisablePaintAI' {
+        RegImport "> Disabling AI features in Paint..." "Disable_Paint_AI_Features.reg"
+        continue
+    }
+    'DisableNotepadAI' {
+        RegImport "> Disabling AI features in Notepad..." "Disable_Notepad_AI_Features.reg"
         continue
     }
     'RevertContextMenu' {
@@ -1624,7 +1653,7 @@ switch ($script:Params.Keys) {
         continue
     }
     'DisableStartRecommended' {
-        RegImport "> Disabling and hiding the start menu recommended section..." "Disable_Start_Recommended.reg"
+        RegImport "> Disabling the start menu recommended section..." "Disable_Start_Recommended.reg"
         continue
     }
     'DisableStartPhoneLink' {

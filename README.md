@@ -138,7 +138,7 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 - Disable the widgets service & hide icon from the taskbar.
 - Hide the chat (meet now) icon from the taskbar.
 - Enable the 'End Task' option in the taskbar right click menu. (W11 only)
-- Enable the 'Last Active Click' behavior in the taskbar app area. This allows you to repeatedly click on an application's icon in the taskbar to switch focus between multiple active windows for that application.
+- Enable the 'Last Active Click' behavior in the taskbar app area. This allows you to repeatedly click on an application's icon in the taskbar to switch focus between the open windows of that application.
 
 #### Start
 

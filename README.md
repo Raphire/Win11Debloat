@@ -7,7 +7,7 @@
    </a>
 
 ### [Warp, the intelligent terminal for developers](https://www.warp.dev/windebloat)
-[Available for MacOS, Linux, & Windows](https://www.warp.dev/windebloat)<br>
+[Available for macOS, Linux, & Windows](https://www.warp.dev/windebloat)<br>
 
 </div>
 <hr>

@@ -19,6 +19,7 @@ param (
     [switch]$DisableDVR,
     [switch]$DisableTelemetry,
     [switch]$DisableFastStartup,
+    [switch]$DisableModernStandbyNetworking,
     [switch]$DisableBingSearches, [switch]$DisableBing,
     [switch]$DisableDesktopSpotlight,
     [switch]$DisableLockscrTips, [switch]$DisableLockscreenTips,

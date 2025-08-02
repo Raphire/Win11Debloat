@@ -6,6 +6,7 @@ Win11Debloat will make the following changes:
 - Disable & remove Bing web search, Bing AI and Cortana from Windows search.
 - Disable & remove Microsoft Copilot. (W11 only)
 - Disable Fast Start-up to ensure a full shutdown.
+- Disable network connectivity during Modern Standby to prevent battery drain. (W11 only)
 - Show file extensions for known file types.
 - Hide the 3D objects folder in Windows Explorer. (W10 only)
 - Disable the widget service & hide the icon from the taskbar.

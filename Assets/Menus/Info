@@ -12,6 +12,7 @@ App Removal
 Telemetry, Tracking & Suggested Content
 - Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads.
 - Disable tips, tricks, suggestions & ads across Windows.
+- Disable ads and the MSN news feed in Microsoft Edge.
 - Disable the 'Windows Spotlight' desktop background option.
 
 Bing Web Search, Copilot & AI Features
@@ -63,6 +64,7 @@ The default mode applies the changes that are recommended for most users. This i
 - Remove the default selection of apps, the list can be found in the 'Appslist.txt' file.
 - Disable telemetry, diagnostic data, app-launch tracking & targeted ads.
 - Disable tips, tricks, suggestions and ads in start, settings, notifications and more.
+- Disable ads and the MSN news feed in Microsoft Edge.
 - Disable tips & tricks on the lockscreen. (This may change your lockscreen wallpaper)
 - Disable & remove Bing web search, Bing AI and Cortana from Windows search.
 - Disable & remove Microsoft Copilot. (W11 only)

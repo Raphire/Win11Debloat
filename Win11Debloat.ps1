@@ -25,6 +25,7 @@ param (
     [switch]$DisableDesktopSpotlight,
     [switch]$DisableLockscrTips, [switch]$DisableLockscreenTips,
     [switch]$DisableWindowsSuggestions, [switch]$DisableSuggestions,
+    [switch]$DisableEdgeAds,
     [switch]$DisableSettings365Ads,
     [switch]$DisableSettingsHome,
     [switch]$ShowHiddenFolders,
@@ -42,6 +43,7 @@ param (
     [switch]$DisableRecall,
     [switch]$DisablePaintAI,
     [switch]$DisableNotepadAI,
+    [switch]$DisableEdgeAI,
     [switch]$DisableWidgets, [switch]$HideWidgets,
     [switch]$DisableChat, [switch]$HideChat,
     [switch]$EnableEndTask,
@@ -885,8 +887,9 @@ function DisplayCustomModeOptions {
 
     Write-Output ""
 
-    if ($( Read-Host -Prompt "Disable tips, tricks, suggestions and ads in start, settings, notifications, explorer and lockscreen? (y/n)" ) -eq 'y') {
+    if ($( Read-Host -Prompt "Disable tips, tricks, suggestions and ads in start, settings, notifications, explorer, lockscreen and edge? (y/n)" ) -eq 'y') {
         AddParameter 'DisableSuggestions' 'Disable tips, tricks, suggestions and ads in start, settings, notifications and File Explorer'
+        AddParameter 'DisableEdgeAds' 'Disable ads and the MSN news feed in Microsoft Edge'
         AddParameter 'DisableSettings365Ads' 'Disable Microsoft 365 ads in Settings Home'
         AddParameter 'DisableLockscreenTips' 'Disable tips & tricks on the lockscreen'
     }
@@ -906,7 +909,7 @@ function DisplayCustomModeOptions {
             Write-Host "Options:" -ForegroundColor Yellow
             Write-Host " (n) Don't disable any AI features" -ForegroundColor Yellow
             Write-Host " (1) Disable Microsoft Copilot and Windows Recall snapshots" -ForegroundColor Yellow
-            Write-Host " (2) Disable Microsoft Copilot, Windows Recall snapshots and AI features in Paint and Notepad"  -ForegroundColor Yellow
+            Write-Host " (2) Disable Microsoft Copilot, Windows Recall snapshots and AI features in Microsoft Edge, Paint and Notepad"  -ForegroundColor Yellow
             $DisableAIInput = Read-Host "Do you want to disable any AI features? This applies to all users (n/1/2)"
         }
         while ($DisableAIInput -ne 'n' -and $DisableAIInput -ne '0' -and $DisableAIInput -ne '1' -and $DisableAIInput -ne '2') 
@@ -920,6 +923,7 @@ function DisplayCustomModeOptions {
             '2' {
                 AddParameter 'DisableCopilot' 'Disable & remove Microsoft Copilot'
                 AddParameter 'DisableRecall' 'Disable Windows Recall snapshots'
+                AddParameter 'DisableEdgeAI' 'Disable AI features in Edge'
                 AddParameter 'DisablePaintAI' 'Disable AI features in Paint'
                 AddParameter 'DisableNotepadAI' 'Disable AI features in Notepad'
             }
@@ -1397,7 +1401,7 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunS
                 Read-Host | Out-Null
             }
 
-            $DefaultParameterNames = 'CreateRestorePoint','RemoveApps','DisableTelemetry','DisableBing','DisableLockscreenTips','DisableSuggestions','ShowKnownFileExt','DisableWidgets','HideChat','DisableCopilot','DisableFastStartup'
+            $DefaultParameterNames = 'CreateRestorePoint','RemoveApps','DisableTelemetry','DisableBing','DisableLockscreenTips','DisableSuggestions','DisableEdgeAds','ShowKnownFileExt','DisableWidgets','HideChat','DisableCopilot','DisableFastStartup'
 
             PrintHeader 'Default Mode'
 
@@ -1572,6 +1576,10 @@ switch ($script:Params.Keys) {
         RegImport "> Disabling tips, tricks, suggestions and ads across Windows..." "Disable_Windows_Suggestions.reg"
         continue
     }
+    'DisableEdgeAds' {
+        RegImport "> Disabling ads and the MSN news feed in Microsoft Edge..." "Disable_Edge_Ads_And_Suggestions.reg"
+        continue
+    }
     {$_ -in "DisableLockscrTips", "DisableLockscreenTips"} {
         RegImport "> Disabling tips & tricks on the lockscreen..." "Disable_Lockscreen_Tips.reg"
         continue
@@ -1606,6 +1614,10 @@ switch ($script:Params.Keys) {
     }
     'DisableRecall' {
         RegImport "> Disabling Windows Recall snapshots..." "Disable_AI_Recall.reg"
+        continue
+    }
+    'DisableEdgeAI' {
+        RegImport "> Disabling AI features in Microsoft Edge..." "Disable_Edge_AI_Features.reg"
         continue
     }
     'DisablePaintAI' {

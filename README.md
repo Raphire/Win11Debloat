@@ -102,6 +102,7 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 
 - Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads.
 - Disable tips, tricks, suggestions and ads in start, settings, notifications, File Explorer, and on the lockscreen.
+- Disable ads and the MSN news feed in Microsoft Edge.
 - Disable the 'Windows Spotlight' desktop background option.
 
 #### Bing Web Search, Copilot & AI Features
@@ -109,6 +110,7 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 - Disable & remove Bing web search, Bing AI and Cortana from Windows search.
 - Disable & remove Microsoft Copilot. (W11 only)
 - Disable Windows Recall snapshots. (W11 only)
+- Disable AI Features in Edge (W11 only)
 - Disable AI Features in Paint (W11 only)
 - Disable AI Features in Notepad (W11 only)
 
@@ -164,6 +166,7 @@ Win11Debloat offers a default mode that allows you to quickly and easily apply t
 - Remove the default selection of bloatware apps. (See below for full list)
 - Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads.
 - Disable tips, tricks, suggestions and ads in start, settings, notifications, File Explorer, and on the lockscreen.
+- Disable ads and the MSN news feed in Microsoft Edge.
 - Disable & remove Bing web search, Bing AI and Cortana from Windows search.
 - Disable & remove Microsoft Copilot. (W11 only)
 - Disable Fast Start-up to ensure a full shutdown.

@@ -777,16 +777,28 @@ function GetUserName {
 
 function CreateSystemRestorePoint {
     Write-Output "> Attempting to create a system restore point..."
-
+    
     $SysRestore = Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SystemRestore" -Name "RPSessionInterval"
 
     if ($SysRestore.RPSessionInterval -eq 0) {
         if ($Silent -or $( Read-Host -Prompt "System restore is disabled, would you like to enable it and create a restore point? (y/n)") -eq 'y') {
-            try {
-                Enable-ComputerRestore -Drive "$env:SystemDrive"
-            } catch {
-                Write-Host "Error: Failed to enable System Restore: $_" -ForegroundColor Red
+            $enableSystemRestoreJob = Start-Job { 
+                try {
+                    Enable-ComputerRestore -Drive "$env:SystemDrive"
+                } catch {
+                    Write-Host "Error: Failed to enable System Restore: $_" -ForegroundColor Red
+                    Write-Output ""
+                    return
+                }
+            }
+    
+            $enableSystemRestoreJobDone = $enableSystemRestoreJob | Wait-Job -TimeOut 20
+
+            if (-not $enableSystemRestoreJobDone) {
+                Write-Host "Error: Failed to enable system restore and create restore point, operation timed out" -ForegroundColor Red
                 Write-Output ""
+                Write-Output "Press any key to continue anyway..."
+                $null = [System.Console]::ReadKey()
                 return
             }
         } else {
@@ -795,24 +807,35 @@ function CreateSystemRestorePoint {
         }
     }
 
-    # Find existing restore points that are less than 24 hours old
-    try {
-        $recentRestorePoints = Get-ComputerRestorePoint | Where-Object { (Get-Date) - [System.Management.ManagementDateTimeConverter]::ToDateTime($_.CreationTime) -le (New-TimeSpan -Hours 24) }
-    } catch {
-        Write-Host "Error: Unable to retrieve existing restore points: $_" -ForegroundColor Red
-        Write-Output ""
-        return
-    }
-
-    if ($recentRestorePoints.Count -eq 0) {
+    $createRestorePointJob = Start-Job { 
+        # Find existing restore points that are less than 24 hours old
         try {
-            Checkpoint-Computer -Description "Restore point created by Win11Debloat" -RestorePointType "MODIFY_SETTINGS"
-            Write-Output "System restore point created successfully"
+            $recentRestorePoints = Get-ComputerRestorePoint | Where-Object { (Get-Date) - [System.Management.ManagementDateTimeConverter]::ToDateTime($_.CreationTime) -le (New-TimeSpan -Hours 24) }
         } catch {
-            Write-Host "Error: Unable to create restore point: $_" -ForegroundColor Red
+            Write-Host "Error: Unable to retrieve existing restore points: $_" -ForegroundColor Red
+            Write-Output ""
+            return
         }
-    } else {
-        Write-Host "A recent restore point already exists, no new restore point was created." -ForegroundColor Yellow
+    
+        if ($recentRestorePoints.Count -eq 0) {
+            try {
+                Checkpoint-Computer -Description "Restore point created by Win11Debloat" -RestorePointType "MODIFY_SETTINGS"
+                Write-Output "System restore point created successfully"
+            } catch {
+                Write-Host "Error: Unable to create restore point: $_" -ForegroundColor Red
+            }
+        } else {
+            Write-Host "A recent restore point already exists, no new restore point was created." -ForegroundColor Yellow
+        }
+    }
+    
+    $createRestorePointJobDone = $createRestorePointJob | Wait-Job -TimeOut 20
+
+    if (-not $createRestorePointJobDone) {
+        Write-Host "Error: Failed to create system restore point, operation timed out" -ForegroundColor Red
+        Write-Output ""
+        Write-Output "Press any key to continue anyway..."
+        $null = [System.Console]::ReadKey()
     }
 
     Write-Output ""

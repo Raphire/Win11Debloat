@@ -800,6 +800,8 @@ function CreateSystemRestorePoint {
                 Write-Output "Press any key to continue anyway..."
                 $null = [System.Console]::ReadKey()
                 return
+            } else {
+                Receive-Job $enableSystemRestoreJob
             }
         } else {
             Write-Output ""
@@ -836,6 +838,8 @@ function CreateSystemRestorePoint {
         Write-Output ""
         Write-Output "Press any key to continue anyway..."
         $null = [System.Console]::ReadKey()
+    } else {
+        Receive-Job $createRestorePointJob
     }
 
     Write-Output ""

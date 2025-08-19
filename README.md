@@ -151,6 +151,7 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 
 - Disable Xbox game/screen recording, this also stops gaming overlay popups.
 - Disable Fast Start-up to ensure a full shutdown.
+- Disable network connectivity during Modern Standby to reduce battery drain. (W11 only)
 - Option to [apply changes to a different user](https://github.com/Raphire/Win11Debloat/wiki/Advanced-Features#running-as-another-user), instead of the currently logged in user.
 - [Sysprep mode](https://github.com/Raphire/Win11Debloat/wiki/Advanced-Features#sysprep-mode) to apply changes to the Windows Default user profile. Afterwards, all new users will have the changes automatically applied to them.
 
@@ -170,6 +171,7 @@ Win11Debloat offers a default mode that allows you to quickly and easily apply t
 - Disable & remove Bing web search, Bing AI and Cortana from Windows search.
 - Disable & remove Microsoft Copilot. (W11 only)
 - Disable Fast Start-up to ensure a full shutdown.
+- Disable network connectivity during Modern Standby to reduce battery drain. (W11 only)
 - Show file extensions for known file types.
 - Hide the 3D objects folder under 'This pc' from File Explorer. (W10 only)
 - Disable the widget service & hide the icon from the taskbar.

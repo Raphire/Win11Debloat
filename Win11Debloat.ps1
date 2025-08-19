@@ -21,6 +21,7 @@ param (
     [switch]$DisableDVR,
     [switch]$DisableTelemetry,
     [switch]$DisableFastStartup,
+    [switch]$DisableModernStandbyNetworking,
     [switch]$DisableBingSearches, [switch]$DisableBing,
     [switch]$DisableDesktopSpotlight,
     [switch]$DisableLockscrTips, [switch]$DisableLockscreenTips,
@@ -1006,6 +1007,15 @@ function DisplayCustomModeOptions {
         AddParameter 'DisableFastStartup' 'Disable Fast Start-up'
     }
 
+    # Only show this option for Windows 11 users running build 22000 or later, and if the machine has at least one battery
+    if (($WinVersion -ge 22000) -and $script:BatteryInstalled) {
+        Write-Output ""
+
+        if ($( Read-Host -Prompt "Disable network connectivity during Modern Standby to reduce battery drain? (y/n)" ) -eq 'y') {
+            AddParameter 'DisableModernStandbyNetworking' 'Disable network connectivity during Modern Standby'
+        }
+    }
+
     # Only show option for disabling context menu items for Windows 10 users or if the user opted to restore the Windows 10 context menu
     if ((get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'") -or $script:Params.ContainsKey('RevertContextMenu')) {
         Write-Output ""
@@ -1287,6 +1297,9 @@ else {
 # Get current Windows build version to compare against features
 $WinVersion = Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' CurrentBuild
 
+# Check if the machine has a battery installed, this is used to determine if the DisableModernStandbyNetworking option can be used
+$script:BatteryInstalled = (Get-WmiObject -Class Win32_Battery).Count -gt 0
+
 $script:Params = $PSBoundParameters
 $script:FirstSelection = $true
 $SPParams = 'WhatIf', 'Confirm', 'Verbose', 'Silent', 'Sysprep', 'Debug', 'User', 'CreateRestorePoint', 'LogPath'
@@ -1442,6 +1455,11 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunS
             # Only add this option for Windows 10 users, if it doesn't already exist
             if ((get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'") -and (-not $script:Params.ContainsKey('Hide3dObjects'))) {
                 $script:Params.Add('Hide3dObjects', $Hide3dObjects)
+            }
+
+            # Only add this option for Windows 11 users (build 22000+), if it doesn't already exist
+            if (($WinVersion -ge 22000) -and $script:BatteryInstalled -and (-not $script:Params.ContainsKey('DisableModernStandbyNetworking'))) {
+                $script:Params.Add('DisableModernStandbyNetworking', $true)
             }
         }
 
@@ -1669,6 +1687,10 @@ switch ($script:Params.Keys) {
     }
     'DisableFastStartup' {
         RegImport "> Disabling Fast Start-up..." "Disable_Fast_Startup.reg"
+        continue
+    }
+    'DisableModernStandbyNetworking' {
+        RegImport "> Disabling network connectivity during Modern Standby..." "Disable_Modern_Standby_Networking.reg"
         continue
     }
     'ClearStart' {

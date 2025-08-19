@@ -976,11 +976,11 @@ function DisplayCustomModeOptions {
         AddParameter 'DisableFastStartup' 'Disable Fast Start-up'
     }
 
-    # Only show this option for Windows 11 users running build 22000 or later
-    if ($WinVersion -ge 22000) {
+    # Only show this option for Windows 11 users running build 22000 or later, and if the machine has at least one battery
+    if (($WinVersion -ge 22000) -and ((Get-WmiObject -Class Win32_Battery).Count -gt 0)) {
         Write-Output ""
 
-        if ($( Read-Host -Prompt "Disable network connectivity during Modern Standby? Prevents battery drain during sleep (y/n)" ) -eq 'y') {
+        if ($( Read-Host -Prompt "Disable network connectivity during Modern Standby to reduce battery drain? (y/n)" ) -eq 'y') {
             AddParameter 'DisableModernStandbyNetworking' 'Disable network connectivity during Modern Standby'
         }
     }

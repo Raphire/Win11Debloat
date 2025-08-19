@@ -1,0 +1,11 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge]
+"CopilotCDPPageContext"=dword:00000000
+"CopilotPageContext"=dword:00000000
+"HubsSidebarEnabled"=dword:00000000
+"EdgeEntraCopilotPageContext"=dword:00000000
+"EdgeHistoryAISearchEnabled"=dword:00000000
+"ComposeInlineEnabled"=dword:00000000
+"GenAILocalFoundationalModelSettings"=dword:00000001
+"NewTabPageBingChatEnabled"=dword:00000000

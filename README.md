@@ -47,7 +47,7 @@ Download & run the script automatically via PowerShell.
 3. Wait for the script to automatically download Win11Debloat.
 4. Carefully read through and follow the on-screen instructions.
 
-This method supports parameters to customize the behaviour of the script. Please click [here](https://github.com/Raphire/Win11Debloat/wiki/How-To-Use#parameters) for more information.
+This method supports command-line parameters to customize the behaviour of the script. Please click [here](https://github.com/Raphire/Win11Debloat/wiki/How-To-Use#parameters) for more information.
 
 ### Traditional method
 
@@ -83,7 +83,7 @@ This method supports parameters to customize the behaviour of the script. Please
 
   6. Carefully read through and follow the on-screen instructions.
 
-  This method supports parameters to customize the behaviour of the script. Please click [here](https://github.com/Raphire/Win11Debloat/wiki/How-To-Use#parameters) for more information.
+  This method supports command-line parameters to customize the behaviour of the script. Please click [here](https://github.com/Raphire/Win11Debloat/wiki/How-To-Use#parameters) for more information.
 </details>
 
 ## Features
@@ -102,6 +102,7 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 
 - Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads.
 - Disable tips, tricks, suggestions and ads in start, settings, notifications, File Explorer, and on the lockscreen.
+- Disable ads and the MSN news feed in Microsoft Edge.
 - Disable the 'Windows Spotlight' desktop background option.
 
 #### Bing Web Search, Copilot & AI Features
@@ -109,6 +110,7 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 - Disable & remove Bing web search, Bing AI and Cortana from Windows search.
 - Disable & remove Microsoft Copilot. (W11 only)
 - Disable Windows Recall snapshots. (W11 only)
+- Disable AI Features in Edge (W11 only)
 - Disable AI Features in Paint (W11 only)
 - Disable AI Features in Notepad (W11 only)
 
@@ -149,6 +151,7 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 
 - Disable Xbox game/screen recording, this also stops gaming overlay popups.
 - Disable Fast Start-up to ensure a full shutdown.
+- Disable network connectivity during Modern Standby to reduce battery drain. (W11 only)
 - Option to [apply changes to a different user](https://github.com/Raphire/Win11Debloat/wiki/Advanced-Features#running-as-another-user), instead of the currently logged in user.
 - [Sysprep mode](https://github.com/Raphire/Win11Debloat/wiki/Advanced-Features#sysprep-mode) to apply changes to the Windows Default user profile. Afterwards, all new users will have the changes automatically applied to them.
 
@@ -164,9 +167,11 @@ Win11Debloat offers a default mode that allows you to quickly and easily apply t
 - Remove the default selection of bloatware apps. (See below for full list)
 - Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads.
 - Disable tips, tricks, suggestions and ads in start, settings, notifications, File Explorer, and on the lockscreen.
+- Disable ads and the MSN news feed in Microsoft Edge.
 - Disable & remove Bing web search, Bing AI and Cortana from Windows search.
 - Disable & remove Microsoft Copilot. (W11 only)
 - Disable Fast Start-up to ensure a full shutdown.
+- Disable network connectivity during Modern Standby to reduce battery drain. (W11 only)
 - Show file extensions for known file types.
 - Hide the 3D objects folder under 'This pc' from File Explorer. (W10 only)
 - Disable the widget service & hide the icon from the taskbar.

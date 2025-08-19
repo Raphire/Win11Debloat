@@ -27,6 +27,7 @@ param (
     [switch]$DisableLockscrTips, [switch]$DisableLockscreenTips,
     [switch]$DisableWindowsSuggestions, [switch]$DisableSuggestions,
     [switch]$DisableBackupNotifications,
+    [switch]$DisableEdgeAds,
     [switch]$DisableSettings365Ads,
     [switch]$DisableSettingsHome,
     [switch]$ShowHiddenFolders,
@@ -44,6 +45,7 @@ param (
     [switch]$DisableRecall,
     [switch]$DisablePaintAI,
     [switch]$DisableNotepadAI,
+    [switch]$DisableEdgeAI,
     [switch]$DisableWidgets, [switch]$HideWidgets,
     [switch]$DisableChat, [switch]$HideChat,
     [switch]$EnableEndTask,
@@ -777,17 +779,31 @@ function GetUserName {
 
 function CreateSystemRestorePoint {
     Write-Output "> Attempting to create a system restore point..."
-
+    
     $SysRestore = Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SystemRestore" -Name "RPSessionInterval"
 
     if ($SysRestore.RPSessionInterval -eq 0) {
         if ($Silent -or $( Read-Host -Prompt "System restore is disabled, would you like to enable it and create a restore point? (y/n)") -eq 'y') {
-            try {
-                Enable-ComputerRestore -Drive "$env:SystemDrive"
-            } catch {
-                Write-Host "Error: Failed to enable System Restore: $_" -ForegroundColor Red
+            $enableSystemRestoreJob = Start-Job { 
+                try {
+                    Enable-ComputerRestore -Drive "$env:SystemDrive"
+                } catch {
+                    Write-Host "Error: Failed to enable System Restore: $_" -ForegroundColor Red
+                    Write-Output ""
+                    return
+                }
+            }
+    
+            $enableSystemRestoreJobDone = $enableSystemRestoreJob | Wait-Job -TimeOut 20
+
+            if (-not $enableSystemRestoreJobDone) {
+                Write-Host "Error: Failed to enable system restore and create restore point, operation timed out" -ForegroundColor Red
                 Write-Output ""
+                Write-Output "Press any key to continue anyway..."
+                $null = [System.Console]::ReadKey()
                 return
+            } else {
+                Receive-Job $enableSystemRestoreJob
             }
         } else {
             Write-Output ""
@@ -795,24 +811,37 @@ function CreateSystemRestorePoint {
         }
     }
 
-    # Find existing restore points that are less than 24 hours old
-    try {
-        $recentRestorePoints = Get-ComputerRestorePoint | Where-Object { (Get-Date) - [System.Management.ManagementDateTimeConverter]::ToDateTime($_.CreationTime) -le (New-TimeSpan -Hours 24) }
-    } catch {
-        Write-Host "Error: Unable to retrieve existing restore points: $_" -ForegroundColor Red
-        Write-Output ""
-        return
-    }
-
-    if ($recentRestorePoints.Count -eq 0) {
+    $createRestorePointJob = Start-Job { 
+        # Find existing restore points that are less than 24 hours old
         try {
-            Checkpoint-Computer -Description "Restore point created by Win11Debloat" -RestorePointType "MODIFY_SETTINGS"
-            Write-Output "System restore point created successfully"
+            $recentRestorePoints = Get-ComputerRestorePoint | Where-Object { (Get-Date) - [System.Management.ManagementDateTimeConverter]::ToDateTime($_.CreationTime) -le (New-TimeSpan -Hours 24) }
         } catch {
-            Write-Host "Error: Unable to create restore point: $_" -ForegroundColor Red
+            Write-Host "Error: Unable to retrieve existing restore points: $_" -ForegroundColor Red
+            Write-Output ""
+            return
         }
+    
+        if ($recentRestorePoints.Count -eq 0) {
+            try {
+                Checkpoint-Computer -Description "Restore point created by Win11Debloat" -RestorePointType "MODIFY_SETTINGS"
+                Write-Output "System restore point created successfully"
+            } catch {
+                Write-Host "Error: Unable to create restore point: $_" -ForegroundColor Red
+            }
+        } else {
+            Write-Host "A recent restore point already exists, no new restore point was created." -ForegroundColor Yellow
+        }
+    }
+    
+    $createRestorePointJobDone = $createRestorePointJob | Wait-Job -TimeOut 20
+
+    if (-not $createRestorePointJobDone) {
+        Write-Host "Error: Failed to create system restore point, operation timed out" -ForegroundColor Red
+        Write-Output ""
+        Write-Output "Press any key to continue anyway..."
+        $null = [System.Console]::ReadKey()
     } else {
-        Write-Host "A recent restore point already exists, no new restore point was created." -ForegroundColor Yellow
+        Receive-Job $createRestorePointJob
     }
 
     Write-Output ""
@@ -887,8 +916,9 @@ function DisplayCustomModeOptions {
 
     Write-Output ""
 
-    if ($( Read-Host -Prompt "Disable tips, tricks, suggestions and ads in start, settings, notifications, explorer and lockscreen? (y/n)" ) -eq 'y') {
+    if ($( Read-Host -Prompt "Disable tips, tricks, suggestions and ads in start, settings, notifications, explorer, lockscreen and edge? (y/n)" ) -eq 'y') {
         AddParameter 'DisableSuggestions' 'Disable tips, tricks, suggestions and ads in start, settings, notifications and File Explorer'
+        AddParameter 'DisableEdgeAds' 'Disable ads and the MSN news feed in Microsoft Edge'
         AddParameter 'DisableSettings365Ads' 'Disable Microsoft 365 ads in Settings Home'
         AddParameter 'DisableLockscreenTips' 'Disable tips & tricks on the lockscreen'
         AddParameter 'DisableBackupNotifications' 'Disable Windows Backup reminder notifications'
@@ -909,7 +939,7 @@ function DisplayCustomModeOptions {
             Write-Host "Options:" -ForegroundColor Yellow
             Write-Host " (n) Don't disable any AI features" -ForegroundColor Yellow
             Write-Host " (1) Disable Microsoft Copilot and Windows Recall snapshots" -ForegroundColor Yellow
-            Write-Host " (2) Disable Microsoft Copilot, Windows Recall snapshots and AI features in Paint and Notepad"  -ForegroundColor Yellow
+            Write-Host " (2) Disable Microsoft Copilot, Windows Recall snapshots and AI features in Microsoft Edge, Paint and Notepad"  -ForegroundColor Yellow
             $DisableAIInput = Read-Host "Do you want to disable any AI features? This applies to all users (n/1/2)"
         }
         while ($DisableAIInput -ne 'n' -and $DisableAIInput -ne '0' -and $DisableAIInput -ne '1' -and $DisableAIInput -ne '2') 
@@ -923,6 +953,7 @@ function DisplayCustomModeOptions {
             '2' {
                 AddParameter 'DisableCopilot' 'Disable & remove Microsoft Copilot'
                 AddParameter 'DisableRecall' 'Disable Windows Recall snapshots'
+                AddParameter 'DisableEdgeAI' 'Disable AI features in Edge'
                 AddParameter 'DisablePaintAI' 'Disable AI features in Paint'
                 AddParameter 'DisableNotepadAI' 'Disable AI features in Notepad'
             }
@@ -978,11 +1009,11 @@ function DisplayCustomModeOptions {
         AddParameter 'DisableFastStartup' 'Disable Fast Start-up'
     }
 
-    # Only show this option for Windows 11 users running build 22000 or later
-    if ($WinVersion -ge 22000) {
+    # Only show this option for Windows 11 users running build 22000 or later, and if the machine has at least one battery
+    if (($WinVersion -ge 22000) -and $script:BatteryInstalled) {
         Write-Output ""
 
-        if ($( Read-Host -Prompt "Disable network connectivity during Modern Standby? Prevents battery drain during sleep (y/n)" ) -eq 'y') {
+        if ($( Read-Host -Prompt "Disable network connectivity during Modern Standby to reduce battery drain? (y/n)" ) -eq 'y') {
             AddParameter 'DisableModernStandbyNetworking' 'Disable network connectivity during Modern Standby'
         }
     }
@@ -1268,6 +1299,9 @@ else {
 # Get current Windows build version to compare against features
 $WinVersion = Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' CurrentBuild
 
+# Check if the machine has a battery installed, this is used to determine if the DisableModernStandbyNetworking option can be used
+$script:BatteryInstalled = (Get-WmiObject -Class Win32_Battery).Count -gt 0
+
 $script:Params = $PSBoundParameters
 $script:FirstSelection = $true
 $SPParams = 'WhatIf', 'Confirm', 'Verbose', 'Silent', 'Sysprep', 'Debug', 'User', 'CreateRestorePoint', 'LogPath'
@@ -1409,7 +1443,7 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunS
                 Read-Host | Out-Null
             }
 
-            $DefaultParameterNames = 'CreateRestorePoint','RemoveApps','DisableTelemetry','DisableBing','DisableLockscreenTips','DisableSuggestions','DisableBackupNotifications','ShowKnownFileExt','DisableWidgets','HideChat','DisableCopilot','DisableFastStartup'
+            $DefaultParameterNames = 'CreateRestorePoint','RemoveApps','DisableTelemetry','DisableBing','DisableLockscreenTips','DisableSuggestions','DisableBackupNotifications','DisableEdgeAds','ShowKnownFileExt','DisableWidgets','HideChat','DisableCopilot','DisableFastStartup'
 
             PrintHeader 'Default Mode'
 
@@ -1426,7 +1460,7 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunS
             }
 
             # Only add this option for Windows 11 users (build 22000+), if it doesn't already exist
-            if (($WinVersion -ge 22000) -and (-not $script:Params.ContainsKey('DisableModernStandbyNetworking'))) {
+            if (($WinVersion -ge 22000) -and $script:BatteryInstalled -and (-not $script:Params.ContainsKey('DisableModernStandbyNetworking'))) {
                 $script:Params.Add('DisableModernStandbyNetworking', $true)
             }
         }
@@ -1589,6 +1623,10 @@ switch ($script:Params.Keys) {
         RegImport "> Disabling tips, tricks, suggestions and ads across Windows..." "Disable_Windows_Suggestions.reg"
         continue
     }
+    'DisableEdgeAds' {
+        RegImport "> Disabling ads and the MSN news feed in Microsoft Edge..." "Disable_Edge_Ads_And_Suggestions.reg"
+        continue
+    }
     {$_ -in "DisableLockscrTips", "DisableLockscreenTips"} {
         RegImport "> Disabling tips & tricks on the lockscreen..." "Disable_Lockscreen_Tips.reg"
         continue
@@ -1627,6 +1665,10 @@ switch ($script:Params.Keys) {
     }
     'DisableRecall' {
         RegImport "> Disabling Windows Recall snapshots..." "Disable_AI_Recall.reg"
+        continue
+    }
+    'DisableEdgeAI' {
+        RegImport "> Disabling AI features in Microsoft Edge..." "Disable_Edge_AI_Features.reg"
         continue
     }
     'DisablePaintAI' {

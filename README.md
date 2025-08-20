@@ -12,9 +12,13 @@
 </div>
 <hr>
 
+## Language
+**English** | [简体中文](README-CN.md)
+
 # Win11Debloat
 
 [![GitHub Release](https://img.shields.io/github/v/release/Raphire/Win11Debloat?style=for-the-badge&label=Latest%20release)](https://github.com/Raphire/Win11Debloat/releases/latest)
+[![GitHub 发布](https://img.shields.io/github/v/release/Raphire/Win11Debloat?style=for-the-badge&label=最新发布)](https://github.com/HSSkyBoy/Win11DebloatCN/releases/latest)
 [![Join the Discussion](https://img.shields.io/badge/Join-the%20Discussion-2D9F2D?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Raphire/Win11Debloat/discussions)
 [![Static Badge](https://img.shields.io/badge/Documentation-_?style=for-the-badge&logo=bookstack&color=grey)](https://github.com/Raphire/Win11Debloat/wiki/)
 

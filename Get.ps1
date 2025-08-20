@@ -1,4 +1,4 @@
-param (
+﻿param (
     [switch]$Silent,
     [switch]$Verbose,
     [switch]$Sysprep,
@@ -68,45 +68,45 @@ param (
     [switch]$DisableShare, [switch]$HideShare
 )
 
-# Show error if current powershell environment does not have LanguageMode set to FullLanguage 
+# 如果當前的 powershell 環境沒有將 LanguageMode 設定為 FullLanguage，則顯示錯誤
 if ($ExecutionContext.SessionState.LanguageMode -ne "FullLanguage") {
-   Write-Host "Error: Win11Debloat is unable to run on your system. PowerShell execution is restricted by security policies" -ForegroundColor Red
+   Write-Host "错误：Win11Debloat 无法在您的系统上运行。PowerShell 执行受到安全策略的限制" -ForegroundColor Red
    Write-Output ""
-   Write-Output "Press enter to exit..."
+   Write-Output "按 Enter 键退出..."
    Read-Host | Out-Null
    Exit
 }
 
 Clear-Host
 Write-Output "-------------------------------------------------------------------------------------------"
-Write-Output " Win11Debloat Script - Get"
+Write-Output " Win11Debloat  Script - Get"
 Write-Output "-------------------------------------------------------------------------------------------"
 
-Write-Output "> Downloading Win11Debloat..."
+Write-Output "> 正在下载 Win11Debloat..."
 
-# Download latest version of Win11Debloat from github as zip archive
+# 從 github 下載最新版本的 Win11Debloat 為 zip 壓縮檔
 Invoke-RestMethod https://api.github.com/repos/Raphire/Win11Debloat/zipball/2025.08.16 -OutFile "$env:TEMP/win11debloat.zip"
 
-# Remove old script folder if it exists, except for CustomAppsList and SavedSettings files
+# 如果舊的腳本資料夾存在，則移除，但保留 CustomAppsList 和 SavedSettings 檔案
 if (Test-Path "$env:TEMP/Win11Debloat") {
     Write-Output ""
-    Write-Output "> Cleaning up old Win11Debloat folder..."
+    Write-Output "> 正在清理旧的 Win11Debloat 文件夹..."
     Get-ChildItem -Path "$env:TEMP/Win11Debloat" -Exclude CustomAppsList,SavedSettings,Win11Debloat.log | Remove-Item -Recurse -Force
 }
 
 Write-Output ""
-Write-Output "> Unpacking..."
+Write-Output "> 正在解压..."
 
-# Unzip archive to Win11Debloat folder
+# 將壓縮檔解壓縮到 Win11Debloat 資料夾
 Expand-Archive "$env:TEMP/win11debloat.zip" "$env:TEMP/Win11Debloat"
 
-# Remove archive
+# 移除壓縮檔
 Remove-Item "$env:TEMP/win11debloat.zip"
 
-# Move files
+# 移動檔案
 Get-ChildItem -Path "$env:TEMP/Win11Debloat/Raphire-Win11Debloat-*" -Recurse | Move-Item -Destination "$env:TEMP/Win11Debloat"
 
-# Make list of arguments to pass on to the script
+# 製作要傳遞給腳本的參數清單
 $arguments = $($PSBoundParameters.GetEnumerator() | ForEach-Object {
     if ($_.Value -eq $true) {
         "-$($_.Key)"
@@ -117,22 +117,22 @@ $arguments = $($PSBoundParameters.GetEnumerator() | ForEach-Object {
 })
 
 Write-Output ""
-Write-Output "> Running Win11Debloat..."
+Write-Output "> 正在運行 Win11Debloat..."
 
-# Run Win11Debloat script with the provided arguments
+# 運行 Win11Debloat 腳本，並傳遞提供的參數
 $debloatProcess = Start-Process powershell.exe -PassThru -ArgumentList "-executionpolicy bypass -File $env:TEMP\Win11Debloat\Win11Debloat.ps1 $arguments" -Verb RunAs
 
-# Wait for the process to finish before continuing
+# 等待進程完成後再繼續
 if ($null -ne $debloatProcess) {
     $debloatProcess.WaitForExit()
 }
 
-# Remove all remaining script files, except for CustomAppsList and SavedSettings files
+# 移除所有剩餘的腳本檔案，但保留 CustomAppsList 和 SavedSettings 檔案
 if (Test-Path "$env:TEMP/Win11Debloat") {
     Write-Output ""
-    Write-Output "> Cleaning up..."
+    Write-Output "> 正在清理..."
 
-    # Cleanup, remove Win11Debloat directory
+    # 清理，移除 Win11Debloat 目錄
     Get-ChildItem -Path "$env:TEMP/Win11Debloat" -Exclude CustomAppsList,SavedSettings,Win11Debloat.log | Remove-Item -Recurse -Force
 }
 

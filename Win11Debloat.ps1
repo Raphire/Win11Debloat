@@ -544,29 +544,25 @@ function Strip-Progress {
 
 # Check if this machine supports S0 Modern Standby power state. Returns true if S0 Modern Standby is supported, false otherwise.
 function CheckModernStandbySupport {
-    $capture = $false
-    
+    $count = 0
+
     try {
-        $null = switch -Regex (powercfg /a) {
-            'The following sleep states are available on this system:' {
-                $capture = $true
+        switch -Regex (powercfg /a) {
+            ':' {
+                $count += 1
             }
-        
-            '^\s{2,4}(Standby \(S0 Low Power Idle\))' {
-                if($capture){
+
+            '(.*S0.{1,}\))' {
+                if ($count -eq 1) {
                     return $true
                 }
-            }
-        
-            'The following sleep states are not available on this system:' {
-                $capture = $false
             }
         }
     }
     catch {
         Write-Host "Error: Unable to check for S0 Modern Standby support, powercfg command failed" -ForegroundColor Red
-        Write-Output ""
-        Write-Output "Press any key to continue..."
+        Write-Host ""
+        Write-Host "Press any key to continue..."
         $null = [System.Console]::ReadKey()
         return $true
     }

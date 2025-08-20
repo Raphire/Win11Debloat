@@ -24,7 +24,6 @@ param (
     [switch]$DisableDesktopSpotlight,
     [switch]$DisableLockscrTips, [switch]$DisableLockscreenTips,
     [switch]$DisableWindowsSuggestions, [switch]$DisableSuggestions,
-    [switch]$DisableBackupNotifications,
     [switch]$DisableEdgeAds,
     [switch]$DisableSettings365Ads,
     [switch]$DisableSettingsHome,

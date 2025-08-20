@@ -1,78 +1,76 @@
-Win11Debloat is a lightweight and easy to use PowerShell script that allows you to quickly
-declutter and improve your Windows experience. It can remove pre-installed bloatware apps,
-disable telemetry, remove intrusive interface elements and much more.
+Win11Debloat 是一款轻量级且易于使用的 PowerShell 脚本，允许您快速
+整理并提升您的 Windows 体验。它可以移除预装的大众化应用程序。
+禁用遥测，移除侵入性界面元素等等。
 
+- 删除或替换当前用户或所有现有及新用户的起始页面上所有已固定的应用。（仅限 W11）
 -------------------------------------------------------------------------------------------
- All Features
+所有功能
 -------------------------------------------------------------------------------------------
-App Removal
-- Remove a wide variety of bloatware apps.
-- Remove or replace all pinned apps from start for the current user, or for all existing & new users. (W11 only)
+应用移除
+- 移除各种冗余的应用程序。
 
-Telemetry, Tracking & Suggested Content
-- Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads.
-- Disable tips, tricks, suggestions & ads across Windows.
-- Disable ads and the MSN news feed in Microsoft Edge.
-- Disable the 'Windows Spotlight' desktop background option.
+遥测、跟踪与推荐内容
+- 禁用遥测、诊断数据、活动历史、应用启动跟踪和定向广告。
+- 禁用 Windows 中的提示、技巧、建议和广告。
+- 在 Microsoft Edge 中禁用广告和 MSN 新闻源。
+- 禁用“Windows spotlight”桌面背景选项。
 
-Bing Web Search, Copilot & AI Features
-- Disable & remove Bing web search, Bing AI and Cortana from Windows search.
-- Disable & remove Microsoft Copilot. (W11 only)
-- Disable Windows Recall snapshots. (W11 only)
-- Disable AI Features in Paint (W11 only)
-- Disable AI Features in Notepad (W11 only)
+必应网络搜索、Copilot 和 AI 功能
+- 禁用并移除必应网络搜索、Bing AI 和 Cortana 从 Windows 搜索中。
+- 禁用并移除 Microsoft Copilot。（仅限 Windows 11）
+- 禁用 Windows 回忆快照。（仅限 Windows 11）
+- 禁用画图中的 AI 功能。（仅限 Windows 11）
+- 禁用记事本中的 AI 功能。（仅限 Windows 11）
 
-Personalisation
-- Enable dark mode for system and apps.
-- Disable transparency, animations and visual effects.
-- Turn off Enhance Pointer Precision, also known as mouse acceleration.
-- Disable the Sticky Keys keyboard shortcut. (W11 only)
-- Restore the old Windows 10 style context menu. (W11 only)
-- Hide the 'Include in library', 'Give access to' and 'Share' options from the context menu. (W10 only)
+个性化
+- 启用系统和应用的暗黑模式。
+- 禁用透明度、动画和视觉效果。
+- 关闭增强指针精度，也称为鼠标加速。
+- 禁用粘滞键键盘快捷键。（仅限 Windows 11）
+- 恢复旧版 Windows 10 样式的上下文菜单。（仅限 W11）
+- 从上下文菜单中隐藏“包含在库中”、“授予访问权限”和“共享”选项。（仅限 W10）
 
-File Explorer
-- Change the default location that File Explorer opens to.
-- Show hidden files, folders & drives.
-- Show file extensions for known file types.
-- Hide the Home or Gallery section from the File Explorer navigation pane. (W11 only)
-- Hide the 3D objects, music or OneDrive folder from the File Explorer sidepanel. (W10 only)
-- Hide duplicate removable drive entries from the File Explorer sidepanel.
+文件资源管理器
+- 更改文件资源管理器默认打开的位置。
+- 显示隐藏的文件、文件夹和驱动器。
+- 显示已知文件类型的文件扩展名。
+- 从文件资源管理器导航窗格中隐藏“主页”或“图库”部分。（仅限 Windows 11）
+- 从文件资源管理器侧边栏中隐藏 3D 对象、音乐或 OneDrive 文件夹。（仅限 Windows 10）
+- 从文件资源管理器侧边栏中隐藏可删除的重复驱动器条目。
 
-Taskbar
-- Align taskbar icons to the left. (W11 only)
-- Hide or change the search icon/box on the taskbar. (W11 only)
-- Hide the taskview button from the taskbar. (W11 only)
-- Disable the widgets service & hide icon from the taskbar.
-- Hide the chat (meet now) icon from the taskbar.
-- Enable the 'End Task' option in the taskbar right click menu. (W11 only)
-- Enable the 'Last Active Click' behavior in the taskbar app area.
+任务栏
+- 将任务栏图标左对齐。（仅限 Windows 11）
+- 隐藏或更改任务栏上的搜索图标/框。（仅限 Windows 11）
+- 隐藏任务视图按钮从任务栏。（仅限 Windows 11）
+- 禁用小部件服务并隐藏任务栏图标。
+- 隐藏聊天（现在会议）图标从任务栏。
+- 启用任务栏右键菜单中的“结束任务”选项。（仅限 Windows 11）
+- 启用任务栏应用区域中的“上次活动点击”行为。
 
-Start
-- Disable the recommended section in the start menu. (W11 only)
-- Disable the Phone Link mobile devices integration in the start menu. (W11 only)
+开始
+- 禁用开始菜单中的推荐部分。（仅限 Windows 11）
+- 禁用开始菜单中的电话链接移动设备集成。（仅限 Windows 11）
 
-Other
-- Disable Xbox game/screen recording, this also stops gaming overlay popups.
-- Disable Fast Start-up to ensure a full shutdown.
-- Disable network connectivity during Modern Standby to reduce battery drain. (W11 only)
-- Option to apply changes to a different user, instead of the currently logged in user.
-- Sysprep mode to apply changes to the Windows Default user profile. 
+其他
+- 禁用 Xbox 游戏/屏幕录制，这也会停止游戏覆盖弹窗。
+- 禁用快速启动以确保完全关闭。
+- 在现代待机期间禁用网络连接以减少电池消耗。（仅限 Windows 11）
+- 可选择将更改应用于不同用户，而不是当前登录用户。
+- Sysprep 模式，将更改应用于 Windows 默认用户配置文件。
 
+默认模式
+默认模式应用大多数用户推荐的建议更改。这包括：
+- 删除默认应用选择，列表可在“Appslist.txt”文件中找到。
+- 禁用遥测、诊断数据、应用启动跟踪和定向广告。
+- 禁用开始、设置、通知等处的提示、技巧、建议和广告。
+- 在 Microsoft Edge 中禁用广告和 MSN 新闻源。
+- 禁用锁屏上的小贴士和技巧。（这可能会更改您的锁屏壁纸）
+- 禁用并移除 Windows 搜索中的必应网络搜索、必应 AI 和 Cortana。
+- 禁用并移除 Microsoft Copilot。（仅限 Windows 11）
 -------------------------------------------------------------------------------------------
- Default mode
+- 禁用快速启动以确保完全关闭。
 -------------------------------------------------------------------------------------------
-The default mode applies the changes that are recommended for most users. This includes:
-- Remove the default selection of apps, the list can be found in the 'Appslist.txt' file.
-- Disable telemetry, diagnostic data, app-launch tracking & targeted ads.
-- Disable tips, tricks, suggestions and ads in start, settings, notifications and more.
-- Disable ads and the MSN news feed in Microsoft Edge.
-- Disable tips & tricks on the lockscreen. (This may change your lockscreen wallpaper)
-- Disable & remove Bing web search, Bing AI and Cortana from Windows search.
-- Disable & remove Microsoft Copilot. (W11 only)
-- Disable Fast Start-up to ensure a full shutdown.
-- Show file extensions for known file types.
-- Hide the 3D objects folder in Windows Explorer. (W10 only)
-- Disable the widget service & hide the icon from the taskbar.
-- Hide the Chat (meet now) icon from the taskbar.
-
-
+- 显示已知文件类型的文件扩展名。
+- 在 Windows 资源管理器中隐藏 3D 对象文件夹。（仅限 Windows 10）
+- 禁用小部件服务并从任务栏隐藏图标。
+- 从任务栏隐藏聊天（现在会议）图标。

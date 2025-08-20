@@ -1,4 +1,5 @@
 @echo off
+echo https://github.com/HSSkyBoy/Win11DebloatCN/tree/CN-v2
 :: Set Windows Terminal installation paths. (Default and Scoop installation)
 set "wtDefaultPath=%LOCALAPPDATA%\Microsoft\WindowsApps\wt.exe"
 set "wtScoopPath=%USERPROFILE%\scoop\apps\windows-terminal\current\wt.exe"

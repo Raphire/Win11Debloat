@@ -542,6 +542,35 @@ function Strip-Progress {
 }
 
 
+# Check if this machine supports S0 Modern Standby power state. Returns true if S0 Modern Standby is supported, false otherwise.
+function CheckModernStandbySupport {
+    $count = 0
+
+    try {
+        switch -Regex (powercfg /a) {
+            ':' {
+                $count += 1
+            }
+
+            '(.*S0.{1,}\))' {
+                if ($count -eq 1) {
+                    return $true
+                }
+            }
+        }
+    }
+    catch {
+        Write-Host "Error: Unable to check for S0 Modern Standby support, powercfg command failed" -ForegroundColor Red
+        Write-Host ""
+        Write-Host "Press any key to continue..."
+        $null = [System.Console]::ReadKey()
+        return $true
+    }
+
+    return $false
+}
+
+
 # Import & execute regfile
 function RegImport {
     param (
@@ -1008,10 +1037,10 @@ function DisplayCustomModeOptions {
     }
 
     # Only show this option for Windows 11 users running build 22000 or later, and if the machine has at least one battery
-    if (($WinVersion -ge 22000) -and $script:BatteryInstalled) {
+    if (($WinVersion -ge 22000) -and $script:ModernStandbySupported) {
         Write-Output ""
 
-        if ($( Read-Host -Prompt "Disable network connectivity during Modern Standby to reduce battery drain? (y/n)" ) -eq 'y') {
+        if ($( Read-Host -Prompt "Disable network connectivity during Modern Standby? This applies to all users (y/n)" ) -eq 'y') {
             AddParameter 'DisableModernStandbyNetworking' 'Disable network connectivity during Modern Standby'
         }
     }
@@ -1297,8 +1326,8 @@ else {
 # Get current Windows build version to compare against features
 $WinVersion = Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' CurrentBuild
 
-# Check if the machine has a battery installed, this is used to determine if the DisableModernStandbyNetworking option can be used
-$script:BatteryInstalled = (Get-WmiObject -Class Win32_Battery).Count -gt 0
+# Check if the machine supports Modern Standby, this is used to determine if the DisableModernStandbyNetworking option can be used
+$script:ModernStandbySupported = CheckModernStandbySupport
 
 $script:Params = $PSBoundParameters
 $script:FirstSelection = $true
@@ -1458,7 +1487,7 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunS
             }
 
             # Only add this option for Windows 11 users (build 22000+), if it doesn't already exist
-            if (($WinVersion -ge 22000) -and $script:BatteryInstalled -and (-not $script:Params.ContainsKey('DisableModernStandbyNetworking'))) {
+            if (($WinVersion -ge 22000) -and $script:ModernStandbySupported -and (-not $script:Params.ContainsKey('DisableModernStandbyNetworking'))) {
                 $script:Params.Add('DisableModernStandbyNetworking', $true)
             }
         }

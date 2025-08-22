@@ -1,4 +1,4 @@
-param (
+﻿param (
     [switch]$Silent,
     [switch]$Verbose,
     [switch]$Sysprep,

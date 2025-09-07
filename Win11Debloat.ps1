@@ -1190,8 +1190,8 @@ function DisplayCustomModeOptions {
 
         Write-Output ""
 
-        if ($( Read-Host -Prompt "   Disable the widgets service and hide the icon from the taskbar? (y/n)" ) -eq 'y') {
-            AddParameter 'DisableWidgets' 'Disable the widget service & hide the widget (news and interests) icon from the taskbar'
+        if ($( Read-Host -Prompt "   Disable the widgets service to remove widgets on the taskbar & lockscreen? (y/n)" ) -eq 'y') {
+            AddParameter 'DisableWidgets' 'Disable widgets on the taskbar & lockscreen'
         }
 
         # Only show this options for Windows users running build 22621 or earlier
@@ -1799,7 +1799,7 @@ switch ($script:Params.Keys) {
         continue
     }
     {$_ -in "HideWidgets", "DisableWidgets"} {
-        RegImport "> Disabling the widget service and hiding the widget icon from the taskbar..." "Disable_Widgets_Taskbar.reg"
+        RegImport "> Disabling widgets on the taskbar & lockscreen..." "Disable_Widgets_Service.reg"
 
         # Also remove the app package for Widgets
         $appsList = 'Microsoft.StartExperiencesApp'

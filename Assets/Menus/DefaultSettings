@@ -10,7 +10,7 @@ Win11Debloat will make the following changes:
 - Disable network connectivity during Modern Standby to reduce battery drain. (W11 only)
 - Show file extensions for known file types.
 - Hide the 3D objects folder in Windows Explorer. (W10 only)
-- Disable the widget service & hide the icon from the taskbar.
+- Disable widgets on the taskbar & lockscreen.
 - Hide the Chat (meet now) icon from the taskbar.
 
 

@@ -137,7 +137,7 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 - Align taskbar icons to the left. (W11 only)
 - Hide or change the search icon/box on the taskbar. (W11 only)
 - Hide the taskview button from the taskbar. (W11 only)
-- Disable the widgets service & hide icon from the taskbar.
+- Disable widgets on the taskbar & lockscreen.
 - Hide the chat (meet now) icon from the taskbar.
 - Enable the 'End Task' option in the taskbar right click menu. (W11 only)
 - Enable the 'Last Active Click' behavior in the taskbar app area. This allows you to repeatedly click on an application's icon in the taskbar to switch focus between the open windows of that application.
@@ -174,7 +174,7 @@ Win11Debloat offers a default mode that allows you to quickly and easily apply t
 - Disable network connectivity during Modern Standby to reduce battery drain. (W11 only)
 - Show file extensions for known file types.
 - Hide the 3D objects folder under 'This pc' from File Explorer. (W10 only)
-- Disable the widget service & hide the icon from the taskbar.
+- Disable widgets on the taskbar & lockscreen.
 - Hide the Chat (meet now) icon from the taskbar.
 
 #### Apps that ARE removed as part of the default mode

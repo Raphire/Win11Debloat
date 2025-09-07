@@ -571,6 +571,28 @@ function CheckModernStandbySupport {
 }
 
 
+# Returns the directory path of the specified user, exits script if user path can't be found
+function GetUserDirectory {
+    param (
+        $userName,
+        $fileName = ""
+    )
+
+    $userPath = "$env:SystemDrive\Users\$userName\$fileName"
+
+    if (-not (Test-Path $userPath)) {
+        $userPath = $env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), "\$userName\$fileName"
+    }
+
+    if (-not (Test-Path $userPath)) {
+        Write-Host "Error: Unable to find user directory path for user $userName" -ForegroundColor Red
+        AwaitKeyToExit
+    }
+
+    return $userPath
+}
+
+
 # Import & execute regfile
 function RegImport {
     param (
@@ -581,14 +603,14 @@ function RegImport {
     Write-Output $message
 
     if ($script:Params.ContainsKey("Sysprep")) {
-        $defaultUserPath = $env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), '\Default\NTUSER.DAT'
+        $defaultUserPath = GetUserDirectory -userName "Default" -fileName "NTUSER.DAT"
         
         reg load "HKU\Default" $defaultUserPath | Out-Null
         reg import "$PSScriptRoot\Regfiles\Sysprep\$path"
         reg unload "HKU\Default" | Out-Null
     }
     elseif ($script:Params.ContainsKey("User")) {
-        $userPath = $env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), "\$($script:Params.Item("User"))\NTUSER.DAT"
+        $userPath = GetUserDirectory -userName $script:Params.Item("User") -fileName "NTUSER.DAT"
         
         reg load "HKU\Default" $userPath | Out-Null
         reg import "$PSScriptRoot\Regfiles\Sysprep\$path"
@@ -651,7 +673,7 @@ function ReplaceStartMenuForAllUsers {
     }
 
     # Get path to start menu file for all users
-    $userPathString = $env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), "\*\AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState"
+    $userPathString = GetUserDirectory -userName "*" -fileName "AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState"
     $usersStartMenuPaths = get-childitem -path $userPathString
 
     # Go through all users and replace the start menu file
@@ -660,7 +682,7 @@ function ReplaceStartMenuForAllUsers {
     }
 
     # Also replace the start menu file for the default user profile
-    $defaultStartMenuPath = $env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), '\Default\AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState'
+    $defaultStartMenuPath = GetUserDirectory -userName "Default" -fileName "AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState"
 
     # Create folder if it doesn't exist
     if (-not (Test-Path $defaultStartMenuPath)) {
@@ -685,7 +707,7 @@ function ReplaceStartMenu {
 
     # Change path to correct user if a user was specified
     if ($script:Params.ContainsKey("User")) {
-        $startMenuBinFile = $env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), "\$(GetUserName)\AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState\start2.bin"
+        $startMenuBinFile = GetUserDirectory -userName "$(GetUserName)" -fileName "AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState\start2.bin"
     }
 
     # Check if template bin file exists, return early if it doesn't
@@ -699,9 +721,11 @@ function ReplaceStartMenu {
         return
     }
 
+    $userName = [regex]::Match($startMenuBinFile, '(?:Users\\)([^\\]+)(?:\\AppData)').Groups[1].Value
+
     # Check if bin file exists, return early if it doesn't
     if (-not (Test-Path $startMenuBinFile)) {
-        Write-Host "Error: Unable to replace start menu for user $(GetUserName), original start2.bin file not found" -ForegroundColor Red
+        Write-Host "Error: Unable to replace start menu for user $userName, original start2.bin file not found" -ForegroundColor Red
         return
     }
 
@@ -713,7 +737,7 @@ function ReplaceStartMenu {
     # Copy template file
     Copy-Item -Path $startMenuTemplate -Destination $startMenuBinFile -Force
 
-    Write-Output "Replaced start menu for user $(GetUserName)"
+    Write-Output "Replaced start menu for user $userName"
 }
 
 
@@ -1355,15 +1379,9 @@ else {
     $ProgressPreference = 'Continue'
 }
 
-# Make sure all requirements for Sysprep are met, if Sysprep is enabled
 if ($script:Params.ContainsKey("Sysprep")) {
-    $defaultUserPath = $env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), '\Default\NTUSER.DAT'
+    $defaultUserPath = GetUserDirectory -userName "Default"
 
-    # Exit script if default user directory or NTUSER.DAT file cannot be found
-    if (-not (Test-Path "$defaultUserPath")) {
-        Write-Host "Error: Unable to start Win11Debloat in Sysprep mode, cannot find default user folder at '$defaultUserPath'" -ForegroundColor Red
-        AwaitKeyToExit
-    }
     # Exit script if run in Sysprep mode on Windows 10
     if ($WinVersion -lt 22000) {
         Write-Host "Error: Win11Debloat Sysprep mode is not supported on Windows 10" -ForegroundColor Red
@@ -1373,13 +1391,7 @@ if ($script:Params.ContainsKey("Sysprep")) {
 
 # Make sure all requirements for User mode are met, if User is specified
 if ($script:Params.ContainsKey("User")) {
-    $userPath = $env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), "\$($script:Params.Item("User"))\NTUSER.DAT"
-
-    # Exit script if user directory or NTUSER.DAT file cannot be found
-    if (-not (Test-Path "$userPath")) {
-        Write-Host "Error: Unable to run Win11Debloat for user $($script:Params.Item("User")), cannot find user data at '$userPath'" -ForegroundColor Red
-        AwaitKeyToExit
-    }
+    $userPath = GetUserDirectory -userName $script:Params.Item("User")
 }
 
 # Remove SavedSettings file if it exists and is empty

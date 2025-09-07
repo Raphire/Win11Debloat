@@ -3,3 +3,7 @@ Windows Registry Editor Version 5.00
 [hkey_users\default\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize]
 "AppsUseLightTheme"=dword:00000000
 "SystemUsesLightTheme"=dword:00000000
+
+[hkey_users\default\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce]
+"AppsUseLightTheme"="reg add HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize /v AppsUseLightTheme /t REG_DWORD /d 0 /f"
+"SystemUsesLightTheme"="reg add HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize /v SystemUsesLightTheme /t REG_DWORD /d 0 /f"

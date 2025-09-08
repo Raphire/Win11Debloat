@@ -575,21 +575,26 @@ function CheckModernStandbySupport {
 function GetUserDirectory {
     param (
         $userName,
-        $fileName = ""
+        $fileName = "",
+        $exitIfPathNotFound = $true
     )
 
+    $userDirectoryExists = Test-Path "$env:SystemDrive\Users\$userName"
     $userPath = "$env:SystemDrive\Users\$userName\$fileName"
 
-    if (-not (Test-Path $userPath)) {
-        $userPath = $env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), "\$userName\$fileName"
+    if ((Test-Path $userPath) -or ($userDirectoryExists -and (-not $exitIfPathNotFound))) {
+        return $userPath
     }
 
-    if (-not (Test-Path $userPath)) {
-        Write-Host "Error: Unable to find user directory path for user $userName" -ForegroundColor Red
-        AwaitKeyToExit
+    $userDirectoryExists = Test-Path $env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), "\$userName"
+    $userPath = $env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), "\$userName\$fileName"
+
+    if ((Test-Path $userPath) -or ($userDirectoryExists -and (-not $exitIfPathNotFound))) {
+        return $userPath
     }
 
-    return $userPath
+    Write-Host "Error: Unable to find user directory path for user $userName" -ForegroundColor Red
+    AwaitKeyToExit
 }
 
 
@@ -682,7 +687,7 @@ function ReplaceStartMenuForAllUsers {
     }
 
     # Also replace the start menu file for the default user profile
-    $defaultStartMenuPath = GetUserDirectory -userName "Default" -fileName "AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState"
+    $defaultStartMenuPath = GetUserDirectory -userName "Default" -fileName "AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState" -exitIfPathNotFound $false
 
     # Create folder if it doesn't exist
     if (-not (Test-Path $defaultStartMenuPath)) {

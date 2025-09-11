@@ -1,0 +1,7 @@
+Windows Registry Editor Version 5.00
+
+; Allow personalization of ads, Microsoft Edge, search, news and other Microsoft services by sending browsing history, favorites and collections, usage and other browsing data to Microsoft
+; Allow sending required and optional diagnostic data about browser usage
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge]
+"PersonalizationReportingEnabled"=-
+"DiagnosticData"=-

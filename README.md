@@ -221,6 +221,7 @@ Win11Debloat offers a default mode that allows you to quickly and easily apply t
     - Microsoft.XboxApp (Old Xbox Console Companion App, no longer supported)
     - Microsoft.ZuneVideo  
     - MicrosoftCorporationII.MicrosoftFamily (Microsoft Family Safety)
+    - MicrosoftCorporationII.QuickAssist (Remote assistance tool)
     - MicrosoftTeams (Old personal version of MS Teams from the MS Store)
     - MSTeams (New MS Teams app)
 
@@ -237,7 +238,6 @@ Win11Debloat offers a default mode that allows you to quickly and easily apply t
     - CyberLinkMediaSuiteEssentials  
     - DisneyMagicKingdoms  
     - Disney 
-    - Dolby  
     - DrawboardPDF  
     - Duolingo-LearnLanguagesforFree  
     - EclipseManager  
@@ -266,7 +266,6 @@ Win11Debloat offers a default mode that allows you to quickly and easily apply t
     - Shazam  
     - Sidia.LiveWallpaper  
     - SlingTV  
-    - Speed Test  
     - Spotify  
     - TikTok
     - TuneInRadio  

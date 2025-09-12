@@ -1,0 +1,56 @@
+# Defaults
+CreateRestorePoint#- Create a system restore point before making any changes. Unless a restore point was already created in the last 24 hours.
+DisableTelemetry#- Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads.
+DisableBing#- Disable & remove Bing web search, Bing AI and Cortana from Windows search.
+DisableLockscreenTips#- Disable tips & tricks on the lockscreen.
+DisableSuggestions#- Disable tips, tricks, suggestions and ads in start, settings, notifications, File Explorer, and on the lockscreen.
+DisableEdgeAds#- Disable ads and the MSN news feed in Microsoft Edge.
+ShowKnownFileExt#- Show file extensions for known file types.
+DisableWidgets#- Disable the widget service & hide the icon from the taskbar.
+HideChat#- Hide the Chat (meet now) icon from the taskbar.
+DisableCopilot#- Disable & remove Microsoft Copilot. (Windows 11 only)
+DisableFastStartup#- Disable Fast Start-up to ensure a full shutdown.
+DisableModernStandbyNetworking#- Disable network connectivity during Modern Standby to reduce battery drain. (Windows 11 only)
+Hide3dObjects#- Hide the 3D objects folder under This pc in File Explorer. (Windows 10 only)
+
+# Non-defaults
+#ClearStart#- Remove all pinned apps from start for the current user. (Windows 11 update 22H2 or later only)
+#ClearStartAllUsers#- Remove all pinned apps from start for all existing and new users. (Windows 11 update 22H2 or later only)
+#ReplaceStart <PATH>#- Replace the pinned apps from start for the current user with your template file. Click here for more details. (Windows 11 update 22H2 or later only)
+#ReplaceStartAllUsers <PATH>#- Replace the pinned apps from start for all existing and new users with your template file. Click here for more details. (Windows 11 update 22H2 or later only)
+#DisableStartRecommended#- Disable & hide the recommended section in the start menu. This will also change the start menu layout to More pins.
+#DisableStartPhoneLink#- Disable the Phone Link mobile devices integration in the start menu. This will not uninstall or disable Phone Link itself.
+#DisableDesktopSpotlight#- Disable the Windows Spotlight desktop background option.
+#DisableSettings365Ads#- Disable Microsoft 365 ads in Settings Home.
+#DisableSettingsHome#- Hide the Settings Home page completely. Settings will open to the System tab instead.
+#DisableRecall#- Disable Windows Recall snapshots. (Windows 11 only)
+#DisableEdgeAI#- Disable AI features in Edge. (Windows 11 only)
+#DisablePaintAI#- Disable AI features in Paint. (Windows 11 only)
+#DisableNotepadAI#- Disable AI features in Notepad. (Windows 11 only)
+#RevertContextMenu#- Restore the old Windows 10 style context menu. (Windows 11 only)
+#DisableMouseAcceleration#- Turn off Enhance Pointer Precision, also known as mouse acceleration. Requires reboot to apply.
+#DisableStickyKeys#- Disable the Sticky Keys keyboard shortcut.
+#TaskbarAlignLeft#- Align taskbar icons to the left. (Windows 11 only)
+#HideSearchTb#- Hide search icon from the taskbar. (Windows 11 only)
+#ShowSearchIconTb#- Show search icon on the taskbar. (Windows 11 only)
+#ShowSearchLabelTb#- Show search icon with label on the taskbar. (Windows 11 only)
+#ShowSearchBoxTb#- Show search box on the taskbar. (Windows 11 only)
+#HideTaskview#- Hide the taskview button from the taskbar. (Windows 11 only)
+#EnableEndTask#- Enable the End Task option in the taskbar right click menu.
+#EnableLastActiveClick#- Enable the 'Last Active Click' behavior in the taskbar app area. This allows you to repeatedly click on an application's icon in the taskbar to switch focus between the open windows of that application.
+#HideHome#- Hide the home section from the File Explorer navigation pane and add a toggle in the File Explorer folder options. (Windows 11 only)
+#HideGallery#- Hide the gallery section from the File Explorer navigation pane and add a toggle in the File Explorer folder options. (Windows 11 only)
+#ExplorerToHome#- Change File Explorer to open to Home.
+#ExplorerToThisPC#- Change File Explorer to open to This PC.
+#ExplorerToDownloads#- Change File Explorer to open to Downloads.
+#ExplorerToOneDrive#- Change File Explorer to open to OneDrive.
+#HideOnedrive#- Hide the OneDrive folder from the File Explorer navigation pane. (Windows 10 only)
+#HideMusic#- Hide the music folder under This pc in File Explorer. (Windows 10 only)
+#HideIncludeInLibrary#- Hide the Include in library option in the context menu. (Windows 10 only)
+#HideGiveAccessTo#- Hide the Give access to option in the context menu. (Windows 10 only)
+#HideShare#- Hide the Share option in the context menu. (Windows 10 only)
+#ShowHiddenFolders#- Show hidden files, folders and drives.
+#HideDupliDrive#- Hide duplicate removable drive entries from the File Explorer navigation pane, so only the entry under This PC remains.
+#EnableDarkMode#- Enable dark mode for system and apps.
+#DisableTransparency#- Disable transparency effects.
+#DisableAnimations#- Disable animations and visual effects.

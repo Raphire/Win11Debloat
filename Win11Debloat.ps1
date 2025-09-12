@@ -1548,6 +1548,11 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunS
             Foreach ($line in (Get-Content -Path "$PSScriptRoot/SavedSettings" )) { 
                 # Remove any spaces before and after the line
                 $line = $line.Trim()
+
+                # Skip full comment lines
+                if ($line.StartsWith('#')) {
+                    continue
+                }
             
                 # Check if the line contains a comment
                 if (-not ($line.IndexOf('#') -eq -1)) {

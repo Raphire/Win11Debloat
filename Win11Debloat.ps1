@@ -1487,7 +1487,7 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunS
                 Read-Host | Out-Null
             }
 
-            $DefaultParameterNames = 'CreateRestorePoint','RemoveApps','DisableTelemetry','DisableBing','DisableLockscreenTips','DisableSuggestions','DisableEdgeAds','ShowKnownFileExt','DisableWidgets','HideChat','DisableCopilot','DisableRecall','DisableFastStartup'
+            $DefaultParameterNames = 'CreateRestorePoint','RemoveApps','DisableTelemetry','DisableBing','DisableLockscreenTips','DisableSuggestions','DisableEdgeAds','ShowKnownFileExt','DisableWidgets','HideChat','DisableCopilot','DisableFastStartup'
 
             PrintHeader 'Default Mode'
 
@@ -1503,10 +1503,16 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunS
                 $script:Params.Add('Hide3dObjects', $Hide3dObjects)
             }
 
-            # Only add this option for Windows 11 users (build 22000+), if it doesn't already exist
-            if (($WinVersion -ge 22000) -and $script:ModernStandbySupported -and (-not $script:Params.ContainsKey('DisableModernStandbyNetworking'))) {
-                $script:Params.Add('DisableModernStandbyNetworking', $true)
-            }
+            # Only add these options for Windows 11 users (build 22000+), if it doesn't already exist
+            if ($WinVersion -ge 22000) {
+                if ($script:ModernStandbySupported -and (-not $script:Params.ContainsKey('DisableModernStandbyNetworking'))) {
+                    $script:Params.Add('DisableModernStandbyNetworking', $true)
+                }
+
+                if (-not $script:Params.ContainsKey('DisableRecall')) {
+                    $script:Params.Add('DisableRecall', $true)
+                }
+            } 
         }
 
         # Custom mode, show & add options based on user input

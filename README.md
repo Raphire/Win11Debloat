@@ -108,7 +108,7 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 #### Bing Web Search, Copilot & AI Features
 
 - Disable & remove Bing web search, Bing AI and Cortana from Windows search.
-- Disable & remove Microsoft Copilot. (W11 only)
+- Disable & remove Microsoft Copilot.
 - Disable Windows Recall snapshots. (W11 only)
 - Disable AI Features in Edge (W11 only)
 - Disable AI Features in Paint (W11 only)
@@ -169,7 +169,7 @@ Win11Debloat offers a default mode that allows you to quickly and easily apply t
 - Disable tips, tricks, suggestions and ads in start, settings, notifications, File Explorer, and on the lockscreen.
 - Disable ads, suggestions and the MSN news feed in Microsoft Edge.
 - Disable & remove Bing web search, Bing AI and Cortana from Windows search.
-- Disable & remove Microsoft Copilot. (W11 only)
+- Disable & remove Microsoft Copilot.
 - Disable Windows Recall snapshots. (W11 only)
 - Disable Fast Start-up to ensure a full shutdown.
 - Disable network connectivity during Modern Standby to reduce battery drain. (W11 only)

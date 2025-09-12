@@ -191,7 +191,7 @@ Win11Debloat offers a default mode that allows you to quickly and easily apply t
     - Microsoft.BingFoodAndDrink 
     - Microsoft.BingHealthAndFitness
     - Microsoft.BingNews  
-    - Microsoft.BingSearch[^1] (Bing web search in Windows)
+    - Microsoft.BingSearch* (Bing web search in Windows)
     - Microsoft.BingSports  
     - Microsoft.BingTranslator  
     - Microsoft.BingTravel   
@@ -212,7 +212,7 @@ Win11Debloat offers a default mode that allows you to quickly and easily apply t
     - Microsoft.Office.Sway  
     - Microsoft.OneConnect  
     - Microsoft.Print3D  
-    - Microsoft.StartExperiencesApp[^2] (Widgets app)
+    - Microsoft.StartExperiencesApp** (Widgets app)
     - Microsoft.SkypeApp  
     - Microsoft.Todos  
     - Microsoft.WindowsAlarms  
@@ -276,8 +276,8 @@ Win11Debloat offers a default mode that allows you to quickly and easily apply t
     - Wunderlist  
     - XING
     
-    [^1] Removed when disabling Bing web search, Bing AI and Cortana from Windows search
-    [^2] Removed when disabling widgets on the taskbar & lockscreen
+    * Removed when disabling Bing web search, Bing AI and Cortana from Windows search
+    ** Removed when disabling widgets on the taskbar & lockscreen
 </blockquote>
 </details>
 

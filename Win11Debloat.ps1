@@ -8,7 +8,8 @@ param (
     [string]$User,
     [switch]$CreateRestorePoint,
     [switch]$RunAppsListGenerator, [switch]$RunAppConfigurator,
-    [switch]$RunDefaults, [switch]$RunWin11Defaults,
+    [switch]$RunDefaults,
+    [switch]$RunDefaultsLite,
     [switch]$RunSavedSettings,
     [switch]$RemoveApps, 
     [switch]$RemoveAppsCustom,
@@ -798,12 +799,15 @@ function PrintHeader {
 function PrintFromFile {
     param (
         $path,
-        $title
+        $title,
+        $printHeader = $true
     )
 
-    Clear-Host
+    if ($printHeader) {
+        Clear-Host
 
-    PrintHeader $title
+        PrintHeader $title
+    }
 
     # Get & print script menu from file
     Foreach ($line in (Get-Content -Path $path )) {   
@@ -1423,8 +1427,8 @@ if ($RunAppConfigurator -or $RunAppsListGenerator) {
 }
 
 # Change script execution based on provided parameters or user input
-if ((-not $script:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunSavedSettings -or ($SPParamCount -eq $script:Params.Count)) {
-    if ($RunDefaults -or $RunWin11Defaults) {
+if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSavedSettings -or ($SPParamCount -eq $script:Params.Count)) {
+    if ($RunDefaults -or $RunDefaultsLite) {
         $Mode = '1'
     }
     elseif ($RunSavedSettings) {
@@ -1481,13 +1485,64 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunS
         '1' { 
             # Show the default settings with confirmation, unless Silent parameter was passed
             if (-not $Silent) {
-                PrintFromFile "$PSScriptRoot/Assets/Menus/DefaultSettings" "Default Mode"
+                # Show options for app removal
+                if ((-not $RunDefaults) -and (-not $RunDefaultsLite)) {
+                    PrintHeader 'Default Mode'
+                    
+                    Do {
+                        Write-Host "Options:" -ForegroundColor Yellow
+                        Write-Host " (n) Don't remove any apps" -ForegroundColor Yellow
+                        Write-Host " (1) Only remove the default selection of bloatware apps" -ForegroundColor Yellow
+                        Write-Host " (2) Manually select which apps to remove" -ForegroundColor Yellow
+                        $RemoveAppsInput = Read-Host "Do you want to remove any apps? Apps will be removed for all users (n/1/2)"
+                
+                        # Show app selection form if user entered option 3
+                        if ($RemoveAppsInput -eq '2') {
+                            $result = ShowAppSelectionForm
+                
+                            if ($result -ne [System.Windows.Forms.DialogResult]::OK) {
+                                # User cancelled or closed app selection, show error and change RemoveAppsInput so the menu will be shown again
+                                Write-Output ""
+                                Write-Host "Cancelled application selection, please try again" -ForegroundColor Red
+                
+                                $RemoveAppsInput = 'c'
+                            }
+                            
+                            Write-Output ""
+                        }
+                    }
+                    while ($RemoveAppsInput -ne 'n' -and $RemoveAppsInput -ne '0' -and $RemoveAppsInput -ne '1' -and $RemoveAppsInput -ne '2') 
+                } elseif ($RunDefaultsLite) {
+                    $RemoveAppsInput = '0'                
+                } else {
+                    $RemoveAppsInput = '1'
+                }
 
+                PrintHeader 'Default Mode'
+
+                Write-Output "Win11Debloat will make the following changes:"
+    
+                # Select correct option based on user input
+                switch ($RemoveAppsInput) {
+                    '1' {
+                        $script:Params.Add('RemoveApps', $true)
+    
+                        Write-Output "- Remove the default selection of apps."
+                    }
+                    '2' {
+                        $script:Params.Add('RemoveAppsCustom', $true)
+    
+                        Write-Output "- Remove your custom selection of $($script:SelectedApps.Count) apps."
+                    }
+                }
+
+                PrintFromFile "$PSScriptRoot/Assets/Menus/DefaultSettings" "Default Mode" $false
+        
                 Write-Output "Press enter to execute the script or press CTRL+C to quit..."
                 Read-Host | Out-Null
             }
 
-            $DefaultParameterNames = 'CreateRestorePoint','RemoveApps','DisableTelemetry','DisableBing','DisableLockscreenTips','DisableSuggestions','DisableEdgeAds','ShowKnownFileExt','DisableWidgets','HideChat','DisableCopilot','DisableFastStartup'
+            $DefaultParameterNames = 'CreateRestorePoint','DisableTelemetry','DisableBing','DisableLockscreenTips','DisableSuggestions','DisableEdgeAds','ShowKnownFileExt','DisableWidgets','HideChat','DisableFastStartup','DisableCopilot'
 
             PrintHeader 'Default Mode'
 
@@ -1505,12 +1560,12 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunS
 
             # Only add these options for Windows 11 users (build 22000+), if it doesn't already exist
             if ($WinVersion -ge 22000) {
-                if ($script:ModernStandbySupported -and (-not $script:Params.ContainsKey('DisableModernStandbyNetworking'))) {
-                    $script:Params.Add('DisableModernStandbyNetworking', $true)
-                }
-
                 if (-not $script:Params.ContainsKey('DisableRecall')) {
                     $script:Params.Add('DisableRecall', $true)
+                }
+
+                if ($script:ModernStandbySupported -and (-not $script:Params.ContainsKey('DisableModernStandbyNetworking'))) {
+                    $script:Params.Add('DisableModernStandbyNetworking', $true)
                 }
             } 
         }

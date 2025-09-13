@@ -1,5 +1,3 @@
-Win11Debloat will make the following changes:
-- Remove the default selection of apps, the list can be found in the 'Appslist.txt' file.
 - Disable telemetry, diagnostic data, app-launch tracking & targeted ads.
 - Disable tips, tricks, suggestions and ads in start, settings, notifications and more.
 - Disable ads, suggestions and the MSN news feed in Microsoft Edge.

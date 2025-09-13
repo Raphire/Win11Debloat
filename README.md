@@ -157,14 +157,17 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 
 ### Default Settings
 
-Win11Debloat offers a default mode that allows you to quickly and easily apply the changes that are recommended for most people. This includes uninstalling apps that most would consider bloatware, removing many annoying distractions and disabling telemetry and tracking. To apply the default settings, launch the script as you normally would and select option `1` in the script menu. Alternatively, you can launch the script with the `-RunDefaults` parameter. Example:
+Win11Debloat's default mode allows you to quickly and easily apply the changes that are recommended for most people. This includes removing many annoying distractions, disabling telemetry and tracking and optionally uninstalling the default or your custom selection of apps. To apply the default settings, launch the script as you normally would and select option `1` in the script menu.
 
+Alternatively, you can launch the script with the `-RunDefaults` or `-RunDefaultsLite` parameters to immediately run the defaults without going through the menu or the app removal options. Using the `-RunDefaults` parameter will run the script in default mode and remove the default selection of apps. While using the `-RunDefaultsLite` parameter will run the script in default mode without removing any apps.
+
+Example:
 ```Powershell
 & ([scriptblock]::Create((irm "https://debloat.raphi.re/"))) -RunDefaults
 ```
   
 #### Changes included in the default mode
-- Remove the default selection of bloatware apps. (See below for full list)
+- Remove the default or your custom selection of apps. (See below for the default selection of apps)
 - Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads.
 - Disable tips, tricks, suggestions and ads in start, settings, notifications, File Explorer, and on the lockscreen.
 - Disable ads, suggestions and the MSN news feed in Microsoft Edge.
@@ -179,6 +182,8 @@ Win11Debloat offers a default mode that allows you to quickly and easily apply t
 - Hide the Chat (meet now) icon from the taskbar.
 
 #### Apps that ARE removed as part of the default mode
+
+These apps are uninstalled when you opt to remove the default selection of apps. This includes apps from both Microsoft and third parties.
 
 <details>
   <summary>Click to expand</summary>
@@ -283,6 +288,8 @@ Win11Debloat offers a default mode that allows you to quickly and easily apply t
 </details>
 
 #### Apps that are NOT removed as part of the default mode
+
+ These apps are not removed by default. They will only be removed if you manually select them.
 
 <details>
   <summary>Click to expand</summary>

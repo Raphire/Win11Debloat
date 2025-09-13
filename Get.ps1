@@ -6,7 +6,8 @@ param (
     [string]$User,
     [switch]$CreateRestorePoint,
     [switch]$RunAppsListGenerator, [switch]$RunAppConfigurator,
-    [switch]$RunDefaults, [switch]$RunWin11Defaults,
+    [switch]$RunDefaults,
+    [switch]$RunDefaultsLite,
     [switch]$RunSavedSettings,
     [switch]$RemoveApps, 
     [switch]$RemoveAppsCustom,
@@ -85,7 +86,7 @@ Write-Output "------------------------------------------------------------------
 Write-Output "> Downloading Win11Debloat..."
 
 # Download latest version of Win11Debloat from github as zip archive
-Invoke-RestMethod https://api.github.com/repos/Raphire/Win11Debloat/zipball/2025.09.08 -OutFile "$env:TEMP/win11debloat.zip"
+Invoke-RestMethod https://api.github.com/repos/Raphire/Win11Debloat/zipball/2025.09.13 -OutFile "$env:TEMP/win11debloat.zip"
 
 # Remove old script folder if it exists, except for CustomAppsList and SavedSettings files
 if (Test-Path "$env:TEMP/Win11Debloat") {

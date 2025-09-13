@@ -181,9 +181,9 @@ Example:
 - Disable widgets on the taskbar & lockscreen.
 - Hide the Chat (meet now) icon from the taskbar.
 
-#### Apps that ARE removed as part of the default mode
+#### Apps that ARE removed by default
 
-These apps are uninstalled when you opt to remove the default selection of apps. This includes apps from both Microsoft and third parties.
+These apps are uninstalled when you opt to remove the default selection of apps.
 
 <details>
   <summary>Click to expand</summary>
@@ -287,9 +287,9 @@ These apps are uninstalled when you opt to remove the default selection of apps.
 </blockquote>
 </details>
 
-#### Apps that are NOT removed as part of the default mode
+#### Apps that are NOT removed by default
 
- These apps are not removed by default. They will only be removed if you manually select them.
+These apps will not be removed by Win11Debloat unless explicitly selected by the user.
 
 <details>
   <summary>Click to expand</summary>

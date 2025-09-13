@@ -1483,6 +1483,10 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
     switch ($Mode) {
         # Default mode, loads defaults after confirmation
         '1' { 
+            if (-not $script:Params.ContainsKey('CreateRestorePoint')) {
+                $script:Params.Add('CreateRestorePoint', $true)
+            }
+
             # Show the default settings with confirmation, unless Silent parameter was passed
             if (-not $Silent) {
                 # Show options for app removal
@@ -1525,12 +1529,16 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
                 # Select correct option based on user input
                 switch ($RemoveAppsInput) {
                     '1' {
-                        $script:Params.Add('RemoveApps', $true)
+                        if (-not $script:Params.ContainsKey('RemoveApps')) {
+                            $script:Params.Add('RemoveApps', $true)
+                        }
     
                         Write-Output "- Remove the default selection of apps."
                     }
                     '2' {
-                        $script:Params.Add('RemoveAppsCustom', $true)
+                        if (-not $script:Params.ContainsKey('RemoveAppsCustom')) {
+                            $script:Params.Add('RemoveAppsCustom', $true)
+                        }
     
                         Write-Output "- Remove your custom selection of $($script:SelectedApps.Count) apps."
                     }
@@ -1542,7 +1550,7 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
                 Read-Host | Out-Null
             }
 
-            $DefaultParameterNames = 'CreateRestorePoint','DisableTelemetry','DisableBing','DisableLockscreenTips','DisableSuggestions','DisableEdgeAds','ShowKnownFileExt','DisableWidgets','HideChat','DisableFastStartup','DisableCopilot'
+            $DefaultParameterNames = 'DisableTelemetry','DisableBing','DisableLockscreenTips','DisableSuggestions','DisableEdgeAds','ShowKnownFileExt','DisableWidgets','HideChat','DisableFastStartup','DisableCopilot'
 
             PrintHeader 'Default Mode'
 

@@ -112,7 +112,7 @@ Get-ChildItem -Path "$env:TEMP/Win11Debloat/Raphire-Win11Debloat-*" -Recurse | M
 $arguments = $($PSBoundParameters.GetEnumerator() | ForEach-Object {
     if ($_.Value -eq $true) {
         "-$($_.Key)"
-    } 
+    }
     else {
          "-$($_.Key) ""$($_.Value)"""
     }

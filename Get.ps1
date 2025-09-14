@@ -5,11 +5,12 @@
     [string]$LogPath,
     [string]$User,
     [switch]$CreateRestorePoint,
-    [switch]$RunAppsListGenerator, [switch]$RunAppConfigurator,
+    [switch]$RunAppsListGenerator,
+    [switch]$RunAppConfigurator,
     [switch]$RunDefaults,
     [switch]$RunDefaultsLite,
     [switch]$RunSavedSettings,
-    [switch]$RemoveApps, 
+    [switch]$RemoveApps,
     [switch]$RemoveAppsCustom,
     [switch]$RemoveGamingApps,
     [switch]$RemoveCommApps,
@@ -72,10 +73,10 @@
 # Show error if current powershell environment does not have LanguageMode set to FullLanguage 
 if ($ExecutionContext.SessionState.LanguageMode -ne "FullLanguage") {
    Write-Host "Error: Win11Debloat is unable to run on your system. PowerShell execution is restricted by security policies" -ForegroundColor Red
-   Write-Output ""
-   Write-Output "Press enter to exit..."
-   Read-Host | Out-Null
-   Exit
+    Write-Output ""
+    Write-Output "Press enter to exit..."
+    Read-Host | Out-Null
+    Exit
 }
 
 Clear-Host

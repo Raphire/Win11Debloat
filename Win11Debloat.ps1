@@ -8,7 +8,8 @@ param (
     [string]$User,
     [switch]$CreateRestorePoint,
     [switch]$RunAppsListGenerator, [switch]$RunAppConfigurator,
-    [switch]$RunDefaults, [switch]$RunWin11Defaults,
+    [switch]$RunDefaults,
+    [switch]$RunDefaultsLite,
     [switch]$RunSavedSettings,
     [switch]$RemoveApps, 
     [switch]$RemoveAppsCustom,
@@ -467,7 +468,7 @@ function ForceRemoveEdge {
     $hklm = [Microsoft.Win32.RegistryKey]::OpenBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, $regView)
     $hklm.CreateSubKey('SOFTWARE\Microsoft\EdgeUpdateDev').SetValue('AllowUninstall', '')
 
-    # Create stub (Creating this somehow allows uninstalling edge)
+    # Create stub (Creating this somehow allows uninstalling Edge)
     $edgeStub = "$env:SystemRoot\SystemApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe"
     New-Item $edgeStub -ItemType Directory | Out-Null
     New-Item "$edgeStub\MicrosoftEdge.exe" | Out-Null
@@ -500,7 +501,7 @@ function ForceRemoveEdge {
 
         Write-Output "Cleaning up registry..."
 
-        # Remove ms edge from autostart
+        # Remove MS Edge from autostart
         reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run" /v "MicrosoftEdgeAutoLaunch_A9F6DCE4ABADF4F51CF45CD7129E3C6C" /f *>$null
         reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run" /v "Microsoft Edge Update" /f *>$null
         reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run" /v "MicrosoftEdgeAutoLaunch_A9F6DCE4ABADF4F51CF45CD7129E3C6C" /f *>$null
@@ -542,6 +543,62 @@ function Strip-Progress {
 }
 
 
+# Check if this machine supports S0 Modern Standby power state. Returns true if S0 Modern Standby is supported, false otherwise.
+function CheckModernStandbySupport {
+    $count = 0
+
+    try {
+        switch -Regex (powercfg /a) {
+            ':' {
+                $count += 1
+            }
+
+            '(.*S0.{1,}\))' {
+                if ($count -eq 1) {
+                    return $true
+                }
+            }
+        }
+    }
+    catch {
+        Write-Host "Error: Unable to check for S0 Modern Standby support, powercfg command failed" -ForegroundColor Red
+        Write-Host ""
+        Write-Host "Press any key to continue..."
+        $null = [System.Console]::ReadKey()
+        return $true
+    }
+
+    return $false
+}
+
+
+# Returns the directory path of the specified user, exits script if user path can't be found
+function GetUserDirectory {
+    param (
+        $userName,
+        $fileName = "",
+        $exitIfPathNotFound = $true
+    )
+
+    $userDirectoryExists = Test-Path "$env:SystemDrive\Users\$userName"
+    $userPath = "$env:SystemDrive\Users\$userName\$fileName"
+
+    if ((Test-Path $userPath) -or ($userDirectoryExists -and (-not $exitIfPathNotFound))) {
+        return $userPath
+    }
+
+    $userDirectoryExists = Test-Path $env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), "\$userName"
+    $userPath = $env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), "\$userName\$fileName"
+
+    if ((Test-Path $userPath) -or ($userDirectoryExists -and (-not $exitIfPathNotFound))) {
+        return $userPath
+    }
+
+    Write-Host "Error: Unable to find user directory path for user $userName" -ForegroundColor Red
+    AwaitKeyToExit
+}
+
+
 # Import & execute regfile
 function RegImport {
     param (
@@ -552,14 +609,14 @@ function RegImport {
     Write-Output $message
 
     if ($script:Params.ContainsKey("Sysprep")) {
-        $defaultUserPath = $env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), '\Default\NTUSER.DAT'
+        $defaultUserPath = GetUserDirectory -userName "Default" -fileName "NTUSER.DAT"
         
         reg load "HKU\Default" $defaultUserPath | Out-Null
         reg import "$PSScriptRoot\Regfiles\Sysprep\$path"
         reg unload "HKU\Default" | Out-Null
     }
     elseif ($script:Params.ContainsKey("User")) {
-        $userPath = $env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), "\$($script:Params.Item("User"))\NTUSER.DAT"
+        $userPath = GetUserDirectory -userName $script:Params.Item("User") -fileName "NTUSER.DAT"
         
         reg load "HKU\Default" $userPath | Out-Null
         reg import "$PSScriptRoot\Regfiles\Sysprep\$path"
@@ -622,7 +679,7 @@ function ReplaceStartMenuForAllUsers {
     }
 
     # Get path to start menu file for all users
-    $userPathString = $env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), "\*\AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState"
+    $userPathString = GetUserDirectory -userName "*" -fileName "AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState"
     $usersStartMenuPaths = get-childitem -path $userPathString
 
     # Go through all users and replace the start menu file
@@ -631,7 +688,7 @@ function ReplaceStartMenuForAllUsers {
     }
 
     # Also replace the start menu file for the default user profile
-    $defaultStartMenuPath = $env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), '\Default\AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState'
+    $defaultStartMenuPath = GetUserDirectory -userName "Default" -fileName "AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState" -exitIfPathNotFound $false
 
     # Create folder if it doesn't exist
     if (-not (Test-Path $defaultStartMenuPath)) {
@@ -656,7 +713,7 @@ function ReplaceStartMenu {
 
     # Change path to correct user if a user was specified
     if ($script:Params.ContainsKey("User")) {
-        $startMenuBinFile = $env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), "\$(GetUserName)\AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState\start2.bin"
+        $startMenuBinFile = GetUserDirectory -userName "$(GetUserName)" -fileName "AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState\start2.bin"
     }
 
     # Check if template bin file exists, return early if it doesn't
@@ -670,9 +727,11 @@ function ReplaceStartMenu {
         return
     }
 
+    $userName = [regex]::Match($startMenuBinFile, '(?:Users\\)([^\\]+)(?:\\AppData)').Groups[1].Value
+
     # Check if bin file exists, return early if it doesn't
     if (-not (Test-Path $startMenuBinFile)) {
-        Write-Host "Error: Unable to replace start menu for user $(GetUserName), original start2.bin file not found" -ForegroundColor Red
+        Write-Host "Error: Unable to replace start menu for user $userName, original start2.bin file not found" -ForegroundColor Red
         return
     }
 
@@ -684,7 +743,7 @@ function ReplaceStartMenu {
     # Copy template file
     Copy-Item -Path $startMenuTemplate -Destination $startMenuBinFile -Force
 
-    Write-Output "Replaced start menu for user $(GetUserName)"
+    Write-Output "Replaced start menu for user $userName"
 }
 
 
@@ -740,12 +799,15 @@ function PrintHeader {
 function PrintFromFile {
     param (
         $path,
-        $title
+        $title,
+        $printHeader = $true
     )
 
-    Clear-Host
+    if ($printHeader) {
+        Clear-Host
 
-    PrintHeader $title
+        PrintHeader $title
+    }
 
     # Get & print script menu from file
     Foreach ($line in (Get-Content -Path $path )) {   
@@ -915,9 +977,9 @@ function DisplayCustomModeOptions {
 
     Write-Output ""
 
-    if ($( Read-Host -Prompt "Disable tips, tricks, suggestions and ads in start, settings, notifications, explorer, lockscreen and edge? (y/n)" ) -eq 'y') {
+    if ($( Read-Host -Prompt "Disable tips, tricks, suggestions and ads in start, settings, notifications, explorer, lockscreen and Edge? (y/n)" ) -eq 'y') {
         AddParameter 'DisableSuggestions' 'Disable tips, tricks, suggestions and ads in start, settings, notifications and File Explorer'
-        AddParameter 'DisableEdgeAds' 'Disable ads and the MSN news feed in Microsoft Edge'
+        AddParameter 'DisableEdgeAds' 'Disable ads, suggestions and the MSN news feed in Microsoft Edge'
         AddParameter 'DisableSettings365Ads' 'Disable Microsoft 365 ads in Settings Home'
         AddParameter 'DisableLockscreenTips' 'Disable tips & tricks on the lockscreen'
     }
@@ -1008,10 +1070,10 @@ function DisplayCustomModeOptions {
     }
 
     # Only show this option for Windows 11 users running build 22000 or later, and if the machine has at least one battery
-    if (($WinVersion -ge 22000) -and $script:BatteryInstalled) {
+    if (($WinVersion -ge 22000) -and $script:ModernStandbySupported) {
         Write-Output ""
 
-        if ($( Read-Host -Prompt "Disable network connectivity during Modern Standby to reduce battery drain? (y/n)" ) -eq 'y') {
+        if ($( Read-Host -Prompt "Disable network connectivity during Modern Standby? This applies to all users (y/n)" ) -eq 'y') {
             AddParameter 'DisableModernStandbyNetworking' 'Disable network connectivity during Modern Standby'
         }
     }
@@ -1137,8 +1199,8 @@ function DisplayCustomModeOptions {
 
         Write-Output ""
 
-        if ($( Read-Host -Prompt "   Disable the widgets service and hide the icon from the taskbar? (y/n)" ) -eq 'y') {
-            AddParameter 'DisableWidgets' 'Disable the widget service & hide the widget (news and interests) icon from the taskbar'
+        if ($( Read-Host -Prompt "   Disable the widgets service to remove widgets on the taskbar & lockscreen? (y/n)" ) -eq 'y') {
+            AddParameter 'DisableWidgets' 'Disable widgets on the taskbar & lockscreen'
         }
 
         # Only show this options for Windows users running build 22621 or earlier
@@ -1297,8 +1359,8 @@ else {
 # Get current Windows build version to compare against features
 $WinVersion = Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' CurrentBuild
 
-# Check if the machine has a battery installed, this is used to determine if the DisableModernStandbyNetworking option can be used
-$script:BatteryInstalled = (Get-WmiObject -Class Win32_Battery).Count -gt 0
+# Check if the machine supports Modern Standby, this is used to determine if the DisableModernStandbyNetworking option can be used
+$script:ModernStandbySupported = CheckModernStandbySupport
 
 $script:Params = $PSBoundParameters
 $script:FirstSelection = $true
@@ -1326,15 +1388,9 @@ else {
     $ProgressPreference = 'Continue'
 }
 
-# Make sure all requirements for Sysprep are met, if Sysprep is enabled
 if ($script:Params.ContainsKey("Sysprep")) {
-    $defaultUserPath = $env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), '\Default\NTUSER.DAT'
+    $defaultUserPath = GetUserDirectory -userName "Default"
 
-    # Exit script if default user directory or NTUSER.DAT file cannot be found
-    if (-not (Test-Path "$defaultUserPath")) {
-        Write-Host "Error: Unable to start Win11Debloat in Sysprep mode, cannot find default user folder at '$defaultUserPath'" -ForegroundColor Red
-        AwaitKeyToExit
-    }
     # Exit script if run in Sysprep mode on Windows 10
     if ($WinVersion -lt 22000) {
         Write-Host "Error: Win11Debloat Sysprep mode is not supported on Windows 10" -ForegroundColor Red
@@ -1344,13 +1400,7 @@ if ($script:Params.ContainsKey("Sysprep")) {
 
 # Make sure all requirements for User mode are met, if User is specified
 if ($script:Params.ContainsKey("User")) {
-    $userPath = $env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), "\$($script:Params.Item("User"))\NTUSER.DAT"
-
-    # Exit script if user directory or NTUSER.DAT file cannot be found
-    if (-not (Test-Path "$userPath")) {
-        Write-Host "Error: Unable to run Win11Debloat for user $($script:Params.Item("User")), cannot find user data at '$userPath'" -ForegroundColor Red
-        AwaitKeyToExit
-    }
+    $userPath = GetUserDirectory -userName $script:Params.Item("User")
 }
 
 # Remove SavedSettings file if it exists and is empty
@@ -1377,8 +1427,8 @@ if ($RunAppConfigurator -or $RunAppsListGenerator) {
 }
 
 # Change script execution based on provided parameters or user input
-if ((-not $script:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunSavedSettings -or ($SPParamCount -eq $script:Params.Count)) {
-    if ($RunDefaults -or $RunWin11Defaults) {
+if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSavedSettings -or ($SPParamCount -eq $script:Params.Count)) {
+    if ($RunDefaults -or $RunDefaultsLite) {
         $Mode = '1'
     }
     elseif ($RunSavedSettings) {
@@ -1433,15 +1483,74 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunS
     switch ($Mode) {
         # Default mode, loads defaults after confirmation
         '1' { 
+            if (-not $script:Params.ContainsKey('CreateRestorePoint')) {
+                $script:Params.Add('CreateRestorePoint', $true)
+            }
+
             # Show the default settings with confirmation, unless Silent parameter was passed
             if (-not $Silent) {
-                PrintFromFile "$PSScriptRoot/Assets/Menus/DefaultSettings" "Default Mode"
+                # Show options for app removal
+                if ((-not $RunDefaults) -and (-not $RunDefaultsLite)) {
+                    PrintHeader 'Default Mode'
+                    
+                    Do {
+                        Write-Host "Options:" -ForegroundColor Yellow
+                        Write-Host " (n) Don't remove any apps" -ForegroundColor Yellow
+                        Write-Host " (1) Only remove the default selection of bloatware apps" -ForegroundColor Yellow
+                        Write-Host " (2) Manually select which apps to remove" -ForegroundColor Yellow
+                        $RemoveAppsInput = Read-Host "Do you want to remove any apps? Apps will be removed for all users (n/1/2)"
+                
+                        # Show app selection form if user entered option 3
+                        if ($RemoveAppsInput -eq '2') {
+                            $result = ShowAppSelectionForm
+                
+                            if ($result -ne [System.Windows.Forms.DialogResult]::OK) {
+                                # User cancelled or closed app selection, show error and change RemoveAppsInput so the menu will be shown again
+                                Write-Output ""
+                                Write-Host "Cancelled application selection, please try again" -ForegroundColor Red
+                
+                                $RemoveAppsInput = 'c'
+                            }
+                            
+                            Write-Output ""
+                        }
+                    }
+                    while ($RemoveAppsInput -ne 'n' -and $RemoveAppsInput -ne '0' -and $RemoveAppsInput -ne '1' -and $RemoveAppsInput -ne '2') 
+                } elseif ($RunDefaultsLite) {
+                    $RemoveAppsInput = '0'                
+                } else {
+                    $RemoveAppsInput = '1'
+                }
 
+                PrintHeader 'Default Mode'
+
+                Write-Output "Win11Debloat will make the following changes:"
+    
+                # Select correct option based on user input
+                switch ($RemoveAppsInput) {
+                    '1' {
+                        if (-not $script:Params.ContainsKey('RemoveApps')) {
+                            $script:Params.Add('RemoveApps', $true)
+                        }
+    
+                        Write-Output "- Remove the default selection of apps."
+                    }
+                    '2' {
+                        if (-not $script:Params.ContainsKey('RemoveAppsCustom')) {
+                            $script:Params.Add('RemoveAppsCustom', $true)
+                        }
+    
+                        Write-Output "- Remove your custom selection of $($script:SelectedApps.Count) apps."
+                    }
+                }
+
+                PrintFromFile "$PSScriptRoot/Assets/Menus/DefaultSettings" "Default Mode" $false
+        
                 Write-Output "Press enter to execute the script or press CTRL+C to quit..."
                 Read-Host | Out-Null
             }
 
-            $DefaultParameterNames = 'CreateRestorePoint','RemoveApps','DisableTelemetry','DisableBing','DisableLockscreenTips','DisableSuggestions','DisableEdgeAds','ShowKnownFileExt','DisableWidgets','HideChat','DisableCopilot','DisableFastStartup'
+            $DefaultParameterNames = 'DisableTelemetry','DisableBing','DisableLockscreenTips','DisableSuggestions','DisableEdgeAds','ShowKnownFileExt','DisableWidgets','HideChat','DisableFastStartup','DisableCopilot'
 
             PrintHeader 'Default Mode'
 
@@ -1457,10 +1566,16 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunWin11Defaults -or $RunS
                 $script:Params.Add('Hide3dObjects', $Hide3dObjects)
             }
 
-            # Only add this option for Windows 11 users (build 22000+), if it doesn't already exist
-            if (($WinVersion -ge 22000) -and $script:BatteryInstalled -and (-not $script:Params.ContainsKey('DisableModernStandbyNetworking'))) {
-                $script:Params.Add('DisableModernStandbyNetworking', $true)
-            }
+            # Only add these options for Windows 11 users (build 22000+), if it doesn't already exist
+            if ($WinVersion -ge 22000) {
+                if (-not $script:Params.ContainsKey('DisableRecall')) {
+                    $script:Params.Add('DisableRecall', $true)
+                }
+
+                if ($script:ModernStandbySupported -and (-not $script:Params.ContainsKey('DisableModernStandbyNetworking'))) {
+                    $script:Params.Add('DisableModernStandbyNetworking', $true)
+                }
+            } 
         }
 
         # Custom mode, show & add options based on user input
@@ -1622,7 +1737,7 @@ switch ($script:Params.Keys) {
         continue
     }
     'DisableEdgeAds' {
-        RegImport "> Disabling ads and the MSN news feed in Microsoft Edge..." "Disable_Edge_Ads_And_Suggestions.reg"
+        RegImport "> Disabling ads, suggestions and the MSN news feed in Microsoft Edge..." "Disable_Edge_Ads_And_Suggestions.reg"
         continue
     }
     {$_ -in "DisableLockscrTips", "DisableLockscreenTips"} {
@@ -1758,7 +1873,7 @@ switch ($script:Params.Keys) {
         continue
     }
     {$_ -in "HideWidgets", "DisableWidgets"} {
-        RegImport "> Disabling the widget service and hiding the widget icon from the taskbar..." "Disable_Widgets_Taskbar.reg"
+        RegImport "> Disabling widgets on the taskbar & lockscreen..." "Disable_Widgets_Service.reg"
 
         # Also remove the app package for Widgets
         $appsList = 'Microsoft.StartExperiencesApp'

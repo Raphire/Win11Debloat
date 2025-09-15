@@ -37,6 +37,7 @@ param (
     [switch]$DisableTransparency,
     [switch]$DisableAnimations,
     [switch]$TaskbarAlignLeft,
+    [switch]$CombineTaskbarAlways, [switch]$CombineTaskbarWhenFull, [switch]$CombineTaskbarNever,
     [switch]$HideSearchTb, [switch]$ShowSearchIconTb, [switch]$ShowSearchLabelTb, [switch]$ShowSearchBoxTb,
     [switch]$HideTaskview,
     [switch]$DisableStartRecommended,
@@ -1161,6 +1162,31 @@ function DisplayCustomModeOptions {
                 AddParameter 'TaskbarAlignLeft' 'Align taskbar icons to the left'
             }
 
+            # Show options for combine icon on taskbar, only continue on valid input
+            Do {
+                Write-Output ""
+                Write-Host "   Options:" -ForegroundColor Yellow
+                Write-Host "    (n) No change" -ForegroundColor Yellow
+                Write-Host "    (1) Always" -ForegroundColor Yellow
+                Write-Host "    (2) When Taskbar is full" -ForegroundColor Yellow
+                Write-Host "    (3) Never" -ForegroundColor Yellow
+                $TbCombineTaskbar = Read-Host "   Combine Taskbar buttons and hide labels? (n/1/2/3)" 
+            }
+            while ($TbCombineTaskbar -ne 'n' -and $TbCombineTaskbar -ne '0' -and $TbCombineTaskbar -ne '1' -and $TbCombineTaskbar -ne '2' -and $TbCombineTaskbar -ne '3') 
+
+            # Select correct taskbar goup option based on user input
+            switch ($TbCombineTaskbar) {
+                '1' {
+                    AddParameter 'CombineTaskbarAlways' 'Always combine Taskbar'
+                }
+                '2' {
+                    AddParameter 'CombineTaskbarWhenFull' 'Combine Taskbar and labels when Taskbar is full'
+                }
+                '3' {
+                    AddParameter 'CombineTaskbarNever' 'Never combine Taskbar and labels'
+                }
+            }
+
             # Show options for search icon on taskbar, only continue on valid input
             Do {
                 Write-Output ""
@@ -1850,6 +1876,18 @@ switch ($script:Params.Keys) {
     }
     'TaskbarAlignLeft' {
         RegImport "> Aligning taskbar buttons to the left..." "Align_Taskbar_Left.reg"
+        continue
+    }
+    'CombineTaskbarAlways' {
+        RegImport "> Hiding the search icon from the taskbar..." "Combine_Taskbar_Never.reg"
+        continue
+    }
+    'CombineTaskbarWhenFull' {
+        RegImport "> Hiding the search icon from the taskbar..." "Combine_Taskbar_When_Full.reg"
+        continue
+    }
+    'CombineTaskbarNever' {
+        RegImport "> Hiding the search icon from the taskbar..." "Combine_Taskbar_Never.reg"
         continue
     }
     'HideSearchTb' {

@@ -357,4 +357,6 @@ These apps will not be removed by Win11Debloat unless explicitly selected by the
 
 ## License
 
-Win11Debloat is licensed under the MIT license. See the LICENSE file for more information.
+Win11Debloat is licensed under the MIT license.  
+See the [LICENSE](LICENSE.txt) file for more information.
+

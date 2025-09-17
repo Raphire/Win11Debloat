@@ -1,0 +1,7 @@
+Windows Registry Editor Version 5.00
+
+[hkey_users\default\Software\Policies\Microsoft\Windows\WindowsAI]
+"DisableClickToDo"=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsAI]
+"DisableClickToDo"=dword:00000001

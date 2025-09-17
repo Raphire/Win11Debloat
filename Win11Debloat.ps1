@@ -43,6 +43,7 @@ param (
     [switch]$DisableStartPhoneLink,
     [switch]$DisableCopilot,
     [switch]$DisableRecall,
+    [switch]$DisableClickToDo,
     [switch]$DisablePaintAI,
     [switch]$DisableNotepadAI,
     [switch]$DisableEdgeAI,
@@ -998,8 +999,8 @@ function DisplayCustomModeOptions {
         Do {
             Write-Host "Options:" -ForegroundColor Yellow
             Write-Host " (n) Don't disable any AI features" -ForegroundColor Yellow
-            Write-Host " (1) Disable Microsoft Copilot and Windows Recall snapshots" -ForegroundColor Yellow
-            Write-Host " (2) Disable Microsoft Copilot, Windows Recall snapshots and AI features in Microsoft Edge, Paint and Notepad"  -ForegroundColor Yellow
+            Write-Host " (1) Disable Microsoft Copilot, Windows Recall and Click to Do" -ForegroundColor Yellow
+            Write-Host " (2) Disable Microsoft Copilot, Windows Recall, Click to Do and AI features in Microsoft Edge, Paint and Notepad"  -ForegroundColor Yellow
             $DisableAIInput = Read-Host "Do you want to disable any AI features? This applies to all users (n/1/2)"
         }
         while ($DisableAIInput -ne 'n' -and $DisableAIInput -ne '0' -and $DisableAIInput -ne '1' -and $DisableAIInput -ne '2') 
@@ -1009,10 +1010,12 @@ function DisplayCustomModeOptions {
             '1' {
                 AddParameter 'DisableCopilot' 'Disable & remove Microsoft Copilot'
                 AddParameter 'DisableRecall' 'Disable Windows Recall snapshots'
+                AddParameter 'DisableClickToDo' 'Disable Click to Do (AI text & image analysis)'
             }
             '2' {
                 AddParameter 'DisableCopilot' 'Disable & remove Microsoft Copilot'
                 AddParameter 'DisableRecall' 'Disable Windows Recall snapshots'
+                AddParameter 'DisableClickToDo' 'Disable Click to Do (AI text & image analysis)'
                 AddParameter 'DisableEdgeAI' 'Disable AI features in Edge'
                 AddParameter 'DisablePaintAI' 'Disable AI features in Paint'
                 AddParameter 'DisableNotepadAI' 'Disable AI features in Notepad'
@@ -1774,6 +1777,10 @@ switch ($script:Params.Keys) {
     }
     'DisableRecall' {
         RegImport "> Disabling Windows Recall snapshots..." "Disable_AI_Recall.reg"
+        continue
+    }
+    'DisableClickToDo' {
+        RegImport "> Disabling Click to Do (AI text & image analysis)..." "Disable_Click_to_Do.reg"
         continue
     }
     'DisableEdgeAI' {

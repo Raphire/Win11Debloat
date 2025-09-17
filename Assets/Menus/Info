@@ -19,8 +19,10 @@ Bing Web Search, Copilot & AI Features
 - Disable & remove Bing web search, Bing AI and Cortana from Windows search.
 - Disable & remove Microsoft Copilot.
 - Disable Windows Recall snapshots. (W11 only)
-- Disable AI Features in Paint (W11 only)
-- Disable AI Features in Notepad (W11 only)
+- Disable Click to Do AI text & image analysis. (W11 only)
+- Disable AI Features in Edge. (W11 only)
+- Disable AI Features in Paint. (W11 only)
+- Disable AI Features in Notepad. (W11 only)
 
 Personalisation
 - Enable dark mode for system and apps.

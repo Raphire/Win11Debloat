@@ -110,9 +110,10 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 - Disable & remove Bing web search, Bing AI and Cortana from Windows search.
 - Disable & remove Microsoft Copilot.
 - Disable Windows Recall snapshots. (W11 only)
-- Disable AI Features in Edge (W11 only)
-- Disable AI Features in Paint (W11 only)
-- Disable AI Features in Notepad (W11 only)
+- Disable Click to Do AI text & image analysis. (W11 only)
+- Disable AI Features in Edge. (W11 only)
+- Disable AI Features in Paint. (W11 only)
+- Disable AI Features in Notepad. (W11 only)
 
 #### Personalisation
 
@@ -159,9 +160,7 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 
 Win11Debloat's default mode allows you to quickly and easily apply the changes that are recommended for most people. This includes removing many annoying distractions, disabling telemetry and tracking and optionally uninstalling the default or your custom selection of apps. To apply the default settings, launch the script as you normally would and select option `1` in the script menu.
 
-Alternatively, you can launch the script with the `-RunDefaults` or `-RunDefaultsLite` parameters to immediately run the defaults without going through the menu or the app removal options. Using the `-RunDefaults` parameter will run the script in default mode and remove the default selection of apps. While using the `-RunDefaultsLite` parameter will run the script in default mode without removing any apps.
-
-Example:
+Alternatively, you can launch the script with the `-RunDefaults` or `-RunDefaultsLite` parameters to immediately run the defaults without going through the menu or the app removal options. Using the `-RunDefaults` parameter will run the script in default mode and remove the default selection of apps. While using the `-RunDefaultsLite` parameter will run the script in default mode without removing any apps. Example:
 ```Powershell
 & ([scriptblock]::Create((irm "https://debloat.raphi.re/"))) -RunDefaults
 ```

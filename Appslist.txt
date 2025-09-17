@@ -21,7 +21,7 @@ Microsoft.MicrosoftJournal                     # Digital note-taking app optimiz
 Microsoft.MicrosoftOfficeHub                   # Hub to access Microsoft Office apps and documents (Precursor to Microsoft 365 app)
 Microsoft.MicrosoftPowerBIForWindows           # Business analytics service client
 Microsoft.MicrosoftSolitaireCollection         # Collection of solitaire card games
-Microsoft.MicrosoftStickyNotes                 # Digital sticky notes app
+Microsoft.MicrosoftStickyNotes                 # Digital sticky notes app (Deprecated & replaced by OneNote)
 Microsoft.MixedReality.Portal                  # Portal for Windows Mixed Reality headsets
 Microsoft.NetworkSpeedTest                     # Internet connection speed test utility
 Microsoft.News                                 # News aggregator (Replaced Bing News, now part of Microsoft Start)

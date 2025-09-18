@@ -1,15 +1,16 @@
-param (
+﻿param (
     [switch]$Silent,
     [switch]$Verbose,
     [switch]$Sysprep,
     [string]$LogPath,
     [string]$User,
     [switch]$CreateRestorePoint,
-    [switch]$RunAppsListGenerator, [switch]$RunAppConfigurator,
+    [switch]$RunAppsListGenerator,
+    [switch]$RunAppConfigurator,
     [switch]$RunDefaults,
     [switch]$RunDefaultsLite,
     [switch]$RunSavedSettings,
-    [switch]$RemoveApps, 
+    [switch]$RemoveApps,
     [switch]$RemoveAppsCustom,
     [switch]$RemoveGamingApps,
     [switch]$RemoveCommApps,
@@ -73,10 +74,10 @@ param (
 # Show error if current powershell environment does not have LanguageMode set to FullLanguage 
 if ($ExecutionContext.SessionState.LanguageMode -ne "FullLanguage") {
    Write-Host "Error: Win11Debloat is unable to run on your system. PowerShell execution is restricted by security policies" -ForegroundColor Red
-   Write-Output ""
-   Write-Output "Press enter to exit..."
-   Read-Host | Out-Null
-   Exit
+    Write-Output ""
+    Write-Output "Press enter to exit..."
+    Read-Host | Out-Null
+    Exit
 }
 
 Clear-Host
@@ -112,7 +113,7 @@ Get-ChildItem -Path "$env:TEMP/Win11Debloat/Raphire-Win11Debloat-*" -Recurse | M
 $arguments = $($PSBoundParameters.GetEnumerator() | ForEach-Object {
     if ($_.Value -eq $true) {
         "-$($_.Key)"
-    } 
+    }
     else {
          "-$($_.Key) ""$($_.Value)"""
     }

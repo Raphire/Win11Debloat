@@ -851,7 +851,6 @@ function CreateSystemRestorePoint {
                     Enable-ComputerRestore -Drive "$env:SystemDrive"
                 } catch {
                     Write-Host "Error: Failed to enable System Restore: $_" -ForegroundColor Red
-                    Write-Output ""
                     return
                 }
             }
@@ -860,9 +859,6 @@ function CreateSystemRestorePoint {
 
             if (-not $enableSystemRestoreJobDone) {
                 Write-Host "Error: Failed to enable system restore and create restore point, operation timed out" -ForegroundColor Red
-                Write-Output ""
-                Write-Output "Press any key to continue anyway..."
-                $null = [System.Console]::ReadKey()
                 return
             } else {
                 Receive-Job $enableSystemRestoreJob
@@ -879,7 +875,6 @@ function CreateSystemRestorePoint {
             $recentRestorePoints = Get-ComputerRestorePoint | Where-Object { (Get-Date) - [System.Management.ManagementDateTimeConverter]::ToDateTime($_.CreationTime) -le (New-TimeSpan -Hours 24) }
         } catch {
             Write-Host "Error: Unable to retrieve existing restore points: $_" -ForegroundColor Red
-            Write-Output ""
             return
         }
     
@@ -899,9 +894,6 @@ function CreateSystemRestorePoint {
 
     if (-not $createRestorePointJobDone) {
         Write-Host "Error: Failed to create system restore point, operation timed out" -ForegroundColor Red
-        Write-Output ""
-        Write-Output "Press any key to continue anyway..."
-        $null = [System.Console]::ReadKey()
     } else {
         Receive-Job $createRestorePointJob
     }

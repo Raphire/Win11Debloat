@@ -35,6 +35,7 @@ param (
     [switch]$DisableTransparency,
     [switch]$DisableAnimations,
     [switch]$TaskbarAlignLeft,
+    [switch]$CombineTaskbarAlways, [switch]$CombineTaskbarWhenFull, [switch]$CombineTaskbarNever,
     [switch]$HideSearchTb, [switch]$ShowSearchIconTb, [switch]$ShowSearchLabelTb, [switch]$ShowSearchBoxTb,
     [switch]$HideTaskview,
     [switch]$DisableStartRecommended,

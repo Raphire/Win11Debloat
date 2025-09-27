@@ -752,12 +752,18 @@ function ReplaceStartMenu {
 function AddParameter {
     param (
         $parameterName,
-        $message
+        $message,
+        $addToFile = $true
     )
 
     # Add key if it doesn't already exist
     if (-not $script:Params.ContainsKey($parameterName)) {
         $script:Params.Add($parameterName, $true)
+    }
+
+    if (-not $addToFile) {
+        Write-Output "- $message"
+        return
     }
 
     # Create or clear file that stores last used settings
@@ -814,6 +820,20 @@ function PrintFromFile {
     Foreach ($line in (Get-Content -Path $path )) {   
         Write-Output $line
     }
+}
+
+
+function PrintAppsList {
+    param (
+        $path
+    )
+
+    if (-not (Test-Path $path)) {
+        return
+    }
+    
+    $appsList = ReadAppslistFromFile $path
+    Write-Host $appsList -ForegroundColor DarkGray
 }
 
 
@@ -914,8 +934,8 @@ function DisplayCustomModeOptions {
     Do {
         Write-Host "Options:" -ForegroundColor Yellow
         Write-Host " (n) Don't remove any apps" -ForegroundColor Yellow
-        Write-Host " (1) Only remove the default selection of bloatware apps from 'Appslist.txt'" -ForegroundColor Yellow
-        Write-Host " (2) Remove default selection of bloatware apps, as well as mail & calendar apps, developer apps and gaming apps"  -ForegroundColor Yellow
+        Write-Host " (1) Only remove the default selection of apps" -ForegroundColor Yellow
+        Write-Host " (2) Remove the default selection of apps, as well as mail & calendar apps, developer apps and gaming apps"  -ForegroundColor Yellow
         Write-Host " (3) Manually select which apps to remove" -ForegroundColor Yellow
         $RemoveAppsInput = Read-Host "Do you want to remove any apps? Apps will be removed for all users (n/1/2/3)"
 
@@ -939,10 +959,10 @@ function DisplayCustomModeOptions {
     # Select correct option based on user input
     switch ($RemoveAppsInput) {
         '1' {
-            AddParameter 'RemoveApps' 'Remove default selection of bloatware apps'
+            AddParameter 'RemoveApps' 'Remove the default selection of apps'
         }
         '2' {
-            AddParameter 'RemoveApps' 'Remove default selection of bloatware apps'
+            AddParameter 'RemoveApps' 'Remove the default selection of apps'
             AddParameter 'RemoveCommApps' 'Remove the Mail, Calendar, and People apps'
             AddParameter 'RemoveW11Outlook' 'Remove the new Outlook for Windows app'
             AddParameter 'RemoveDevApps' 'Remove developer-related apps'
@@ -1001,12 +1021,12 @@ function DisplayCustomModeOptions {
         switch ($DisableAIInput) {
             '1' {
                 AddParameter 'DisableCopilot' 'Disable & remove Microsoft Copilot'
-                AddParameter 'DisableRecall' 'Disable Windows Recall snapshots'
+                AddParameter 'DisableRecall' 'Disable Windows Recall'
                 AddParameter 'DisableClickToDo' 'Disable Click to Do (AI text & image analysis)'
             }
             '2' {
                 AddParameter 'DisableCopilot' 'Disable & remove Microsoft Copilot'
-                AddParameter 'DisableRecall' 'Disable Windows Recall snapshots'
+                AddParameter 'DisableRecall' 'Disable Windows Recall'
                 AddParameter 'DisableClickToDo' 'Disable Click to Do (AI text & image analysis)'
                 AddParameter 'DisableEdgeAI' 'Disable AI features in Edge'
                 AddParameter 'DisablePaintAI' 'Disable AI features in Paint'
@@ -1478,9 +1498,7 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
     switch ($Mode) {
         # Default mode, loads defaults after confirmation
         '1' { 
-            if (-not $script:Params.ContainsKey('CreateRestorePoint')) {
-                $script:Params.Add('CreateRestorePoint', $true)
-            }
+            AddParameter 'CreateRestorePoint' 'Create a system restore point' $false
 
             # Show the default settings with confirmation, unless Silent parameter was passed
             if (-not $Silent) {
@@ -1491,7 +1509,7 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
                     Do {
                         Write-Host "Options:" -ForegroundColor Yellow
                         Write-Host " (n) Don't remove any apps" -ForegroundColor Yellow
-                        Write-Host " (1) Only remove the default selection of bloatware apps" -ForegroundColor Yellow
+                        Write-Host " (1) Only remove the default selection of apps" -ForegroundColor Yellow
                         Write-Host " (2) Manually select which apps to remove" -ForegroundColor Yellow
                         $RemoveAppsInput = Read-Host "Do you want to remove any apps? Apps will be removed for all users (n/1/2)"
                 
@@ -1524,20 +1542,30 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
                 # Select correct option based on user input
                 switch ($RemoveAppsInput) {
                     '1' {
-                        if (-not $script:Params.ContainsKey('RemoveApps')) {
-                            $script:Params.Add('RemoveApps', $true)
-                        }
-    
-                        Write-Output "- Remove the default selection of apps."
+                        AddParameter 'RemoveApps' 'Remove the default selection of apps:' $false
+                        PrintAppsList "$PSScriptRoot/Appslist.txt"
                     }
                     '2' {
-                        if (-not $script:Params.ContainsKey('RemoveAppsCustom')) {
-                            $script:Params.Add('RemoveAppsCustom', $true)
-                        }
-    
-                        Write-Output "- Remove your custom selection of $($script:SelectedApps.Count) apps."
+                        AddParameter 'RemoveAppsCustom' 'Remove $($script:SelectedApps.Count) apps:' $false
+                        PrintAppsList "$PSScriptRoot/CustomAppsList"
                     }
                 }
+
+                 # Only add this option for Windows 10 users
+                if (get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'") {
+                    AddParameter 'Hide3dObjects' "Hide the 3D objects folder under 'This pc' in File Explorer" $false
+                    AddParameter 'HideChat' 'Hide the chat (meet now) icon from the taskbar' $false
+                }
+
+                # Only add these options for Windows 11 users (build 22000+)
+                if ($WinVersion -ge 22000) {
+                    AddParameter 'DisableRecall' 'Disable Windows Recall' $false
+                    AddParameter 'DisableClickToDo' 'Disable Click to Do (AI text & image analysis)' $false
+
+                    if ($script:ModernStandbySupported) {
+                        AddParameter 'DisableModernStandbyNetworking' 'Disable network connectivity during Modern Standby' $false
+                    }
+                } 
 
                 PrintFromFile "$PSScriptRoot/Assets/Menus/DefaultSettings" "Default Mode" $false
         
@@ -1545,7 +1573,7 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
                 Read-Host | Out-Null
             }
 
-            $DefaultParameterNames = 'DisableTelemetry','DisableBing','DisableLockscreenTips','DisableSuggestions','DisableEdgeAds','ShowKnownFileExt','DisableWidgets','HideChat','DisableFastStartup','DisableCopilot'
+            $DefaultParameterNames = 'DisableCopilot','DisableTelemetry','DisableSuggestions','DisableEdgeAds','DisableLockscreenTips','DisableBing','ShowKnownFileExt','DisableWidgets','DisableFastStartup'
 
             PrintHeader 'Default Mode'
 
@@ -1555,22 +1583,6 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
                     $script:Params.Add($ParameterName, $true)
                 }
             }
-
-            # Only add this option for Windows 10 users, if it doesn't already exist
-            if ((get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'") -and (-not $script:Params.ContainsKey('Hide3dObjects'))) {
-                $script:Params.Add('Hide3dObjects', $Hide3dObjects)
-            }
-
-            # Only add these options for Windows 11 users (build 22000+), if it doesn't already exist
-            if ($WinVersion -ge 22000) {
-                if (-not $script:Params.ContainsKey('DisableRecall')) {
-                    $script:Params.Add('DisableRecall', $true)
-                }
-
-                if ($script:ModernStandbySupported -and (-not $script:Params.ContainsKey('DisableModernStandbyNetworking'))) {
-                    $script:Params.Add('DisableModernStandbyNetworking', $true)
-                }
-            } 
         }
 
         # Custom mode, show & add options based on user input
@@ -1619,14 +1631,7 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
 
                     # Print parameter description and add parameter to Params list
                     if ($parameterName -eq "RemoveAppsCustom") {
-                        if (-not (Test-Path "$PSScriptRoot/CustomAppsList")) {
-                            # Apps file does not exist, skip
-                            continue
-                        }
-                        
-                        $appsList = ReadAppslistFromFile "$PSScriptRoot/CustomAppsList"
-                        Write-Output "- Remove $($appsList.Count) apps:"
-                        Write-Host $appsList -ForegroundColor DarkGray
+                        PrintAppsList "$PSScriptRoot/CustomAppsList"
                     }
                     else {
                         Write-Output $line.Substring(($line.IndexOf('#') + 1), ($line.Length - $line.IndexOf('#') - 1))
@@ -1768,11 +1773,11 @@ switch ($script:Params.Keys) {
         continue
     }
     'DisableRecall' {
-        RegImport "> Disabling Windows Recall snapshots..." "Disable_AI_Recall.reg"
+        RegImport "> Disabling Windows Recall..." "Disable_AI_Recall.reg"
         continue
     }
     'DisableClickToDo' {
-        RegImport "> Disabling Click to Do (AI text & image analysis)..." "Disable_Click_to_Do.reg"
+        RegImport "> Disabling Click to Do..." "Disable_Click_to_Do.reg"
         continue
     }
     'DisableEdgeAI' {

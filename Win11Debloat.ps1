@@ -1168,22 +1168,22 @@ function DisplayCustomModeOptions {
                 Write-Host "   Options:" -ForegroundColor Yellow
                 Write-Host "    (n) No change" -ForegroundColor Yellow
                 Write-Host "    (1) Always" -ForegroundColor Yellow
-                Write-Host "    (2) When Taskbar is full" -ForegroundColor Yellow
+                Write-Host "    (2) When taskbar is full" -ForegroundColor Yellow
                 Write-Host "    (3) Never" -ForegroundColor Yellow
-                $TbCombineTaskbar = Read-Host "   Combine Taskbar buttons and hide labels? (n/1/2/3)" 
+                $TbCombineTaskbar = Read-Host "   Combine taskbar buttons and hide labels? (n/1/2/3)" 
             }
             while ($TbCombineTaskbar -ne 'n' -and $TbCombineTaskbar -ne '0' -and $TbCombineTaskbar -ne '1' -and $TbCombineTaskbar -ne '2' -and $TbCombineTaskbar -ne '3') 
 
             # Select correct taskbar goup option based on user input
             switch ($TbCombineTaskbar) {
                 '1' {
-                    AddParameter 'CombineTaskbarAlways' 'Always combine Taskbar'
+                    AddParameter 'CombineTaskbarAlways' 'Always combine taskbar buttons and hide labels'
                 }
                 '2' {
-                    AddParameter 'CombineTaskbarWhenFull' 'Combine Taskbar and labels when Taskbar is full'
+                    AddParameter 'CombineTaskbarWhenFull' 'Combine taskbar buttons and hide labels when taskbar is full'
                 }
                 '3' {
-                    AddParameter 'CombineTaskbarNever' 'Never combine Taskbar and labels'
+                    AddParameter 'CombineTaskbarNever' 'Never combine taskbar buttons and show labels'
                 }
             }
 
@@ -1879,15 +1879,15 @@ switch ($script:Params.Keys) {
         continue
     }
     'CombineTaskbarAlways' {
-        RegImport "> Hiding the search icon from the taskbar..." "Combine_Taskbar_Never.reg"
+        RegImport "> Setting the taskbar to always combine buttons and hide labels..." "Combine_Taskbar_Never.reg"
         continue
     }
     'CombineTaskbarWhenFull' {
-        RegImport "> Hiding the search icon from the taskbar..." "Combine_Taskbar_When_Full.reg"
+        RegImport "> Setting the taskbar to only combine buttons and hide labels when the taskbar is full..." "Combine_Taskbar_When_Full.reg"
         continue
     }
     'CombineTaskbarNever' {
-        RegImport "> Hiding the search icon from the taskbar..." "Combine_Taskbar_Never.reg"
+        RegImport "> Setting the taskbar to never combine buttons or hide labels..." "Combine_Taskbar_Never.reg"
         continue
     }
     'HideSearchTb' {

@@ -1559,12 +1559,12 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
 
                 # Only add these options for Windows 11 users (build 22000+)
                 if ($WinVersion -ge 22000) {
-                    AddParameter 'DisableRecall' 'Disable Windows Recall' $false
-                    AddParameter 'DisableClickToDo' 'Disable Click to Do (AI text & image analysis)' $false
-
                     if ($script:ModernStandbySupported) {
                         AddParameter 'DisableModernStandbyNetworking' 'Disable network connectivity during Modern Standby' $false
                     }
+
+                    AddParameter 'DisableRecall' 'Disable Windows Recall' $false
+                    AddParameter 'DisableClickToDo' 'Disable Click to Do (AI text & image analysis)' $false
                 } 
 
                 PrintFromFile "$PSScriptRoot/Assets/Menus/DefaultSettings" "Default Mode" $false

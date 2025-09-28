@@ -101,8 +101,8 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 #### Telemetry, Tracking & Suggested Content
 
 - Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads.
-- Disable tips, tricks, suggestions and ads in start, settings, notifications, File Explorer, and on the lockscreen.
-- Disable ads and the MSN news feed in Microsoft Edge.
+- Disable tips, tricks, suggestions & ads across Windows.
+- Disable ads, suggestions and the MSN news feed in Microsoft Edge.
 - Disable the 'Windows Spotlight' desktop background option.
 
 #### Bing Web Search, Copilot & AI Features
@@ -169,8 +169,9 @@ Alternatively, you can launch the script with the `-RunDefaults` or `-RunDefault
 #### Changes included in the default mode
 - Remove the default or your custom selection of apps. (See below for the default selection of apps)
 - Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads.
-- Disable tips, tricks, suggestions and ads in start, settings, notifications, File Explorer, and on the lockscreen.
+- Disable tips, tricks, suggestions and ads in start, settings, notifications and File Explorer.
 - Disable ads, suggestions and the MSN news feed in Microsoft Edge.
+- Disable tips & tricks on the lockscreen. (This may change your lockscreen wallpaper)
 - Disable & remove Bing web search, Bing AI and Cortana from Windows search.
 - Disable & remove Microsoft Copilot.
 - Disable Windows Recall. (W11 only)

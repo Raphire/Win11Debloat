@@ -6,7 +6,7 @@ disable telemetry, remove intrusive interface elements and much more.
  All Features
 -------------------------------------------------------------------------------------------
 App Removal
-- Remove a wide variety of bloatware apps.
+- Remove a wide variety of preinstalled apps.
 - Remove or replace all pinned apps from start for the current user, or for all existing & new users. (W11 only)
 
 Telemetry, Tracking & Suggested Content
@@ -34,11 +34,11 @@ Personalisation
 
 File Explorer
 - Change the default location that File Explorer opens to.
-- Show hidden files, folders & drives.
+- Show hidden files, folders and drives.
 - Show file extensions for known file types.
 - Hide the Home or Gallery section from the File Explorer navigation pane. (W11 only)
-- Hide the 3D objects, music or OneDrive folder from the File Explorer sidepanel. (W10 only)
-- Hide duplicate removable drive entries from the File Explorer sidepanel.
+- Hide the 3D objects, music or OneDrive folder from the File Explorer navigation pane. (W10 only)
+- Hide duplicate removable drive entries from the File Explorer navigation pane.
 
 Taskbar
 - Align taskbar icons to the left. (W11 only)
@@ -59,7 +59,7 @@ Other
 - Disable Fast Start-up to ensure a full shutdown.
 - Disable network connectivity during Modern Standby to reduce battery drain. (W11 only)
 - Option to apply changes to a different user, instead of the currently logged in user.
-- Sysprep mode to apply changes to the Windows Default user profile. 
+- Sysprep mode to apply changes to the Windows Default user profile.
 
 -------------------------------------------------------------------------------------------
  Default mode
@@ -67,7 +67,7 @@ Other
 The default mode applies the changes that are recommended for most users. This includes:
 - Remove the default selection or your custom selection of apps.
 - Disable telemetry, diagnostic data, app-launch tracking & targeted ads.
-- Disable tips, tricks, suggestions and ads in start, settings, notifications and more.
+- Disable tips, tricks, suggestions and ads in start, settings, notifications and File Explorer.
 - Disable ads, suggestions and the MSN news feed in Microsoft Edge.
 - Disable tips & tricks on the lockscreen. (This may change your lockscreen wallpaper)
 - Disable & remove Bing web search, Bing AI and Cortana from Windows search.

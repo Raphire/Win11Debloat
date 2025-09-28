@@ -715,7 +715,7 @@ function ReplaceStartMenu {
 
     # Change path to correct user if a user was specified
     if ($script:Params.ContainsKey("User")) {
-        $startMenuBinFile = GetUserDirectory -userName "$(GetUserName)" -fileName "AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState\start2.bin"
+        $startMenuBinFile = GetUserDirectory -userName "$(GetUserName)" -fileName "AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState\start2.bin" -exitIfPathNotFound $false
     }
 
     # Check if template bin file exists, return early if it doesn't
@@ -731,16 +731,14 @@ function ReplaceStartMenu {
 
     $userName = [regex]::Match($startMenuBinFile, '(?:Users\\)([^\\]+)(?:\\AppData)').Groups[1].Value
 
-    # Check if bin file exists, return early if it doesn't
-    if (-not (Test-Path $startMenuBinFile)) {
-        Write-Host "Error: Unable to replace start menu for user $userName, original start2.bin file not found" -ForegroundColor Red
-        return
-    }
-
     $backupBinFile = $startMenuBinFile + ".bak"
 
-    # Backup current start menu file
-    Move-Item -Path $startMenuBinFile -Destination $backupBinFile -Force
+    if (Test-Path $startMenuBinFile) {
+        # Backup current start menu file
+        Move-Item -Path $startMenuBinFile -Destination $backupBinFile -Force
+    } else {
+        Write-Host "Warning: Unable to find original start2.bin file for user $userName. No backup was created for this user!" -ForegroundColor Yellow
+    }
 
     # Copy template file
     Copy-Item -Path $startMenuTemplate -Destination $startMenuBinFile -Force

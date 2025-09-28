@@ -190,50 +190,48 @@ These apps are uninstalled when you opt to remove the default selection of apps.
   <summary>Click to expand</summary>
   <blockquote>
     
-    Microsoft bloat:
-    - Clipchamp.Clipchamp  
-    - Microsoft.3DBuilder  
-    - Microsoft.549981C3F5F10 (Cortana app)
-    - Microsoft.BingFinance  
-    - Microsoft.BingFoodAndDrink 
-    - Microsoft.BingHealthAndFitness
-    - Microsoft.BingNews  
-    - Microsoft.BingSearch* (Bing web search in Windows)
-    - Microsoft.BingSports  
-    - Microsoft.BingTranslator  
-    - Microsoft.BingTravel   
-    - Microsoft.BingWeather  
-    - Microsoft.Copilot
-    - Microsoft.Getstarted (Cannot be uninstalled in Windows 11)
-    - Microsoft.Messaging  
-    - Microsoft.Microsoft3DViewer  
-    - Microsoft.MicrosoftJournal
-    - Microsoft.MicrosoftOfficeHub  
-    - Microsoft.MicrosoftPowerBIForWindows  
-    - Microsoft.MicrosoftSolitaireCollection  
-    - Microsoft.MicrosoftStickyNotes  
-    - Microsoft.MixedReality.Portal  
-    - Microsoft.NetworkSpeedTest  
-    - Microsoft.News  
-    - Microsoft.Office.OneNote (Discontinued UWP version only, does not remove new MS365 versions)
-    - Microsoft.Office.Sway  
-    - Microsoft.OneConnect  
-    - Microsoft.Print3D  
-    - Microsoft.StartExperiencesApp** (Widgets app)
-    - Microsoft.SkypeApp  
-    - Microsoft.Todos  
-    - Microsoft.WindowsAlarms  
-    - Microsoft.WindowsFeedbackHub  
-    - Microsoft.WindowsMaps  
-    - Microsoft.WindowsSoundRecorder  
+    Microsoft apps:
+    - Clipchamp.Clipchamp (Video editor from Microsoft)
+    - Microsoft.3DBuilder (Basic 3D modeling software)
+    - Microsoft.549981C3F5F10 (Cortana app, discontinued)
+    - Microsoft.BingFinance (Finance news and tracking via Bing, discontinued)
+    - Microsoft.BingFoodAndDrink (Recipes and food news via Bing, discontinued)
+    - Microsoft.BingHealthAndFitness (Health and fitness tracking/news via Bing, discontinued)
+    - Microsoft.BingNews (News aggregator via Bing, replaced by Microsoft News/Start)
+    - Microsoft.BingSports (Sports news and scores via Bing, discontinued)
+    - Microsoft.BingTranslator (Translation service via Bing)
+    - Microsoft.BingTravel (Travel planning and news via Bing, discontinued)
+    - Microsoft.BingWeather (Weather forecast via Bing)
+    - Microsoft.Copilot (AI assistant integrated into Windows)
+    - Microsoft.Getstarted (Tips and introductory guide for Windows, cannot be uninstalled in Windows 11)
+    - Microsoft.Messaging (Messaging app, often integrates with Skype, largely deprecated) 
+    - Microsoft.Microsoft3DViewer (Viewer for 3D models)
+    - Microsoft.MicrosoftJournal (Digital note-taking app optimized for pen input)
+    - Microsoft.MicrosoftOfficeHub (Hub to access Microsoft Office apps and documents, precursor to Microsoft 365 app)
+    - Microsoft.MicrosoftPowerBIForWindows (Business analytics service client)
+    - Microsoft.MicrosoftSolitaireCollection (Collection of solitaire card games)
+    - Microsoft.MicrosoftStickyNotes (Digital sticky notes app, deprecated & replaced by OneNote)
+    - Microsoft.MixedReality.Portal (Portal for Windows Mixed Reality headsets)
+    - Microsoft.NetworkSpeedTest (Internet connection speed test utility)
+    - Microsoft.News (News aggregator. Replaced Bing News and now part of Microsoft Start)
+    - Microsoft.Office.OneNote (Digital note-taking app, Universal Windows Platform version)
+    - Microsoft.Office.Sway (Presentation and storytelling app)
+    - Microsoft.OneConnect (Mobile Operator management app, replaced by Mobile Plans)
+    - Microsoft.Print3D (3D printing preparation software)
+    - Microsoft.SkypeApp (Skype communication app, Universal Windows Platform version)
+    - Microsoft.Todos (To-do list and task management app)
+    - Microsoft.WindowsAlarms (Alarms & Clock app)
+    - Microsoft.WindowsFeedbackHub (App for providing feedback to Microsoft on Windows)
+    - Microsoft.WindowsMaps (Mapping and navigation app)
+    - Microsoft.WindowsSoundRecorder (Basic audio recording app)
     - Microsoft.XboxApp (Old Xbox Console Companion App, no longer supported)
-    - Microsoft.ZuneVideo  
-    - MicrosoftCorporationII.MicrosoftFamily (Microsoft Family Safety)
+    - Microsoft.ZuneVideo (Movies & TV app for renting/buying/playing video content. Rebranded as "Films & TV")
+    - MicrosoftCorporationII.MicrosoftFamily (Family Safety App for managing family accounts and settings)
     - MicrosoftCorporationII.QuickAssist (Remote assistance tool)
-    - MicrosoftTeams (Old personal version of MS Teams from the MS Store)
-    - MSTeams (New MS Teams app)
+    - MicrosoftTeams (Old MS Teams personal, MS Store version)
+    - MSTeams (New MS Teams app. Work/School or Personal)
 
-    Third party bloat:
+    Third party apps:    
     - ACGMediaPlayer  
     - ActiproSoftwareLLC  
     - AdobeSystemsIncorporated.AdobePhotoshopExpress  
@@ -282,9 +280,6 @@ These apps are uninstalled when you opt to remove the default selection of apps.
     - WinZipUniversal  
     - Wunderlist  
     - XING
-    
-    * Removed when disabling Bing web search, Bing AI and Cortana from Windows search
-    ** Removed when disabling widgets on the taskbar & lockscreen
 </blockquote>
 </details>
 
@@ -296,21 +291,21 @@ These apps will not be removed by Win11Debloat unless explicitly selected by the
   <summary>Click to expand</summary>
   <blockquote>
 
-    General apps that are not removed by default:
+    Miscellaneous apps:
     - Microsoft.Edge (Edge browser, only removeable in the EEA)
     - Microsoft.GetHelp (Required for some Windows 11 Troubleshooters)
     - Microsoft.MSPaint (Paint 3D)
-    - Microsoft.OutlookForWindows* (New mail app)
+    - Microsoft.OutlookForWindows (New mail app)
     - Microsoft.OneDrive (OneDrive consumer)
     - Microsoft.Paint (Classic Paint)
-    - Microsoft.People* (Required for & included with Mail & Calendar)
+    - Microsoft.People (Required for & included with Mail & Calendar)
     - Microsoft.ScreenSketch (Snipping Tool)
     - Microsoft.Whiteboard (Only preinstalled on devices with touchscreen and/or pen support)
     - Microsoft.Windows.Photos
     - Microsoft.WindowsCalculator
     - Microsoft.WindowsCamera
     - Microsoft.WindowsNotepad
-    - Microsoft.windowscommunicationsapps* (Mail & Calendar)
+    - Microsoft.windowscommunicationsapps (Mail & Calendar)
     - Microsoft.WindowsStore (Microsoft Store, NOTE: This app cannot be reinstalled!)
     - Microsoft.WindowsTerminal (New default terminal app in Windows 11)
     - Microsoft.YourPhone (Phone Link)
@@ -318,41 +313,39 @@ These apps will not be removed by Win11Debloat unless explicitly selected by the
     - Microsoft.ZuneMusic (Modern Media Player)
     - MicrosoftWindows.CrossDevice (Phone integration within File Explorer, Camera and more)
 
-    HP apps that are not removed by default:
-    - AD2F1837.HPAIExperienceCenter*
-    - AD2F1837.HPConnectedMusic*
-    - AD2F1837.HPConnectedPhotopoweredbySnapfish*
-    - AD2F1837.HPDesktopSupportUtilities*
-    - AD2F1837.HPEasyClean*
-    - AD2F1837.HPFileViewer*
-    - AD2F1837.HPJumpStarts*
-    - AD2F1837.HPPCHardwareDiagnosticsWindows*
-    - AD2F1837.HPPowerManager*
-    - AD2F1837.HPPrinterControl*
-    - AD2F1837.HPPrivacySettings*
-    - AD2F1837.HPQuickDrop*
-    - AD2F1837.HPQuickTouch*
-    - AD2F1837.HPRegistration*
-    - AD2F1837.HPSupportAssistant*
-    - AD2F1837.HPSureShieldAI*
-    - AD2F1837.HPSystemInformation*
-    - AD2F1837.HPWelcome*
-    - AD2F1837.HPWorkWell*
-    - AD2F1837.myHP*
-
-    Gaming related apps that are not removed by default:
-    - Microsoft.GamingApp* (Modern Xbox Gaming App, required for installing some games)
-    - Microsoft.XboxGameOverlay* (Game overlay, required for some games)
-    - Microsoft.XboxGamingOverlay* (Game overlay, required for some games)
+    Gaming related apps:
+    - Microsoft.GamingApp (Modern Xbox Gaming App, required for installing some games)
+    - Microsoft.XboxGameOverlay (Game overlay, required for some games)
+    - Microsoft.XboxGamingOverlay (Game overlay, required for some games)
     - Microsoft.XboxIdentityProvider (Xbox sign-in framework, required for some games)
     - Microsoft.XboxSpeechToTextOverlay (Might be required for some games, NOTE: This app cannot be reinstalled!)
 
-    Developer related apps that are not removed by default:
-    - Microsoft.PowerAutomateDesktop*
-    - Microsoft.RemoteDesktop*
-    - Windows.DevHome*
+    Developer related apps:
+    - Microsoft.PowerAutomateDesktop
+    - Microsoft.RemoteDesktop
+    - Windows.DevHome
 
-    * Can be removed by running the script with the relevant parameter. (Please refer to the wiki for more details)
+    HP apps:
+    - AD2F1837.HPAIExperienceCenter
+    - AD2F1837.HPConnectedMusic
+    - AD2F1837.HPConnectedPhotopoweredbySnapfish
+    - AD2F1837.HPDesktopSupportUtilities
+    - AD2F1837.HPEasyClean
+    - AD2F1837.HPFileViewer
+    - AD2F1837.HPJumpStarts
+    - AD2F1837.HPPCHardwareDiagnosticsWindows
+    - AD2F1837.HPPowerManager
+    - AD2F1837.HPPrinterControl
+    - AD2F1837.HPPrivacySettings
+    - AD2F1837.HPQuickDrop
+    - AD2F1837.HPQuickTouch
+    - AD2F1837.HPRegistration
+    - AD2F1837.HPSupportAssistant
+    - AD2F1837.HPSureShieldAI
+    - AD2F1837.HPSystemInformation
+    - AD2F1837.HPWelcome
+    - AD2F1837.HPWorkWell
+    - AD2F1837.myHP
 </blockquote>
 </details>
 

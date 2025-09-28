@@ -826,7 +826,8 @@ function PrintFromFile {
 
 function PrintAppsList {
     param (
-        $path
+        $path,
+        $printCount = $false
     )
 
     if (-not (Test-Path $path)) {
@@ -834,6 +835,11 @@ function PrintAppsList {
     }
     
     $appsList = ReadAppslistFromFile $path
+
+    if ($printCount) {
+        Write-Output "- Remove $($appsList.Count) apps:"
+    }
+
     Write-Host $appsList -ForegroundColor DarkGray
 }
 
@@ -1572,7 +1578,7 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
                         PrintAppsList "$PSScriptRoot/Appslist.txt"
                     }
                     '2' {
-                        AddParameter 'RemoveAppsCustom' 'Remove $($script:SelectedApps.Count) apps:' $false
+                        AddParameter 'RemoveAppsCustom' "Remove $($script:SelectedApps.Count) apps:" $false
                         PrintAppsList "$PSScriptRoot/CustomAppsList"
                     }
                 }
@@ -1656,11 +1662,16 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
                     $parameterName = $line.Substring(0, $line.IndexOf('#'))
 
                     # Print parameter description and add parameter to Params list
-                    if ($parameterName -eq "RemoveAppsCustom") {
-                        PrintAppsList "$PSScriptRoot/CustomAppsList"
-                    }
-                    else {
-                        Write-Output $line.Substring(($line.IndexOf('#') + 1), ($line.Length - $line.IndexOf('#') - 1))
+                    switch ($parameterName) {
+                        'RemoveApps' {
+                            PrintAppsList "$PSScriptRoot/Appslist.txt" $true
+                        }
+                        'RemoveAppsCustom' {
+                            PrintAppsList "$PSScriptRoot/CustomAppsList" $true
+                        }
+                        default {
+                            Write-Output $line.Substring(($line.IndexOf('#') + 1), ($line.Length - $line.IndexOf('#') - 1))
+                        }
                     }
 
                     if (-not $script:Params.ContainsKey($parameterName)) {

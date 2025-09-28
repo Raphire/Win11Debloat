@@ -582,18 +582,23 @@ function GetUserDirectory {
         $exitIfPathNotFound = $true
     )
 
-    $userDirectoryExists = Test-Path "$env:SystemDrive\Users\$userName"
-    $userPath = "$env:SystemDrive\Users\$userName\$fileName"
-
-    if ((Test-Path $userPath) -or ($userDirectoryExists -and (-not $exitIfPathNotFound))) {
-        return $userPath
-    }
-
-    $userDirectoryExists = Test-Path $env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), "\$userName"
-    $userPath = $env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), "\$userName\$fileName"
-
-    if ((Test-Path $userPath) -or ($userDirectoryExists -and (-not $exitIfPathNotFound))) {
-        return $userPath
+    try {
+        $userDirectoryExists = Test-Path "$env:SystemDrive\Users\$userName"
+        $userPath = "$env:SystemDrive\Users\$userName\$fileName"
+    
+        if ((Test-Path $userPath) -or ($userDirectoryExists -and (-not $exitIfPathNotFound))) {
+            return $userPath
+        }
+    
+        $userDirectoryExists = Test-Path ($env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), "\$userName")
+        $userPath = $env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), "\$userName\$fileName"
+    
+        if ((Test-Path $userPath) -or ($userDirectoryExists -and (-not $exitIfPathNotFound))) {
+            return $userPath
+        }
+    } catch {
+        Write-Host "Error: Something went wrong when trying to find the user directory path for user $userName. Please ensure the user exists on this system." -ForegroundColor Red
+        AwaitKeyToExit
     }
 
     Write-Host "Error: Unable to find user directory path for user $userName" -ForegroundColor Red
@@ -738,6 +743,7 @@ function ReplaceStartMenu {
         Move-Item -Path $startMenuBinFile -Destination $backupBinFile -Force
     } else {
         Write-Host "Warning: Unable to find original start2.bin file for user $userName. No backup was created for this user!" -ForegroundColor Yellow
+        New-Item -ItemType File -Path $startMenuBinFile -Force
     }
 
     # Copy template file

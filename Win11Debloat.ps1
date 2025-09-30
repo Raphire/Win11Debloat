@@ -38,6 +38,8 @@ param (
     [switch]$DisableAnimations,
     [switch]$TaskbarAlignLeft,
     [switch]$CombineTaskbarAlways, [switch]$CombineTaskbarWhenFull, [switch]$CombineTaskbarNever,
+    [switch]$CombineMMTaskbarAlways, [switch]$CombineMMTaskbarWhenFull, [switch]$CombineMMTaskbarNever,
+    [switch]$MMTaskbarModeMain, [switch]$MMTaskbarModeAll, [switch]$MMTaskbarModeAppOnly,
     [switch]$HideSearchTb, [switch]$ShowSearchIconTb, [switch]$ShowSearchLabelTb, [switch]$ShowSearchBoxTb,
     [switch]$HideTaskview,
     [switch]$DisableStartRecommended,
@@ -1212,6 +1214,56 @@ function DisplayCustomModeOptions {
                 }
             }
 
+            # Show options for combine icon on taskbar in multi-monitor mode, only continue on valid input
+            Do {
+                Write-Output ""
+                Write-Host "   Options:" -ForegroundColor Yellow
+                Write-Host "    (n) No change" -ForegroundColor Yellow
+                Write-Host "    (1) Always" -ForegroundColor Yellow
+                Write-Host "    (2) When taskbar is full" -ForegroundColor Yellow
+                Write-Host "    (3) Never" -ForegroundColor Yellow
+                $TbCombineTaskbar = Read-Host "   Combine taskbar buttons and hide labels in multi-monitor mode? (n/1/2/3)" 
+            }
+            while ($TbCombineTaskbar -ne 'n' -and $TbCombineTaskbar -ne '0' -and $TbCombineTaskbar -ne '1' -and $TbCombineTaskbar -ne '2' -and $TbCombineTaskbar -ne '3') 
+
+            # Select correct taskbar goup option based on user input
+            switch ($TbCombineTaskbar) {
+                '1' {
+                    AddParameter 'CombineMMTaskbarAlways' 'Always combine taskbar buttons and hide labels in multi-monitor mode'
+                }
+                '2' {
+                    AddParameter 'CombineMMTaskbarWhenFull' 'Combine taskbar buttons and hide labels when taskbar is full in multi-monitor mode'
+                }
+                '3' {
+                    AddParameter 'CombineMMTaskbarNever' 'Never combine taskbar buttons and show labels in multi-monitor mode'
+                }
+            }
+
+            # Show options for show icon on taskbar in multi-monitor mode, only continue on valid input
+            Do {
+                Write-Output ""
+                Write-Host "   Options:" -ForegroundColor Yellow
+                Write-Host "    (n) No change" -ForegroundColor Yellow
+                Write-Host "    (1) Only main taskbar" -ForegroundColor Yellow
+                Write-Host "    (2) Show all open windows on all taskbars" -ForegroundColor Yellow
+                Write-Host "    (3) Show apps only on the taskbar where the window is open" -ForegroundColor Yellow
+                $TbCombineTaskbar = Read-Host "   Combine taskbar buttons and hide labels in multi-monitor mode? (n/1/2/3)" 
+            }
+            while ($TbCombineTaskbar -ne 'n' -and $TbCombineTaskbar -ne '0' -and $TbCombineTaskbar -ne '1' -and $TbCombineTaskbar -ne '2' -and $TbCombineTaskbar -ne '3') 
+
+            # Select correct taskbar goup option based on user input
+            switch ($TbCombineTaskbar) {
+                '1' {
+                    AddParameter 'MMTaskbarModeMain' 'Only main taskbar in multi-monitor mode'
+                }
+                '2' {
+                    AddParameter 'MMTaskbarModeAll' 'Show all open windows on all taskbars in multi-monitor mode'
+                }
+                '3' {
+                    AddParameter 'MMTaskbarModeAppOnly' 'Show apps only on the taskbar where the window is open in multi-monitor mode'
+                }
+            }
+
             # Show options for search icon on taskbar, only continue on valid input
             Do {
                 Write-Output ""
@@ -1898,7 +1950,7 @@ switch ($script:Params.Keys) {
         continue
     }
     'CombineTaskbarAlways' {
-        RegImport "> Setting the taskbar to always combine buttons and hide labels..." "Combine_Taskbar_Never.reg"
+        RegImport "> Setting the taskbar to always combine buttons and hide labels..." "Combine_Taskbar_Always.reg"
         continue
     }
     'CombineTaskbarWhenFull' {
@@ -1907,6 +1959,30 @@ switch ($script:Params.Keys) {
     }
     'CombineTaskbarNever' {
         RegImport "> Setting the taskbar to never combine buttons or hide labels..." "Combine_Taskbar_Never.reg"
+        continue
+    }
+    'CombineMMTaskbarAlways' {
+        RegImport "> Setting the taskbar to always combine buttons and hide labels in multi-monitor mode..." "Combine_MMTaskbar_Always.reg"
+        continue
+    }
+    'CombineMMTaskbarWhenFull' {
+        RegImport "> Setting the taskbar to only combine buttons and hide labels when the taskbar is ful in multi-monitor mode..." "Combine_MMTaskbar_When_Full.reg"
+        continue
+    }
+    'CombineMMTaskbarNever' {
+        RegImport "> Setting the taskbar to never combine buttons or hide labels in multi-monitor mode..." "Combine_MMTaskbar_Never.reg"
+        continue
+    }
+    'MMTaskbarModeMain' {
+        RegImport "> Show icons only on main taskbar in multi-monitor mode..." "MMTaskbarMode_Main.reg"
+        continue
+    }
+    'MMTaskbarModeAll' {
+        RegImport "> Show icons on all taskbars in multi-monitor mode..." "MMTaskbarMode_When_All.reg"
+        continue
+    }
+    'MMTaskbarModeAppOnly' {
+        RegImport "> AAAA Show icons on taskbar where the window is open in multi-monitor mode..." "MMTaskbarMode_App_Only.reg"
         continue
     }
     'HideSearchTb' {

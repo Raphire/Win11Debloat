@@ -137,6 +137,8 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 
 - Align taskbar icons to the left. (W11 only)
 - Choose combine mode for taskbar buttons and labels. (W11 only)
+- Choose combine mode for taskbar buttons and labels in multi-monitor mode. (W11 only)
+- Choose where show icons on taskbar in multi-monitor mode. (W11 only)
 - Hide or change the search icon/box on the taskbar. (W11 only)
 - Hide the taskview button from the taskbar. (W11 only)
 - Disable widgets on the taskbar & lockscreen.

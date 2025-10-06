@@ -1225,7 +1225,7 @@ function DisplayCustomModeOptions {
                 Write-Host "    (1) Show apps icons on all taskbars" -ForegroundColor Yellow
                 Write-Host "    (2) Show apps icons on main taskbar and on taskbar where the windows is open" -ForegroundColor Yellow
                 Write-Host "    (3) Show apps icons only on taskbar where the window is open" -ForegroundColor Yellow
-                $TbCombineTaskbar = Read-Host "   How to show app icons on the taskbar when using multiple monitors? (n/1/2/3)" 
+                $TbCombineTaskbar = Read-Host "   Change how to show app icons on the taskbar when using multiple monitors? (n/1/2/3)" 
             }
             while ($TbCombineTaskbar -ne 'n' -and $TbCombineTaskbar -ne '0' -and $TbCombineTaskbar -ne '1' -and $TbCombineTaskbar -ne '2' -and $TbCombineTaskbar -ne '3') 
 

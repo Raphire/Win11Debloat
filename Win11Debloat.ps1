@@ -1539,7 +1539,10 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
                 # Show options for app removal
                 if ((-not $RunDefaults) -and (-not $RunDefaultsLite)) {
                     PrintHeader 'Default Mode'
-                    
+
+                    Write-Host "Please note: The default selection of apps includes Microsoft Teams, Spotify, Sticky Notes and more. Select option 2 to verify and change what apps are removed by the script." -ForegroundColor DarkGray
+                    Write-Output ""
+
                     Do {
                         Write-Host "Options:" -ForegroundColor Yellow
                         Write-Host " (n) Don't remove any apps" -ForegroundColor Yellow

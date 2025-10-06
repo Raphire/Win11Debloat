@@ -13,7 +13,6 @@ param (
     [switch]$RemoveAppsCustom,
     [switch]$RemoveGamingApps,
     [switch]$RemoveCommApps,
-    [switch]$RemoveDevApps,
     [switch]$RemoveHPApps,
     [switch]$RemoveW11Outlook,
     [switch]$ForceRemoveEdge,

@@ -29,8 +29,10 @@ Microsoft.Office.OneNote                       # Digital note-taking app (Univer
 Microsoft.Office.Sway                          # Presentation and storytelling app
 Microsoft.OneConnect                           # Mobile Operator management app (Replaced by Mobile Plans)
 Microsoft.Print3D                              # 3D printing preparation software
+Microsoft.PowerAutomateDesktop                 # Desktop automation tool (RPA)
 Microsoft.SkypeApp                             # Skype communication app (Universal Windows Platform version)
 Microsoft.Todos                                # To-do list and task management app
+Microsoft.Windows.DevHome                      # Developer dashboard and tool configuration utility, no longer supported
 Microsoft.WindowsAlarms                        # Alarms & Clock app
 Microsoft.WindowsFeedbackHub                   # App for providing feedback to Microsoft on Windows
 Microsoft.WindowsMaps                          # Mapping and navigation app
@@ -108,12 +110,10 @@ XING                                           # Professional networking platfor
 #Microsoft.OutlookForWindows                   # New mail app: Outlook for Windows
 #Microsoft.Paint                               # Classic Paint (Traditional 2D paint application)
 #Microsoft.People                              # Required for & included with Mail & Calendar (Contacts management)
-#Microsoft.PowerAutomateDesktop                # Desktop automation tool (RPA)
 #Microsoft.RemoteDesktop                       # Remote Desktop client app
 #Microsoft.ScreenSketch                        # Snipping Tool (Screenshot and annotation tool)
 #Microsoft.StartExperiencesApp                 # This app powers Windows Widgets My Feed
 #Microsoft.Whiteboard                          # Digital collaborative whiteboard app
-#Microsoft.Windows.DevHome                     # Developer dashboard and tool configuration utility
 #Microsoft.Windows.Photos                      # Default photo viewing and basic editing app
 #Microsoft.WindowsCalculator                   # Calculator app
 #Microsoft.WindowsCamera                       # Camera app for using built-in or connected cameras

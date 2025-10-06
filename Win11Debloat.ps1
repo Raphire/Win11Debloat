@@ -15,7 +15,6 @@ param (
     [switch]$RemoveAppsCustom,
     [switch]$RemoveGamingApps,
     [switch]$RemoveCommApps,
-    [switch]$RemoveDevApps,
     [switch]$RemoveHPApps,
     [switch]$RemoveW11Outlook,
     [switch]$ForceRemoveEdge,
@@ -946,7 +945,7 @@ function DisplayCustomModeOptions {
         Write-Host "Options:" -ForegroundColor Yellow
         Write-Host " (n) Don't remove any apps" -ForegroundColor Yellow
         Write-Host " (1) Only remove the default selection of apps" -ForegroundColor Yellow
-        Write-Host " (2) Remove the default selection of apps, as well as mail & calendar apps, developer apps and gaming apps"  -ForegroundColor Yellow
+        Write-Host " (2) Remove the default selection of apps, as well as mail & calendar apps and gaming related apps"  -ForegroundColor Yellow
         Write-Host " (3) Manually select which apps to remove" -ForegroundColor Yellow
         $RemoveAppsInput = Read-Host "Do you want to remove any apps? Apps will be removed for all users (n/1/2/3)"
 
@@ -976,7 +975,6 @@ function DisplayCustomModeOptions {
             AddParameter 'RemoveApps' 'Remove the default selection of apps'
             AddParameter 'RemoveCommApps' 'Remove the Mail, Calendar, and People apps'
             AddParameter 'RemoveW11Outlook' 'Remove the new Outlook for Windows app'
-            AddParameter 'RemoveDevApps' 'Remove developer-related apps'
             AddParameter 'RemoveGamingApps' 'Remove the Xbox App and Xbox Gamebar'
             AddParameter 'DisableDVR' 'Disable Xbox game/screen recording'
         }
@@ -1740,12 +1738,6 @@ switch ($script:Params.Keys) {
     'RemoveW11Outlook' {
         $appsList = 'Microsoft.OutlookForWindows'
         Write-Output "> Removing new Outlook for Windows app..."
-        RemoveApps $appsList
-        continue
-    }
-    'RemoveDevApps' {
-        $appsList = 'Microsoft.PowerAutomateDesktop', 'Microsoft.RemoteDesktop', 'Windows.DevHome'
-        Write-Output "> Removing developer-related related apps..."
         RemoveApps $appsList
         continue
     }

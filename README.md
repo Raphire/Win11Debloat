@@ -217,9 +217,11 @@ These apps are uninstalled when you opt to remove the default selection of apps.
     - Microsoft.Office.OneNote (Digital note-taking app, Universal Windows Platform version)
     - Microsoft.Office.Sway (Presentation and storytelling app)
     - Microsoft.OneConnect (Mobile Operator management app, replaced by Mobile Plans)
+    - Microsoft.PowerAutomateDesktop (Desktop automation tool)
     - Microsoft.Print3D (3D printing preparation software)
     - Microsoft.SkypeApp (Skype communication app, Universal Windows Platform version)
     - Microsoft.Todos (To-do list and task management app)
+    - Microsoft.Windows.DevHome (Developer dashboard and tool configuration utility, no longer supported)
     - Microsoft.WindowsAlarms (Alarms & Clock app)
     - Microsoft.WindowsFeedbackHub (App for providing feedback to Microsoft on Windows)
     - Microsoft.WindowsMaps (Mapping and navigation app)
@@ -299,6 +301,7 @@ These apps will not be removed by Win11Debloat unless explicitly selected by the
     - Microsoft.OneDrive (OneDrive consumer)
     - Microsoft.Paint (Classic Paint)
     - Microsoft.People (Required for & included with Mail & Calendar)
+    - Microsoft.RemoteDesktop
     - Microsoft.ScreenSketch (Snipping Tool)
     - Microsoft.Whiteboard (Only preinstalled on devices with touchscreen and/or pen support)
     - Microsoft.Windows.Photos
@@ -319,11 +322,6 @@ These apps will not be removed by Win11Debloat unless explicitly selected by the
     - Microsoft.XboxGamingOverlay (Game overlay, required for some games)
     - Microsoft.XboxIdentityProvider (Xbox sign-in framework, required for some games)
     - Microsoft.XboxSpeechToTextOverlay (Might be required for some games, NOTE: This app cannot be reinstalled!)
-
-    Developer related apps:
-    - Microsoft.PowerAutomateDesktop
-    - Microsoft.RemoteDesktop
-    - Windows.DevHome
 
     HP apps:
     - AD2F1837.HPAIExperienceCenter

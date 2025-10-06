@@ -37,6 +37,8 @@ param (
     [switch]$DisableAnimations,
     [switch]$TaskbarAlignLeft,
     [switch]$CombineTaskbarAlways, [switch]$CombineTaskbarWhenFull, [switch]$CombineTaskbarNever,
+    [switch]$CombineMMTaskbarAlways, [switch]$CombineMMTaskbarWhenFull, [switch]$CombineMMTaskbarNever,
+    [switch]$MMTaskbarModeAll, [switch]$MMTaskbarModeMainActive, [switch]$MMTaskbarModeActive,
     [switch]$HideSearchTb, [switch]$ShowSearchIconTb, [switch]$ShowSearchLabelTb, [switch]$ShowSearchBoxTb,
     [switch]$HideTaskview,
     [switch]$DisableStartRecommended,
@@ -1201,12 +1203,40 @@ function DisplayCustomModeOptions {
             switch ($TbCombineTaskbar) {
                 '1' {
                     AddParameter 'CombineTaskbarAlways' 'Always combine taskbar buttons and hide labels'
+                    AddParameter 'CombineMMTaskbarAlways' 'Always combine taskbar buttons and hide labels in multi-monitor mode'
                 }
                 '2' {
                     AddParameter 'CombineTaskbarWhenFull' 'Combine taskbar buttons and hide labels when taskbar is full'
+                    AddParameter 'CombineMMTaskbarWhenFull' 'Combine taskbar buttons and hide labels when taskbar is full in multi-monitor mode'
                 }
                 '3' {
                     AddParameter 'CombineTaskbarNever' 'Never combine taskbar buttons and show labels'
+                    AddParameter 'CombineMMTaskbarNever' 'Never combine taskbar buttons and show labels in multi-monitor mode'
+                }
+            }
+
+            # Show options for show icon on taskbar in multi-monitor mode, only continue on valid input
+            Do {
+                Write-Output ""
+                Write-Host "   Options:" -ForegroundColor Yellow
+                Write-Host "    (n) No change" -ForegroundColor Yellow
+                Write-Host "    (1) Show apps icons on all taskbars" -ForegroundColor Yellow
+                Write-Host "    (2) Show apps icons on main taskbar and on taskbar where the windows is open" -ForegroundColor Yellow
+                Write-Host "    (3) Show apps icons only on taskbar where the window is open" -ForegroundColor Yellow
+                $TbCombineTaskbar = Read-Host "   Change how to show app icons on the taskbar when using multiple monitors? (n/1/2/3)" 
+            }
+            while ($TbCombineTaskbar -ne 'n' -and $TbCombineTaskbar -ne '0' -and $TbCombineTaskbar -ne '1' -and $TbCombineTaskbar -ne '2' -and $TbCombineTaskbar -ne '3') 
+
+            # Select correct taskbar goup option based on user input
+            switch ($TbCombineTaskbar) {
+                '1' {
+                    AddParameter 'MMTaskbarModeAll' 'Show apps icons on all taskbars'
+                }
+                '2' {
+                    AddParameter 'MMTaskbarModeMainActive' 'Show apps icons on main taskbar and on taskbar where the windows is open'
+                }
+                '3' {
+                    AddParameter 'MMTaskbarModeActive' 'Show apps icons only on taskbar where the window is open'
                 }
             }
 
@@ -1893,7 +1923,7 @@ switch ($script:Params.Keys) {
         continue
     }
     'CombineTaskbarAlways' {
-        RegImport "> Setting the taskbar to always combine buttons and hide labels..." "Combine_Taskbar_Never.reg"
+        RegImport "> Setting the taskbar to always combine buttons and hide labels..." "Combine_Taskbar_Always.reg"
         continue
     }
     'CombineTaskbarWhenFull' {
@@ -1902,6 +1932,30 @@ switch ($script:Params.Keys) {
     }
     'CombineTaskbarNever' {
         RegImport "> Setting the taskbar to never combine buttons or hide labels..." "Combine_Taskbar_Never.reg"
+        continue
+    }
+    'CombineMMTaskbarAlways' {
+        RegImport "> Setting the taskbar to always combine buttons and hide labels in multi-monitor mode..." "Combine_MMTaskbar_Always.reg"
+        continue
+    }
+    'CombineMMTaskbarWhenFull' {
+        RegImport "> Setting the taskbar to only combine buttons and hide labels when the taskbar is ful in multi-monitor mode..." "Combine_MMTaskbar_When_Full.reg"
+        continue
+    }
+    'CombineMMTaskbarNever' {
+        RegImport "> Setting the taskbar to never combine buttons or hide labels in multi-monitor mode..." "Combine_MMTaskbar_Never.reg"
+        continue
+    }
+    'MMTaskbarModeAll' {
+        RegImport "> Setting the taskbar to only show icons on main taskbar in multi-monitor mode..." "MMTaskbarMode_All.reg"
+        continue
+    }
+    'MMTaskbarModeMainActive' {
+        RegImport "> Setting the taskbar to show icons on all taskbars in multi-monitor mode..." "MMTaskbarMode_Main_Active.reg"
+        continue
+    }
+    'MMTaskbarModeActive' {
+        RegImport "> Setting the taskbar to only show apps on the taskbar where the window is open in multi-monitor mode..." "MMTaskbarMode_Active.reg"
         continue
     }
     'HideSearchTb' {

@@ -11,7 +11,7 @@ param (
     [switch]$RunDefaults,
     [switch]$RunDefaultsLite,
     [switch]$RunSavedSettings,
-    [switch]$RemoveApps, 
+    [switch]$RemoveApps,
     [switch]$RemoveAppsCustom,
     [switch]$RemoveGamingApps,
     [switch]$RemoveCommApps,
@@ -71,7 +71,9 @@ param (
     [switch]$DisableMusic, [switch]$HideMusic,
     [switch]$DisableIncludeInLibrary, [switch]$HideIncludeInLibrary,
     [switch]$DisableGiveAccessTo, [switch]$HideGiveAccessTo,
-    [switch]$DisableShare, [switch]$HideShare
+    [switch]$DisableShare, [switch]$HideShare,
+    [string]$ConfigFile,
+    [switch]$SaveAsJSON
 )
 
 
@@ -99,7 +101,7 @@ function ShowAppSelectionForm {
     $label = New-Object System.Windows.Forms.Label
     $button1 = New-Object System.Windows.Forms.Button
     $button2 = New-Object System.Windows.Forms.Button
-    $selectionBox = New-Object System.Windows.Forms.CheckedListBox 
+    $selectionBox = New-Object System.Windows.Forms.CheckedListBox
     $loadingLabel = New-Object System.Windows.Forms.Label
     $onlyInstalledCheckBox = New-Object System.Windows.Forms.CheckBox
     $checkUncheckCheckBox = New-Object System.Windows.Forms.CheckBox
@@ -108,11 +110,11 @@ function ShowAppSelectionForm {
     $script:selectionBoxIndex = -1
 
     # saveButton eventHandler
-    $handler_saveButton_Click= 
+    $handler_saveButton_Click=
     {
         if ($selectionBox.CheckedItems -contains "Microsoft.WindowsStore" -and -not $Silent) {
             $warningSelection = [System.Windows.Forms.Messagebox]::Show('Are you sure you wish to uninstall the Microsoft Store? This app cannot easily be reinstalled.', 'Are you sure?', 'YesNo', 'Warning')
-        
+
             if ($warningSelection -eq 'No') {
                 return
             }
@@ -123,7 +125,7 @@ function ShowAppSelectionForm {
         # Create file that stores selected apps if it doesn't exist
         if (-not (Test-Path "$PSScriptRoot/CustomAppsList")) {
             $null = New-Item "$PSScriptRoot/CustomAppsList"
-        } 
+        }
 
         Set-Content -Path "$PSScriptRoot/CustomAppsList" -Value $script:SelectedApps
 
@@ -132,12 +134,12 @@ function ShowAppSelectionForm {
     }
 
     # cancelButton eventHandler
-    $handler_cancelButton_Click= 
+    $handler_cancelButton_Click=
     {
         $form.Close()
     }
 
-    $selectionBox_SelectedIndexChanged= 
+    $selectionBox_SelectedIndexChanged=
     {
         $script:selectionBoxIndex = $selectionBox.SelectedIndex
     }
@@ -210,7 +212,7 @@ function ShowAppSelectionForm {
         }
 
         # Go through appslist and add items one by one to the selectionBox
-        Foreach ($app in (Get-Content -Path $appsFile | Where-Object { $_ -notmatch '^\s*$' -and $_ -notmatch '^#  .*' -and $_ -notmatch '^# -* #' } )) { 
+        Foreach ($app in (Get-Content -Path $appsFile | Where-Object { $_ -notmatch '^\s*$' -and $_ -notmatch '^#  .*' -and $_ -notmatch '^# -* #' } )) {
             $appChecked = $true
 
             # Remove first # if it exists and set appChecked to false
@@ -223,7 +225,7 @@ function ShowAppSelectionForm {
             if (-not ($app.IndexOf('#') -eq -1)) {
                 $app = $app.Substring(0, $app.IndexOf('#'))
             }
-            
+
             # Remove leading and trailing spaces and `*` characters from Appname
             $app = $app.Trim()
             $appString = $app.Trim('*')
@@ -246,7 +248,7 @@ function ShowAppSelectionForm {
                 $selectionBox.Items.Add($appString, $appChecked) | Out-Null
             }
         }
-        
+
         # Hide loading indicator
         $loadingLabel.Visible = $False
 
@@ -349,7 +351,7 @@ function ReadAppslistFromFile {
     $appsList = @()
 
     # Get list of apps from file at the path provided, and remove them one by one
-    Foreach ($app in (Get-Content -Path $appsFilePath | Where-Object { $_ -notmatch '^#.*' -and $_ -notmatch '^\s*$' } )) { 
+    Foreach ($app in (Get-Content -Path $appsFilePath | Where-Object { $_ -notmatch '^#.*' -and $_ -notmatch '^\s*$' } )) {
         # Remove any comments from the Appname
         if (-not ($app.IndexOf('#') -eq -1)) {
             $app = $app.Substring(0, $app.IndexOf('#'))
@@ -357,7 +359,7 @@ function ReadAppslistFromFile {
 
         # Remove any spaces before and after the Appname
         $app = $app.Trim()
-        
+
         $appString = $app.Trim('*')
         $appsList += $appString
     }
@@ -372,7 +374,7 @@ function RemoveApps {
         $appslist
     )
 
-    Foreach ($app in $appsList) { 
+    Foreach ($app in $appsList) {
         Write-Output "Attempting to remove $app..."
 
         if (($app -eq "Microsoft.OneDrive") -or ($app -eq "Microsoft.Edge")) {
@@ -382,7 +384,7 @@ function RemoveApps {
             }
             else {
                 # Uninstall app via winget
-                Strip-Progress -ScriptBlock { winget uninstall --accept-source-agreements --disable-interactivity --id $app } | Tee-Object -Variable wingetOutput 
+                Strip-Progress -ScriptBlock { winget uninstall --accept-source-agreements --disable-interactivity --id $app } | Tee-Object -Variable wingetOutput
 
                 If (($app -eq "Microsoft.Edge") -and (Select-String -InputObject $wingetOutput -Pattern "Uninstall failed with exit code")) {
                     Write-Host "Unable to uninstall Microsoft Edge via Winget" -ForegroundColor Red
@@ -420,7 +422,7 @@ function RemoveApps {
                 # Windows 10
                 try {
                     Get-AppxPackage -Name $app | Remove-AppxPackage -ErrorAction SilentlyContinue
-                    
+
                     if ($DebugPreference -ne "SilentlyContinue") {
                         Write-Host "Removed $app for current user" -ForegroundColor DarkGray
                     }
@@ -431,10 +433,10 @@ function RemoveApps {
                         Write-Host $psitem.Exception.StackTrace -ForegroundColor Gray
                     }
                 }
-                
+
                 try {
                     Get-AppxPackage -Name $app -PackageTypeFilter Main, Bundle, Resource -AllUsers | Remove-AppxPackage -AllUsers -ErrorAction SilentlyContinue
-                    
+
                     if ($DebugPreference -ne "SilentlyContinue") {
                         Write-Host "Removed $app for all users" -ForegroundColor DarkGray
                     }
@@ -457,7 +459,7 @@ function RemoveApps {
             }
         }
     }
-            
+
     Write-Output ""
 }
 
@@ -516,7 +518,7 @@ function ForceRemoveEdge {
         Write-Output ""
         Write-Host "Error: Unable to forcefully uninstall Microsoft Edge, uninstaller could not be found" -ForegroundColor Red
     }
-    
+
     Write-Output ""
 }
 
@@ -586,14 +588,14 @@ function GetUserDirectory {
     try {
         $userDirectoryExists = Test-Path "$env:SystemDrive\Users\$userName"
         $userPath = "$env:SystemDrive\Users\$userName\$fileName"
-    
+
         if ((Test-Path $userPath) -or ($userDirectoryExists -and (-not $exitIfPathNotFound))) {
             return $userPath
         }
-    
+
         $userDirectoryExists = Test-Path ($env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), "\$userName")
         $userPath = $env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), "\$userName\$fileName"
-    
+
         if ((Test-Path $userPath) -or ($userDirectoryExists -and (-not $exitIfPathNotFound))) {
             return $userPath
         }
@@ -618,21 +620,21 @@ function RegImport {
 
     if ($script:Params.ContainsKey("Sysprep")) {
         $defaultUserPath = GetUserDirectory -userName "Default" -fileName "NTUSER.DAT"
-        
+
         reg load "HKU\Default" $defaultUserPath | Out-Null
         reg import "$PSScriptRoot\Regfiles\Sysprep\$path"
         reg unload "HKU\Default" | Out-Null
     }
     elseif ($script:Params.ContainsKey("User")) {
         $userPath = GetUserDirectory -userName $script:Params.Item("User") -fileName "NTUSER.DAT"
-        
+
         reg load "HKU\Default" $userPath | Out-Null
         reg import "$PSScriptRoot\Regfiles\Sysprep\$path"
         reg unload "HKU\Default" | Out-Null
-        
+
     }
     else {
-        reg import "$PSScriptRoot\Regfiles\$path"  
+        reg import "$PSScriptRoot\Regfiles\$path"
     }
 
     Write-Output ""
@@ -775,11 +777,11 @@ function AddParameter {
     # Create or clear file that stores last used settings
     if (-not (Test-Path "$PSScriptRoot/SavedSettings")) {
         $null = New-Item "$PSScriptRoot/SavedSettings"
-    } 
+    }
     elseif ($script:FirstSelection) {
         $null = Clear-Content "$PSScriptRoot/SavedSettings"
     }
-    
+
     $script:FirstSelection = $false
 
     # Create entry and add it to the file
@@ -788,8 +790,32 @@ function AddParameter {
 }
 
 
-function PrintHeader {
-    param (
+# Saves the current settings to a JSON file
+function Save-Settings {
+    $settings = [ordered]@{}
+    $controlParams = 'WhatIf', 'Confirm', 'Verbose', 'Silent', 'Sysprep', 'Debug', 'User', 'CreateRestorePoint', 'LogPath', 'ConfigFile', 'SaveAsJSON'
+
+    foreach ($param in $script:Params.Keys) {
+        if ($controlParams -notcontains $param) {
+            $settings[$param] = $true
+        }
+    }
+
+    $json = $settings | ConvertTo-Json
+    $filePath = "$PSScriptRoot\Win11Debloat-settings.json"
+
+    try {
+        Set-Content -Path $filePath -Value $json
+        Write-Output "> Settings saved to '$filePath'"
+    }
+    catch {
+        Write-Host "Error: Unable to save settings to '$filePath'" -ForegroundColor Red
+    }
+    Write-Output ""
+}
+
+
+function PrintHeader {    param (
         $title
     )
 
@@ -823,7 +849,7 @@ function PrintFromFile {
     }
 
     # Get & print script menu from file
-    Foreach ($line in (Get-Content -Path $path )) {   
+    Foreach ($line in (Get-Content -Path $path )) {
         Write-Output $line
     }
 }
@@ -838,7 +864,7 @@ function PrintAppsList {
     if (-not (Test-Path $path)) {
         return
     }
-    
+
     $appsList = ReadAppslistFromFile $path
 
     if ($printCount) {
@@ -863,22 +889,22 @@ function AwaitKeyToExit {
 
 
 function GetUserName {
-    if ($script:Params.ContainsKey("User")) { 
-        return $script:Params.Item("User") 
+    if ($script:Params.ContainsKey("User")) {
+        return $script:Params.Item("User")
     }
-    
+
     return $env:USERNAME
 }
 
 
 function CreateSystemRestorePoint {
     Write-Output "> Attempting to create a system restore point..."
-    
+
     $SysRestore = Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SystemRestore" -Name "RPSessionInterval"
 
     if ($SysRestore.RPSessionInterval -eq 0) {
         if ($Silent -or $( Read-Host -Prompt "System restore is disabled, would you like to enable it and create a restore point? (y/n)") -eq 'y') {
-            $enableSystemRestoreJob = Start-Job { 
+            $enableSystemRestoreJob = Start-Job {
                 try {
                     Enable-ComputerRestore -Drive "$env:SystemDrive"
                 } catch {
@@ -886,7 +912,7 @@ function CreateSystemRestorePoint {
                     return
                 }
             }
-    
+
             $enableSystemRestoreJobDone = $enableSystemRestoreJob | Wait-Job -TimeOut 20
 
             if (-not $enableSystemRestoreJobDone) {
@@ -901,7 +927,7 @@ function CreateSystemRestorePoint {
         }
     }
 
-    $createRestorePointJob = Start-Job { 
+    $createRestorePointJob = Start-Job {
         # Find existing restore points that are less than 24 hours old
         try {
             $recentRestorePoints = Get-ComputerRestorePoint | Where-Object { (Get-Date) - [System.Management.ManagementDateTimeConverter]::ToDateTime($_.CreationTime) -le (New-TimeSpan -Hours 24) }
@@ -909,7 +935,7 @@ function CreateSystemRestorePoint {
             Write-Host "Error: Unable to retrieve existing restore points: $_" -ForegroundColor Red
             return
         }
-    
+
         if ($recentRestorePoints.Count -eq 0) {
             try {
                 Checkpoint-Computer -Description "Restore point created by Win11Debloat" -RestorePointType "MODIFY_SETTINGS"
@@ -921,7 +947,7 @@ function CreateSystemRestorePoint {
             Write-Host "A recent restore point already exists, no new restore point was created." -ForegroundColor Yellow
         }
     }
-    
+
     $createRestorePointJobDone = $createRestorePointJob | Wait-Job -TimeOut 20
 
     if (-not $createRestorePointJobDone) {
@@ -937,7 +963,7 @@ function CreateSystemRestorePoint {
 function DisplayCustomModeOptions {
     # Get current Windows build version to compare against features
     $WinVersion = Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' CurrentBuild
-            
+
     PrintHeader 'Custom Mode'
 
     AddParameter 'CreateRestorePoint' 'Create a system restore point'
@@ -962,11 +988,11 @@ function DisplayCustomModeOptions {
 
                 $RemoveAppsInput = 'c'
             }
-            
+
             Write-Output ""
         }
     }
-    while ($RemoveAppsInput -ne 'n' -and $RemoveAppsInput -ne '0' -and $RemoveAppsInput -ne '1' -and $RemoveAppsInput -ne '2' -and $RemoveAppsInput -ne '3') 
+    while ($RemoveAppsInput -ne 'n' -and $RemoveAppsInput -ne '0' -and $RemoveAppsInput -ne '1' -and $RemoveAppsInput -ne '2' -and $RemoveAppsInput -ne '3')
 
     # Select correct option based on user input
     switch ($RemoveAppsInput) {
@@ -1026,7 +1052,7 @@ function DisplayCustomModeOptions {
             Write-Host " (2) Disable Microsoft Copilot, Windows Recall, Click to Do and AI features in Microsoft Edge, Paint and Notepad"  -ForegroundColor Yellow
             $DisableAIInput = Read-Host "Do you want to disable any AI features? This applies to all users (n/1/2)"
         }
-        while ($DisableAIInput -ne 'n' -and $DisableAIInput -ne '0' -and $DisableAIInput -ne '1' -and $DisableAIInput -ne '2') 
+        while ($DisableAIInput -ne 'n' -and $DisableAIInput -ne '0' -and $DisableAIInput -ne '1' -and $DisableAIInput -ne '2')
 
         # Select correct option based on user input
         switch ($DisableAIInput) {
@@ -1147,9 +1173,9 @@ function DisplayCustomModeOptions {
                     Write-Host "    (n) Don't remove any pinned apps from the start menu" -ForegroundColor Yellow
                     Write-Host "    (1) Remove all pinned apps from the start menu for this user only ($(GetUserName))" -ForegroundColor Yellow
                     Write-Host "    (2) Remove all pinned apps from the start menu for all existing and new users"  -ForegroundColor Yellow
-                    $ClearStartInput = Read-Host "   Remove all pinned apps from the start menu? (n/1/2)" 
+                    $ClearStartInput = Read-Host "   Remove all pinned apps from the start menu? (n/1/2)"
                 }
-                while ($ClearStartInput -ne 'n' -and $ClearStartInput -ne '0' -and $ClearStartInput -ne '1' -and $ClearStartInput -ne '2') 
+                while ($ClearStartInput -ne 'n' -and $ClearStartInput -ne '0' -and $ClearStartInput -ne '1' -and $ClearStartInput -ne '2')
 
                 # Select correct option based on user input
                 switch ($ClearStartInput) {
@@ -1195,9 +1221,9 @@ function DisplayCustomModeOptions {
                 Write-Host "    (1) Always" -ForegroundColor Yellow
                 Write-Host "    (2) When taskbar is full" -ForegroundColor Yellow
                 Write-Host "    (3) Never" -ForegroundColor Yellow
-                $TbCombineTaskbar = Read-Host "   Combine taskbar buttons and hide labels? (n/1/2/3)" 
+                $TbCombineTaskbar = Read-Host "   Combine taskbar buttons and hide labels? (n/1/2/3)"
             }
-            while ($TbCombineTaskbar -ne 'n' -and $TbCombineTaskbar -ne '0' -and $TbCombineTaskbar -ne '1' -and $TbCombineTaskbar -ne '2' -and $TbCombineTaskbar -ne '3') 
+            while ($TbCombineTaskbar -ne 'n' -and $TbCombineTaskbar -ne '0' -and $TbCombineTaskbar -ne '1' -and $TbCombineTaskbar -ne '2' -and $TbCombineTaskbar -ne '3')
 
             # Select correct taskbar goup option based on user input
             switch ($TbCombineTaskbar) {
@@ -1223,9 +1249,9 @@ function DisplayCustomModeOptions {
                 Write-Host "    (1) Show app icons on all taskbars" -ForegroundColor Yellow
                 Write-Host "    (2) Show app icons on main taskbar and on taskbar where the windows is open" -ForegroundColor Yellow
                 Write-Host "    (3) Show app icons only on taskbar where the window is open" -ForegroundColor Yellow
-                $TbCombineTaskbar = Read-Host "   Change how to show app icons on the taskbar when using multiple monitors? (n/1/2/3)" 
+                $TbCombineTaskbar = Read-Host "   Change how to show app icons on the taskbar when using multiple monitors? (n/1/2/3)"
             }
-            while ($TbCombineTaskbar -ne 'n' -and $TbCombineTaskbar -ne '0' -and $TbCombineTaskbar -ne '1' -and $TbCombineTaskbar -ne '2' -and $TbCombineTaskbar -ne '3') 
+            while ($TbCombineTaskbar -ne 'n' -and $TbCombineTaskbar -ne '0' -and $TbCombineTaskbar -ne '1' -and $TbCombineTaskbar -ne '2' -and $TbCombineTaskbar -ne '3')
 
             # Select correct taskbar goup option based on user input
             switch ($TbCombineTaskbar) {
@@ -1249,9 +1275,9 @@ function DisplayCustomModeOptions {
                 Write-Host "    (2) Show search icon on the taskbar" -ForegroundColor Yellow
                 Write-Host "    (3) Show search icon with label on the taskbar" -ForegroundColor Yellow
                 Write-Host "    (4) Show search box on the taskbar" -ForegroundColor Yellow
-                $TbSearchInput = Read-Host "   Hide or change the search icon on the taskbar? (n/1/2/3/4)" 
+                $TbSearchInput = Read-Host "   Hide or change the search icon on the taskbar? (n/1/2/3/4)"
             }
-            while ($TbSearchInput -ne 'n' -and $TbSearchInput -ne '0' -and $TbSearchInput -ne '1' -and $TbSearchInput -ne '2' -and $TbSearchInput -ne '3' -and $TbSearchInput -ne '4') 
+            while ($TbSearchInput -ne 'n' -and $TbSearchInput -ne '0' -and $TbSearchInput -ne '1' -and $TbSearchInput -ne '2' -and $TbSearchInput -ne '3' -and $TbSearchInput -ne '4')
 
             # Select correct taskbar search option based on user input
             switch ($TbSearchInput) {
@@ -1290,7 +1316,7 @@ function DisplayCustomModeOptions {
                 AddParameter 'HideChat' 'Hide the chat (meet now) icon from the taskbar'
             }
         }
-        
+
         # Only show this options for Windows users running build 22631 or later
         if ($WinVersion -ge 22631) {
             Write-Output ""
@@ -1299,7 +1325,7 @@ function DisplayCustomModeOptions {
                 AddParameter 'EnableEndTask' "Enable the 'End Task' option in the taskbar right click menu"
             }
         }
-        
+
         Write-Output ""
         if ($( Read-Host -Prompt "   Enable the 'Last Active Click' behavior in the taskbar app area? (y/n)" ) -eq 'y') {
             AddParameter 'EnableLastActiveClick' "Enable the 'Last Active Click' behavior in the taskbar app area"
@@ -1318,9 +1344,9 @@ function DisplayCustomModeOptions {
             Write-Host "    (2) Open File Explorer to 'This PC'" -ForegroundColor Yellow
             Write-Host "    (3) Open File Explorer to 'Downloads'" -ForegroundColor Yellow
             Write-Host "    (4) Open File Explorer to 'OneDrive'" -ForegroundColor Yellow
-            $ExplSearchInput = Read-Host "   Change the default location that File Explorer opens to? (n/1/2/3/4)" 
+            $ExplSearchInput = Read-Host "   Change the default location that File Explorer opens to? (n/1/2/3/4)"
         }
-        while ($ExplSearchInput -ne 'n' -and $ExplSearchInput -ne '0' -and $ExplSearchInput -ne '1' -and $ExplSearchInput -ne '2' -and $ExplSearchInput -ne '3' -and $ExplSearchInput -ne '4') 
+        while ($ExplSearchInput -ne 'n' -and $ExplSearchInput -ne '0' -and $ExplSearchInput -ne '1' -and $ExplSearchInput -ne '2' -and $ExplSearchInput -ne '3' -and $ExplSearchInput -ne '4')
 
         # Select correct taskbar search option based on user input
         switch ($ExplSearchInput) {
@@ -1383,11 +1409,11 @@ function DisplayCustomModeOptions {
                 }
 
                 Write-Output ""
-                
+
                 if ($( Read-Host -Prompt "   Hide the 3D objects folder from the File Explorer sidepanel? (y/n)" ) -eq 'y') {
-                    AddParameter 'Hide3dObjects' "Hide the 3D objects folder under 'This pc' in File Explorer" 
+                    AddParameter 'Hide3dObjects' "Hide the 3D objects folder under 'This pc' in File Explorer"
                 }
-                
+
                 Write-Output ""
 
                 if ($( Read-Host -Prompt "   Hide the music folder from the File Explorer sidepanel? (y/n)" ) -eq 'y') {
@@ -1404,6 +1430,15 @@ function DisplayCustomModeOptions {
         Write-Output ""
         Write-Output "Press enter to confirm your choices and execute the script or press CTRL+C to quit..."
         Read-Host | Out-Null
+    }
+
+    if ($SaveAsJSON) {
+        Save-Settings
+    }
+    elseif (-not $Silent) {
+        if ($( Read-Host -Prompt "Do you want to save these settings to a JSON file for future use? (y/n)" ) -eq 'y') {
+            Save-Settings
+        }
     }
 
     PrintHeader 'Custom Mode'
@@ -1482,6 +1517,26 @@ if ($script:Params.ContainsKey("User")) {
     $userPath = GetUserDirectory -userName $script:Params.Item("User")
 }
 
+# Load settings from the specified JSON config file
+if ($ConfigFile -and (Test-Path $ConfigFile)) {
+    try {
+        $config = Get-Content -Path $ConfigFile -Raw | ConvertFrom-Json
+        Write-Output "> Applying settings from '$ConfigFile'...`n"
+
+        foreach ($key in $config.PSObject.Properties.Name) {
+            if ($config.$key -eq $true) {
+                if (-not $script:Params.ContainsKey($key)) {
+                    $script:Params.Add($key, $true)
+                }
+            }
+        }
+    }
+    catch {
+        Write-Host "Error: Unable to parse the JSON configuration file. Please make sure it is a valid JSON file." -ForegroundColor Red
+        AwaitKeyToExit
+    }
+}
+
 # Remove SavedSettings file if it exists and is empty
 if ((Test-Path "$PSScriptRoot/SavedSettings") -and ([String]::IsNullOrWhiteSpace((Get-content "$PSScriptRoot/SavedSettings")))) {
     Remove-Item -Path "$PSScriptRoot/SavedSettings" -recurse
@@ -1521,8 +1576,8 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
     }
     else {
         # Show menu and wait for user input, loops until valid input is provided
-        Do { 
-            $ModeSelectionMessage = "Please select an option (1/2/3/0)" 
+        Do {
+            $ModeSelectionMessage = "Please select an option (1/2/3/0)"
 
             PrintHeader 'Menu'
 
@@ -1533,8 +1588,8 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
             # Only show this option if SavedSettings file exists
             if (Test-Path "$PSScriptRoot/SavedSettings") {
                 Write-Output "(4) Apply saved custom settings from last time"
-                
-                $ModeSelectionMessage = "Please select an option (1/2/3/4/0)" 
+
+                $ModeSelectionMessage = "Please select an option (1/2/3/4/0)"
             }
 
             Write-Output ""
@@ -1555,13 +1610,13 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
                 $Mode = $null
             }
         }
-        while ($Mode -ne '1' -and $Mode -ne '2' -and $Mode -ne '3' -and $Mode -ne '4') 
+        while ($Mode -ne '1' -and $Mode -ne '2' -and $Mode -ne '3' -and $Mode -ne '4')
     }
 
     # Add execution parameters based on the mode
     switch ($Mode) {
         # Default mode, loads defaults after confirmation
-        '1' { 
+        '1' {
             AddParameter 'CreateRestorePoint' 'Create a system restore point' $false
 
             # Show the default settings with confirmation, unless Silent parameter was passed
@@ -1579,25 +1634,25 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
                         Write-Host " (1) Only remove the default selection of apps" -ForegroundColor Yellow
                         Write-Host " (2) Manually select which apps to remove" -ForegroundColor Yellow
                         $RemoveAppsInput = Read-Host "Do you want to remove any apps? Apps will be removed for all users (n/1/2)"
-                
+
                         # Show app selection form if user entered option 3
                         if ($RemoveAppsInput -eq '2') {
                             $result = ShowAppSelectionForm
-                
+
                             if ($result -ne [System.Windows.Forms.DialogResult]::OK) {
                                 # User cancelled or closed app selection, show error and change RemoveAppsInput so the menu will be shown again
                                 Write-Output ""
                                 Write-Host "Cancelled application selection, please try again" -ForegroundColor Red
-                
+
                                 $RemoveAppsInput = 'c'
                             }
-                            
+
                             Write-Output ""
                         }
                     }
-                    while ($RemoveAppsInput -ne 'n' -and $RemoveAppsInput -ne '0' -and $RemoveAppsInput -ne '1' -and $RemoveAppsInput -ne '2') 
+                    while ($RemoveAppsInput -ne 'n' -and $RemoveAppsInput -ne '0' -and $RemoveAppsInput -ne '1' -and $RemoveAppsInput -ne '2')
                 } elseif ($RunDefaultsLite) {
-                    $RemoveAppsInput = '0'                
+                    $RemoveAppsInput = '0'
                 } else {
                     $RemoveAppsInput = '1'
                 }
@@ -1605,7 +1660,7 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
                 PrintHeader 'Default Mode'
 
                 Write-Output "Win11Debloat will make the following changes:"
-    
+
                 # Select correct option based on user input
                 switch ($RemoveAppsInput) {
                     '1' {
@@ -1632,10 +1687,10 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
 
                     AddParameter 'DisableRecall' 'Disable Windows Recall' $false
                     AddParameter 'DisableClickToDo' 'Disable Click to Do (AI text & image analysis)' $false
-                } 
+                }
 
                 PrintFromFile "$PSScriptRoot/Assets/Menus/DefaultSettings" "Default Mode" $false
-        
+
                 Write-Output "Press enter to execute the script or press CTRL+C to quit..."
                 Read-Host | Out-Null
             }
@@ -1653,7 +1708,7 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
         }
 
         # Custom mode, show & add options based on user input
-        '2' { 
+        '2' {
             DisplayCustomModeOptions
         }
 
@@ -1688,10 +1743,10 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
             Write-Output "Win11Debloat will make the following changes:"
 
             # Print the saved settings info from file
-            Foreach ($line in (Get-Content -Path "$PSScriptRoot/SavedSettings" )) { 
+            Foreach ($line in (Get-Content -Path "$PSScriptRoot/SavedSettings" )) {
                 # Remove any spaces before and after the line
                 $line = $line.Trim()
-            
+
                 # Check if the line contains a comment
                 if (-not ($line.IndexOf('#') -eq -1)) {
                     $parameterName = $line.Substring(0, $line.IndexOf('#'))
@@ -1745,7 +1800,7 @@ switch ($script:Params.Keys) {
         continue
     }
     'RemoveApps' {
-        $appsList = ReadAppslistFromFile "$PSScriptRoot/Appslist.txt" 
+        $appsList = ReadAppslistFromFile "$PSScriptRoot/Appslist.txt"
         Write-Output "> Removing default selection of $($appsList.Count) apps..."
         RemoveApps $appsList
         continue
@@ -1756,7 +1811,7 @@ switch ($script:Params.Keys) {
             Write-Output ""
             continue
         }
-        
+
         $appsList = ReadAppslistFromFile "$PSScriptRoot/CustomAppsList"
         Write-Output "> Removing $($appsList.Count) apps..."
         RemoveApps $appsList
@@ -1824,7 +1879,7 @@ switch ($script:Params.Keys) {
     }
     {$_ -in "DisableBingSearches", "DisableBing"} {
         RegImport "> Disabling Bing web search, Bing AI and Cortana from Windows search..." "Disable_Bing_Cortana_In_Search.reg"
-        
+
         # Also remove the app package for Bing search
         $appsList = 'Microsoft.BingSearch'
         RemoveApps $appsList

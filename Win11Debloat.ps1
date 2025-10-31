@@ -66,6 +66,7 @@ param (
     [switch]$ExplorerToThisPC,
     [switch]$ExplorerToDownloads,
     [switch]$ExplorerToOneDrive,
+    [switch]$NoRestartExplorer,
     [switch]$DisableOnedrive, [switch]$HideOnedrive,
     [switch]$Disable3dObjects, [switch]$Hide3dObjects,
     [switch]$DisableMusic, [switch]$HideMusic,
@@ -641,7 +642,7 @@ function RegImport {
 
 # Restart the Windows Explorer process
 function RestartExplorer {
-    if ($script:Params.ContainsKey("Sysprep") -or $script:Params.ContainsKey("User")) {
+    if ($script:Params.ContainsKey("Sysprep") -or $script:Params.ContainsKey("User") -or $script:Params.ContainsKey("NoRestartExplorer")) {
         return
     }
 

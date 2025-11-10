@@ -297,6 +297,7 @@ These apps will not be removed by Win11Debloat unless explicitly selected by the
     Miscellaneous apps:
     - Microsoft.Edge (Edge browser, only removeable in the EEA)
     - Microsoft.GetHelp (Required for some Windows 11 Troubleshooters)
+    - Microsoft.M365Companions (Microsoft 365 Business Calendar, Files and People mini-apps, these apps may be reinstalled if enabled by your Microsoft 365 admin)
     - Microsoft.MSPaint (Paint 3D)
     - Microsoft.OutlookForWindows (New mail app)
     - Microsoft.OneDrive (OneDrive consumer)

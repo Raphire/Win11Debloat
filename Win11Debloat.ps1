@@ -1163,10 +1163,13 @@ function DisplayCustomModeOptions {
                 }
             }
 
-            Write-Output ""
+            # Don't show option for users running build 26200 and above, as this setting was removed in this build
+            if ($WinVersion -lt 26200) {
+                Write-Output ""
 
-            if ($( Read-Host -Prompt "   Disable the recommended section in the start menu? This applies to all users (y/n)" ) -eq 'y') {
-                AddParameter 'DisableStartRecommended' 'Disable the recommended section in the start menu.'
+                if ($( Read-Host -Prompt "   Disable the recommended section in the start menu? This applies to all users (y/n)" ) -eq 'y') {
+                    AddParameter 'DisableStartRecommended' 'Disable the recommended section in the start menu.'
+                }
             }
 
             Write-Output ""

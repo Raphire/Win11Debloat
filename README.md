@@ -152,7 +152,7 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 
 #### Other
 
-- Disable Xbox game/screen recording, this also stops gaming overlay popups.
+- Disable Xbox Game Bar game/screen recording and controller integration. This also disables the annoying `msgaming overlay` popups if you uninstalled the Xbox Game Bar app.
 - Disable Fast Start-up to ensure a full shutdown.
 - Disable network connectivity during Modern Standby to reduce battery drain. (W11 only)
 - Option to [apply changes to a different user](https://github.com/Raphire/Win11Debloat/wiki/Advanced-Features#running-as-another-user), instead of the currently logged in user.

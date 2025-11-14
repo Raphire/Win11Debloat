@@ -1,0 +1,5 @@
+Windows Registry Editor Version 5.00
+
+; Disable allow your controller to open Game Bar
+[HKEY_CURRENT_USER\SOFTWARE\Microsoft\GameBar]
+"UseNexusForGameBarEnabled"=dword:00000000

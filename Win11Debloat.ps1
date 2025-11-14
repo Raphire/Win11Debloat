@@ -383,8 +383,18 @@ function RemoveApps {
                 Write-Host "Error: WinGet is either not installed or is outdated, $app could not be removed" -ForegroundColor Red
             }
             else {
-                # Uninstall app via winget
-                Strip-Progress -ScriptBlock { winget uninstall --accept-source-agreements --disable-interactivity --id $app } | Tee-Object -Variable wingetOutput 
+                $appName = $app -replace '\.', '_'
+
+                # Uninstall app via winget, or create a scheduled task to uninstall it later
+                if ($script:Params.ContainsKey("User")) {
+                    RegImport "Adding scheduled task to uninstall $app for user $(GetUserName)..." "Uninstall_$($appName).reg"
+                }
+                elseif ($script:Params.ContainsKey("Sysprep")) {
+                    RegImport "Adding scheduled task to uninstall $app after new users log in..." "Uninstall_$($appName).reg"
+                }
+                else {
+                    Strip-Progress -ScriptBlock { winget uninstall --accept-source-agreements --disable-interactivity --id $app } | Tee-Object -Variable wingetOutput
+                }
 
                 If (($app -eq "Microsoft.Edge") -and (Select-String -InputObject $wingetOutput -Pattern "Uninstall failed with exit code")) {
                     Write-Host "Unable to uninstall Microsoft Edge via Winget" -ForegroundColor Red

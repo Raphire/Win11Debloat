@@ -1,0 +1,20 @@
+Windows Registry Editor Version 5.00
+
+; Enable allow your controller to open Game Bar
+[HKEY_CURRENT_USER\SOFTWARE\Microsoft\GameBar]
+"UseNexusForGameBarEnabled"=dword:00000001
+
+; Enable `ms-gamebar` popups
+[HKEY_CLASSES_ROOT\ms-gamebar]
+@="URL:ms-gamebar"
+"URL Protocol"=""
+"NoOpenWith"=-
+
+[-HKEY_CLASSES_ROOT\ms-gamebar\shell\open\command]
+
+[HKEY_CLASSES_ROOT\ms-gamebarservices]
+@="URL:ms-gamebar"
+"URL Protocol"=""
+"NoOpenWith"=-
+
+[-HKEY_CLASSES_ROOT\ms-gamebar\shell\open\command]

@@ -17,7 +17,7 @@ param (
     [switch]$RemoveW11Outlook,
     [switch]$ForceRemoveEdge,
     [switch]$DisableDVR,
-    [switch]$DisableControllerOverlay,
+    [switch]$DisableGameBarIntegration,
     [switch]$DisableTelemetry,
     [switch]$DisableFastStartup,
     [switch]$DisableModernStandbyNetworking,

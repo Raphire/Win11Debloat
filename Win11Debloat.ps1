@@ -19,7 +19,7 @@ param (
     [switch]$RemoveW11Outlook,
     [switch]$ForceRemoveEdge,
     [switch]$DisableDVR,
-    [switch]$DisableControllerOverlay,
+    [switch]$DisableGameBarIntegration,
     [switch]$DisableTelemetry,
     [switch]$DisableFastStartup,
     [switch]$DisableModernStandbyNetworking,
@@ -991,7 +991,7 @@ function DisplayCustomModeOptions {
             AddParameter 'RemoveW11Outlook' 'Remove the new Outlook for Windows app'
             AddParameter 'RemoveGamingApps' 'Remove the Xbox App and Xbox Gamebar'
             AddParameter 'DisableDVR' 'Disable Xbox game/screen recording'
-            AddParameter 'DisableControllerOverlay' 'Disable opening the Xbox Game Bar with a controller'
+            AddParameter 'DisableGameBarIntegration' 'Disable Game Bar integration'
         }
         '3' {
             Write-Output "You have selected $($script:SelectedApps.Count) apps for removal"
@@ -1000,9 +1000,9 @@ function DisplayCustomModeOptions {
 
             Write-Output ""
 
-            if ($( Read-Host -Prompt "Disable Game Bar integration for controller and game/screen recording? This also stops msgaming overlay popups (y/n)" ) -eq 'y') {
+            if ($( Read-Host -Prompt "Disable Game Bar integration and game/screen recording? This also stops ms-gamingoverlay and ms-gamebar popups (y/n)" ) -eq 'y') {
                 AddParameter 'DisableDVR' 'Disable Xbox game/screen recording'
-                AddParameter 'DisableControllerOverlay' 'Disable opening the Xbox Game Bar with a controller'
+                AddParameter 'DisableGameBarIntegration' 'Disable Game Bar integration'
             }
         }
     }
@@ -1811,8 +1811,8 @@ switch ($script:Params.Keys) {
         RegImport "> Disabling Xbox game/screen recording..." "Disable_DVR.reg"
         continue
     }
-    'DisableControllerOverlay' {
-        RegImport "> Disabling the option of opening the Xbox Game Bar with a controller..." "Disable_Controller_Game_Bar_Integration.reg"
+    'DisableGameBarIntegration' {
+        RegImport "> Disabling the option of opening the Xbox Game Bar with a controller..." "Disable_Game_Bar_Integration.reg"
         continue
     }
     'DisableTelemetry' {

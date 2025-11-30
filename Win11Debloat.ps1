@@ -1812,7 +1812,7 @@ switch ($script:Params.Keys) {
         continue
     }
     'DisableGameBarIntegration' {
-        RegImport "> Disabling the option of opening the Xbox Game Bar with a controller..." "Disable_Game_Bar_Integration.reg"
+        RegImport "> Disabling Game Bar integration..." "Disable_Game_Bar_Integration.reg"
         continue
     }
     'DisableTelemetry' {

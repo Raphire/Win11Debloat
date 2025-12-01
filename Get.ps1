@@ -394,7 +394,7 @@
     Script Name    : Get.ps1
     Author         : Win11Debloat Project / Enterprise Infrastructure Team
     Version        : 2.0
-    Last Modified  : November 30, 2024
+    Last Modified  : 2025-.11.29
 
     Prerequisites  :
     ? PowerShell 5.1 or higher with FullLanguage execution mode
@@ -403,7 +403,7 @@
     ? Windows 11 operating system
 
     Source Repository: https://github.com/Raphire/Win11Debloat
-    Latest Version: 2025.11.30
+    Latest Version: 2025.11.29
 
     Temporary Files:
     ? Download Location: %TEMP%\win11debloat.zip
@@ -472,7 +472,8 @@ param (
     [string]$LogPath,
     [string]$User,
     [switch]$CreateRestorePoint,
-    [switch]$RunAppsListGenerator, [switch]$RunAppConfigurator,
+    [switch]$RunAppsListGenerator,
+    [switch]$RunAppConfigurator,
     [switch]$RunDefaults,
     [switch]$RunDefaultsLite,
     [switch]$RunSavedSettings,

@@ -399,8 +399,8 @@
 .NOTES
     Script Name    : Win11Debloat.ps1
     Author         : Raphire / Win11Debloat Community
-    Version        : 2025.11.30
-    Last Modified  : November 30, 2024
+    Version        : 2025.11.29
+    Last Modified  : 2025.11.29
 
     Prerequisites  :
     ? Windows 11 operating system
@@ -473,7 +473,7 @@
     PowerShell Documentation: https://docs.microsoft.com/powershell/
 
 .CHANGELOG
-    Version 2025.11.30 - Latest feature updates, AI controls, and enterprise enhancements
+    Version 2025.11.29 - Latest feature updates, AI controls, and enterprise enhancements
     Version 2.0 - Enterprise documentation, enhanced safety features, and comprehensive parameter support
 #>
 
@@ -574,7 +574,7 @@ function ShowAppSelectionForm {
     [reflection.assembly]::loadwithpartialname('System.Windows.Forms') | Out-Null
     [reflection.assembly]::loadwithpartialname('System.Drawing') | Out-Null
 
-    # Initialise form objects
+    # Initialize form objects
     $form = New-Object System.Windows.Forms.Form
     $label = New-Object System.Windows.Forms.Label
     $button1 = New-Object System.Windows.Forms.Button
@@ -657,7 +657,7 @@ function ShowAppSelectionForm {
         # Correct the initial state of the form to prevent the .Net maximized form issue
         $form.WindowState = $initialFormWindowState
 
-        # Reset state to default before loading appslist again
+        # Reset state to default before loading AppsList again
         $script:selectionBoxIndex = -1
         $checkUncheckCheckBox.Checked = $False
 
@@ -668,8 +668,8 @@ function ShowAppSelectionForm {
         # Clear selectionBox before adding any new items
         $selectionBox.Items.Clear()
 
-        # Set filePath where Appslist can be found
-        $appsFile = "$PSScriptRoot/Appslist.txt"
+        # Set filePath where AppsList can be found
+        $appsFile = "$PSScriptRoot/AppsList.txt"
         $listOfApps = ''
 
         if ($onlyInstalledCheckBox.Checked -and ($script:wingetInstalled -eq $true)) {
@@ -686,7 +686,7 @@ function ShowAppSelectionForm {
             }
         }
 
-        # Go through appslist and add items one by one to the selectionBox
+        # Go through AppsList and add items one by one to the selectionBox
         foreach ($app in (Get-Content -Path $appsFile | Where-Object { $_ -notmatch '^\s*$' -and $_ -notmatch '^#  .*' -and $_ -notmatch '^# -* #' } )) {
             $appChecked = $true
 
@@ -696,12 +696,12 @@ function ShowAppSelectionForm {
                 $appChecked = $false
             }
 
-            # Remove any comments from the Appname
+            # Remove any comments from the AppName
             if (-not ($app.IndexOf('#') -eq -1)) {
                 $app = $app.Substring(0, $app.IndexOf('#'))
             }
 
-            # Remove leading and trailing spaces and `*` characters from Appname
+            # Remove leading and trailing spaces and `*` characters from AppName
             $app = $app.Trim()
             $appString = $app.Trim('*')
 
@@ -818,38 +818,38 @@ function ShowAppSelectionForm {
 
 
 # Returns list of apps from the specified file, it trims the app names and removes any comments
-function ReadAppslistFromFile {
+function ReadAppsListFromFile {
     param (
         $appsFilePath
     )
 
-    $appsList = @()
+    $AppsList = @()
 
     # Get list of apps from file at the path provided, and remove them one by one
     foreach ($app in (Get-Content -Path $appsFilePath | Where-Object { $_ -notmatch '^#.*' -and $_ -notmatch '^\s*$' } )) {
-        # Remove any comments from the Appname
+        # Remove any comments from the AppName
         if (-not ($app.IndexOf('#') -eq -1)) {
             $app = $app.Substring(0, $app.IndexOf('#'))
         }
 
-        # Remove any spaces before and after the Appname
+        # Remove any spaces before and after the AppName
         $app = $app.Trim()
 
         $appString = $app.Trim('*')
-        $appsList += $appString
+        $AppsList += $appString
     }
 
-    return $appsList
+    return $AppsList
 }
 
 
 # Removes apps specified during function call from all user accounts and from the OS image.
 function RemoveApps {
     param (
-        $appslist
+        $AppsList
     )
 
-    foreach ($app in $appsList) {
+    foreach ($app in $AppsList) {
         Write-Output "Attempting to remove $app..."
 
         if (($app -eq 'Microsoft.OneDrive') -or ($app -eq 'Microsoft.Edge')) {
@@ -857,13 +857,13 @@ function RemoveApps {
             if ($script:wingetInstalled -eq $false) {
                 Write-Host "Error: WinGet is either not installed or is outdated, $app could not be removed" -ForegroundColor Red
             } else {
-                $appName = $app -replace '\.', '_'
+                $AppName = $app -replace '\.', '_'
 
                 # Uninstall app via winget, or create a scheduled task to uninstall it later
                 if ($script:Params.ContainsKey('User')) {
-                    RegImport "Adding scheduled task to uninstall $app for user $(GetUserName)..." "Uninstall_$($appName).reg"
+                    RegImport "Adding scheduled task to uninstall $app for user $(GetUserName)..." "Uninstall_$($AppName).reg"
                 } elseif ($script:Params.ContainsKey('Sysprep')) {
-                    RegImport "Adding scheduled task to uninstall $app after new users log in..." "Uninstall_$($appName).reg"
+                    RegImport "Adding scheduled task to uninstall $app after new users log in..." "Uninstall_$($AppName).reg"
                 } else {
                     Strip-Progress -ScriptBlock { winget uninstall --accept-source-agreements --disable-interactivity --id $app } | Tee-Object -Variable wingetOutput
                 }
@@ -894,7 +894,7 @@ function RemoveApps {
                 } catch {
                     if ($DebugPreference -ne 'SilentlyContinue') {
                         Write-Host "Unable to remove $app for all users" -ForegroundColor Yellow
-                        Write-Host $psitem.Exception.StackTrace -ForegroundColor Gray
+                        Write-Host $PSItem.Exception.StackTrace -ForegroundColor Gray
                     }
                 }
             } else {
@@ -908,7 +908,7 @@ function RemoveApps {
                 } catch {
                     if ($DebugPreference -ne 'SilentlyContinue') {
                         Write-Host "Unable to remove $app for current user" -ForegroundColor Yellow
-                        Write-Host $psitem.Exception.StackTrace -ForegroundColor Gray
+                        Write-Host $PSItem.Exception.StackTrace -ForegroundColor Gray
                     }
                 }
 
@@ -921,7 +921,7 @@ function RemoveApps {
                 } catch {
                     if ($DebugPreference -ne 'SilentlyContinue') {
                         Write-Host "Unable to remove $app for all users" -ForegroundColor Yellow
-                        Write-Host $psitem.Exception.StackTrace -ForegroundColor Gray
+                        Write-Host $PSItem.Exception.StackTrace -ForegroundColor Gray
                     }
                 }
             }
@@ -931,7 +931,7 @@ function RemoveApps {
                 Get-AppxProvisionedPackage -Online | Where-Object { $_.PackageName -like $app } | ForEach-Object { Remove-ProvisionedAppxPackage -Online -AllUsers -PackageName $_.PackageName }
             } catch {
                 Write-Host "Unable to remove $app from windows image" -ForegroundColor Yellow
-                Write-Host $psitem.Exception.StackTrace -ForegroundColor Gray
+                Write-Host $PSItem.Exception.StackTrace -ForegroundColor Gray
             }
         }
     }
@@ -942,7 +942,7 @@ function RemoveApps {
 
 # Forcefully removes Microsoft Edge using it's uninstaller
 function ForceRemoveEdge {
-    # Based on work from loadstring1 & ave9858
+    # Based on work from LoadString1 & ave9858
     Write-Output '> Forcefully uninstalling Microsoft Edge...'
 
     $regView = [Microsoft.Win32.RegistryView]::Registry32
@@ -1083,7 +1083,7 @@ function GetUserDirectory {
 }
 
 
-# Import & execute regfile
+# Import & execute RegFile
 function RegImport {
     param (
         $message,
@@ -1096,17 +1096,17 @@ function RegImport {
         $defaultUserPath = GetUserDirectory -userName 'Default' -fileName 'NTUSER.DAT'
 
         reg load 'HKU\Default' $defaultUserPath | Out-Null
-        reg import "$PSScriptRoot\Regfiles\Sysprep\$path"
+        reg import "$PSScriptRoot\RegFiles\Sysprep\$path"
         reg unload 'HKU\Default' | Out-Null
     } elseif ($script:Params.ContainsKey('User')) {
         $userPath = GetUserDirectory -userName $script:Params.Item('User') -fileName 'NTUSER.DAT'
 
         reg load 'HKU\Default' $userPath | Out-Null
-        reg import "$PSScriptRoot\Regfiles\Sysprep\$path"
+        reg import "$PSScriptRoot\RegFiles\Sysprep\$path"
         reg unload 'HKU\Default' | Out-Null
 
     } else {
-        reg import "$PSScriptRoot\Regfiles\$path"
+        reg import "$PSScriptRoot\RegFiles\$path"
     }
 
     Write-Output ''
@@ -1310,13 +1310,13 @@ function PrintAppsList {
         return
     }
 
-    $appsList = ReadAppslistFromFile $path
+    $AppsList = ReadAppsListFromFile $path
 
     if ($printCount) {
-        Write-Output "- Remove $($appsList.Count) apps:"
+        Write-Output "- Remove $($AppsList.Count) apps:"
     }
 
-    Write-Host $appsList -ForegroundColor DarkGray
+    Write-Host $AppsList -ForegroundColor DarkGray
 }
 
 
@@ -1829,43 +1829,43 @@ function DisplayCustomModeOptions {
         if ($WinVersion -ge 22000) {
             Write-Output ''
 
-            if ($( Read-Host -Prompt '   Hide the Home section from the File Explorer sidepanel? (y/n)' ) -eq 'y') {
-                AddParameter 'HideHome' 'Hide the Home section from the File Explorer sidepanel'
+            if ($( Read-Host -Prompt '   Hide the Home section from the File Explorer side panel? (y/n)' ) -eq 'y') {
+                AddParameter 'HideHome' 'Hide the Home section from the File Explorer side panel'
             }
 
             Write-Output ''
 
-            if ($( Read-Host -Prompt '   Hide the Gallery section from the File Explorer sidepanel? (y/n)' ) -eq 'y') {
-                AddParameter 'HideGallery' 'Hide the Gallery section from the File Explorer sidepanel'
+            if ($( Read-Host -Prompt '   Hide the Gallery section from the File Explorer side panel? (y/n)' ) -eq 'y') {
+                AddParameter 'HideGallery' 'Hide the Gallery section from the File Explorer side panel'
             }
         }
 
         Write-Output ''
 
-        if ($( Read-Host -Prompt '   Hide duplicate removable drive entries from the File Explorer sidepanel so they only show under This PC? (y/n)' ) -eq 'y') {
-            AddParameter 'HideDupliDrive' 'Hide duplicate removable drive entries from the File Explorer sidepanel'
+        if ($( Read-Host -Prompt '   Hide duplicate removable drive entries from the File Explorer side panel so they only show under This PC? (y/n)' ) -eq 'y') {
+            AddParameter 'HideDupliDrive' 'Hide duplicate removable drive entries from the File Explorer side panel'
         }
 
         # Only show option for disabling these specific folders for Windows 10 users
         if (Get-CimInstance -Query "select caption from win32_operatingsystem where caption like '%Windows 10%'") {
             Write-Output ''
 
-            if ($( Read-Host -Prompt 'Do you want to hide any folders from the File Explorer sidepanel? (y/n)' ) -eq 'y') {
+            if ($( Read-Host -Prompt 'Do you want to hide any folders from the File Explorer side panel? (y/n)' ) -eq 'y') {
                 Write-Output ''
 
-                if ($( Read-Host -Prompt '   Hide the OneDrive folder from the File Explorer sidepanel? (y/n)' ) -eq 'y') {
-                    AddParameter 'HideOnedrive' 'Hide the OneDrive folder in the File Explorer sidepanel'
+                if ($( Read-Host -Prompt '   Hide the OneDrive folder from the File Explorer side panel? (y/n)' ) -eq 'y') {
+                    AddParameter 'HideOnedrive' 'Hide the OneDrive folder in the File Explorer side panel'
                 }
 
                 Write-Output ''
 
-                if ($( Read-Host -Prompt '   Hide the 3D objects folder from the File Explorer sidepanel? (y/n)' ) -eq 'y') {
+                if ($( Read-Host -Prompt '   Hide the 3D objects folder from the File Explorer side panel? (y/n)' ) -eq 'y') {
                     AddParameter 'Hide3dObjects' "Hide the 3D objects folder under 'This pc' in File Explorer"
                 }
 
                 Write-Output ''
 
-                if ($( Read-Host -Prompt '   Hide the music folder from the File Explorer sidepanel? (y/n)' ) -eq 'y') {
+                if ($( Read-Host -Prompt '   Hide the music folder from the File Explorer side panel? (y/n)' ) -eq 'y') {
                     AddParameter 'HideMusic' "Hide the music folder under 'This pc' in File Explorer"
                 }
             }
@@ -2079,7 +2079,7 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
                 switch ($RemoveAppsInput) {
                     '1' {
                         AddParameter 'RemoveApps' 'Remove the default selection of apps:' $false
-                        PrintAppsList "$PSScriptRoot/Appslist.txt"
+                        PrintAppsList "$PSScriptRoot/AppsList.txt"
                     }
                     '2' {
                         AddParameter 'RemoveAppsCustom' "Remove $($script:SelectedApps.Count) apps:" $false
@@ -2167,7 +2167,7 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
                     # Print parameter description and add parameter to Params list
                     switch ($parameterName) {
                         'RemoveApps' {
-                            PrintAppsList "$PSScriptRoot/Appslist.txt" $true
+                            PrintAppsList "$PSScriptRoot/AppsList.txt" $true
                         }
                         'RemoveAppsCustom' {
                             PrintAppsList "$PSScriptRoot/CustomAppsList" $true
@@ -2212,9 +2212,9 @@ switch ($script:Params.Keys) {
         continue
     }
     'RemoveApps' {
-        $appsList = ReadAppslistFromFile "$PSScriptRoot/Appslist.txt"
-        Write-Output "> Removing default selection of $($appsList.Count) apps..."
-        RemoveApps $appsList
+        $AppsList = ReadAppsListFromFile "$PSScriptRoot/AppsList.txt"
+        Write-Output "> Removing default selection of $($AppsList.Count) apps..."
+        RemoveApps $AppsList
         continue
     }
     'RemoveAppsCustom' {
@@ -2224,33 +2224,33 @@ switch ($script:Params.Keys) {
             continue
         }
 
-        $appsList = ReadAppslistFromFile "$PSScriptRoot/CustomAppsList"
-        Write-Output "> Removing $($appsList.Count) apps..."
-        RemoveApps $appsList
+        $AppsList = ReadAppsListFromFile "$PSScriptRoot/CustomAppsList"
+        Write-Output "> Removing $($AppsList.Count) apps..."
+        RemoveApps $AppsList
         continue
     }
     'RemoveCommApps' {
-        $appsList = 'Microsoft.windowscommunicationsapps', 'Microsoft.People'
+        $AppsList = 'Microsoft.windowscommunicationsapps', 'Microsoft.People'
         Write-Output '> Removing Mail, Calendar and People apps...'
-        RemoveApps $appsList
+        RemoveApps $AppsList
         continue
     }
     'RemoveW11Outlook' {
-        $appsList = 'Microsoft.OutlookForWindows'
+        $AppsList = 'Microsoft.OutlookForWindows'
         Write-Output '> Removing new Outlook for Windows app...'
-        RemoveApps $appsList
+        RemoveApps $AppsList
         continue
     }
     'RemoveGamingApps' {
-        $appsList = 'Microsoft.GamingApp', 'Microsoft.XboxGameOverlay', 'Microsoft.XboxGamingOverlay'
+        $AppsList = 'Microsoft.GamingApp', 'Microsoft.XboxGameOverlay', 'Microsoft.XboxGamingOverlay'
         Write-Output '> Removing gaming related apps...'
-        RemoveApps $appsList
+        RemoveApps $AppsList
         continue
     }
     'RemoveHPApps' {
-        $appsList = 'AD2F1837.HPAIExperienceCenter', 'AD2F1837.HPJumpStarts', 'AD2F1837.HPPCHardwareDiagnosticsWindows', 'AD2F1837.HPPowerManager', 'AD2F1837.HPPrivacySettings', 'AD2F1837.HPSupportAssistant', 'AD2F1837.HPSureShieldAI', 'AD2F1837.HPSystemInformation', 'AD2F1837.HPQuickDrop', 'AD2F1837.HPWorkWell', 'AD2F1837.myHP', 'AD2F1837.HPDesktopSupportUtilities', 'AD2F1837.HPQuickTouch', 'AD2F1837.HPEasyClean', 'AD2F1837.HPConnectedMusic', 'AD2F1837.HPFileViewer', 'AD2F1837.HPRegistration', 'AD2F1837.HPWelcome', 'AD2F1837.HPConnectedPhotopoweredbySnapfish', 'AD2F1837.HPPrinterControl'
+        $AppsList = 'AD2F1837.HPAIExperienceCenter', 'AD2F1837.HPJumpStarts', 'AD2F1837.HPPCHardwareDiagnosticsWindows', 'AD2F1837.HPPowerManager', 'AD2F1837.HPPrivacySettings', 'AD2F1837.HPSupportAssistant', 'AD2F1837.HPSureShieldAI', 'AD2F1837.HPSystemInformation', 'AD2F1837.HPQuickDrop', 'AD2F1837.HPWorkWell', 'AD2F1837.myHP', 'AD2F1837.HPDesktopSupportUtilities', 'AD2F1837.HPQuickTouch', 'AD2F1837.HPEasyClean', 'AD2F1837.HPConnectedMusic', 'AD2F1837.HPFileViewer', 'AD2F1837.HPRegistration', 'AD2F1837.HPWelcome', 'AD2F1837.HPConnectedPhotopoweredbySnapfish', 'AD2F1837.HPPrinterControl'
         Write-Output '> Removing HP apps...'
-        RemoveApps $appsList
+        RemoveApps $AppsList
         continue
     }
     'ForceRemoveEdge' {
@@ -2297,16 +2297,16 @@ switch ($script:Params.Keys) {
         RegImport '> Disabling Bing web search, Bing AI and Cortana from Windows search...' 'Disable_Bing_Cortana_In_Search.reg'
 
         # Also remove the app package for Bing search
-        $appsList = 'Microsoft.BingSearch'
-        RemoveApps $appsList
+        $AppsList = 'Microsoft.BingSearch'
+        RemoveApps $AppsList
         continue
     }
     'DisableCopilot' {
         RegImport '> Disabling Microsoft Copilot...' 'Disable_Copilot.reg'
 
         # Also remove the app package for Copilot
-        $appsList = 'Microsoft.Copilot'
-        RemoveApps $appsList
+        $AppsList = 'Microsoft.Copilot'
+        RemoveApps $AppsList
         continue
     }
     'DisableRecall' {
@@ -2453,8 +2453,8 @@ switch ($script:Params.Keys) {
         RegImport '> Disabling widgets on the taskbar & lockscreen...' 'Disable_Widgets_Service.reg'
 
         # Also remove the app package for Widgets
-        $appsList = 'Microsoft.StartExperiencesApp'
-        RemoveApps $appsList
+        $AppsList = 'Microsoft.StartExperiencesApp'
+        RemoveApps $AppsList
         continue
     }
     { $_ -in 'HideChat', 'DisableChat' } {

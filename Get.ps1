@@ -90,8 +90,18 @@ Write-Output "------------------------------------------------------------------
 
 Write-Output "> Downloading Win11Debloat..."
 
-# Download latest version of Win11Debloat from github as zip archive
-Invoke-RestMethod https://api.github.com/repos/Raphire/Win11Debloat/zipball/2025.11.30 -OutFile "$env:TEMP/win11debloat.zip"
+# Download latest version of Win11Debloat from GitHub as zip archive
+try {
+    $LatestReleaseUri = (Invoke-RestMethod https://api.github.com/repos/Raphire/Win11Debloat/releases/latest).zipball_url
+    Invoke-RestMethod $LatestReleaseUri -OutFile "$env:TEMP/win11debloat.zip"
+}
+catch {
+    Write-Host "Error: Unable to fetch latest release from GitHub. Please check your internet connection and try again." -ForegroundColor Red
+    Write-Output ""
+    Write-Output "Press enter to exit..."
+    Read-Host | Out-Null
+    Exit
+}
 
 # Remove old script folder if it exists, except for CustomAppsList and SavedSettings files
 if (Test-Path "$env:TEMP/Win11Debloat") {

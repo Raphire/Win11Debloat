@@ -400,7 +400,7 @@
     Script Name    : Win11Debloat.ps1
     Author         : Raphire / Win11Debloat Community
     Version        : 2025.11.29
-    Last Modified  : 2025.11.29
+    Last Modified  : 2025.11.30
 
     Prerequisites  :
     ? Windows 11 operating system

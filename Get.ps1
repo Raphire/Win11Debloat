@@ -394,7 +394,7 @@
     Script Name    : Get.ps1
     Author         : Win11Debloat Project / Enterprise Infrastructure Team
     Version        : 2.0
-    Last Modified  : 2025-.11.29
+    Last Modified  : 2025.11.30
 
     Prerequisites  :
     ? PowerShell 5.1 or higher with FullLanguage execution mode

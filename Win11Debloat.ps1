@@ -399,8 +399,8 @@
 .NOTES
     Script Name    : Win11Debloat.ps1
     Author         : Raphire / Win11Debloat Community
-    Version        : 2025.11.29
-    Last Modified  : 2025.11.30
+    Version        : 2025.12.02
+    Last Modified  : 2025.12.02
 
     Prerequisites  :
     ? Windows 11 operating system
@@ -473,6 +473,7 @@
     PowerShell Documentation: https://docs.microsoft.com/powershell/
 
 .CHANGELOG
+    Version 2025.12.02 - Updated header and version information
     Version 2025.11.29 - Latest feature updates, AI controls, and enterprise enhancements
     Version 2.0 - Enterprise documentation, enhanced safety features, and comprehensive parameter support
 #>

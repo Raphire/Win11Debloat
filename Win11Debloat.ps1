@@ -1608,6 +1608,13 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
                 
                                 $RemoveAppsInput = 'c'
                             }
+                            elseif ($script:selectedApps.contains('Microsoft.XboxGameOverlay') -or $script:selectedApps.contains('Microsoft.XboxGamingOverlay')) {
+                                Write-Output ""
+
+                                if ($( Read-Host -Prompt "Disable Game Bar integration and game/screen recording? This also stops ms-gamingoverlay and ms-gamebar popups (y/n)" ) -eq 'y') {
+                                    $DisableGameBarIntegrationInput = $true;
+                                }
+                            }
                             
                             Write-Output ""
                         }
@@ -1635,7 +1642,12 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
                     }
                 }
 
-                 # Only add this option for Windows 10 users
+                if ($DisableGameBarIntegrationInput) {
+                    AddParameter 'DisableDVR' 'Disable Xbox game/screen recording' $false
+                    AddParameter 'DisableGameBarIntegration' 'Disable Game Bar integration' $false
+                }
+
+                # Only add this option for Windows 10 users
                 if (get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'") {
                     AddParameter 'Hide3dObjects' "Hide the 3D objects folder under 'This pc' in File Explorer" $false
                     AddParameter 'HideChat' 'Hide the chat (meet now) icon from the taskbar' $false

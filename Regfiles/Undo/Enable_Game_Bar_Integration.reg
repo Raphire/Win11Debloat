@@ -13,7 +13,7 @@ Windows Registry Editor Version 5.00
 [-HKEY_CLASSES_ROOT\ms-gamebar\shell\open\command]
 
 [HKEY_CLASSES_ROOT\ms-gamebarservices]
-@="URL:ms-gamebar"
+@="URL:ms-gamebarservices"
 "URL Protocol"=""
 "NoOpenWith"=-
 

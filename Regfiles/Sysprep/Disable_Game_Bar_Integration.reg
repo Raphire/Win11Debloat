@@ -14,7 +14,7 @@ Windows Registry Editor Version 5.00
 @="%SystemRoot%/System32/systray.exe"
 
 [HKEY_CLASSES_ROOT\ms-gamebarservices]
-@="URL:ms-gamebar"
+@="URL:ms-gamebarservices"
 "URL Protocol"=""
 "NoOpenWith"=""
 

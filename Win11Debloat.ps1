@@ -388,7 +388,7 @@ function RemoveApps {
     Foreach ($app in $appsList) { 
         Write-Output "Attempting to remove $app..."
 
-        # Only use winget to remove OneDrive and Edge
+        # Use winget only to remove OneDrive and Edge
         if (($app -eq "Microsoft.OneDrive") -or ($app -eq "Microsoft.Edge")) {
             if ($script:wingetInstalled -eq $false) {
                 Write-Host "Error: WinGet is either not installed or is outdated, $app could not be removed" -ForegroundColor Red

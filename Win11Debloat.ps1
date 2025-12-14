@@ -1761,7 +1761,7 @@ else {
 
 # If the number of keys in SPParams equals the number of keys in Params then no modifications/changes were selected
 #  or added by the user, and the script can exit without making any changes.
-if ($SPParamCount -eq $script:Params.Keys.Count) {
+if (($SPParamCount -eq $script:Params.Keys.Count) -or (($script:Params.Keys.Count -eq 1) -and ($script:Params.Keys -contains 'CreateRestorePoint'))) {
     Write-Output "The script completed without making any changes."
 
     AwaitKeyToExit

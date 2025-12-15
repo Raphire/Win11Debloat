@@ -979,68 +979,69 @@ function ShowScriptMenuOptions {
 function ShowDefaultMode {
     AddParameter 'CreateRestorePoint' 'Create a system restore point' $false
 
-    # Show the default settings and any relevant app removal options, unless Silent parameter was passed
+    # Show options for removing apps, or set selection if RunDefaults or RunDefaultsLite parameter was passed
+    if ($RunDefaults) {
+        $RemoveAppsInput = '1'
+    }
+    elseif ($RunDefaultsLite) {
+        $RemoveAppsInput = '0'                
+    }
+    else {
+        $RemoveAppsInput = ShowDefaultModeAppRemovalOptions
+
+        if ($script:selectedApps.contains('Microsoft.XboxGameOverlay') -or $script:selectedApps.contains('Microsoft.XboxGamingOverlay')) {
+            Write-Output ""
+
+            if ($( Read-Host -Prompt "Disable Game Bar integration and game/screen recording? This also stops ms-gamingoverlay and ms-gamebar popups (y/n)" ) -eq 'y') {
+                $DisableGameBarIntegrationInput = $true;
+            }
+        }
+    }
+
+    PrintHeader 'Default Mode'
+
+    Write-Output "Win11Debloat will make the following changes:"
+
+    # Select correct option based on user input
+    switch ($RemoveAppsInput) {
+        '1' {
+            AddParameter 'RemoveApps' 'Remove the default selection of apps:' $false
+            PrintAppsList "$PSScriptRoot/Appslist.txt"
+        }
+        '2' {
+            AddParameter 'RemoveAppsCustom' "Remove $($script:SelectedApps.Count) apps:" $false
+            PrintAppsList "$PSScriptRoot/CustomAppsList"
+        }
+    }
+
+    if ($DisableGameBarIntegrationInput) {
+        AddParameter 'DisableDVR' 'Disable Xbox game/screen recording' $false
+        AddParameter 'DisableGameBarIntegration' 'Disable Game Bar integration' $false
+    }
+
+    # Only add this option for Windows 10 users
+    if (get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'") {
+        AddParameter 'Hide3dObjects' "Hide the 3D objects folder under 'This pc' in File Explorer" $false
+        AddParameter 'HideChat' 'Hide the chat (meet now) icon from the taskbar' $false
+    }
+
+    # Only add these options for Windows 11 users (build 22000+)
+    if ($WinVersion -ge 22000) {
+        if ($script:ModernStandbySupported) {
+            AddParameter 'DisableModernStandbyNetworking' 'Disable network connectivity during Modern Standby' $false
+        }
+
+        AddParameter 'DisableRecall' 'Disable Windows Recall' $false
+        AddParameter 'DisableClickToDo' 'Disable Click to Do (AI text & image analysis)' $false
+    }
+
+    PrintFromFile "$PSScriptRoot/Assets/Menus/DefaultSettings" "Default Mode" $false
+
+    # Suppress prompt if Silent parameter was passed
     if (-not $Silent) {
-        if ($RunDefaults) {
-            $RemoveAppsInput = '1'
-        }
-        elseif ($RunDefaultsLite) {
-            $RemoveAppsInput = '0'                
-        }
-        else {
-            $RemoveAppsInput = ShowDefaultModeAppRemovalOptions
-
-            if ($script:selectedApps.contains('Microsoft.XboxGameOverlay') -or $script:selectedApps.contains('Microsoft.XboxGamingOverlay')) {
-                Write-Output ""
-
-                if ($( Read-Host -Prompt "Disable Game Bar integration and game/screen recording? This also stops ms-gamingoverlay and ms-gamebar popups (y/n)" ) -eq 'y') {
-                    $DisableGameBarIntegrationInput = $true;
-                }
-            }
-        }
-
-        PrintHeader 'Default Mode'
-
-        Write-Output "Win11Debloat will make the following changes:"
-
-        # Select correct option based on user input
-        switch ($RemoveAppsInput) {
-            '1' {
-                AddParameter 'RemoveApps' 'Remove the default selection of apps:' $false
-                PrintAppsList "$PSScriptRoot/Appslist.txt"
-            }
-            '2' {
-                AddParameter 'RemoveAppsCustom' "Remove $($script:SelectedApps.Count) apps:" $false
-                PrintAppsList "$PSScriptRoot/CustomAppsList"
-            }
-        }
-
-        if ($DisableGameBarIntegrationInput) {
-            AddParameter 'DisableDVR' 'Disable Xbox game/screen recording' $false
-            AddParameter 'DisableGameBarIntegration' 'Disable Game Bar integration' $false
-        }
-
-        # Only add this option for Windows 10 users
-        if (get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'") {
-            AddParameter 'Hide3dObjects' "Hide the 3D objects folder under 'This pc' in File Explorer" $false
-            AddParameter 'HideChat' 'Hide the chat (meet now) icon from the taskbar' $false
-        }
-
-        # Only add these options for Windows 11 users (build 22000+)
-        if ($WinVersion -ge 22000) {
-            if ($script:ModernStandbySupported) {
-                AddParameter 'DisableModernStandbyNetworking' 'Disable network connectivity during Modern Standby' $false
-            }
-
-            AddParameter 'DisableRecall' 'Disable Windows Recall' $false
-            AddParameter 'DisableClickToDo' 'Disable Click to Do (AI text & image analysis)' $false
-        }
-
-        PrintFromFile "$PSScriptRoot/Assets/Menus/DefaultSettings" "Default Mode" $false
-
         Write-Output "Press enter to execute the script or press CTRL+C to quit..."
         Read-Host | Out-Null
-    }
+    } 
 
     $DefaultParameterNames = 'DisableCopilot','DisableTelemetry','DisableSuggestions','DisableEdgeAds','DisableLockscreenTips','DisableBing','ShowKnownFileExt','DisableWidgets','DisableFastStartup'
 
@@ -1595,7 +1596,7 @@ function ShowAppRemoval {
 }
 
 
-function ShowSavedSettings {
+function LoadAndShowSavedSettings {
     PrintHeader 'Custom Mode'
     Write-Output "Win11Debloat will make the following changes:"
 
@@ -1627,6 +1628,7 @@ function ShowSavedSettings {
         }
     }
 
+    # Suppress prompt if Silent parameter was passed
     if (-not $Silent) {
         Write-Output ""
         Write-Output ""
@@ -1753,12 +1755,12 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
 
     # Add execution parameters based on the mode
     switch ($Mode) {
-        # Default mode, loads defaults after confirmation
+        # Default mode, loads defaults and app removal options
         '1' { 
             ShowDefaultMode
         }
 
-        # Custom mode, show & add options based on user input
+        # Custom mode, shows all available options for user selection
         '2' { 
             ShowCustomModeOptions
         }
@@ -1768,9 +1770,9 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
             ShowAppRemoval
         }
 
-        # Load custom options from the "SavedSettings" file
+        # Load last used custom options from the "SavedSettings" file
         '4' {
-            ShowSavedSettings
+            LoadAndShowSavedSettings
         }
     }
 }

@@ -989,12 +989,9 @@ function ShowDefaultMode {
     else {
         $RemoveAppsInput = ShowDefaultModeAppRemovalOptions
 
-        if ($script:selectedApps.contains('Microsoft.XboxGameOverlay') -or $script:selectedApps.contains('Microsoft.XboxGamingOverlay')) {
-            Write-Output ""
-
-            if ($( Read-Host -Prompt "Disable Game Bar integration and game/screen recording? This also stops ms-gamingoverlay and ms-gamebar popups (y/n)" ) -eq 'y') {
-                $DisableGameBarIntegrationInput = $true;
-            }
+        if (($script:selectedApps.contains('Microsoft.XboxGameOverlay') -or $script:selectedApps.contains('Microsoft.XboxGamingOverlay')) -and 
+          $( Read-Host -Prompt "Disable Game Bar integration and game/screen recording? This also stops ms-gamingoverlay and ms-gamebar popups (y/n)" ) -eq 'y') {
+            $DisableGameBarIntegrationInput = $true;
         }
     }
 

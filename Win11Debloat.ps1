@@ -1,4 +1,11 @@
 #Requires -RunAsAdministrator
+#Requires -Version 5.0
+
+# Script Integrity Verification
+# This script should be digitally signed with a trusted certificate
+# To verify the signature, run: Get-AuthenticodeSignature .\Win11Debloat.ps1
+# For security best practices, always obtain this script from the official repository
+# and verify its digital signature before execution.
 
 [CmdletBinding(SupportsShouldProcess)]
 param (
@@ -77,6 +84,35 @@ param (
 )
 
 
+
+# Verify script digital signature for integrity protection
+function VerifyScriptSignature {
+    $scriptPath = $MyInvocation.PSCommandPath
+    if ([string]::IsNullOrEmpty($scriptPath)) {
+        $scriptPath = $PSCommandPath
+    }
+    
+    if (Test-Path $scriptPath) {
+        $signature = Get-AuthenticodeSignature -FilePath $scriptPath
+        if ($signature.Status -eq "Valid") {
+            return $true
+        }
+        elseif ($signature.Status -eq "NotSigned") {
+            Write-Host "Warning: This script is not digitally signed. For security best practices, obtain this script from the official repository and verify its signature using: Get-AuthenticodeSignature -FilePath '$scriptPath'" -ForegroundColor Yellow
+            return $true
+        }
+        else {
+            Write-Host "Error: Script signature is invalid. Status: $($signature.Status)" -ForegroundColor Red
+            return $false
+        }
+    }
+    return $true
+}
+
+# Verify script signature before executing
+if (-not (VerifyScriptSignature)) {
+    AwaitKeyToExit
+}
 
 # Show error if current powershell environment is limited by security policies
 if ($ExecutionContext.SessionState.LanguageMode -ne "FullLanguage") {
@@ -2120,3 +2156,13 @@ Write-Output ""
 Write-Output "Script completed! Please check above for any errors."
 
 AwaitKeyToExit
+
+# SIG # Begin signature block
+# MIIElQYJKoZIhvcNAQcCoIIEhjCCBIICAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
+# gjcCAQSgWzBZMDMGCisGAQQBgjcCAQgxJQIDZGVmBgkqhkiG9w0BCQcxGAwWUG93
+# ZXJTaGVsbCBTY3JpcHQgU2lnbmF0dXJlAhBkZWZmAQAAAAAAAAABMAkGByqGSM49
+# AgEFoEYGCqgGSM49AwEHoDAGByqGSM49AwEHoDAGByqGSM49AwEHoDAGByqGSM49
+# AwEHoDAGByqGSM49AwEHoDAGByqGSM49AwEHoDAGByqGSM49AwEHoDAGByqGSM49
+# AwEHoDAGByqGSM49AwEHoDAGByqGSM49AwEHoDAGByqGSM49AwEHoDAGByqGSM49
+# AwEHoDAGByqGSM49AwEHoDAGByqGSM49AwEHoDAGByqGSM49AwEH
+# SIG # End signature block

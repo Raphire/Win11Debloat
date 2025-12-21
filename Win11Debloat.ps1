@@ -11,7 +11,8 @@ param (
     [switch]$RunDefaults,
     [switch]$RunDefaultsLite,
     [switch]$RunSavedSettings,
-    [switch]$RemoveApps, 
+    [string]$Apps,
+    [switch]$RemoveApps,
     [switch]$RemoveAppsCustom,
     [switch]$RemoveGamingApps,
     [switch]$RemoveCommApps,
@@ -80,8 +81,18 @@ param (
 
 # Show error if current powershell environment is limited by security policies
 if ($ExecutionContext.SessionState.LanguageMode -ne "FullLanguage") {
-    Write-Host "Error: Win11Debloat is unable to run on your system, powershell execution is restricted by security policies" -ForegroundColor Red
-    AwaitKeyToExit
+    Write-Error "Error: Win11Debloat is unable to run on your system, powershell execution is restricted by security policies"
+    Write-Output "Press any key to exit..."
+    $null = [System.Console]::ReadKey()
+    Exit
+}
+
+# Show error if script does not see file dependencies
+if (-not ((Test-Path "$PSScriptRoot/Appslist.txt") -and (Test-Path "$PSScriptRoot/Regfiles") -and (Test-Path "$PSScriptRoot/Assets"))) {
+    Write-Error "Error: Win11Debloat is unable to find required files, please ensure all script files are present"
+    Write-Output "Press any key to exit..."
+    $null = [System.Console]::ReadKey()
+    Exit
 }
 
 # Log script output to 'Win11Debloat.log' at the specified path
@@ -353,6 +364,47 @@ function ShowAppSelectionForm {
 }
 
 
+# Returns a validated list of apps based on the provided appsList and the supported apps from Appslist.txt
+function ValidateAppslist {
+    param (
+        $appsList,
+        $appsFilePath = "$PSScriptRoot/Appslist.txt"
+    )
+
+    $supportedAppsList = @()
+    $validatedAppsList = @()
+
+    Foreach ($app in (Get-Content -Path $appsFilePath | Where-Object {  $_ -notmatch '^# .*' -and $_ -notmatch '^\s*$' } )) {
+        if ($app.StartsWith('#')) {
+            $app = $app.TrimStart("#")
+        }
+
+        # Remove any comments from the Appname
+        if (-not ($app.IndexOf('#') -eq -1)) {
+            $app = $app.Substring(0, $app.IndexOf('#'))
+        }
+
+        $app = $app.Trim()
+        $appString = $app.Trim('*')
+        $supportedAppsList += $appString
+    }
+
+    Foreach ($app in $appsList) {
+        $app = $app.Trim()
+        $appString = $app.Trim('*')
+
+        if ($supportedAppsList -notcontains $appString) {
+            Write-Host "Warning: Removal of app '$appString' is not supported and will be skipped" -ForegroundColor Yellow
+            continue
+        }
+
+        $validatedAppsList += $appString
+    }
+
+    return $validatedAppsList
+}
+
+
 # Returns list of apps from the specified file, it trims the app names and removes any comments
 function ReadAppslistFromFile {
     param (
@@ -361,16 +413,13 @@ function ReadAppslistFromFile {
 
     $appsList = @()
 
-    # Get list of apps from file at the path provided, and remove them one by one
     Foreach ($app in (Get-Content -Path $appsFilePath | Where-Object { $_ -notmatch '^#.*' -and $_ -notmatch '^\s*$' } )) { 
         # Remove any comments from the Appname
         if (-not ($app.IndexOf('#') -eq -1)) {
             $app = $app.Substring(0, $app.IndexOf('#'))
         }
 
-        # Remove any spaces before and after the Appname
         $app = $app.Trim()
-        
         $appString = $app.Trim('*')
         $appsList += $appString
     }
@@ -634,18 +683,19 @@ function RegImport {
 
 # Restart the Windows Explorer process
 function RestartExplorer {
+    Write-Output "> Attempting to restart the Windows Explorer process to apply all changes..."
+    
     if ($script:Params.ContainsKey("Sysprep") -or $script:Params.ContainsKey("User") -or $script:Params.ContainsKey("NoRestartExplorer")) {
+        Write-Host "Process restart was skipped. Please manually reboot your PC to apply all changes." -ForegroundColor Yellow
         return
     }
 
-    Write-Output "> Restarting Windows Explorer process to apply all changes... (This may cause some flickering)"
-
     if ($script:Params.ContainsKey("DisableMouseAcceleration")) {
-        Write-Host "Warning: The Enhance Pointer Precision setting changes will only take effect after a reboot" -ForegroundColor Yellow
+        Write-Host "Warning: Changes to the Enhance Pointer Precision setting will only take effect after a reboot" -ForegroundColor Yellow
     }
 
     if ($script:Params.ContainsKey("DisableStickyKeys")) {
-        Write-Host "Warning: The Sticky Keys setting changes will only take effect after a reboot" -ForegroundColor Yellow
+        Write-Host "Warning: Changes to the Sticky Keys setting will only take effect after a reboot" -ForegroundColor Yellow
     }
 
     if ($script:Params.ContainsKey("DisableAnimations")) {
@@ -655,10 +705,11 @@ function RestartExplorer {
     # Only restart if the powershell process matches the OS architecture.
     # Restarting explorer from a 32bit PowerShell window will fail on a 64bit OS
     if ([Environment]::Is64BitProcess -eq [Environment]::Is64BitOperatingSystem) {
+        Write-Output "Restarting the Windows Explorer process... (This may cause your screen to flicker)"
         Stop-Process -processName: Explorer -Force
     }
     else {
-        Write-Warning "Unable to restart Windows Explorer process, please manually reboot your PC to apply all changes."
+        Write-Host "Unable to restart Windows Explorer process. Please manually reboot your PC to apply all changes." -ForegroundColor Yellow
     }
 }
 
@@ -753,16 +804,29 @@ function AddParameter {
     param (
         $parameterName,
         $message,
-        $addToFile = $true
+        $addToFile = $true,
+        $messageAsValue = $false
     )
 
-    # Add key if it doesn't already exist
+    $value = $true
+
+    if ($messageAsValue) {
+        $value = $message
+    }
+
+    # Add key or update value if key already exists
     if (-not $script:Params.ContainsKey($parameterName)) {
-        $script:Params.Add($parameterName, $true)
+        $script:Params.Add($parameterName, $value)
+    }
+    else {
+        $script:Params[$parameterName] = $value
     }
 
     if (-not $addToFile) {
-        Write-Output "- $message"
+        if (-not $messageAsValue) {
+            Write-Output "- $message"
+        }
+
         return
     }
 
@@ -823,7 +887,7 @@ function PrintFromFile {
 }
 
 
-function PrintAppsList {
+function PrintAppsListFromFile {
     param (
         $path,
         $printCount = $false
@@ -840,6 +904,34 @@ function PrintAppsList {
     }
 
     Write-Host $appsList -ForegroundColor DarkGray
+}
+
+
+function GenerateAppsList {
+    $appMode = $script:Params["Apps"].toLower()
+
+    switch ($appMode) {
+        'default' {
+            Write-Host "> Removing default selection of apps..."
+
+            $appsList = ReadAppslistFromFile "$PSScriptRoot/Appslist.txt"
+            Write-Host "$($appsList.Count) apps selected for removal"
+            return $appsList
+        }
+        default {
+            Write-Host "> Removing custom selection of apps..."
+
+            $appsList = $script:Params["Apps"].Split(',') | ForEach-Object { $_.Trim() }
+            $validatedAppsList = ValidateAppslist $appsList
+
+            if ($validatedAppsList.Count -eq 0) {
+                return @()
+            }
+
+            Write-Host "$($validatedAppsList.Count) apps selected for removal"
+            return $validatedAppsList
+        }
+    }
 }
 
 
@@ -1003,11 +1095,12 @@ function ShowDefaultMode {
     switch ($RemoveAppsInput) {
         '1' {
             AddParameter 'RemoveApps' 'Remove the default selection of apps:' $false
-            PrintAppsList "$PSScriptRoot/Appslist.txt"
+            AddParameter 'Apps' 'Default' $false $true
+            PrintAppsListFromFile "$PSScriptRoot/Appslist.txt"
         }
         '2' {
             AddParameter 'RemoveAppsCustom' "Remove $($script:SelectedApps.Count) apps:" $false
-            PrintAppsList "$PSScriptRoot/CustomAppsList"
+            PrintAppsListFromFile "$PSScriptRoot/CustomAppsList"
         }
     }
 
@@ -1124,10 +1217,12 @@ function ShowCustomModeOptions {
     # Select correct option based on user input
     switch ($RemoveAppsInput) {
         '1' {
-            AddParameter 'RemoveApps' 'Remove the default selection of apps'
+            AddParameter 'RemoveApps' 'Remove the default selection of apps:'
+            AddParameter 'Apps' 'Default' $true $true
         }
         '2' {
-            AddParameter 'RemoveApps' 'Remove the default selection of apps'
+            AddParameter 'RemoveApps' 'Remove the default selection of apps:'
+            AddParameter 'Apps' 'Default' $true $true
             AddParameter 'RemoveCommApps' 'Remove the Mail, Calendar, and People apps'
             AddParameter 'RemoveW11Outlook' 'Remove the new Outlook for Windows app'
             AddParameter 'RemoveGamingApps' 'Remove the Xbox App and Xbox Gamebar'
@@ -1597,32 +1692,57 @@ function LoadAndShowSavedSettings {
     PrintHeader 'Custom Mode'
     Write-Output "Win11Debloat will make the following changes:"
 
+    $appsListPrinted = $false
+
     # Print the saved settings info from file
-    Foreach ($line in (Get-Content -Path "$PSScriptRoot/SavedSettings" )) { 
+    Foreach ($line in (Get-Content -Path "$PSScriptRoot/SavedSettings")) { 
         # Remove any spaces before and after the line
         $line = $line.Trim()
     
         # Check if the line contains a comment
-        if (-not ($line.IndexOf('#') -eq -1)) {
-            $parameterName = $line.Substring(0, $line.IndexOf('#'))
+        if ($line.IndexOf('#') -eq -1) {
+            continue
+        }
 
-            # Print parameter description and add parameter to Params list
-            switch ($parameterName) {
-                'RemoveApps' {
-                    PrintAppsList "$PSScriptRoot/Appslist.txt" $true
-                }
-                'RemoveAppsCustom' {
-                    PrintAppsList "$PSScriptRoot/CustomAppsList" $true
-                }
-                default {
-                    Write-Output $line.Substring(($line.IndexOf('#') + 1), ($line.Length - $line.IndexOf('#') - 1))
-                }
+        $parameterName = $line.Substring(0, $line.IndexOf('#'))
+        $value = $true
+
+        # Print parameter description and add parameter to Params list
+        switch ($parameterName) {
+            'RemoveApps' {
+                # Skip
             }
+            'RemoveAppsCustom' {
+                PrintAppsListFromFile "$PSScriptRoot/CustomAppsList" $true
+            }
+            'Apps' {
+                $value = $line.Substring(($line.IndexOf('#') + 3), ($line.Length - $line.IndexOf('#') - 3))
 
-            if (-not $script:Params.ContainsKey($parameterName)) {
-                $script:Params.Add($parameterName, $true)
+                if ($value -eq 'Default') {
+                    PrintAppsListFromFile "$PSScriptRoot/Appslist.txt" $true
+                }
+                else {
+                    Write-Host $value.Split(',') -ForegroundColor DarkGray
+                }
+
+                $appsListPrinted = $true
+            }
+            default {
+                Write-Output $line.Substring(($line.IndexOf('#') + 1), ($line.Length - $line.IndexOf('#') - 1))
             }
         }
+
+        if (-not $script:Params.ContainsKey($parameterName)) {
+            $script:Params.Add($parameterName, $value)
+        }
+        else {
+            $script:Params[$parameterName] = $value
+        }
+    }
+
+    # For compatibility with old saved settings files, print apps list if not already printed
+    if ((-not $appsListPrinted) -and $script:Params.ContainsKey('RemoveApps')) {
+        PrintAppsListFromFile "$PSScriptRoot/Appslist.txt" $true
     }
 
     # Suppress prompt if Silent parameter was passed
@@ -1669,8 +1789,14 @@ $WinVersion = Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\Current
 $script:ModernStandbySupported = CheckModernStandbySupport
 
 $script:Params = $PSBoundParameters
+
+# Add default Apps parameter if not provided
+if (-not $script:Params.ContainsKey("Apps")) {
+    $script:Params.Add('Apps', 'Default')
+}
+
 $script:FirstSelection = $true
-$SPParams = 'WhatIf', 'Confirm', 'Verbose', 'Silent', 'Sysprep', 'Debug', 'User', 'CreateRestorePoint', 'LogPath'
+$SPParams = 'WhatIf', 'Confirm', 'Verbose', 'Silent', 'Sysprep', 'Debug', 'User', 'CreateRestorePoint', 'LogPath', 'Apps', 'NoRestartExplorer'
 $SPParamCount = 0
 
 # Count how many SPParams exist within Params
@@ -1793,12 +1919,20 @@ if ($script:Params.ContainsKey("CreateRestorePoint")) {
 # Execute all selected/provided parameters
 switch ($script:Params.Keys) {
     'RemoveApps' {
-        $appsList = ReadAppslistFromFile "$PSScriptRoot/Appslist.txt" 
-        Write-Output "> Removing default selection of $($appsList.Count) apps..."
+        $appsList = GenerateAppsList
+
+        if ($appsList.Count -eq 0) {
+            Write-Host "Skipping app removal, no valid apps provided!" -ForegroundColor Yellow
+            Write-Output ""
+            continue
+        }
+
         RemoveApps $appsList
         continue
     }
     'RemoveAppsCustom' {
+        Write-Output "> Removing custom selection of apps..."
+
         if (-not (Test-Path "$PSScriptRoot/CustomAppsList")) {
             Write-Host "> Error: Could not load custom apps list from file, no apps were removed" -ForegroundColor Red
             Write-Output ""
@@ -1806,7 +1940,7 @@ switch ($script:Params.Keys) {
         }
         
         $appsList = ReadAppslistFromFile "$PSScriptRoot/CustomAppsList"
-        Write-Output "> Removing $($appsList.Count) apps..."
+        Write-Output "$($appsList.Count) apps selected for removal"
         RemoveApps $appsList
         continue
     }

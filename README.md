@@ -20,7 +20,7 @@
 
  Win11Debloat is a lightweight, easy to use PowerShell script that allows you to quickly declutter and improve your Windows experience. It can remove pre-installed bloatware apps, disable telemetry, remove intrusive interface elements and much more. No need to painstakingly go through all the settings yourself or remove apps one by one. Win11Debloat makes the process quick and easy!
 
-The script also includes many features that system administrators and power users will enjoy. Such as support for Windows Audit mode, the option to make changes to other Windows users, the option to run without requiring any user input at runtime and the ability to access all of Win11Debloat's features right from the command-line. Please refer to our [wiki](https://github.com/Raphire/Win11Debloat/wiki/) for more details.
+The script also includes many features that system administrators and power users will enjoy. Such as support for Windows Audit mode, the option to make changes to other Windows users and the ability to access all of Win11Debloat's features right from the command-line. Please refer to our [wiki](https://github.com/Raphire/Win11Debloat/wiki/) for more details.
 
 ![Win11Debloat Menu](/Assets/menu.png)
 

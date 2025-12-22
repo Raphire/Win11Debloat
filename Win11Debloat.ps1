@@ -80,13 +80,13 @@ param (
 
 
 # Define script-level file paths
-$script:defaultSettingsFilePath = "$PSScriptRoot/DefaultSettings.json"
-$script:appsListFilePath = "$PSScriptRoot/Appslist.txt"
-$script:customSettingsFilePath = "$PSScriptRoot/CustomSettings.json"
-$script:customAppsListFilePath = "$PSScriptRoot/CustomAppsList"
-$script:defaultLogPath = "$PSScriptRoot/Win11Debloat.log"
-$script:regfilesPath = "$PSScriptRoot/Regfiles"
-$script:assetsPath = "$PSScriptRoot/Assets"
+$script:DefaultSettingsFilePath = "$PSScriptRoot/DefaultSettings.json"
+$script:AppsListFilePath = "$PSScriptRoot/Appslist.txt"
+$script:CustomSettingsFilePath = "$PSScriptRoot/CustomSettings.json"
+$script:CustomAppsListFilePath = "$PSScriptRoot/CustomAppsList"
+$script:DefaultLogPath = "$PSScriptRoot/Win11Debloat.log"
+$script:RegfilesPath = "$PSScriptRoot/Regfiles"
+$script:AssetsPath = "$PSScriptRoot/Assets"
 
 # Show error if current powershell environment is limited by security policies
 if ($ExecutionContext.SessionState.LanguageMode -ne "FullLanguage") {
@@ -97,7 +97,7 @@ if ($ExecutionContext.SessionState.LanguageMode -ne "FullLanguage") {
 }
 
 # Show error if script does not see file dependencies
-if (-not ((Test-Path $script:defaultSettingsFilePath) -and (Test-Path $script:appsListFilePath) -and (Test-Path $script:regfilesPath) -and (Test-Path $script:assetsPath))) {
+if (-not ((Test-Path $script:DefaultSettingsFilePath) -and (Test-Path $script:AppsListFilePath) -and (Test-Path $script:RegfilesPath) -and (Test-Path $script:AssetsPath))) {
     Write-Error "Error: Win11Debloat is unable to find required files, please ensure all script files are present"
     Write-Output "Press any key to exit..."
     $null = [System.Console]::ReadKey()
@@ -109,7 +109,7 @@ if ($LogPath -and (Test-Path $LogPath)) {
     Start-Transcript -Path "$LogPath/Win11Debloat.log" -Append -IncludeInvocationHeader -Force | Out-Null
 }
 else {
-    Start-Transcript -Path $script:defaultLogPath -Append -IncludeInvocationHeader -Force | Out-Null
+    Start-Transcript -Path $script:DefaultLogPath -Append -IncludeInvocationHeader -Force | Out-Null
 }
 
 
@@ -138,7 +138,7 @@ function ShowAppSelectionForm {
     $checkUncheckCheckBox = New-Object System.Windows.Forms.CheckBox
     $initialFormWindowState = New-Object System.Windows.Forms.FormWindowState
 
-    $script:selectionBoxIndex = -1
+    $script:SelectionBoxIndex = -1
 
     # saveButton eventHandler
     $handler_saveButton_Click= 
@@ -154,11 +154,11 @@ function ShowAppSelectionForm {
         $script:SelectedApps = $selectionBox.CheckedItems
 
         # Create file that stores selected apps if it doesn't exist
-        if (-not (Test-Path $script:customAppsListFilePath)) {
-            $null = New-Item $script:customAppsListFilePath
+        if (-not (Test-Path $script:CustomAppsListFilePath)) {
+            $null = New-Item $script:CustomAppsListFilePath
         }
 
-        Set-Content -Path $script:customAppsListFilePath -Value $script:SelectedApps
+        Set-Content -Path $script:CustomAppsListFilePath -Value $script:SelectedApps
 
         $form.DialogResult = [System.Windows.Forms.DialogResult]::OK
         $form.Close()
@@ -172,15 +172,15 @@ function ShowAppSelectionForm {
 
     $selectionBox_SelectedIndexChanged= 
     {
-        $script:selectionBoxIndex = $selectionBox.SelectedIndex
+        $script:SelectionBoxIndex = $selectionBox.SelectedIndex
     }
 
     $selectionBox_MouseDown=
     {
         if ($_.Button -eq [System.Windows.Forms.MouseButtons]::Left) {
             if ([System.Windows.Forms.Control]::ModifierKeys -eq [System.Windows.Forms.Keys]::Shift) {
-                if ($script:selectionBoxIndex -ne -1) {
-                    $topIndex = $script:selectionBoxIndex
+                if ($script:SelectionBoxIndex -ne -1) {
+                    $topIndex = $script:SelectionBoxIndex
 
                     if ($selectionBox.SelectedIndex -gt $topIndex) {
                         for (($i = ($topIndex)); $i -le $selectionBox.SelectedIndex; $i++) {
@@ -194,7 +194,7 @@ function ShowAppSelectionForm {
                     }
                 }
             }
-            elseif ($script:selectionBoxIndex -ne $selectionBox.SelectedIndex) {
+            elseif ($script:SelectionBoxIndex -ne $selectionBox.SelectedIndex) {
                 $selectionBox.SetItemChecked($selectionBox.SelectedIndex, -not $selectionBox.GetItemChecked($selectionBox.SelectedIndex))
             }
         }
@@ -213,7 +213,7 @@ function ShowAppSelectionForm {
         $form.WindowState = $initialFormWindowState
 
         # Reset state to default before loading appslist again
-        $script:selectionBoxIndex = -1
+        $script:SelectionBoxIndex = -1
         $checkUncheckCheckBox.Checked = $False
 
         # Show loading indicator
@@ -225,7 +225,7 @@ function ShowAppSelectionForm {
 
         $listOfApps = ""
 
-        if ($onlyInstalledCheckBox.Checked -and ($script:wingetInstalled -eq $true)) {
+        if ($onlyInstalledCheckBox.Checked -and ($script:WingetInstalled -eq $true)) {
             # Attempt to get a list of installed apps via winget, times out after 10 seconds
             $job = Start-Job { return winget list --accept-source-agreements --disable-interactivity }
             $jobDone = $job | Wait-Job -TimeOut 10
@@ -241,7 +241,7 @@ function ShowAppSelectionForm {
         }
 
         # Go through appslist and add items one by one to the selectionBox
-        Foreach ($app in (Get-Content -Path $script:appsListFilePath | Where-Object { $_ -notmatch '^\s*$' -and $_ -notmatch '^#  .*' -and $_ -notmatch '^# -* #' } )) { 
+        Foreach ($app in (Get-Content -Path $script:AppsListFilePath | Where-Object { $_ -notmatch '^\s*$' -and $_ -notmatch '^#  .*' -and $_ -notmatch '^# -* #' } )) { 
             $appChecked = $true
 
             # Remove first # if it exists and set appChecked to false
@@ -380,7 +380,7 @@ function ValidateAppslist {
     $supportedAppsList = @()
     $validatedAppsList = @()
 
-    Foreach ($app in (Get-Content -Path $script:appsListFilePath | Where-Object {  $_ -notmatch '^# .*' -and $_ -notmatch '^\s*$' } )) {
+    Foreach ($app in (Get-Content -Path $script:AppsListFilePath | Where-Object {  $_ -notmatch '^# .*' -and $_ -notmatch '^\s*$' } )) {
         if ($app.StartsWith('#')) {
             $app = $app.TrimStart("#")
         }
@@ -445,7 +445,7 @@ function RemoveApps {
 
         # Use winget only to remove OneDrive and Edge
         if (($app -eq "Microsoft.OneDrive") -or ($app -eq "Microsoft.Edge")) {
-            if ($script:wingetInstalled -eq $false) {
+            if ($script:WingetInstalled -eq $false) {
                 Write-Host "Error: WinGet is either not installed or is outdated, $app could not be removed" -ForegroundColor Red
                 continue
             }
@@ -668,19 +668,19 @@ function RegImport {
         $defaultUserPath = GetUserDirectory -userName "Default" -fileName "NTUSER.DAT"
         
         reg load "HKU\Default" $defaultUserPath | Out-Null
-        reg import "$script:regfilesPath\Sysprep\$path"
+        reg import "$script:RegfilesPath\Sysprep\$path"
         reg unload "HKU\Default" | Out-Null
     }
     elseif ($script:Params.ContainsKey("User")) {
         $userPath = GetUserDirectory -userName $script:Params.Item("User") -fileName "NTUSER.DAT"
         
         reg load "HKU\Default" $userPath | Out-Null
-        reg import "$script:regfilesPath\Sysprep\$path"
+        reg import "$script:RegfilesPath\Sysprep\$path"
         reg unload "HKU\Default" | Out-Null
         
     }
     else {
-        reg import "$script:regfilesPath\$path"  
+        reg import "$script:RegfilesPath\$path"  
     }
 
     Write-Output ""
@@ -724,7 +724,7 @@ function RestartExplorer {
 # Credit: https://lazyadmin.nl/win-11/customize-windows-11-start-menu-layout/
 function ReplaceStartMenuForAllUsers {
     param (
-        $startMenuTemplate = "$script:assetsPath/Start/start2.bin"
+        $startMenuTemplate = "$script:AssetsPath/Start/start2.bin"
     )
 
     Write-Output "> Removing all pinned apps from the start menu for all users..."
@@ -765,7 +765,7 @@ function ReplaceStartMenuForAllUsers {
 # Credit: https://lazyadmin.nl/win-11/customize-windows-11-start-menu-layout/
 function ReplaceStartMenu {
     param (
-        $startMenuTemplate = "$script:assetsPath/Start/start2.bin",
+        $startMenuTemplate = "$script:AssetsPath/Start/start2.bin",
         $startMenuBinFile = "$env:LOCALAPPDATA\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState\start2.bin"
     )
 
@@ -830,39 +830,45 @@ function AddParameter {
         return
     }
 
-    # Set default saved settings structure
-    $savedSettings = @{
+    # Initialize custom settings object
+    $customSettings = @{
         "Version" = "1.0"
         "Settings" = @()
     }
 
-    # Create or clear file that stores last used settings
-    if (-not (Test-Path $script:customSettingsFilePath)) {
-        $null = New-Item $script:customSettingsFilePath
+    # Create or clear custom settings file, or load existing settings from file
+    if (-not (Test-Path $script:CustomSettingsFilePath)) {
+        $null = New-Item $script:CustomSettingsFilePath
     }
     elseif ($script:FirstSelection) {
-        $null = Clear-Content $script:customSettingsFilePath
+        $null = Clear-Content $script:CustomSettingsFilePath
     }
     else {
         try {
-            $savedSettings = (Get-Content -Path $script:customSettingsFilePath -Raw | ConvertFrom-Json)
-    
-            $script:FirstSelection = $false
-            
-            # Add new setting
-            $savedSettings.Settings += @{
-                "Name" = $parameterName
-                "Description" = $message
-                "Value" = $value
-            }
-        
-            # Save the updated JSON object back to the file
-            $savedSettings | ConvertTo-Json -Depth 10 | Set-Content $script:customSettingsFilePath
+            $customSettings = (Get-Content -Path $script:CustomSettingsFilePath -Raw | ConvertFrom-Json)
         }
         catch {
-            Write-Host "Error: Failed to update CustomSettings.json file." -ForegroundColor Red
+            Write-Host "Error: Failed to load CustomSettings.json file." -ForegroundColor Red
             AwaitKeyToExit
         }
+    }
+
+    $script:FirstSelection = $false
+
+    try {
+        # Add new setting
+        $customSettings.Settings += @{
+            "Name" = $parameterName
+            "Description" = $message
+            "Value" = $value
+        }
+    
+        # Save the updated JSON object back to the file
+        $customSettings | ConvertTo-Json -Depth 10 | Set-Content $script:CustomSettingsFilePath
+    }
+    catch {
+        Write-Host "Error: Failed to update CustomSettings.json file." -ForegroundColor Red
+        AwaitKeyToExit
     }
 }
 
@@ -935,7 +941,7 @@ function GenerateAppsList {
         'default' {
             Write-Host "> Removing default selection of apps..."
 
-            $appsList = ReadAppslistFromFile $script:appsListFilePath
+            $appsList = ReadAppslistFromFile $script:AppsListFilePath
             Write-Host "$($appsList.Count) apps selected for removal"
             return $appsList
         }
@@ -1059,7 +1065,7 @@ function ShowScriptMenuOptions {
         Write-Host "(3) App removal mode: Select & remove apps, without making other changes"
 
         # Only show this option if SavedSettings file exists
-        if (Test-Path $script:customSettingsFilePath) {
+        if (Test-Path $script:CustomSettingsFilePath) {
             Write-Host "(4) Apply saved custom settings from last time"
             
             $ModeSelectionMessage = "Please select an option (1/2/3/4/0)" 
@@ -1074,12 +1080,12 @@ function ShowScriptMenuOptions {
 
         if ($Mode -eq '0') {
             # Print information screen from file
-            PrintFromFile "$script:assetsPath/Menus/Info" "Information"
+            PrintFromFile "$script:AssetsPath/Menus/Info" "Information"
 
             Write-Host "Press any key to go back..."
             $null = [System.Console]::ReadKey()
         }
-        elseif (($Mode -eq '4') -and -not (Test-Path $script:customSettingsFilePath)) {
+        elseif (($Mode -eq '4') -and -not (Test-Path $script:CustomSettingsFilePath)) {
             $Mode = $null
         }
     }
@@ -1100,7 +1106,7 @@ function ShowDefaultMode {
     else {
         $RemoveAppsInput = ShowDefaultModeAppRemovalOptions
 
-        if ($RemoveAppsInput -eq '2' -and ($script:selectedApps.contains('Microsoft.XboxGameOverlay') -or $script:selectedApps.contains('Microsoft.XboxGamingOverlay')) -and 
+        if ($RemoveAppsInput -eq '2' -and ($script:SelectedApps.contains('Microsoft.XboxGameOverlay') -or $script:SelectedApps.contains('Microsoft.XboxGamingOverlay')) -and 
           $( Read-Host -Prompt "Disable Game Bar integration and game/screen recording? This also stops ms-gamingoverlay and ms-gamebar popups (y/n)" ) -eq 'y') {
             $DisableGameBarIntegrationInput = $true;
         }
@@ -1110,7 +1116,7 @@ function ShowDefaultMode {
 
     # Add default settings from defaultsettings.json
     try {
-        $defaultSettings = (Get-Content -Path $script:defaultSettingsFilePath -Raw | ConvertFrom-Json)
+        $defaultSettings = (Get-Content -Path $script:DefaultSettingsFilePath -Raw | ConvertFrom-Json)
 
         Write-Output "Win11Debloat will make the following changes:"
 
@@ -1119,11 +1125,11 @@ function ShowDefaultMode {
             '1' {
                 AddParameter 'RemoveApps' 'Remove the default selection of apps' $true $false
                 AddParameter 'Apps' 'Default selection of apps' 'Default' $false
-                PrintAppsListFromFile $script:appsListFilePath
+                PrintAppsListFromFile $script:AppsListFilePath
             }
             '2' {
                 AddParameter 'RemoveAppsCustom' "Remove custom selection of apps" $true $false
-                PrintAppsListFromFile $script:customAppsListFilePath
+                PrintAppsListFromFile $script:CustomAppsListFilePath
 
                 if ($DisableGameBarIntegrationInput) {
                     AddParameter 'DisableDVR' 'Disable Xbox game/screen recording' $true $false
@@ -1703,10 +1709,8 @@ function LoadAndShowSavedSettings {
     PrintHeader 'Custom Mode'
     Write-Output "Win11Debloat will make the following changes:"
 
-    $appsListPrinted = $false
-
     try {
-        $customSettings = (Get-Content -Path $script:customSettingsFilePath -Raw | ConvertFrom-Json)
+        $customSettings = (Get-Content -Path $script:CustomSettingsFilePath -Raw | ConvertFrom-Json)
 
         # Go through each setting in the custom settings file, print the description and add it to Params
         Foreach ($parameter in $customSettings.Settings) {
@@ -1724,17 +1728,15 @@ function LoadAndShowSavedSettings {
                     # Skip
                 }
                 'RemoveAppsCustom' {
-                    PrintAppsListFromFile $script:customAppsListFilePath $true
+                    PrintAppsListFromFile $script:CustomAppsListFilePath $true
                 }
                 'Apps' {
                     if ($value -eq 'Default') {
-                        PrintAppsListFromFile $script:appsListFilePath $true
+                        PrintAppsListFromFile $script:AppsListFilePath $true
                     }
                     else {
                         Write-Host $value.Split(',') -ForegroundColor DarkGray
                     }
-    
-                    $appsListPrinted = $true
                 }
                 default {
                     Write-Output "- $($parameter.Description)"
@@ -1778,10 +1780,10 @@ function LoadAndShowSavedSettings {
 
 # Check if winget is installed & if it is, check if the version is at least v1.4
 if ((Get-AppxPackage -Name "*Microsoft.DesktopAppInstaller*") -and ([int](((winget -v) -replace 'v','').split('.')[0..1] -join '') -gt 14)) {
-    $script:wingetInstalled = $true
+    $script:WingetInstalled = $true
 }
 else {
-    $script:wingetInstalled = $false
+    $script:WingetInstalled = $false
 
     # Show warning that requires user confirmation, Suppress confirmation if Silent parameter was passed
     if (-not $Silent) {
@@ -1846,8 +1848,8 @@ if ($script:Params.ContainsKey("User")) {
 }
 
 # Remove SavedSettings file if it exists and is empty
-if ((Test-Path $script:customSettingsFilePath) -and ([String]::IsNullOrWhiteSpace((Get-content $script:customSettingsFilePath)))) {
-    Remove-Item -Path $script:customSettingsFilePath -recurse
+if ((Test-Path $script:CustomSettingsFilePath) -and ([String]::IsNullOrWhiteSpace((Get-content $script:CustomSettingsFilePath)))) {
+    Remove-Item -Path $script:CustomSettingsFilePath -recurse
 }
 
 # Only run the app selection form if the 'RunAppsListGenerator' parameter was passed to the script
@@ -1874,9 +1876,9 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
         $Mode = '1'
     }
     elseif ($RunSavedSettings) {
-        if (-not (Test-Path $script:customSettingsFilePath)) {
+        if (-not (Test-Path $script:CustomSettingsFilePath)) {
             PrintHeader 'Custom Mode'
-            Write-Host "Error: No saved settings found, no changes were made." -ForegroundColor Red
+            Write-Host "Error: Unable to find CustomSettings.json file, no changes were made." -ForegroundColor Red
             AwaitKeyToExit
         }
 
@@ -1943,13 +1945,13 @@ switch ($script:Params.Keys) {
     'RemoveAppsCustom' {
         Write-Output "> Removing custom selection of apps..."
 
-        if (-not (Test-Path $script:customAppsListFilePath)) {
+        if (-not (Test-Path $script:CustomAppsListFilePath)) {
             Write-Host "> Error: Could not load custom apps list from file, no apps were removed" -ForegroundColor Red
             Write-Output ""
             continue
         }
         
-        $appsList = ReadAppslistFromFile $script:customAppsListFilePath
+        $appsList = ReadAppslistFromFile $script:CustomAppsListFilePath
         Write-Output "$($appsList.Count) apps selected for removal"
         RemoveApps $appsList
         continue

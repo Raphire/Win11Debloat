@@ -846,24 +846,24 @@ function AddParameter {
     else {
         try {
             $savedSettings = (Get-Content -Path $script:customSettingsFilePath -Raw | ConvertFrom-Json)
+    
+            $script:FirstSelection = $false
+            
+            # Add new setting
+            $savedSettings.Settings += @{
+                "Name" = $parameterName
+                "Description" = $message
+                "Value" = $value
+            }
+        
+            # Save the updated JSON object back to the file
+            $savedSettings | ConvertTo-Json -Depth 10 | Set-Content $script:customSettingsFilePath
         }
         catch {
-            Write-Host "Error: Failed to load custom settings from CustomSettings.json file." -ForegroundColor Red
+            Write-Host "Error: Failed to update CustomSettings.json file." -ForegroundColor Red
             AwaitKeyToExit
         }
     }
-    
-    $script:FirstSelection = $false
-    
-    # Add new setting
-    $savedSettings.Settings += @{
-        "Name" = $parameterName
-        "Description" = $message
-        "Value" = $value
-    }
-
-    # Save the updated JSON object back to the file
-    $savedSettings | ConvertTo-Json -Depth 10 | Set-Content $script:customSettingsFilePath
 }
 
 
@@ -1141,7 +1141,7 @@ function ShowDefaultMode {
         }
     }
     catch {
-        Write-Host "Error: Failed to load default settings from DefaultSettings.json file." -ForegroundColor Red
+        Write-Host "Error: Failed to load settings from DefaultSettings.json file." -ForegroundColor Red
         AwaitKeyToExit
     }
 
@@ -1751,7 +1751,7 @@ function LoadAndShowSavedSettings {
         }
     }
     catch {
-        Write-Host "Error: Failed to load custom settings from CustomSettings.json file." -ForegroundColor Red
+        Write-Host "Error: Failed to load settings from CustomSettings.json file." -ForegroundColor Red
         AwaitKeyToExit
     }
 

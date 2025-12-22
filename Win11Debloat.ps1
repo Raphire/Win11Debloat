@@ -400,7 +400,7 @@ function ValidateAppslist {
         $appString = $app.Trim('*')
 
         if ($supportedAppsList -notcontains $appString) {
-            Write-Host "Warning: Removal of app '$appString' is not supported and will be skipped" -ForegroundColor Yellow
+            Write-Host "Removal of app '$appString' is not supported and will be skipped" -ForegroundColor Yellow
             continue
         }
 
@@ -446,7 +446,7 @@ function RemoveApps {
         # Use winget only to remove OneDrive and Edge
         if (($app -eq "Microsoft.OneDrive") -or ($app -eq "Microsoft.Edge")) {
             if ($script:WingetInstalled -eq $false) {
-                Write-Host "Error: WinGet is either not installed or is outdated, $app could not be removed" -ForegroundColor Red
+                Write-Host "WinGet is either not installed or is outdated, $app could not be removed" -ForegroundColor Red
                 continue
             }
 
@@ -646,7 +646,7 @@ function GetUserDirectory {
         }
     }
     catch {
-        Write-Host "Error: Something went wrong when trying to find the user directory path for user $userName. Please ensure the user exists on this system." -ForegroundColor Red
+        Write-Host "Error: Something went wrong when trying to find the user directory path for user $userName. Please ensure the user exists on this system" -ForegroundColor Red
         AwaitKeyToExit
     }
 
@@ -692,7 +692,7 @@ function RestartExplorer {
     Write-Output "> Attempting to restart the Windows Explorer process to apply all changes..."
     
     if ($script:Params.ContainsKey("Sysprep") -or $script:Params.ContainsKey("User") -or $script:Params.ContainsKey("NoRestartExplorer")) {
-        Write-Host "Process restart was skipped. Please manually reboot your PC to apply all changes." -ForegroundColor Yellow
+        Write-Host "Process restart was skipped, please manually reboot your PC to apply all changes" -ForegroundColor Yellow
         return
     }
 
@@ -715,7 +715,7 @@ function RestartExplorer {
         Stop-Process -processName: Explorer -Force
     }
     else {
-        Write-Host "Unable to restart Windows Explorer process. Please manually reboot your PC to apply all changes." -ForegroundColor Yellow
+        Write-Host "Unable to restart Windows Explorer process, please manually reboot your PC to apply all changes" -ForegroundColor Yellow
     }
 }
 
@@ -794,7 +794,7 @@ function ReplaceStartMenu {
         Move-Item -Path $startMenuBinFile -Destination $backupBinFile -Force
     }
     else {
-        Write-Host "Warning: Unable to find original start2.bin file for user $userName. No backup was created for this user!" -ForegroundColor Yellow
+        Write-Host "Unable to find original start2.bin file for user $userName, no backup was created for this user" -ForegroundColor Yellow
         New-Item -ItemType File -Path $startMenuBinFile -Force
     }
 
@@ -848,7 +848,7 @@ function AddParameter {
             $customSettings = (Get-Content -Path $script:CustomSettingsFilePath -Raw | ConvertFrom-Json)
         }
         catch {
-            Write-Host "Error: Failed to load CustomSettings.json file." -ForegroundColor Red
+            Write-Error "Error: Failed to load CustomSettings.json file"
             AwaitKeyToExit
         }
     }
@@ -867,7 +867,7 @@ function AddParameter {
         $customSettings | ConvertTo-Json -Depth 10 | Set-Content $script:CustomSettingsFilePath
     }
     catch {
-        Write-Host "Error: Failed to update CustomSettings.json file." -ForegroundColor Red
+        Write-Error "Error: Failed to update CustomSettings.json file"
         AwaitKeyToExit
     }
 }
@@ -1037,7 +1037,7 @@ function CreateSystemRestorePoint {
             }
         }
         else {
-            Write-Host "A recent restore point already exists, no new restore point was created." -ForegroundColor Yellow
+            Write-Host "A recent restore point already exists, no new restore point was created" -ForegroundColor Yellow
         }
     }
     
@@ -1147,7 +1147,7 @@ function ShowDefaultMode {
         }
     }
     catch {
-        Write-Host "Error: Failed to load settings from DefaultSettings.json file." -ForegroundColor Red
+        Write-Error "Error: Failed to load settings from DefaultSettings.json file"
         AwaitKeyToExit
     }
 
@@ -1166,7 +1166,7 @@ function ShowDefaultMode {
 function ShowDefaultModeAppRemovalOptions {
     PrintHeader 'Default Mode'
 
-    Write-Host "Please note: The default selection of apps includes Microsoft Teams, Spotify, Sticky Notes and more. Select option 2 to verify and change what apps are removed by the script." -ForegroundColor DarkGray
+    Write-Host "Please note: The default selection of apps includes Microsoft Teams, Spotify, Sticky Notes and more. Select option 2 to verify and change what apps are removed by the script" -ForegroundColor DarkGray
     Write-Host ""
 
     Do {
@@ -1717,7 +1717,7 @@ function LoadAndShowSavedSettings {
             $parameterName = $parameter.Name
             $value = $parameter.Value
     
-            # Skip parameters that are set to false in the 
+            # Skip parameters that are set to false in the config
             if ($value -eq $false) {
                 continue
             }
@@ -1753,7 +1753,7 @@ function LoadAndShowSavedSettings {
         }
     }
     catch {
-        Write-Host "Error: Failed to load settings from CustomSettings.json file." -ForegroundColor Red
+        Write-Error "Error: Failed to load settings from CustomSettings.json file"
         AwaitKeyToExit
     }
 
@@ -1787,7 +1787,7 @@ else {
 
     # Show warning that requires user confirmation, Suppress confirmation if Silent parameter was passed
     if (-not $Silent) {
-        Write-Warning "Winget is not installed or outdated. This may prevent Win11Debloat from removing certain apps."
+        Write-Warning "Winget is not installed or outdated, this may prevent Win11Debloat from removing certain apps"
         Write-Output ""
         Write-Output "Press any key to continue anyway..."
         $null = [System.Console]::ReadKey()
@@ -1837,7 +1837,7 @@ if ($script:Params.ContainsKey("Sysprep")) {
 
     # Exit script if run in Sysprep mode on Windows 10
     if ($WinVersion -lt 22000) {
-        Write-Host "Error: Win11Debloat Sysprep mode is not supported on Windows 10" -ForegroundColor Red
+        Write-Error "Error: Win11Debloat Sysprep mode is not supported on Windows 10"
         AwaitKeyToExit
     }
 }
@@ -1878,7 +1878,7 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
     elseif ($RunSavedSettings) {
         if (-not (Test-Path $script:CustomSettingsFilePath)) {
             PrintHeader 'Custom Mode'
-            Write-Host "Error: Unable to find CustomSettings.json file, no changes were made." -ForegroundColor Red
+            Write-Error "Error: Unable to find CustomSettings.json file, no changes were made"
             AwaitKeyToExit
         }
 
@@ -1934,7 +1934,7 @@ switch ($script:Params.Keys) {
         $appsList = GenerateAppsList
 
         if ($appsList.Count -eq 0) {
-            Write-Host "Skipping app removal, no valid apps provided!" -ForegroundColor Yellow
+            Write-Host "No valid apps were selected for removal" -ForegroundColor Yellow
             Write-Output ""
             continue
         }
@@ -1946,7 +1946,7 @@ switch ($script:Params.Keys) {
         Write-Output "> Removing custom selection of apps..."
 
         if (-not (Test-Path $script:CustomAppsListFilePath)) {
-            Write-Host "> Error: Could not load custom apps list from file, no apps were removed" -ForegroundColor Red
+            Write-Host "Error: Could not load custom apps list from file, no apps were removed" -ForegroundColor Red
             Write-Output ""
             continue
         }
@@ -2039,7 +2039,7 @@ switch ($script:Params.Keys) {
     'DisableRecall' {
         if ($WinVersion -lt 22000) {
             Write-Output "> Disabling Windows Recall..."
-            Write-Host "Feature is not available on Windows 10." -ForegroundColor Yellow
+            Write-Host "Feature is not available on Windows 10" -ForegroundColor Yellow
             Write-Output ""
             continue
         }
@@ -2050,7 +2050,7 @@ switch ($script:Params.Keys) {
     'DisableClickToDo' {
         if ($WinVersion -lt 22000) {
             Write-Output "> Disabling Click to Do..."
-            Write-Host "Feature is not available on Windows 10." -ForegroundColor Yellow
+            Write-Host "Feature is not available on Windows 10" -ForegroundColor Yellow
             Write-Output ""
             continue
         }
@@ -2089,7 +2089,7 @@ switch ($script:Params.Keys) {
     'DisableModernStandbyNetworking' {
         if (-not $script:ModernStandbySupported) {
             Write-Output "> Disabling network connectivity during Modern Standby..."
-            Write-Host "Device does not support modern standby." -ForegroundColor Yellow
+            Write-Host "Device does not support modern standby" -ForegroundColor Yellow
             Write-Output ""
             continue
         }
@@ -2208,7 +2208,7 @@ switch ($script:Params.Keys) {
     {$_ -in "HideChat", "DisableChat"} {
         if ($WinVersion -ge 22000) {
             Write-Output "> Hiding the chat icon from the taskbar..."
-            Write-Host "Feature is not available on Windows 11." -ForegroundColor Yellow
+            Write-Host "Feature is not available on Windows 11" -ForegroundColor Yellow
             Write-Output ""
             continue
         }
@@ -2267,7 +2267,7 @@ switch ($script:Params.Keys) {
     {$_ -in "Hide3dObjects", "Disable3dObjects"} {
         if ($WinVersion -ge 22000) {
             Write-Output "> Hiding the 3D objects folder from the File Explorer navigation pane..."
-            Write-Host "Feature is not available on Windows 11." -ForegroundColor Yellow
+            Write-Host "Feature is not available on Windows 11" -ForegroundColor Yellow
             Write-Output ""
             continue
         }

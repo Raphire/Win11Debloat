@@ -1306,7 +1306,7 @@ function ShowCustomModeOptions {
                 AddParameter 'DisableCopilot' 'Disable & remove Microsoft Copilot'
                 AddParameter 'DisableRecall' 'Disable Windows Recall'
                 AddParameter 'DisableClickToDo' 'Disable Click to Do (AI text & image analysis)'
-                AddParameter 'DisableEdgeAI' 'Disable AI features in Edge'
+                AddParameter 'DisableEdgeAI' 'Disable AI features in Microsoft Edge'
                 AddParameter 'DisablePaintAI' 'Disable AI features in Paint'
                 AddParameter 'DisableNotepadAI' 'Disable AI features in Notepad'
             }
@@ -1316,7 +1316,7 @@ function ShowCustomModeOptions {
     Write-Output ""
 
     if ($( Read-Host -Prompt "Disable Windows Spotlight background on desktop? (y/n)" ) -eq 'y') {
-        AddParameter 'DisableDesktopSpotlight' 'Disable the Windows Spotlight desktop background option.'
+        AddParameter 'DisableDesktopSpotlight' 'Disable the Windows Spotlight desktop background option'
     }
 
     Write-Output ""
@@ -1434,14 +1434,14 @@ function ShowCustomModeOptions {
                 Write-Output ""
 
                 if ($( Read-Host -Prompt "   Disable the recommended section in the start menu? This applies to all users (y/n)" ) -eq 'y') {
-                    AddParameter 'DisableStartRecommended' 'Disable the recommended section in the start menu.'
+                    AddParameter 'DisableStartRecommended' 'Disable the recommended section in the start menu'
                 }
             }
 
             Write-Output ""
 
             if ($( Read-Host -Prompt "   Disable the Phone Link mobile devices integration in the start menu? (y/n)" ) -eq 'y') {
-                AddParameter 'DisableStartPhoneLink' 'Disable the Phone Link mobile devices integration in the start menu.'
+                AddParameter 'DisableStartPhoneLink' 'Disable the Phone Link mobile devices integration in the start menu'
             }
         }
     }

@@ -1,0 +1,80 @@
+{
+    "Version": "1.0",
+    "Settings": [
+        {
+            "Name": "CreateRestorePoint",
+            "Description": "Create a system restore point",
+            "Value": true
+        },
+        {
+            "Name": "DisableTelemetry",
+            "Description": "Disable telemetry, diagnostic data, activity history, app-launch tracking \u0026 targeted ads",
+            "Value": true
+        },
+        {
+            "Name": "DisableSuggestions",
+            "Description": "Disable tips, tricks, suggestions and ads in start, settings, notifications and File Explorer",
+            "Value": true
+        },
+        {
+            "Name": "DisableEdgeAds",
+            "Description": "Disable ads, suggestions and the MSN news feed in Microsoft Edge",
+            "Value": true
+        },
+        {
+            "Name": "DisableLockscreenTips",
+            "Description": "Disable tips \u0026 tricks on the lockscreen",
+            "Value": true
+        },
+        {
+            "Name": "DisableBing",
+            "Description": "Disable \u0026 remove Bing web search, Bing AI and Cortana from Windows search",
+            "Value": true
+        },
+        {
+            "Name": "DisableCopilot",
+            "Description": "Disable & remove Microsoft Copilot",
+            "Value": true
+        },
+        {
+            "Name": "DisableRecall",
+            "Description": "Disable Windows Recall (Windows 11 only)",
+            "Value": true
+        },
+        {
+            "Name": "DisableClickToDo",
+            "Description": "Disable Click to Do, AI text & image analysis (Windows 11 only)",
+            "Value": true
+        },
+        {
+            "Name": "DisableWidgets",
+            "Description": "Disable widgets on the taskbar & lockscreen",
+            "Value": true
+        },
+        {
+            "Name": "HideChat",
+            "Description": "Hide the chat (meet now) icon from the taskbar (Windows 10 only)",
+            "Value": true
+        },
+        {
+            "Name": "ShowKnownFileExt",
+            "Description": "Show file extensions for known file types",
+            "Value": true
+        },
+        {
+            "Name": "DisableFastStartup",
+            "Description": "Disable Fast Start-up",
+            "Value": true
+        },
+        {
+            "Name": "Hide3dObjects",
+            "Description": "Hide the 3D objects folder under 'This pc' in File Explorer (Windows 10 only)",
+            "Value": true
+        },
+        {
+            "Name": "DisableModernStandbyNetworking",
+            "Description": "Disable network connectivity during Modern Standby (If supported)",
+            "Value": true
+        }
+    ]
+}

@@ -79,6 +79,15 @@ param (
 
 
 
+# Define script-level file paths
+$script:defaultSettingsFilePath = "$PSScriptRoot/DefaultSettings.json"
+$script:appsListFilePath = "$PSScriptRoot/Appslist.txt"
+$script:customSettingsFilePath = "$PSScriptRoot/CustomSettings.json"
+$script:customAppsListFilePath = "$PSScriptRoot/CustomAppsList"
+$script:defaultLogPath = "$PSScriptRoot/Win11Debloat.log"
+$script:regfilesPath = "$PSScriptRoot/Regfiles"
+$script:assetsPath = "$PSScriptRoot/Assets"
+
 # Show error if current powershell environment is limited by security policies
 if ($ExecutionContext.SessionState.LanguageMode -ne "FullLanguage") {
     Write-Error "Error: Win11Debloat is unable to run on your system, powershell execution is restricted by security policies"
@@ -88,7 +97,7 @@ if ($ExecutionContext.SessionState.LanguageMode -ne "FullLanguage") {
 }
 
 # Show error if script does not see file dependencies
-if (-not ((Test-Path "$PSScriptRoot/Appslist.txt") -and (Test-Path "$PSScriptRoot/Regfiles") -and (Test-Path "$PSScriptRoot/Assets"))) {
+if (-not ((Test-Path $script:defaultSettingsFilePath) -and (Test-Path $script:appsListFilePath) -and (Test-Path $script:regfilesPath) -and (Test-Path $script:assetsPath))) {
     Write-Error "Error: Win11Debloat is unable to find required files, please ensure all script files are present"
     Write-Output "Press any key to exit..."
     $null = [System.Console]::ReadKey()
@@ -100,7 +109,7 @@ if ($LogPath -and (Test-Path $LogPath)) {
     Start-Transcript -Path "$LogPath/Win11Debloat.log" -Append -IncludeInvocationHeader -Force | Out-Null
 }
 else {
-    Start-Transcript -Path "$PSScriptRoot/Win11Debloat.log" -Append -IncludeInvocationHeader -Force | Out-Null
+    Start-Transcript -Path $script:defaultLogPath -Append -IncludeInvocationHeader -Force | Out-Null
 }
 
 
@@ -145,11 +154,11 @@ function ShowAppSelectionForm {
         $script:SelectedApps = $selectionBox.CheckedItems
 
         # Create file that stores selected apps if it doesn't exist
-        if (-not (Test-Path "$PSScriptRoot/CustomAppsList")) {
-            $null = New-Item "$PSScriptRoot/CustomAppsList"
+        if (-not (Test-Path $script:customAppsListFilePath)) {
+            $null = New-Item $script:customAppsListFilePath
         }
 
-        Set-Content -Path "$PSScriptRoot/CustomAppsList" -Value $script:SelectedApps
+        Set-Content -Path $script:customAppsListFilePath -Value $script:SelectedApps
 
         $form.DialogResult = [System.Windows.Forms.DialogResult]::OK
         $form.Close()
@@ -214,8 +223,6 @@ function ShowAppSelectionForm {
         # Clear selectionBox before adding any new items
         $selectionBox.Items.Clear()
 
-        # Set filePath where Appslist can be found
-        $appsFile = "$PSScriptRoot/Appslist.txt"
         $listOfApps = ""
 
         if ($onlyInstalledCheckBox.Checked -and ($script:wingetInstalled -eq $true)) {
@@ -234,7 +241,7 @@ function ShowAppSelectionForm {
         }
 
         # Go through appslist and add items one by one to the selectionBox
-        Foreach ($app in (Get-Content -Path $appsFile | Where-Object { $_ -notmatch '^\s*$' -and $_ -notmatch '^#  .*' -and $_ -notmatch '^# -* #' } )) { 
+        Foreach ($app in (Get-Content -Path $script:appsListFilePath | Where-Object { $_ -notmatch '^\s*$' -and $_ -notmatch '^#  .*' -and $_ -notmatch '^# -* #' } )) { 
             $appChecked = $true
 
             # Remove first # if it exists and set appChecked to false
@@ -367,14 +374,13 @@ function ShowAppSelectionForm {
 # Returns a validated list of apps based on the provided appsList and the supported apps from Appslist.txt
 function ValidateAppslist {
     param (
-        $appsList,
-        $appsFilePath = "$PSScriptRoot/Appslist.txt"
+        $appsList
     )
 
     $supportedAppsList = @()
     $validatedAppsList = @()
 
-    Foreach ($app in (Get-Content -Path $appsFilePath | Where-Object {  $_ -notmatch '^# .*' -and $_ -notmatch '^\s*$' } )) {
+    Foreach ($app in (Get-Content -Path $script:appsListFilePath | Where-Object {  $_ -notmatch '^# .*' -and $_ -notmatch '^\s*$' } )) {
         if ($app.StartsWith('#')) {
             $app = $app.TrimStart("#")
         }
@@ -662,19 +668,19 @@ function RegImport {
         $defaultUserPath = GetUserDirectory -userName "Default" -fileName "NTUSER.DAT"
         
         reg load "HKU\Default" $defaultUserPath | Out-Null
-        reg import "$PSScriptRoot\Regfiles\Sysprep\$path"
+        reg import "$script:regfilesPath\Sysprep\$path"
         reg unload "HKU\Default" | Out-Null
     }
     elseif ($script:Params.ContainsKey("User")) {
         $userPath = GetUserDirectory -userName $script:Params.Item("User") -fileName "NTUSER.DAT"
         
         reg load "HKU\Default" $userPath | Out-Null
-        reg import "$PSScriptRoot\Regfiles\Sysprep\$path"
+        reg import "$script:regfilesPath\Sysprep\$path"
         reg unload "HKU\Default" | Out-Null
         
     }
     else {
-        reg import "$PSScriptRoot\Regfiles\$path"  
+        reg import "$script:regfilesPath\$path"  
     }
 
     Write-Output ""
@@ -718,7 +724,7 @@ function RestartExplorer {
 # Credit: https://lazyadmin.nl/win-11/customize-windows-11-start-menu-layout/
 function ReplaceStartMenuForAllUsers {
     param (
-        $startMenuTemplate = "$PSScriptRoot/Assets/Start/start2.bin"
+        $startMenuTemplate = "$script:assetsPath/Start/start2.bin"
     )
 
     Write-Output "> Removing all pinned apps from the start menu for all users..."
@@ -759,7 +765,7 @@ function ReplaceStartMenuForAllUsers {
 # Credit: https://lazyadmin.nl/win-11/customize-windows-11-start-menu-layout/
 function ReplaceStartMenu {
     param (
-        $startMenuTemplate = "$PSScriptRoot/Assets/Start/start2.bin",
+        $startMenuTemplate = "$script:assetsPath/Start/start2.bin",
         $startMenuBinFile = "$env:LOCALAPPDATA\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState\start2.bin"
     )
 
@@ -804,15 +810,9 @@ function AddParameter {
     param (
         $parameterName,
         $message,
-        $addToFile = $true,
-        $messageAsValue = $false
+        $value = $true,
+        $addToFile = $true
     )
-
-    $value = $true
-
-    if ($messageAsValue) {
-        $value = $message
-    }
 
     # Add key or update value if key already exists
     if (-not $script:Params.ContainsKey($parameterName)) {
@@ -823,26 +823,47 @@ function AddParameter {
     }
 
     if (-not $addToFile) {
-        if (-not $messageAsValue) {
+        if ($value -is [bool]) {
             Write-Output "- $message"
         }
 
         return
     }
 
+    # Set default saved settings structure
+    $savedSettings = @{
+        "Version" = "1.0"
+        "Settings" = @()
+    }
+
     # Create or clear file that stores last used settings
-    if (-not (Test-Path "$PSScriptRoot/SavedSettings")) {
-        $null = New-Item "$PSScriptRoot/SavedSettings"
+    if (-not (Test-Path $script:customSettingsFilePath)) {
+        $null = New-Item $script:customSettingsFilePath
     }
     elseif ($script:FirstSelection) {
-        $null = Clear-Content "$PSScriptRoot/SavedSettings"
+        $null = Clear-Content $script:customSettingsFilePath
+    }
+    else {
+        try {
+            $savedSettings = (Get-Content -Path $script:customSettingsFilePath -Raw | ConvertFrom-Json)
+        }
+        catch {
+            Write-Host "Error: Failed to load custom settings from CustomSettings.json file." -ForegroundColor Red
+            AwaitKeyToExit
+        }
     }
     
     $script:FirstSelection = $false
+    
+    # Add new setting
+    $savedSettings.Settings += @{
+        "Name" = $parameterName
+        "Description" = $message
+        "Value" = $value
+    }
 
-    # Create entry and add it to the file
-    $entry = "$parameterName#- $message"
-    Add-Content -Path "$PSScriptRoot/SavedSettings" -Value $entry
+    # Save the updated JSON object back to the file
+    $savedSettings | ConvertTo-Json -Depth 10 | Set-Content $script:customSettingsFilePath
 }
 
 
@@ -914,7 +935,7 @@ function GenerateAppsList {
         'default' {
             Write-Host "> Removing default selection of apps..."
 
-            $appsList = ReadAppslistFromFile "$PSScriptRoot/Appslist.txt"
+            $appsList = ReadAppslistFromFile $script:appsListFilePath
             Write-Host "$($appsList.Count) apps selected for removal"
             return $appsList
         }
@@ -1038,7 +1059,7 @@ function ShowScriptMenuOptions {
         Write-Host "(3) App removal mode: Select & remove apps, without making other changes"
 
         # Only show this option if SavedSettings file exists
-        if (Test-Path "$PSScriptRoot/SavedSettings") {
+        if (Test-Path $script:customSettingsFilePath) {
             Write-Host "(4) Apply saved custom settings from last time"
             
             $ModeSelectionMessage = "Please select an option (1/2/3/4/0)" 
@@ -1053,12 +1074,12 @@ function ShowScriptMenuOptions {
 
         if ($Mode -eq '0') {
             # Print information screen from file
-            PrintFromFile "$PSScriptRoot/Assets/Menus/Info" "Information"
+            PrintFromFile "$script:assetsPath/Menus/Info" "Information"
 
             Write-Host "Press any key to go back..."
             $null = [System.Console]::ReadKey()
         }
-        elseif (($Mode -eq '4') -and -not (Test-Path "$PSScriptRoot/SavedSettings")) {
+        elseif (($Mode -eq '4') -and -not (Test-Path $script:customSettingsFilePath)) {
             $Mode = $null
         }
     }
@@ -1069,8 +1090,6 @@ function ShowScriptMenuOptions {
 
 
 function ShowDefaultMode {
-    AddParameter 'CreateRestorePoint' 'Create a system restore point' $false
-
     # Show options for removing apps, or set selection if RunDefaults or RunDefaultsLite parameter was passed
     if ($RunDefaults) {
         $RemoveAppsInput = '1'
@@ -1081,7 +1100,7 @@ function ShowDefaultMode {
     else {
         $RemoveAppsInput = ShowDefaultModeAppRemovalOptions
 
-        if (($script:selectedApps.contains('Microsoft.XboxGameOverlay') -or $script:selectedApps.contains('Microsoft.XboxGamingOverlay')) -and 
+        if ($RemoveAppsInput -eq '2' -and ($script:selectedApps.contains('Microsoft.XboxGameOverlay') -or $script:selectedApps.contains('Microsoft.XboxGamingOverlay')) -and 
           $( Read-Host -Prompt "Disable Game Bar integration and game/screen recording? This also stops ms-gamingoverlay and ms-gamebar popups (y/n)" ) -eq 'y') {
             $DisableGameBarIntegrationInput = $true;
         }
@@ -1089,60 +1108,52 @@ function ShowDefaultMode {
 
     PrintHeader 'Default Mode'
 
-    Write-Output "Win11Debloat will make the following changes:"
+    # Add default settings from defaultsettings.json
+    try {
+        $defaultSettings = (Get-Content -Path $script:defaultSettingsFilePath -Raw | ConvertFrom-Json)
 
-    # Select correct option based on user input
-    switch ($RemoveAppsInput) {
-        '1' {
-            AddParameter 'RemoveApps' 'Remove the default selection of apps:' $false
-            AddParameter 'Apps' 'Default' $false $true
-            PrintAppsListFromFile "$PSScriptRoot/Appslist.txt"
+        Write-Output "Win11Debloat will make the following changes:"
+
+        # Select app removal options based on user input
+        switch ($RemoveAppsInput) {
+            '1' {
+                AddParameter 'RemoveApps' 'Remove the default selection of apps' $true $false
+                AddParameter 'Apps' 'Default selection of apps' 'Default' $false
+                PrintAppsListFromFile $script:appsListFilePath
+            }
+            '2' {
+                AddParameter 'RemoveAppsCustom' "Remove custom selection of apps" $true $false
+                PrintAppsListFromFile $script:customAppsListFilePath
+
+                if ($DisableGameBarIntegrationInput) {
+                    AddParameter 'DisableDVR' 'Disable Xbox game/screen recording' $true $false
+                    AddParameter 'DisableGameBarIntegration' 'Disable Game Bar integration' $true $false
+                }
+            }
         }
-        '2' {
-            AddParameter 'RemoveAppsCustom' "Remove $($script:SelectedApps.Count) apps:" $false
-            PrintAppsListFromFile "$PSScriptRoot/CustomAppsList"
-        }
+    }
+    catch {
+        Write-Host "Error: Failed to load default settings from DefaultSettings.json file." -ForegroundColor Red
+        AwaitKeyToExit
     }
 
-    if ($DisableGameBarIntegrationInput) {
-        AddParameter 'DisableDVR' 'Disable Xbox game/screen recording' $false
-        AddParameter 'DisableGameBarIntegration' 'Disable Game Bar integration' $false
-    }
-
-    # Only add this option for Windows 10 users
-    if (get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'") {
-        AddParameter 'Hide3dObjects' "Hide the 3D objects folder under 'This pc' in File Explorer" $false
-        AddParameter 'HideChat' 'Hide the chat (meet now) icon from the taskbar' $false
-    }
-
-    # Only add these options for Windows 11 users (build 22000+)
-    if ($WinVersion -ge 22000) {
-        if ($script:ModernStandbySupported) {
-            AddParameter 'DisableModernStandbyNetworking' 'Disable network connectivity during Modern Standby' $false
+    Foreach ($setting in $defaultSettings.Settings) {
+        if ($setting.Value -eq $false) {
+            continue
         }
 
-        AddParameter 'DisableRecall' 'Disable Windows Recall' $false
-        AddParameter 'DisableClickToDo' 'Disable Click to Do (AI text & image analysis)' $false
+        AddParameter $setting.Name $setting.Description $setting.Value $false
     }
-
-    PrintFromFile "$PSScriptRoot/Assets/Menus/DefaultSettings" "Default Mode" $false
 
     # Suppress prompt if Silent parameter was passed
     if (-not $Silent) {
+        Write-Output ""
+        Write-Output ""
         Write-Output "Press enter to execute the script or press CTRL+C to quit..."
         Read-Host | Out-Null
     } 
 
-    $DefaultParameterNames = 'DisableCopilot','DisableTelemetry','DisableSuggestions','DisableEdgeAds','DisableLockscreenTips','DisableBing','ShowKnownFileExt','DisableWidgets','DisableFastStartup'
-
     PrintHeader 'Default Mode'
-
-    # Add default parameters, if they don't already exist
-    foreach ($ParameterName in $DefaultParameterNames) {
-        if (-not $script:Params.ContainsKey($ParameterName)) {
-            $script:Params.Add($ParameterName, $true)
-        }
-    }
 }
 
 
@@ -1217,12 +1228,12 @@ function ShowCustomModeOptions {
     # Select correct option based on user input
     switch ($RemoveAppsInput) {
         '1' {
-            AddParameter 'RemoveApps' 'Remove the default selection of apps:'
-            AddParameter 'Apps' 'Default' $true $true
+            AddParameter 'RemoveApps' 'Remove the default selection of apps'
+            AddParameter 'Apps' 'Default selection of apps' 'Default'
         }
         '2' {
-            AddParameter 'RemoveApps' 'Remove the default selection of apps:'
-            AddParameter 'Apps' 'Default' $true $true
+            AddParameter 'RemoveApps' 'Remove the default selection of apps'
+            AddParameter 'Apps' 'Default selection of apps' 'Default'
             AddParameter 'RemoveCommApps' 'Remove the Mail, Calendar, and People apps'
             AddParameter 'RemoveW11Outlook' 'Remove the new Outlook for Windows app'
             AddParameter 'RemoveGamingApps' 'Remove the Xbox App and Xbox Gamebar'
@@ -1232,7 +1243,7 @@ function ShowCustomModeOptions {
         '3' {
             Write-Output "You have selected $($script:SelectedApps.Count) apps for removal"
 
-            AddParameter 'RemoveAppsCustom' "Remove $($script:SelectedApps.Count) apps:"
+            AddParameter 'RemoveAppsCustom' "Remove custom selection of apps"
 
             Write-Output ""
 
@@ -1670,7 +1681,7 @@ function ShowAppRemoval {
 
     if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
         Write-Output "You have selected $($script:SelectedApps.Count) apps for removal"
-        AddParameter 'RemoveAppsCustom' "Remove $($script:SelectedApps.Count) apps:"
+        AddParameter 'RemoveAppsCustom' "Remove custom selection of apps"
 
         # Suppress prompt if Silent parameter was passed
         if (-not $Silent) {
@@ -1694,32 +1705,35 @@ function LoadAndShowSavedSettings {
 
     $appsListPrinted = $false
 
-    # Print the saved settings info from file
-    Foreach ($line in (Get-Content -Path "$PSScriptRoot/SavedSettings")) { 
-        # Remove any spaces before and after the line
-        $line = $line.Trim()
-    
-        # Check if the line contains a comment
-        if ($line.IndexOf('#') -eq -1) {
+    try {
+        $customSettings = (Get-Content -Path $script:customSettingsFilePath -Raw | ConvertFrom-Json)
+    }
+    catch {
+        Write-Host "Error: Failed to load custom settings from CustomSettings.json file." -ForegroundColor Red
+        AwaitKeyToExit
+    }
+
+    # Go through each setting in the custom settings file, print the description and add it to Params
+    Foreach ($parameter in $customSettings.Settings) {
+        $parameterName = $parameter.Name
+        $value = $parameter.Value
+
+        # Skip parameters that are set to false in the 
+        if ($value -eq $false) {
             continue
         }
 
-        $parameterName = $line.Substring(0, $line.IndexOf('#'))
-        $value = $true
-
-        # Print parameter description and add parameter to Params list
+        # Print parameter description
         switch ($parameterName) {
             'RemoveApps' {
                 # Skip
             }
             'RemoveAppsCustom' {
-                PrintAppsListFromFile "$PSScriptRoot/CustomAppsList" $true
+                PrintAppsListFromFile $script:customAppsListFilePath $true
             }
             'Apps' {
-                $value = $line.Substring(($line.IndexOf('#') + 3), ($line.Length - $line.IndexOf('#') - 3))
-
                 if ($value -eq 'Default') {
-                    PrintAppsListFromFile "$PSScriptRoot/Appslist.txt" $true
+                    PrintAppsListFromFile $script:appsListFilePath $true
                 }
                 else {
                     Write-Host $value.Split(',') -ForegroundColor DarkGray
@@ -1728,21 +1742,17 @@ function LoadAndShowSavedSettings {
                 $appsListPrinted = $true
             }
             default {
-                Write-Output $line.Substring(($line.IndexOf('#') + 1), ($line.Length - $line.IndexOf('#') - 1))
+                Write-Output "- $($parameter.Description)"
             }
         }
 
+        # Add parameter to Params
         if (-not $script:Params.ContainsKey($parameterName)) {
             $script:Params.Add($parameterName, $value)
         }
         else {
             $script:Params[$parameterName] = $value
         }
-    }
-
-    # For compatibility with old saved settings files, print apps list if not already printed
-    if ((-not $appsListPrinted) -and $script:Params.ContainsKey('RemoveApps')) {
-        PrintAppsListFromFile "$PSScriptRoot/Appslist.txt" $true
     }
 
     # Suppress prompt if Silent parameter was passed
@@ -1836,8 +1846,8 @@ if ($script:Params.ContainsKey("User")) {
 }
 
 # Remove SavedSettings file if it exists and is empty
-if ((Test-Path "$PSScriptRoot/SavedSettings") -and ([String]::IsNullOrWhiteSpace((Get-content "$PSScriptRoot/SavedSettings")))) {
-    Remove-Item -Path "$PSScriptRoot/SavedSettings" -recurse
+if ((Test-Path $script:customSettingsFilePath) -and ([String]::IsNullOrWhiteSpace((Get-content $script:customSettingsFilePath)))) {
+    Remove-Item -Path $script:customSettingsFilePath -recurse
 }
 
 # Only run the app selection form if the 'RunAppsListGenerator' parameter was passed to the script
@@ -1864,9 +1874,9 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
         $Mode = '1'
     }
     elseif ($RunSavedSettings) {
-        if (-not (Test-Path "$PSScriptRoot/SavedSettings")) {
+        if (-not (Test-Path $script:customSettingsFilePath)) {
             PrintHeader 'Custom Mode'
-            Write-Host "Error: No saved settings found, no changes were made" -ForegroundColor Red
+            Write-Host "Error: No saved settings found, no changes were made." -ForegroundColor Red
             AwaitKeyToExit
         }
 
@@ -1933,13 +1943,13 @@ switch ($script:Params.Keys) {
     'RemoveAppsCustom' {
         Write-Output "> Removing custom selection of apps..."
 
-        if (-not (Test-Path "$PSScriptRoot/CustomAppsList")) {
+        if (-not (Test-Path $script:customAppsListFilePath)) {
             Write-Host "> Error: Could not load custom apps list from file, no apps were removed" -ForegroundColor Red
             Write-Output ""
             continue
         }
         
-        $appsList = ReadAppslistFromFile "$PSScriptRoot/CustomAppsList"
+        $appsList = ReadAppslistFromFile $script:customAppsListFilePath
         Write-Output "$($appsList.Count) apps selected for removal"
         RemoveApps $appsList
         continue
@@ -2025,10 +2035,24 @@ switch ($script:Params.Keys) {
         continue
     }
     'DisableRecall' {
+        if ($WinVersion -lt 22000) {
+            Write-Output "> Disabling Windows Recall..."
+            Write-Host "Feature is not available on Windows 10." -ForegroundColor Yellow
+            Write-Output ""
+            continue
+        }
+
         RegImport "> Disabling Windows Recall..." "Disable_AI_Recall.reg"
         continue
     }
     'DisableClickToDo' {
+        if ($WinVersion -lt 22000) {
+            Write-Output "> Disabling Click to Do..."
+            Write-Host "Feature is not available on Windows 10." -ForegroundColor Yellow
+            Write-Output ""
+            continue
+        }
+
         RegImport "> Disabling Click to Do..." "Disable_Click_to_Do.reg"
         continue
     }
@@ -2061,6 +2085,13 @@ switch ($script:Params.Keys) {
         continue
     }
     'DisableModernStandbyNetworking' {
+        if (-not $script:ModernStandbySupported) {
+            Write-Output "> Disabling network connectivity during Modern Standby..."
+            Write-Host "Device does not support modern standby." -ForegroundColor Yellow
+            Write-Output ""
+            continue
+        }
+
         RegImport "> Disabling network connectivity during Modern Standby..." "Disable_Modern_Standby_Networking.reg"
         continue
     }
@@ -2173,6 +2204,13 @@ switch ($script:Params.Keys) {
         continue
     }
     {$_ -in "HideChat", "DisableChat"} {
+        if ($WinVersion -ge 22000) {
+            Write-Output "> Hiding the chat icon from the taskbar..."
+            Write-Host "Feature is not available on Windows 11." -ForegroundColor Yellow
+            Write-Output ""
+            continue
+        }
+
         RegImport "> Hiding the chat icon from the taskbar..." "Disable_Chat_Taskbar.reg"
         continue
     }
@@ -2225,6 +2263,13 @@ switch ($script:Params.Keys) {
         continue
     }
     {$_ -in "Hide3dObjects", "Disable3dObjects"} {
+        if ($WinVersion -ge 22000) {
+            Write-Output "> Hiding the 3D objects folder from the File Explorer navigation pane..."
+            Write-Host "Feature is not available on Windows 11." -ForegroundColor Yellow
+            Write-Output ""
+            continue
+        }
+
         RegImport "> Hiding the 3D objects folder from the File Explorer navigation pane..." "Hide_3D_Objects_Folder.reg"
         continue
     }

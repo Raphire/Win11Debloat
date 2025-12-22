@@ -1131,18 +1131,18 @@ function ShowDefaultMode {
                 }
             }
         }
+
+        Foreach ($setting in $defaultSettings.Settings) {
+            if ($setting.Value -eq $false) {
+                continue
+            }
+    
+            AddParameter $setting.Name $setting.Description $setting.Value $false
+        }
     }
     catch {
         Write-Host "Error: Failed to load default settings from DefaultSettings.json file." -ForegroundColor Red
         AwaitKeyToExit
-    }
-
-    Foreach ($setting in $defaultSettings.Settings) {
-        if ($setting.Value -eq $false) {
-            continue
-        }
-
-        AddParameter $setting.Name $setting.Description $setting.Value $false
     }
 
     # Suppress prompt if Silent parameter was passed
@@ -1707,52 +1707,52 @@ function LoadAndShowSavedSettings {
 
     try {
         $customSettings = (Get-Content -Path $script:customSettingsFilePath -Raw | ConvertFrom-Json)
+
+        # Go through each setting in the custom settings file, print the description and add it to Params
+        Foreach ($parameter in $customSettings.Settings) {
+            $parameterName = $parameter.Name
+            $value = $parameter.Value
+    
+            # Skip parameters that are set to false in the 
+            if ($value -eq $false) {
+                continue
+            }
+    
+            # Print parameter description
+            switch ($parameterName) {
+                'RemoveApps' {
+                    # Skip
+                }
+                'RemoveAppsCustom' {
+                    PrintAppsListFromFile $script:customAppsListFilePath $true
+                }
+                'Apps' {
+                    if ($value -eq 'Default') {
+                        PrintAppsListFromFile $script:appsListFilePath $true
+                    }
+                    else {
+                        Write-Host $value.Split(',') -ForegroundColor DarkGray
+                    }
+    
+                    $appsListPrinted = $true
+                }
+                default {
+                    Write-Output "- $($parameter.Description)"
+                }
+            }
+    
+            # Add parameter to Params
+            if (-not $script:Params.ContainsKey($parameterName)) {
+                $script:Params.Add($parameterName, $value)
+            }
+            else {
+                $script:Params[$parameterName] = $value
+            }
+        }
     }
     catch {
         Write-Host "Error: Failed to load custom settings from CustomSettings.json file." -ForegroundColor Red
         AwaitKeyToExit
-    }
-
-    # Go through each setting in the custom settings file, print the description and add it to Params
-    Foreach ($parameter in $customSettings.Settings) {
-        $parameterName = $parameter.Name
-        $value = $parameter.Value
-
-        # Skip parameters that are set to false in the 
-        if ($value -eq $false) {
-            continue
-        }
-
-        # Print parameter description
-        switch ($parameterName) {
-            'RemoveApps' {
-                # Skip
-            }
-            'RemoveAppsCustom' {
-                PrintAppsListFromFile $script:customAppsListFilePath $true
-            }
-            'Apps' {
-                if ($value -eq 'Default') {
-                    PrintAppsListFromFile $script:appsListFilePath $true
-                }
-                else {
-                    Write-Host $value.Split(',') -ForegroundColor DarkGray
-                }
-
-                $appsListPrinted = $true
-            }
-            default {
-                Write-Output "- $($parameter.Description)"
-            }
-        }
-
-        # Add parameter to Params
-        if (-not $script:Params.ContainsKey($parameterName)) {
-            $script:Params.Add($parameterName, $value)
-        }
-        else {
-            $script:Params[$parameterName] = $value
-        }
     }
 
     # Suppress prompt if Silent parameter was passed

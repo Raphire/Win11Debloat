@@ -1707,10 +1707,15 @@ function ShowAppRemoval {
 
 function LoadAndShowCustomSettings {
     PrintHeader 'Custom Mode'
-    Write-Output "Win11Debloat will make the following changes:"
 
     try {
         $customSettings = (Get-Content -Path $script:CustomSettingsFilePath -Raw | ConvertFrom-Json)
+
+        if (-not $customSettings.Settings) {
+            throw
+        }
+
+        Write-Output "Win11Debloat will make the following changes:"
 
         # Go through each setting in the custom settings file, print the description and add it to Params
         Foreach ($parameter in $customSettings.Settings) {
@@ -1918,7 +1923,7 @@ else {
 #  or added by the user, and the script can exit without making any changes.
 if (($controlParamsCount -eq $script:Params.Keys.Count) -or (($script:Params.Keys.Count -eq 1) -and ($script:Params.Keys -contains 'CreateRestorePoint'))) {
     Write-Output "The script completed without making any changes."
-
+    Write-Output ""
     AwaitKeyToExit
 }
 

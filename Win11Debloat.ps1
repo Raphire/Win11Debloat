@@ -380,7 +380,7 @@ function ValidateAppslist {
     $supportedAppsList = @()
     $validatedAppsList = @()
 
-    Foreach ($app in (Get-Content -Path $script:AppsListFilePath | Where-Object {  $_ -notmatch '^# .*' -and $_ -notmatch '^\s*$' } )) {
+    Foreach ($app in (Get-Content -Path $script:AppsListFilePath | Where-Object {  $_ -notmatch '^\s*$' -and $_ -notmatch '^#  .*' -and $_ -notmatch '^# -* #' } )) {
         if ($app.StartsWith('#')) {
             $app = $app.TrimStart("#")
         }

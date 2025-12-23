@@ -1705,7 +1705,7 @@ function ShowAppRemoval {
 }
 
 
-function LoadAndShowSavedSettings {
+function LoadAndShowCustomSettings {
     PrintHeader 'Custom Mode'
     Write-Output "Win11Debloat will make the following changes:"
 
@@ -1808,14 +1808,13 @@ if (-not $script:Params.ContainsKey("Apps")) {
 }
 
 $script:FirstSelection = $true
-$SPParams = 'WhatIf', 'Confirm', 'Verbose', 'Silent', 'Sysprep', 'Debug', 'User', 'CreateRestorePoint', 'LogPath', 'Apps', 'NoRestartExplorer'
-$SPParamCount = 0
+$controlParams = 'WhatIf', 'Confirm', 'Verbose', 'Silent', 'Sysprep', 'Debug', 'User', 'CreateRestorePoint', 'LogPath', 'Apps', 'NoRestartExplorer'
+$controlParamsCount = 0
 
-# Count how many SPParams exist within Params
-# This is later used to check if any options were selected
-foreach ($Param in $SPParams) {
+# Count how many control parameters are set, to determine if any changes were selected by the user during runtime
+foreach ($Param in $controlParams) {
     if ($script:Params.ContainsKey($Param)) {
-        $SPParamCount++
+        $controlParamsCount++
     }
 }
 
@@ -1847,7 +1846,7 @@ if ($script:Params.ContainsKey("User")) {
     $userPath = GetUserDirectory -userName $script:Params.Item("User")
 }
 
-# Remove SavedSettings file if it exists and is empty
+# Remove CustomSettings.json file if it exists and is empty
 if ((Test-Path $script:CustomSettingsFilePath) -and ([String]::IsNullOrWhiteSpace((Get-content $script:CustomSettingsFilePath)))) {
     Remove-Item -Path $script:CustomSettingsFilePath -recurse
 }
@@ -1871,7 +1870,7 @@ if ($RunAppConfigurator -or $RunAppsListGenerator) {
 }
 
 # Change script execution based on provided parameters or user input
-if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSavedSettings -or ($SPParamCount -eq $script:Params.Count)) {
+if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSavedSettings -or ($controlParamsCount -eq $script:Params.Count)) {
     if ($RunDefaults -or $RunDefaultsLite) {
         $Mode = '1'
     }
@@ -1905,9 +1904,9 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
             ShowAppRemoval
         }
 
-        # Load last used custom options from the "SavedSettings" file
+        # Load last used custom options from the "CustomSettings.json" file
         '4' {
-            LoadAndShowSavedSettings
+            LoadAndShowCustomSettings
         }
     }
 }
@@ -1915,9 +1914,9 @@ else {
     PrintHeader 'Custom Mode'
 }
 
-# If the number of keys in SPParams equals the number of keys in Params then no modifications/changes were selected
+# If the number of keys in ControlParams equals the number of keys in Params then no modifications/changes were selected
 #  or added by the user, and the script can exit without making any changes.
-if (($SPParamCount -eq $script:Params.Keys.Count) -or (($script:Params.Keys.Count -eq 1) -and ($script:Params.Keys -contains 'CreateRestorePoint'))) {
+if (($controlParamsCount -eq $script:Params.Keys.Count) -or (($script:Params.Keys.Count -eq 1) -and ($script:Params.Keys -contains 'CreateRestorePoint'))) {
     Write-Output "The script completed without making any changes."
 
     AwaitKeyToExit

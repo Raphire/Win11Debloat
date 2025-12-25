@@ -91,7 +91,7 @@ $script:AssetsPath = "$PSScriptRoot/Assets"
 $script:ControlParams = 'WhatIf', 'Confirm', 'Verbose', 'Debug', 'LogPath', 'Silent', 'Sysprep', 'User', 'NoRestartExplorer', 'RunDefaults', 'RunDefaultsLite', 'RunSavedSettings', 'RunAppsListGenerator'
 $script:Features = @{
     "RemoveApps" = "Remove the apps specified in the 'Apps' parameter"
-    "Apps" = "The selection of apps to remove, specified as a comma separated list. Use 'Default' or leave empty to use the default apps list"
+    "Apps" = "The selection of apps to remove, specified as a comma separated list. Use 'Default' (or omit) to use the default apps list"
     "RemoveAppsCustom" = "Remove custom selection of apps"
     "RemoveCommApps" = "Remove the Mail, Calendar, and People apps"
     "RemoveW11Outlook" = "Remove the new Outlook for Windows app"
@@ -230,7 +230,7 @@ function ShowAppSelectionForm {
 
         $script:SelectedApps = $selectionBox.CheckedItems
 
-        # Close form without saving if no apps are selected
+        # Close form without saving if no apps were selected
         if ($script:SelectedApps.Count -eq 0) {
             $form.Close()
             return
@@ -356,7 +356,7 @@ function ShowAppSelectionForm {
                     }
                 }
 
-                # Add the app to the selectionBox and set it's checked status
+                # Add the app to the selectionBox and set its checked status
                 $selectionBox.Items.Add($appString, $appChecked) | Out-Null
             }
         }
@@ -501,6 +501,10 @@ function ReadAppslistFromFile {
 
     $appsList = @()
 
+    if (-not (Test-Path $appsFilePath)) {
+        return $appsList
+    }
+
     Foreach ($app in (Get-Content -Path $appsFilePath | Where-Object { $_ -notmatch '^#.*' -and $_ -notmatch '^\s*$' } )) { 
         if (-not ($app.IndexOf('#') -eq -1)) {
             $app = $app.Substring(0, $app.IndexOf('#'))
@@ -590,7 +594,7 @@ function RemoveApps {
 }
 
 
-# Forcefully removes Microsoft Edge using it's uninstaller
+# Forcefully removes Microsoft Edge using its uninstaller
 # Credit: Based on work from loadstring1 & ave9858
 function ForceRemoveEdge {
     Write-Output "> Forcefully uninstalling Microsoft Edge..."
@@ -728,11 +732,11 @@ function GetUserDirectory {
         }
     }
     catch {
-        Write-Error "Something went wrong when trying to find the user directory path for user $userName. Please ensure the user exists on this system" -ForegroundColor Red
+        Write-Error "Something went wrong when trying to find the user directory path for user $userName. Please ensure the user exists on this system"
         AwaitKeyToExit
     }
 
-    Write-Error "Unable to find user directory path for user $userName" -ForegroundColor Red
+    Write-Error "Unable to find user directory path for user $userName"
     AwaitKeyToExit
 }
 
@@ -894,7 +898,7 @@ function AddParameter {
         $value = $true
     )
 
-    # Add parameter or update it's value if key already exists
+    # Add parameter or update its value if key already exists
     if (-not $script:Params.ContainsKey($parameterName)) {
         $script:Params.Add($parameterName, $value)
     }
@@ -997,12 +1001,26 @@ function PrintPendingChanges {
             }
             'RemoveApps' {
                 $appsList = GenerateAppsList
+
+                if ($appsList.Count -eq 0) {
+                    Write-Host "No valid apps were selected for removal" -ForegroundColor Yellow
+                    Write-Output ""
+                    continue
+                }
+
                 Write-Output "- Remove $($appsList.Count) apps:"
                 Write-Host $appsList -ForegroundColor DarkGray
                 continue
             }
             'RemoveAppsCustom' {
                 $appsList = ReadAppslistFromFile $script:CustomAppsListFilePath
+
+                if ($appsList.Count -eq 0) {
+                    Write-Host "No valid apps were selected for removal" -ForegroundColor Yellow
+                    Write-Output ""
+                    continue
+                }
+
                 Write-Output "- Remove $($appsList.Count) apps:"
                 Write-Host $appsList -ForegroundColor DarkGray
                 continue
@@ -1044,11 +1062,6 @@ function GenerateAppsList {
         default {
             $appsList = $script:Params["Apps"].Split(',') | ForEach-Object { $_.Trim() }
             $validatedAppsList = ValidateAppslist $appsList
-
-            if ($validatedAppsList.Count -eq 0) {
-                return @()
-            }
-
             return $validatedAppsList
         }
     }
@@ -2006,7 +2019,6 @@ if ($script:Params.ContainsKey("CreateRestorePoint")) {
 switch ($script:Params.Keys) {
     'RemoveApps' {
         Write-Output "> Removing selected apps..."
-
         $appsList = GenerateAppsList
 
         if ($appsList.Count -eq 0) {
@@ -2016,20 +2028,19 @@ switch ($script:Params.Keys) {
         }
 
         Write-Output "$($appsList.Count) apps selected for removal"
-
         RemoveApps $appsList
         continue
     }
     'RemoveAppsCustom' {
         Write-Output "> Removing selected apps..."
+        $appsList = ReadAppslistFromFile $script:CustomAppsListFilePath
 
-        if (-not (Test-Path $script:CustomAppsListFilePath)) {
-            Write-Host "Error: Could not load custom apps list from file, no apps were removed" -ForegroundColor Red
+        if ($appsList.Count -eq 0) {
+            Write-Host "No valid apps were selected for removal" -ForegroundColor Yellow
             Write-Output ""
             continue
         }
-        
-        $appsList = ReadAppslistFromFile $script:CustomAppsListFilePath
+
         Write-Output "$($appsList.Count) apps selected for removal"
         RemoveApps $appsList
         continue

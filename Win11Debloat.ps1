@@ -24,10 +24,10 @@ param (
     [switch]$DisableTelemetry,
     [switch]$DisableFastStartup,
     [switch]$DisableModernStandbyNetworking,
-    [switch]$DisableBingSearches, [switch]$DisableBing,
+    [switch]$DisableBing, [switch]$DisableBingSearches,
     [switch]$DisableDesktopSpotlight,
-    [switch]$DisableLockscrTips, [switch]$DisableLockscreenTips,
-    [switch]$DisableWindowsSuggestions, [switch]$DisableSuggestions,
+    [switch]$DisableLockscreenTips, [switch]$DisableLockscrTips,
+    [switch]$DisableSuggestions, [switch]$DisableWindowsSuggestions,
     [switch]$DisableEdgeAds,
     [switch]$DisableSettings365Ads,
     [switch]$DisableSettingsHome,
@@ -52,7 +52,7 @@ param (
     [switch]$DisableNotepadAI,
     [switch]$DisableEdgeAI,
     [switch]$DisableWidgets, [switch]$HideWidgets,
-    [switch]$DisableChat, [switch]$HideChat,
+    [switch]$HideChat, [switch]$DisableChat,
     [switch]$EnableEndTask,
     [switch]$EnableLastActiveClick,
     [switch]$ClearStart,
@@ -69,19 +69,17 @@ param (
     [switch]$ExplorerToDownloads,
     [switch]$ExplorerToOneDrive,
     [switch]$NoRestartExplorer,
-    [switch]$DisableOnedrive, [switch]$HideOnedrive,
-    [switch]$Disable3dObjects, [switch]$Hide3dObjects,
-    [switch]$DisableMusic, [switch]$HideMusic,
-    [switch]$DisableIncludeInLibrary, [switch]$HideIncludeInLibrary,
-    [switch]$DisableGiveAccessTo, [switch]$HideGiveAccessTo,
-    [switch]$DisableShare, [switch]$HideShare,
-    [string]$ConfigFile,
-    [switch]$SaveAsJSON
+    [switch]$HideOnedrive, [switch]$DisableOnedrive,
+    [switch]$Hide3dObjects, [switch]$Disable3dObjects,
+    [switch]$HideMusic, [switch]$DisableMusic,
+    [switch]$HideIncludeInLibrary, [switch]$DisableIncludeInLibrary,
+    [switch]$HideGiveAccessTo, [switch]$DisableGiveAccessTo,
+    [switch]$HideShare, [switch]$DisableShare
 )
 
 
 
-# Define script-level file paths
+# Define script-level variables & paths
 $script:DefaultSettingsFilePath = "$PSScriptRoot/DefaultSettings.json"
 $script:AppsListFilePath = "$PSScriptRoot/Appslist.txt"
 $script:CustomSettingsFilePath = "$PSScriptRoot/CustomSettings.json"
@@ -89,6 +87,78 @@ $script:CustomAppsListFilePath = "$PSScriptRoot/CustomAppsList"
 $script:DefaultLogPath = "$PSScriptRoot/Win11Debloat.log"
 $script:RegfilesPath = "$PSScriptRoot/Regfiles"
 $script:AssetsPath = "$PSScriptRoot/Assets"
+
+$script:Features = @{
+    "RemoveApps" = "Remove the apps specified in the 'Apps' parameter"
+    "Apps" = "The selection of apps to remove, specified as a comma separated list. Use 'Default' or leave empty to use the default apps list"
+    "RemoveAppsCustom" = "Remove custom selection of apps"
+    "RemoveCommApps" = "Remove the Mail, Calendar, and People apps"
+    "RemoveW11Outlook" = "Remove the new Outlook for Windows app"
+    "RemoveGamingApps" = "Remove the Xbox App and Xbox Gamebar"
+    "CreateRestorePoint" = "Create a system restore point"
+    "DisableTelemetry" = "Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads"
+    "DisableSuggestions" = "Disable tips, tricks, suggestions and ads in start, settings, notifications and File Explorer"
+    "DisableEdgeAds" = "Disable ads, suggestions and the MSN news feed in Microsoft Edge"
+    "DisableLockscreenTips" = "Disable tips & tricks on the lockscreen"
+    "DisableBing" = "Disable & remove Bing web search, Bing AI and Cortana from Windows search"
+    "DisableCopilot" = "Disable & remove Microsoft Copilot"
+    "DisableRecall" = "Disable Windows Recall (Windows 11 only)"
+    "DisableClickToDo" = "Disable Click to Do, AI text & image analysis (Windows 11 only)"
+    "DisableWidgets" = "Disable widgets on the taskbar & lockscreen"
+    "HideChat" = "Hide the chat (meet now) icon from the taskbar (Windows 10 only)"
+    "ShowKnownFileExt" = "Show file extensions for known file types"
+    "DisableFastStartup" = "Disable Fast Start-up"
+    "Hide3dObjects" = "Hide the 3D objects folder under 'This pc' in File Explorer (Windows 10 only)"
+    "DisableModernStandbyNetworking" = "Disable network connectivity during Modern Standby (If supported)"
+    "DisableDVR" = "Disable Xbox game/screen recording"
+    "DisableGameBarIntegration" = "Disable Game Bar integration"
+    "ClearStart" = "Remove all pinned apps from the start menu for this user only"
+    "ClearStartAllUsers" = "Remove all pinned apps from the start menu for all existing and new users"
+    "DisableStartRecommended" = "Disable the recommended section in the start menu (Windows 11 only)"
+    "DisableStartPhoneLink" = "Disable the Phone Link mobile devices integration in the start menu"
+    "DisableSettings365Ads" = "Disable Microsoft 365 ads in Settings Home (Windows 11 only)"
+    "DisableEdgeAI" = "Disable AI features in Microsoft Edge (Windows 11 only)"
+    "DisablePaintAI" = "Disable AI features in Paint (Windows 11 only)"
+    "DisableNotepadAI" = "Disable AI features in Notepad (Windows 11 only)"
+    "EnableDarkMode" = "Enable dark mode for system and apps"
+    "RevertContextMenu" = "Restore the old Windows 10 style context menu (Windows 11 only)"
+    "DisableMouseAcceleration" = "Turn off Enhance Pointer Precision (mouse acceleration)"
+    "DisableStickyKeys" = "Disable the Sticky Keys keyboard shortcut (Windows 11 only)"
+    "DisableDesktopSpotlight" = "Disable the Windows Spotlight desktop background option"
+    "TaskbarAlignLeft" = "Align taskbar icons to the left (Windows 11 only)"
+    "CombineTaskbarAlways" = "Always combine taskbar buttons and hide labels for the main display (Windows 11 only)"
+    "CombineMMTaskbarAlways" = "Always combine taskbar buttons and hide labels for secondary displays (Windows 11 only)"
+    "CombineTaskbarWhenFull" = "Combine taskbar buttons and hide labels when taskbar is full for the main display (Windows 11 only)"
+    "CombineMMTaskbarWhenFull" = "Combine taskbar buttons and hide labels when taskbar is full for secondary displays (Windows 11 only)"
+    "CombineTaskbarNever" = "Never combine taskbar buttons and show labels for the main display (Windows 11 only)"
+    "CombineMMTaskbarNever" = "Never combine taskbar buttons and show labels for secondary displays (Windows 11 only)"
+    "MMTaskbarModeAll" = "Show app icons on all taskbars (Windows 11 only)"
+    "MMTaskbarModeMainActive" = "Show app icons on main taskbar and on taskbar where the windows is open (Windows 11 only)"
+    "MMTaskbarModeActive" = "Show app icons only on taskbar where the window is open (Windows 11 only)"
+    "HideSearchTb" = "Hide search icon from the taskbar (Windows 11 only)"
+    "ShowSearchIconTb" = "Show search icon on the taskbar (Windows 11 only)"
+    "ShowSearchLabelTb" = "Show search icon with label on the taskbar (Windows 11 only)"
+    "ShowSearchBoxTb" = "Show search box on the taskbar (Windows 11 only)"
+    "HideTaskview" = "Hide the taskview button from the taskbar (Windows 11 only)"
+    "EnableEndTask" = "Enable the 'End Task' option in the taskbar right click menu (Windows 11 only)"
+    "EnableLastActiveClick" = "Enable the 'Last Active Click' behavior in the taskbar app area"
+    "ShowHiddenFolders" = "Show hidden files, folders and drives"
+    "ExplorerToHome" = "Change the default location that File Explorer opens to 'Home'"
+    "ExplorerToThisPC" = "Change the default location that File Explorer opens to 'This PC'"
+    "ExplorerToDownloads" = "Change the default location that File Explorer opens to 'Downloads'"
+    "ExplorerToOneDrive" = "Change the default location that File Explorer opens to 'OneDrive'"
+    "HideHome" = "Hide the Home section from the File Explorer sidepanel (Windows 11 only)"
+    "HideGallery" = "Hide the Gallery section from the File Explorer sidepanel (Windows 11 only)"
+    "HideDupliDrive" = "Hide duplicate removable drive entries from the File Explorer sidepanel"
+    "DisableTransparency" = "Disable transparency effects"
+    "DisableAnimations" = "Disable animations and visual effects"
+    "ForceRemoveEdge" = "Forcefully uninstall Microsoft Edge. NOT RECOMMENDED!"
+    "HideIncludeInLibrary" = "Hide the 'Include in library' option in the context menu (Windows 10 only)"
+    "HideGiveAccessTo" = "Hide the 'Give access to' option in the context menu (Windows 10 only)"
+    "HideShare" = "Hide the 'Share' option in the context menu (Windows 10 only)"
+    "HideOnedrive" = "Hide the OneDrive folder in the File Explorer sidepanel (Windows 10 only)"
+    "HideMusic" = "Hide the music folder under 'This pc' in File Explorer (Windows 10 only)"
+}
 
 # Show error if current powershell environment is limited by security policies
 if ($ExecutionContext.SessionState.LanguageMode -ne "FullLanguage") {
@@ -465,13 +535,14 @@ function RemoveApps {
                 # Uninstall app via winget
                 Strip-Progress -ScriptBlock { winget uninstall --accept-source-agreements --disable-interactivity --id $app } | Tee-Object -Variable wingetOutput
 
-            If (($app -eq "Microsoft.Edge") -and (Select-String -InputObject $wingetOutput -Pattern "Uninstall failed with exit code")) {
-                Write-Host "Unable to uninstall Microsoft Edge via Winget" -ForegroundColor Red
-                Write-Output ""
-
-                if ($( Read-Host -Prompt "Would you like to forcefully uninstall Edge? NOT RECOMMENDED! (y/n)" ) -eq 'y') {
+                If (($app -eq "Microsoft.Edge") -and (Select-String -InputObject $wingetOutput -Pattern "Uninstall failed with exit code")) {
+                    Write-Host "Unable to uninstall Microsoft Edge via Winget" -ForegroundColor Red
                     Write-Output ""
-                    ForceRemoveEdge
+
+                    if ($( Read-Host -Prompt "Would you like to forcefully uninstall Microsoft Edge? NOT RECOMMENDED! (y/n)" ) -eq 'y') {
+                        Write-Output ""
+                        ForceRemoveEdge
+                    }
                 }
             }
 
@@ -811,7 +882,6 @@ function ReplaceStartMenu {
 function AddParameter {
     param (
         $parameterName,
-        $message,
         $value = $true,
         $addToFile = $true
     )
@@ -826,6 +896,7 @@ function AddParameter {
 
     if (-not $addToFile) {
         if ($value -is [bool]) {
+            $message = $script:Features[$parameterName]
             Write-Output "- $message"
         }
 
@@ -861,7 +932,6 @@ function AddParameter {
         # Add new setting
         $customSettings.Settings += @{
             "Name" = $parameterName
-            "Description" = $message
             "Value" = $value
         }
     
@@ -900,7 +970,8 @@ function Save-Settings {
 }
 
 
-function PrintHeader {    param (
+function PrintHeader {
+    param (
         $title
     )
 
@@ -1149,17 +1220,17 @@ function ShowDefaultMode {
         # Select app removal options based on user input
         switch ($RemoveAppsInput) {
             '1' {
-                AddParameter 'RemoveApps' 'Remove the default selection of apps' $true $false
-                AddParameter 'Apps' 'Default selection of apps' 'Default' $false
+                AddParameter 'RemoveApps' $true $false
+                AddParameter 'Apps' 'Default' $false
                 PrintAppsListFromFile $script:AppsListFilePath
             }
             '2' {
-                AddParameter 'RemoveAppsCustom' "Remove custom selection of apps" $true $false
+                AddParameter 'RemoveAppsCustom' $true $false
                 PrintAppsListFromFile $script:CustomAppsListFilePath
 
                 if ($DisableGameBarIntegrationInput) {
-                    AddParameter 'DisableDVR' 'Disable Xbox game/screen recording' $true $false
-                    AddParameter 'DisableGameBarIntegration' 'Disable Game Bar integration' $true $false
+                    AddParameter 'DisableDVR' $true $false
+                    AddParameter 'DisableGameBarIntegration' $true $false
                 }
             }
         }
@@ -1169,7 +1240,7 @@ function ShowDefaultMode {
                 continue
             }
     
-            AddParameter $setting.Name $setting.Description $setting.Value $false
+            AddParameter $setting.Name $setting.Value $false
         }
     }
     catch {
@@ -1229,7 +1300,7 @@ function ShowCustomModeOptions {
 
     PrintHeader 'Custom Mode'
 
-    AddParameter 'CreateRestorePoint' 'Create a system restore point'
+    AddParameter 'CreateRestorePoint'
 
     # Show options for removing apps, only continue on valid input
     Do {
@@ -1260,28 +1331,33 @@ function ShowCustomModeOptions {
     # Select correct option based on user input
     switch ($RemoveAppsInput) {
         '1' {
-            AddParameter 'RemoveApps' 'Remove the default selection of apps'
-            AddParameter 'Apps' 'Default selection of apps' 'Default'
+            AddParameter 'RemoveApps'
+            AddParameter 'Apps'
         }
         '2' {
-            AddParameter 'RemoveApps' 'Remove the default selection of apps'
-            AddParameter 'Apps' 'Default selection of apps' 'Default'
-            AddParameter 'RemoveCommApps' 'Remove the Mail, Calendar, and People apps'
-            AddParameter 'RemoveW11Outlook' 'Remove the new Outlook for Windows app'
-            AddParameter 'RemoveGamingApps' 'Remove the Xbox App and Xbox Gamebar'
-            AddParameter 'DisableDVR' 'Disable Xbox game/screen recording'
-            AddParameter 'DisableGameBarIntegration' 'Disable Game Bar integration'
+            AddParameter 'RemoveApps'
+            AddParameter 'Apps'
+            AddParameter 'RemoveCommApps'
+            AddParameter 'RemoveW11Outlook'
+            AddParameter 'RemoveGamingApps'
+
+            Write-Output ""
+
+            if ($(Read-Host -Prompt "Disable Game Bar integration and game/screen recording? This also stops ms-gamingoverlay and ms-gamebar popups (y/n)" ) -eq 'y') {
+                AddParameter 'DisableDVR'
+                AddParameter 'DisableGameBarIntegration'
+            }
         }
         '3' {
             Write-Output "You have selected $($script:SelectedApps.Count) apps for removal"
 
-            AddParameter 'RemoveAppsCustom' "Remove custom selection of apps"
+            AddParameter 'RemoveAppsCustom'
 
             Write-Output ""
 
-            if ($( Read-Host -Prompt "Disable Game Bar integration and game/screen recording? This also stops ms-gamingoverlay and ms-gamebar popups (y/n)" ) -eq 'y') {
-                AddParameter 'DisableDVR' 'Disable Xbox game/screen recording'
-                AddParameter 'DisableGameBarIntegration' 'Disable Game Bar integration'
+            if ($(Read-Host -Prompt "Disable Game Bar integration and game/screen recording? This also stops ms-gamingoverlay and ms-gamebar popups (y/n)" ) -eq 'y') {
+                AddParameter 'DisableDVR'
+                AddParameter 'DisableGameBarIntegration'
             }
         }
     }
@@ -1289,22 +1365,22 @@ function ShowCustomModeOptions {
     Write-Output ""
 
     if ($( Read-Host -Prompt "Disable telemetry, diagnostic data, activity history, app-launch tracking and targeted ads? (y/n)" ) -eq 'y') {
-        AddParameter 'DisableTelemetry' 'Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads'
+        AddParameter 'DisableTelemetry'
     }
 
     Write-Output ""
 
     if ($( Read-Host -Prompt "Disable tips, tricks, suggestions and ads in start, settings, notifications, explorer, lockscreen and Edge? (y/n)" ) -eq 'y') {
-        AddParameter 'DisableSuggestions' 'Disable tips, tricks, suggestions and ads in start, settings, notifications and File Explorer'
-        AddParameter 'DisableEdgeAds' 'Disable ads, suggestions and the MSN news feed in Microsoft Edge'
-        AddParameter 'DisableSettings365Ads' 'Disable Microsoft 365 ads in Settings Home'
-        AddParameter 'DisableLockscreenTips' 'Disable tips & tricks on the lockscreen'
+        AddParameter 'DisableSuggestions'
+        AddParameter 'DisableEdgeAds'
+        AddParameter 'DisableSettings365Ads'
+        AddParameter 'DisableLockscreenTips'
     }
 
     Write-Output ""
 
     if ($( Read-Host -Prompt "Disable & remove Bing web search, Bing AI and Cortana from Windows search? (y/n)" ) -eq 'y') {
-        AddParameter 'DisableBing' 'Disable & remove Bing web search, Bing AI and Cortana from Windows search'
+        AddParameter 'DisableBing'
     }
 
     # Only show this option for Windows 11 users running build 22621 or later
@@ -1324,17 +1400,17 @@ function ShowCustomModeOptions {
         # Select correct option based on user input
         switch ($DisableAIInput) {
             '1' {
-                AddParameter 'DisableCopilot' 'Disable & remove Microsoft Copilot'
-                AddParameter 'DisableRecall' 'Disable Windows Recall'
-                AddParameter 'DisableClickToDo' 'Disable Click to Do (AI text & image analysis)'
+                AddParameter 'DisableCopilot'
+                AddParameter 'DisableRecall'
+                AddParameter 'DisableClickToDo'
             }
             '2' {
-                AddParameter 'DisableCopilot' 'Disable & remove Microsoft Copilot'
-                AddParameter 'DisableRecall' 'Disable Windows Recall'
-                AddParameter 'DisableClickToDo' 'Disable Click to Do (AI text & image analysis)'
-                AddParameter 'DisableEdgeAI' 'Disable AI features in Microsoft Edge'
-                AddParameter 'DisablePaintAI' 'Disable AI features in Paint'
-                AddParameter 'DisableNotepadAI' 'Disable AI features in Notepad'
+                AddParameter 'DisableCopilot'
+                AddParameter 'DisableRecall'
+                AddParameter 'DisableClickToDo'
+                AddParameter 'DisableEdgeAI'
+                AddParameter 'DisablePaintAI'
+                AddParameter 'DisableNotepadAI'
             }
         }
     }
@@ -1342,20 +1418,20 @@ function ShowCustomModeOptions {
     Write-Output ""
 
     if ($( Read-Host -Prompt "Disable Windows Spotlight background on desktop? (y/n)" ) -eq 'y') {
-        AddParameter 'DisableDesktopSpotlight' 'Disable the Windows Spotlight desktop background option'
+        AddParameter 'DisableDesktopSpotlight'
     }
 
     Write-Output ""
 
     if ($( Read-Host -Prompt "Enable dark mode for system and apps? (y/n)" ) -eq 'y') {
-        AddParameter 'EnableDarkMode' 'Enable dark mode for system and apps'
+        AddParameter 'EnableDarkMode'
     }
 
     Write-Output ""
 
     if ($( Read-Host -Prompt "Disable transparency, animations and visual effects? (y/n)" ) -eq 'y') {
-        AddParameter 'DisableTransparency' 'Disable transparency effects'
-        AddParameter 'DisableAnimations' 'Disable animations and visual effects'
+        AddParameter 'DisableTransparency'
+        AddParameter 'DisableAnimations'
     }
 
     # Only show this option for Windows 11 users running build 22000 or later
@@ -1363,14 +1439,14 @@ function ShowCustomModeOptions {
         Write-Output ""
 
         if ($( Read-Host -Prompt "Restore the old Windows 10 style context menu? (y/n)" ) -eq 'y') {
-            AddParameter 'RevertContextMenu' 'Restore the old Windows 10 style context menu'
+            AddParameter 'RevertContextMenu'
         }
     }
 
     Write-Output ""
 
     if ($( Read-Host -Prompt "Turn off Enhance Pointer Precision, also known as mouse acceleration? (y/n)" ) -eq 'y') {
-        AddParameter 'DisableMouseAcceleration' 'Turn off Enhance Pointer Precision (mouse acceleration)'
+        AddParameter 'DisableMouseAcceleration'
     }
 
     # Only show this option for Windows 11 users running build 26100 or later
@@ -1378,14 +1454,14 @@ function ShowCustomModeOptions {
         Write-Output ""
 
         if ($( Read-Host -Prompt "Disable the Sticky Keys keyboard shortcut? (y/n)" ) -eq 'y') {
-            AddParameter 'DisableStickyKeys' 'Disable the Sticky Keys keyboard shortcut'
+            AddParameter 'DisableStickyKeys'
         }
     }
 
     Write-Output ""
 
     if ($( Read-Host -Prompt "Disable Fast Start-up? This applies to all users (y/n)" ) -eq 'y') {
-        AddParameter 'DisableFastStartup' 'Disable Fast Start-up'
+        AddParameter 'DisableFastStartup'
     }
 
     # Only show this option for Windows 11 users running build 22000 or later, and if the machine has at least one battery
@@ -1393,7 +1469,7 @@ function ShowCustomModeOptions {
         Write-Output ""
 
         if ($( Read-Host -Prompt "Disable network connectivity during Modern Standby? This applies to all users (y/n)" ) -eq 'y') {
-            AddParameter 'DisableModernStandbyNetworking' 'Disable network connectivity during Modern Standby'
+            AddParameter 'DisableModernStandbyNetworking'
         }
     }
 
@@ -1405,19 +1481,19 @@ function ShowCustomModeOptions {
             Write-Output ""
 
             if ($( Read-Host -Prompt "   Hide the 'Include in library' option in the context menu? (y/n)" ) -eq 'y') {
-                AddParameter 'HideIncludeInLibrary' "Hide the 'Include in library' option in the context menu"
+                AddParameter 'HideIncludeInLibrary'
             }
 
             Write-Output ""
 
             if ($( Read-Host -Prompt "   Hide the 'Give access to' option in the context menu? (y/n)" ) -eq 'y') {
-                AddParameter 'HideGiveAccessTo' "Hide the 'Give access to' option in the context menu"
+                AddParameter 'HideGiveAccessTo'
             }
 
             Write-Output ""
 
             if ($( Read-Host -Prompt "   Hide the 'Share' option in the context menu? (y/n)" ) -eq 'y') {
-                AddParameter 'HideShare' "Hide the 'Share' option in the context menu"
+                AddParameter 'HideShare'
             }
         }
     }
@@ -1431,7 +1507,7 @@ function ShowCustomModeOptions {
 
             if ($script:Params.ContainsKey("Sysprep")) {
                 if ($( Read-Host -Prompt "Remove all pinned apps from the start menu for all existing and new users? (y/n)" ) -eq 'y') {
-                    AddParameter 'ClearStartAllUsers' 'Remove all pinned apps from the start menu for existing and new users'
+                    AddParameter 'ClearStartAllUsers'
                 }
             }
             else {
@@ -1447,10 +1523,10 @@ function ShowCustomModeOptions {
                 # Select correct option based on user input
                 switch ($ClearStartInput) {
                     '1' {
-                        AddParameter 'ClearStart' "Remove all pinned apps from the start menu for this user only"
+                        AddParameter 'ClearStart'
                     }
                     '2' {
-                        AddParameter 'ClearStartAllUsers' "Remove all pinned apps from the start menu for all existing and new users"
+                        AddParameter 'ClearStartAllUsers'
                     }
                 }
             }
@@ -1460,14 +1536,14 @@ function ShowCustomModeOptions {
                 Write-Output ""
 
                 if ($( Read-Host -Prompt "   Disable the recommended section in the start menu? This applies to all users (y/n)" ) -eq 'y') {
-                    AddParameter 'DisableStartRecommended' 'Disable the recommended section in the start menu'
+                    AddParameter 'DisableStartRecommended'
                 }
             }
 
             Write-Output ""
 
             if ($( Read-Host -Prompt "   Disable the Phone Link mobile devices integration in the start menu? (y/n)" ) -eq 'y') {
-                AddParameter 'DisableStartPhoneLink' 'Disable the Phone Link mobile devices integration in the start menu'
+                AddParameter 'DisableStartPhoneLink'
             }
         }
     }
@@ -1480,7 +1556,7 @@ function ShowCustomModeOptions {
             Write-Output ""
 
             if ($( Read-Host -Prompt "   Align taskbar buttons to the left side? (y/n)" ) -eq 'y') {
-                AddParameter 'TaskbarAlignLeft' 'Align taskbar icons to the left'
+                AddParameter 'TaskbarAlignLeft'
             }
 
             # Show options for combine icon on taskbar, only continue on valid input
@@ -1498,16 +1574,16 @@ function ShowCustomModeOptions {
             # Select correct taskbar goup option based on user input
             switch ($TbCombineTaskbar) {
                 '1' {
-                    AddParameter 'CombineTaskbarAlways' 'Always combine taskbar buttons and hide labels for the main display'
-                    AddParameter 'CombineMMTaskbarAlways' 'Always combine taskbar buttons and hide labels for secondary displays'
+                    AddParameter 'CombineTaskbarAlways'
+                    AddParameter 'CombineMMTaskbarAlways'
                 }
                 '2' {
-                    AddParameter 'CombineTaskbarWhenFull' 'Combine taskbar buttons and hide labels when taskbar is full for the main display'
-                    AddParameter 'CombineMMTaskbarWhenFull' 'Combine taskbar buttons and hide labels when taskbar is full for secondary displays'
+                    AddParameter 'CombineTaskbarWhenFull'
+                    AddParameter 'CombineMMTaskbarWhenFull'
                 }
                 '3' {
-                    AddParameter 'CombineTaskbarNever' 'Never combine taskbar buttons and show labels for the main display'
-                    AddParameter 'CombineMMTaskbarNever' 'Never combine taskbar buttons and show labels for secondary displays'
+                    AddParameter 'CombineTaskbarNever'
+                    AddParameter 'CombineMMTaskbarNever'
                 }
             }
 
@@ -1526,13 +1602,13 @@ function ShowCustomModeOptions {
             # Select correct taskbar goup option based on user input
             switch ($TbCombineTaskbar) {
                 '1' {
-                    AddParameter 'MMTaskbarModeAll' 'Show app icons on all taskbars'
+                    AddParameter 'MMTaskbarModeAll'
                 }
                 '2' {
-                    AddParameter 'MMTaskbarModeMainActive' 'Show app icons on main taskbar and on taskbar where the windows is open'
+                    AddParameter 'MMTaskbarModeMainActive'
                 }
                 '3' {
-                    AddParameter 'MMTaskbarModeActive' 'Show app icons only on taskbar where the window is open'
+                    AddParameter 'MMTaskbarModeActive'
                 }
             }
 
@@ -1552,30 +1628,30 @@ function ShowCustomModeOptions {
             # Select correct taskbar search option based on user input
             switch ($TbSearchInput) {
                 '1' {
-                    AddParameter 'HideSearchTb' 'Hide search icon from the taskbar'
+                    AddParameter 'HideSearchTb'
                 }
                 '2' {
-                    AddParameter 'ShowSearchIconTb' 'Show search icon on the taskbar'
+                    AddParameter 'ShowSearchIconTb'
                 }
                 '3' {
-                    AddParameter 'ShowSearchLabelTb' 'Show search icon with label on the taskbar'
+                    AddParameter 'ShowSearchLabelTb'
                 }
                 '4' {
-                    AddParameter 'ShowSearchBoxTb' 'Show search box on the taskbar'
+                    AddParameter 'ShowSearchBoxTb'
                 }
             }
 
             Write-Output ""
 
             if ($( Read-Host -Prompt "   Hide the taskview button from the taskbar? (y/n)" ) -eq 'y') {
-                AddParameter 'HideTaskview' 'Hide the taskview button from the taskbar'
+                AddParameter 'HideTaskview'
             }
         }
 
         Write-Output ""
 
         if ($( Read-Host -Prompt "   Disable the widgets service to remove widgets on the taskbar & lockscreen? (y/n)" ) -eq 'y') {
-            AddParameter 'DisableWidgets' 'Disable widgets on the taskbar & lockscreen'
+            AddParameter 'DisableWidgets'
         }
 
         # Only show this options for Windows users running build 22621 or earlier
@@ -1583,7 +1659,7 @@ function ShowCustomModeOptions {
             Write-Output ""
 
             if ($( Read-Host -Prompt "   Hide the chat (meet now) icon from the taskbar? (y/n)" ) -eq 'y') {
-                AddParameter 'HideChat' 'Hide the chat (meet now) icon from the taskbar'
+                AddParameter 'HideChat'
             }
         }
 
@@ -1592,13 +1668,13 @@ function ShowCustomModeOptions {
             Write-Output ""
 
             if ($( Read-Host -Prompt "   Enable the 'End Task' option in the taskbar right click menu? (y/n)" ) -eq 'y') {
-                AddParameter 'EnableEndTask' "Enable the 'End Task' option in the taskbar right click menu"
+                AddParameter 'EnableEndTask'
             }
         }
 
         Write-Output ""
         if ($( Read-Host -Prompt "   Enable the 'Last Active Click' behavior in the taskbar app area? (y/n)" ) -eq 'y') {
-            AddParameter 'EnableLastActiveClick' "Enable the 'Last Active Click' behavior in the taskbar app area"
+            AddParameter 'EnableLastActiveClick'
         }
     }
 
@@ -1621,29 +1697,29 @@ function ShowCustomModeOptions {
         # Select correct taskbar search option based on user input
         switch ($ExplSearchInput) {
             '1' {
-                AddParameter 'ExplorerToHome' "Change the default location that File Explorer opens to 'Home'"
+                AddParameter 'ExplorerToHome'
             }
             '2' {
-                AddParameter 'ExplorerToThisPC' "Change the default location that File Explorer opens to 'This PC'"
+                AddParameter 'ExplorerToThisPC'
             }
             '3' {
-                AddParameter 'ExplorerToDownloads' "Change the default location that File Explorer opens to 'Downloads'"
+                AddParameter 'ExplorerToDownloads'
             }
             '4' {
-                AddParameter 'ExplorerToOneDrive' "Change the default location that File Explorer opens to 'OneDrive'"
+                AddParameter 'ExplorerToOneDrive'
             }
         }
 
         Write-Output ""
 
         if ($( Read-Host -Prompt "   Show hidden files, folders and drives? (y/n)" ) -eq 'y') {
-            AddParameter 'ShowHiddenFolders' 'Show hidden files, folders and drives'
+            AddParameter 'ShowHiddenFolders'
         }
 
         Write-Output ""
 
         if ($( Read-Host -Prompt "   Show file extensions for known file types? (y/n)" ) -eq 'y') {
-            AddParameter 'ShowKnownFileExt' 'Show file extensions for known file types'
+            AddParameter 'ShowKnownFileExt'
         }
 
         # Only show this option for Windows 11 users running build 22000 or later
@@ -1651,20 +1727,20 @@ function ShowCustomModeOptions {
             Write-Output ""
 
             if ($( Read-Host -Prompt "   Hide the Home section from the File Explorer sidepanel? (y/n)" ) -eq 'y') {
-                AddParameter 'HideHome' 'Hide the Home section from the File Explorer sidepanel'
+                AddParameter 'HideHome'
             }
 
             Write-Output ""
 
             if ($( Read-Host -Prompt "   Hide the Gallery section from the File Explorer sidepanel? (y/n)" ) -eq 'y') {
-                AddParameter 'HideGallery' 'Hide the Gallery section from the File Explorer sidepanel'
+                AddParameter 'HideGallery'
             }
         }
 
         Write-Output ""
 
         if ($( Read-Host -Prompt "   Hide duplicate removable drive entries from the File Explorer sidepanel so they only show under This PC? (y/n)" ) -eq 'y') {
-            AddParameter 'HideDupliDrive' 'Hide duplicate removable drive entries from the File Explorer sidepanel'
+            AddParameter 'HideDupliDrive'
         }
 
         # Only show option for disabling these specific folders for Windows 10 users
@@ -1675,19 +1751,19 @@ function ShowCustomModeOptions {
                 Write-Output ""
 
                 if ($( Read-Host -Prompt "   Hide the OneDrive folder from the File Explorer sidepanel? (y/n)" ) -eq 'y') {
-                    AddParameter 'HideOnedrive' 'Hide the OneDrive folder in the File Explorer sidepanel'
+                    AddParameter 'HideOnedrive'
                 }
 
                 Write-Output ""
 
                 if ($( Read-Host -Prompt "   Hide the 3D objects folder from the File Explorer sidepanel? (y/n)" ) -eq 'y') {
-                    AddParameter 'Hide3dObjects' "Hide the 3D objects folder under 'This pc' in File Explorer"
+                    AddParameter 'Hide3dObjects'
                 }
 
                 Write-Output ""
 
                 if ($( Read-Host -Prompt "   Hide the music folder from the File Explorer sidepanel? (y/n)" ) -eq 'y') {
-                    AddParameter 'HideMusic' "Hide the music folder under 'This pc' in File Explorer"
+                    AddParameter 'HideMusic'
                 }
             }
         }
@@ -1722,7 +1798,7 @@ function ShowAppRemoval {
 
     if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
         Write-Output "You have selected $($script:SelectedApps.Count) apps for removal"
-        AddParameter 'RemoveAppsCustom' "Remove custom selection of apps"
+        AddParameter 'RemoveAppsCustom'
 
         # Suppress prompt if Silent parameter was passed
         if (-not $Silent) {
@@ -1779,7 +1855,8 @@ function LoadAndShowCustomSettings {
                     }
                 }
                 default {
-                    Write-Output "- $($parameter.Description)"
+                    $message = $script:Features[$parameterName]
+                    Write-Output "- $message"
                 }
             }
     
@@ -1848,7 +1925,7 @@ if (-not $script:Params.ContainsKey("Apps")) {
 }
 
 $script:FirstSelection = $true
-$controlParams = 'WhatIf', 'Confirm', 'Verbose', 'Silent', 'Sysprep', 'Debug', 'User', 'CreateRestorePoint', 'LogPath', 'Apps', 'NoRestartExplorer'
+$controlParams = 'WhatIf', 'Confirm', 'Verbose', 'Debug', 'LogPath', 'Silent', 'Sysprep', 'User', 'NoRestartExplorer', 'CreateRestorePoint', 'Apps'
 $controlParamsCount = 0
 
 # Count how many control parameters are set, to determine if any changes were selected by the user during runtime

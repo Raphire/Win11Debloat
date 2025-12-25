@@ -1,0 +1,22 @@
+Windows Registry Editor Version 5.00
+
+; Disable allow your controller to open Game Bar
+[hkey_users\default\SOFTWARE\Microsoft\GameBar]
+"UseNexusForGameBarEnabled"=dword:00000000
+
+; Disable `ms-gamebar` popups
+[HKEY_CLASSES_ROOT\ms-gamebar]
+@="URL:ms-gamebar"
+"URL Protocol"=""
+"NoOpenWith"=""
+
+[HKEY_CLASSES_ROOT\ms-gamebar\shell\open\command]
+@="%SystemRoot%/System32/systray.exe"
+
+[HKEY_CLASSES_ROOT\ms-gamebarservices]
+@="URL:ms-gamebarservices"
+"URL Protocol"=""
+"NoOpenWith"=""
+
+[HKEY_CLASSES_ROOT\ms-gamebar\shell\open\command]
+@="%SystemRoot%/System32/systray.exe"

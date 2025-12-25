@@ -1,0 +1,9 @@
+Windows Registry Editor Version 5.00
+
+; Create task to remove OneDrive if it's already installed
+[hkey_users\default\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce]
+"UninstallMicrosoftOneDrive"="cmd.exe /c winget uninstall --accept-source-agreements --disable-interactivity --id Microsoft.OneDrive"
+
+; Remove task that installs OneDrive
+[hkey_users\default\SOFTWARE\Microsoft\Windows\CurrentVersion\Run]
+"OneDriveSetup"=-

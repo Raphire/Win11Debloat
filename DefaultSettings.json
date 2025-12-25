@@ -1,0 +1,310 @@
+{
+    "Version": "1.0",
+    "Settings": [
+        {
+            "Name": "CreateRestorePoint",
+            "Description": "Create a system restore point",
+            "Value": true
+        },
+        {
+            "Name": "DisableTelemetry",
+            "Description": "Disable telemetry, diagnostic data, activity history, app-launch tracking \u0026 targeted ads",
+            "Value": true
+        },
+        {
+            "Name": "DisableSuggestions",
+            "Description": "Disable tips, tricks, suggestions and ads in start, settings, notifications and File Explorer",
+            "Value": true
+        },
+        {
+            "Name": "DisableEdgeAds",
+            "Description": "Disable ads, suggestions and the MSN news feed in Microsoft Edge",
+            "Value": true
+        },
+        {
+            "Name": "DisableLockscreenTips",
+            "Description": "Disable tips \u0026 tricks on the lockscreen",
+            "Value": true
+        },
+        {
+            "Name": "DisableBing",
+            "Description": "Disable \u0026 remove Bing web search, Bing AI and Cortana from Windows search",
+            "Value": true
+        },
+        {
+            "Name": "DisableCopilot",
+            "Description": "Disable & remove Microsoft Copilot",
+            "Value": true
+        },
+        {
+            "Name": "DisableRecall",
+            "Description": "Disable Windows Recall (Windows 11 only)",
+            "Value": true
+        },
+        {
+            "Name": "DisableClickToDo",
+            "Description": "Disable Click to Do, AI text & image analysis (Windows 11 only)",
+            "Value": true
+        },
+        {
+            "Name": "DisableWidgets",
+            "Description": "Disable widgets on the taskbar & lockscreen",
+            "Value": true
+        },
+        {
+            "Name": "HideChat",
+            "Description": "Hide the chat (meet now) icon from the taskbar (Windows 10 only)",
+            "Value": true
+        },
+        {
+            "Name": "ShowKnownFileExt",
+            "Description": "Show file extensions for known file types",
+            "Value": true
+        },
+        {
+            "Name": "DisableFastStartup",
+            "Description": "Disable Fast Start-up",
+            "Value": true
+        },
+        {
+            "Name": "Hide3dObjects",
+            "Description": "Hide the 3D objects folder under 'This pc' in File Explorer (Windows 10 only)",
+            "Value": true
+        },
+        {
+            "Name": "DisableModernStandbyNetworking",
+            "Description": "Disable network connectivity during Modern Standby (If supported)",
+            "Value": true
+        },
+        {
+            "Name": "DisableDVR",
+            "Description": "Disable Xbox game/screen recording",
+            "Value": false
+        },
+        {
+            "Name": "DisableGameBarIntegration",
+            "Description": "Disable Game Bar integration",
+            "Value": false
+        },
+        {
+            "Name": "ClearStart",
+            "Description": "Remove all pinned apps from the start menu for this user only",
+            "Value": false
+        },
+        {
+            "Name": "ClearStartAllUsers",
+            "Description": "Remove all pinned apps from the start menu for all existing and new users",
+            "Value": false
+        },
+        {
+            "Name": "DisableStartPhoneLink",
+            "Description": "Disable the Phone Link mobile devices integration in the start menu",
+            "Value": false
+        },
+        {
+            "Name": "DisableSettings365Ads",
+            "Description": "Disable Microsoft 365 ads in Settings Home (Windows 11 only)",
+            "Value": false
+        },
+        {
+            "Name": "DisableEdgeAI",
+            "Description": "Disable AI features in Microsoft Edge (Windows 11 only)",
+            "Value": false
+        },
+        {
+            "Name": "DisablePaintAI",
+            "Description": "Disable AI features in Paint (Windows 11 only)",
+            "Value": false
+        },
+        {
+            "Name": "DisableNotepadAI",
+            "Description": "Disable AI features in Notepad (Windows 11 only)",
+            "Value": false
+        },
+        {
+            "Name": "EnableDarkMode",
+            "Description": "Enable dark mode for system and apps",
+            "Value": false
+        },
+        {
+            "Name": "RevertContextMenu",
+            "Description": "Restore the old Windows 10 style context menu (Windows 11 only)",
+            "Value": false
+        },
+        {
+            "Name": "DisableMouseAcceleration",
+            "Description": "Turn off Enhance Pointer Precision (mouse acceleration)",
+            "Value": false
+        },
+        {
+            "Name": "DisableStickyKeys",
+            "Description": "Disable the Sticky Keys keyboard shortcut (Windows 11 only)",
+            "Value": false
+        },
+        {
+            "Name": "DisableDesktopSpotlight",
+            "Description": "Disable the Windows Spotlight desktop background option",
+            "Value": false
+        },
+        {
+            "Name": "TaskbarAlignLeft",
+            "Description": "Align taskbar icons to the left (Windows 11 only)",
+            "Value": false
+        },
+        {
+            "Name": "CombineTaskbarAlways",
+            "Description": "Always combine taskbar buttons and hide labels for the main display (Windows 11 only)",
+            "Value": false
+        },
+        {
+            "Name": "CombineMMTaskbarAlways",
+            "Description": "Always combine taskbar buttons and hide labels for secondary displays (Windows 11 only)",
+            "Value": false
+        },
+        {
+            "Name": "CombineTaskbarWhenFull",
+            "Description": "Combine taskbar buttons and hide labels when taskbar is full for the main display (Windows 11 only)",
+            "Value": false
+        },
+        {
+            "Name": "CombineMMTaskbarWhenFull",
+            "Description": "Combine taskbar buttons and hide labels when taskbar is full for secondary displays (Windows 11 only)",
+            "Value": false
+        },
+        {
+            "Name": "CombineTaskbarNever",
+            "Description": "Never combine taskbar buttons and show labels for the main display (Windows 11 only)",
+            "Value": false
+        },
+        {
+            "Name": "CombineMMTaskbarNever",
+            "Description": "Never combine taskbar buttons and show labels for secondary displays (Windows 11 only)",
+            "Value": false
+        },
+        {
+            "Name": "MMTaskbarModeAll",
+            "Description": "Show app icons on all taskbars (Windows 11 only)",
+            "Value": false
+        },
+        {
+            "Name": "MMTaskbarModeMainActive",
+            "Description": "Show app icons on main taskbar and on taskbar where the windows is open (Windows 11 only)",
+            "Value": false
+        },
+        {
+            "Name": "MMTaskbarModeActive",
+            "Description": "Show app icons only on taskbar where the window is open (Windows 11 only)",
+            "Value": false
+        },
+        {
+            "Name": "HideSearchTb",
+            "Description": "Hide search icon from the taskbar (Windows 11 only)",
+            "Value": false
+        },
+        {
+            "Name": "ShowSearchIconTb",
+            "Description": "Show search icon on the taskbar (Windows 11 only)",
+            "Value": false
+        },
+        {
+            "Name": "ShowSearchLabelTb",
+            "Description": "Show search icon with label on the taskbar (Windows 11 only)",
+            "Value": false
+        },
+        {
+            "Name": "ShowSearchBoxTb",
+            "Description": "Show search box on the taskbar (Windows 11 only)",
+            "Value": false
+        },
+        {
+            "Name": "HideTaskview",
+            "Description": "Hide the taskview button from the taskbar (Windows 11 only)",
+            "Value": false
+        },
+        {
+            "Name": "EnableEndTask",
+            "Description": "Enable the 'End Task' option in the taskbar right click menu (Windows 11 only)",
+            "Value": false
+        },
+        {
+            "Name": "EnableLastActiveClick",
+            "Description": "Enable the 'Last Active Click' behavior in the taskbar app area",
+            "Value": false
+        },
+        {
+            "Name": "ShowHiddenFolders",
+            "Description": "Show hidden files, folders and drives",
+            "Value": false
+        },
+        {
+            "Name": "ExplorerToHome",
+            "Description": "Change the default location that File Explorer opens to 'Home'",
+            "Value": false
+        },
+        {
+            "Name": "ExplorerToThisPC",
+            "Description": "Change the default location that File Explorer opens to 'This PC'",
+            "Value": false
+        },
+        {
+            "Name": "ExplorerToDownloads",
+            "Description": "Change the default location that File Explorer opens to 'Downloads'",
+            "Value": false
+        },
+        {
+            "Name": "ExplorerToOneDrive",
+            "Description": "Change the default location that File Explorer opens to 'OneDrive'",
+            "Value": false
+        },
+        {
+            "Name": "HideHome",
+            "Description": "Hide the Home section from the File Explorer sidepanel (Windows 11 only)",
+            "Value": false
+        },
+        {
+            "Name": "HideGallery",
+            "Description": "Hide the Gallery section from the File Explorer sidepanel (Windows 11 only)",
+            "Value": false
+        },
+        {
+            "Name": "HideDupliDrive",
+            "Description": "Hide duplicate removable drive entries from the File Explorer sidepanel",
+            "Value": false
+        },
+        {
+            "Name": "DisableTransparency",
+            "Description": "Disable transparency effects",
+            "Value": false
+        },
+        {
+            "Name": "DisableAnimations",
+            "Description": "Disable animations and visual effects",
+            "Value": false
+        },
+        {
+            "Name": "HideIncludeInLibrary",
+            "Description": "Hide the 'Include in library' option in the context menu (Windows 10 only)",
+            "Value": false
+        },
+        {
+            "Name": "HideGiveAccessTo",
+            "Description": "Hide the 'Give access to' option in the context menu (Windows 10 only)",
+            "Value": false
+        },
+        {
+            "Name": "HideShare",
+            "Description": "Hide the 'Share' option in the context menu (Windows 10 only)",
+            "Value": false
+        },
+        {
+            "Name": "HideOnedrive",
+            "Description": "Hide the OneDrive folder in the File Explorer sidepanel (Windows 10 only)",
+            "Value": false
+        },
+        {
+            "Name": "HideMusic",
+            "Description": "Hide the music folder under 'This pc' in File Explorer (Windows 10 only)",
+            "Value": false
+        }
+    ]
+}

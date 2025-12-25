@@ -105,6 +105,7 @@ XING                                           # Professional networking platfor
 #Microsoft.Edge                                # Edge browser (Can only be uninstalled in European Economic Area)
 #Microsoft.GamingApp                           # Modern Xbox Gaming App, required for installing some PC games
 #Microsoft.GetHelp                             # Required for some Windows 11 Troubleshooters and support interactions
+#Microsoft.M365Companions                      # Microsoft 365 (Business) Calendar, Files and People mini-apps, these apps may be reinstalled if enabled by your Microsoft 365 admin
 #Microsoft.MSPaint                             # Paint 3D (Modern paint application with 3D features)
 #Microsoft.OneDrive                            # OneDrive consumer cloud storage client
 #Microsoft.OutlookForWindows                   # New mail app: Outlook for Windows

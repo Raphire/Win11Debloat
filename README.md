@@ -18,9 +18,9 @@
 [![Join the Discussion](https://img.shields.io/badge/Join-the%20Discussion-2D9F2D?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Raphire/Win11Debloat/discussions)
 [![Static Badge](https://img.shields.io/badge/Documentation-_?style=for-the-badge&logo=bookstack&color=grey)](https://github.com/Raphire/Win11Debloat/wiki/)
 
- Win11Debloat is a simple, easy to use and lightweight PowerShell script that allows you to quickly declutter and improve your Windows experience. It can remove pre-installed bloatware apps, disable telemetry, remove intrusive interface elements and much more. No need to painstakingly go through all the settings yourself or remove apps one by one. Win11Debloat makes the process quick and easy!
+ Win11Debloat is a lightweight, easy to use PowerShell script that allows you to quickly declutter and improve your Windows experience. It can remove pre-installed bloatware apps, disable telemetry, remove intrusive interface elements and much more. No need to painstakingly go through all the settings yourself or remove apps one by one. Win11Debloat makes the process quick and easy!
 
-The script also includes many features that system administrators will enjoy. Such as support for Windows Audit mode, the option to make changes to other Windows users and the ability to run the script without requiring user input during runtime. Please refer to our [wiki](https://github.com/Raphire/Win11Debloat/wiki/) for more details.
+The script also includes many features that system administrators and power users will enjoy. Such as support for Windows Audit mode, the option to make changes to other Windows users and the ability to access all of Win11Debloat's features right from the command-line. Please refer to our [wiki](https://github.com/Raphire/Win11Debloat/wiki/) for more details.
 
 ![Win11Debloat Menu](/Assets/menu.png)
 
@@ -152,11 +152,14 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 
 #### Other
 
-- Disable Xbox game/screen recording, this also stops gaming overlay popups.
+- Disable Xbox Game Bar integration & game/screen recording. This also disables `ms-gamingoverlay`/`ms-gamebar` popups if you uninstall the Xbox Game Bar.
 - Disable Fast Start-up to ensure a full shutdown.
 - Disable network connectivity during Modern Standby to reduce battery drain. (W11 only)
+
+#### Advanced Features
+
 - Option to [apply changes to a different user](https://github.com/Raphire/Win11Debloat/wiki/Advanced-Features#running-as-another-user), instead of the currently logged in user.
-- [Sysprep mode](https://github.com/Raphire/Win11Debloat/wiki/Advanced-Features#sysprep-mode) to apply changes to the Windows Default user profile. Afterwards, all new users will have the changes automatically applied to them.
+- [Sysprep mode](https://github.com/Raphire/Win11Debloat/wiki/Advanced-Features#sysprep-mode) to apply changes to the Windows Default user profile. Which ensures, all new users will have the changes automatically applied to them.
 
 ### Default Settings
 
@@ -297,6 +300,7 @@ These apps will not be removed by Win11Debloat unless explicitly selected by the
     Miscellaneous apps:
     - Microsoft.Edge (Edge browser, only removeable in the EEA)
     - Microsoft.GetHelp (Required for some Windows 11 Troubleshooters)
+    - Microsoft.M365Companions (Microsoft 365 Business Calendar, Files and People mini-apps, these apps may be reinstalled if enabled by your Microsoft 365 admin)
     - Microsoft.MSPaint (Paint 3D)
     - Microsoft.OutlookForWindows (New mail app)
     - Microsoft.OneDrive (OneDrive consumer)

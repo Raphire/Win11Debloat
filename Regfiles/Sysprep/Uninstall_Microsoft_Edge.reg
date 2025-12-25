@@ -1,0 +1,4 @@
+Windows Registry Editor Version 5.00
+
+[hkey_users\default\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce]
+"UninstallMicrosoftEdge"="cmd.exe /c winget uninstall --accept-source-agreements --disable-interactivity --id Microsoft.Edge"

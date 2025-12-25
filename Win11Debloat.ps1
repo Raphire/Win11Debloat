@@ -88,6 +88,7 @@ $script:DefaultLogPath = "$PSScriptRoot/Win11Debloat.log"
 $script:RegfilesPath = "$PSScriptRoot/Regfiles"
 $script:AssetsPath = "$PSScriptRoot/Assets"
 
+$script:ControlParams = 'WhatIf', 'Confirm', 'Verbose', 'Debug', 'LogPath', 'Silent', 'Sysprep', 'User', 'NoRestartExplorer', 'RunDefaults', 'RunDefaultsLite', 'RunSavedSettings', 'RunAppsListGenerator'
 $script:Features = @{
     "RemoveApps" = "Remove the apps specified in the 'Apps' parameter"
     "Apps" = "The selection of apps to remove, specified as a comma separated list. Use 'Default' or leave empty to use the default apps list"
@@ -95,6 +96,7 @@ $script:Features = @{
     "RemoveCommApps" = "Remove the Mail, Calendar, and People apps"
     "RemoveW11Outlook" = "Remove the new Outlook for Windows app"
     "RemoveGamingApps" = "Remove the Xbox App and Xbox Gamebar"
+    "RemoveHPApps" = "Remove HP OEM applications"
     "CreateRestorePoint" = "Create a system restore point"
     "DisableTelemetry" = "Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads"
     "DisableSuggestions" = "Disable tips, tricks, suggestions and ads in start, settings, notifications and File Explorer"
@@ -114,9 +116,12 @@ $script:Features = @{
     "DisableGameBarIntegration" = "Disable Game Bar integration"
     "ClearStart" = "Remove all pinned apps from the start menu for this user only"
     "ClearStartAllUsers" = "Remove all pinned apps from the start menu for all existing and new users"
+    "ReplaceStart" = "Replace the start menu layout for this user only with the provided template file"
+    "ReplaceStartAllUsers" = "Replace the start menu layout for all existing and new users with the provided template file"
     "DisableStartRecommended" = "Disable the recommended section in the start menu (Windows 11 only)"
     "DisableStartPhoneLink" = "Disable the Phone Link mobile devices integration in the start menu"
     "DisableSettings365Ads" = "Disable Microsoft 365 ads in Settings Home (Windows 11 only)"
+    "DisableSettingsHome" = "Completely hide the Settings 'Home' page (Windows 11 only)"
     "DisableEdgeAI" = "Disable AI features in Microsoft Edge (Windows 11 only)"
     "DisablePaintAI" = "Disable AI features in Paint (Windows 11 only)"
     "DisableNotepadAI" = "Disable AI features in Notepad (Windows 11 only)"
@@ -162,7 +167,7 @@ $script:Features = @{
 
 # Check if current powershell environment is limited by security policies
 if ($ExecutionContext.SessionState.LanguageMode -ne "FullLanguage") {
-    Write-Error "Error: Win11Debloat is unable to run on your system, powershell execution is restricted by security policies"
+    Write-Error "Win11Debloat is unable to run on your system, powershell execution is restricted by security policies"
     Write-Output "Press any key to exit..."
     $null = [System.Console]::ReadKey()
     Exit
@@ -170,7 +175,7 @@ if ($ExecutionContext.SessionState.LanguageMode -ne "FullLanguage") {
 
 # Check if script does not see file dependencies
 if (-not ((Test-Path $script:DefaultSettingsFilePath) -and (Test-Path $script:AppsListFilePath) -and (Test-Path $script:RegfilesPath) -and (Test-Path $script:AssetsPath))) {
-    Write-Error "Error: Win11Debloat is unable to find required files, please ensure all script files are present"
+    Write-Error "Win11Debloat is unable to find required files, please ensure all script files are present"
     Write-Output "Press any key to exit..."
     $null = [System.Console]::ReadKey()
     Exit
@@ -658,7 +663,7 @@ function StripProgress {
 
     & $ScriptBlock 2>&1 | ForEach-Object {
         if ($_ -is [System.Management.Automation.ErrorRecord]) {
-            "ERROR: $($_.Exception.Message)"
+            "Error: $($_.Exception.Message)"
         }
         else {
             $line = $_ -replace $progressPattern, '' -replace $sizePattern, ''
@@ -723,11 +728,11 @@ function GetUserDirectory {
         }
     }
     catch {
-        Write-Host "Error: Something went wrong when trying to find the user directory path for user $userName. Please ensure the user exists on this system" -ForegroundColor Red
+        Write-Error "Something went wrong when trying to find the user directory path for user $userName. Please ensure the user exists on this system" -ForegroundColor Red
         AwaitKeyToExit
     }
 
-    Write-Host "Error: Unable to find user directory path for user $userName" -ForegroundColor Red
+    Write-Error "Unable to find user directory path for user $userName" -ForegroundColor Red
     AwaitKeyToExit
 }
 
@@ -905,10 +910,9 @@ function SaveSettings {
         "Version" = "1.0"
         "Settings" = @()
     }
-    $controlParams = 'WhatIf', 'Confirm', 'Verbose', 'Debug', 'LogPath', 'Silent', 'Sysprep', 'User', 'NoRestartExplorer', 'RunDefaults', 'RunDefaultsLite', 'RunSavedSettings', 'RunAppsListGenerator'
-
+    
     foreach ($param in $script:Params.Keys) {
-        if ($controlParams -notcontains $param) {
+        if ($script:ControlParams -notcontains $param) {
             $value = $script:Params[$param]
 
             $settings.Settings += @{
@@ -978,11 +982,8 @@ function PrintPendingChanges {
     if ($script:Params['CreateRestorePoint']) {
         Write-Output "- $($script:Features['CreateRestorePoint'])"
     }
-
-    $controlParams = 'WhatIf', 'Confirm', 'Verbose', 'Debug', 'LogPath', 'Silent', 'Sysprep', 'User', 'NoRestartExplorer', 'RunDefaults', 'RunDefaultsLite', 'RunSavedSettings', 'RunAppsListGenerator'
-
     foreach ($parameterName in $script:Params.Keys) {
-        if ($controlParams -contains $parameterName) {
+        if ($script:ControlParams -contains $parameterName) {
             continue
         }
 
@@ -996,7 +997,7 @@ function PrintPendingChanges {
             }
             'RemoveApps' {
                 $appsList = GenerateAppsList
-                Write-Host "- Remove $($appsList.Count) apps:"
+                Write-Output "- Remove $($appsList.Count) apps:"
                 Write-Host $appsList -ForegroundColor DarkGray
                 continue
             }
@@ -1007,8 +1008,14 @@ function PrintPendingChanges {
                 continue
             }
             default {
-                $message = $script:Features[$parameterName]
-                Write-Output "- $message"
+                if ($script:Features -and $script:Features.ContainsKey($parameterName)) {
+                    $message = $script:Features[$parameterName]
+                    Write-Output "- $message"
+                }
+                else {
+                    # Fallback: show the parameter name if no feature description is available
+                    Write-Output "- $parameterName"
+                }
                 continue
             }
         }
@@ -1227,7 +1234,7 @@ function ShowDefaultModeOptions {
         }
     }
     catch {
-        Write-Error "Error: Failed to load settings from DefaultSettings.json file"
+        Write-Error "Failed to load settings from DefaultSettings.json file"
         AwaitKeyToExit
     }
 
@@ -1754,7 +1761,10 @@ function ShowCustomModeOptions {
         }
     }
     
-    SaveSettings
+    # Only save settings if any changes were selected by the user
+    if ($script:Params.Keys.Count -gt 1) {
+        SaveSettings
+    }
 
     # Suppress prompt if Silent parameter was passed
     if (-not $Silent) {
@@ -1828,7 +1838,7 @@ function LoadAndShowLastUsedSettings {
         }
     }
     catch {
-        Write-Error "Error: Failed to load settings from LastUsedSettings.json file"
+        Write-Error "Failed to load settings from LastUsedSettings.json file"
         AwaitKeyToExit
     }
 
@@ -1870,17 +1880,15 @@ $script:ModernStandbySupported = CheckModernStandbySupport
 
 $script:Params = $PSBoundParameters
 
-# Add default Apps parameter if not provided
-if (-not $script:Params.ContainsKey("Apps")) {
+# Add default Apps parameter when RemoveApps is requested and Apps was not explicitly provided
+if ((-not $script:Params.ContainsKey("Apps")) -and $script:Params.ContainsKey("RemoveApps")) {
     $script:Params.Add('Apps', 'Default')
 }
 
-$script:FirstSelection = $true
-$controlParams = 'WhatIf', 'Confirm', 'Verbose', 'Debug', 'LogPath', 'Silent', 'Sysprep', 'User', 'NoRestartExplorer', 'CreateRestorePoint', 'Apps'
 $controlParamsCount = 0
 
 # Count how many control parameters are set, to determine if any changes were selected by the user during runtime
-foreach ($Param in $controlParams) {
+foreach ($Param in $script:ControlParams) {
     if ($script:Params.ContainsKey($Param)) {
         $controlParamsCount++
     }
@@ -1904,7 +1912,7 @@ if ($script:Params.ContainsKey("Sysprep")) {
 
     # Exit script if run in Sysprep mode on Windows 10
     if ($WinVersion -lt 22000) {
-        Write-Error "Error: Win11Debloat Sysprep mode is not supported on Windows 10"
+        Write-Error "Win11Debloat Sysprep mode is not supported on Windows 10"
         AwaitKeyToExit
     }
 }
@@ -1945,7 +1953,7 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
     elseif ($RunSavedSettings) {
         if (-not (Test-Path $script:SavedSettingsFilePath)) {
             PrintHeader 'Custom Mode'
-            Write-Error "Error: Unable to find LastUsedSettings.json file, no changes were made"
+            Write-Error "Unable to find LastUsedSettings.json file, no changes were made"
             AwaitKeyToExit
         }
 
@@ -1984,9 +1992,8 @@ else {
 
 # If the number of keys in ControlParams equals the number of keys in Params then no modifications/changes were selected
 #  or added by the user, and the script can exit without making any changes.
-if (($controlParamsCount -eq $script:Params.Keys.Count) -or (($script:Params.Keys.Count -eq 2) -and ($script:Params.Keys -contains 'CreateRestorePoint') -and ($script:Params.Keys -contains 'Apps'))) {
+if (($controlParamsCount -eq $script:Params.Keys.Count) -or ($script:Params.Keys.Count -eq 1 -and $script:Params.Keys -contains 'CreateRestorePoint')) {
     Write-Output "The script completed without making any changes."
-    Write-Output ""
     AwaitKeyToExit
 }
 

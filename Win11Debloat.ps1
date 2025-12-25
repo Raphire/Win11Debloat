@@ -225,6 +225,12 @@ function ShowAppSelectionForm {
 
         $script:SelectedApps = $selectionBox.CheckedItems
 
+        # Close form without saving if no apps are selected
+        if ($script:SelectedApps.Count -eq 0) {
+            $form.Close()
+            return
+        }
+
         # Create file that stores selected apps if it doesn't exist
         if (-not (Test-Path $script:CustomAppsListFilePath)) {
             $null = New-Item $script:CustomAppsListFilePath

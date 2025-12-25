@@ -160,7 +160,7 @@ $script:Features = @{
     "HideMusic" = "Hide the music folder under 'This pc' in File Explorer (Windows 10 only)"
 }
 
-# Show error if current powershell environment is limited by security policies
+# Check if current powershell environment is limited by security policies
 if ($ExecutionContext.SessionState.LanguageMode -ne "FullLanguage") {
     Write-Error "Error: Win11Debloat is unable to run on your system, powershell execution is restricted by security policies"
     Write-Output "Press any key to exit..."
@@ -168,7 +168,7 @@ if ($ExecutionContext.SessionState.LanguageMode -ne "FullLanguage") {
     Exit
 }
 
-# Show error if script does not see file dependencies
+# Check if script does not see file dependencies
 if (-not ((Test-Path $script:DefaultSettingsFilePath) -and (Test-Path $script:AppsListFilePath) -and (Test-Path $script:RegfilesPath) -and (Test-Path $script:AssetsPath))) {
     Write-Error "Error: Win11Debloat is unable to find required files, please ensure all script files are present"
     Write-Output "Press any key to exit..."
@@ -452,12 +452,10 @@ function ValidateAppslist {
     $supportedAppsList = @()
     $validatedAppsList = @()
 
+    # Generate a list of supported apps from AppsList.txt
     Foreach ($app in (Get-Content -Path $script:AppsListFilePath | Where-Object {  $_ -notmatch '^\s*$' -and $_ -notmatch '^#  .*' -and $_ -notmatch '^# -* #' } )) {
-        if ($app.StartsWith('#')) {
-            $app = $app.TrimStart("#")
-        }
+        $app = $app.TrimStart("#")
 
-        # Remove any comments from the Appname
         if (-not ($app.IndexOf('#') -eq -1)) {
             $app = $app.Substring(0, $app.IndexOf('#'))
         }
@@ -467,6 +465,7 @@ function ValidateAppslist {
         $supportedAppsList += $appString
     }
 
+    # Validate provided appsList against supportedAppsList
     Foreach ($app in $appsList) {
         $app = $app.Trim()
         $appString = $app.Trim('*')
@@ -492,7 +491,6 @@ function ReadAppslistFromFile {
     $appsList = @()
 
     Foreach ($app in (Get-Content -Path $appsFilePath | Where-Object { $_ -notmatch '^#.*' -and $_ -notmatch '^\s*$' } )) { 
-        # Remove any comments from the Appname
         if (-not ($app.IndexOf('#') -eq -1)) {
             $app = $app.Substring(0, $app.IndexOf('#'))
         }
@@ -532,8 +530,8 @@ function RemoveApps {
                 RegImport "Adding scheduled task to uninstall $app after new users log in..." "Uninstall_$($appName).reg"
             }
             else {
-                # Uninstall app via winget
-                Strip-Progress -ScriptBlock { winget uninstall --accept-source-agreements --disable-interactivity --id $app } | Tee-Object -Variable wingetOutput
+                # Uninstall app via winget, with any progress indicators removed from the output
+                StripProgress -ScriptBlock { winget uninstall --accept-source-agreements --disable-interactivity --id $app } | Tee-Object -Variable wingetOutput
 
                 If (($app -eq "Microsoft.Edge") -and (Select-String -InputObject $wingetOutput -Pattern "Uninstall failed with exit code")) {
                     Write-Host "Unable to uninstall Microsoft Edge via Winget" -ForegroundColor Red
@@ -582,8 +580,8 @@ function RemoveApps {
 
 
 # Forcefully removes Microsoft Edge using it's uninstaller
+# Credit: Based on work from loadstring1 & ave9858
 function ForceRemoveEdge {
-    # Based on work from loadstring1 & ave9858
     Write-Output "> Forcefully uninstalling Microsoft Edge..."
 
     $regView = [Microsoft.Win32.RegistryView]::Registry32
@@ -641,7 +639,7 @@ function ForceRemoveEdge {
 
 
 # Execute provided command and strips progress spinners/bars from console output
-function Strip-Progress {
+function StripProgress {
     param(
         [ScriptBlock]$ScriptBlock
     )
@@ -802,7 +800,7 @@ function ReplaceStartMenuForAllUsers {
 
     Write-Output "> Removing all pinned apps from the start menu for all users..."
 
-    # Check if template bin file exists, return early if it doesn't
+    # Check if template bin file exists
     if (-not (Test-Path $startMenuTemplate)) {
         Write-Host "Error: Unable to clear start menu, start2.bin file missing from script folder" -ForegroundColor Red
         Write-Output ""
@@ -847,7 +845,7 @@ function ReplaceStartMenu {
         $startMenuBinFile = GetUserDirectory -userName "$(GetUserName)" -fileName "AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState\start2.bin" -exitIfPathNotFound $false
     }
 
-    # Check if template bin file exists, return early if it doesn't
+    # Check if template bin file exists
     if (-not (Test-Path $startMenuTemplate)) {
         Write-Host "Error: Unable to replace start menu, template file not found" -ForegroundColor Red
         return
@@ -885,7 +883,7 @@ function AddParameter {
         $value = $true
     )
 
-    # Add key or update value if key already exists
+    # Add parameter or update it's value if key already exists
     if (-not $script:Params.ContainsKey($parameterName)) {
         $script:Params.Add($parameterName, $value)
     }
@@ -924,6 +922,7 @@ function SaveSettings {
 }
 
 
+# Prints the header for the script
 function PrintHeader {
     param (
         $title
@@ -945,6 +944,7 @@ function PrintHeader {
 }
 
 
+# Prints the contents of a file to the console
 function PrintFromFile {
     param (
         $path,
@@ -965,26 +965,7 @@ function PrintFromFile {
 }
 
 
-function PrintAppsListFromFile {
-    param (
-        $path,
-        $printCount = $false
-    )
-
-    if (-not (Test-Path $path)) {
-        return
-    }
-
-    $appsList = ReadAppslistFromFile $path
-
-    if ($printCount) {
-        Write-Output "- Remove $($appsList.Count) apps:"
-    }
-
-    Write-Host $appsList -ForegroundColor DarkGray
-}
-
-
+# Prints all pending changes that will be made by the script
 function PrintPendingChanges {
     Write-Output "Win11Debloat will make the following changes:"
 
@@ -1009,12 +990,14 @@ function PrintPendingChanges {
             }
             'RemoveApps' {
                 $appsList = GenerateAppsList
-                Write-Host "- Removing $($appsList.Count) apps:"
+                Write-Host "- Remove $($appsList.Count) apps:"
                 Write-Host $appsList -ForegroundColor DarkGray
                 continue
             }
             'RemoveAppsCustom' {
-                PrintAppsListFromFile $script:CustomAppsListFilePath $true
+                $appsList = ReadAppslistFromFile $path
+                Write-Output "- Remove $($appsList.Count) apps:"
+                Write-Host $appsList -ForegroundColor DarkGray
                 continue
             }
             default {
@@ -1032,6 +1015,7 @@ function PrintPendingChanges {
 }
 
 
+# Generates a list of apps to remove based on the Apps parameter
 function GenerateAppsList {
     if (-not ($script:Params["Apps"] -and $script:Params["Apps"] -is [string])) {
         return @()
@@ -1273,7 +1257,7 @@ function ShowDefaultModeAppRemovalOptions {
             $result = ShowAppSelectionForm
 
             if ($result -ne [System.Windows.Forms.DialogResult]::OK) {
-                # User cancelled or closed app selection, show error and change RemoveAppsInput so the menu will be shown again
+                # User cancelled or closed app selection, change RemoveAppsInput so the menu will be shown again
                 Write-Host ""
                 Write-Host "Cancelled application selection, please try again" -ForegroundColor Red
 
@@ -1311,7 +1295,7 @@ function ShowCustomModeOptions {
             $result = ShowAppSelectionForm
 
             if ($result -ne [System.Windows.Forms.DialogResult]::OK) {
-                # User cancelled or closed app selection, show error and change RemoveAppsInput so the menu will be shown again
+                # User cancelled or closed app selection, change RemoveAppsInput so the menu will be shown again
                 Write-Output ""
                 Write-Host "Cancelled application selection, please try again" -ForegroundColor Red
 

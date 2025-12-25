@@ -995,7 +995,7 @@ function PrintPendingChanges {
                 continue
             }
             'RemoveAppsCustom' {
-                $appsList = ReadAppslistFromFile $path
+                $appsList = ReadAppslistFromFile $script:CustomAppsListFilePath
                 Write-Output "- Remove $($appsList.Count) apps:"
                 Write-Host $appsList -ForegroundColor DarkGray
                 continue

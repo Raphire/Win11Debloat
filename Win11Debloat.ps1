@@ -882,8 +882,7 @@ function ReplaceStartMenu {
 function AddParameter {
     param (
         $parameterName,
-        $value = $true,
-        $addToFile = $true
+        $value = $true
     )
 
     # Add key or update value if key already exists
@@ -893,80 +892,35 @@ function AddParameter {
     else {
         $script:Params[$parameterName] = $value
     }
-
-    if (-not $addToFile) {
-        if ($value -is [bool]) {
-            $message = $script:Features[$parameterName]
-            Write-Output "- $message"
-        }
-
-        return
-    }
-
-    # Initialize custom settings object
-    $customSettings = @{
-        "Version" = "1.0"
-        "Settings" = @()
-    }
-
-    # Create or clear custom settings file, or load existing settings from file
-    if (-not (Test-Path $script:CustomSettingsFilePath)) {
-        $null = New-Item $script:CustomSettingsFilePath
-    }
-    elseif ($script:FirstSelection) {
-        $null = Clear-Content $script:CustomSettingsFilePath
-    }
-    else {
-        try {
-            $customSettings = (Get-Content -Path $script:CustomSettingsFilePath -Raw | ConvertFrom-Json)
-        }
-        catch {
-            Write-Error "Error: Failed to load CustomSettings.json file"
-            AwaitKeyToExit
-        }
-    }
-
-    $script:FirstSelection = $false
-
-    try {
-        # Add new setting
-        $customSettings.Settings += @{
-            "Name" = $parameterName
-            "Value" = $value
-        }
-    
-        # Save the updated JSON object back to the file
-        $customSettings | ConvertTo-Json -Depth 10 | Set-Content $script:CustomSettingsFilePath
-    }
-    catch {
-        Write-Error "Error: Failed to update CustomSettings.json file"
-        AwaitKeyToExit
-    }
 }
 
 
-# Saves the current settings to a JSON file
-function Save-Settings {
-    $settings = [ordered]@{}
-    $controlParams = 'WhatIf', 'Confirm', 'Verbose', 'Silent', 'Sysprep', 'Debug', 'User', 'CreateRestorePoint', 'LogPath', 'ConfigFile', 'SaveAsJSON'
+# Saves the current settings, excluding control parameters, to a JSON file
+function SaveSettings {
+    $settings = @{
+        "Version" = "1.0"
+        "Settings" = @()
+    }
+    $controlParams = 'WhatIf', 'Confirm', 'Verbose', 'Debug', 'LogPath', 'Silent', 'Sysprep', 'User', 'NoRestartExplorer', 'RunDefaults', 'RunDefaultsLite', 'RunSavedSettings'
 
     foreach ($param in $script:Params.Keys) {
         if ($controlParams -notcontains $param) {
-            $settings[$param] = $true
+            $value = $script:Params[$param]
+
+            $settings.Settings += @{
+                "Name" = $param
+                "Value" = $value
+            }
         }
     }
 
-    $json = $settings | ConvertTo-Json
-    $filePath = "$PSScriptRoot\Win11Debloat-settings.json"
-
     try {
-        Set-Content -Path $filePath -Value $json
-        Write-Output "> Settings saved to '$filePath'"
+        $settings | ConvertTo-Json -Depth 10 | Set-Content $script:CustomSettingsFilePath
     }
     catch {
-        Write-Host "Error: Unable to save settings to '$filePath'" -ForegroundColor Red
+        Write-Output ""
+        Write-Host "Error: Failed to save settings to CustomSettings.json file" -ForegroundColor Red
     }
-    Write-Output ""
 }
 
 
@@ -1032,19 +986,18 @@ function PrintAppsListFromFile {
 
 
 function GenerateAppsList {
+    if (-not ($script:Params["Apps"] -and $script:Params["Apps"] -is [string])) {
+        return @()
+    }
+
     $appMode = $script:Params["Apps"].toLower()
 
     switch ($appMode) {
         'default' {
-            Write-Host "> Removing default selection of apps..."
-
             $appsList = ReadAppslistFromFile $script:AppsListFilePath
-            Write-Host "$($appsList.Count) apps selected for removal"
             return $appsList
         }
         default {
-            Write-Host "> Removing custom selection of apps..."
-
             $appsList = $script:Params["Apps"].Split(',') | ForEach-Object { $_.Trim() }
             $validatedAppsList = ValidateAppslist $appsList
 
@@ -1052,7 +1005,6 @@ function GenerateAppsList {
                 return @()
             }
 
-            Write-Host "$($validatedAppsList.Count) apps selected for removal"
             return $validatedAppsList
         }
     }
@@ -1209,28 +1161,22 @@ function ShowDefaultMode {
         }
     }
 
-    PrintHeader 'Default Mode'
-
-    # Add default settings from defaultsettings.json
+    # Add default settings based on user input
     try {
         $defaultSettings = (Get-Content -Path $script:DefaultSettingsFilePath -Raw | ConvertFrom-Json)
-
-        Write-Output "Win11Debloat will make the following changes:"
 
         # Select app removal options based on user input
         switch ($RemoveAppsInput) {
             '1' {
-                AddParameter 'RemoveApps' $true $false
-                AddParameter 'Apps' 'Default' $false
-                PrintAppsListFromFile $script:AppsListFilePath
+                AddParameter 'RemoveApps'
+                AddParameter 'Apps' 'Default'
             }
             '2' {
-                AddParameter 'RemoveAppsCustom' $true $false
-                PrintAppsListFromFile $script:CustomAppsListFilePath
+                AddParameter 'RemoveAppsCustom'
 
                 if ($DisableGameBarIntegrationInput) {
-                    AddParameter 'DisableDVR' $true $false
-                    AddParameter 'DisableGameBarIntegration' $true $false
+                    AddParameter 'DisableDVR'
+                    AddParameter 'DisableGameBarIntegration'
                 }
             }
         }
@@ -1240,7 +1186,7 @@ function ShowDefaultMode {
                 continue
             }
     
-            AddParameter $setting.Name $setting.Value $false
+            AddParameter $setting.Name $setting.Value
         }
     }
     catch {
@@ -1248,13 +1194,56 @@ function ShowDefaultMode {
         AwaitKeyToExit
     }
 
-    # Suppress prompt if Silent parameter was passed
-    if (-not $Silent) {
-        Write-Output ""
-        Write-Output ""
-        Write-Output "Press enter to execute the script or press CTRL+C to quit..."
-        Read-Host | Out-Null
-    } 
+    PrintHeader 'Default Mode'
+
+    # Skip change summary if Silent parameter was passed
+    if ($Silent) {
+        return
+    }
+
+    Write-Output "Win11Debloat will make the following changes:"
+
+    if ($script:Params['CreateRestorePoint']) {
+        Write-Output "- $($script:Features['CreateRestorePoint'])"
+    }
+
+    $controlParams = 'WhatIf', 'Confirm', 'Verbose', 'Debug', 'LogPath', 'Silent', 'Sysprep', 'User', 'NoRestartExplorer', 'RunDefaults', 'RunDefaultsLite', 'RunSavedSettings'
+
+    foreach ($parameterName in $script:Params.Keys) {
+        if ($controlParams -contains $parameterName) {
+            continue
+        }
+
+        # Print parameter description
+        switch ($parameterName) {
+            'Apps' {
+                continue
+            }
+            'CreateRestorePoint' {
+                continue
+            }
+            'RemoveApps' {
+                $appsList = GenerateAppsList
+                Write-Host "- Removing $($appsList.Count) apps:"
+                Write-Host $appsList -ForegroundColor DarkGray
+                continue
+            }
+            'RemoveAppsCustom' {
+                PrintAppsListFromFile $script:CustomAppsListFilePath $true
+                continue
+            }
+            default {
+                $message = $script:Features[$parameterName]
+                Write-Output "- $message"
+                continue
+            }
+        }
+    }
+
+    Write-Output ""
+    Write-Output ""
+    Write-Output "Press enter to execute the script or press CTRL+C to quit..."
+    Read-Host | Out-Null
 
     PrintHeader 'Default Mode'
 }
@@ -1332,11 +1321,11 @@ function ShowCustomModeOptions {
     switch ($RemoveAppsInput) {
         '1' {
             AddParameter 'RemoveApps'
-            AddParameter 'Apps'
+            AddParameter 'Apps' 'Default'
         }
         '2' {
             AddParameter 'RemoveApps'
-            AddParameter 'Apps'
+            AddParameter 'Apps' 'Default'
             AddParameter 'RemoveCommApps'
             AddParameter 'RemoveW11Outlook'
             AddParameter 'RemoveGamingApps'
@@ -1768,6 +1757,8 @@ function ShowCustomModeOptions {
             }
         }
     }
+    
+    SaveSettings
 
     # Suppress prompt if Silent parameter was passed
     if (-not $Silent) {
@@ -1776,15 +1767,6 @@ function ShowCustomModeOptions {
         Write-Output ""
         Write-Output "Press enter to confirm your choices and execute the script or press CTRL+C to quit..."
         Read-Host | Out-Null
-    }
-
-    if ($SaveAsJSON) {
-        Save-Settings
-    }
-    elseif (-not $Silent) {
-        if ($( Read-Host -Prompt "Do you want to save these settings to a JSON file for future use? (y/n)" ) -eq 'y') {
-            Save-Settings
-        }
     }
 
     PrintHeader 'Custom Mode'
@@ -1828,6 +1810,12 @@ function LoadAndShowCustomSettings {
 
         Write-Output "Win11Debloat will make the following changes:"
 
+        $createRestorePointSetting = $customSettings.Settings | Where-Object { $_.Name -eq 'CreateRestorePoint' }
+
+        if ($createRestorePointSetting -and $createRestorePointSetting.Value -eq $true) {
+            Write-Output "- $($script:Features['CreateRestorePoint'])"
+        }
+
         # Go through each setting in the custom settings file, print the description and add it to Params
         Foreach ($parameter in $customSettings.Settings) {
             $parameterName = $parameter.Name
@@ -1838,34 +1826,37 @@ function LoadAndShowCustomSettings {
                 continue
             }
     
-            # Print parameter description
-            switch ($parameterName) {
-                'RemoveApps' {
-                    # Skip
-                }
-                'RemoveAppsCustom' {
-                    PrintAppsListFromFile $script:CustomAppsListFilePath $true
-                }
-                'Apps' {
-                    if ($value -eq 'Default') {
-                        PrintAppsListFromFile $script:AppsListFilePath $true
-                    }
-                    else {
-                        Write-Host $value.Split(',') -ForegroundColor DarkGray
-                    }
-                }
-                default {
-                    $message = $script:Features[$parameterName]
-                    Write-Output "- $message"
-                }
-            }
-    
             # Add parameter to Params
             if (-not $script:Params.ContainsKey($parameterName)) {
                 $script:Params.Add($parameterName, $value)
             }
             else {
                 $script:Params[$parameterName] = $value
+            }
+    
+            # Print parameter description
+            switch ($parameterName) {
+                'Apps' {
+                    continue
+                }
+                'CreateRestorePoint' {
+                    continue
+                }
+                'RemoveApps' {
+                    $appsList = GenerateAppsList
+                    Write-Host "- Removing $($appsList.Count) apps:"
+                    Write-Host $appsList -ForegroundColor DarkGray
+                    continue
+                }
+                'RemoveAppsCustom' {
+                    PrintAppsListFromFile $script:CustomAppsListFilePath $true
+                    continue
+                }
+                default {
+                    $message = $script:Features[$parameterName]
+                    Write-Output "- $message"
+                    continue
+                }
             }
         }
     }
@@ -2047,6 +2038,8 @@ if ($script:Params.ContainsKey("CreateRestorePoint")) {
 # Execute all selected/provided parameters
 switch ($script:Params.Keys) {
     'RemoveApps' {
+        Write-Output "> Removing selected apps..."
+
         $appsList = GenerateAppsList
 
         if ($appsList.Count -eq 0) {
@@ -2055,11 +2048,13 @@ switch ($script:Params.Keys) {
             continue
         }
 
+        Write-Output "$($appsList.Count) apps selected for removal"
+
         RemoveApps $appsList
         continue
     }
     'RemoveAppsCustom' {
-        Write-Output "> Removing custom selection of apps..."
+        Write-Output "> Removing selected apps..."
 
         if (-not (Test-Path $script:CustomAppsListFilePath)) {
             Write-Host "Error: Could not load custom apps list from file, no apps were removed" -ForegroundColor Red

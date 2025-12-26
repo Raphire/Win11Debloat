@@ -1218,11 +1218,14 @@ function ShowDefaultModeOptions {
         }
     }
 
+    PrintHeader 'Default Mode'
+
     # Add default settings based on user input
     try {
         $defaultSettings = (Get-Content -Path $script:DefaultSettingsFilePath -Raw | ConvertFrom-Json)
         if (-not $defaultSettings.Version -or $defaultSettings.Version -ne "1.0") {
-            Write-Warning "DefaultSettings.json version mismatch (expected 1.0, found $($defaultSettings.Version))"
+            Write-Error "DefaultSettings.json version mismatch (expected 1.0, found $($defaultSettings.Version))"
+            AwaitKeyToExit
         }
 
         # Select app removal options based on user input
@@ -1255,8 +1258,6 @@ function ShowDefaultModeOptions {
     }
 
     SaveSettings
-
-    PrintHeader 'Default Mode'
 
     # Skip change summary if Silent parameter was passed
     if ($Silent) {
@@ -1830,7 +1831,8 @@ function LoadAndShowLastUsedSettings {
     try {
         $savedSettings = (Get-Content -Path $script:SavedSettingsFilePath -Raw | ConvertFrom-Json)
         if ($savedSettings.Version -and $savedSettings.Version -ne "1.0") {
-            Write-Warning "LastUsedSettings.json version mismatch (expected 1.0, found $($savedSettings.Version))"
+            Write-Error "LastUsedSettings.json version mismatch (expected 1.0, found $($savedSettings.Version))"
+            AwaitKeyToExit
         }
 
         if (-not $savedSettings.Settings) {

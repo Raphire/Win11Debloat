@@ -464,7 +464,7 @@ function ValidateAppslist {
     $validatedAppsList = @()
 
     # Generate a list of supported apps from AppsList.txt
-    Foreach ($app in (Get-Content -Path $script:AppsListFilePath | Where-Object {  $_ -notmatch '^\s*$' -and $_ -notmatch '^#  .*' -and $_ -notmatch '^# -* #' } )) {
+    Foreach ($app in (Get-Content -Path $script:AppsListFilePath | Where-Object { $_ -notmatch '^\s*$' -and $_ -notmatch '^#  .*' -and $_ -notmatch '^# -* #' } )) {
         $app = $app.TrimStart("#")
 
         if (-not ($app.IndexOf('#') -eq -1)) {

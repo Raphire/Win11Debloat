@@ -1,0 +1,257 @@
+{
+    "Version": "1.0",
+    "Settings": [
+        {
+            "Name": "CreateRestorePoint",
+            "Value": true
+        },
+        {
+            "Name": "DisableTelemetry",
+            "Value": true
+        },
+        {
+            "Name": "DisableSuggestions",
+            "Value": true
+        },
+        {
+            "Name": "DisableEdgeAds",
+            "Value": true
+        },
+        {
+            "Name": "DisableLockscreenTips",
+            "Value": true
+        },
+        {
+            "Name": "DisableBing",
+            "Value": true
+        },
+        {
+            "Name": "DisableCopilot",
+            "Value": true
+        },
+        {
+            "Name": "DisableRecall",
+            "Value": true
+        },
+        {
+            "Name": "DisableClickToDo",
+            "Value": true
+        },
+        {
+            "Name": "DisableWidgets",
+            "Value": true
+        },
+        {
+            "Name": "HideChat",
+            "Value": true
+        },
+        {
+            "Name": "ShowKnownFileExt",
+            "Value": true
+        },
+        {
+            "Name": "DisableFastStartup",
+            "Value": true
+        },
+        {
+            "Name": "Hide3dObjects",
+            "Value": true
+        },
+        {
+            "Name": "DisableModernStandbyNetworking",
+            "Value": true
+        },
+        {
+            "Name": "DisableDVR",
+            "Value": false
+        },
+        {
+            "Name": "DisableGameBarIntegration",
+            "Value": false
+        },
+        {
+            "Name": "ClearStart",
+            "Value": false
+        },
+        {
+            "Name": "ClearStartAllUsers",
+            "Value": false
+        },
+        {
+            "Name": "DisableStartRecommended",
+            "Value": false
+        },
+        {
+            "Name": "DisableStartPhoneLink",
+            "Value": false
+        },
+        {
+            "Name": "DisableSettings365Ads",
+            "Value": false
+        },
+        {
+            "Name": "DisableEdgeAI",
+            "Value": false
+        },
+        {
+            "Name": "DisablePaintAI",
+            "Value": false
+        },
+        {
+            "Name": "DisableNotepadAI",
+            "Value": false
+        },
+        {
+            "Name": "EnableDarkMode",
+            "Value": false
+        },
+        {
+            "Name": "RevertContextMenu",
+            "Value": false
+        },
+        {
+            "Name": "DisableMouseAcceleration",
+            "Value": false
+        },
+        {
+            "Name": "DisableStickyKeys",
+            "Value": false
+        },
+        {
+            "Name": "DisableDesktopSpotlight",
+            "Value": false
+        },
+        {
+            "Name": "TaskbarAlignLeft",
+            "Value": false
+        },
+        {
+            "Name": "CombineTaskbarAlways",
+            "Value": false
+        },
+        {
+            "Name": "CombineMMTaskbarAlways",
+            "Value": false
+        },
+        {
+            "Name": "CombineTaskbarWhenFull",
+            "Value": false
+        },
+        {
+            "Name": "CombineMMTaskbarWhenFull",
+            "Value": false
+        },
+        {
+            "Name": "CombineTaskbarNever",
+            "Value": false
+        },
+        {
+            "Name": "CombineMMTaskbarNever",
+            "Value": false
+        },
+        {
+            "Name": "MMTaskbarModeAll",
+            "Value": false
+        },
+        {
+            "Name": "MMTaskbarModeMainActive",
+            "Value": false
+        },
+        {
+            "Name": "MMTaskbarModeActive",
+            "Value": false
+        },
+        {
+            "Name": "HideSearchTb",
+            "Value": false
+        },
+        {
+            "Name": "ShowSearchIconTb",
+            "Value": false
+        },
+        {
+            "Name": "ShowSearchLabelTb",
+            "Value": false
+        },
+        {
+            "Name": "ShowSearchBoxTb",
+            "Value": false
+        },
+        {
+            "Name": "HideTaskview",
+            "Value": false
+        },
+        {
+            "Name": "EnableEndTask",
+            "Value": false
+        },
+        {
+            "Name": "EnableLastActiveClick",
+            "Value": false
+        },
+        {
+            "Name": "ShowHiddenFolders",
+            "Value": false
+        },
+        {
+            "Name": "ExplorerToHome",
+            "Value": false
+        },
+        {
+            "Name": "ExplorerToThisPC",
+            "Value": false
+        },
+        {
+            "Name": "ExplorerToDownloads",
+            "Value": false
+        },
+        {
+            "Name": "ExplorerToOneDrive",
+            "Value": false
+        },
+        {
+            "Name": "HideHome",
+            "Value": false
+        },
+        {
+            "Name": "HideGallery",
+            "Value": false
+        },
+        {
+            "Name": "HideDupliDrive",
+            "Value": false
+        },
+        {
+            "Name": "DisableTransparency",
+            "Value": false
+        },
+        {
+            "Name": "DisableAnimations",
+            "Value": false
+        },
+        {
+            "Name": "ForceRemoveEdge",
+            "Value": false
+        },
+        {
+            "Name": "HideIncludeInLibrary",
+            "Value": false
+        },
+        {
+            "Name": "HideGiveAccessTo",
+            "Value": false
+        },
+        {
+            "Name": "HideShare",
+            "Value": false
+        },
+        {
+            "Name": "HideOnedrive",
+            "Value": false
+        },
+        {
+            "Name": "HideMusic",
+            "Value": false
+        }
+    ]
+}

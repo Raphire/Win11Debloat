@@ -9,7 +9,8 @@ param (
     [switch]$RunDefaults,
     [switch]$RunDefaultsLite,
     [switch]$RunSavedSettings,
-    [switch]$RemoveApps, 
+    [string]$Apps,
+    [switch]$RemoveApps,
     [switch]$RemoveAppsCustom,
     [switch]$RemoveGamingApps,
     [switch]$RemoveCommApps,
@@ -103,11 +104,11 @@ catch {
     Exit
 }
 
-# Remove old script folder if it exists, except for CustomAppsList and SavedSettings files
+# Remove old script folder if it exists, except for CustomAppsList and LastUsedSettings.json files
 if (Test-Path "$env:TEMP/Win11Debloat") {
     Write-Output ""
     Write-Output "> Cleaning up old Win11Debloat folder..."
-    Get-ChildItem -Path "$env:TEMP/Win11Debloat" -Exclude CustomAppsList,SavedSettings,Win11Debloat.log | Remove-Item -Recurse -Force
+    Get-ChildItem -Path "$env:TEMP/Win11Debloat" -Exclude CustomAppsList,LastUsedSettings.json,Win11Debloat.log | Remove-Item -Recurse -Force
 }
 
 Write-Output ""
@@ -143,13 +144,13 @@ if ($null -ne $debloatProcess) {
     $debloatProcess.WaitForExit()
 }
 
-# Remove all remaining script files, except for CustomAppsList and SavedSettings files
+# Remove all remaining script files, except for CustomAppsList and LastUsedSettings.json files
 if (Test-Path "$env:TEMP/Win11Debloat") {
     Write-Output ""
     Write-Output "> Cleaning up..."
 
     # Cleanup, remove Win11Debloat directory
-    Get-ChildItem -Path "$env:TEMP/Win11Debloat" -Exclude CustomAppsList,SavedSettings,Win11Debloat.log | Remove-Item -Recurse -Force
+    Get-ChildItem -Path "$env:TEMP/Win11Debloat" -Exclude CustomAppsList,LastUsedSettings.json,Win11Debloat.log | Remove-Item -Recurse -Force
 }
 
 Write-Output ""

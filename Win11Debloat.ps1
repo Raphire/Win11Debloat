@@ -1829,6 +1829,9 @@ function LoadAndShowLastUsedSettings {
 
     try {
         $savedSettings = (Get-Content -Path $script:SavedSettingsFilePath -Raw | ConvertFrom-Json)
+        if ($savedSettings.Version -and $savedSettings.Version -ne "1.0") {
+            Write-Warning "LastUsedSettings.json version mismatch (expected 1.0, found $($savedSettings.Version))"
+        }
 
         if (-not $savedSettings.Settings) {
             throw

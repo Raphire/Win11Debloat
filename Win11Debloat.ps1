@@ -1221,6 +1221,9 @@ function ShowDefaultModeOptions {
     # Add default settings based on user input
     try {
         $defaultSettings = (Get-Content -Path $script:DefaultSettingsFilePath -Raw | ConvertFrom-Json)
+        if (-not $defaultSettings.Version -or $defaultSettings.Version -ne "1.0") {
+            Write-Warning "DefaultSettings.json version mismatch (expected 1.0, found $($defaultSettings.Version))"
+        }
 
         # Select app removal options based on user input
         switch ($RemoveAppsInput) {

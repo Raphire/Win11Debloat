@@ -6,6 +6,7 @@ param (
     [switch]$Sysprep,
     [string]$LogPath,
     [string]$User,
+    [switch]$NoRestartExplorer,
     [switch]$CreateRestorePoint,
     [switch]$RunAppsListGenerator, [switch]$RunAppConfigurator,
     [switch]$RunDefaults,
@@ -68,7 +69,7 @@ param (
     [switch]$ExplorerToThisPC,
     [switch]$ExplorerToDownloads,
     [switch]$ExplorerToOneDrive,
-    [switch]$NoRestartExplorer,
+    [switch]$AddFoldersToThisPC,
     [switch]$HideOnedrive, [switch]$DisableOnedrive,
     [switch]$Hide3dObjects, [switch]$Disable3dObjects,
     [switch]$HideMusic, [switch]$DisableMusic,
@@ -152,6 +153,7 @@ $script:Features = @{
     "ExplorerToThisPC" = "Change the default location that File Explorer opens to 'This PC'"
     "ExplorerToDownloads" = "Change the default location that File Explorer opens to 'Downloads'"
     "ExplorerToOneDrive" = "Change the default location that File Explorer opens to 'OneDrive'"
+    "AddFoldersToThisPC" = "Add all common folders (Desktop, Downloads, etc.) back to 'This PC' in File Explorer"
     "HideHome" = "Hide the Home section from the File Explorer sidepanel (Windows 11 only)"
     "HideGallery" = "Hide the Gallery section from the File Explorer sidepanel (Windows 11 only)"
     "HideDupliDrive" = "Hide duplicate removable drive entries from the File Explorer sidepanel"
@@ -1735,6 +1737,12 @@ function ShowCustomModeOptions {
         if ($WinVersion -ge 22000) {
             Write-Output ""
 
+            if ($( Read-Host -Prompt "   Add all common folders (Desktop, Downloads, etc.) back to 'This PC' in File Explorer? (y/n)" ) -eq 'y') {
+                AddParameter 'HideHome'
+            }
+
+            Write-Output ""
+
             if ($( Read-Host -Prompt "   Hide the Home section from the File Explorer sidepanel? (y/n)" ) -eq 'y') {
                 AddParameter 'HideHome'
             }
@@ -2343,6 +2351,10 @@ switch ($script:Params.Keys) {
     }
     'ShowKnownFileExt' {
         RegImport "> Enabling file extensions for known file types..." "Show_Extensions_For_Known_File_Types.reg"
+        continue
+    }
+    'AddFoldersToThisPC' {
+        RegImport "> Adding all common folders (Desktop, Downloads, etc.) back to This PC in File Explorer..." "Add_All_Folders_Under_This_PC.reg"
         continue
     }
     'HideHome' {

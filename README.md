@@ -129,6 +129,7 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 - Change the default location that File Explorer opens to.
 - Show hidden files, folders and drives.
 - Show file extensions for known file types.
+- Add all common folders (Desktop, Downloads, etc.) back to 'This PC' in File Explorer. (W11 only)
 - Hide the Home or Gallery section from the File Explorer navigation pane. (W11 only)
 - Hide the 3D objects, music or OneDrive folder from the File Explorer navigation pane. (W10 only)
 - Hide duplicate removable drive entries from the File Explorer navigation pane, so only the entry under 'This PC' remains.

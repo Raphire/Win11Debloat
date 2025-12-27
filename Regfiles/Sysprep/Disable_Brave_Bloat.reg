@@ -1,0 +1,9 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\Software\Policies\BraveSoftware\Brave]
+"BraveVPNDisabled"=dword:00000001
+"BraveWalletDisabled"=dword:00000001
+"BraveAIChatEnabled"=dword:00000000
+"BraveRewardsDisabled"=dword:00000001
+"BraveTalkDisabled"=dword:00000001
+"BraveNewsDisabled"=dword:00000001

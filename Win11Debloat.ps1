@@ -111,7 +111,7 @@ $script:Features = @{
     "HideChat" = "Hide the chat (meet now) icon from the taskbar (Windows 10 only)"
     "ShowKnownFileExt" = "Show file extensions for known file types"
     "DisableFastStartup" = "Disable Fast Start-up"
-    "Hide3dObjects" = "Hide the 3D objects folder under 'This pc' in File Explorer (Windows 10 only)"
+    "Hide3dObjects" = "Hide the 3D objects folder under 'This PC' in File Explorer (Windows 10 only)"
     "DisableModernStandbyNetworking" = "Disable network connectivity during Modern Standby (If supported)"
     "DisableDVR" = "Disable Xbox game/screen recording"
     "DisableGameBarIntegration" = "Disable Game Bar integration"
@@ -164,7 +164,7 @@ $script:Features = @{
     "HideGiveAccessTo" = "Hide the 'Give access to' option in the context menu (Windows 10 only)"
     "HideShare" = "Hide the 'Share' option in the context menu (Windows 10 only)"
     "HideOnedrive" = "Hide the OneDrive folder in the File Explorer sidepanel (Windows 10 only)"
-    "HideMusic" = "Hide the music folder under 'This pc' in File Explorer (Windows 10 only)"
+    "HideMusic" = "Hide the music folder under 'This PC' in File Explorer (Windows 10 only)"
 }
 
 # Check if current powershell environment is limited by security policies
@@ -1756,7 +1756,7 @@ function ShowCustomModeOptions {
 
         Write-Output ""
 
-        if ($( Read-Host -Prompt "   Hide duplicate removable drive entries from the File Explorer sidepanel so they only show under This PC? (y/n)" ) -eq 'y') {
+        if ($( Read-Host -Prompt "   Hide duplicate removable drive entries from the File Explorer sidepanel so they only show under 'This PC'? (y/n)" ) -eq 'y') {
             AddParameter 'HideDupliDrive'
         }
 
@@ -2354,7 +2354,7 @@ switch ($script:Params.Keys) {
         continue
     }
     'AddFoldersToThisPC' {
-        RegImport "> Adding all common folders (Desktop, Downloads, etc.) back to This PC in File Explorer..." "Add_All_Folders_Under_This_PC.reg"
+        RegImport "> Adding all common folders (Desktop, Downloads, etc.) back to `This PC` in File Explorer..." "Add_All_Folders_Under_This_PC.reg"
         continue
     }
     'HideHome' {

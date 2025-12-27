@@ -1,0 +1,4 @@
+Windows Registry Editor Version 5.00
+
+; Remove all Brave Browser Policies
+[-HKEY_LOCAL_MACHINE\Software\Policies\BraveSoftware\Brave]

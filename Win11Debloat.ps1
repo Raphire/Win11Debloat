@@ -29,6 +29,7 @@ param (
     [switch]$DisableLockscreenTips, [switch]$DisableLockscrTips,
     [switch]$DisableSuggestions, [switch]$DisableWindowsSuggestions,
     [switch]$DisableEdgeAds,
+    [switch]$DisableBraveBloat,
     [switch]$DisableSettings365Ads,
     [switch]$DisableSettingsHome,
     [switch]$ShowHiddenFolders,
@@ -2099,6 +2100,10 @@ switch ($script:Params.Keys) {
     }
     'DisableEdgeAds' {
         RegImport "> Disabling ads, suggestions and the MSN news feed in Microsoft Edge..." "Disable_Edge_Ads_And_Suggestions.reg"
+        continue
+    }
+    'DisableBraveBloat' {
+        RegImport "> Disabling Brave AI, Crypto, News, Rewards, Talk and VPN from Brave browser..." "Disable_Brave_Bloat.reg"
         continue
     }
     {$_ -in "DisableLockscrTips", "DisableLockscreenTips"} {

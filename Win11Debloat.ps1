@@ -6,6 +6,7 @@ param (
     [switch]$Sysprep,
     [string]$LogPath,
     [string]$User,
+    [switch]$NoRestartExplorer,
     [switch]$CreateRestorePoint,
     [switch]$RunAppsListGenerator, [switch]$RunAppConfigurator,
     [switch]$RunDefaults,
@@ -68,7 +69,7 @@ param (
     [switch]$ExplorerToThisPC,
     [switch]$ExplorerToDownloads,
     [switch]$ExplorerToOneDrive,
-    [switch]$NoRestartExplorer,
+    [switch]$AddFoldersToThisPC,
     [switch]$HideOnedrive, [switch]$DisableOnedrive,
     [switch]$Hide3dObjects, [switch]$Disable3dObjects,
     [switch]$HideMusic, [switch]$DisableMusic,
@@ -110,7 +111,7 @@ $script:Features = @{
     "HideChat" = "Hide the chat (meet now) icon from the taskbar (Windows 10 only)"
     "ShowKnownFileExt" = "Show file extensions for known file types"
     "DisableFastStartup" = "Disable Fast Start-up"
-    "Hide3dObjects" = "Hide the 3D objects folder under 'This pc' in File Explorer (Windows 10 only)"
+    "Hide3dObjects" = "Hide the 3D objects folder under 'This PC' in File Explorer (Windows 10 only)"
     "DisableModernStandbyNetworking" = "Disable network connectivity during Modern Standby (If supported)"
     "DisableDVR" = "Disable Xbox game/screen recording"
     "DisableGameBarIntegration" = "Disable Game Bar integration"
@@ -152,6 +153,7 @@ $script:Features = @{
     "ExplorerToThisPC" = "Change the default location that File Explorer opens to 'This PC'"
     "ExplorerToDownloads" = "Change the default location that File Explorer opens to 'Downloads'"
     "ExplorerToOneDrive" = "Change the default location that File Explorer opens to 'OneDrive'"
+    "AddFoldersToThisPC" = "Add all common folders (Desktop, Downloads, etc.) back to 'This PC' in File Explorer"
     "HideHome" = "Hide the Home section from the File Explorer sidepanel (Windows 11 only)"
     "HideGallery" = "Hide the Gallery section from the File Explorer sidepanel (Windows 11 only)"
     "HideDupliDrive" = "Hide duplicate removable drive entries from the File Explorer sidepanel"
@@ -162,7 +164,7 @@ $script:Features = @{
     "HideGiveAccessTo" = "Hide the 'Give access to' option in the context menu (Windows 10 only)"
     "HideShare" = "Hide the 'Share' option in the context menu (Windows 10 only)"
     "HideOnedrive" = "Hide the OneDrive folder in the File Explorer sidepanel (Windows 10 only)"
-    "HideMusic" = "Hide the music folder under 'This pc' in File Explorer (Windows 10 only)"
+    "HideMusic" = "Hide the music folder under 'This PC' in File Explorer (Windows 10 only)"
 }
 
 # Check if current powershell environment is limited by security policies
@@ -1568,59 +1570,6 @@ function ShowCustomModeOptions {
                 AddParameter 'TaskbarAlignLeft'
             }
 
-            # Show options for combine icon on taskbar, only continue on valid input
-            Do {
-                Write-Output ""
-                Write-Host "   Options:" -ForegroundColor Yellow
-                Write-Host "    (n) No change" -ForegroundColor Yellow
-                Write-Host "    (1) Always" -ForegroundColor Yellow
-                Write-Host "    (2) When taskbar is full" -ForegroundColor Yellow
-                Write-Host "    (3) Never" -ForegroundColor Yellow
-                $TbCombineTaskbar = Read-Host "   Combine taskbar buttons and hide labels? (n/1/2/3)"
-            }
-            while ($TbCombineTaskbar -ne 'n' -and $TbCombineTaskbar -ne '0' -and $TbCombineTaskbar -ne '1' -and $TbCombineTaskbar -ne '2' -and $TbCombineTaskbar -ne '3')
-
-            # Select correct taskbar goup option based on user input
-            switch ($TbCombineTaskbar) {
-                '1' {
-                    AddParameter 'CombineTaskbarAlways'
-                    AddParameter 'CombineMMTaskbarAlways'
-                }
-                '2' {
-                    AddParameter 'CombineTaskbarWhenFull'
-                    AddParameter 'CombineMMTaskbarWhenFull'
-                }
-                '3' {
-                    AddParameter 'CombineTaskbarNever'
-                    AddParameter 'CombineMMTaskbarNever'
-                }
-            }
-
-            # Show options for changing on what taskbar(s) app icons are shown, only continue on valid input
-            Do {
-                Write-Output ""
-                Write-Host "   Options:" -ForegroundColor Yellow
-                Write-Host "    (n) No change" -ForegroundColor Yellow
-                Write-Host "    (1) Show app icons on all taskbars" -ForegroundColor Yellow
-                Write-Host "    (2) Show app icons on main taskbar and on taskbar where the windows is open" -ForegroundColor Yellow
-                Write-Host "    (3) Show app icons only on taskbar where the window is open" -ForegroundColor Yellow
-                $TbCombineTaskbar = Read-Host "   Change how to show app icons on the taskbar when using multiple monitors? (n/1/2/3)"
-            }
-            while ($TbCombineTaskbar -ne 'n' -and $TbCombineTaskbar -ne '0' -and $TbCombineTaskbar -ne '1' -and $TbCombineTaskbar -ne '2' -and $TbCombineTaskbar -ne '3')
-
-            # Select correct taskbar goup option based on user input
-            switch ($TbCombineTaskbar) {
-                '1' {
-                    AddParameter 'MMTaskbarModeAll'
-                }
-                '2' {
-                    AddParameter 'MMTaskbarModeMainActive'
-                }
-                '3' {
-                    AddParameter 'MMTaskbarModeActive'
-                }
-            }
-
             # Show options for search icon on taskbar, only continue on valid input
             Do {
                 Write-Output ""
@@ -1682,8 +1631,65 @@ function ShowCustomModeOptions {
         }
 
         Write-Output ""
+
         if ($( Read-Host -Prompt "   Enable the 'Last Active Click' behavior in the taskbar app area? (y/n)" ) -eq 'y') {
             AddParameter 'EnableLastActiveClick'
+        }
+
+        # Only show these specific options for Windows 11 users running build 22000 or later
+        if ($WinVersion -ge 22000) {
+            # Show options for combine icon on taskbar, only continue on valid input
+            Do {
+                Write-Output ""
+                Write-Host "   Options:" -ForegroundColor Yellow
+                Write-Host "    (n) No change" -ForegroundColor Yellow
+                Write-Host "    (1) Always" -ForegroundColor Yellow
+                Write-Host "    (2) When taskbar is full" -ForegroundColor Yellow
+                Write-Host "    (3) Never" -ForegroundColor Yellow
+                $TbCombineTaskbar = Read-Host "   Combine taskbar buttons and hide labels? (n/1/2/3)"
+            }
+            while ($TbCombineTaskbar -ne 'n' -and $TbCombineTaskbar -ne '0' -and $TbCombineTaskbar -ne '1' -and $TbCombineTaskbar -ne '2' -and $TbCombineTaskbar -ne '3')
+
+            # Select correct taskbar goup option based on user input
+            switch ($TbCombineTaskbar) {
+                '1' {
+                    AddParameter 'CombineTaskbarAlways'
+                    AddParameter 'CombineMMTaskbarAlways'
+                }
+                '2' {
+                    AddParameter 'CombineTaskbarWhenFull'
+                    AddParameter 'CombineMMTaskbarWhenFull'
+                }
+                '3' {
+                    AddParameter 'CombineTaskbarNever'
+                    AddParameter 'CombineMMTaskbarNever'
+                }
+            }
+
+            # Show options for changing on what taskbar(s) app icons are shown, only continue on valid input
+            Do {
+                Write-Output ""
+                Write-Host "   Options:" -ForegroundColor Yellow
+                Write-Host "    (n) No change" -ForegroundColor Yellow
+                Write-Host "    (1) Show app icons on all taskbars" -ForegroundColor Yellow
+                Write-Host "    (2) Show app icons on main taskbar and on taskbar where the windows is open" -ForegroundColor Yellow
+                Write-Host "    (3) Show app icons only on taskbar where the window is open" -ForegroundColor Yellow
+                $TbCombineTaskbar = Read-Host "   Change how to show app icons on the taskbar when using multiple monitors? (n/1/2/3)"
+            }
+            while ($TbCombineTaskbar -ne 'n' -and $TbCombineTaskbar -ne '0' -and $TbCombineTaskbar -ne '1' -and $TbCombineTaskbar -ne '2' -and $TbCombineTaskbar -ne '3')
+
+            # Select correct taskbar goup option based on user input
+            switch ($TbCombineTaskbar) {
+                '1' {
+                    AddParameter 'MMTaskbarModeAll'
+                }
+                '2' {
+                    AddParameter 'MMTaskbarModeMainActive'
+                }
+                '3' {
+                    AddParameter 'MMTaskbarModeActive'
+                }
+            }
         }
     }
 
@@ -1735,6 +1741,12 @@ function ShowCustomModeOptions {
         if ($WinVersion -ge 22000) {
             Write-Output ""
 
+            if ($( Read-Host -Prompt "   Add all common folders (Desktop, Downloads, etc.) back to 'This PC' in File Explorer? (y/n)" ) -eq 'y') {
+                AddParameter 'AddFoldersToThisPC'
+            }
+
+            Write-Output ""
+
             if ($( Read-Host -Prompt "   Hide the Home section from the File Explorer sidepanel? (y/n)" ) -eq 'y') {
                 AddParameter 'HideHome'
             }
@@ -1748,7 +1760,7 @@ function ShowCustomModeOptions {
 
         Write-Output ""
 
-        if ($( Read-Host -Prompt "   Hide duplicate removable drive entries from the File Explorer sidepanel so they only show under This PC? (y/n)" ) -eq 'y') {
+        if ($( Read-Host -Prompt "   Hide duplicate removable drive entries from the File Explorer sidepanel so they only show under 'This PC'? (y/n)" ) -eq 'y') {
             AddParameter 'HideDupliDrive'
         }
 
@@ -2343,6 +2355,10 @@ switch ($script:Params.Keys) {
     }
     'ShowKnownFileExt' {
         RegImport "> Enabling file extensions for known file types..." "Show_Extensions_For_Known_File_Types.reg"
+        continue
+    }
+    'AddFoldersToThisPC' {
+        RegImport "> Adding all common folders (Desktop, Downloads, etc.) back to `This PC` in File Explorer..." "Add_All_Folders_Under_This_PC.reg"
         continue
     }
     'HideHome' {

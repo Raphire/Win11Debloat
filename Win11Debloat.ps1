@@ -1570,59 +1570,6 @@ function ShowCustomModeOptions {
                 AddParameter 'TaskbarAlignLeft'
             }
 
-            # Show options for combine icon on taskbar, only continue on valid input
-            Do {
-                Write-Output ""
-                Write-Host "   Options:" -ForegroundColor Yellow
-                Write-Host "    (n) No change" -ForegroundColor Yellow
-                Write-Host "    (1) Always" -ForegroundColor Yellow
-                Write-Host "    (2) When taskbar is full" -ForegroundColor Yellow
-                Write-Host "    (3) Never" -ForegroundColor Yellow
-                $TbCombineTaskbar = Read-Host "   Combine taskbar buttons and hide labels? (n/1/2/3)"
-            }
-            while ($TbCombineTaskbar -ne 'n' -and $TbCombineTaskbar -ne '0' -and $TbCombineTaskbar -ne '1' -and $TbCombineTaskbar -ne '2' -and $TbCombineTaskbar -ne '3')
-
-            # Select correct taskbar goup option based on user input
-            switch ($TbCombineTaskbar) {
-                '1' {
-                    AddParameter 'CombineTaskbarAlways'
-                    AddParameter 'CombineMMTaskbarAlways'
-                }
-                '2' {
-                    AddParameter 'CombineTaskbarWhenFull'
-                    AddParameter 'CombineMMTaskbarWhenFull'
-                }
-                '3' {
-                    AddParameter 'CombineTaskbarNever'
-                    AddParameter 'CombineMMTaskbarNever'
-                }
-            }
-
-            # Show options for changing on what taskbar(s) app icons are shown, only continue on valid input
-            Do {
-                Write-Output ""
-                Write-Host "   Options:" -ForegroundColor Yellow
-                Write-Host "    (n) No change" -ForegroundColor Yellow
-                Write-Host "    (1) Show app icons on all taskbars" -ForegroundColor Yellow
-                Write-Host "    (2) Show app icons on main taskbar and on taskbar where the windows is open" -ForegroundColor Yellow
-                Write-Host "    (3) Show app icons only on taskbar where the window is open" -ForegroundColor Yellow
-                $TbCombineTaskbar = Read-Host "   Change how to show app icons on the taskbar when using multiple monitors? (n/1/2/3)"
-            }
-            while ($TbCombineTaskbar -ne 'n' -and $TbCombineTaskbar -ne '0' -and $TbCombineTaskbar -ne '1' -and $TbCombineTaskbar -ne '2' -and $TbCombineTaskbar -ne '3')
-
-            # Select correct taskbar goup option based on user input
-            switch ($TbCombineTaskbar) {
-                '1' {
-                    AddParameter 'MMTaskbarModeAll'
-                }
-                '2' {
-                    AddParameter 'MMTaskbarModeMainActive'
-                }
-                '3' {
-                    AddParameter 'MMTaskbarModeActive'
-                }
-            }
-
             # Show options for search icon on taskbar, only continue on valid input
             Do {
                 Write-Output ""
@@ -1684,8 +1631,65 @@ function ShowCustomModeOptions {
         }
 
         Write-Output ""
+
         if ($( Read-Host -Prompt "   Enable the 'Last Active Click' behavior in the taskbar app area? (y/n)" ) -eq 'y') {
             AddParameter 'EnableLastActiveClick'
+        }
+
+        # Only show these specific options for Windows 11 users running build 22000 or later
+        if ($WinVersion -ge 22000) {
+            # Show options for combine icon on taskbar, only continue on valid input
+            Do {
+                Write-Output ""
+                Write-Host "   Options:" -ForegroundColor Yellow
+                Write-Host "    (n) No change" -ForegroundColor Yellow
+                Write-Host "    (1) Always" -ForegroundColor Yellow
+                Write-Host "    (2) When taskbar is full" -ForegroundColor Yellow
+                Write-Host "    (3) Never" -ForegroundColor Yellow
+                $TbCombineTaskbar = Read-Host "   Combine taskbar buttons and hide labels? (n/1/2/3)"
+            }
+            while ($TbCombineTaskbar -ne 'n' -and $TbCombineTaskbar -ne '0' -and $TbCombineTaskbar -ne '1' -and $TbCombineTaskbar -ne '2' -and $TbCombineTaskbar -ne '3')
+
+            # Select correct taskbar goup option based on user input
+            switch ($TbCombineTaskbar) {
+                '1' {
+                    AddParameter 'CombineTaskbarAlways'
+                    AddParameter 'CombineMMTaskbarAlways'
+                }
+                '2' {
+                    AddParameter 'CombineTaskbarWhenFull'
+                    AddParameter 'CombineMMTaskbarWhenFull'
+                }
+                '3' {
+                    AddParameter 'CombineTaskbarNever'
+                    AddParameter 'CombineMMTaskbarNever'
+                }
+            }
+
+            # Show options for changing on what taskbar(s) app icons are shown, only continue on valid input
+            Do {
+                Write-Output ""
+                Write-Host "   Options:" -ForegroundColor Yellow
+                Write-Host "    (n) No change" -ForegroundColor Yellow
+                Write-Host "    (1) Show app icons on all taskbars" -ForegroundColor Yellow
+                Write-Host "    (2) Show app icons on main taskbar and on taskbar where the windows is open" -ForegroundColor Yellow
+                Write-Host "    (3) Show app icons only on taskbar where the window is open" -ForegroundColor Yellow
+                $TbCombineTaskbar = Read-Host "   Change how to show app icons on the taskbar when using multiple monitors? (n/1/2/3)"
+            }
+            while ($TbCombineTaskbar -ne 'n' -and $TbCombineTaskbar -ne '0' -and $TbCombineTaskbar -ne '1' -and $TbCombineTaskbar -ne '2' -and $TbCombineTaskbar -ne '3')
+
+            # Select correct taskbar goup option based on user input
+            switch ($TbCombineTaskbar) {
+                '1' {
+                    AddParameter 'MMTaskbarModeAll'
+                }
+                '2' {
+                    AddParameter 'MMTaskbarModeMainActive'
+                }
+                '3' {
+                    AddParameter 'MMTaskbarModeActive'
+                }
+            }
         }
     }
 

@@ -1172,7 +1172,7 @@ function ShowScriptMenuOptions {
 
         # Only show this option if SavedSettings file exists
         if (Test-Path $script:SavedSettingsFilePath) {
-            Write-Host "(4) Apply the settings you used last time"
+            Write-Host "(4) Quickly apply your last used settings"
             
             $ModeSelectionMessage = "Please select an option (1/2/3/4/0)" 
         }

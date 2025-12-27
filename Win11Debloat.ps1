@@ -1742,7 +1742,7 @@ function ShowCustomModeOptions {
             Write-Output ""
 
             if ($( Read-Host -Prompt "   Add all common folders (Desktop, Downloads, etc.) back to 'This PC' in File Explorer? (y/n)" ) -eq 'y') {
-                AddParameter 'HideHome'
+                AddParameter 'AddFoldersToThisPC'
             }
 
             Write-Output ""

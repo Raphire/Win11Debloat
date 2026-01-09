@@ -2373,8 +2373,12 @@ switch ($script:Params.Keys) {
         RegImport "> Hiding duplicate removable drive entries from the File Explorer navigation pane..." "Hide_duplicate_removable_drives_from_navigation_pane_of_File_Explorer.reg"
         continue
     }
-    {$_ -in "HideOnedrive", "DisableOnedrive"} {
+    'HideOnedrive' {
         RegImport "> Hiding the OneDrive folder from the File Explorer navigation pane..." "Hide_Onedrive_Folder.reg"
+        continue
+    }    
+    'DisableOnedrive' {
+        RegImport "> Disabling OneDrive-Install for new users..." "Uninstall_Microsoft_Onedrive.reg"
         continue
     }
     {$_ -in "Hide3dObjects", "Disable3dObjects"} {

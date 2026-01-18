@@ -241,10 +241,9 @@ function ShowAppSelectionWindow {
             $description = $appData.Description
             $appChecked = $appData.SelectedByDefault
 
-            # Make sure appId is not empty
             if ($appId.length -gt 0) {
                 if ($onlyInstalledBox.IsChecked) {
-                    # onlyInstalledBox is checked, check if app is installed before adding it
+                    # Only include app if it's installed
                     if (-not ($listOfApps -like ("*$appId*")) -and -not (Get-AppxPackage -Name $appId)) {
                         continue
                     }
@@ -259,7 +258,7 @@ function ShowAppSelectionWindow {
             }
         }
 
-        # Sort apps alphabetically by app ID (case-insensitive) and add to panel
+        # Sort apps alphabetically and add to panel
         $appsToAdd | Sort-Object -Property DisplayName | ForEach-Object {
             $checkbox = New-Object System.Windows.Controls.CheckBox
             $checkbox.Content = $_.DisplayName
@@ -366,7 +365,6 @@ function ValidateAppslist {
     $validatedAppsList = @()
 
     # Generate a list of supported apps from Apps.json
-    # Read JSON file and extract app IDs
     $jsonContent = Get-Content -Path $script:AppsListFilePath -Raw | ConvertFrom-Json
     Foreach ($appData in $jsonContent.Apps) {
         $appId = $appData.AppId.Trim()
@@ -405,9 +403,9 @@ function ReadAppslistFromFile {
     }
 
     try {
-        # Check if file is JSON or text format for backward compatibility
+        # Check if file is JSON or text format
         if ($appsFilePath -like "*.json") {
-            # Read JSON file and extract app IDs
+            # JSON file format
             $jsonContent = Get-Content -Path $appsFilePath -Raw | ConvertFrom-Json
             Foreach ($appData in $jsonContent.Apps) {
                 $appId = $appData.AppId.Trim()
@@ -1879,7 +1877,7 @@ if ((Test-Path $script:SavedSettingsFilePath) -and ([String]::IsNullOrWhiteSpace
 }
 
 # Only run the app selection form if the 'RunAppsListGenerator' parameter was passed to the script
-if ($RunAppConfigurator -or $RunAppsListGenerator) {
+if ($RunAppsListGenerator) {
     PrintHeader "Custom Apps List Generator"
 
     $result = ShowAppSelectionWindow

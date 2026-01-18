@@ -320,7 +320,7 @@ function ShowAppSelectionWindow {
         }
 
         # Sort apps alphabetically by app ID (case-insensitive) and add to panel
-        $appsToAdd | Sort-Object -Property AppId | ForEach-Object {
+        $appsToAdd | Sort-Object -Property DisplayName | ForEach-Object {
             $checkbox = New-Object System.Windows.Controls.CheckBox
             $checkbox.Content = $_.DisplayName
             $checkbox.Tag = $_.AppId

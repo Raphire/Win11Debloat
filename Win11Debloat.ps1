@@ -89,84 +89,9 @@ $script:DefaultLogPath = "$PSScriptRoot/Win11Debloat.log"
 $script:RegfilesPath = "$PSScriptRoot/Regfiles"
 $script:AssetsPath = "$PSScriptRoot/Assets"
 $script:AppSelectionSchema = "$script:AssetsPath/Schemas/AppSelectionWindow.xaml"
+$script:FeaturesFilePath = "$script:AssetsPath/Features.json"
 
 $script:ControlParams = 'WhatIf', 'Confirm', 'Verbose', 'Debug', 'LogPath', 'Silent', 'Sysprep', 'User', 'NoRestartExplorer', 'RunDefaults', 'RunDefaultsLite', 'RunSavedSettings', 'RunAppsListGenerator'
-$script:Features = @{
-    "RemoveApps" = "Remove the apps specified in the 'Apps' parameter"
-    "Apps" = "The selection of apps to remove, specified as a comma separated list. Use 'Default' (or omit) to use the default apps list"
-    "RemoveAppsCustom" = "Remove custom selection of apps"
-    "RemoveCommApps" = "Remove the Mail, Calendar, and People apps"
-    "RemoveW11Outlook" = "Remove the new Outlook for Windows app"
-    "RemoveGamingApps" = "Remove the Xbox App and Xbox Gamebar"
-    "RemoveHPApps" = "Remove HP OEM applications"
-    "CreateRestorePoint" = "Create a system restore point"
-    "DisableTelemetry" = "Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads"
-    "DisableSuggestions" = "Disable tips, tricks, suggestions and ads in start, settings, notifications and File Explorer"
-    "DisableEdgeAds" = "Disable ads, suggestions and the MSN news feed in Microsoft Edge"
-    "DisableLockscreenTips" = "Disable tips & tricks on the lockscreen"
-    "DisableBing" = "Disable & remove Bing web search, Bing AI and Cortana from Windows search"
-    "DisableCopilot" = "Disable & remove Microsoft Copilot"
-    "DisableRecall" = "Disable Windows Recall (Windows 11 only)"
-    "DisableClickToDo" = "Disable Click to Do, AI text & image analysis (Windows 11 only)"
-    "DisableWidgets" = "Disable widgets on the taskbar & lockscreen"
-    "HideChat" = "Hide the chat (meet now) icon from the taskbar (Windows 10 only)"
-    "ShowKnownFileExt" = "Show file extensions for known file types"
-    "DisableFastStartup" = "Disable Fast Start-up"
-    "Hide3dObjects" = "Hide the 3D objects folder under 'This PC' in File Explorer (Windows 10 only)"
-    "DisableModernStandbyNetworking" = "Disable network connectivity during Modern Standby (If supported)"
-    "DisableDVR" = "Disable Xbox game/screen recording"
-    "DisableGameBarIntegration" = "Disable Game Bar integration"
-    "ClearStart" = "Remove all pinned apps from the start menu for this user only"
-    "ClearStartAllUsers" = "Remove all pinned apps from the start menu for all existing and new users"
-    "ReplaceStart" = "Replace the start menu layout for this user only with the provided template file"
-    "ReplaceStartAllUsers" = "Replace the start menu layout for all existing and new users with the provided template file"
-    "DisableStartRecommended" = "Disable the recommended section in the start menu (Windows 11 only)"
-    "DisableStartPhoneLink" = "Disable the Phone Link mobile devices integration in the start menu"
-    "DisableSettings365Ads" = "Disable Microsoft 365 ads in Settings Home (Windows 11 only)"
-    "DisableSettingsHome" = "Completely hide the Settings 'Home' page (Windows 11 only)"
-    "DisableEdgeAI" = "Disable AI features in Microsoft Edge (Windows 11 only)"
-    "DisablePaintAI" = "Disable AI features in Paint (Windows 11 only)"
-    "DisableNotepadAI" = "Disable AI features in Notepad (Windows 11 only)"
-    "EnableDarkMode" = "Enable dark mode for system and apps"
-    "RevertContextMenu" = "Restore the old Windows 10 style context menu (Windows 11 only)"
-    "DisableMouseAcceleration" = "Turn off Enhance Pointer Precision (mouse acceleration)"
-    "DisableStickyKeys" = "Disable the Sticky Keys keyboard shortcut (Windows 11 only)"
-    "DisableDesktopSpotlight" = "Disable the Windows Spotlight desktop background option"
-    "TaskbarAlignLeft" = "Align taskbar icons to the left (Windows 11 only)"
-    "CombineTaskbarAlways" = "Always combine taskbar buttons and hide labels for the main display (Windows 11 only)"
-    "CombineMMTaskbarAlways" = "Always combine taskbar buttons and hide labels for secondary displays (Windows 11 only)"
-    "CombineTaskbarWhenFull" = "Combine taskbar buttons and hide labels when taskbar is full for the main display (Windows 11 only)"
-    "CombineMMTaskbarWhenFull" = "Combine taskbar buttons and hide labels when taskbar is full for secondary displays (Windows 11 only)"
-    "CombineTaskbarNever" = "Never combine taskbar buttons and show labels for the main display (Windows 11 only)"
-    "CombineMMTaskbarNever" = "Never combine taskbar buttons and show labels for secondary displays (Windows 11 only)"
-    "MMTaskbarModeAll" = "Show app icons on all taskbars (Windows 11 only)"
-    "MMTaskbarModeMainActive" = "Show app icons on main taskbar and on taskbar where the windows is open (Windows 11 only)"
-    "MMTaskbarModeActive" = "Show app icons only on taskbar where the window is open (Windows 11 only)"
-    "HideSearchTb" = "Hide search icon from the taskbar (Windows 11 only)"
-    "ShowSearchIconTb" = "Show search icon on the taskbar (Windows 11 only)"
-    "ShowSearchLabelTb" = "Show search icon with label on the taskbar (Windows 11 only)"
-    "ShowSearchBoxTb" = "Show search box on the taskbar (Windows 11 only)"
-    "HideTaskview" = "Hide the taskview button from the taskbar (Windows 11 only)"
-    "EnableEndTask" = "Enable the 'End Task' option in the taskbar right click menu (Windows 11 only)"
-    "EnableLastActiveClick" = "Enable the 'Last Active Click' behavior in the taskbar app area"
-    "ShowHiddenFolders" = "Show hidden files, folders and drives"
-    "ExplorerToHome" = "Change the default location that File Explorer opens to 'Home'"
-    "ExplorerToThisPC" = "Change the default location that File Explorer opens to 'This PC'"
-    "ExplorerToDownloads" = "Change the default location that File Explorer opens to 'Downloads'"
-    "ExplorerToOneDrive" = "Change the default location that File Explorer opens to 'OneDrive'"
-    "AddFoldersToThisPC" = "Add all common folders (Desktop, Downloads, etc.) back to 'This PC' in File Explorer"
-    "HideHome" = "Hide the Home section from the File Explorer sidepanel (Windows 11 only)"
-    "HideGallery" = "Hide the Gallery section from the File Explorer sidepanel (Windows 11 only)"
-    "HideDupliDrive" = "Hide duplicate removable drive entries from the File Explorer sidepanel"
-    "DisableTransparency" = "Disable transparency effects"
-    "DisableAnimations" = "Disable animations and visual effects"
-    "ForceRemoveEdge" = "Forcefully uninstall Microsoft Edge. NOT RECOMMENDED!"
-    "HideIncludeInLibrary" = "Hide the 'Include in library' option in the context menu (Windows 10 only)"
-    "HideGiveAccessTo" = "Hide the 'Give access to' option in the context menu (Windows 10 only)"
-    "HideShare" = "Hide the 'Share' option in the context menu (Windows 10 only)"
-    "HideOnedrive" = "Hide the OneDrive folder in the File Explorer sidepanel (Windows 10 only)"
-    "HideMusic" = "Hide the music folder under 'This PC' in File Explorer (Windows 10 only)"
-}
 
 # Check if current powershell environment is limited by security policies
 if ($ExecutionContext.SessionState.LanguageMode -ne "FullLanguage") {
@@ -177,11 +102,28 @@ if ($ExecutionContext.SessionState.LanguageMode -ne "FullLanguage") {
 }
 
 # Check if script does not see file dependencies
-if (-not ((Test-Path $script:DefaultSettingsFilePath) -and (Test-Path $script:AppsListFilePath) -and (Test-Path $script:RegfilesPath) -and (Test-Path $script:AssetsPath) -and (Test-Path $script:AppSelectionSchema))) {
+if (-not ((Test-Path $script:DefaultSettingsFilePath) -and (Test-Path $script:AppsListFilePath) -and (Test-Path $script:RegfilesPath) -and (Test-Path $script:AssetsPath) -and (Test-Path $script:AppSelectionSchema) -and (Test-Path $script:FeaturesFilePath))) {
     Write-Error "Win11Debloat is unable to find required files, please ensure all script files are present"
     Write-Output "Press any key to exit..."
     $null = [System.Console]::ReadKey()
     Exit
+}
+
+# Load feature info from file
+$script:Features = @{}
+try {
+    $featuresData = Get-Content -Path $script:FeaturesFilePath -Raw | ConvertFrom-Json
+    foreach ($feature in $featuresData.Features) {
+        $script:Features[$feature.FeatureId] = @{
+            Description = $feature.Description
+            RegistryKey = $feature.RegistryKey
+            RegistryUndoKey = $feature.RegistryUndoKey
+        }
+    }
+}
+catch {
+    Write-Error "Failed to load feature info from Features.json file"
+    AwaitKeyToExit
 }
 
 # Log script output to 'Win11Debloat.log' at the specified path
@@ -961,7 +903,7 @@ function PrintPendingChanges {
     Write-Output "Win11Debloat will make the following changes:"
 
     if ($script:Params['CreateRestorePoint']) {
-        Write-Output "- $($script:Features['CreateRestorePoint'])"
+        Write-Output "- $($script:Features['CreateRestorePoint'].Description)"
     }
     foreach ($parameterName in $script:Params.Keys) {
         if ($script:ControlParams -contains $parameterName) {
@@ -1004,7 +946,7 @@ function PrintPendingChanges {
             }
             default {
                 if ($script:Features -and $script:Features.ContainsKey($parameterName)) {
-                    $message = $script:Features[$parameterName]
+                    $message = $script:Features[$parameterName].Description
                     Write-Output "- $message"
                 }
                 else {

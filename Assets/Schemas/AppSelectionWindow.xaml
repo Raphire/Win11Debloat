@@ -136,7 +136,7 @@
     <Border BorderBrush="{DynamicResource BorderColor}" 
             BorderThickness="1" 
             CornerRadius="8" 
-            Background="Transparent">
+            Background="{DynamicResource BgColor}">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="32"/>
@@ -165,7 +165,7 @@
             </Grid>
 
             <!-- Main Content -->
-            <Grid Grid.Row="1" Background="{DynamicResource BgColor}">
+            <Grid Grid.Row="1">
                 <Grid Margin="12">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>

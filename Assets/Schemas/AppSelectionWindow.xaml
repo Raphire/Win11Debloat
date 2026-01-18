@@ -182,7 +182,6 @@
 
                     <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,8">
                         <CheckBox x:Name="CheckAllBox" Content="Check/Uncheck all" Margin="8,0,15,0" Foreground="{DynamicResource FgColor}"/>
-                        <CheckBox x:Name="OnlyInstalledBox" Content="Only show installed apps" IsChecked="True" Foreground="{DynamicResource FgColor}"/>
                     </StackPanel>
 
                     <Border Grid.Row="2" BorderBrush="{DynamicResource BorderColor}" CornerRadius="4" BorderThickness="1" Margin="0,0,0,10" Background="{DynamicResource ListBgColor}">
@@ -204,6 +203,7 @@
                     </Border>
 
                     <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
+                        <CheckBox x:Name="OnlyInstalledBox" Content="Only show installed apps" IsChecked="True" Foreground="{DynamicResource FgColor}" Margin="0,8,10,0" />
                         <Button x:Name="ConfirmBtn" Width="80" Height="32" Margin="0,0,10,0" Content="Confirm" Style="{StaticResource Win11Button}"/>
                         <Button x:Name="CancelBtn" Width="80" Height="32" Content="Cancel" Style="{StaticResource Win11ButtonSecondary}"/>
                     </StackPanel>

@@ -82,12 +82,13 @@ param (
 
 # Define script-level variables & paths
 $script:DefaultSettingsFilePath = "$PSScriptRoot/DefaultSettings.json"
-$script:AppsListFilePath = "$PSScriptRoot/Appslist.txt"
+$script:AppsListFilePath = "$PSScriptRoot/Apps.json"
 $script:SavedSettingsFilePath = "$PSScriptRoot/LastUsedSettings.json"
 $script:CustomAppsListFilePath = "$PSScriptRoot/CustomAppsList"
 $script:DefaultLogPath = "$PSScriptRoot/Win11Debloat.log"
 $script:RegfilesPath = "$PSScriptRoot/Regfiles"
 $script:AssetsPath = "$PSScriptRoot/Assets"
+$script:AppSelectionSchema = "$script:AssetsPath/Schemas/AppSelectionWindow.xaml"
 
 $script:ControlParams = 'WhatIf', 'Confirm', 'Verbose', 'Debug', 'LogPath', 'Silent', 'Sysprep', 'User', 'NoRestartExplorer', 'RunDefaults', 'RunDefaultsLite', 'RunSavedSettings', 'RunAppsListGenerator'
 $script:Features = @{
@@ -176,7 +177,7 @@ if ($ExecutionContext.SessionState.LanguageMode -ne "FullLanguage") {
 }
 
 # Check if script does not see file dependencies
-if (-not ((Test-Path $script:DefaultSettingsFilePath) -and (Test-Path $script:AppsListFilePath) -and (Test-Path $script:RegfilesPath) -and (Test-Path $script:AssetsPath))) {
+if (-not ((Test-Path $script:DefaultSettingsFilePath) -and (Test-Path $script:AppsListFilePath) -and (Test-Path $script:RegfilesPath) -and (Test-Path $script:AssetsPath) -and (Test-Path $script:AppSelectionSchema))) {
     Write-Error "Win11Debloat is unable to find required files, please ensure all script files are present"
     Write-Output "Press any key to exit..."
     $null = [System.Console]::ReadKey()
@@ -201,123 +202,85 @@ else {
 
 
 
-# Shows application selection form that allows the user to select what apps they want to remove or keep
-function ShowAppSelectionForm {
-    [reflection.assembly]::loadwithpartialname("System.Windows.Forms") | Out-Null
-    [reflection.assembly]::loadwithpartialname("System.Drawing") | Out-Null
+# Shows application selection window that allows the user to select what apps they want to remove or keep
+function ShowAppSelectionWindow {
+    Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase | Out-Null
 
-    # Initialise form objects
-    $form = New-Object System.Windows.Forms.Form
-    $label = New-Object System.Windows.Forms.Label
-    $button1 = New-Object System.Windows.Forms.Button
-    $button2 = New-Object System.Windows.Forms.Button
-    $selectionBox = New-Object System.Windows.Forms.CheckedListBox
-    $loadingLabel = New-Object System.Windows.Forms.Label
-    $onlyInstalledCheckBox = New-Object System.Windows.Forms.CheckBox
-    $checkUncheckCheckBox = New-Object System.Windows.Forms.CheckBox
-    $initialFormWindowState = New-Object System.Windows.Forms.FormWindowState
-
-    $script:SelectionBoxIndex = -1
-
-    # saveButton eventHandler
-    $handler_saveButton_Click=
-    {
-        if ($selectionBox.CheckedItems -contains "Microsoft.WindowsStore" -and -not $Silent) {
-            $warningSelection = [System.Windows.Forms.Messagebox]::Show('Are you sure you wish to uninstall the Microsoft Store? This app cannot easily be reinstalled.', 'Are you sure?', 'YesNo', 'Warning')
-
-            if ($warningSelection -eq 'No') {
-                return
-            }
-        }
-
-        $script:SelectedApps = $selectionBox.CheckedItems
-
-        # Close form without saving if no apps were selected
-        if ($script:SelectedApps.Count -eq 0) {
-            $form.Close()
-            return
-        }
-
-        # Create file that stores selected apps if it doesn't exist
-        if (-not (Test-Path $script:CustomAppsListFilePath)) {
-            $null = New-Item $script:CustomAppsListFilePath
-        }
-
-        Set-Content -Path $script:CustomAppsListFilePath -Value $script:SelectedApps
-
-        $form.DialogResult = [System.Windows.Forms.DialogResult]::OK
-        $form.Close()
+    # Detect system theme (dark or light mode)
+    $usesDarkMode = $false
+    try {
+        $appsTheme = Get-ItemPropertyValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" -Name "AppsUseLightTheme" -ErrorAction SilentlyContinue
+        $usesDarkMode = ($appsTheme -eq 0)
+    }
+    catch {
+        $usesDarkMode = $false
     }
 
-    # cancelButton eventHandler
-    $handler_cancelButton_Click=
-    {
-        $form.Close()
+    # Load XAML from file
+    $xaml = Get-Content -Path $script:AppSelectionSchema -Raw
+    $reader = [System.Xml.XmlReader]::Create([System.IO.StringReader]::new($xaml))
+    $window = [System.Windows.Markup.XamlReader]::Load($reader)
+    $reader.Close()
+
+    # Set colors based on theme (Windows 11 color scheme) as dynamic resources
+    if ($usesDarkMode) {
+        $window.Resources.Add("BgColor", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#272727")))
+        $window.Resources.Add("FgColor", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#FFFFFF")))
+        $window.Resources.Add("BorderColor", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#363636")))
+        $window.Resources.Add("LoadingBgColor", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#CC1C1C1C")))
+        $window.Resources.Add("LoadingFgColor", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#FFFFFF")))
+        $window.Resources.Add("TitleBarBg", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#202020")))
+        $window.Resources.Add("CloseHover", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#C42B1C")))
+        $window.Resources.Add("ListBgColor", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#1f1f1f")))
+        $window.Resources.Add("ButtonBg", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#3379d9")))
+        $window.Resources.Add("ButtonHover", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#559ce4")))
+        $window.Resources.Add("SecondaryButtonBg", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#343434")))
+        $window.Resources.Add("SecondaryButtonHover", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#3D3D3D")))
+        $fgColor = "#FFFFFF"
+    }
+    else {
+        $window.Resources.Add("BgColor", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#F3F3F3")))
+        $window.Resources.Add("FgColor", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#1C1C1C")))
+        $window.Resources.Add("BorderColor", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#E5E5E5")))
+        $window.Resources.Add("LoadingBgColor", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#F0F3F3F3")))
+        $window.Resources.Add("LoadingFgColor", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#1C1C1C")))
+        $window.Resources.Add("TitleBarBg", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#E5E5E5")))
+        $window.Resources.Add("CloseHover", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#C42B1C")))
+        $window.Resources.Add("ListBgColor", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#FAFAFA")))
+        $window.Resources.Add("ButtonBg", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#3379d9")))
+        $window.Resources.Add("ButtonHover", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#559ce4")))
+        $window.Resources.Add("SecondaryButtonBg", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#FFFFFF")))
+        $window.Resources.Add("SecondaryButtonHover", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#E5E5E5")))
+        $fgColor = "#1C1C1C"
     }
 
-    $selectionBox_SelectedIndexChanged=
-    {
-        $script:SelectionBoxIndex = $selectionBox.SelectedIndex
-    }
+    $appsPanel = $window.FindName('AppsPanel')
+    $checkAllBox = $window.FindName('CheckAllBox')
+    $onlyInstalledBox = $window.FindName('OnlyInstalledBox')
+    $confirmBtn = $window.FindName('ConfirmBtn')
+    $cancelBtn = $window.FindName('CancelBtn')
+    $loadingIndicator = $window.FindName('LoadingIndicator')
+    $titleBar = $window.FindName('TitleBar')
+    $closeBtn = $window.FindName('CloseBtn')
 
-    $selectionBox_MouseDown=
-    {
-        if ($_.Button -eq [System.Windows.Forms.MouseButtons]::Left) {
-            if ([System.Windows.Forms.Control]::ModifierKeys -eq [System.Windows.Forms.Keys]::Shift) {
-                if ($script:SelectionBoxIndex -ne -1) {
-                    $topIndex = $script:SelectionBoxIndex
-
-                    if ($selectionBox.SelectedIndex -gt $topIndex) {
-                        for (($i = ($topIndex)); $i -le $selectionBox.SelectedIndex; $i++) {
-                            $selectionBox.SetItemChecked($i, $selectionBox.GetItemChecked($topIndex))
-                        }
-                    }
-                    elseif ($topIndex -gt $selectionBox.SelectedIndex) {
-                        for (($i = ($selectionBox.SelectedIndex)); $i -le $topIndex; $i++) {
-                            $selectionBox.SetItemChecked($i, $selectionBox.GetItemChecked($topIndex))
-                        }
-                    }
-                }
-            }
-            elseif ($script:SelectionBoxIndex -ne $selectionBox.SelectedIndex) {
-                $selectionBox.SetItemChecked($selectionBox.SelectedIndex, -not $selectionBox.GetItemChecked($selectionBox.SelectedIndex))
-            }
-        }
-    }
-
-    $check_All=
-    {
-        for (($i = 0); $i -lt $selectionBox.Items.Count; $i++) {
-            $selectionBox.SetItemChecked($i, $checkUncheckCheckBox.Checked)
-        }
-    }
-
-    $load_Apps=
-    {
-        # Correct the initial state of the form to prevent the .Net maximized form issue
-        $form.WindowState = $initialFormWindowState
-
-        # Reset state to default before loading appslist again
-        $script:SelectionBoxIndex = -1
-        $checkUncheckCheckBox.Checked = $False
-
+    # Function to load apps into the panel
+    function LoadApps {
         # Show loading indicator
-        $loadingLabel.Visible = $true
-        $form.Refresh()
+        $loadingIndicator.Visibility = 'Visible'
+        $window.Dispatcher.Invoke([System.Windows.Threading.DispatcherPriority]::Background, [action]{})
 
-        # Clear selectionBox before adding any new items
-        $selectionBox.Items.Clear()
-
+        $appsPanel.Children.Clear()
         $listOfApps = ""
 
-        if ($onlyInstalledCheckBox.Checked -and ($script:WingetInstalled -eq $true)) {
+        if ($onlyInstalledBox.IsChecked -and ($script:WingetInstalled -eq $true)) {
             # Attempt to get a list of installed apps via winget, times out after 10 seconds
             $job = Start-Job { return winget list --accept-source-agreements --disable-interactivity }
             $jobDone = $job | Wait-Job -TimeOut 10
 
             if (-not $jobDone) {
                 # Show error that the script was unable to get list of apps from winget
-                [System.Windows.MessageBox]::Show('Unable to load list of installed apps via winget, some apps may not be displayed in the list.', 'Error', 'Ok', 'Error')
+                [System.Windows.MessageBox]::Show('Unable to load list of installed apps via winget.', 'Error', 'OK', 'Error') | Out-Null
+                $onlyInstalledBox.IsChecked = $false
             }
             else {
                 # Add output of job (list of apps) to $listOfApps
@@ -325,138 +288,135 @@ function ShowAppSelectionForm {
             }
         }
 
-        # Go through appslist and add items one by one to the selectionBox
-        Foreach ($app in (Get-Content -Path $script:AppsListFilePath | Where-Object { $_ -notmatch '^\s*$' -and $_ -notmatch '^#  .*' -and $_ -notmatch '^# -* #' } )) { 
-            $appChecked = $true
+        # Store apps data for sorting
+        $appsToAdd = @()
 
-            # Remove first # if it exists and set appChecked to false
-            if ($app.StartsWith('#')) {
-                $app = $app.TrimStart("#")
-                $appChecked = $false
-            }
+        # Read JSON file and parse apps
+        $jsonContent = Get-Content -Path $script:AppsListFilePath -Raw | ConvertFrom-Json
+        
+        # Go through appslist and collect apps
+        Foreach ($appData in $jsonContent.Apps) {
+            $appId = $appData.AppId.Trim()
+            $friendlyName = $appData.FriendlyName
+            $description = $appData.Description
+            $appChecked = $appData.SelectedByDefault
 
-            # Remove any comments from the Appname
-            if (-not ($app.IndexOf('#') -eq -1)) {
-                $app = $app.Substring(0, $app.IndexOf('#'))
-            }
-
-            # Remove leading and trailing spaces and `*` characters from Appname
-            $app = $app.Trim()
-            $appString = $app.Trim('*')
-
-            # Make sure appString is not empty
-            if ($appString.length -gt 0) {
-                if ($onlyInstalledCheckBox.Checked) {
-                    # onlyInstalledCheckBox is checked, check if app is installed before adding it to selectionBox
-                    if (-not ($listOfApps -like ("*$appString*")) -and -not (Get-AppxPackage -Name $app)) {
-                        # App is not installed, continue with next item
+            # Make sure appId is not empty
+            if ($appId.length -gt 0) {
+                if ($onlyInstalledBox.IsChecked) {
+                    # onlyInstalledBox is checked, check if app is installed before adding it
+                    if (-not ($listOfApps -like ("*$appId*")) -and -not (Get-AppxPackage -Name $appId)) {
                         continue
                     }
-                    if (($appString -eq "Microsoft.Edge") -and -not ($listOfApps -like "* Microsoft.Edge *")) {
-                        # App is not installed, continue with next item
+                    if (($appId -eq "Microsoft.Edge") -and -not ($listOfApps -like "* Microsoft.Edge *")) {
                         continue
                     }
                 }
 
-                # Add the app to the selectionBox and set its checked status
-                $selectionBox.Items.Add($appString, $appChecked) | Out-Null
+                # Combine friendly name and app ID for display
+                $displayName = if ($friendlyName) { "$friendlyName ($appId)" } else { $appId }
+                $appsToAdd += [PSCustomObject]@{ AppId = $appId; DisplayName = $displayName; IsChecked = $appChecked; Description = $description }
             }
         }
 
-        # Hide loading indicator
-        $loadingLabel.Visible = $False
+        # Sort apps alphabetically by app ID (case-insensitive) and add to panel
+        $appsToAdd | Sort-Object -Property AppId | ForEach-Object {
+            $checkbox = New-Object System.Windows.Controls.CheckBox
+            $checkbox.Content = $_.DisplayName
+            $checkbox.Tag = $_.AppId
+            $checkbox.IsChecked = $_.IsChecked
+            $checkbox.ToolTip = $_.Description
+            $checkbox.Foreground = $fgColor
+            $checkbox.Margin = "2,3,2,3"
+            $appsPanel.Children.Add($checkbox) | Out-Null
+        }
 
-        # Sort selectionBox alphabetically
-        $selectionBox.Sorted = $True
+        # Hide loading indicator
+        $loadingIndicator.Visibility = 'Collapsed'
     }
 
-    $form.Text = "Win11Debloat Application Selection"
-    $form.Name = "appSelectionForm"
-    $form.DataBindings.DefaultDataSourceUpdateMode = 0
-    $form.ClientSize = New-Object System.Drawing.Size(400,502)
-    $form.FormBorderStyle = 'FixedDialog'
-    $form.MaximizeBox = $False
+    # Event handlers
+    $titleBar.Add_MouseLeftButtonDown({
+        $window.DragMove()
+    })
 
-    $button1.TabIndex = 4
-    $button1.Name = "saveButton"
-    $button1.UseVisualStyleBackColor = $True
-    $button1.Text = "Confirm"
-    $button1.Location = New-Object System.Drawing.Point(27,472)
-    $button1.Size = New-Object System.Drawing.Size(75,23)
-    $button1.DataBindings.DefaultDataSourceUpdateMode = 0
-    $button1.add_Click($handler_saveButton_Click)
+    $closeBtn.Add_Click({
+        $window.Close()
+    })
 
-    $form.Controls.Add($button1)
+    $checkAllBox.Add_Checked({
+        foreach ($child in $appsPanel.Children) {
+            if ($child -is [System.Windows.Controls.CheckBox]) {
+                $child.IsChecked = $true
+            }
+        }
+    })
 
-    $button2.TabIndex = 5
-    $button2.Name = "cancelButton"
-    $button2.DialogResult = [System.Windows.Forms.DialogResult]::Cancel
-    $button2.UseVisualStyleBackColor = $True
-    $button2.Text = "Cancel"
-    $button2.Location = New-Object System.Drawing.Point(129,472)
-    $button2.Size = New-Object System.Drawing.Size(75,23)
-    $button2.DataBindings.DefaultDataSourceUpdateMode = 0
-    $button2.add_Click($handler_cancelButton_Click)
+    $checkAllBox.Add_Unchecked({
+        foreach ($child in $appsPanel.Children) {
+            if ($child -is [System.Windows.Controls.CheckBox]) {
+                $child.IsChecked = $false
+            }
+        }
+    })
 
-    $form.Controls.Add($button2)
+    $onlyInstalledBox.Add_Checked({ LoadApps })
+    $onlyInstalledBox.Add_Unchecked({ LoadApps })
 
-    $label.Location = New-Object System.Drawing.Point(13,5)
-    $label.Size = New-Object System.Drawing.Size(400,14)
-    $Label.Font = 'Microsoft Sans Serif,8'
-    $label.Text = 'Check apps that you wish to remove, uncheck apps that you wish to keep'
+    $confirmBtn.Add_Click({
+        $selectedApps = @()
+        foreach ($child in $appsPanel.Children) {
+            if ($child -is [System.Windows.Controls.CheckBox] -and $child.IsChecked) {
+                $selectedApps += $child.Tag
+            }
+        }
 
-    $form.Controls.Add($label)
+        # Close form without saving if no apps were selected
+        if ($selectedApps.Count -eq 0) {
+            $window.Close()
+            return
+        }
 
-    $loadingLabel.Location = New-Object System.Drawing.Point(16,46)
-    $loadingLabel.Size = New-Object System.Drawing.Size(300,418)
-    $loadingLabel.Text = 'Loading apps...'
-    $loadingLabel.BackColor = "White"
-    $loadingLabel.Visible = $false
+        if ($selectedApps -contains "Microsoft.WindowsStore" -and -not $Silent) {
+            $result = [System.Windows.MessageBox]::Show(
+                'Are you sure you wish to uninstall the Microsoft Store? This app cannot easily be reinstalled.',
+                'Are you sure?',
+                [System.Windows.MessageBoxButton]::YesNo,
+                [System.Windows.MessageBoxImage]::Warning
+            )
 
-    $form.Controls.Add($loadingLabel)
+            if ($result -eq [System.Windows.MessageBoxResult]::No) {
+                return
+            }
+        }
 
-    $onlyInstalledCheckBox.TabIndex = 6
-    $onlyInstalledCheckBox.Location = New-Object System.Drawing.Point(230,474)
-    $onlyInstalledCheckBox.Size = New-Object System.Drawing.Size(150,20)
-    $onlyInstalledCheckBox.Text = 'Only show installed apps'
-    $onlyInstalledCheckBox.add_CheckedChanged($load_Apps)
+        $script:SelectedApps = $selectedApps
 
-    $form.Controls.Add($onlyInstalledCheckBox)
+        # Create file that stores selected apps if it doesn't exist
+        if (-not (Test-Path $script:CustomAppsListFilePath)) {
+            $null = New-Item $script:CustomAppsListFilePath -ItemType File
+        }
 
-    $checkUncheckCheckBox.TabIndex = 7
-    $checkUncheckCheckBox.Location = New-Object System.Drawing.Point(16,22)
-    $checkUncheckCheckBox.Size = New-Object System.Drawing.Size(150,20)
-    $checkUncheckCheckBox.Text = 'Check/Uncheck all'
-    $checkUncheckCheckBox.add_CheckedChanged($check_All)
+        Set-Content -Path $script:CustomAppsListFilePath -Value $script:SelectedApps
 
-    $form.Controls.Add($checkUncheckCheckBox)
+        $window.DialogResult = $true
+    })
 
-    $selectionBox.FormattingEnabled = $True
-    $selectionBox.DataBindings.DefaultDataSourceUpdateMode = 0
-    $selectionBox.Name = "selectionBox"
-    $selectionBox.Location = New-Object System.Drawing.Point(13,43)
-    $selectionBox.Size = New-Object System.Drawing.Size(374,424)
-    $selectionBox.TabIndex = 3
-    $selectionBox.add_SelectedIndexChanged($selectionBox_SelectedIndexChanged)
-    $selectionBox.add_Click($selectionBox_MouseDown)
+    $cancelBtn.Add_Click({
+        $window.Close()
+    })
 
-    $form.Controls.Add($selectionBox)
+    # Load apps after window is shown (allows UI to render first)
+    $window.Add_ContentRendered({ 
+        $window.Dispatcher.Invoke([System.Windows.Threading.DispatcherPriority]::Background, [action]{ LoadApps })
+    })
 
-    # Save the initial state of the form
-    $initialFormWindowState = $form.WindowState
-
-    # Load apps into selectionBox
-    $form.add_Load($load_Apps)
-
-    # Focus selectionBox when form opens
-    $form.Add_Shown({$form.Activate(); $selectionBox.Focus()})
-
-    # Show the Form
-    return $form.ShowDialog()
+    # Show the window and return dialog result
+    return $window.ShowDialog()
 }
 
 
-# Returns a validated list of apps based on the provided appsList and the supported apps from Appslist.txt
+# Returns a validated list of apps based on the provided appsList and the supported apps from Apps.json
 function ValidateAppslist {
     param (
         $appsList
@@ -465,17 +425,14 @@ function ValidateAppslist {
     $supportedAppsList = @()
     $validatedAppsList = @()
 
-    # Generate a list of supported apps from AppsList.txt
-    Foreach ($app in (Get-Content -Path $script:AppsListFilePath | Where-Object { $_ -notmatch '^\s*$' -and $_ -notmatch '^#  .*' -and $_ -notmatch '^# -* #' } )) {
-        $app = $app.TrimStart("#")
-
-        if (-not ($app.IndexOf('#') -eq -1)) {
-            $app = $app.Substring(0, $app.IndexOf('#'))
+    # Generate a list of supported apps from Apps.json
+    # Read JSON file and extract app IDs
+    $jsonContent = Get-Content -Path $script:AppsListFilePath -Raw | ConvertFrom-Json
+    Foreach ($appData in $jsonContent.Apps) {
+        $appId = $appData.AppId.Trim()
+        if ($appId.length -gt 0) {
+            $supportedAppsList += $appId
         }
-
-        $app = $app.Trim()
-        $appString = $app.Trim('*')
-        $supportedAppsList += $appString
     }
 
     # Validate provided appsList against supportedAppsList
@@ -507,17 +464,37 @@ function ReadAppslistFromFile {
         return $appsList
     }
 
-    Foreach ($app in (Get-Content -Path $appsFilePath | Where-Object { $_ -notmatch '^#.*' -and $_ -notmatch '^\s*$' } )) { 
-        if (-not ($app.IndexOf('#') -eq -1)) {
-            $app = $app.Substring(0, $app.IndexOf('#'))
+    try {
+        # Check if file is JSON or text format for backward compatibility
+        if ($appsFilePath -like "*.json") {
+            # Read JSON file and extract app IDs
+            $jsonContent = Get-Content -Path $appsFilePath -Raw | ConvertFrom-Json
+            Foreach ($appData in $jsonContent.apps) {
+                $appId = $appData.appId.Trim()
+                if ($appId.length -gt 0) {
+                    $appsList += $appId
+                }
+            }
+        }
+        else {
+            # Legacy text file format
+            Foreach ($app in (Get-Content -Path $appsFilePath | Where-Object { $_ -notmatch '^#.*' -and $_ -notmatch '^\s*$' } )) { 
+                if (-not ($app.IndexOf('#') -eq -1)) {
+                    $app = $app.Substring(0, $app.IndexOf('#'))
+                }
+
+                $app = $app.Trim()
+                $appString = $app.Trim('*')
+                $appsList += $appString
+            }
         }
 
-        $app = $app.Trim()
-        $appString = $app.Trim('*')
-        $appsList += $appString
+        return $appsList
+    } 
+    catch {
+        Write-Error "Unable to read apps list from file: $appsFilePath"
+        AwaitKeyToExit
     }
-
-    return $appsList
 }
 
 
@@ -1286,9 +1263,9 @@ function ShowDefaultModeAppRemovalOptions {
 
         # Show app selection form if user entered option 3
         if ($RemoveAppsInput -eq '2') {
-            $result = ShowAppSelectionForm
+            $result = ShowAppSelectionWindow
 
-            if ($result -ne [System.Windows.Forms.DialogResult]::OK) {
+            if ($result -ne $true) {
                 # User cancelled or closed app selection, change RemoveAppsInput so the menu will be shown again
                 Write-Host ""
                 Write-Host "Cancelled application selection, please try again" -ForegroundColor Red
@@ -1324,9 +1301,9 @@ function ShowCustomModeOptions {
 
         # Show app selection form if user entered option 3
         if ($RemoveAppsInput -eq '3') {
-            $result = ShowAppSelectionForm
+            $result = ShowAppSelectionWindow
 
-            if ($result -ne [System.Windows.Forms.DialogResult]::OK) {
+            if ($result -ne $true) {
                 # User cancelled or closed app selection, change RemoveAppsInput so the menu will be shown again
                 Write-Output ""
                 Write-Host "Cancelled application selection, please try again" -ForegroundColor Red
@@ -1813,9 +1790,9 @@ function ShowAppRemoval {
 
     Write-Output "> Opening app selection form..."
 
-    $result = ShowAppSelectionForm
+    $result = ShowAppSelectionWindow
 
-    if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
+    if ($result -eq $true) {
         Write-Output "You have selected $($script:SelectedApps.Count) apps for removal"
         AddParameter 'RemoveAppsCustom'
 
@@ -1964,10 +1941,10 @@ if ((Test-Path $script:SavedSettingsFilePath) -and ([String]::IsNullOrWhiteSpace
 if ($RunAppConfigurator -or $RunAppsListGenerator) {
     PrintHeader "Custom Apps List Generator"
 
-    $result = ShowAppSelectionForm
+    $result = ShowAppSelectionWindow
 
     # Show different message based on whether the app selection was saved or cancelled
-    if ($result -ne [System.Windows.Forms.DialogResult]::OK) {
+    if ($result -ne $true) {
         Write-Host "Application selection window was closed without saving." -ForegroundColor Red
     }
     else {

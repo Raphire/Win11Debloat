@@ -170,7 +170,7 @@
       "SelectedByDefault": true
     },
     {
-      "FriendlyName": "Skype",
+      "FriendlyName": "Skype (UWP)",
       "AppId": "Microsoft.SkypeApp",
       "Description": "Skype communication app, Universal Windows Platform version (Discontinued)",
       "SelectedByDefault": true
@@ -200,7 +200,7 @@
       "SelectedByDefault": true
     },
     {
-      "FriendlyName": "Maps",
+      "FriendlyName": "Windows Maps",
       "AppId": "Microsoft.WindowsMaps",
       "Description": "Mapping and navigation app",
       "SelectedByDefault": true
@@ -658,7 +658,7 @@
     {
       "FriendlyName": "Windows Terminal",
       "AppId": "Microsoft.WindowsTerminal",
-      "Description": "New default terminal app in windows 11 (Command Prompt, PowerShell, WSL)",
+      "Description": "Default terminal app in windows 11 (Command Prompt, PowerShell, WSL)",
       "SelectedByDefault": false
     },
     {
@@ -688,7 +688,7 @@
     {
       "FriendlyName": "Xbox Speech To Text",
       "AppId": "Microsoft.XboxSpeechToTextOverlay",
-      "Description": "Might be required for some games, WARNING: This app cannot be reinstalled easily! (Accessibility feature)",
+      "Description": "Accessibility feature required for some games, WARNING: This app cannot be reinstalled easily!",
       "SelectedByDefault": false
     },
     {
@@ -698,7 +698,7 @@
       "SelectedByDefault": false
     },
     {
-      "FriendlyName": "Groove Music",
+      "FriendlyName": "Media Player",
       "AppId": "Microsoft.ZuneMusic",
       "Description": "Modern Media Player (Replaced Groove Music, plays local audio/video)",
       "SelectedByDefault": false

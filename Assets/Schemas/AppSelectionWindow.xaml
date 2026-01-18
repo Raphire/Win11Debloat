@@ -196,7 +196,7 @@
                                 <TextBlock Text="Loading apps..." 
                                         FontSize="16" 
                                         FontWeight="SemiBold" 
-                                        Foreground="{DynamicResource LoadingFgColor}" 
+                                        Foreground="{DynamicResource FgColor}" 
                                         HorizontalAlignment="Center" 
                                         VerticalAlignment="Center"/>
                             </Border>

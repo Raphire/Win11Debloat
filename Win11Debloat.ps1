@@ -411,7 +411,8 @@ function ReadAppslistFromFile {
             $jsonContent = Get-Content -Path $appsFilePath -Raw | ConvertFrom-Json
             Foreach ($appData in $jsonContent.apps) {
                 $appId = $appData.appId.Trim()
-                if ($appId.length -gt 0) {
+                $selectedByDefault = $appData.SelectedByDefault
+                if ($selectedByDefault -and $appId.length -gt 0) {
                     $appsList += $appId
                 }
             }

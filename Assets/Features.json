@@ -1,449 +1,882 @@
 {
   "Version": "1.0",
+  "UiGroups": [
+    {
+      "GroupId": "SearchIcon",
+      "Label": "Taskbar search item",
+      "Category": "Taskbar",
+      "Values": [
+        { "Label": "Hide", "FeatureIds": ["HideSearchTb"] },
+        { "Label": "Show search icon only", "FeatureIds": ["ShowSearchIconTb"] },
+        { "Label": "Show search icon and label", "FeatureIds": ["ShowSearchLabelTb"] },
+        { "Label": "Show search box", "FeatureIds": ["ShowSearchBoxTb"] }
+      ]
+    },
+    {
+      "GroupId": "MultiMon",
+      "Label": "Show taskbar apps on",
+      "Category": "Taskbar",
+      "Values": [
+        { "Label": "All taskbars", "FeatureIds": ["MMTaskbarModeAll"] },
+        { "Label": "Main taskbar and taskbar where window is open", "FeatureIds": ["MMTaskbarModeMainActive"] },
+        { "Label": "Taskbar where window is open", "FeatureIds": ["MMTaskbarModeActive"] }
+      ]
+    },
+    {
+      "GroupId": "CombineButtons",
+      "Label": "Combine taskbar buttons",
+      "Category": "Taskbar",
+      "Values": [
+        { "Label": "Always", "FeatureIds": ["CombineTaskbarAlways"] },
+        { "Label": "When taskbar is full", "FeatureIds": ["CombineTaskbarWhenFull"] },
+        { "Label": "Never", "FeatureIds": ["CombineTaskbarNever"] }
+      ]
+    },
+    {
+      "GroupId": "CombineMMButtons",
+      "Label": "Combine taskbar buttons on secondary displays",
+      "Category": "Taskbar",
+      "Values": [
+        { "Label": "Always", "FeatureIds": ["CombineMMTaskbarAlways"] },
+        { "Label": "When taskbar is full", "FeatureIds": ["CombineMMTaskbarWhenFull"] },
+        { "Label": "Never", "FeatureIds": ["CombineMMTaskbarNever"] }
+      ]
+    },
+    {
+      "GroupId": "ClearStart",
+      "Label": "Clear Start",
+      "Category": "Start Menu",
+      "Values": [
+        { "Label": "Current user", "FeatureIds": ["ClearStart"] },
+        { "Label": "All users", "FeatureIds": ["ClearStartAllUsers"] }
+      ]
+    },
+    {
+      "GroupId": "ExplorerLocation",
+      "Label": "Open File Explorer to",
+      "Category": "File Explorer",
+      "Values": [
+        { "Label": "Home", "FeatureIds": ["ExplorerToHome"] },
+        { "Label": "This PC", "FeatureIds": ["ExplorerToThisPC"] },
+        { "Label": "Downloads", "FeatureIds": ["ExplorerToDownloads"] },
+        { "Label": "OneDrive", "FeatureIds": ["ExplorerToOneDrive"] }
+      ]
+    }
+  ],
   "Features": [
     {
       "FeatureId": "RemoveApps",
-      "Description": "Remove the apps specified in the 'Apps' parameter",
+      "Label": "Remove the apps specified in the 'Apps' parameter",
+      "Category": null,
+      "Action": "Remove Apps",
       "RegistryKey": null,
-      "RegistryUndoKey": null
+      "UndoAction": null,
+      "RegistryUndoKey": null,
+      "minVersion": null,
+      "maxVersion": null
     },
     {
       "FeatureId": "Apps",
-      "Description": "The selection of apps to remove, specified as a comma separated list. Use 'Default' (or omit) to use the default apps list",
+      "Label": "The selection of apps to remove, specified as a comma separated list. Use 'Default' (or omit) to use the default apps list",
+      "Category": null,
+      "Action": "Apps",
       "RegistryKey": null,
-      "RegistryUndoKey": null
+      "UndoAction": null,
+      "RegistryUndoKey": null,
+      "minVersion": null,
+      "maxVersion": null
     },
     {
       "FeatureId": "RemoveAppsCustom",
-      "Description": "Remove custom selection of apps",
+      "Label": "Remove custom selection of apps",
+      "Category": null,
+      "Action": "Remove Custom Apps",
       "RegistryKey": null,
-      "RegistryUndoKey": null
+      "UndoAction": null,
+      "RegistryUndoKey": null,
+      "minVersion": null,
+      "maxVersion": null
     },
     {
       "FeatureId": "RemoveCommApps",
-      "Description": "Remove the Mail, Calendar, and People apps",
+      "Label": "Remove the Mail, Calendar, and People apps",
+      "Category": null,
+      "Action": "Remove Mail, Calendar & People",
       "RegistryKey": null,
-      "RegistryUndoKey": null
+      "UndoAction": null,
+      "RegistryUndoKey": null,
+      "minVersion": null,
+      "maxVersion": null
     },
     {
       "FeatureId": "RemoveW11Outlook",
-      "Description": "Remove the new Outlook for Windows app",
+      "Label": "Remove the new Outlook for Windows app",
+      "Category": null,
+      "Action": "Remove Outlook for Windows",
       "RegistryKey": null,
-      "RegistryUndoKey": null
+      "UndoAction": null,
+      "RegistryUndoKey": null,
+      "minVersion": null,
+      "maxVersion": null
     },
     {
       "FeatureId": "RemoveGamingApps",
-      "Description": "Remove the Xbox App and Xbox Gamebar",
+      "Label": "Remove the Xbox App and Xbox Gamebar",
+      "Category": null,
+      "Action": "Remove Gaming Apps",
       "RegistryKey": null,
-      "RegistryUndoKey": null
+      "UndoAction": null,
+      "RegistryUndoKey": null,
+      "minVersion": null,
+      "maxVersion": null
     },
     {
       "FeatureId": "RemoveHPApps",
-      "Description": "Remove HP OEM applications",
+      "Label": "Remove HP OEM applications",
+      "Category": null,
+      "Action": "Remove HP Apps",
       "RegistryKey": null,
-      "RegistryUndoKey": null
+      "UndoAction": null,
+      "RegistryUndoKey": null,
+      "minVersion": null,
+      "maxVersion": null
     },
     {
       "FeatureId": "CreateRestorePoint",
-      "Description": "Create a system restore point",
+      "Label": "Create a system restore point",
+      "Category": null,
+      "Action": "Create Restore Point",
       "RegistryKey": null,
-      "RegistryUndoKey": null
+      "UndoAction": null,
+      "RegistryUndoKey": null,
+      "minVersion": null,
+      "maxVersion": null
     },
     {
       "FeatureId": "DisableTelemetry",
-      "Description": "Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads",
+      "Label": "telemetry, tracking & targeted ads",
+      "Category": "Privacy & Suggested Content",
+      "Action": "Disable",
       "RegistryKey": "Disable_Telemetry.reg",
-      "RegistryUndoKey": "Enable_Telemetry.reg"
+      "UndoAction": "Enable",
+      "RegistryUndoKey": "Enable_Telemetry.reg",
+      "minVersion": null,
+      "maxVersion": null
     },
     {
       "FeatureId": "DisableSuggestions",
-      "Description": "Disable tips, tricks, suggestions and ads in start, settings, notifications and File Explorer",
+      "Label": "tips, tricks & suggested content",
+      "Category": "Privacy & Suggested Content",
+      "Action": "Disable",
       "RegistryKey": "Disable_Windows_Suggestions.reg",
-      "RegistryUndoKey": "Enable_Windows_Suggestions.reg"
-    },
-    {
-      "FeatureId": "DisableEdgeAds",
-      "Description": "Disable ads, suggestions and the MSN news feed in Microsoft Edge",
-      "RegistryKey": "Disable_Edge_Ads_And_Suggestions.reg",
-      "RegistryUndoKey": "Enable_Edge_Ads_And_Suggestions.reg"
-    },
-    {
-      "FeatureId": "DisableLockscreenTips",
-      "Description": "Disable tips & tricks on the lockscreen",
-      "RegistryKey": "Disable_Lockscreen_Tips.reg",
-      "RegistryUndoKey": "Enable_Lockscreen_Tips.reg"
+      "UndoAction": "Enable",
+      "RegistryUndoKey": "Enable_Windows_Suggestions.reg",
+      "minVersion": null,
+      "maxVersion": null
     },
     {
       "FeatureId": "DisableBing",
-      "Description": "Disable & remove Bing web search, Bing AI and Cortana from Windows search",
+      "Label": "Bing web search from Windows search",
+      "Category": "Privacy & Suggested Content",
+      "Action": "Disable",
       "RegistryKey": "Disable_Bing_Cortana_In_Search.reg",
-      "RegistryUndoKey": "Enable_Bing_Cortana_In_Search.reg"
+      "UndoAction": "Enable",
+      "RegistryUndoKey": "Enable_Bing_Cortana_In_Search.reg",
+      "minVersion": null,
+      "maxVersion": null
     },
     {
-      "FeatureId": "DisableCopilot",
-      "Description": "Disable & remove Microsoft Copilot",
-      "RegistryKey": "Disable_Copilot.reg",
-      "RegistryUndoKey": "Enable_Copilot.reg"
-    },
-    {
-      "FeatureId": "DisableRecall",
-      "Description": "Disable Windows Recall (Windows 11 only)",
-      "RegistryKey": "Disable_AI_Recall.reg",
-      "RegistryUndoKey": "Enable_AI_Recall.reg"
-    },
-    {
-      "FeatureId": "DisableClickToDo",
-      "Description": "Disable Click to Do, AI text & image analysis (Windows 11 only)",
-      "RegistryKey": "Disable_Click_to_Do.reg",
-      "RegistryUndoKey": "Enable_Click_to_Do.reg"
-    },
-    {
-      "FeatureId": "DisableWidgets",
-      "Description": "Disable widgets on the taskbar & lockscreen",
-      "RegistryKey": "Disable_Widgets_Service.reg",
-      "RegistryUndoKey": "Enable_Widgets_Service.reg"
-    },
-    {
-      "FeatureId": "HideChat",
-      "Description": "Hide the chat (meet now) icon from the taskbar (Windows 10 only)",
-      "RegistryKey": "Disable_Chat_Taskbar.reg",
-      "RegistryUndoKey": "Enable_Chat_Taskbar.reg"
-    },
-    {
-      "FeatureId": "ShowKnownFileExt",
-      "Description": "Show file extensions for known file types",
-      "RegistryKey": "Show_Extensions_For_Known_File_Types.reg",
-      "RegistryUndoKey": "Hide_Extensions_For_Known_File_Types.reg"
-    },
-    {
-      "FeatureId": "DisableFastStartup",
-      "Description": "Disable Fast Start-up",
-      "RegistryKey": "Disable_Fast_Startup.reg",
-      "RegistryUndoKey": "Enable_Fast_Startup.reg"
-    },
-    {
-      "FeatureId": "Hide3dObjects",
-      "Description": "Hide the 3D objects folder under 'This PC' in File Explorer (Windows 10 only)",
-      "RegistryKey": "Hide_3D_Objects_Folder.reg",
-      "RegistryUndoKey": "Show_3D_Objects_Folder.reg"
-    },
-    {
-      "FeatureId": "DisableModernStandbyNetworking",
-      "Description": "Disable network connectivity during Modern Standby (If supported)",
-      "RegistryKey": "Disable_Modern_Standby_Networking.reg",
-      "RegistryUndoKey": "Enable_Modern_Standby_Networking.reg"
-    },
-    {
-      "FeatureId": "DisableDVR",
-      "Description": "Disable Xbox game/screen recording",
-      "RegistryKey": "Disable_DVR.reg",
-      "RegistryUndoKey": "Enable_DVR.reg"
-    },
-    {
-      "FeatureId": "DisableGameBarIntegration",
-      "Description": "Disable Game Bar integration",
-      "RegistryKey": "Disable_Game_Bar_Integration.reg",
-      "RegistryUndoKey": "Enable_Game_Bar_Integration.reg"
-    },
-    {
-      "FeatureId": "ClearStart",
-      "Description": "Remove all pinned apps from the start menu for this user only",
-      "RegistryKey": null,
-      "RegistryUndoKey": null
-    },
-    {
-      "FeatureId": "ClearStartAllUsers",
-      "Description": "Remove all pinned apps from the start menu for all existing and new users",
-      "RegistryKey": null,
-      "RegistryUndoKey": null
-    },
-    {
-      "FeatureId": "ReplaceStart",
-      "Description": "Replace the start menu layout for this user only with the provided template file",
-      "RegistryKey": null,
-      "RegistryUndoKey": null
-    },
-    {
-      "FeatureId": "ReplaceStartAllUsers",
-      "Description": "Replace the start menu layout for all existing and new users with the provided template file",
-      "RegistryKey": null,
-      "RegistryUndoKey": null
-    },
-    {
-      "FeatureId": "DisableStartRecommended",
-      "Description": "Disable the recommended section in the start menu (Windows 11 only)",
-      "RegistryKey": "Disable_Start_Recommended.reg",
-      "RegistryUndoKey": "Enable_Start_Recommended.reg"
-    },
-    {
-      "FeatureId": "DisableStartPhoneLink",
-      "Description": "Disable the Phone Link mobile devices integration in the start menu",
-      "RegistryKey": "Disable_Phone_Link_In_Start.reg",
-      "RegistryUndoKey": "Enable_Phone_Link_In_Start.reg"
-    },
-    {
-      "FeatureId": "DisableSettings365Ads",
-      "Description": "Disable Microsoft 365 ads in Settings Home (Windows 11 only)",
-      "RegistryKey": "Disable_Settings_365_Ads.reg",
-      "RegistryUndoKey": "Enable_Settings_365_Ads.reg"
-    },
-    {
-      "FeatureId": "DisableSettingsHome",
-      "Description": "Completely hide the Settings 'Home' page (Windows 11 only)",
-      "RegistryKey": "Disable_Settings_Home.reg",
-      "RegistryUndoKey": "Enable_Settings_Home.reg"
-    },
-    {
-      "FeatureId": "DisableEdgeAI",
-      "Description": "Disable AI features in Microsoft Edge (Windows 11 only)",
-      "RegistryKey": "Disable_Edge_AI_Features.reg",
-      "RegistryUndoKey": "Enable_Edge_AI_Features.reg"
-    },
-    {
-      "FeatureId": "DisablePaintAI",
-      "Description": "Disable AI features in Paint (Windows 11 only)",
-      "RegistryKey": "Disable_Paint_AI_Features.reg",
-      "RegistryUndoKey": "Enable_Paint_AI_Features.reg"
-    },
-    {
-      "FeatureId": "DisableNotepadAI",
-      "Description": "Disable AI features in Notepad (Windows 11 only)",
-      "RegistryKey": "Disable_Notepad_AI_Features.reg",
-      "RegistryUndoKey": "Enable_Notepad_AI_Features.reg"
-    },
-    {
-      "FeatureId": "EnableDarkMode",
-      "Description": "Enable dark mode for system and apps",
-      "RegistryKey": "Enable_Dark_Mode.reg",
-      "RegistryUndoKey": "Enable_Light_Mode.reg"
-    },
-    {
-      "FeatureId": "RevertContextMenu",
-      "Description": "Restore the old Windows 10 style context menu (Windows 11 only)",
-      "RegistryKey": "Disable_Show_More_Options_Context_Menu.reg",
-      "RegistryUndoKey": "Enable_W11_Style_Context_Menu.reg"
-    },
-    {
-      "FeatureId": "DisableMouseAcceleration",
-      "Description": "Turn off Enhance Pointer Precision (mouse acceleration)",
-      "RegistryKey": "Disable_Enhance_Pointer_Precision.reg",
-      "RegistryUndoKey": "Enable_Enhance_Pointer_Precision.reg"
-    },
-    {
-      "FeatureId": "DisableStickyKeys",
-      "Description": "Disable the Sticky Keys keyboard shortcut (Windows 11 only)",
-      "RegistryKey": "Disable_Sticky_Keys_Shortcut.reg",
-      "RegistryUndoKey": "Enable_Sticky_Keys_Shortcut.reg"
+      "FeatureId": "DisableLockscreenTips",
+      "Label": "Windows Spotlight for lockscreen",
+      "Category": "Privacy & Suggested Content",
+      "Action": "Disable",
+      "RegistryKey": "Disable_Lockscreen_Tips.reg",
+      "UndoAction": "Enable",
+      "RegistryUndoKey": "Enable_Lockscreen_Tips.reg",
+      "minVersion": null,
+      "maxVersion": null
     },
     {
       "FeatureId": "DisableDesktopSpotlight",
-      "Description": "Disable the Windows Spotlight desktop background option",
+      "Label": "Windows Spotlight for desktop",
+      "Category": "Privacy & Suggested Content",
+      "Action": "Disable",
       "RegistryKey": "Disable_Desktop_Spotlight.reg",
-      "RegistryUndoKey": "Enable_Desktop_Spotlight.reg"
+      "UndoAction": "Enable",
+      "RegistryUndoKey": "Enable_Desktop_Spotlight.reg",
+      "minVersion": null,
+      "maxVersion": null
+    },
+    {
+      "FeatureId": "DisableEdgeAds",
+      "Label": "ads, suggestions and newsfeed in Edge",
+      "Category": "Privacy & Suggested Content",
+      "Action": "Disable",
+      "RegistryKey": "Disable_Edge_Ads_And_Suggestions.reg",
+      "UndoAction": "Enable",
+      "RegistryUndoKey": "Enable_Edge_Ads_And_Suggestions.reg",
+      "minVersion": null,
+      "maxVersion": null
+    },
+    {
+      "FeatureId": "DisableCopilot",
+      "Label": "Microsoft Copilot",
+      "Category": "AI",
+      "Action": "Disable",
+      "RegistryKey": "Disable_Copilot.reg",
+      "UndoAction": "Enable",
+      "RegistryUndoKey": "Enable_Copilot.reg",
+      "minVersion": 22621,
+      "maxVersion": null
+    },
+    {
+      "FeatureId": "DisableRecall",
+      "Label": "Windows Recall",
+      "Category": "AI",
+      "Action": "Disable",
+      "RegistryKey": "Disable_AI_Recall.reg",
+      "UndoAction": "Enable",
+      "RegistryUndoKey": "Enable_AI_Recall.reg",
+      "minVersion": 22621,
+      "maxVersion": null
+    },
+    {
+      "FeatureId": "DisableClickToDo",
+      "Label": "Click To Do, AI text & image analysis",
+      "Category": "AI",
+      "Action": "Disable",
+      "RegistryKey": "Disable_Click_to_Do.reg",
+      "UndoAction": "Enable",
+      "RegistryUndoKey": "Enable_Click_to_Do.reg",
+      "minVersion": 22621,
+      "maxVersion": null
+    },
+    {
+      "FeatureId": "DisableFastStartup",
+      "Label": "fast start-up",
+      "Category": "System",
+      "Action": "Disable",
+      "RegistryKey": "Disable_Fast_Startup.reg",
+      "UndoAction": "Enable",
+      "RegistryUndoKey": "Enable_Fast_Startup.reg",
+      "minVersion": null,
+      "maxVersion": null
+    },
+    {
+      "FeatureId": "DisableModernStandbyNetworking",
+      "Label": "Modern Standby network connectivity",
+      "Category": "System",
+      "Action": "Disable",
+      "RegistryKey": "Disable_Modern_Standby_Networking.reg",
+      "UndoAction": "Enable",
+      "RegistryUndoKey": "Enable_Modern_Standby_Networking.reg",
+      "minVersion": 22000,
+      "maxVersion": null
+    },
+    {
+      "FeatureId": "DisableDVR",
+      "Label": "Xbox game/screen recording",
+      "Category": "Gaming",
+      "Action": "Disable",
+      "RegistryKey": "Disable_DVR.reg",
+      "UndoAction": "Enable",
+      "RegistryUndoKey": "Enable_DVR.reg",
+      "minVersion": null,
+      "maxVersion": null
+    },
+    {
+      "FeatureId": "DisableGameBarIntegration",
+      "Label": "Game Bar integration",
+      "Category": "Gaming",
+      "Action": "Disable",
+      "RegistryKey": "Disable_Game_Bar_Integration.reg",
+      "UndoAction": "Enable",
+      "RegistryUndoKey": "Enable_Game_Bar_Integration.reg",
+      "minVersion": null,
+      "maxVersion": null
+    },
+    {
+      "FeatureId": "ClearStart",
+      "Action": "Clear Start Menu",
+      "Label": "Remove all pinned apps from the start menu for this user only",
+      "Category": "Start Menu",
+      "RegistryKey": null,
+      "UndoAction": null,
+      "RegistryUndoKey": null,
+      "minVersion": 22621,
+      "maxVersion": null
+    },
+    {
+      "FeatureId": "ClearStartAllUsers",
+      "Action": "Clear Start Menu (All Users)",
+      "Label": "Remove all pinned apps from the start menu for all existing and new users",
+      "Category": "Start Menu",
+      "RegistryKey": null,
+      "UndoAction": null,
+      "RegistryUndoKey": null,
+      "minVersion": 22621,
+      "maxVersion": null
+    },
+    {
+      "FeatureId": "ReplaceStart",
+      "Action": "Replace Start Menu",
+      "Label": "Replace the start menu layout for this user only with the provided template file",
+      "Category": null,
+      "RegistryKey": null,
+      "UndoAction": null,
+      "RegistryUndoKey": null,
+      "minVersion": 22621,
+      "maxVersion": null
+    },
+    {
+      "FeatureId": "ReplaceStartAllUsers",
+      "Action": "Replace Start Menu (All Users)",
+      "Label": "Replace the start menu layout for all existing and new users with the provided template file",
+      "Category": null,
+      "RegistryKey": null,
+      "UndoAction": null,
+      "RegistryUndoKey": null,
+      "minVersion": 22621,
+      "maxVersion": null
+    },
+    {
+      "FeatureId": "DisableStartRecommended",
+      "Label": "recommended section in start",
+      "Category": "Start Menu",
+      "Action": "Hide",
+      "RegistryKey": "Disable_Start_Recommended.reg",
+      "UndoAction": "Show",
+      "RegistryUndoKey": "Enable_Start_Recommended.reg",
+      "minVersion": 22621,
+      "maxVersion": 26199
+    },
+    {
+      "FeatureId": "DisableStartPhoneLink",
+      "Label": "Phone Link integration in start",
+      "Category": "Start Menu",
+      "Action": "Disable",
+      "RegistryKey": "Disable_Phone_Link_In_Start.reg",
+      "UndoAction": "Enable",
+      "RegistryUndoKey": "Enable_Phone_Link_In_Start.reg",
+      "minVersion": 22621,
+      "maxVersion": null
+    },
+    {
+      "FeatureId": "DisableSettings365Ads",
+      "Label": "Microsoft 365 ads in Settings Home",
+      "Category": "Privacy & Suggested Content",
+      "Action": "Hide",
+      "RegistryKey": "Disable_Settings_365_Ads.reg",
+      "UndoAction": "Show",
+      "RegistryUndoKey": "Enable_Settings_365_Ads.reg",
+      "minVersion": null,
+      "maxVersion": null
+    },
+    {
+      "FeatureId": "DisableSettingsHome",
+      "Label": "Settings 'Home' page",
+      "Category": "Privacy & Suggested Content",
+      "Action": "Hide",
+      "RegistryKey": "Disable_Settings_Home.reg",
+      "UndoAction": "Show",
+      "RegistryUndoKey": "Enable_Settings_Home.reg",
+      "minVersion": null,
+      "maxVersion": null
+    },
+    {
+      "FeatureId": "DisableEdgeAI",
+      "Label": "AI features in Microsoft Edge",
+      "Category": "AI",
+      "Action": "Disable",
+      "RegistryKey": "Disable_Edge_AI_Features.reg",
+      "UndoAction": "Enable",
+      "RegistryUndoKey": "Enable_Edge_AI_Features.reg",
+      "minVersion": 22621,
+      "maxVersion": null
+    },
+    {
+      "FeatureId": "DisablePaintAI",
+      "Label": "AI features in Paint",
+      "Category": "AI",
+      "Action": "Disable",
+      "RegistryKey": "Disable_Paint_AI_Features.reg",
+      "UndoAction": "Enable",
+      "RegistryUndoKey": "Enable_Paint_AI_Features.reg",
+      "minVersion": 22621,
+      "maxVersion": null
+    },
+    {
+      "FeatureId": "DisableNotepadAI",
+      "Label": "AI features in Notepad",
+      "Category": "AI",
+      "Action": "Disable",
+      "RegistryKey": "Disable_Notepad_AI_Features.reg",
+      "UndoAction": "Enable",
+      "RegistryUndoKey": "Enable_Notepad_AI_Features.reg",
+      "minVersion": 22621,
+      "maxVersion": null
+    },
+    {
+      "FeatureId": "EnableDarkMode",
+      "Label": "theme for system and apps",
+      "Category": "Appearance",
+      "Action": "Enable dark",
+      "RegistryKey": "Enable_Dark_Mode.reg",
+      "UndoAction": "Disable light",
+      "RegistryUndoKey": "Enable_Light_Mode.reg",
+      "minVersion": null,
+      "maxVersion": null
+    },
+    {
+      "FeatureId": "RevertContextMenu",
+      "Label": "context menu style",
+      "Category": "System",
+      "Action": "Use classic Windows 10",
+      "RegistryKey": "Disable_Show_More_Options_Context_Menu.reg",
+      "UndoAction": "Use modern Windows 11",
+      "RegistryUndoKey": "Enable_W11_Style_Context_Menu.reg",
+      "minVersion": 22000,
+      "maxVersion": null
+    },
+    {
+      "FeatureId": "DisableMouseAcceleration",
+      "Label": "Enhance Pointer Precision (mouse acceleration)",
+      "Category": "System",
+      "Action": "Disable",
+      "RegistryKey": "Disable_Enhance_Pointer_Precision.reg",
+      "UndoAction": "Enable",
+      "RegistryUndoKey": "Enable_Enhance_Pointer_Precision.reg",
+      "minVersion": null,
+      "maxVersion": null
+    },
+    {
+      "FeatureId": "DisableStickyKeys",
+      "Label": "Sticky Keys keyboard shortcut",
+      "Category": "System",
+      "Action": "Disable",
+      "RegistryKey": "Disable_Sticky_Keys_Shortcut.reg",
+      "UndoAction": "Enable",
+      "RegistryUndoKey": "Enable_Sticky_Keys_Shortcut.reg",
+      "minVersion": 26100,
+      "maxVersion": null
     },
     {
       "FeatureId": "TaskbarAlignLeft",
-      "Description": "Align taskbar icons to the left (Windows 11 only)",
+      "Label": "taskbar alignment",
+      "Category": "Taskbar",
+      "Action": "Left",
       "RegistryKey": "Align_Taskbar_Left.reg",
-      "RegistryUndoKey": "Align_Taskbar_Center.reg"
-    },
-    {
-      "FeatureId": "CombineTaskbarAlways",
-      "Description": "Always combine taskbar buttons and hide labels for the main display (Windows 11 only)",
-      "RegistryKey": "Combine_Taskbar_Always.reg",
-      "RegistryUndoKey": null
-    },
-    {
-      "FeatureId": "CombineMMTaskbarAlways",
-      "Description": "Always combine taskbar buttons and hide labels for secondary displays (Windows 11 only)",
-      "RegistryKey": "Combine_MMTaskbar_Always.reg",
-      "RegistryUndoKey": null
-    },
-    {
-      "FeatureId": "CombineTaskbarWhenFull",
-      "Description": "Combine taskbar buttons and hide labels when taskbar is full for the main display (Windows 11 only)",
-      "RegistryKey": "Combine_Taskbar_When_Full.reg",
-      "RegistryUndoKey": "Combine_Taskbar_Always.reg"
-    },
-    {
-      "FeatureId": "CombineMMTaskbarWhenFull",
-      "Description": "Combine taskbar buttons and hide labels when taskbar is full for secondary displays (Windows 11 only)",
-      "RegistryKey": "Combine_MMTaskbar_When_Full.reg",
-      "RegistryUndoKey": "Combine_MMTaskbar_Always.reg"
-    },
-    {
-      "FeatureId": "CombineTaskbarNever",
-      "Description": "Never combine taskbar buttons and show labels for the main display (Windows 11 only)",
-      "RegistryKey": "Combine_Taskbar_Never.reg",
-      "RegistryUndoKey": "Combine_Taskbar_Always.reg"
-    },
-    {
-      "FeatureId": "CombineMMTaskbarNever",
-      "Description": "Never combine taskbar buttons and show labels for secondary displays (Windows 11 only)",
-      "RegistryKey": "Combine_MMTaskbar_Never.reg",
-      "RegistryUndoKey": "Combine_MMTaskbar_Always.reg"
-    },
-    {
-      "FeatureId": "MMTaskbarModeAll",
-      "Description": "Show app icons on all taskbars (Windows 11 only)",
-      "RegistryKey": "MMTaskbarMode_All.reg",
-      "RegistryUndoKey": null
-    },
-    {
-      "FeatureId": "MMTaskbarModeMainActive",
-      "Description": "Show app icons on main taskbar and on taskbar where the windows is open (Windows 11 only)",
-      "RegistryKey": "MMTaskbarMode_Main_Active.reg",
-      "RegistryUndoKey": "MMTaskbarMode_All.reg"
-    },
-    {
-      "FeatureId": "MMTaskbarModeActive",
-      "Description": "Show app icons only on taskbar where the window is open (Windows 11 only)",
-      "RegistryKey": "MMTaskbarMode_Active.reg",
-      "RegistryUndoKey": "MMTaskbarMode_All.reg"
+      "UndoAction": "Center",
+      "RegistryUndoKey": "Align_Taskbar_Center.reg",
+      "minVersion": 22000,
+      "maxVersion": null
     },
     {
       "FeatureId": "HideSearchTb",
-      "Description": "Hide search icon from the taskbar (Windows 11 only)",
+      "Label": "Hide search icon from the taskbar",
+      "Category": "Taskbar",
+      "Action": "Hide Search",
       "RegistryKey": "Hide_Search_Taskbar.reg",
-      "RegistryUndoKey": "Show_Search_Box.reg"
+      "UndoAction": "Show Search Box",
+      "RegistryUndoKey": "Show_Search_Box.reg",
+      "minVersion": 22000,
+      "maxVersion": null
     },
     {
       "FeatureId": "ShowSearchIconTb",
-      "Description": "Show search icon on the taskbar (Windows 11 only)",
+      "Label": "Show search icon on the taskbar",
+      "Category": "Taskbar",
+      "Action": "Show Search Icon",
       "RegistryKey": "Show_Search_Box.reg",
-      "RegistryUndoKey": "Show_Search_Box.reg"
+      "UndoAction": "Show Search Box",
+      "RegistryUndoKey": "Show_Search_Box.reg",
+      "minVersion": 22000,
+      "maxVersion": null
     },
     {
       "FeatureId": "ShowSearchLabelTb",
-      "Description": "Show search icon with label on the taskbar (Windows 11 only)",
+      "Label": "Show search icon with label on the taskbar",
+      "Category": "Taskbar",
+      "Action": "Show Search Label",
       "RegistryKey": "Show_Search_Box.reg",
-      "RegistryUndoKey": "Show_Search_Box.reg"
+      "UndoAction": "Show Search Box",
+      "RegistryUndoKey": "Show_Search_Box.reg",
+      "minVersion": 22000,
+      "maxVersion": null
     },
     {
       "FeatureId": "ShowSearchBoxTb",
-      "Description": "Show search box on the taskbar (Windows 11 only)",
+      "Label": "Show search box on the taskbar",
+      "Category": "Taskbar",
+      "Action": "Show Search Box",
       "RegistryKey": "Show_Search_Box.reg",
-      "RegistryUndoKey": null
+      "UndoAction": null,
+      "RegistryUndoKey": null,
+      "minVersion": 22000,
+      "maxVersion": null
     },
     {
       "FeatureId": "HideTaskview",
-      "Description": "Hide the taskview button from the taskbar (Windows 11 only)",
+      "Label": "'Task view' button on the taskbar",
+      "Category": "Taskbar",
+      "Action": "Hide",
       "RegistryKey": "Hide_Taskview_Taskbar.reg",
-      "RegistryUndoKey": "Show_Taskview_Taskbar.reg"
+      "UndoAction": "Show",
+      "RegistryUndoKey": "Show_Taskview_Taskbar.reg",
+      "minVersion": 22000,
+      "maxVersion": null
+    },
+    {
+      "FeatureId": "DisableWidgets",
+      "Label": "widgets on the taskbar & lockscreen",
+      "Category": "Taskbar",
+      "Action": "Disable",
+      "RegistryKey": "Disable_Widgets_Service.reg",
+      "UndoAction": "Enable",
+      "RegistryUndoKey": "Enable_Widgets_Service.reg",
+      "minVersion": null,
+      "maxVersion": null
+    },
+    {
+      "FeatureId": "HideChat",
+      "Label": "Chat (meet now) icon on the taskbar",
+      "Category": "Taskbar",
+      "Action": "Hide",
+      "RegistryKey": "Disable_Chat_Taskbar.reg",
+      "UndoAction": "Show",
+      "RegistryUndoKey": "Enable_Chat_Taskbar.reg",
+      "minVersion": null,
+      "maxVersion": 22621
     },
     {
       "FeatureId": "EnableEndTask",
-      "Description": "Enable the 'End Task' option in the taskbar right click menu (Windows 11 only)",
+      "Label": "'End Task' option in taskbar context menu",
+      "Category": "Taskbar",
+      "Action": "Show",
       "RegistryKey": "Enable_End_Task.reg",
-      "RegistryUndoKey": "Disable_End_Task.reg"
+      "UndoAction": "Hide",
+      "RegistryUndoKey": "Disable_End_Task.reg",
+      "minVersion": 22631,
+      "maxVersion": null
     },
     {
       "FeatureId": "EnableLastActiveClick",
-      "Description": "Enable the 'Last Active Click' behavior in the taskbar app area",
+      "Label": "'Last Active Click' behavior for taskbar apps",
+      "Category": "Taskbar",
+      "Action": "Enable",
       "RegistryKey": "Enable_Last_Active_Click.reg",
-      "RegistryUndoKey": "Disable_Last_Active_Click.reg"
+      "UndoAction": "Disable",
+      "RegistryUndoKey": "Disable_Last_Active_Click.reg",
+      "minVersion": 22000,
+      "maxVersion": null
     },
     {
-      "FeatureId": "ShowHiddenFolders",
-      "Description": "Show hidden files, folders and drives",
-      "RegistryKey": "Show_Hidden_Folders.reg",
-      "RegistryUndoKey": "Hide_Hidden_Folders.reg"
+      "FeatureId": "CombineTaskbarAlways",
+      "Label": "Always combine taskbar buttons and hide labels for the main display",
+      "Category": "Taskbar",
+      "Action": "Combine Taskbar Always",
+      "RegistryKey": "Combine_Taskbar_Always.reg",
+      "UndoAction": null,
+      "RegistryUndoKey": null,
+      "minVersion": 22000,
+      "maxVersion": null
+    },
+    {
+      "FeatureId": "CombineMMTaskbarAlways",
+      "Label": "Always combine taskbar buttons and hide labels for secondary displays",
+      "Category": "Taskbar",
+      "Action": "Combine Multi-Monitor Taskbar Always",
+      "RegistryKey": "Combine_MMTaskbar_Always.reg",
+      "UndoAction": null,
+      "RegistryUndoKey": null,
+      "minVersion": 22000,
+      "maxVersion": null
+    },
+    {
+      "FeatureId": "CombineTaskbarWhenFull",
+      "Label": "Combine taskbar buttons and hide labels when taskbar is full for the main display",
+      "Category": "Taskbar",
+      "Action": "Combine Taskbar When Full",
+      "RegistryKey": "Combine_Taskbar_When_Full.reg",
+      "UndoAction": "Combine Taskbar Always",
+      "RegistryUndoKey": "Combine_Taskbar_Always.reg",
+      "minVersion": 22000,
+      "maxVersion": null
+    },
+    {
+      "FeatureId": "CombineMMTaskbarWhenFull",
+      "Label": "Combine taskbar buttons and hide labels when taskbar is full for secondary displays",
+      "Category": "Taskbar",
+      "Action": "Combine Multi-Monitor Taskbar When Full",
+      "RegistryKey": "Combine_MMTaskbar_When_Full.reg",
+      "UndoAction": "Combine Multi-Monitor Taskbar Always",
+      "RegistryUndoKey": "Combine_MMTaskbar_Always.reg",
+      "minVersion": 22000,
+      "maxVersion": null
+    },
+    {
+      "FeatureId": "CombineTaskbarNever",
+      "Label": "Never combine taskbar buttons and show labels for the main display",
+      "Category": "Taskbar",
+      "Action": "Never Combine Taskbar",
+      "RegistryKey": "Combine_Taskbar_Never.reg",
+      "UndoAction": "Combine Taskbar Always",
+      "RegistryUndoKey": "Combine_Taskbar_Always.reg",
+      "minVersion": 22000,
+      "maxVersion": null
+    },
+    {
+      "FeatureId": "CombineMMTaskbarNever",
+      "Label": "Never combine taskbar buttons and show labels for secondary displays",
+      "Category": "Taskbar",
+      "Action": "Never Combine Multi-Monitor Taskbar",
+      "RegistryKey": "Combine_MMTaskbar_Never.reg",
+      "UndoAction": "Combine Multi-Monitor Taskbar Always",
+      "RegistryUndoKey": "Combine_MMTaskbar_Always.reg",
+      "minVersion": 22000,
+      "maxVersion": null
+    },
+    {
+      "FeatureId": "MMTaskbarModeAll",
+      "Label": "Show app icons on all taskbars",
+      "Category": "Taskbar",
+      "Action": "Show All Taskbar Icons",
+      "RegistryKey": "MMTaskbarMode_All.reg",
+      "UndoAction": null,
+      "RegistryUndoKey": null,
+      "minVersion": 22000,
+      "maxVersion": null
+    },
+    {
+      "FeatureId": "MMTaskbarModeMainActive",
+      "Label": "Show app icons on main taskbar and on taskbar where the windows is open",
+      "Category": "Taskbar",
+      "Action": "Show Taskbar Icons Main + Active",
+      "RegistryKey": "MMTaskbarMode_Main_Active.reg",
+      "UndoAction": "Show All Taskbar Icons",
+      "RegistryUndoKey": "MMTaskbarMode_All.reg",
+      "minVersion": 22000,
+      "maxVersion": null
+    },
+    {
+      "FeatureId": "MMTaskbarModeActive",
+      "Label": "Show app icons only on taskbar where the window is open",
+      "Category": "Taskbar",
+      "Action": "Show Taskbar Icons Active Only",
+      "RegistryKey": "MMTaskbarMode_Active.reg",
+      "UndoAction": "Show All Taskbar Icons",
+      "RegistryUndoKey": "MMTaskbarMode_All.reg",
+      "minVersion": 22000,
+      "maxVersion": null
     },
     {
       "FeatureId": "ExplorerToHome",
-      "Description": "Change the default location that File Explorer opens to 'Home'",
+      "Label": "Change the default location that File Explorer opens to 'Home'",
+      "Category": "File Explorer",
+      "Action": "Explorer to Home",
       "RegistryKey": "Launch_File_Explorer_To_Home.reg",
-      "RegistryUndoKey": null
+      "UndoAction": null,
+      "RegistryUndoKey": null,
+      "minVersion": null,
+      "maxVersion": null
     },
     {
       "FeatureId": "ExplorerToThisPC",
-      "Description": "Change the default location that File Explorer opens to 'This PC'",
+      "Label": "Change the default location that File Explorer opens to 'This PC'",
+      "Category": "File Explorer",
+      "Action": "Explorer to This PC",
       "RegistryKey": "Launch_File_Explorer_To_This_PC.reg",
-      "RegistryUndoKey": "Launch_File_Explorer_To_Home.reg"
+      "UndoAction": "Explorer to Home",
+      "RegistryUndoKey": "Launch_File_Explorer_To_Home.reg",
+      "minVersion": null,
+      "maxVersion": null
     },
     {
       "FeatureId": "ExplorerToDownloads",
-      "Description": "Change the default location that File Explorer opens to 'Downloads'",
+      "Label": "Change the default location that File Explorer opens to 'Downloads'",
+      "Category": "File Explorer",
+      "Action": "Explorer to Downloads",
       "RegistryKey": "Launch_File_Explorer_To_Downloads.reg",
-      "RegistryUndoKey": "Launch_File_Explorer_To_Home.reg"
+      "UndoAction": "Explorer to Home",
+      "RegistryUndoKey": "Launch_File_Explorer_To_Home.reg",
+      "minVersion": null,
+      "maxVersion": null
     },
     {
       "FeatureId": "ExplorerToOneDrive",
-      "Description": "Change the default location that File Explorer opens to 'OneDrive'",
+      "Label": "Change the default location that File Explorer opens to 'OneDrive'",
+      "Category": "File Explorer",
+      "Action": "Explorer to OneDrive",
       "RegistryKey": "Launch_File_Explorer_To_OneDrive.reg",
-      "RegistryUndoKey": "Launch_File_Explorer_To_Home.reg"
+      "UndoAction": "Explorer to Home",
+      "RegistryUndoKey": "Launch_File_Explorer_To_Home.reg",
+      "minVersion": null,
+      "maxVersion": null
     },
     {
-      "FeatureId": "AddFoldersToThisPC",
-      "Description": "Add all common folders (Desktop, Downloads, etc.) back to 'This PC' in File Explorer",
-      "RegistryKey": "Add_All_Folders_Under_This_PC.reg",
-      "RegistryUndoKey": "Remove_All_Folders_Under_This_PC.reg"
+      "FeatureId": "ShowKnownFileExt",
+      "Label": "file extensions for known file types",
+      "Category": "File Explorer",
+      "Action": "Show",
+      "RegistryKey": "Show_Extensions_For_Known_File_Types.reg",
+      "UndoAction": "Hide",
+      "RegistryUndoKey": "Hide_Extensions_For_Known_File_Types.reg",
+      "minVersion": null,
+      "maxVersion": null
+    },
+    {
+      "FeatureId": "ShowHiddenFolders",
+      "Label": "hidden files, folders and drives",
+      "Category": "File Explorer",
+      "Action": "Show",
+      "RegistryKey": "Show_Hidden_Folders.reg",
+      "UndoAction": "Hide",
+      "RegistryUndoKey": "Hide_Hidden_Folders.reg",
+      "minVersion": null,
+      "maxVersion": null
     },
     {
       "FeatureId": "HideHome",
-      "Description": "Hide the Home section from the File Explorer sidepanel (Windows 11 only)",
+      "Label": "'Home' from navigation pane",
+      "Category": "File Explorer",
+      "Action": "Hide",
       "RegistryKey": "Hide_Home_from_Explorer.reg",
-      "RegistryUndoKey": "Show_Home_in_Explorer.reg"
+      "UndoAction": "Show",
+      "RegistryUndoKey": "Show_Home_in_Explorer.reg",
+      "minVersion": 22000,
+      "maxVersion": null
     },
     {
       "FeatureId": "HideGallery",
-      "Description": "Hide the Gallery section from the File Explorer sidepanel (Windows 11 only)",
+      "Label": "'Gallery' from navigation pane",
+      "Category": "File Explorer",
+      "Action": "Hide",
       "RegistryKey": "Hide_Gallery_from_Explorer.reg",
-      "RegistryUndoKey": "Show_Gallery_in_Explorer.reg"
+      "UndoAction": "Show",
+      "RegistryUndoKey": "Show_Gallery_in_Explorer.reg",
+      "minVersion": 22000,
+      "maxVersion": null
     },
     {
       "FeatureId": "HideDupliDrive",
-      "Description": "Hide duplicate removable drive entries from the File Explorer sidepanel",
+      "Label": "duplicate removable drive entries",
+      "Category": "File Explorer",
+      "Action": "Hide",
       "RegistryKey": "Hide_duplicate_removable_drives_from_navigation_pane_of_File_Explorer.reg",
-      "RegistryUndoKey": "Show_duplicate_removable_drives_in_navigation_pane_of_File_Explorer.reg"
+      "UndoAction": "Show",
+      "RegistryUndoKey": "Show_duplicate_removable_drives_in_navigation_pane_of_File_Explorer.reg",
+      "minVersion": null,
+      "maxVersion": null
+    },
+    {
+      "FeatureId": "AddFoldersToThisPC",
+      "Label": "common folders to 'This PC'",
+      "Category": "File Explorer",
+      "Action": "Add",
+      "RegistryKey": "Add_All_Folders_Under_This_PC.reg",
+      "UndoAction": "Remove",
+      "RegistryUndoKey": "Remove_All_Folders_Under_This_PC.reg",
+      "minVersion": 22000,
+      "maxVersion": null
     },
     {
       "FeatureId": "DisableTransparency",
-      "Description": "Disable transparency effects",
+      "Label": "transparency effects",
+      "Category": "Appearance",
+      "Action": "Disable",
       "RegistryKey": "Disable_Transparency.reg",
-      "RegistryUndoKey": "Enable_Transparency.reg"
+      "UndoAction": "Enable",
+      "RegistryUndoKey": "Enable_Transparency.reg",
+      "minVersion": null,
+      "maxVersion": null
     },
     {
       "FeatureId": "DisableAnimations",
-      "Description": "Disable animations and visual effects",
+      "Label": "animations and visual effects",
+      "Category": "Appearance",
+      "Action": "Disable",
       "RegistryKey": "Disable_Animations.reg",
-      "RegistryUndoKey": "Enable_Animations.reg"
+      "UndoAction": "Enable",
+      "RegistryUndoKey": "Enable_Animations.reg",
+      "minVersion": null,
+      "maxVersion": null
     },
     {
       "FeatureId": "ForceRemoveEdge",
-      "Description": "Forcefully uninstall Microsoft Edge. NOT RECOMMENDED!",
+      "Label": "Forcefully uninstall Microsoft Edge. NOT RECOMMENDED!",
+      "Category": null,
+      "Action": "Force Remove Edge",
       "RegistryKey": null,
-      "RegistryUndoKey": null
+      "UndoAction": null,
+      "RegistryUndoKey": null,
+      "minVersion": null,
+      "maxVersion": null
     },
     {
       "FeatureId": "HideIncludeInLibrary",
-      "Description": "Hide the 'Include in library' option in the context menu (Windows 10 only)",
+      "Label": "'Include in library' option in the context menu",
+      "Category": "File Explorer",
+      "Action": "Hide",
       "RegistryKey": "Disable_Include_in_library_from_context_menu.reg",
-      "RegistryUndoKey": "Enable_Include_in_library_in_context_menu.reg"
+      "UndoAction": "Show",
+      "RegistryUndoKey": "Enable_Include_in_library_in_context_menu.reg",
+      "minVersion": null,
+      "maxVersion": 21999
     },
     {
       "FeatureId": "HideGiveAccessTo",
-      "Description": "Hide the 'Give access to' option in the context menu (Windows 10 only)",
+      "Label": "'Give access to' option in the context menu",
+      "Category": "File Explorer",
+      "Action": "Hide",
       "RegistryKey": "Disable_Give_access_to_context_menu.reg",
-      "RegistryUndoKey": "Enable_Give_access_to_context_menu.reg"
+      "UndoAction": "Show",
+      "RegistryUndoKey": "Enable_Give_access_to_context_menu.reg",
+      "minVersion": null,
+      "maxVersion": 21999
     },
     {
       "FeatureId": "HideShare",
-      "Description": "Hide the 'Share' option in the context menu (Windows 10 only)",
+      "Label": "'Share' option in the context menu",
+      "Category": "File Explorer",
+      "Action": "Hide",
       "RegistryKey": "Disable_Share_from_context_menu.reg",
-      "RegistryUndoKey": "Enable_Share_in_context_menu.reg"
+      "UndoAction": "Show",
+      "RegistryUndoKey": "Enable_Share_in_context_menu.reg",
+      "minVersion": null,
+      "maxVersion": 21999
     },
     {
       "FeatureId": "HideOnedrive",
-      "Description": "Hide the OneDrive folder in the File Explorer sidepanel (Windows 10 only)",
+      "Label": "'OneDrive' folder from navigation pane",
+      "Category": "File Explorer",
+      "Action": "Hide",
       "RegistryKey": "Hide_Onedrive_Folder.reg",
-      "RegistryUndoKey": "Show_Onedrive_Folder.reg"
+      "UndoAction": "Show",
+      "RegistryUndoKey": "Show_Onedrive_Folder.reg",
+      "minVersion": null,
+      "maxVersion": 21999
+    },
+    {
+      "FeatureId": "Hide3dObjects",
+      "Label": "'3D objects' folder under 'This PC'",
+      "Category": "File Explorer",
+      "Action": "Hide",
+      "RegistryKey": "Hide_3D_Objects_Folder.reg",
+      "UndoAction": "Show",
+      "RegistryUndoKey": "Show_3D_Objects_Folder.reg",
+      "minVersion": null,
+      "maxVersion": 21999
     },
     {
       "FeatureId": "HideMusic",
-      "Description": "Hide the music folder under 'This PC' in File Explorer (Windows 10 only)",
+      "Label": "'Music' folder under 'This PC'",
+      "Category": "File Explorer",
+      "Action": "Hide",
       "RegistryKey": "Hide_Music_Folder.reg",
-      "RegistryUndoKey": "Show_Music_Folder.reg"
+      "UndoAction": "Show",
+      "RegistryUndoKey": "Show_Music_Folder.reg",
+      "minVersion": null,
+      "maxVersion": 21999
     }
   ]
 }

@@ -2,6 +2,7 @@
 
 [CmdletBinding(SupportsShouldProcess)]
 param (
+    [switch]$CLI,
     [switch]$Silent,
     [switch]$Sysprep,
     [string]$LogPath,
@@ -89,9 +90,10 @@ $script:DefaultLogPath = "$PSScriptRoot/Win11Debloat.log"
 $script:RegfilesPath = "$PSScriptRoot/Regfiles"
 $script:AssetsPath = "$PSScriptRoot/Assets"
 $script:AppSelectionSchema = "$script:AssetsPath/Schemas/AppSelectionWindow.xaml"
+$script:MainMenuWindowSchema = "$script:AssetsPath/Schemas/MainMenuWindow.xaml"
 $script:FeaturesFilePath = "$script:AssetsPath/Features.json"
 
-$script:ControlParams = 'WhatIf', 'Confirm', 'Verbose', 'Debug', 'LogPath', 'Silent', 'Sysprep', 'User', 'NoRestartExplorer', 'RunDefaults', 'RunDefaultsLite', 'RunSavedSettings', 'RunAppsListGenerator'
+$script:ControlParams = 'WhatIf', 'Confirm', 'Verbose', 'Debug', 'LogPath', 'Silent', 'Sysprep', 'User', 'NoRestartExplorer', 'RunDefaults', 'RunDefaultsLite', 'RunSavedSettings', 'RunAppsListGenerator', 'CLI'
 
 # Check if current powershell environment is limited by security policies
 if ($ExecutionContext.SessionState.LanguageMode -ne "FullLanguage") {
@@ -114,11 +116,7 @@ $script:Features = @{}
 try {
     $featuresData = Get-Content -Path $script:FeaturesFilePath -Raw | ConvertFrom-Json
     foreach ($feature in $featuresData.Features) {
-        $script:Features[$feature.FeatureId] = @{
-            Description = $feature.Description
-            RegistryKey = $feature.RegistryKey
-            RegistryUndoKey = $feature.RegistryUndoKey
-        }
+        $script:Features[$feature.FeatureId] = $feature
     }
 }
 catch {
@@ -142,6 +140,143 @@ else {
 #                                                                                                                #
 ##################################################################################################################
 
+
+
+# Loads a JSON file from the specified path and returns the parsed object
+# Returns $null if the file doesn't exist or if parsing fails
+function LoadJsonFile {
+    param (
+        [string]$filePath,
+        [string]$expectedVersion = $null
+    )
+    
+    if (-not (Test-Path $filePath)) {
+        Write-Error "File not found: $filePath"
+        return $null
+    }
+    
+    try {
+        $jsonContent = Get-Content -Path $filePath -Raw | ConvertFrom-Json
+        
+        # Validate version if specified
+        if ($expectedVersion -and $jsonContent.Version -and $jsonContent.Version -ne $expectedVersion) {
+            Write-Error "$(Split-Path $filePath -Leaf) version mismatch (expected $expectedVersion, found $($jsonContent.Version))"
+            return $null
+        }
+        
+        return $jsonContent
+    }
+    catch {
+        Write-Error "Failed to parse JSON file: $filePath"
+        return $null
+    }
+}
+
+
+# Loads settings from a JSON file and adds them to script params
+# Used by command-line modes (ShowDefaultModeOptions, LoadAndShowLastUsedSettings)
+function LoadSettingsToParams {
+    param (
+        [string]$filePath,
+        [string]$expectedVersion = "1.0"
+    )
+    
+    $settingsJson = LoadJsonFile -filePath $filePath -expectedVersion $expectedVersion
+    
+    if (-not $settingsJson -or -not $settingsJson.Settings) {
+        throw "Failed to load settings from $(Split-Path $filePath -Leaf)"
+    }
+    
+    foreach ($setting in $settingsJson.Settings) {
+        if ($setting.Value -eq $false) {
+            continue
+        }
+        
+        AddParameter $setting.Name $setting.Value
+    }
+}
+
+
+# Applies settings from a JSON object to UI controls (checkboxes and comboboxes)
+# Used by LoadDefaultsBtn and LoadLastUsedBtn in the UI
+function ApplySettingsToUiControls {
+    param (
+        $window,
+        $settingsJson,
+        $uiControlMappings
+    )
+    
+    if (-not $settingsJson -or -not $settingsJson.Settings) {
+        return $false
+    }
+    
+    # First, reset all tweaks to "No Change" (index 0) or unchecked
+    if ($uiControlMappings) {
+        foreach ($comboName in $uiControlMappings.Keys) {
+            $control = $window.FindName($comboName)
+            if ($control -is [System.Windows.Controls.CheckBox]) {
+                $control.IsChecked = $false
+            }
+            elseif ($control -is [System.Windows.Controls.ComboBox]) {
+                $control.SelectedIndex = 0
+            }
+        }
+    }
+    
+    # Also uncheck RestorePointCheckBox
+    $restorePointCheckBox = $window.FindName('RestorePointCheckBox')
+    if ($restorePointCheckBox) {
+        $restorePointCheckBox.IsChecked = $false
+    }
+    
+    # Apply settings from JSON
+    foreach ($setting in $settingsJson.Settings) {
+        if ($setting.Value -ne $true) { continue }
+        $paramName = $setting.Name
+
+        # Handle RestorePointCheckBox separately
+        if ($paramName -eq 'CreateRestorePoint') {
+            if ($restorePointCheckBox) { $restorePointCheckBox.IsChecked = $true }
+            continue
+        }
+
+        if ($uiControlMappings) {
+            foreach ($comboName in $uiControlMappings.Keys) {
+                $mapping = $uiControlMappings[$comboName]
+                if ($mapping.Type -eq 'group') {
+                    $i = 1
+                    foreach ($val in $mapping.Values) {
+                        if ($val.FeatureIds -contains $paramName) {
+                            $control = $window.FindName($comboName)
+                            if ($control -and $control.Visibility -eq 'Visible') {
+                                if ($control -is [System.Windows.Controls.ComboBox]) {
+                                    $control.SelectedIndex = $i
+                                }
+                            }
+                            break
+                        }
+                        $i++
+                    }
+                }
+                elseif ($mapping.Type -eq 'feature') {
+                    if ($mapping.FeatureId -eq $paramName) {
+                        $control = $window.FindName($comboName)
+                        if ($control -and $control.Visibility -eq 'Visible') {
+                            if ($control -is [System.Windows.Controls.CheckBox]) {
+                                $control.IsChecked = $true
+                            }
+                            elseif ($control -is [System.Windows.Controls.ComboBox]) {
+                                $control.SelectedIndex = 1
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    return $true
+}
 
 
 # Shows application selection window that allows the user to select what apps they want to remove or keep
@@ -171,7 +306,7 @@ function ShowAppSelectionWindow {
         $window.Resources.Add("BorderColor", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#363636")))
         $window.Resources.Add("LoadingBgColor", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#CC1C1C1C")))
         $window.Resources.Add("TitleBarBg", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#202020")))
-        $window.Resources.Add("CloseHover", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#C42B1C")))
+        $window.Resources.Add("CloseHover", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#c42b1c")))
         $window.Resources.Add("ListBgColor", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#1f1f1f")))
         $window.Resources.Add("ButtonBg", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#3379d9")))
         $window.Resources.Add("ButtonHover", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#559ce4")))
@@ -185,7 +320,7 @@ function ShowAppSelectionWindow {
         $window.Resources.Add("BorderColor", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#eaeaea")))
         $window.Resources.Add("LoadingBgColor", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#F0F3F3F3")))
         $window.Resources.Add("TitleBarBg", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#eaeaea")))
-        $window.Resources.Add("CloseHover", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#C42B1C")))
+        $window.Resources.Add("CloseHover", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#c42b1c")))
         $window.Resources.Add("ListBgColor", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#FAFAFA")))
         $window.Resources.Add("ButtonBg", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#3379d9")))
         $window.Resources.Add("ButtonHover", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#559ce4")))
@@ -194,7 +329,7 @@ function ShowAppSelectionWindow {
         $fgColor = "#1A1A1A"
     }
 
-    $appsPanel = $window.FindName('AppsPanel')
+    $appsPanel = $window.FindName('AppSelectionPanel')
     $checkAllBox = $window.FindName('CheckAllBox')
     $onlyInstalledBox = $window.FindName('OnlyInstalledBox')
     $confirmBtn = $window.FindName('ConfirmBtn')
@@ -203,31 +338,8 @@ function ShowAppSelectionWindow {
     $titleBar = $window.FindName('TitleBar')
     $closeBtn = $window.FindName('CloseBtn')
 
-    # Function to load apps into the panel
-    function LoadApps {
-        # Show loading indicator
-        $loadingIndicator.Visibility = 'Visible'
-        $window.Dispatcher.Invoke([System.Windows.Threading.DispatcherPriority]::Background, [action]{})
-
-        $appsPanel.Children.Clear()
-        $listOfApps = ""
-
-        if ($onlyInstalledBox.IsChecked -and ($script:WingetInstalled -eq $true)) {
-            # Attempt to get a list of installed apps via winget, times out after 10 seconds
-            $job = Start-Job { return winget list --accept-source-agreements --disable-interactivity }
-            $jobDone = $job | Wait-Job -TimeOut 10
-
-            if (-not $jobDone) {
-                # Show error that the script was unable to get list of apps from winget
-                [System.Windows.MessageBox]::Show('Unable to load list of installed apps via winget.', 'Error', 'OK', 'Error') | Out-Null
-                $onlyInstalledBox.IsChecked = $false
-            }
-            else {
-                # Add output of job (list of apps) to $listOfApps
-                $listOfApps = Receive-Job -Job $job
-            }
-        }
-
+    # Helper function to complete app loading with the winget list
+    function LoadAppsWithWingetList($listOfApps) {
         # Store apps data for sorting
         $appsToAdd = @()
 
@@ -272,6 +384,63 @@ function ShowAppSelectionWindow {
 
         # Hide loading indicator
         $loadingIndicator.Visibility = 'Collapsed'
+    }
+
+    # Function to load apps into the panel
+    function LoadApps {
+        # Disable confirm button during loading to prevent premature actions
+        $confirmBtn.IsEnabled = $false
+        
+        # Show loading indicator and force UI update
+        $loadingIndicator.Visibility = 'Visible'
+        $window.Dispatcher.Invoke([System.Windows.Threading.DispatcherPriority]::Background, [action]{})
+
+        $appsPanel.Children.Clear()
+        $listOfApps = ""
+
+        if ($onlyInstalledBox.IsChecked -and ($script:WingetInstalled -eq $true)) {
+            # Start job to get list of installed apps via winget
+            $job = Start-Job { return winget list --accept-source-agreements --disable-interactivity }
+            $jobStartTime = Get-Date
+            
+            # Create timer to poll job status without blocking UI
+            $pollTimer = New-Object System.Windows.Threading.DispatcherTimer
+            $pollTimer.Interval = [TimeSpan]::FromMilliseconds(100)
+            
+            $pollTimer.Add_Tick({
+                $elapsed = (Get-Date) - $jobStartTime
+                
+                # Check if job is complete or timed out (10 seconds)
+                if ($job.State -eq 'Completed') {
+                    $pollTimer.Stop()
+                    $listOfApps = Receive-Job -Job $job
+                    Remove-Job -Job $job
+                    
+                    # Continue with loading apps
+                    LoadAppsWithWingetList $listOfApps
+                    $confirmBtn.IsEnabled = $true
+                }
+                elseif ($elapsed.TotalSeconds -gt 10 -or $job.State -eq 'Failed') {
+                    $pollTimer.Stop()
+                    Remove-Job -Job $job -Force
+                    
+                    # Show error that the script was unable to get list of apps from winget
+                    [System.Windows.MessageBox]::Show('Unable to load list of installed apps via winget.', 'Error', 'OK', 'Error') | Out-Null
+                    $onlyInstalledBox.IsChecked = $false
+                    
+                    # Continue with loading all apps (unchecked now)
+                    LoadAppsWithWingetList ""
+                    $confirmBtn.IsEnabled = $true
+                }
+            }.GetNewClosure())
+            
+            $pollTimer.Start()
+            return  # Exit here, timer will continue the work
+        }
+        
+        # If checkbox is not checked or winget not installed, load all apps immediately
+        LoadAppsWithWingetList $listOfApps
+        $confirmBtn.IsEnabled = $true
     }
 
     # Event handlers
@@ -666,7 +835,7 @@ function RegImport {
         $path
     )
 
-    Write-Output $message
+    Write-ToConsole $message
 
     if ($script:Params.ContainsKey("Sysprep")) {
         $defaultUserPath = GetUserDirectory -userName "Default" -fileName "NTUSER.DAT"
@@ -687,7 +856,7 @@ function RegImport {
         reg import "$script:RegfilesPath\$path"  
     }
 
-    Write-Output ""
+    Write-ToConsole ""
 }
 
 
@@ -876,33 +1045,12 @@ function PrintHeader {
 }
 
 
-# Prints the contents of a file to the console
-function PrintFromFile {
-    param (
-        $path,
-        $title,
-        $printHeader = $true
-    )
-
-    if ($printHeader) {
-        Clear-Host
-
-        PrintHeader $title
-    }
-
-    # Get & print script menu from file
-    Foreach ($line in (Get-Content -Path $path )) {   
-        Write-Host $line
-    }
-}
-
-
 # Prints all pending changes that will be made by the script
 function PrintPendingChanges {
     Write-Output "Win11Debloat will make the following changes:"
 
     if ($script:Params['CreateRestorePoint']) {
-        Write-Output "- $($script:Features['CreateRestorePoint'].Description)"
+        Write-Output "- $($script:Features['CreateRestorePoint'].Label)"
     }
     foreach ($parameterName in $script:Params.Keys) {
         if ($script:ControlParams -contains $parameterName) {
@@ -945,8 +1093,9 @@ function PrintPendingChanges {
             }
             default {
                 if ($script:Features -and $script:Features.ContainsKey($parameterName)) {
-                    $message = $script:Features[$parameterName].Description
-                    Write-Output "- $message"
+                    $action = $script:Features[$parameterName].Action
+                    $message = $script:Features[$parameterName].Label
+                    Write-Output "- $action $message"
                 }
                 else {
                     # Fallback: show the parameter name if no feature description is available
@@ -1085,37 +1234,1706 @@ function ShowScriptMenuOptions {
         PrintHeader 'Menu'
 
         Write-Host "(1) Default mode: Quickly apply the recommended changes"
-        Write-Host "(2) Custom mode: Manually select what changes to make"
-        Write-Host "(3) App removal mode: Select & remove apps, without making other changes"
+        Write-Host "(2) App removal mode: Select & remove apps, without making other changes"
 
         # Only show this option if SavedSettings file exists
         if (Test-Path $script:SavedSettingsFilePath) {
-            Write-Host "(4) Quickly apply your last used settings"
+            Write-Host "(3) Quickly apply your last used settings"
             
-            $ModeSelectionMessage = "Please select an option (1/2/3/4/0)" 
+            $ModeSelectionMessage = "Please select an option (1/2/3)" 
         }
 
-        Write-Host ""
-        Write-Host "(0) Show more information"
         Write-Host ""
         Write-Host ""
 
         $Mode = Read-Host $ModeSelectionMessage
 
-        if ($Mode -eq '0') {
-            # Print information screen from file
-            PrintFromFile "$script:AssetsPath/Menus/Info" "Information"
-
-            Write-Host "Press any key to go back..."
-            $null = [System.Console]::ReadKey()
-        }
-        elseif (($Mode -eq '4') -and -not (Test-Path $script:SavedSettingsFilePath)) {
+        if (($Mode -eq '3') -and -not (Test-Path $script:SavedSettingsFilePath)) {
             $Mode = $null
         }
     }
-    while ($Mode -ne '1' -and $Mode -ne '2' -and $Mode -ne '3' -and $Mode -ne '4')
+    while ($Mode -ne '1' -and $Mode -ne '2' -and $Mode -ne '3')
 
     return $Mode
+}
+
+
+function ShowScriptUI {
+    Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase | Out-Null
+
+    # Get current Windows build version
+    $WinVersion = Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' CurrentBuild
+
+    # Detect system theme (dark or light mode)
+    $usesDarkMode = $false
+    try {
+        $usesDarkMode = (Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize' -Name 'AppsUseLightTheme').AppsUseLightTheme -eq 0
+    }
+    catch {}
+
+    # Load XAML from file
+    $xamlPath = "$script:AssetsPath/Schemas/MainMenuWindow.xaml"
+    $xaml = Get-Content -Path $xamlPath -Raw
+    $reader = [System.Xml.XmlReader]::Create([System.IO.StringReader]::new($xaml))
+    $window = [System.Windows.Markup.XamlReader]::Load($reader)
+    $reader.Close()
+
+    # Set colors based on theme
+    if ($usesDarkMode) {
+        $window.Resources.Add("BgColor", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#303030")))
+        $window.Resources.Add("FgColor", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#E0E0E0")))
+        $window.Resources.Add("BorderColor", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#404040")))
+        $window.Resources.Add("ButtonBorderColor", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#404040")))
+        $window.Resources.Add("TitleBarBg", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#202020")))
+        $window.Resources.Add("ComboBgColor", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#2A2A2A")))
+        $window.Resources.Add("ComboHoverColor", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#2C2C2C")))
+        $window.Resources.Add("AccentColor", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#FFD700")))
+        $window.Resources.Add("ButtonBg", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#0067c0")))
+        $window.Resources.Add("ButtonHover", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#1E88E5")))
+        $window.Resources.Add("ButtonPressed", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#3284cc")))
+        $window.Resources.Add("SecondaryButtonBg", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#2a2a2a")))
+        $window.Resources.Add("SecondaryButtonHover", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#2d2d2d")))
+        $window.Resources.Add("SecondaryButtonPressed", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#272727")))
+        $window.Resources.Add("CloseHover", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#c42b1c")))
+        $window.Resources.Add("ScrollBarThumbColor", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#3d3d3d")))
+        $window.Resources.Add("ScrollBarThumbHoverColor", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#4b4b4b")))
+    }
+    else {
+        $window.Resources.Add("BgColor", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#fdfdfd")))
+        $window.Resources.Add("FgColor", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#000000")))
+        $window.Resources.Add("BorderColor", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#ededed")))
+        $window.Resources.Add("ButtonBorderColor", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#d3d3d3")))
+        $window.Resources.Add("TitleBarBg", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#f3f3f3")))
+        $window.Resources.Add("ComboBgColor", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#FFFFFF")))
+        $window.Resources.Add("ComboHoverColor", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#fafafa")))
+        $window.Resources.Add("AccentColor", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#ffae00")))
+        $window.Resources.Add("ButtonBg", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#0067c0")))
+        $window.Resources.Add("ButtonHover", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#1E88E5")))
+        $window.Resources.Add("ButtonPressed", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#3284cc")))
+        $window.Resources.Add("SecondaryButtonBg", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#fefefe")))
+        $window.Resources.Add("SecondaryButtonHover", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#fafafa")))
+        $window.Resources.Add("SecondaryButtonPressed", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#FFFFFF")))
+        $window.Resources.Add("CloseHover", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#c42b1c")))
+        $window.Resources.Add("ScrollBarThumbColor", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#b9b9b9")))
+        $window.Resources.Add("ScrollBarThumbHoverColor", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#8b8b8b")))
+    }
+
+    # Try to load logo image if it exists
+    $logoImage = $window.FindName('LogoImage')
+    $logoPath = "$PSScriptRoot\Assets\logo.png"
+    if (Test-Path $logoPath) {
+        try {
+            $bitmap = New-Object System.Windows.Media.Imaging.BitmapImage
+            $bitmap.BeginInit()
+            $bitmap.UriSource = New-Object System.Uri($logoPath, [System.UriKind]::Absolute)
+            $bitmap.CacheOption = [System.Windows.Media.Imaging.BitmapCacheOption]::OnLoad
+            $bitmap.EndInit()
+            $logoImage.Source = $bitmap
+        }
+        catch {
+            # Logo loading failed, use fallback
+        }
+    }
+
+    # Get named elements
+    $titleBar = $window.FindName('TitleBar')
+    $closeBtn = $window.FindName('CloseBtn')
+    $helpBtn = $window.FindName('HelpBtn')
+
+    # Title bar event handlers
+    $titleBar.Add_MouseLeftButtonDown({
+        $window.DragMove()
+    })
+
+    $closeBtn.Add_Click({
+        $window.Close()
+    })
+    
+    $helpBtn.Add_Click({
+        Start-Process "https://github.com/Raphire/Win11Debloat/wiki"
+    })
+
+    # Integrated App Selection UI
+    $appsPanel = $window.FindName('AppSelectionPanel')
+    $onlyInstalledAppsBox = $window.FindName('OnlyInstalledAppsBox')
+    $loadingAppsIndicator = $window.FindName('LoadingAppsIndicator')
+    $appSelectionStatus = $window.FindName('AppSelectionStatus')
+    $defaultAppsBtn = $window.FindName('DefaultAppsBtn')
+    $loadLastUsedAppsBtn = $window.FindName('LoadLastUsedAppsBtn')
+    $clearAppSelectionBtn = $window.FindName('ClearAppSelectionBtn')
+    
+    # Apply Tab UI Elements
+    $consoleOutput = $window.FindName('ConsoleOutput')
+    $consoleScrollViewer = $window.FindName('ConsoleScrollViewer')
+    $applyStatusText = $window.FindName('ApplyStatusText')
+    $applyProgressBar = $window.FindName('ApplyProgressBar')
+    $applyProgressText = $window.FindName('ApplyProgressText')
+    $startApplyBtn = $window.FindName('StartApplyBtn')
+    $finishBtn = $window.FindName('FinishBtn')
+    
+    # Function to write to console output in UI
+    function Write-ToConsole {
+        param(
+            [string]$message
+        )
+        
+        if ($consoleOutput) {
+            $timestamp = Get-Date -Format "HH:mm:ss"
+            $consoleOutput.Dispatcher.Invoke([System.Windows.Threading.DispatcherPriority]::Send, [action]{
+                $consoleOutput.Text += "[$timestamp] $message`n"
+                # Auto-scroll to bottom
+                $consoleScrollViewer.ScrollToEnd()
+            })
+        }
+        
+        # Also write to actual console for logging
+        Write-Host $message
+    }
+
+    # Function to update selection status
+    function UpdateAppSelectionStatus {
+        $selectedCount = 0
+        foreach ($child in $appsPanel.Children) {
+            if ($child -is [System.Windows.Controls.CheckBox] -and $child.IsChecked) {
+                $selectedCount++
+            }
+        }
+        $appSelectionStatus.Text = "$selectedCount app(s) selected for removal"
+    }
+
+    # Function to dynamically build Tweaks UI from Features.json
+    function BuildDynamicTweaks {
+        $featuresJson = LoadJsonFile -filePath $script:FeaturesFilePath -expectedVersion "1.0"
+
+        if (-not $featuresJson) {
+            [System.Windows.MessageBox]::Show("Unable to load Features.json file!","Error",[System.Windows.MessageBoxButton]::OK,[System.Windows.MessageBoxImage]::Error) | Out-Null
+            Exit
+        }
+
+        # Column containers
+        $col0 = $window.FindName('Column0Panel')
+        $col1 = $window.FindName('Column1Panel')
+        $col2 = $window.FindName('Column2Panel')
+        $columns = @($col0, $col1, $col2) | Where-Object { $_ -ne $null }
+
+        # Clear all columns for fully dynamic panel creation
+        foreach ($col in $columns) {
+            if ($col) { $col.Children.Clear() }
+        }
+
+        $script:UiControlMappings = @{}
+        $script:CategoryCardMap = @{}
+
+        function CreateLabeledCombo($parent, $labelText, $comboName, $items) {
+            # If only 2 items (No Change + one option), use a checkbox instead
+            if ($items.Count -eq 2) {
+                $checkbox = New-Object System.Windows.Controls.CheckBox
+                $checkbox.Content = $labelText
+                $checkbox.Name = $comboName
+                $checkbox.Margin = '0,0,0,10'
+                $checkbox.Padding = '0,2'
+                $checkbox.IsChecked = $false
+                $parent.Children.Add($checkbox) | Out-Null
+                
+                # Register the checkbox with the window's name scope
+                try {
+                    [System.Windows.NameScope]::SetNameScope($checkbox, [System.Windows.NameScope]::GetNameScope($window))
+                    $window.RegisterName($comboName, $checkbox)
+                }
+                catch {
+                    # Name might already be registered, ignore
+                }
+                
+                return $checkbox
+            }
+            
+            # Otherwise use a combobox for multiple options
+            $lbl = New-Object System.Windows.Controls.TextBlock
+            $lbl.Text = $labelText
+            $lbl.Style = $window.Resources['LabelStyle']
+            $labelName = "$comboName`_Label"
+            $lbl.Name = $labelName
+            $parent.Children.Add($lbl) | Out-Null
+            
+            # Register the label with the window's name scope
+            try {
+                [System.Windows.NameScope]::SetNameScope($lbl, [System.Windows.NameScope]::GetNameScope($window))
+                $window.RegisterName($labelName, $lbl)
+            }
+            catch {
+                # Name might already be registered, ignore
+            }
+
+            $combo = New-Object System.Windows.Controls.ComboBox
+            $combo.Name = $comboName
+            $combo.Margin = '0,0,0,10'
+            foreach ($it in $items) { $cbItem = New-Object System.Windows.Controls.ComboBoxItem; $cbItem.Content = $it; $combo.Items.Add($cbItem) | Out-Null }
+            $combo.SelectedIndex = 0
+            $parent.Children.Add($combo) | Out-Null
+            
+            # Register the combo box with the window's name scope so FindName works
+            try {
+                [System.Windows.NameScope]::SetNameScope($combo, [System.Windows.NameScope]::GetNameScope($window))
+                $window.RegisterName($comboName, $combo)
+            }
+            catch {
+                # Name might already be registered, ignore
+            }
+            
+            return $combo
+        }
+
+        function GetOrCreateCategoryCard($category) {
+            if (-not $category) { $category = 'Other' }
+
+            if ($script:CategoryCardMap.ContainsKey($category)) { return $script:CategoryCardMap[$category] }
+
+            # Create a new card Border + StackPanel and add to shortest column
+            $target = $columns | Sort-Object { $_.Children.Count } | Select-Object -First 1
+
+            $border = New-Object System.Windows.Controls.Border
+            $border.BorderBrush = $window.Resources['BorderColor']
+            $border.BorderThickness = 1
+            $border.CornerRadius = New-Object System.Windows.CornerRadius(4)
+            $border.Background = $window.Resources['BgColor']
+            $border.Padding = '16,12'
+            $border.Margin = '0,0,0,16'
+            $border.Tag = 'DynamicCategory'
+
+            $panel = New-Object System.Windows.Controls.StackPanel
+            $safe = ($category -replace '[^a-zA-Z0-9_]','_')
+            $panel.Name = "Category_{0}_Panel" -f $safe
+
+            $header = New-Object System.Windows.Controls.TextBlock
+            $header.Text = $category
+            $header.FontWeight = 'Bold'
+            $header.FontSize = 14
+            $header.Margin = '0,0,0,10'
+            $header.SetResourceReference([System.Windows.Controls.TextBlock]::ForegroundProperty, 'FgColor')
+            $panel.Children.Add($header) | Out-Null
+
+            $border.Child = $panel
+            $target.Children.Add($border) | Out-Null
+
+            $script:CategoryCardMap[$category] = $panel
+            return $panel
+        }
+
+        # Determine categories present (from lists and features)
+        $categoriesPresent = @{}
+        if ($featuresJson.UiGroups) {
+            foreach ($g in $featuresJson.UiGroups) { if ($g.Category) { $categoriesPresent[$g.Category] = $true } }
+        }
+        foreach ($f in $featuresJson.Features) { if ($f.Category) { $categoriesPresent[$f.Category] = $true } }
+
+        # Create cards in the order defined in Features.json Categories (if present)
+        $orderedCategories = @()
+        if ($featuresJson.Categories) {
+            foreach ($c in $featuresJson.Categories) { if ($categoriesPresent.ContainsKey($c)) { $orderedCategories += $c } }
+        } else {
+            $orderedCategories = $categoriesPresent.Keys
+        }
+
+        foreach ($category in $orderedCategories) {
+            # Create/get card for this category
+            $panel = GetOrCreateCategoryCard -category $category
+            if (-not $panel) { continue }
+
+            # Add any groups for this category (in original order)
+            if ($featuresJson.UiGroups) {
+                foreach ($group in $featuresJson.UiGroups) {
+                    if ($group.Category -ne $category) { continue }
+                    $items = @('No Change') + ($group.Values | ForEach-Object { $_.Label })
+                    $comboName = 'Group_{0}Combo' -f $group.GroupId
+                    $combo = CreateLabeledCombo -parent $panel -labelText $group.Label -comboName $comboName -items $items
+                    $script:UiControlMappings[$comboName] = @{ Type='group'; Values = $group.Values; Label = $group.Label }
+                }
+            }
+
+            # Add individual features for this category, preserving Features.json order
+            foreach ($feature in $featuresJson.Features) {
+                if ($feature.Category -ne $category) { continue }
+                
+                # Check version and feature compatibility using Features.json
+                if (($feature.MinVersion -and $WinVersion -lt $feature.MinVersion) -or ($feature.MaxVersion -and $WinVersion -gt $feature.MaxVersion) -or ($feature.FeatureId -eq 'DisableModernStandbyNetworking' -and (-not $script:ModernStandbySupported))) {
+                    continue
+                }
+
+                # Skip if feature part of a group
+                $inGroup = $false
+                if ($featuresJson.UiGroups) {
+                    foreach ($g in $featuresJson.UiGroups) { foreach ($val in $g.Values) { if ($val.FeatureIds -contains $feature.FeatureId) { $inGroup = $true; break } }; if ($inGroup) { break } }
+                }
+                if ($inGroup) { continue }
+
+                $opt = 'Apply'
+                if ($feature.FeatureId -match '^Disable') { $opt = 'Disable' } elseif ($feature.FeatureId -match '^Enable') { $opt = 'Enable' }
+                $items = @('No Change', $opt)
+                $comboName = ("Feature_{0}_Combo" -f $feature.FeatureId) -replace '[^a-zA-Z0-9_]',''
+                $combo = CreateLabeledCombo -parent $panel -labelText ($feature.Action + ' ' + $feature.Label) -comboName $comboName -items $items
+                $script:UiControlMappings[$comboName] = @{ Type='feature'; FeatureId = $feature.FeatureId; Action = $feature.Action }
+            }
+        }
+    }
+
+    # Helper function to complete app loading with the winget list
+    function script:LoadAppsWithList($listOfApps) {
+        # Store apps data for sorting
+        $appsToAdd = @()
+
+        # Read JSON file and parse apps
+        $jsonContent = Get-Content -Path $script:AppsListFilePath -Raw | ConvertFrom-Json
+        
+        # Go through appslist and collect apps
+        Foreach ($appData in $jsonContent.Apps) {
+            $appId = $appData.AppId.Trim()
+            $friendlyName = $appData.FriendlyName
+            $description = $appData.Description
+            $appChecked = $false  # Start with nothing checked
+
+            if ($appId.length -gt 0) {
+                if ($onlyInstalledAppsBox.IsChecked) {
+                    # Only include app if it's installed
+                    if (-not ($listOfApps -like ("*$appId*")) -and -not (Get-AppxPackage -Name $appId)) {
+                        continue
+                    }
+                    if (($appId -eq "Microsoft.Edge") -and -not ($listOfApps -like "* Microsoft.Edge *")) {
+                        continue
+                    }
+                }
+
+                # Combine friendly name and app ID for display
+                $displayName = if ($friendlyName) { "$friendlyName ($appId)" } else { $appId }
+                $appsToAdd += [PSCustomObject]@{ 
+                    AppId = $appId
+                    DisplayName = $displayName
+                    IsChecked = $appChecked
+                    Description = $description
+                    SelectedByDefault = $appData.SelectedByDefault
+                    IsGamingApp = $appData.IsGamingApp
+                    IsCommApp = $appData.IsCommApp
+                }
+            }
+        }
+
+        # Sort apps alphabetically and add to panel
+        $appsToAdd | Sort-Object -Property DisplayName | ForEach-Object {
+            $checkbox = New-Object System.Windows.Controls.CheckBox
+            $checkbox.Content = $_.DisplayName
+            $checkbox.Tag = $_.AppId
+            $checkbox.IsChecked = $_.IsChecked
+            $checkbox.ToolTip = $_.Description
+            $checkbox.SetResourceReference([System.Windows.Controls.Control]::ForegroundProperty, "FgColor")
+            $checkbox.Margin = "2,3,2,3"
+            
+            # Store metadata in checkbox for later use
+            Add-Member -InputObject $checkbox -MemberType NoteProperty -Name "SelectedByDefault" -Value $_.SelectedByDefault
+            Add-Member -InputObject $checkbox -MemberType NoteProperty -Name "IsGamingApp" -Value $_.IsGamingApp
+            Add-Member -InputObject $checkbox -MemberType NoteProperty -Name "IsCommApp" -Value $_.IsCommApp
+            
+            # Add event handler to update status
+            $checkbox.Add_Checked({ UpdateAppSelectionStatus })
+            $checkbox.Add_Unchecked({ UpdateAppSelectionStatus })
+            
+            $appsPanel.Children.Add($checkbox) | Out-Null
+        }
+
+        # Hide loading indicator and navigation blocker, update status
+        $loadingAppsIndicator.Visibility = 'Collapsed'
+
+        UpdateAppSelectionStatus
+    }
+
+    # Function to load apps into the panel
+    function LoadAppsIntoMainUI {
+        # Show loading indicator and navigation blocker, clear existing apps immediately
+        $loadingAppsIndicator.Visibility = 'Visible'
+        $appsPanel.Children.Clear()
+        
+        # Update navigation buttons to disable Next/Previous
+        UpdateNavigationButtons
+        
+        # Force UI to update and render all changes (loading indicator, blocker, disabled buttons)
+        $window.Dispatcher.Invoke([System.Windows.Threading.DispatcherPriority]::Render, [action]{})
+        
+        # Schedule the actual loading work to run after UI has updated
+        $window.Dispatcher.BeginInvoke([System.Windows.Threading.DispatcherPriority]::Background, [action]{
+            $listOfApps = ""
+            $job = $null
+            $jobStartTime = $null
+
+            if ($onlyInstalledAppsBox.IsChecked -and ($script:WingetInstalled -eq $true)) {
+                # Start job to get list of installed apps via winget
+                $job = Start-Job { return winget list --accept-source-agreements --disable-interactivity }
+                $jobStartTime = Get-Date
+                
+                # Create timer to poll job status without blocking UI
+                $pollTimer = New-Object System.Windows.Threading.DispatcherTimer
+                $pollTimer.Interval = [TimeSpan]::FromMilliseconds(100)
+                
+                $pollTimer.Add_Tick({
+                    $elapsed = (Get-Date) - $jobStartTime
+                    
+                    # Check if job is complete or timed out (10 seconds)
+                    if ($job.State -eq 'Completed') {
+                        $pollTimer.Stop()
+                        $listOfApps = Receive-Job -Job $job
+                        Remove-Job -Job $job
+                        
+                        # Continue with loading apps
+                        LoadAppsWithList $listOfApps
+                    }
+                    elseif ($elapsed.TotalSeconds -gt 10 -or $job.State -eq 'Failed') {
+                        $pollTimer.Stop()
+                        Remove-Job -Job $job -Force
+                        
+                        # Show error that the script was unable to get list of apps from winget
+                        [System.Windows.MessageBox]::Show('Unable to load list of installed apps via winget.', 'Error', 'OK', 'Error') | Out-Null
+                        $onlyInstalledAppsBox.IsChecked = $false
+                        
+                        # Continue with loading all apps (unchecked now)
+                        LoadAppsWithList ""
+                    }
+                }.GetNewClosure())
+                
+                $pollTimer.Start()
+                return  # Exit here, timer will continue the work
+            }
+
+            # If checkbox is not checked or winget not installed, load all apps immediately
+            LoadAppsWithList $listOfApps
+        }) | Out-Null
+    }
+
+    # Event handlers for app selection
+    $onlyInstalledAppsBox.Add_Checked({
+        LoadAppsIntoMainUI 
+    })
+    $onlyInstalledAppsBox.Add_Unchecked({
+        LoadAppsIntoMainUI 
+    })
+
+    # Quick selection buttons - only select apps actually in those categories
+    $defaultAppsBtn.Add_Click({
+        foreach ($child in $appsPanel.Children) {
+            if ($child -is [System.Windows.Controls.CheckBox]) {
+                if ($child.SelectedByDefault -eq $true) {
+                    $child.IsChecked = $true
+                } else {
+                    $child.IsChecked = $false
+                }
+            }
+        }
+    })
+
+    # Load Last Used App Selection button - only visible if CustomAppsList exists and has content
+    if ((Test-Path $script:CustomAppsListFilePath)) {
+        try {
+            $savedApps = ReadAppslistFromFile $script:CustomAppsListFilePath
+            if ($savedApps -and $savedApps.Count -gt 0) {
+                $loadLastUsedAppsBtn.Add_Click({
+                    try {
+                        $savedApps = ReadAppslistFromFile $script:CustomAppsListFilePath
+                        foreach ($child in $appsPanel.Children) {
+                            if ($child -is [System.Windows.Controls.CheckBox]) {
+                                if ($savedApps -contains $child.Tag) {
+                                    $child.IsChecked = $true
+                                } else {
+                                    $child.IsChecked = $false
+                                }
+                            }
+                        }
+                    }
+                    catch {
+                        [System.Windows.MessageBox]::Show("Failed to load last used app selection: $_", "Error", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Error)
+                    }
+                })
+            }
+            else {
+                # Hide the button if CustomAppsList is empty
+                $loadLastUsedAppsBtn.Visibility = 'Collapsed'
+            }
+        }
+        catch {
+            # Hide the button if there's an error reading the file
+            $loadLastUsedAppsBtn.Visibility = 'Collapsed'
+        }
+    }
+    else {
+        # Hide the button if CustomAppsList doesn't exist
+        $loadLastUsedAppsBtn.Visibility = 'Collapsed'
+    }
+
+    $clearAppSelectionBtn.Add_Click({
+        foreach ($child in $appsPanel.Children) {
+            if ($child -is [System.Windows.Controls.CheckBox]) {
+                $child.IsChecked = $false
+            }
+        }
+    })
+
+    # App Search Box functionality
+    $appSearchBox = $window.FindName('AppSearchBox')
+    $appSearchPlaceholder = $window.FindName('AppSearchPlaceholder')
+    $highlightColor = [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#FFF4CE"))
+    $highlightColorDark = [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#4A4A2A"))
+    
+    $appSearchBox.Add_TextChanged({
+        $searchText = $appSearchBox.Text.ToLower().Trim()
+        
+        # Show/hide placeholder
+        if ([string]::IsNullOrWhiteSpace($appSearchBox.Text)) {
+            $appSearchPlaceholder.Visibility = 'Visible'
+        } else {
+            $appSearchPlaceholder.Visibility = 'Collapsed'
+        }
+        
+        # Clear all highlights first
+        foreach ($child in $appsPanel.Children) {
+            if ($child -is [System.Windows.Controls.CheckBox]) {
+                $child.Background = [System.Windows.Media.Brushes]::Transparent
+            }
+        }
+        
+        if ([string]::IsNullOrWhiteSpace($searchText)) {
+            return
+        }
+        
+        # Find and highlight all matching apps
+        $firstMatch = $null
+        $usesDarkMode = $window.Resources["BgColor"].Color.R -lt 128
+        $highlightBrush = if ($usesDarkMode) { $highlightColorDark } else { $highlightColor }
+        
+        foreach ($child in $appsPanel.Children) {
+            if ($child -is [System.Windows.Controls.CheckBox]) {
+                # Only consider visible apps (not filtered out by installed filter)
+                if ($child.Visibility -eq 'Visible') {
+                    $appName = $child.Content.ToString().ToLower()
+                    if ($appName.Contains($searchText)) {
+                        # Highlight the matching app
+                        $child.Background = $highlightBrush
+                        
+                        # Remember first match for scrolling
+                        if ($null -eq $firstMatch) {
+                            $firstMatch = $child
+                        }
+                    }
+                }
+            }
+        }
+        
+        # Scroll to first match - centered
+        if ($firstMatch) {
+            # Get the ScrollViewer that contains the apps panel
+            $scrollViewer = $null
+            $parent = [System.Windows.Media.VisualTreeHelper]::GetParent($appsPanel)
+            while ($parent -ne $null) {
+                if ($parent -is [System.Windows.Controls.ScrollViewer]) {
+                    $scrollViewer = $parent
+                    break
+                }
+                $parent = [System.Windows.Media.VisualTreeHelper]::GetParent($parent)
+            }
+            
+            if ($scrollViewer) {
+                # Calculate the position to scroll to for centering
+                $itemPosition = $firstMatch.TransformToAncestor($appsPanel).Transform([System.Windows.Point]::new(0, 0)).Y
+                $viewportHeight = $scrollViewer.ViewportHeight
+                $itemHeight = $firstMatch.ActualHeight
+                
+                # Center the item in the viewport
+                $targetOffset = $itemPosition - ($viewportHeight / 2) + ($itemHeight / 2)
+                $scrollViewer.ScrollToVerticalOffset([Math]::Max(0, $targetOffset))
+            } else {
+                # Fallback to simple bring into view
+                $firstMatch.BringIntoView()
+            }
+        }
+    })
+
+    # Wizard Navigation
+    $tabControl = $window.FindName('MainTabControl')
+    $previousBtn = $window.FindName('PreviousBtn')
+    $nextBtn = $window.FindName('NextBtn')
+    $userSelectionCombo = $window.FindName('UserSelectionCombo')
+    $userSelectionDescription = $window.FindName('UserSelectionDescription')
+    $otherUserPanel = $window.FindName('OtherUserPanel')
+    $otherUsernameTextBox = $window.FindName('OtherUsernameTextBox')
+    $usernameTextBoxPlaceholder = $window.FindName('UsernameTextBoxPlaceholder')
+    $usernameValidationMessage = $window.FindName('UsernameValidationMessage')
+
+    # Update user selection description and show/hide other user panel
+    $userSelectionCombo.Add_SelectionChanged({
+        switch ($userSelectionCombo.SelectedIndex) {
+            0 { 
+                $userSelectionDescription.Text = "Changes will be applied to the currently logged-in user profile."
+                $otherUserPanel.Visibility = 'Collapsed'
+                $usernameValidationMessage.Text = ""
+            }
+            1 { 
+                $userSelectionDescription.Text = "Changes will be applied to a different user profile on this system."
+                $otherUserPanel.Visibility = 'Visible'
+                $usernameValidationMessage.Text = ""
+            }
+            2 { 
+                $userSelectionDescription.Text = "Changes will be applied to the default user template, affecting all new users created after this point. Useful for Sysprep deployment."
+                $otherUserPanel.Visibility = 'Collapsed'
+                $usernameValidationMessage.Text = ""
+            }
+        }
+    })
+
+    $otherUsernameTextBox.Add_TextChanged({
+        # Show/hide placeholder
+        if ([string]::IsNullOrWhiteSpace($otherUsernameTextBox.Text)) {
+            $usernameTextBoxPlaceholder.Visibility = 'Visible'
+        } else {
+            $usernameTextBoxPlaceholder.Visibility = 'Collapsed'
+        }
+        
+        ValidateOtherUsername
+    })
+
+    function ValidateOtherUsername {
+        # Only validate if "Other User" is selected
+        if ($userSelectionCombo.SelectedIndex -ne 1) {
+            return $true
+        }
+
+        $username = $otherUsernameTextBox.Text.Trim()
+
+        if ($username.Length -eq 0) {
+            $usernameValidationMessage.Text = "[X] Please enter a username"
+            $usernameValidationMessage.Foreground = "#c42b1c"
+            return $false
+        }
+        
+        if ($username -eq $env:USERNAME) {
+            $usernameValidationMessage.Text = "[X] Cannot enter your own username. Use 'Current User' option instead."
+            $usernameValidationMessage.Foreground = "#c42b1c"
+            return $false
+        }
+        
+        try {
+            $userProfile = Get-LocalUser -Name $username -ErrorAction Stop
+            return $true
+        }
+        catch {
+            $usernameValidationMessage.Text = "[X] User not found. Please enter a valid username."
+            $usernameValidationMessage.Foreground = "#c42b1c"
+            return $false
+        }
+    }
+
+    # Navigation button handlers
+    function UpdateNavigationButtons {
+        $currentIndex = $tabControl.SelectedIndex
+        $totalTabs = $tabControl.Items.Count
+        
+        $homeIndex = 0
+        $overviewIndex = $totalTabs - 2
+        $applyIndex = $totalTabs - 1
+
+        # Navigation button visibility
+        if ($currentIndex -eq $homeIndex) {
+            $nextBtn.Visibility = 'Collapsed'
+            $previousBtn.Visibility = 'Collapsed'
+        } elseif ($currentIndex -eq $overviewIndex) {
+            $nextBtn.Visibility = 'Collapsed'
+            $previousBtn.Visibility = 'Visible'
+        } elseif ($currentIndex -eq $applyIndex) {
+            $nextBtn.Visibility = 'Collapsed'
+            $previousBtn.Visibility = 'Collapsed'
+        } else {
+            $nextBtn.Visibility = 'Visible'
+            $previousBtn.Visibility = 'Visible'
+        }
+        
+        # Update progress indicators
+        # Tab indices: 0=Home, 1=App Removal, 2=Tweaks, 3=Overview, 4=Apply
+        $blueColor = "#0067c0"
+        $greyColor = "#808080"
+        
+        $progressIndicator1 = $window.FindName('ProgressIndicator1') # App Removal
+        $progressIndicator2 = $window.FindName('ProgressIndicator2') # Tweaks
+        $progressIndicator3 = $window.FindName('ProgressIndicator3') # Overview
+        $bottomNavGrid = $window.FindName('BottomNavGrid')
+        
+        # Hide bottom navigation and progress indicators on home page
+        if ($currentIndex -eq 0) {
+            $bottomNavGrid.Visibility = 'Collapsed'
+        } else {
+            $bottomNavGrid.Visibility = 'Visible'
+        }
+        
+        # Update indicator colors based on current tab
+        # Indicator 1 (App Removal) - tab index 1
+        if ($currentIndex -ge 1) {
+            $progressIndicator1.Fill = $blueColor
+        } else {
+            $progressIndicator1.Fill = $greyColor
+        }
+        
+        # Indicator 2 (Tweaks) - tab index 2
+        if ($currentIndex -ge 2) {
+            $progressIndicator2.Fill = $blueColor
+        } else {
+            $progressIndicator2.Fill = $greyColor
+        }
+        
+        # Indicator 3 (Overview) - tab index 3
+        if ($currentIndex -ge 3) {
+            $progressIndicator3.Fill = $blueColor
+        } else {
+            $progressIndicator3.Fill = $greyColor
+        }
+    }
+
+    function GenerateOverview {
+        # Load Features.json
+        $featuresJson = LoadJsonFile -filePath $script:FeaturesFilePath -expectedVersion "1.0"
+        $overviewChangesPanel = $window.FindName('OverviewChangesPanel')
+        $overviewChangesPanel.Children.Clear()
+        
+        $changesList = @()
+        
+        # Collect selected apps
+        $selectedAppsCount = 0
+        foreach ($child in $appsPanel.Children) {
+            if ($child -is [System.Windows.Controls.CheckBox] -and $child.IsChecked) {
+                $selectedAppsCount++
+            }
+        }
+        if ($selectedAppsCount -gt 0) {
+            $changesList += "Remove $selectedAppsCount selected application(s)"
+        }
+        
+        # Collect all ComboBox/CheckBox selections from dynamically created controls
+        if ($script:UiControlMappings) {
+            foreach ($mappingKey in $script:UiControlMappings.Keys) {
+                $control = $window.FindName($mappingKey)
+                $isSelected = $false
+                
+                # Check if it's a checkbox or combobox
+                if ($control -is [System.Windows.Controls.CheckBox]) {
+                    $isSelected = $control.IsChecked -eq $true
+                }
+                elseif ($control -is [System.Windows.Controls.ComboBox]) {
+                    $isSelected = $control.SelectedIndex -gt 0
+                }
+                
+                if ($control -and $isSelected) {
+                    $mapping = $script:UiControlMappings[$mappingKey]
+                    if ($mapping.Type -eq 'group') {
+                        # For combobox: SelectedIndex 0 = No Change, so subtract 1 to index into Values
+                        $selectedValue = $mapping.Values[$control.SelectedIndex - 1]
+                        foreach ($fid in $selectedValue.FeatureIds) {
+                            $feature = $featuresJson.Features | Where-Object { $_.FeatureId -eq $fid }
+                            if ($feature) { $changesList += ($feature.Action + ' ' + $feature.Label) }
+                        }
+                    }
+                    elseif ($mapping.Type -eq 'feature') {
+                        $feature = $featuresJson.Features | Where-Object { $_.FeatureId -eq $mapping.FeatureId }
+                        if ($feature) { $changesList += ($feature.Action + ' ' + $feature.Label) }
+                    }
+                }
+            }
+        }
+        
+        if ($changesList.Count -eq 0) {
+            $textBlock = New-Object System.Windows.Controls.TextBlock
+            $textBlock.Text = "No changes selected."
+            $textBlock.Foreground = $window.Resources["FgColor"]
+            $textBlock.FontStyle = "Italic"
+            $textBlock.Margin = "0,0,0,8"
+            $overviewChangesPanel.Children.Add($textBlock) | Out-Null
+        }
+        else {
+            foreach ($change in $changesList) {
+                $bullet = New-Object System.Windows.Controls.TextBlock
+                $bullet.Text = "- $change"
+                $bullet.Foreground = $window.Resources["FgColor"]
+                $bullet.Margin = "0,0,0,8"
+                $bullet.TextWrapping = "Wrap"
+                $overviewChangesPanel.Children.Add($bullet) | Out-Null
+            }
+        }
+    }
+
+    $previousBtn.Add_Click({        
+        if ($tabControl.SelectedIndex -gt 0) {
+            $tabControl.SelectedIndex--
+            UpdateNavigationButtons
+        }
+    })
+
+    $nextBtn.Add_Click({        
+        if ($tabControl.SelectedIndex -lt ($tabControl.Items.Count - 1)) {
+            $tabControl.SelectedIndex++
+            
+            UpdateNavigationButtons
+        }
+    })
+
+    # Handle Home Start button
+    $homeStartBtn = $window.FindName('HomeStartBtn')
+    $homeStartBtn.Add_Click({
+        # Navigate to first tab after home (App Removal)
+        $tabControl.SelectedIndex = 1
+        UpdateNavigationButtons
+    })
+
+    # Handle Overview Apply Changes button
+    $overviewApplyBtn = $window.FindName('OverviewApplyBtn')
+    $overviewApplyBtn.Add_Click({
+        if (-not (ValidateOtherUsername)) {
+            [System.Windows.MessageBox]::Show("Please enter a valid username for 'Other User' selection.", "Invalid Username", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Warning) | Out-Null
+            return
+        }
+
+        # Navigate to Apply tab (last tab)
+        $tabControl.SelectedIndex = $tabControl.Items.Count - 1
+        UpdateNavigationButtons
+    })
+
+    # Load all apps on startup and build tweaks UI dynamically
+    $window.Add_Loaded({
+        # Build dynamic tweaks controls
+        BuildDynamicTweaks
+
+        # Load all apps (not just installed ones)
+        LoadAppsIntoMainUI
+
+        # Initialize navigation buttons
+        UpdateNavigationButtons
+    })
+
+    # Add event handler for tab changes
+    $tabControl.Add_SelectionChanged({
+        # Regenerate overview when switching to Overview tab
+        if ($tabControl.SelectedIndex -eq ($tabControl.Items.Count - 2)) {
+            GenerateOverview
+        }
+        UpdateNavigationButtons
+    })
+
+    # Handle Load Defaults button
+    $loadDefaultsBtn = $window.FindName('LoadDefaultsBtn')
+    $loadDefaultsBtn.Add_Click({
+        $defaultsJson = LoadJsonFile -filePath $script:DefaultSettingsFilePath -expectedVersion "1.0"
+
+        if (-not $defaultsJson) {
+            [System.Windows.MessageBox]::Show("Failed to load default settings file", "Error", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Error)
+        }
+        
+        ApplySettingsToUiControls -window $window -settingsJson $defaultsJson -uiControlMappings $script:UiControlMappings
+    })
+
+    # Handle Load Last Used button
+    $loadLastUsedBtn = $window.FindName('LoadLastUsedBtn')
+    $lastUsedJson = LoadJsonFile -filePath $script:SavedSettingsFilePath -expectedVersion "1.0"
+    
+    # Check if file exists and has settings with Value = true
+    $hasSettings = $false
+    if ($lastUsedJson -and $lastUsedJson.Settings) {
+        foreach ($setting in $lastUsedJson.Settings) {
+            if ($setting.Value -eq $true) {
+                $hasSettings = $true
+                break
+            }
+        }
+    }
+    
+    if ($hasSettings) {
+        $loadLastUsedBtn.Add_Click({
+            try {
+                $lastUsedJson = LoadJsonFile -filePath $script:SavedSettingsFilePath -expectedVersion "1.0"
+                if ($lastUsedJson) {
+                    ApplySettingsToUiControls -window $window -settingsJson $lastUsedJson -uiControlMappings $script:UiControlMappings
+                }
+                else {
+                    [System.Windows.MessageBox]::Show("Failed to load last used settings file", "Error", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Error)
+                }
+            }
+            catch {
+                [System.Windows.MessageBox]::Show("Failed to load last used settings: $_", "Error", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Error)
+            }
+        })
+    }
+    else {
+        # Hide the button if LastUsedSettings.json doesn't exist or has no settings
+        $loadLastUsedBtn.Visibility = 'Collapsed'
+    }
+
+    # Clear All Tweaks button
+    $clearAllTweaksBtn = $window.FindName('ClearAllTweaksBtn')
+    $clearAllTweaksBtn.Add_Click({
+        # Reset all ComboBoxes to index 0 (No Change) and uncheck all CheckBoxes
+        if ($script:UiControlMappings) {
+            foreach ($comboName in $script:UiControlMappings.Keys) {
+                $control = $window.FindName($comboName)
+                if ($control -is [System.Windows.Controls.CheckBox]) {
+                    $control.IsChecked = $false
+                }
+                elseif ($control -is [System.Windows.Controls.ComboBox]) {
+                    $control.SelectedIndex = 0
+                }
+            }
+        } 
+
+        # Also uncheck RestorePointCheckBox
+        $restorePointCheckBox = $window.FindName('RestorePointCheckBox')
+        if ($restorePointCheckBox) {
+            $restorePointCheckBox.IsChecked = $false
+        }
+    })
+
+    # Start Apply button handler (on Apply tab)
+    $startApplyBtn.Add_Click({
+        # Calculate control params count
+        $controlParamsCount = 0
+        foreach ($Param in $script:ControlParams) {
+            if ($script:Params.ContainsKey($Param)) {
+                $controlParamsCount++
+            }
+        }
+        
+        # Disable navigation during apply
+        $previousBtn.IsEnabled = $false
+        $nextBtn.IsEnabled = $false
+        $startApplyBtn.IsEnabled = $false
+        
+        # Clear console
+        $consoleOutput.Text = ""
+        $applyStatusText.Text = "Applying changes..."
+        $applyProgressText.Text = "Processing..."
+
+        # App Removal - collect selected apps from integrated UI
+        $selectedApps = @()
+        foreach ($child in $appsPanel.Children) {
+            if ($child -is [System.Windows.Controls.CheckBox] -and $child.IsChecked) {
+                $selectedApps += $child.Tag
+            }
+        }
+        
+        if ($selectedApps.Count -gt 0) {
+            # Check if Microsoft Store is selected
+            if ($selectedApps -contains "Microsoft.WindowsStore") {
+                $result = [System.Windows.MessageBox]::Show(
+                    'Are you sure you wish to uninstall the Microsoft Store? This app cannot easily be reinstalled.',
+                    'Are you sure?',
+                    [System.Windows.MessageBoxButton]::YesNo,
+                    [System.Windows.MessageBoxImage]::Warning
+                )
+
+                if ($result -eq [System.Windows.MessageBoxResult]::No) {
+                    # Re-enable navigation buttons
+                    $previousBtn.IsEnabled = $true
+                    $nextBtn.IsEnabled = $true
+                    $startApplyBtn.IsEnabled = $true
+
+                    return
+                }
+            }
+            
+            $script:SelectedApps = $selectedApps
+            AddParameter 'RemoveApps'
+            AddParameter 'Apps' ($script:SelectedApps -join ',')
+        }
+
+        # Apply dynamic tweaks selections
+        if ($script:UiControlMappings) {
+            foreach ($mappingKey in $script:UiControlMappings.Keys) {
+                $control = $window.FindName($mappingKey)
+                $isSelected = $false
+                $selectedIndex = 0
+                
+                # Check if it's a checkbox or combobox
+                if ($control -is [System.Windows.Controls.CheckBox]) {
+                    $isSelected = $control.IsChecked -eq $true
+                    $selectedIndex = if ($isSelected) { 1 } else { 0 }
+                }
+                elseif ($control -is [System.Windows.Controls.ComboBox]) {
+                    $isSelected = $control.SelectedIndex -gt 0
+                    $selectedIndex = $control.SelectedIndex
+                }
+                
+                if ($control -and $isSelected) {
+                    $mapping = $script:UiControlMappings[$mappingKey]
+                    if ($mapping.Type -eq 'group') {
+                        if ($selectedIndex -gt 0 -and $selectedIndex -le $mapping.Values.Count) {
+                            $selectedValue = $mapping.Values[$selectedIndex - 1]
+                            foreach ($fid in $selectedValue.FeatureIds) { 
+                                AddParameter $fid
+                            }
+                        }
+                    }
+                    elseif ($mapping.Type -eq 'feature') {
+                        AddParameter $mapping.FeatureId
+                    }
+                }
+            }
+        }
+
+        # Check if any changes were selected
+        $totalChanges = $script:Params.Count - $controlParamsCount
+        if ($totalChanges -eq 0) {
+            [System.Windows.MessageBox]::Show(
+                'No changes have been selected. Please select at least one app to remove or one tweak to apply before continuing.',
+                'No Changes Selected',
+                [System.Windows.MessageBoxButton]::OK,
+                [System.Windows.MessageBoxImage]::Information
+            )
+            
+            # Re-enable navigation buttons
+            $previousBtn.IsEnabled = $true
+            $nextBtn.IsEnabled = $true
+            $startApplyBtn.IsEnabled = $true
+            
+            return
+        }
+        
+        # Store selected user mode
+        switch ($userSelectionCombo.SelectedIndex) {
+            1 { AddParameter User ($otherUsernameTextBox.Text.Trim()) }
+            2 { AddParameter Sysprep }
+        }
+
+        SaveSettings
+
+        Write-ToConsole "Starting configuration..."
+        Write-ToConsole "Total changes to apply: $totalChanges"
+        
+        # Run changes in background to keep UI responsive
+        $window.Dispatcher.BeginInvoke([System.Windows.Threading.DispatcherPriority]::Background, [action]{
+            try {
+                $script:ApplyFromUI = $true
+                
+                # Calculate total steps (exclude control parameters)
+                $totalSteps = $script:Params.Count - $controlParamsCount
+                $currentStep = 0
+                
+                # Get parent width for progress bar
+                $progressBarParent = $applyProgressBar.Parent
+                $maxWidth = 0
+                $progressBarParent.Dispatcher.Invoke([action]{ $maxWidth = $progressBarParent.ActualWidth })
+                
+                # Function to update progress
+                $updateProgress = {
+                    param($step, $total)
+                    $progressBarParent.Dispatcher.Invoke([action]{
+                        $progressPercent = ($step / $total) * 100
+                        $applyProgressBar.Width = ($maxWidth * $progressPercent / 100)
+                        $stepPadded = $step.ToString().PadLeft($total.ToString().Length, '0')
+                        $applyProgressText.Text = "Completed $stepPadded of $total changes"
+                    })
+                }
+                
+                Write-ToConsole "Applying configuration..."
+                Write-ToConsole ""
+                
+                # Create restore point if requested
+                if ($script:Params.ContainsKey("CreateRestorePoint")) {
+                    Write-ToConsole "Creating system restore point..."
+                    
+                    $SysRestore = Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SystemRestore" -Name "RPSessionInterval" -ErrorAction SilentlyContinue
+                    
+                    if ($SysRestore.RPSessionInterval -eq 0) {
+                        try {
+                            Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SystemRestore" -Name "RPSessionInterval" -Value 1440 -ErrorAction Stop
+                            Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SystemRestore" -Name "RPGlobalInterval" -Value 1440 -ErrorAction Stop
+                            Write-ToConsole "Enabled system restore point creation"
+                        }
+                        catch {
+                            Write-ToConsole "Warning: Could not enable system restore"
+                        }
+                    }
+                    
+                    $createRestorePointJob = Start-Job {
+                        try {
+                            Enable-ComputerRestore -Drive "$env:SYSTEMDRIVE" -ErrorAction SilentlyContinue | Out-Null
+                            Checkpoint-Computer -Description "Win11Debloat restore point" -RestorePointType "MODIFY_SETTINGS" -ErrorAction Stop
+                            return $true
+                        }
+                        catch {
+                            return $false
+                        }
+                    }
+                    
+                    $createRestorePointJobDone = $createRestorePointJob | Wait-Job -TimeOut 20
+                    
+                    if (-not $createRestorePointJobDone) {
+                        Write-ToConsole "Warning: Restore point creation timed out"
+                    }
+                    else {
+                        $result = Receive-Job -Job $createRestorePointJob
+                        if ($result) {
+                            Write-ToConsole "System restore point created successfully"
+                        }
+                        else {
+                            Write-ToConsole "Warning: Failed to create restore point"
+                        }
+                    }
+                    Write-ToConsole ""
+                }
+                
+                # Execute all selected/provided parameters
+                foreach ($paramKey in $script:Params.Keys) {
+                    if ($script:ControlParams -contains $paramKey) {
+                        continue
+                    }
+                    
+                    $currentStep++
+                    & $updateProgress $currentStep $totalSteps
+                    
+                    switch ($paramKey) {
+                        'RemoveApps' {
+                            Write-ToConsole "Removing selected apps..."
+                            $appsList = GenerateAppsList
+                            if ($appsList.Count -gt 0) {
+                                Write-ToConsole "$($appsList.Count) apps selected for removal"
+                                $appIndex = 0
+                                foreach ($app in $appsList) {
+                                    $appIndex++
+                                    $appIndexPadded = $appIndex.ToString().PadLeft($appsList.Count.ToString().Length, '0')
+                                    Write-ToConsole "[$appIndexPadded/$($appsList.Count)] Removing $app..."
+                                    
+                                    # Update status text
+                                    $applyStatusText.Dispatcher.Invoke([action]{
+                                        $applyStatusText.Text = "Removing apps... [$appIndexPadded/$($appsList.Count)]"
+                                    })
+                                    
+                                    RemoveApps @($app)
+                                    
+                                    # Update progress bar for each app
+                                    $subProgress = $currentStep + ($appIndex / $appsList.Count)
+                                    & $updateProgress ([Math]::Floor($subProgress)) $totalSteps
+                                    
+                                    # Force UI to process pending updates
+                                    $window.Dispatcher.Invoke([System.Windows.Threading.DispatcherPriority]::Background, [action]{})
+                                }
+                            }
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'RemoveAppsCustom' {
+                            Write-ToConsole "Removing selected apps..."
+                            $appsList = ReadAppslistFromFile $script:CustomAppsListFilePath
+                            if ($appsList.Count -gt 0) {
+                                Write-ToConsole "$($appsList.Count) apps selected for removal"
+                                $appIndex = 0
+                                foreach ($app in $appsList) {
+                                    $appIndex++
+                                    $appIndexPadded = $appIndex.ToString().PadLeft($appsList.Count.ToString().Length, ' ')
+                                    Write-ToConsole "[$appIndexPadded/$($appsList.Count)] Removing $app..."
+                                    
+                                    # Update status text
+                                    $applyStatusText.Dispatcher.Invoke([action]{
+                                        $applyStatusText.Text = "Removing apps... [$appIndexPadded/$($appsList.Count)]"
+                                    })
+                                    
+                                    RemoveApps @($app)
+                                    
+                                    # Update progress bar for each app
+                                    $subProgress = $currentStep + ($appIndex / $appsList.Count)
+                                    & $updateProgress ([Math]::Floor($subProgress)) $totalSteps
+                                    
+                                    # Force UI to process pending updates
+                                    $window.Dispatcher.Invoke([System.Windows.Threading.DispatcherPriority]::Background, [action]{})
+                                }
+                            }
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'RemoveCommApps' {
+                            Write-ToConsole "Removing Mail, Calendar and People apps..."
+                            $appsList = 'Microsoft.windowscommunicationsapps', 'Microsoft.People'
+                            RemoveApps $appsList
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'RemoveW11Outlook' {
+                            Write-ToConsole "Removing new Outlook for Windows app..."
+                            $appsList = 'Microsoft.OutlookForWindows'
+                            RemoveApps $appsList
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'RemoveGamingApps' {
+                            Write-ToConsole "Removing gaming related apps..."
+                            $appsList = 'Microsoft.GamingApp', 'Microsoft.XboxGameOverlay', 'Microsoft.XboxGamingOverlay'
+                            RemoveApps $appsList
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'RemoveHPApps' {
+                            Write-ToConsole "Removing HP apps..."
+                            $appsList = 'AD2F1837.HPAIExperienceCenter', 'AD2F1837.HPJumpStarts', 'AD2F1837.HPPCHardwareDiagnosticsWindows', 'AD2F1837.HPPowerManager', 'AD2F1837.HPPrivacySettings', 'AD2F1837.HPSupportAssistant', 'AD2F1837.HPSureShieldAI', 'AD2F1837.HPSystemInformation', 'AD2F1837.HPQuickDrop', 'AD2F1837.HPWorkWell', 'AD2F1837.myHP', 'AD2F1837.HPDesktopSupportUtilities', 'AD2F1837.HPQuickTouch', 'AD2F1837.HPEasyClean', 'AD2F1837.HPConnectedMusic', 'AD2F1837.HPFileViewer', 'AD2F1837.HPRegistration', 'AD2F1837.HPWelcome', 'AD2F1837.HPConnectedPhotopoweredbySnapfish', 'AD2F1837.HPPrinterControl'
+                            RemoveApps $appsList
+                            Write-ToConsole ""
+                            continue
+                        }
+                        "ForceRemoveEdge" {
+                            Write-ToConsole "Force removing Microsoft Edge..."
+                            ForceRemoveEdge
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'DisableDVR' {
+                            Write-ToConsole "Disabling Xbox game/screen recording..."
+                            RegImport "" "Disable_DVR.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'DisableGameBarIntegration' {
+                            Write-ToConsole "Disabling Game Bar integration..."
+                            RegImport "" "Disable_Game_Bar_Integration.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'DisableTelemetry' {
+                            Write-ToConsole "Disabling telemetry, diagnostic data and targeted ads..."
+                            RegImport "" "Disable_Telemetry.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        {$_ -in "DisableSuggestions", "DisableWindowsSuggestions"} {
+                            Write-ToConsole "Disabling tips, tricks and suggestions across Windows..."
+                            RegImport "" "Disable_Windows_Suggestions.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'DisableEdgeAds' {
+                            Write-ToConsole "Disabling ads and suggestions in Microsoft Edge..."
+                            RegImport "" "Disable_Edge_Ads_And_Suggestions.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        {$_ -in "DisableLockscrTips", "DisableLockscreenTips"} {
+                            Write-ToConsole "Disabling tips & tricks on the lockscreen..."
+                            RegImport "" "Disable_Lockscreen_Tips.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'DisableDesktopSpotlight' {
+                            Write-ToConsole "Disabling Windows Spotlight desktop background..."
+                            RegImport "" "Disable_Desktop_Spotlight.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'DisableSettings365Ads' {
+                            Write-ToConsole "Disabling Microsoft 365 ads in Settings..."
+                            RegImport "" "Disable_Settings_365_Ads.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'DisableSettingsHome' {
+                            Write-ToConsole "Disabling the Settings Home page..."
+                            RegImport "" "Disable_Settings_Home.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        {$_ -in "DisableBingSearches", "DisableBing"} {
+                            Write-ToConsole "Disabling Bing web search and Cortana..."
+                            RegImport "" "Disable_Bing_Cortana_In_Search.reg"
+                            $appsList = 'Microsoft.BingSearch'
+                            RemoveApps $appsList
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'DisableCopilot' {
+                            Write-ToConsole "Disabling Microsoft Copilot..."
+                            RegImport "" "Disable_Copilot.reg"
+                            $appsList = 'Microsoft.Copilot'
+                            RemoveApps $appsList
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'DisableRecall' {
+                            Write-ToConsole "Disabling Windows Recall..."
+                            RegImport "" "Disable_AI_Recall.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'DisableClickToDo' {
+                            Write-ToConsole "Disabling Click to Do..."
+                            RegImport "" "Disable_Click_to_Do.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'DisableEdgeAI' {
+                            Write-ToConsole "Disabling AI features in Microsoft Edge..."
+                            RegImport "" "Disable_Edge_AI_Features.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'DisablePaintAI' {
+                            Write-ToConsole "Disabling AI features in Paint..."
+                            RegImport "" "Disable_Paint_AI_Features.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'DisableNotepadAI' {
+                            Write-ToConsole "Disabling AI features in Notepad..."
+                            RegImport "" "Disable_Notepad_AI_Features.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'RevertContextMenu' {
+                            Write-ToConsole "Restoring Windows 10 style context menu..."
+                            RegImport "" "Disable_Show_More_Options_Context_Menu.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'DisableMouseAcceleration' {
+                            Write-ToConsole "Turning off Enhanced Pointer Precision..."
+                            RegImport "" "Disable_Enhance_Pointer_Precision.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'DisableStickyKeys' {
+                            Write-ToConsole "Disabling Sticky Keys keyboard shortcut..."
+                            RegImport "" "Disable_Sticky_Keys_Shortcut.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'DisableFastStartup' {
+                            Write-ToConsole "Disabling Fast Start-up..."
+                            RegImport "" "Disable_Fast_Startup.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'DisableModernStandbyNetworking' {
+                            Write-ToConsole "Disabling network during Modern Standby..."
+                            RegImport "" "Disable_Modern_Standby_Networking.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'ClearStart' {
+                            Write-ToConsole "Clearing start menu for user $(GetUserName)..."
+                            ReplaceStartMenu
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'ReplaceStart' {
+                            Write-ToConsole "Replacing start menu for user $(GetUserName)..."
+                            ReplaceStartMenu $script:Params.Item("ReplaceStart")
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'ClearStartAllUsers' {
+                            Write-ToConsole "Clearing start menu for all users..."
+                            ReplaceStartMenuForAllUsers
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'ReplaceStartAllUsers' {
+                            Write-ToConsole "Replacing start menu for all users..."
+                            ReplaceStartMenuForAllUsers $script:Params.Item("ReplaceStartAllUsers")
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'DisableStartRecommended' {
+                            Write-ToConsole "Disabling start menu recommended section..."
+                            RegImport "" "Disable_Start_Recommended.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'DisableStartPhoneLink' {
+                            Write-ToConsole "Disabling Phone Link in start menu..."
+                            RegImport "" "Disable_Phone_Link_In_Start.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'EnableDarkMode' {
+                            Write-ToConsole "Enabling dark mode..."
+                            RegImport "" "Enable_Dark_Mode.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'DisableTransparency' {
+                            Write-ToConsole "Disabling transparency effects..."
+                            RegImport "" "Disable_Transparency.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'DisableAnimations' {
+                            Write-ToConsole "Disabling animations and visual effects..."
+                            RegImport "" "Disable_Animations.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'TaskbarAlignLeft' {
+                            Write-ToConsole "Aligning taskbar buttons to the left..."
+                            RegImport "" "Align_Taskbar_Left.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'CombineTaskbarAlways' {
+                            Write-ToConsole "Setting taskbar to always combine buttons..."
+                            RegImport "" "Combine_Taskbar_Always.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'CombineTaskbarWhenFull' {
+                            Write-ToConsole "Setting taskbar to combine when full..."
+                            RegImport "" "Combine_Taskbar_When_Full.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'CombineTaskbarNever' {
+                            Write-ToConsole "Setting taskbar to never combine buttons..."
+                            RegImport "" "Combine_Taskbar_Never.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'CombineMMTaskbarAlways' {
+                            Write-ToConsole "Setting secondary taskbars to always combine buttons..."
+                            RegImport "" "Combine_MMTaskbar_Always.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'CombineMMTaskbarWhenFull' {
+                            Write-ToConsole "Setting secondary taskbars to combine when full..."
+                            RegImport "" "Combine_MMTaskbar_When_Full.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'CombineMMTaskbarNever' {
+                            Write-ToConsole "Setting secondary taskbars to never combine buttons..."
+                            RegImport "" "Combine_MMTaskbar_Never.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'MMTaskbarModeAll' {
+                            Write-ToConsole "Setting taskbar to show app icons on all taskbars..."
+                            RegImport "" "MMTaskbarMode_All.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'MMTaskbarModeMainActive' {
+                            Write-ToConsole "Setting taskbar to show on main and active..."
+                            RegImport "" "MMTaskbarMode_Main_Active.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'MMTaskbarModeActive' {
+                            Write-ToConsole "Setting taskbar to only show on active..."
+                            RegImport "" "MMTaskbarMode_Active.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'HideSearchTb' {
+                            Write-ToConsole "Hiding search icon from taskbar..."
+                            RegImport "" "Hide_Search_Taskbar.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'ShowSearchIconTb' {
+                            Write-ToConsole "Showing search icon on taskbar..."
+                            RegImport "" "Show_Search_Icon.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'ShowSearchLabelTb' {
+                            Write-ToConsole "Changing taskbar search to icon with label..."
+                            RegImport "" "Show_Search_Icon_And_Label.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'ShowSearchBoxTb' {
+                            Write-ToConsole "Changing taskbar search to search box..."
+                            RegImport "" "Show_Search_Box.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'HideTaskview' {
+                            Write-ToConsole "Hiding taskview button from taskbar..."
+                            RegImport "" "Hide_Taskview_Taskbar.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        {$_ -in "HideWidgets", "DisableWidgets"} {
+                            Write-ToConsole "Disabling widgets..."
+                            RegImport "" "Disable_Widgets_Service.reg"
+                            $appsList = 'Microsoft.StartExperiencesApp'
+                            RemoveApps $appsList
+                            Write-ToConsole ""
+                            continue
+                        }
+                        {$_ -in "HideChat", "DisableChat"} {
+                            Write-ToConsole "Hiding chat icon from taskbar..."
+                            RegImport "" "Disable_Chat_Taskbar.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'EnableEndTask' {
+                            Write-ToConsole "Enabling End Task in taskbar menu..."
+                            RegImport "" "Enable_End_Task.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'EnableLastActiveClick' {
+                            Write-ToConsole "Enabling Last Active Click behavior..."
+                            RegImport "" "Enable_Last_Active_Click.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'ExplorerToHome' {
+                            Write-ToConsole "Setting File Explorer to open to Home..."
+                            RegImport "" "Launch_File_Explorer_To_Home.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'ExplorerToThisPC' {
+                            Write-ToConsole "Setting File Explorer to open to This PC..."
+                            RegImport "" "Launch_File_Explorer_To_This_PC.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'ExplorerToDownloads' {
+                            Write-ToConsole "Setting File Explorer to open to Downloads..."
+                            RegImport "" "Launch_File_Explorer_To_Downloads.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'ExplorerToOneDrive' {
+                            Write-ToConsole "Setting File Explorer to open to OneDrive..."
+                            RegImport "" "Launch_File_Explorer_To_OneDrive.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'ShowHiddenFolders' {
+                            Write-ToConsole "Unhiding hidden files and folders..."
+                            RegImport "" "Show_Hidden_Folders.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'ShowKnownFileExt' {
+                            Write-ToConsole "Enabling file extensions for known file types..."
+                            RegImport "" "Show_Extensions_For_Known_File_Types.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'AddFoldersToThisPC' {
+                            Write-ToConsole "Adding common folders to This PC..."
+                            RegImport "" "Add_All_Folders_Under_This_PC.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'HideHome' {
+                            Write-ToConsole "Hiding Home from File Explorer..."
+                            RegImport "" "Hide_Home_from_Explorer.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'HideGallery' {
+                            Write-ToConsole "Hiding Gallery from File Explorer..."
+                            RegImport "" "Hide_Gallery_from_Explorer.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        'HideDupliDrive' {
+                            Write-ToConsole "Hiding duplicate removable drives..."
+                            RegImport "" "Hide_duplicate_removable_drives_from_navigation_pane_of_File_Explorer.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        {$_ -in "HideOnedrive", "DisableOnedrive"} {
+                            Write-ToConsole "Hiding OneDrive folder..."
+                            RegImport "" "Hide_Onedrive_Folder.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        {$_ -in "Hide3dObjects", "Disable3dObjects"} {
+                            Write-ToConsole "Hiding 3D Objects folder..."
+                            RegImport "" "Hide_3D_Objects_Folder.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        {$_ -in "HideMusic", "DisableMusic"} {
+                            Write-ToConsole "Hiding Music folder..."
+                            RegImport "" "Hide_Music_folder.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        {$_ -in "HideIncludeInLibrary", "DisableIncludeInLibrary"} {
+                            Write-ToConsole "Hiding Include in Library from context menu..."
+                            RegImport "" "Disable_Include_in_library_from_context_menu.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        {$_ -in "HideGiveAccessTo", "DisableGiveAccessTo"} {
+                            Write-ToConsole "Hiding Give Access To from context menu..."
+                            RegImport "" "Disable_Give_access_to_context_menu.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        {$_ -in "HideShare", "DisableShare"} {
+                            Write-ToConsole "Hiding Share from context menu..."
+                            RegImport "" "Disable_Share_from_context_menu.reg"
+                            Write-ToConsole ""
+                            continue
+                        }
+                        default {
+                            Write-ToConsole "ERROR: No matching case for parameter: $paramKey (Type: $($paramKey.GetType().Name))"
+                        }
+                    }
+                }
+                
+                Write-ToConsole ""
+                Write-ToConsole "Configuration complete!"
+                Write-ToConsole "All changes have been applied successfully."
+                
+                # Ask user if they want to restart Explorer now
+                $result = [System.Windows.MessageBox]::Show(
+                    'Configuration complete! Would you like to restart Windows Explorer now to apply all changes? You can also restart it later manually.',
+                    'Restart Windows Explorer?',
+                    [System.Windows.MessageBoxButton]::YesNo,
+                    [System.Windows.MessageBoxImage]::Question
+                )
+                
+                if ($result -eq [System.Windows.MessageBoxResult]::Yes) {
+                    Write-ToConsole "Restarting Windows Explorer..."
+                    RestartExplorer
+                    Write-ToConsole "Windows Explorer restarted successfully"
+                }
+                else {
+                    Write-ToConsole "Skipped Explorer restart - you can restart it manually later"
+                }
+                
+                $applyStatusText.Dispatcher.Invoke([action]{
+                    $applyStatusText.Text = "Changes applied successfully!"
+                })
+                $applyProgressText.Dispatcher.Invoke([action]{
+                    $applyProgressText.Text = "Completed"
+                })
+                $startApplyBtn.Dispatcher.Invoke([action]{
+                    $startApplyBtn.Visibility = 'Collapsed'
+                })
+                $finishBtn.Dispatcher.Invoke([action]{
+                    $finishBtn.Visibility = 'Visible'
+                })
+            }
+            catch {
+                Write-ToConsole "Error: $($_.Exception.Message)"
+                $applyStatusText.Dispatcher.Invoke([action]{
+                    $applyStatusText.Text = "An error occurred"
+                })
+                $startApplyBtn.Dispatcher.Invoke([action]{
+                    $startApplyBtn.IsEnabled = $true
+                })
+            }
+        })
+    })
+    
+    # Finish button handler
+    $finishBtn.Add_Click({
+        $window.Close()
+    })
+
+    # Show the window
+    return $window.ShowDialog()
 }
 
 
@@ -1140,12 +2958,6 @@ function ShowDefaultModeOptions {
 
     # Add default settings based on user input
     try {
-        $defaultSettings = (Get-Content -Path $script:DefaultSettingsFilePath -Raw | ConvertFrom-Json)
-        if (-not $defaultSettings.Version -or $defaultSettings.Version -ne "1.0") {
-            Write-Error "DefaultSettings.json version mismatch (expected 1.0, found $($defaultSettings.Version))"
-            AwaitKeyToExit
-        }
-
         # Select app removal options based on user input
         switch ($RemoveAppsInput) {
             '1' {
@@ -1162,16 +2974,11 @@ function ShowDefaultModeOptions {
             }
         }
 
-        Foreach ($setting in $defaultSettings.Settings) {
-            if ($setting.Value -eq $false) {
-                continue
-            }
-    
-            AddParameter $setting.Name $setting.Value
-        }
+        # Load settings from DefaultSettings.json and add to params
+        LoadSettingsToParams -filePath $script:DefaultSettingsFilePath -expectedVersion "1.0"
     }
     catch {
-        Write-Error "Failed to load settings from DefaultSettings.json file"
+        Write-Error "Failed to load settings from DefaultSettings.json file: $_"
         AwaitKeyToExit
     }
 
@@ -1221,509 +3028,6 @@ function ShowDefaultModeAppRemovalOptions {
 }
 
 
-function ShowCustomModeOptions {
-    # Get current Windows build version to compare against features
-    $WinVersion = Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' CurrentBuild
-
-    PrintHeader 'Custom Mode'
-
-    AddParameter 'CreateRestorePoint'
-
-    # Show options for removing apps, only continue on valid input
-    Do {
-        Write-Host "Options:" -ForegroundColor Yellow
-        Write-Host " (n) Don't remove any apps" -ForegroundColor Yellow
-        Write-Host " (1) Only remove the default selection of apps" -ForegroundColor Yellow
-        Write-Host " (2) Remove the default selection of apps, as well as mail & calendar apps and gaming related apps"  -ForegroundColor Yellow
-        Write-Host " (3) Manually select which apps to remove" -ForegroundColor Yellow
-        $RemoveAppsInput = Read-Host "Do you want to remove any apps? Apps will be removed for all users (n/1/2/3)"
-
-        # Show app selection form if user entered option 3
-        if ($RemoveAppsInput -eq '3') {
-            $result = ShowAppSelectionWindow
-
-            if ($result -ne $true) {
-                # User cancelled or closed app selection, change RemoveAppsInput so the menu will be shown again
-                Write-Output ""
-                Write-Host "Cancelled application selection, please try again" -ForegroundColor Red
-
-                $RemoveAppsInput = 'c'
-            }
-
-            Write-Output ""
-        }
-    }
-    while ($RemoveAppsInput -ne 'n' -and $RemoveAppsInput -ne '0' -and $RemoveAppsInput -ne '1' -and $RemoveAppsInput -ne '2' -and $RemoveAppsInput -ne '3')
-
-    # Select correct option based on user input
-    switch ($RemoveAppsInput) {
-        '1' {
-            AddParameter 'RemoveApps'
-            AddParameter 'Apps' 'Default'
-        }
-        '2' {
-            AddParameter 'RemoveApps'
-            AddParameter 'Apps' 'Default'
-            AddParameter 'RemoveCommApps'
-            AddParameter 'RemoveW11Outlook'
-            AddParameter 'RemoveGamingApps'
-
-            Write-Output ""
-
-            if ($(Read-Host -Prompt "Disable Game Bar integration and game/screen recording? This also stops ms-gamingoverlay and ms-gamebar popups (y/n)" ) -eq 'y') {
-                AddParameter 'DisableDVR'
-                AddParameter 'DisableGameBarIntegration'
-            }
-        }
-        '3' {
-            Write-Output "You have selected $($script:SelectedApps.Count) apps for removal"
-
-            AddParameter 'RemoveAppsCustom'
-
-            Write-Output ""
-
-            if ($(Read-Host -Prompt "Disable Game Bar integration and game/screen recording? This also stops ms-gamingoverlay and ms-gamebar popups (y/n)" ) -eq 'y') {
-                AddParameter 'DisableDVR'
-                AddParameter 'DisableGameBarIntegration'
-            }
-        }
-    }
-
-    Write-Output ""
-
-    if ($( Read-Host -Prompt "Disable telemetry, diagnostic data, activity history, app-launch tracking and targeted ads? (y/n)" ) -eq 'y') {
-        AddParameter 'DisableTelemetry'
-    }
-
-    Write-Output ""
-
-    if ($( Read-Host -Prompt "Disable tips, tricks, suggestions and ads in start, settings, notifications, explorer, lockscreen and Edge? (y/n)" ) -eq 'y') {
-        AddParameter 'DisableSuggestions'
-        AddParameter 'DisableEdgeAds'
-        AddParameter 'DisableSettings365Ads'
-        AddParameter 'DisableLockscreenTips'
-    }
-
-    Write-Output ""
-
-    if ($( Read-Host -Prompt "Disable & remove Bing web search, Bing AI and Cortana from Windows search? (y/n)" ) -eq 'y') {
-        AddParameter 'DisableBing'
-    }
-
-    # Only show this option for Windows 11 users running build 22621 or later
-    if ($WinVersion -ge 22621) {
-        Write-Output ""
-
-        # Show options for disabling/removing AI features, only continue on valid input
-        Do {
-            Write-Host "Options:" -ForegroundColor Yellow
-            Write-Host " (n) Don't disable any AI features" -ForegroundColor Yellow
-            Write-Host " (1) Disable Microsoft Copilot, Windows Recall and Click to Do" -ForegroundColor Yellow
-            Write-Host " (2) Disable Microsoft Copilot, Windows Recall, Click to Do and AI features in Microsoft Edge, Paint and Notepad"  -ForegroundColor Yellow
-            $DisableAIInput = Read-Host "Do you want to disable any AI features? This applies to all users (n/1/2)"
-        }
-        while ($DisableAIInput -ne 'n' -and $DisableAIInput -ne '0' -and $DisableAIInput -ne '1' -and $DisableAIInput -ne '2')
-
-        # Select correct option based on user input
-        switch ($DisableAIInput) {
-            '1' {
-                AddParameter 'DisableCopilot'
-                AddParameter 'DisableRecall'
-                AddParameter 'DisableClickToDo'
-            }
-            '2' {
-                AddParameter 'DisableCopilot'
-                AddParameter 'DisableRecall'
-                AddParameter 'DisableClickToDo'
-                AddParameter 'DisableEdgeAI'
-                AddParameter 'DisablePaintAI'
-                AddParameter 'DisableNotepadAI'
-            }
-        }
-    }
-
-    Write-Output ""
-
-    if ($( Read-Host -Prompt "Disable Windows Spotlight background on desktop? (y/n)" ) -eq 'y') {
-        AddParameter 'DisableDesktopSpotlight'
-    }
-
-    Write-Output ""
-
-    if ($( Read-Host -Prompt "Enable dark mode for system and apps? (y/n)" ) -eq 'y') {
-        AddParameter 'EnableDarkMode'
-    }
-
-    Write-Output ""
-
-    if ($( Read-Host -Prompt "Disable transparency, animations and visual effects? (y/n)" ) -eq 'y') {
-        AddParameter 'DisableTransparency'
-        AddParameter 'DisableAnimations'
-    }
-
-    # Only show this option for Windows 11 users running build 22000 or later
-    if ($WinVersion -ge 22000) {
-        Write-Output ""
-
-        if ($( Read-Host -Prompt "Restore the old Windows 10 style context menu? (y/n)" ) -eq 'y') {
-            AddParameter 'RevertContextMenu'
-        }
-    }
-
-    Write-Output ""
-
-    if ($( Read-Host -Prompt "Turn off Enhance Pointer Precision, also known as mouse acceleration? (y/n)" ) -eq 'y') {
-        AddParameter 'DisableMouseAcceleration'
-    }
-
-    # Only show this option for Windows 11 users running build 26100 or later
-    if ($WinVersion -ge 26100) {
-        Write-Output ""
-
-        if ($( Read-Host -Prompt "Disable the Sticky Keys keyboard shortcut? (y/n)" ) -eq 'y') {
-            AddParameter 'DisableStickyKeys'
-        }
-    }
-
-    Write-Output ""
-
-    if ($( Read-Host -Prompt "Disable Fast Start-up? This applies to all users (y/n)" ) -eq 'y') {
-        AddParameter 'DisableFastStartup'
-    }
-
-    # Only show this option for Windows 11 users running build 22000 or later, and if the machine has at least one battery
-    if (($WinVersion -ge 22000) -and $script:ModernStandbySupported) {
-        Write-Output ""
-
-        if ($( Read-Host -Prompt "Disable network connectivity during Modern Standby? This applies to all users (y/n)" ) -eq 'y') {
-            AddParameter 'DisableModernStandbyNetworking'
-        }
-    }
-
-    # Only show option for disabling context menu items for Windows 10 users or if the user opted to restore the Windows 10 context menu
-    if ((get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'") -or $script:Params.ContainsKey('RevertContextMenu')) {
-        Write-Output ""
-
-        if ($( Read-Host -Prompt "Do you want to disable any context menu options? (y/n)" ) -eq 'y') {
-            Write-Output ""
-
-            if ($( Read-Host -Prompt "   Hide the 'Include in library' option in the context menu? (y/n)" ) -eq 'y') {
-                AddParameter 'HideIncludeInLibrary'
-            }
-
-            Write-Output ""
-
-            if ($( Read-Host -Prompt "   Hide the 'Give access to' option in the context menu? (y/n)" ) -eq 'y') {
-                AddParameter 'HideGiveAccessTo'
-            }
-
-            Write-Output ""
-
-            if ($( Read-Host -Prompt "   Hide the 'Share' option in the context menu? (y/n)" ) -eq 'y') {
-                AddParameter 'HideShare'
-            }
-        }
-    }
-
-    # Only show this option for Windows 11 users running build 22621 or later
-    if ($WinVersion -ge 22621) {
-        Write-Output ""
-
-        if ($( Read-Host -Prompt "Do you want to make any changes to the start menu? (y/n)" ) -eq 'y') {
-            Write-Output ""
-
-            if ($script:Params.ContainsKey("Sysprep")) {
-                if ($( Read-Host -Prompt "Remove all pinned apps from the start menu for all existing and new users? (y/n)" ) -eq 'y') {
-                    AddParameter 'ClearStartAllUsers'
-                }
-            }
-            else {
-                Do {
-                    Write-Host "   Options:" -ForegroundColor Yellow
-                    Write-Host "    (n) Don't remove any pinned apps from the start menu" -ForegroundColor Yellow
-                    Write-Host "    (1) Remove all pinned apps from the start menu for this user only ($(GetUserName))" -ForegroundColor Yellow
-                    Write-Host "    (2) Remove all pinned apps from the start menu for all existing and new users"  -ForegroundColor Yellow
-                    $ClearStartInput = Read-Host "   Remove all pinned apps from the start menu? (n/1/2)"
-                }
-                while ($ClearStartInput -ne 'n' -and $ClearStartInput -ne '0' -and $ClearStartInput -ne '1' -and $ClearStartInput -ne '2')
-
-                # Select correct option based on user input
-                switch ($ClearStartInput) {
-                    '1' {
-                        AddParameter 'ClearStart'
-                    }
-                    '2' {
-                        AddParameter 'ClearStartAllUsers'
-                    }
-                }
-            }
-
-            # Don't show option for users running build 26200 and above, as this setting was removed in this build
-            if ($WinVersion -lt 26200) {
-                Write-Output ""
-
-                if ($( Read-Host -Prompt "   Disable the recommended section in the start menu? This applies to all users (y/n)" ) -eq 'y') {
-                    AddParameter 'DisableStartRecommended'
-                }
-            }
-
-            Write-Output ""
-
-            if ($( Read-Host -Prompt "   Disable the Phone Link mobile devices integration in the start menu? (y/n)" ) -eq 'y') {
-                AddParameter 'DisableStartPhoneLink'
-            }
-        }
-    }
-
-    Write-Output ""
-
-    if ($( Read-Host -Prompt "Do you want to make any changes to the taskbar and related services? (y/n)" ) -eq 'y') {
-        # Only show these specific options for Windows 11 users running build 22000 or later
-        if ($WinVersion -ge 22000) {
-            Write-Output ""
-
-            if ($( Read-Host -Prompt "   Align taskbar buttons to the left side? (y/n)" ) -eq 'y') {
-                AddParameter 'TaskbarAlignLeft'
-            }
-
-            # Show options for search icon on taskbar, only continue on valid input
-            Do {
-                Write-Output ""
-                Write-Host "   Options:" -ForegroundColor Yellow
-                Write-Host "    (n) No change" -ForegroundColor Yellow
-                Write-Host "    (1) Hide search icon from the taskbar" -ForegroundColor Yellow
-                Write-Host "    (2) Show search icon on the taskbar" -ForegroundColor Yellow
-                Write-Host "    (3) Show search icon with label on the taskbar" -ForegroundColor Yellow
-                Write-Host "    (4) Show search box on the taskbar" -ForegroundColor Yellow
-                $TbSearchInput = Read-Host "   Hide or change the search icon on the taskbar? (n/1/2/3/4)"
-            }
-            while ($TbSearchInput -ne 'n' -and $TbSearchInput -ne '0' -and $TbSearchInput -ne '1' -and $TbSearchInput -ne '2' -and $TbSearchInput -ne '3' -and $TbSearchInput -ne '4')
-
-            # Select correct taskbar search option based on user input
-            switch ($TbSearchInput) {
-                '1' {
-                    AddParameter 'HideSearchTb'
-                }
-                '2' {
-                    AddParameter 'ShowSearchIconTb'
-                }
-                '3' {
-                    AddParameter 'ShowSearchLabelTb'
-                }
-                '4' {
-                    AddParameter 'ShowSearchBoxTb'
-                }
-            }
-
-            Write-Output ""
-
-            if ($( Read-Host -Prompt "   Hide the taskview button from the taskbar? (y/n)" ) -eq 'y') {
-                AddParameter 'HideTaskview'
-            }
-        }
-
-        Write-Output ""
-
-        if ($( Read-Host -Prompt "   Disable the widgets service to remove widgets on the taskbar & lockscreen? (y/n)" ) -eq 'y') {
-            AddParameter 'DisableWidgets'
-        }
-
-        # Only show this options for Windows users running build 22621 or earlier
-        if ($WinVersion -le 22621) {
-            Write-Output ""
-
-            if ($( Read-Host -Prompt "   Hide the chat (meet now) icon from the taskbar? (y/n)" ) -eq 'y') {
-                AddParameter 'HideChat'
-            }
-        }
-
-        # Only show this options for Windows users running build 22631 or later
-        if ($WinVersion -ge 22631) {
-            Write-Output ""
-
-            if ($( Read-Host -Prompt "   Enable the 'End Task' option in the taskbar right click menu? (y/n)" ) -eq 'y') {
-                AddParameter 'EnableEndTask'
-            }
-        }
-
-        Write-Output ""
-
-        if ($( Read-Host -Prompt "   Enable the 'Last Active Click' behavior in the taskbar app area? (y/n)" ) -eq 'y') {
-            AddParameter 'EnableLastActiveClick'
-        }
-
-        # Only show these specific options for Windows 11 users running build 22000 or later
-        if ($WinVersion -ge 22000) {
-            # Show options for combine icon on taskbar, only continue on valid input
-            Do {
-                Write-Output ""
-                Write-Host "   Options:" -ForegroundColor Yellow
-                Write-Host "    (n) No change" -ForegroundColor Yellow
-                Write-Host "    (1) Always" -ForegroundColor Yellow
-                Write-Host "    (2) When taskbar is full" -ForegroundColor Yellow
-                Write-Host "    (3) Never" -ForegroundColor Yellow
-                $TbCombineTaskbar = Read-Host "   Combine taskbar buttons and hide labels? (n/1/2/3)"
-            }
-            while ($TbCombineTaskbar -ne 'n' -and $TbCombineTaskbar -ne '0' -and $TbCombineTaskbar -ne '1' -and $TbCombineTaskbar -ne '2' -and $TbCombineTaskbar -ne '3')
-
-            # Select correct taskbar goup option based on user input
-            switch ($TbCombineTaskbar) {
-                '1' {
-                    AddParameter 'CombineTaskbarAlways'
-                    AddParameter 'CombineMMTaskbarAlways'
-                }
-                '2' {
-                    AddParameter 'CombineTaskbarWhenFull'
-                    AddParameter 'CombineMMTaskbarWhenFull'
-                }
-                '3' {
-                    AddParameter 'CombineTaskbarNever'
-                    AddParameter 'CombineMMTaskbarNever'
-                }
-            }
-
-            # Show options for changing on what taskbar(s) app icons are shown, only continue on valid input
-            Do {
-                Write-Output ""
-                Write-Host "   Options:" -ForegroundColor Yellow
-                Write-Host "    (n) No change" -ForegroundColor Yellow
-                Write-Host "    (1) Show app icons on all taskbars" -ForegroundColor Yellow
-                Write-Host "    (2) Show app icons on main taskbar and on taskbar where the windows is open" -ForegroundColor Yellow
-                Write-Host "    (3) Show app icons only on taskbar where the window is open" -ForegroundColor Yellow
-                $TbCombineTaskbar = Read-Host "   Change how to show app icons on the taskbar when using multiple monitors? (n/1/2/3)"
-            }
-            while ($TbCombineTaskbar -ne 'n' -and $TbCombineTaskbar -ne '0' -and $TbCombineTaskbar -ne '1' -and $TbCombineTaskbar -ne '2' -and $TbCombineTaskbar -ne '3')
-
-            # Select correct taskbar goup option based on user input
-            switch ($TbCombineTaskbar) {
-                '1' {
-                    AddParameter 'MMTaskbarModeAll'
-                }
-                '2' {
-                    AddParameter 'MMTaskbarModeMainActive'
-                }
-                '3' {
-                    AddParameter 'MMTaskbarModeActive'
-                }
-            }
-        }
-    }
-
-    Write-Output ""
-
-    if ($( Read-Host -Prompt "Do you want to make any changes to File Explorer? (y/n)" ) -eq 'y') {
-        # Show options for changing the File Explorer default location
-        Do {
-            Write-Output ""
-            Write-Host "   Options:" -ForegroundColor Yellow
-            Write-Host "    (n) No change" -ForegroundColor Yellow
-            Write-Host "    (1) Open File Explorer to 'Home'" -ForegroundColor Yellow
-            Write-Host "    (2) Open File Explorer to 'This PC'" -ForegroundColor Yellow
-            Write-Host "    (3) Open File Explorer to 'Downloads'" -ForegroundColor Yellow
-            Write-Host "    (4) Open File Explorer to 'OneDrive'" -ForegroundColor Yellow
-            $ExplSearchInput = Read-Host "   Change the default location that File Explorer opens to? (n/1/2/3/4)"
-        }
-        while ($ExplSearchInput -ne 'n' -and $ExplSearchInput -ne '0' -and $ExplSearchInput -ne '1' -and $ExplSearchInput -ne '2' -and $ExplSearchInput -ne '3' -and $ExplSearchInput -ne '4')
-
-        # Select correct taskbar search option based on user input
-        switch ($ExplSearchInput) {
-            '1' {
-                AddParameter 'ExplorerToHome'
-            }
-            '2' {
-                AddParameter 'ExplorerToThisPC'
-            }
-            '3' {
-                AddParameter 'ExplorerToDownloads'
-            }
-            '4' {
-                AddParameter 'ExplorerToOneDrive'
-            }
-        }
-
-        Write-Output ""
-
-        if ($( Read-Host -Prompt "   Show hidden files, folders and drives? (y/n)" ) -eq 'y') {
-            AddParameter 'ShowHiddenFolders'
-        }
-
-        Write-Output ""
-
-        if ($( Read-Host -Prompt "   Show file extensions for known file types? (y/n)" ) -eq 'y') {
-            AddParameter 'ShowKnownFileExt'
-        }
-
-        # Only show this option for Windows 11 users running build 22000 or later
-        if ($WinVersion -ge 22000) {
-            Write-Output ""
-
-            if ($( Read-Host -Prompt "   Add all common folders (Desktop, Downloads, etc.) back to 'This PC' in File Explorer? (y/n)" ) -eq 'y') {
-                AddParameter 'AddFoldersToThisPC'
-            }
-
-            Write-Output ""
-
-            if ($( Read-Host -Prompt "   Hide the Home section from the File Explorer sidepanel? (y/n)" ) -eq 'y') {
-                AddParameter 'HideHome'
-            }
-
-            Write-Output ""
-
-            if ($( Read-Host -Prompt "   Hide the Gallery section from the File Explorer sidepanel? (y/n)" ) -eq 'y') {
-                AddParameter 'HideGallery'
-            }
-        }
-
-        Write-Output ""
-
-        if ($( Read-Host -Prompt "   Hide duplicate removable drive entries from the File Explorer sidepanel so they only show under 'This PC'? (y/n)" ) -eq 'y') {
-            AddParameter 'HideDupliDrive'
-        }
-
-        # Only show option for disabling these specific folders for Windows 10 users
-        if (get-ciminstance -query "select caption from win32_operatingsystem where caption like '%Windows 10%'") {
-            Write-Output ""
-
-            if ($( Read-Host -Prompt "Do you want to hide any folders from the File Explorer sidepanel? (y/n)" ) -eq 'y') {
-                Write-Output ""
-
-                if ($( Read-Host -Prompt "   Hide the OneDrive folder from the File Explorer sidepanel? (y/n)" ) -eq 'y') {
-                    AddParameter 'HideOnedrive'
-                }
-
-                Write-Output ""
-
-                if ($( Read-Host -Prompt "   Hide the 3D objects folder from the File Explorer sidepanel? (y/n)" ) -eq 'y') {
-                    AddParameter 'Hide3dObjects'
-                }
-
-                Write-Output ""
-
-                if ($( Read-Host -Prompt "   Hide the music folder from the File Explorer sidepanel? (y/n)" ) -eq 'y') {
-                    AddParameter 'HideMusic'
-                }
-            }
-        }
-    }
-    
-    # Only save settings if any changes were selected by the user
-    if ($script:Params.Keys.Count -gt 1) {
-        SaveSettings
-    }
-
-    # Suppress prompt if Silent parameter was passed
-    if (-not $Silent) {
-        Write-Output ""
-        Write-Output ""
-        Write-Output ""
-        Write-Output "Press enter to confirm your choices and execute the script or press CTRL+C to quit..."
-        Read-Host | Out-Null
-    }
-
-    PrintHeader 'Custom Mode'
-}
-
-
 function ShowAppRemoval {
     PrintHeader "App Removal"
 
@@ -1757,37 +3061,11 @@ function LoadAndShowLastUsedSettings {
     PrintHeader 'Custom Mode'
 
     try {
-        $savedSettings = (Get-Content -Path $script:SavedSettingsFilePath -Raw | ConvertFrom-Json)
-        if ($savedSettings.Version -and $savedSettings.Version -ne "1.0") {
-            Write-Error "LastUsedSettings.json version mismatch (expected 1.0, found $($savedSettings.Version))"
-            AwaitKeyToExit
-        }
-
-        if (-not $savedSettings.Settings) {
-            throw
-        }
-
-        # Add settings from LastUsedSettings.json to Params
-        Foreach ($parameter in $savedSettings.Settings) {
-            $parameterName = $parameter.Name
-            $value = $parameter.Value
-    
-            # Skip parameters that are set to false in the config
-            if ($value -eq $false) {
-                continue
-            }
-    
-            # Add parameter to Params
-            if (-not $script:Params.ContainsKey($parameterName)) {
-                $script:Params.Add($parameterName, $value)
-            }
-            else {
-                $script:Params[$parameterName] = $value
-            }
-        }
+        # Load settings from LastUsedSettings.json and add to params
+        LoadSettingsToParams -filePath $script:SavedSettingsFilePath -expectedVersion "1.0"
     }
     catch {
-        Write-Error "Failed to load settings from LastUsedSettings.json file"
+        Write-Error "Failed to load settings from LastUsedSettings.json file: $_"
         AwaitKeyToExit
     }
 
@@ -1897,7 +3175,7 @@ if ($RunAppsListGenerator) {
 # Change script execution based on provided parameters or user input
 if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSavedSettings -or ($controlParamsCount -eq $script:Params.Count)) {
     if ($RunDefaults -or $RunDefaultsLite) {
-        $Mode = '1'
+        ShowDefaultModeOptions
     }
     elseif ($RunSavedSettings) {
         if (-not (Test-Path $script:SavedSettingsFilePath)) {
@@ -1906,10 +3184,16 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
             AwaitKeyToExit
         }
 
-        $Mode = '4'
+        LoadAndShowLastUsedSettings
     }
     else {
-        $Mode = ShowScriptMenuOptions 
+        if ($CLI) {
+            $Mode = ShowScriptMenuOptions 
+        }
+        else {
+            $result = ShowScriptUI
+            Exit
+        }
     }
 
     # Add execution parameters based on the mode
@@ -1919,24 +3203,19 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
             ShowDefaultModeOptions
         }
 
-        # Custom mode, shows all available options for user selection
-        '2' { 
-            ShowCustomModeOptions
-        }
-
         # App removal, remove apps based on user selection
-        '3' {
+        '2' {
             ShowAppRemoval
         }
 
         # Load last used options from the "LastUsedSettings.json" file
-        '4' {
+        '3' {
             LoadAndShowLastUsedSettings
         }
     }
 }
 else {
-    PrintHeader 'Custom Mode'
+    PrintHeader 'Configuration'
 }
 
 # If the number of keys in ControlParams equals the number of keys in Params then no modifications/changes were selected

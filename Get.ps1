@@ -1,4 +1,5 @@
 param (
+    [switch]$CLI,
     [switch]$Silent,
     [switch]$Verbose,
     [switch]$Sysprep,

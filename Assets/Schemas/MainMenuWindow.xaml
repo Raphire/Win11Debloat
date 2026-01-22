@@ -420,7 +420,7 @@
                             <!-- Logo -->
                             <Viewbox Width="180" Height="180" Margin="0,0,0,10" HorizontalAlignment="Center">
                                 <Grid Width="180" Height="180">
-                                    <!-- Fallback: Windows logo style icon -->
+                                    <!-- Windows logo style icon -->
                                     <Path x:Name="LogoFallback" Data="M0,0 L80,0 L80,80 L0,80 Z M90,0 L170,0 L170,80 L90,80 Z M0,90 L80,90 L80,170 L0,170 Z M90,90 L170,90 L170,170 L90,170 Z" 
                                         Fill="{DynamicResource ButtonBg}" Stretch="Uniform" Margin="10"/>
                                     <!-- Sparkle effects -->

@@ -1318,23 +1318,6 @@ function ShowScriptUI {
         $window.Resources.Add("ScrollBarThumbHoverColor", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#8b8b8b")))
     }
 
-    # Try to load logo image if it exists
-    $logoImage = $window.FindName('LogoImage')
-    $logoPath = "$PSScriptRoot\Assets\logo.png"
-    if (Test-Path $logoPath) {
-        try {
-            $bitmap = New-Object System.Windows.Media.Imaging.BitmapImage
-            $bitmap.BeginInit()
-            $bitmap.UriSource = New-Object System.Uri($logoPath, [System.UriKind]::Absolute)
-            $bitmap.CacheOption = [System.Windows.Media.Imaging.BitmapCacheOption]::OnLoad
-            $bitmap.EndInit()
-            $logoImage.Source = $bitmap
-        }
-        catch {
-            # Logo loading failed, use fallback
-        }
-    }
-
     # Get named elements
     $titleBar = $window.FindName('TitleBar')
     $closeBtn = $window.FindName('CloseBtn')

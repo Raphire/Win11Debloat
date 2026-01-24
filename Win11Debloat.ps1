@@ -210,11 +210,14 @@ function Write-ToConsole {
 function LoadJsonFile {
     param (
         [string]$filePath,
-        [string]$expectedVersion = $null
+        [string]$expectedVersion = $null,
+        [switch]$optionalFile
     )
     
     if (-not (Test-Path $filePath)) {
-        Write-Error "File not found: $filePath"
+        if (-not $optionalFile) {
+            Write-Error "File not found: $filePath"
+        }
         return $null
     }
     
@@ -1388,7 +1391,7 @@ function OpenGUI {
 
     # Handle Load Last Used button
     $loadLastUsedBtn = $window.FindName('LoadLastUsedBtn')
-    $lastUsedJson = LoadJsonFile -filePath $script:SavedSettingsFilePath -expectedVersion "1.0"
+    $lastUsedJson = LoadJsonFile -filePath $script:SavedSettingsFilePath -expectedVersion "1.0" -optionalFile
     
     # Check if file exists and has settings with Value = true
     $hasSettings = $false

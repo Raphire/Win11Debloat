@@ -1979,24 +1979,32 @@ function OpenGUI {
             $panel = GetOrCreateCategoryCard -category $category
             if (-not $panel) { continue }
 
-            # Add any groups for this category (in original order)
+            # Collect groups and features for this category, then sort by priority
+            $categoryItems = @()
+
+            # Add any groups for this category
             if ($featuresJson.UiGroups) {
+                $groupIndex = 0
                 foreach ($group in $featuresJson.UiGroups) {
-                    if ($group.Category -ne $category) { continue }
-                    $items = @('No Change') + ($group.Values | ForEach-Object { $_.Label })
-                    $comboName = 'Group_{0}Combo' -f $group.GroupId
-                    $combo = CreateLabeledCombo -parent $panel -labelText $group.Label -comboName $comboName -items $items
-                    $script:UiControlMappings[$comboName] = @{ Type='group'; Values = $group.Values; Label = $group.Label }
+                    if ($group.Category -ne $category) { $groupIndex++; continue }
+                    $categoryItems += [PSCustomObject]@{
+                        Type = 'group'
+                        Data = $group
+                        Priority = if ($null -ne $group.Priority) { $group.Priority } else { [int]::MaxValue }
+                        OriginalIndex = $groupIndex
+                    }
+                    $groupIndex++
                 }
             }
 
-            # Add individual features for this category, preserving Features.json order
+            # Add individual features for this category
+            $featureIndex = 0
             foreach ($feature in $featuresJson.Features) {
-                if ($feature.Category -ne $category) { continue }
+                if ($feature.Category -ne $category) { $featureIndex++; continue }
                 
                 # Check version and feature compatibility using Features.json
                 if (($feature.MinVersion -and $WinVersion -lt $feature.MinVersion) -or ($feature.MaxVersion -and $WinVersion -gt $feature.MaxVersion) -or ($feature.FeatureId -eq 'DisableModernStandbyNetworking' -and (-not $script:ModernStandbySupported))) {
-                    continue
+                    $featureIndex++; continue
                 }
 
                 # Skip if feature part of a group
@@ -2004,14 +2012,38 @@ function OpenGUI {
                 if ($featuresJson.UiGroups) {
                     foreach ($g in $featuresJson.UiGroups) { foreach ($val in $g.Values) { if ($val.FeatureIds -contains $feature.FeatureId) { $inGroup = $true; break } }; if ($inGroup) { break } }
                 }
-                if ($inGroup) { continue }
+                if ($inGroup) { $featureIndex++; continue }
 
-                $opt = 'Apply'
-                if ($feature.FeatureId -match '^Disable') { $opt = 'Disable' } elseif ($feature.FeatureId -match '^Enable') { $opt = 'Enable' }
-                $items = @('No Change', $opt)
-                $comboName = ("Feature_{0}_Combo" -f $feature.FeatureId) -replace '[^a-zA-Z0-9_]',''
-                $combo = CreateLabeledCombo -parent $panel -labelText ($feature.Action + ' ' + $feature.Label) -comboName $comboName -items $items
-                $script:UiControlMappings[$comboName] = @{ Type='feature'; FeatureId = $feature.FeatureId; Action = $feature.Action }
+                $categoryItems += [PSCustomObject]@{
+                    Type = 'feature'
+                    Data = $feature
+                    Priority = if ($null -ne $feature.Priority) { $feature.Priority } else { [int]::MaxValue }
+                    OriginalIndex = $featureIndex
+                }
+                $featureIndex++
+            }
+
+            # Sort by priority first, then by original index for items with same/no priority
+            $sortedItems = $categoryItems | Sort-Object -Property Priority, OriginalIndex
+
+            # Render sorted items
+            foreach ($item in $sortedItems) {
+                if ($item.Type -eq 'group') {
+                    $group = $item.Data
+                    $items = @('No Change') + ($group.Values | ForEach-Object { $_.Label })
+                    $comboName = 'Group_{0}Combo' -f $group.GroupId
+                    $combo = CreateLabeledCombo -parent $panel -labelText $group.Label -comboName $comboName -items $items
+                    $script:UiControlMappings[$comboName] = @{ Type='group'; Values = $group.Values; Label = $group.Label }
+                }
+                elseif ($item.Type -eq 'feature') {
+                    $feature = $item.Data
+                    $opt = 'Apply'
+                    if ($feature.FeatureId -match '^Disable') { $opt = 'Disable' } elseif ($feature.FeatureId -match '^Enable') { $opt = 'Enable' }
+                    $items = @('No Change', $opt)
+                    $comboName = ("Feature_{0}_Combo" -f $feature.FeatureId) -replace '[^a-zA-Z0-9_]',''
+                    $combo = CreateLabeledCombo -parent $panel -labelText ($feature.Action + ' ' + $feature.Label) -comboName $comboName -items $items
+                    $script:UiControlMappings[$comboName] = @{ Type='feature'; FeatureId = $feature.FeatureId; Action = $feature.Action }
+                }
             }
         }
     }

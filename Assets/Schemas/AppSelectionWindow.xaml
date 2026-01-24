@@ -19,16 +19,22 @@
                         <Grid>
                             <Track Name="PART_Track" IsDirectionReversed="true">
                                 <Track.Thumb>
-                                    <Thumb Background="{DynamicResource BorderColor}">
+                                    <Thumb>
                                         <Thumb.Style>
                                             <Style TargetType="Thumb">
+                                                <Setter Property="Background" Value="{DynamicResource ScrollBarThumbColor}"/>
                                                 <Setter Property="Template">
                                                     <Setter.Value>
-                                                        <ControlTemplate TargetType="Thumb">
+                                                        <ControlTemplate>
                                                             <Border Background="{TemplateBinding Background}" CornerRadius="4"/>
                                                         </ControlTemplate>
                                                     </Setter.Value>
                                                 </Setter>
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Background" Value="{DynamicResource ScrollBarThumbHoverColor}"/>
+                                                    </Trigger>
+                                                </Style.Triggers>
                                             </Style>
                                         </Thumb.Style>
                                     </Thumb>
@@ -39,18 +45,51 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        
-        <!-- Main Button Style -->
+
+        <!-- CheckBox Style -->
+        <Style TargetType="CheckBox">
+            <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Padding" Value="4,2"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <Border Background="{TemplateBinding Background}" BorderThickness="0" CornerRadius="4" Padding="{TemplateBinding Padding}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Border x:Name="CheckBoxBorder" Grid.Column="0" Width="16" Height="16" Background="{DynamicResource ComboBgColor}" BorderBrush="{DynamicResource ButtonBorderColor}" BorderThickness="1" CornerRadius="4" Margin="0,0,8,0">
+                                    <TextBlock x:Name="CheckMark" Text="&#xE73E;" FontFamily="Segoe MDL2 Assets" FontSize="12" Foreground="{DynamicResource ButtonBg}" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed"/>
+                                </Border>
+                                <ContentPresenter Grid.Column="1" VerticalAlignment="Center" Margin="0,0,0,1"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="CheckMark" Property="Visibility" Value="Visible"/>
+                                <Setter TargetName="CheckBoxBorder" Property="Background" Value="{DynamicResource ButtonBg}"/>
+                                <Setter TargetName="CheckMark" Property="Foreground" Value="White"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="CheckBoxBorder" Property="BorderBrush" Value="{DynamicResource ButtonBg}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Button Style -->
         <Style x:Key="Win11Button" TargetType="Button">
             <Setter Property="Background" Value="{DynamicResource ButtonBg}"/>
-            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Foreground" Value="white"/>
             <Setter Property="BorderBrush" Value="{DynamicResource ButtonBg}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="0"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -59,7 +98,7 @@
                                 BorderThickness="{TemplateBinding BorderThickness}"
                                 CornerRadius="4"
                                 Padding="{TemplateBinding Padding}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0"/>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
@@ -69,20 +108,22 @@
                     <Setter Property="Background" Value="{DynamicResource ButtonHover}"/>
                     <Setter Property="BorderBrush" Value="{DynamicResource ButtonHover}"/>
                 </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource ButtonPressed}"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource ButtonPressed}"/>
+                </Trigger>
             </Style.Triggers>
         </Style>
-        
+
         <!-- Secondary Button Style -->
         <Style x:Key="Win11ButtonSecondary" TargetType="Button">
             <Setter Property="Background" Value="{DynamicResource SecondaryButtonBg}"/>
             <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
-            <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderColor}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="0"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -91,7 +132,7 @@
                                 BorderThickness="{TemplateBinding BorderThickness}"
                                 CornerRadius="4"
                                 Padding="{TemplateBinding Padding}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0"/>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,1"/>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
@@ -99,7 +140,9 @@
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="{DynamicResource SecondaryButtonHover}"/>
-                    <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource SecondaryButtonPressed}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -136,7 +179,7 @@
     <Border BorderBrush="{DynamicResource BorderColor}" 
             BorderThickness="1" 
             CornerRadius="8" 
-            Background="{DynamicResource BgColor}">
+            Background="{DynamicResource TitleBarBg}">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="32"/>
@@ -184,26 +227,21 @@
                         <CheckBox x:Name="CheckAllBox" Content="Check/Uncheck all" Margin="8,0,15,0" Foreground="{DynamicResource FgColor}"/>
                     </StackPanel>
 
-                    <Border Grid.Row="2" BorderBrush="{DynamicResource BorderColor}" CornerRadius="4" BorderThickness="1" Margin="0,0,0,10" Background="{DynamicResource ListBgColor}">
+                    <Border Grid.Row="2" BorderBrush="{DynamicResource BorderColor}" CornerRadius="4" BorderThickness="1" Margin="0,0,0,10" Background="{DynamicResource BgColor}">
                         <Grid>
                             <ScrollViewer VerticalScrollBarVisibility="Auto">
                                 <StackPanel x:Name="AppsPanel" Margin="5"/>
                             </ScrollViewer>
-                            <Border x:Name="LoadingIndicator" 
-                                    Background="{DynamicResource LoadingBgColor}" 
-                                    Visibility="Collapsed">
-                                <TextBlock Text="Loading apps..." 
-                                        FontSize="16" 
-                                        FontWeight="SemiBold" 
-                                        Foreground="{DynamicResource FgColor}" 
-                                        HorizontalAlignment="Center" 
-                                        VerticalAlignment="Center"/>
+                            <Border x:Name="LoadingAppsIndicator" CornerRadius="4" Background="{DynamicResource ScrollBarThumbColor}" Opacity="0.8" Visibility="Collapsed">
+                                <TextBlock Text="Loading apps..." FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource FgColor}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </Border>
                         </Grid>
                     </Border>
 
                     <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
-                        <CheckBox x:Name="OnlyInstalledBox" Content="Only show installed apps" IsChecked="True" Foreground="{DynamicResource FgColor}" Margin="0,8,10,0" />
+                        <Grid Margin="0,8,10,10">
+                            <CheckBox x:Name="OnlyInstalledBox" Content="Only show installed apps" Foreground="{DynamicResource FgColor}" />
+                        </Grid>
                         <Button x:Name="ConfirmBtn" Width="80" Height="32" Margin="0,0,10,0" Content="Confirm" Style="{StaticResource Win11Button}"/>
                         <Button x:Name="CancelBtn" Width="80" Height="32" Content="Cancel" Style="{StaticResource Win11ButtonSecondary}"/>
                     </StackPanel>

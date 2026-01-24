@@ -392,7 +392,7 @@ function ShowAppSelectionWindow {
         $fgColor = "#1A1A1A"
     }
 
-    $appsPanel = $window.FindName('AppSelectionPanel')
+    $appsPanel = $window.FindName('AppsPanel')
     $checkAllBox = $window.FindName('CheckAllBox')
     $onlyInstalledBox = $window.FindName('OnlyInstalledBox')
     $confirmBtn = $window.FindName('ConfirmBtn')
@@ -401,8 +401,31 @@ function ShowAppSelectionWindow {
     $titleBar = $window.FindName('TitleBar')
     $closeBtn = $window.FindName('CloseBtn')
 
-    # Helper function to complete app loading with the winget list
-    function LoadAppsWithWingetList($listOfApps) {
+    # Function to load apps into the panel
+    function LoadApps {
+        # Show loading indicator
+        $loadingIndicator.Visibility = 'Visible'
+        $window.Dispatcher.Invoke([System.Windows.Threading.DispatcherPriority]::Background, [action]{})
+
+        $appsPanel.Children.Clear()
+        $listOfApps = ""
+
+        if ($onlyInstalledBox.IsChecked -and ($script:WingetInstalled -eq $true)) {
+            # Attempt to get a list of installed apps via winget, times out after 10 seconds
+            $job = Start-Job { return winget list --accept-source-agreements --disable-interactivity }
+            $jobDone = $job | Wait-Job -TimeOut 10
+
+            if (-not $jobDone) {
+                # Show error that the script was unable to get list of apps from winget
+                [System.Windows.MessageBox]::Show('Unable to load list of installed apps via winget.', 'Error', 'OK', 'Error') | Out-Null
+                $onlyInstalledBox.IsChecked = $false
+            }
+            else {
+                # Add output of job (list of apps) to $listOfApps
+                $listOfApps = Receive-Job -Job $job
+            }
+        }
+
         # Store apps data for sorting
         $appsToAdd = @()
 
@@ -447,63 +470,6 @@ function ShowAppSelectionWindow {
 
         # Hide loading indicator
         $loadingIndicator.Visibility = 'Collapsed'
-    }
-
-    # Function to load apps into the panel
-    function LoadApps {
-        # Disable confirm button during loading to prevent premature actions
-        $confirmBtn.IsEnabled = $false
-        
-        # Show loading indicator and force UI update
-        $loadingIndicator.Visibility = 'Visible'
-        $window.Dispatcher.Invoke([System.Windows.Threading.DispatcherPriority]::Background, [action]{})
-
-        $appsPanel.Children.Clear()
-        $listOfApps = ""
-
-        if ($onlyInstalledBox.IsChecked -and ($script:WingetInstalled -eq $true)) {
-            # Start job to get list of installed apps via winget
-            $job = Start-Job { return winget list --accept-source-agreements --disable-interactivity }
-            $jobStartTime = Get-Date
-            
-            # Create timer to poll job status without blocking UI
-            $pollTimer = New-Object System.Windows.Threading.DispatcherTimer
-            $pollTimer.Interval = [TimeSpan]::FromMilliseconds(100)
-            
-            $pollTimer.Add_Tick({
-                $elapsed = (Get-Date) - $jobStartTime
-                
-                # Check if job is complete or timed out (10 seconds)
-                if ($job.State -eq 'Completed') {
-                    $pollTimer.Stop()
-                    $listOfApps = Receive-Job -Job $job
-                    Remove-Job -Job $job
-                    
-                    # Continue with loading apps
-                    LoadAppsWithWingetList $listOfApps
-                    $confirmBtn.IsEnabled = $true
-                }
-                elseif ($elapsed.TotalSeconds -gt 10 -or $job.State -eq 'Failed') {
-                    $pollTimer.Stop()
-                    Remove-Job -Job $job -Force
-                    
-                    # Show error that the script was unable to get list of apps from winget
-                    [System.Windows.MessageBox]::Show('Unable to load list of installed apps via winget.', 'Error', 'OK', 'Error') | Out-Null
-                    $onlyInstalledBox.IsChecked = $false
-                    
-                    # Continue with loading all apps (unchecked now)
-                    LoadAppsWithWingetList ""
-                    $confirmBtn.IsEnabled = $true
-                }
-            }.GetNewClosure())
-            
-            $pollTimer.Start()
-            return  # Exit here, timer will continue the work
-        }
-        
-        # If checkbox is not checked or winget not installed, load all apps immediately
-        LoadAppsWithWingetList $listOfApps
-        $confirmBtn.IsEnabled = $true
     }
 
     # Event handlers

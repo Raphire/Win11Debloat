@@ -141,6 +141,69 @@ else {
 ##################################################################################################################
 
 
+# Script-level variables for output mode (GUI vs CLI)
+$script:GuiConsoleOutput = $null
+$script:GuiConsoleScrollViewer = $null
+$script:GuiWindow = $null
+
+
+# Unified output function that works for both CLI and GUI modes
+# In GUI mode, writes to the console panel. In CLI mode, uses Write-Output.
+function Write-ToConsole {
+    param(
+        [string]$message,
+        [string]$ForegroundColor = $null
+    )
+    
+    if ($script:GuiConsoleOutput) {
+        # GUI mode
+        $timestamp = Get-Date -Format "HH:mm:ss"
+        $script:GuiConsoleOutput.Dispatcher.Invoke([System.Windows.Threading.DispatcherPriority]::Send, [action]{
+            try {
+                $runText = "[$timestamp] $message`n"
+                $run = New-Object System.Windows.Documents.Run $runText
+
+                if ($ForegroundColor) {
+                    try {
+                        $colorObj = [System.Windows.Media.ColorConverter]::ConvertFromString($ForegroundColor)
+                        if ($colorObj) {
+                            $brush = [System.Windows.Media.SolidColorBrush]::new($colorObj)
+                            $run.Foreground = $brush
+                        }
+                    }
+                    catch {
+                        # Invalid color string - ignore and fall back to default
+                    }
+                }
+
+                $script:GuiConsoleOutput.Inlines.Add($run)
+                if ($script:GuiConsoleScrollViewer) { $script:GuiConsoleScrollViewer.ScrollToEnd() }
+            }
+            catch {
+                # If any UI update fails, fall back to simple text append
+                try { $script:GuiConsoleOutput.Text += "[$timestamp] $message`n" } catch {}
+            }
+        })
+
+        # Force UI to process pending updates for real-time display
+        if ($script:GuiWindow) {
+            $script:GuiWindow.Dispatcher.Invoke([System.Windows.Threading.DispatcherPriority]::Background, [action]{})
+        }
+    }
+
+    try {
+        if ($ForegroundColor) {
+            Write-Host $message -ForegroundColor $ForegroundColor
+        }
+        else {
+            Write-Host $message
+        }
+    }
+    catch {
+        Write-Host $message
+    }
+}
+
 
 # Loads a JSON file from the specified path and returns the parsed object
 # Returns $null if the file doesn't exist or if parsing fails
@@ -613,12 +676,12 @@ function RemoveApps {
     )
 
     Foreach ($app in $appsList) {
-        Write-Output "Attempting to remove $app..."
+        Write-ToConsole "Attempting to remove $app..."
 
         # Use winget only to remove OneDrive and Edge
         if (($app -eq "Microsoft.OneDrive") -or ($app -eq "Microsoft.Edge")) {
             if ($script:WingetInstalled -eq $false) {
-                Write-Host "WinGet is either not installed or is outdated, $app could not be removed" -ForegroundColor Red
+                Write-ToConsole "WinGet is either not installed or is outdated, $app could not be removed" -ForegroundColor Red
                 continue
             }
 
@@ -636,11 +699,12 @@ function RemoveApps {
                 StripProgress -ScriptBlock { winget uninstall --accept-source-agreements --disable-interactivity --id $app } | Tee-Object -Variable wingetOutput
 
                 If (($app -eq "Microsoft.Edge") -and (Select-String -InputObject $wingetOutput -Pattern "Uninstall failed with exit code")) {
-                    Write-Host "Unable to uninstall Microsoft Edge via Winget" -ForegroundColor Red
-                    Write-Output ""
+                    Write-ToConsole "Unable to uninstall Microsoft Edge via Winget" -ForegroundColor Red
+                    Write-ToConsole ""
 
-                    if ($( Read-Host -Prompt "Would you like to forcefully uninstall Microsoft Edge? NOT RECOMMENDED! (y/n)" ) -eq 'y') {
-                        Write-Output ""
+                    # Only prompt in CLI mode (not GUI)
+                    if (-not $script:GuiConsoleOutput -and $( Read-Host -Prompt "Would you like to forcefully uninstall Microsoft Edge? NOT RECOMMENDED! (y/n)" ) -eq 'y') {
+                        Write-ToConsole ""
                         ForceRemoveEdge
                     }
                 }
@@ -657,12 +721,12 @@ function RemoveApps {
             Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage -AllUsers -ErrorAction Continue
 
             if ($DebugPreference -ne "SilentlyContinue") {
-                Write-Host "Removed $app for all users" -ForegroundColor DarkGray
+                Write-ToConsole "Removed $app for all users" -ForegroundColor DarkGray
             }
         }
         catch {
             if ($DebugPreference -ne "SilentlyContinue") {
-                Write-Host "Unable to remove $app for all users" -ForegroundColor Yellow
+                Write-ToConsole "Unable to remove $app for all users" -ForegroundColor Yellow
                 Write-Host $psitem.Exception.StackTrace -ForegroundColor Gray
             }
         }
@@ -672,19 +736,19 @@ function RemoveApps {
             Get-AppxProvisionedPackage -Online | Where-Object { $_.PackageName -like $app } | ForEach-Object { Remove-ProvisionedAppxPackage -Online -AllUsers -PackageName $_.PackageName }
         }
         catch {
-            Write-Host "Unable to remove $app from windows image" -ForegroundColor Yellow
+            Write-ToConsole "Unable to remove $app from windows image" -ForegroundColor Yellow
             Write-Host $psitem.Exception.StackTrace -ForegroundColor Gray
         }
     }
 
-    Write-Output ""
+    Write-ToConsole ""
 }
 
 
 # Forcefully removes Microsoft Edge using its uninstaller
 # Credit: Based on work from loadstring1 & ave9858
 function ForceRemoveEdge {
-    Write-Output "> Forcefully uninstalling Microsoft Edge..."
+    Write-ToConsole "> Forcefully uninstalling Microsoft Edge..."
 
     $regView = [Microsoft.Win32.RegistryView]::Registry32
     $hklm = [Microsoft.Win32.RegistryKey]::OpenBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, $regView)
@@ -698,11 +762,11 @@ function ForceRemoveEdge {
     # Remove edge
     $uninstallRegKey = $hklm.OpenSubKey('SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft Edge')
     if ($null -ne $uninstallRegKey) {
-        Write-Output "Running uninstaller..."
+        Write-ToConsole "Running uninstaller..."
         $uninstallString = $uninstallRegKey.GetValue('UninstallString') + ' --force-uninstall'
         Start-Process cmd.exe "/c $uninstallString" -WindowStyle Hidden -Wait
 
-        Write-Output "Removing leftover files..."
+        Write-ToConsole "Removing leftover files..."
 
         $edgePaths = @(
             "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Microsoft Edge.lnk",
@@ -717,11 +781,11 @@ function ForceRemoveEdge {
         foreach ($path in $edgePaths) {
             if (Test-Path -Path $path) {
                 Remove-Item -Path $path -Force -Recurse -ErrorAction SilentlyContinue
-                Write-Host "  Removed $path" -ForegroundColor DarkGray
+                Write-ToConsole "  Removed $path" -ForegroundColor DarkGray
             }
         }
 
-        Write-Output "Cleaning up registry..."
+        Write-ToConsole "Cleaning up registry..."
 
         # Remove MS Edge from autostart
         reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run" /v "MicrosoftEdgeAutoLaunch_A9F6DCE4ABADF4F51CF45CD7129E3C6C" /f *>$null
@@ -729,14 +793,14 @@ function ForceRemoveEdge {
         reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run" /v "MicrosoftEdgeAutoLaunch_A9F6DCE4ABADF4F51CF45CD7129E3C6C" /f *>$null
         reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run" /v "Microsoft Edge Update" /f *>$null
 
-        Write-Output "Microsoft Edge was uninstalled"
+        Write-ToConsole "Microsoft Edge was uninstalled"
     }
     else {
-        Write-Output ""
-        Write-Host "Error: Unable to forcefully uninstall Microsoft Edge, uninstaller could not be found" -ForegroundColor Red
+        Write-ToConsole ""
+        Write-ToConsole "Error: Unable to forcefully uninstall Microsoft Edge, uninstaller could not be found" -ForegroundColor Red
     }
 
-    Write-Output ""
+    Write-ToConsole ""
 }
 
 
@@ -841,19 +905,24 @@ function RegImport {
         $defaultUserPath = GetUserDirectory -userName "Default" -fileName "NTUSER.DAT"
 
         reg load "HKU\Default" $defaultUserPath | Out-Null
-        reg import "$script:RegfilesPath\Sysprep\$path"
+        $regOutput = reg import "$script:RegfilesPath\Sysprep\$path" 2>&1
         reg unload "HKU\Default" | Out-Null
     }
     elseif ($script:Params.ContainsKey("User")) {
         $userPath = GetUserDirectory -userName $script:Params.Item("User") -fileName "NTUSER.DAT"
 
         reg load "HKU\Default" $userPath | Out-Null
-        reg import "$script:RegfilesPath\Sysprep\$path"
+        $regOutput = reg import "$script:RegfilesPath\Sysprep\$path" 2>&1
         reg unload "HKU\Default" | Out-Null
 
     }
     else {
-        reg import "$script:RegfilesPath\$path"  
+        $regOutput = reg import "$script:RegfilesPath\$path" 2>&1
+    }
+    
+    foreach ($line in $regOutput) { 
+        $lineText = if ($line -is [System.Management.Automation.ErrorRecord]) { $line.Exception.Message } else { $line.ToString() }
+        if ($lineText) { Write-ToConsole $lineText }
     }
 
     Write-ToConsole ""
@@ -862,33 +931,33 @@ function RegImport {
 
 # Restart the Windows Explorer process
 function RestartExplorer {
-    Write-Output "> Attempting to restart the Windows Explorer process to apply all changes..."
+    Write-ToConsole "> Attempting to restart the Windows Explorer process to apply all changes..."
     
     if ($script:Params.ContainsKey("Sysprep") -or $script:Params.ContainsKey("User") -or $script:Params.ContainsKey("NoRestartExplorer")) {
-        Write-Host "Process restart was skipped, please manually reboot your PC to apply all changes" -ForegroundColor Yellow
+        Write-ToConsole "Process restart was skipped, please manually reboot your PC to apply all changes" -ForegroundColor Yellow
         return
     }
 
     if ($script:Params.ContainsKey("DisableMouseAcceleration")) {
-        Write-Host "Warning: Changes to the Enhance Pointer Precision setting will only take effect after a reboot" -ForegroundColor Yellow
+        Write-ToConsole "Warning: Changes to the Enhance Pointer Precision setting will only take effect after a reboot" -ForegroundColor Yellow
     }
 
     if ($script:Params.ContainsKey("DisableStickyKeys")) {
-        Write-Host "Warning: Changes to the Sticky Keys setting will only take effect after a reboot" -ForegroundColor Yellow
+        Write-ToConsole "Warning: Changes to the Sticky Keys setting will only take effect after a reboot" -ForegroundColor Yellow
     }
 
     if ($script:Params.ContainsKey("DisableAnimations")) {
-        Write-Host "Warning: Animations will only be disabled after a reboot" -ForegroundColor Yellow
+        Write-ToConsole "Warning: Animations will only be disabled after a reboot" -ForegroundColor Yellow
     }
 
     # Only restart if the powershell process matches the OS architecture.
     # Restarting explorer from a 32bit PowerShell window will fail on a 64bit OS
     if ([Environment]::Is64BitProcess -eq [Environment]::Is64BitOperatingSystem) {
-        Write-Output "Restarting the Windows Explorer process... (This may cause your screen to flicker)"
+        Write-ToConsole "Restarting the Windows Explorer process... (This may cause your screen to flicker)"
         Stop-Process -processName: Explorer -Force
     }
     else {
-        Write-Host "Unable to restart Windows Explorer process, please manually reboot your PC to apply all changes" -ForegroundColor Yellow
+        Write-ToConsole "Unable to restart Windows Explorer process, please manually reboot your PC to apply all changes" -ForegroundColor Yellow
     }
 }
 
@@ -900,12 +969,12 @@ function ReplaceStartMenuForAllUsers {
         $startMenuTemplate = "$script:AssetsPath/Start/start2.bin"
     )
 
-    Write-Output "> Removing all pinned apps from the start menu for all users..."
+    Write-ToConsole "> Removing all pinned apps from the start menu for all users..."
 
     # Check if template bin file exists
     if (-not (Test-Path $startMenuTemplate)) {
-        Write-Host "Error: Unable to clear start menu, start2.bin file missing from script folder" -ForegroundColor Red
-        Write-Output ""
+        Write-ToConsole "Error: Unable to clear start menu, start2.bin file missing from script folder" -ForegroundColor Red
+        Write-ToConsole ""
         return
     }
 
@@ -924,13 +993,13 @@ function ReplaceStartMenuForAllUsers {
     # Create folder if it doesn't exist
     if (-not (Test-Path $defaultStartMenuPath)) {
         new-item $defaultStartMenuPath -ItemType Directory -Force | Out-Null
-        Write-Output "Created LocalState folder for default user profile"
+        Write-ToConsole "Created LocalState folder for default user profile"
     }
 
     # Copy template to default profile
     Copy-Item -Path $startMenuTemplate -Destination $defaultStartMenuPath -Force
-    Write-Output "Replaced start menu for the default user profile"
-    Write-Output ""
+    Write-ToConsole "Replaced start menu for the default user profile"
+    Write-ToConsole ""
 }
 
 
@@ -949,12 +1018,12 @@ function ReplaceStartMenu {
 
     # Check if template bin file exists
     if (-not (Test-Path $startMenuTemplate)) {
-        Write-Host "Error: Unable to replace start menu, template file not found" -ForegroundColor Red
+        Write-ToConsole "Error: Unable to replace start menu, template file not found" -ForegroundColor Red
         return
     }
 
     if ([IO.Path]::GetExtension($startMenuTemplate) -ne ".bin" ) {
-        Write-Host "Error: Unable to replace start menu, template file is not a valid .bin file" -ForegroundColor Red
+        Write-ToConsole "Error: Unable to replace start menu, template file is not a valid .bin file" -ForegroundColor Red
         return
     }
 
@@ -967,14 +1036,14 @@ function ReplaceStartMenu {
         Move-Item -Path $startMenuBinFile -Destination $backupBinFile -Force
     }
     else {
-        Write-Host "Unable to find original start2.bin file for user $userName, no backup was created for this user" -ForegroundColor Yellow
+        Write-ToConsole "Unable to find original start2.bin file for user $userName, no backup was created for this user" -ForegroundColor Yellow
         New-Item -ItemType File -Path $startMenuBinFile -Force
     }
 
     # Copy template file
     Copy-Item -Path $startMenuTemplate -Destination $startMenuBinFile -Force
 
-    Write-Output "Replaced start menu for user $userName"
+    Write-ToConsole "Replaced start menu for user $userName"
 }
 
 
@@ -1157,35 +1226,407 @@ function GetUserName {
 }
 
 
+# Executes a single parameter/feature based on its key
+# Used by both CLI and GUI execution paths
+# Parameters:
+#   $paramKey - The parameter name to execute
+function ExecuteParameter {
+    param (
+        [string]$paramKey
+    )
+    
+    switch ($paramKey) {
+        'RemoveApps' {
+            Write-ToConsole "> Removing selected apps..."
+            $appsList = GenerateAppsList
+
+            if ($appsList.Count -eq 0) {
+                Write-ToConsole "No valid apps were selected for removal" -ForegroundColor Yellow
+                Write-ToConsole ""
+                return
+            }
+
+            Write-ToConsole "$($appsList.Count) apps selected for removal"
+            RemoveApps $appsList
+        }
+        'RemoveAppsCustom' {
+            Write-ToConsole "> Removing selected apps..."
+            $appsList = ReadAppslistFromFile $script:CustomAppsListFilePath
+
+            if ($appsList.Count -eq 0) {
+                Write-ToConsole "No valid apps were selected for removal" -ForegroundColor Yellow
+                Write-ToConsole ""
+                return
+            }
+
+            Write-ToConsole "$($appsList.Count) apps selected for removal"
+            RemoveApps $appsList
+        }
+        'RemoveCommApps' {
+            $appsList = 'Microsoft.windowscommunicationsapps', 'Microsoft.People'
+            Write-ToConsole "> Removing Mail, Calendar and People apps..."
+            RemoveApps $appsList
+            return
+        }
+        'RemoveW11Outlook' {
+            $appsList = 'Microsoft.OutlookForWindows'
+            Write-ToConsole "> Removing new Outlook for Windows app..."
+            RemoveApps $appsList
+            return
+        }
+        'RemoveGamingApps' {
+            $appsList = 'Microsoft.GamingApp', 'Microsoft.XboxGameOverlay', 'Microsoft.XboxGamingOverlay'
+            Write-ToConsole "> Removing gaming related apps..."
+            RemoveApps $appsList
+            return
+        }
+        'RemoveHPApps' {
+            $appsList = 'AD2F1837.HPAIExperienceCenter', 'AD2F1837.HPJumpStarts', 'AD2F1837.HPPCHardwareDiagnosticsWindows', 'AD2F1837.HPPowerManager', 'AD2F1837.HPPrivacySettings', 'AD2F1837.HPSupportAssistant', 'AD2F1837.HPSureShieldAI', 'AD2F1837.HPSystemInformation', 'AD2F1837.HPQuickDrop', 'AD2F1837.HPWorkWell', 'AD2F1837.myHP', 'AD2F1837.HPDesktopSupportUtilities', 'AD2F1837.HPQuickTouch', 'AD2F1837.HPEasyClean', 'AD2F1837.HPConnectedMusic', 'AD2F1837.HPFileViewer', 'AD2F1837.HPRegistration', 'AD2F1837.HPWelcome', 'AD2F1837.HPConnectedPhotopoweredbySnapfish', 'AD2F1837.HPPrinterControl'
+            Write-ToConsole "> Removing HP apps..."
+            RemoveApps $appsList
+            return
+        }
+        "ForceRemoveEdge" {
+            ForceRemoveEdge
+            return
+        }
+        'DisableDVR' {
+            RegImport "> Disabling Xbox game/screen recording..." "Disable_DVR.reg"
+            return
+        }
+        'DisableGameBarIntegration' {
+            RegImport "> Disabling Game Bar integration..." "Disable_Game_Bar_Integration.reg"
+            return
+        }
+        'DisableTelemetry' {
+            RegImport "> Disabling telemetry, diagnostic data, activity history, app-launch tracking and targeted ads..." "Disable_Telemetry.reg"
+            return
+        }
+        {$_ -in "DisableSuggestions", "DisableWindowsSuggestions"} {
+            RegImport "> Disabling tips, tricks, suggestions and ads across Windows..." "Disable_Windows_Suggestions.reg"
+            return
+        }
+        'DisableEdgeAds' {
+            RegImport "> Disabling ads, suggestions and the MSN news feed in Microsoft Edge..." "Disable_Edge_Ads_And_Suggestions.reg"
+            return
+        }
+        {$_ -in "DisableLockscrTips", "DisableLockscreenTips"} {
+            RegImport "> Disabling tips & tricks on the lockscreen..." "Disable_Lockscreen_Tips.reg"
+            return
+        }
+        'DisableDesktopSpotlight' {
+            RegImport "> Disabling the 'Windows Spotlight' desktop background option..." "Disable_Desktop_Spotlight.reg"
+            return
+        }
+        'DisableSettings365Ads' {
+            RegImport "> Disabling Microsoft 365 ads in Settings Home..." "Disable_Settings_365_Ads.reg"
+            return
+        }
+        'DisableSettingsHome' {
+            RegImport "> Disabling the Settings Home page..." "Disable_Settings_Home.reg"
+            return
+        }
+        {$_ -in "DisableBingSearches", "DisableBing"} {
+            RegImport "> Disabling Bing web search, Bing AI and Cortana from Windows search..." "Disable_Bing_Cortana_In_Search.reg"
+            # Also remove the app package for Bing search
+            $appsList = 'Microsoft.BingSearch'
+            RemoveApps $appsList
+            return
+        }
+        'DisableCopilot' {
+            RegImport "> Disabling Microsoft Copilot..." "Disable_Copilot.reg"
+            # Also remove the app package for Copilot
+            $appsList = 'Microsoft.Copilot'
+            RemoveApps $appsList
+            return
+        }
+        'DisableRecall' {
+            RegImport "> Disabling Windows Recall..." "Disable_AI_Recall.reg"
+            return
+        }
+        'DisableClickToDo' {
+            RegImport "> Disabling Click to Do..." "Disable_Click_to_Do.reg"
+            return
+        }
+        'DisableEdgeAI' {
+            RegImport "> Disabling AI features in Microsoft Edge..." "Disable_Edge_AI_Features.reg"
+            return
+        }
+        'DisablePaintAI' {
+            RegImport "> Disabling AI features in Paint..." "Disable_Paint_AI_Features.reg"
+            return
+        }
+        'DisableNotepadAI' {
+            RegImport "> Disabling AI features in Notepad..." "Disable_Notepad_AI_Features.reg"
+            return
+        }
+        'RevertContextMenu' {
+            RegImport "> Restoring the old Windows 10 style context menu..." "Disable_Show_More_Options_Context_Menu.reg"
+            return
+        }
+        'DisableMouseAcceleration' {
+            RegImport "> Turning off Enhanced Pointer Precision..." "Disable_Enhance_Pointer_Precision.reg"
+            return
+        }
+        'DisableStickyKeys' {
+            RegImport "> Disabling the Sticky Keys keyboard shortcut..." "Disable_Sticky_Keys_Shortcut.reg"
+            return
+        }
+        'DisableFastStartup' {
+            RegImport "> Disabling Fast Start-up..." "Disable_Fast_Startup.reg"
+            return
+        }
+        'DisableModernStandbyNetworking' {
+            if (-not $script:ModernStandbySupported) {
+                Write-ToConsole "> Disabling network connectivity during Modern Standby..."
+                Write-ToConsole "Device does not support modern standby" -ForegroundColor Yellow
+                Write-ToConsole ""
+                return
+            }
+            RegImport "> Disabling network connectivity during Modern Standby..." "Disable_Modern_Standby_Networking.reg"
+            return
+        }
+        'ClearStart' {
+            Write-ToConsole "> Removing all pinned apps from the start menu for user $(GetUserName)..."
+            ReplaceStartMenu
+            Write-ToConsole ""
+            return
+        }
+        'ReplaceStart' {
+            Write-ToConsole "> Replacing the start menu for user $(GetUserName)..."
+            ReplaceStartMenu $script:Params.Item("ReplaceStart")
+            Write-ToConsole ""
+            return
+        }
+        'ClearStartAllUsers' {
+            ReplaceStartMenuForAllUsers
+            return
+        }
+        'ReplaceStartAllUsers' {
+            ReplaceStartMenuForAllUsers $script:Params.Item("ReplaceStartAllUsers")
+            return
+        }
+        'DisableStartRecommended' {
+            RegImport "> Disabling the start menu recommended section..." "Disable_Start_Recommended.reg"
+            return
+        }
+        'DisableStartPhoneLink' {
+            RegImport "> Disabling the Phone Link mobile devices integration in the start menu..." "Disable_Phone_Link_In_Start.reg"
+            return
+        }
+        'EnableDarkMode' {
+            RegImport "> Enabling dark mode for system and apps..." "Enable_Dark_Mode.reg"
+            return
+        }
+        'DisableTransparency' {
+            RegImport "> Disabling transparency effects..." "Disable_Transparency.reg"
+            return
+        }
+        'DisableAnimations' {
+            RegImport "> Disabling animations and visual effects..." "Disable_Animations.reg"
+            return
+        }
+        'TaskbarAlignLeft' {
+            RegImport "> Aligning taskbar buttons to the left..." "Align_Taskbar_Left.reg"
+            return
+        }
+        'CombineTaskbarAlways' {
+            RegImport "> Setting the taskbar on the main display to always combine buttons and hide labels..." "Combine_Taskbar_Always.reg"
+            return
+        }
+        'CombineTaskbarWhenFull' {
+            RegImport "> Setting the taskbar on the main display to only combine buttons and hide labels when the taskbar is full..." "Combine_Taskbar_When_Full.reg"
+            return
+        }
+        'CombineTaskbarNever' {
+            RegImport "> Setting the taskbar on the main display to never combine buttons or hide labels..." "Combine_Taskbar_Never.reg"
+            return
+        }
+        'CombineMMTaskbarAlways' {
+            RegImport "> Setting the taskbar on secondary displays to always combine buttons and hide labels..." "Combine_MMTaskbar_Always.reg"
+            return
+        }
+        'CombineMMTaskbarWhenFull' {
+            RegImport "> Setting the taskbar on secondary displays to only combine buttons and hide labels when the taskbar is full..." "Combine_MMTaskbar_When_Full.reg"
+            return
+        }
+        'CombineMMTaskbarNever' {
+            RegImport "> Setting the taskbar on secondary displays to never combine buttons or hide labels..." "Combine_MMTaskbar_Never.reg"
+            return
+        }
+        'MMTaskbarModeAll' {
+            RegImport "> Setting the taskbar to only show app icons on main taskbar..." "MMTaskbarMode_All.reg"
+            return
+        }
+        'MMTaskbarModeMainActive' {
+            RegImport "> Setting the taskbar to show app icons on all taskbars..." "MMTaskbarMode_Main_Active.reg"
+            return
+        }
+        'MMTaskbarModeActive' {
+            RegImport "> Setting the taskbar to only show app icons on the taskbar where the window is open..." "MMTaskbarMode_Active.reg"
+            return
+        }
+        'HideSearchTb' {
+            RegImport "> Hiding the search icon from the taskbar..." "Hide_Search_Taskbar.reg"
+            return
+        }
+        'ShowSearchIconTb' {
+            RegImport "> Changing taskbar search to icon only..." "Show_Search_Icon.reg"
+            return
+        }
+        'ShowSearchLabelTb' {
+            RegImport "> Changing taskbar search to icon with label..." "Show_Search_Icon_And_Label.reg"
+            return
+        }
+        'ShowSearchBoxTb' {
+            RegImport "> Changing taskbar search to search box..." "Show_Search_Box.reg"
+            return
+        }
+        'HideTaskview' {
+            RegImport "> Hiding the taskview button from the taskbar..." "Hide_Taskview_Taskbar.reg"
+            return
+        }
+        {$_ -in "HideWidgets", "DisableWidgets"} {
+            RegImport "> Disabling widgets on the taskbar & lockscreen..." "Disable_Widgets_Service.reg"
+            # Also remove the app package for Widgets
+            $appsList = 'Microsoft.StartExperiencesApp'
+            RemoveApps $appsList
+            return
+        }
+        {$_ -in "HideChat", "DisableChat"} {
+            RegImport "> Hiding the chat icon from the taskbar..." "Disable_Chat_Taskbar.reg"
+            return
+        }
+        'EnableEndTask' {
+            RegImport "> Enabling the 'End Task' option in the taskbar right click menu..." "Enable_End_Task.reg"
+            return
+        }
+        'EnableLastActiveClick' {
+            RegImport "> Enabling the 'Last Active Click' behavior in the taskbar app area..." "Enable_Last_Active_Click.reg"
+            return
+        }
+        'ExplorerToHome' {
+            RegImport "> Changing the default location that File Explorer opens to 'Home'..." "Launch_File_Explorer_To_Home.reg"
+            return
+        }
+        'ExplorerToThisPC' {
+            RegImport "> Changing the default location that File Explorer opens to 'This PC'..." "Launch_File_Explorer_To_This_PC.reg"
+            return
+        }
+        'ExplorerToDownloads' {
+            RegImport "> Changing the default location that File Explorer opens to 'Downloads'..." "Launch_File_Explorer_To_Downloads.reg"
+            return
+        }
+        'ExplorerToOneDrive' {
+            RegImport "> Changing the default location that File Explorer opens to 'OneDrive'..." "Launch_File_Explorer_To_OneDrive.reg"
+            return
+        }
+        'ShowHiddenFolders' {
+            RegImport "> Unhiding hidden files, folders and drives..." "Show_Hidden_Folders.reg"
+            return
+        }
+        'ShowKnownFileExt' {
+            RegImport "> Enabling file extensions for known file types..." "Show_Extensions_For_Known_File_Types.reg"
+            return
+        }
+        'AddFoldersToThisPC' {
+            RegImport "> Adding all common folders (Desktop, Downloads, etc.) back to 'This PC' in File Explorer..." "Add_All_Folders_Under_This_PC.reg"
+            return
+        }
+        'HideHome' {
+            RegImport "> Hiding the home section from the File Explorer navigation pane..." "Hide_Home_from_Explorer.reg"
+            return
+        }
+        'HideGallery' {
+            RegImport "> Hiding the gallery section from the File Explorer navigation pane..." "Hide_Gallery_from_Explorer.reg"
+            return
+        }
+        'HideDupliDrive' {
+            RegImport "> Hiding duplicate removable drive entries from the File Explorer navigation pane..." "Hide_duplicate_removable_drives_from_navigation_pane_of_File_Explorer.reg"
+            return
+        }
+        {$_ -in "HideOnedrive", "DisableOnedrive"} {
+            RegImport "> Hiding the OneDrive folder from the File Explorer navigation pane..." "Hide_Onedrive_Folder.reg"
+            return
+        }
+        {$_ -in "Hide3dObjects", "Disable3dObjects"} {
+            RegImport "> Hiding the 3D objects folder from the File Explorer navigation pane..." "Hide_3D_Objects_Folder.reg"
+            return
+        }
+        {$_ -in "HideMusic", "DisableMusic"} {
+            RegImport "> Hiding the music folder from the File Explorer navigation pane..." "Hide_Music_folder.reg"
+            return
+        }
+        {$_ -in "HideIncludeInLibrary", "DisableIncludeInLibrary"} {
+            RegImport "> Hiding 'Include in library' in the context menu..." "Disable_Include_in_library_from_context_menu.reg"
+            return
+        }
+        {$_ -in "HideGiveAccessTo", "DisableGiveAccessTo"} {
+            RegImport "> Hiding 'Give access to' in the context menu..." "Disable_Give_access_to_context_menu.reg"
+            return
+        }
+        {$_ -in "HideShare", "DisableShare"} {
+            RegImport "> Hiding 'Share' in the context menu..." "Disable_Share_from_context_menu.reg"
+            return
+        }
+    }
+}
+
+
+# Executes all selected parameters/features
+# Used by both CLI and GUI execution paths
+# Parameters:
+function ExecuteAllChanges {    
+    # Create restore point if requested (CLI only - GUI handles this separately)
+    if ($script:Params.ContainsKey("CreateRestorePoint")) {
+        CreateSystemRestorePoint
+    }
+    
+    # Execute all parameters
+    foreach ($paramKey in $script:Params.Keys) {
+        if ($script:ControlParams -contains $paramKey) {
+            continue
+        }
+        
+        ExecuteParameter -paramKey $paramKey
+    }
+}
+
+
 function CreateSystemRestorePoint {
-    Write-Output "> Attempting to create a system restore point..."
+    Write-ToConsole "> Attempting to create a system restore point..."
 
     $SysRestore = Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SystemRestore" -Name "RPSessionInterval"
 
     if ($SysRestore.RPSessionInterval -eq 0) {
-        if ($Silent -or $( Read-Host -Prompt "System restore is disabled, would you like to enable it and create a restore point? (y/n)") -eq 'y') {
+        # In GUI mode, skip the prompt and just try to enable it
+        if ($script:GuiConsoleOutput -or $Silent -or $( Read-Host -Prompt "System restore is disabled, would you like to enable it and create a restore point? (y/n)") -eq 'y') {
             $enableSystemRestoreJob = Start-Job {
                 try {
                     Enable-ComputerRestore -Drive "$env:SystemDrive"
                 }
                 catch {
-                    Write-Host "Error: Failed to enable System Restore: $_" -ForegroundColor Red
-                    return
+                    return "Error: Failed to enable System Restore: $_"
                 }
+                return $null
             }
 
             $enableSystemRestoreJobDone = $enableSystemRestoreJob | Wait-Job -TimeOut 20
 
             if (-not $enableSystemRestoreJobDone) {
-                Write-Host "Error: Failed to enable system restore and create restore point, operation timed out" -ForegroundColor Red
+                Write-ToConsole "Error: Failed to enable system restore and create restore point, operation timed out" -ForegroundColor Red
                 return
             }
             else {
-                Receive-Job $enableSystemRestoreJob
+                $result = Receive-Job $enableSystemRestoreJob
+                if ($result) {
+                    Write-ToConsole $result -ForegroundColor Red
+                    return
+                }
             }
         }
         else {
-            Write-Output ""
+            Write-ToConsole ""
             return
         }
     }
@@ -1196,34 +1637,44 @@ function CreateSystemRestorePoint {
             $recentRestorePoints = Get-ComputerRestorePoint | Where-Object { (Get-Date) - [System.Management.ManagementDateTimeConverter]::ToDateTime($_.CreationTime) -le (New-TimeSpan -Hours 24) }
         }
         catch {
-            Write-Host "Error: Unable to retrieve existing restore points: $_" -ForegroundColor Red
-            return
+            return @{ Success = $false; Message = "Error: Unable to retrieve existing restore points: $_" }
         }
 
         if ($recentRestorePoints.Count -eq 0) {
             try {
                 Checkpoint-Computer -Description "Restore point created by Win11Debloat" -RestorePointType "MODIFY_SETTINGS"
-                Write-Output "System restore point created successfully"
+                return @{ Success = $true; Message = "System restore point created successfully" }
             }
             catch {
-                Write-Host "Error: Unable to create restore point: $_" -ForegroundColor Red
+                return @{ Success = $false; Message = "Error: Unable to create restore point: $_" }
             }
         }
         else {
-            Write-Host "A recent restore point already exists, no new restore point was created" -ForegroundColor Yellow
+            return @{ Success = $true; Message = "A recent restore point already exists, no new restore point was created"; Warning = $true }
         }
     }
 
     $createRestorePointJobDone = $createRestorePointJob | Wait-Job -TimeOut 20
 
     if (-not $createRestorePointJobDone) {
-        Write-Host "Error: Failed to create system restore point, operation timed out" -ForegroundColor Red
+        Write-ToConsole "Error: Failed to create system restore point, operation timed out" -ForegroundColor Red
     }
     else {
-        Receive-Job $createRestorePointJob
+        $result = Receive-Job $createRestorePointJob
+        if ($result.Success) {
+            if ($result.Warning) {
+                Write-ToConsole $result.Message -ForegroundColor Yellow
+            }
+            else {
+                Write-ToConsole $result.Message
+            }
+        }
+        else {
+            Write-ToConsole $result.Message -ForegroundColor Red
+        }
     }
 
-    Write-Output ""
+    Write-ToConsole ""
 }
 
 
@@ -1258,7 +1709,30 @@ function ShowScriptMenuOptions {
 }
 
 
-function ShowScriptUI {
+function OpenGUI {
+    # Display ASCII art logo in CLI
+    Clear-Host
+    Write-Host ""
+    Write-Host ""
+    Write-Host "                   " -NoNewline; Write-Host "      ^" -ForegroundColor Blue
+    Write-Host "                   " -NoNewline; Write-Host "     / \" -ForegroundColor Blue
+    Write-Host "                   " -NoNewline; Write-Host "    /   \" -ForegroundColor Blue
+    Write-Host "                   " -NoNewline; Write-Host "   /     \" -ForegroundColor Blue
+    Write-Host "                   " -NoNewline; Write-Host "  / ===== \" -ForegroundColor Blue
+    Write-Host "                   " -NoNewline; Write-Host "  |" -ForegroundColor Blue -NoNewline; Write-Host "  ---  " -ForegroundColor White -NoNewline; Write-Host "|" -ForegroundColor Blue
+    Write-Host "                   " -NoNewline; Write-Host "  |" -ForegroundColor Blue -NoNewline; Write-Host " ( O ) " -ForegroundColor DarkCyan -NoNewline; Write-Host "|" -ForegroundColor Blue
+    Write-Host "                   " -NoNewline; Write-Host "  |" -ForegroundColor Blue -NoNewline; Write-Host "  ---  " -ForegroundColor White -NoNewline; Write-Host "|" -ForegroundColor Blue
+    Write-Host "                   " -NoNewline; Write-Host "  |       |" -ForegroundColor Blue
+    Write-Host "                   " -NoNewline; Write-Host " /|       |\" -ForegroundColor Blue
+    Write-Host "                   " -NoNewline; Write-Host "/ |       | \" -ForegroundColor Blue
+    Write-Host "                   " -NoNewline; Write-Host "  |  " -ForegroundColor DarkGray -NoNewline; Write-Host "'''" -ForegroundColor Red -NoNewline; Write-Host "  |" -ForegroundColor DarkGray -NoNewline; Write-Host "    *" -ForegroundColor Yellow
+    Write-Host "                   " -NoNewline; Write-Host "   (" -ForegroundColor Yellow -NoNewline; Write-Host "'''" -ForegroundColor Red -NoNewline; Write-Host ") " -ForegroundColor Yellow -NoNewline; Write-Host "   *  *" -ForegroundColor DarkYellow
+    Write-Host "                   " -NoNewline; Write-Host "   ( " -ForegroundColor DarkYellow -NoNewline; Write-Host "'" -ForegroundColor Red -NoNewline; Write-Host " )   " -ForegroundColor DarkYellow -NoNewline; Write-Host "*" -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "             Win11Debloat is launching..." -ForegroundColor White
+    Write-Host "               Leave this window open" -ForegroundColor DarkGray
+    Write-Host ""
+    
     Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase | Out-Null
 
     # Get current Windows build version
@@ -1348,30 +1822,13 @@ function ShowScriptUI {
     # Apply Tab UI Elements
     $consoleOutput = $window.FindName('ConsoleOutput')
     $consoleScrollViewer = $window.FindName('ConsoleScrollViewer')
-    $applyStatusText = $window.FindName('ApplyStatusText')
-    $applyProgressBar = $window.FindName('ApplyProgressBar')
     $applyProgressText = $window.FindName('ApplyProgressText')
-    $startApplyBtn = $window.FindName('StartApplyBtn')
     $finishBtn = $window.FindName('FinishBtn')
     
-    # Function to write to console output in UI
-    function Write-ToConsole {
-        param(
-            [string]$message
-        )
-        
-        if ($consoleOutput) {
-            $timestamp = Get-Date -Format "HH:mm:ss"
-            $consoleOutput.Dispatcher.Invoke([System.Windows.Threading.DispatcherPriority]::Send, [action]{
-                $consoleOutput.Text += "[$timestamp] $message`n"
-                # Auto-scroll to bottom
-                $consoleScrollViewer.ScrollToEnd()
-            })
-        }
-        
-        # Also write to actual console for logging
-        Write-Host $message
-    }
+    # Set script-level variables for unified Write-ToConsole function
+    $script:GuiConsoleOutput = $consoleOutput
+    $script:GuiConsoleScrollViewer = $consoleScrollViewer
+    $script:GuiWindow = $window
 
     # Function to update selection status
     function UpdateAppSelectionStatus {
@@ -1942,8 +2399,8 @@ function ShowScriptUI {
         $progressIndicator3 = $window.FindName('ProgressIndicator3') # Overview
         $bottomNavGrid = $window.FindName('BottomNavGrid')
         
-        # Hide bottom navigation and progress indicators on home page
-        if ($currentIndex -eq 0) {
+        # Hide bottom navigation on home page and apply tab
+        if ($currentIndex -eq 0 -or $currentIndex -eq $applyIndex) {
             $bottomNavGrid.Visibility = 'Collapsed'
         } else {
             $bottomNavGrid.Visibility = 'Visible'
@@ -2066,7 +2523,7 @@ function ShowScriptUI {
         UpdateNavigationButtons
     })
 
-    # Handle Overview Apply Changes button
+    # Handle Overview Apply Changes button - validates and immediately starts applying changes
     $overviewApplyBtn = $window.FindName('OverviewApplyBtn')
     $overviewApplyBtn.Add_Click({
         if (-not (ValidateOtherUsername)) {
@@ -2074,8 +2531,161 @@ function ShowScriptUI {
             return
         }
 
-        # Navigate to Apply tab (last tab)
+        # Calculate control params count
+        $controlParamsCount = 0
+        foreach ($Param in $script:ControlParams) {
+            if ($script:Params.ContainsKey($Param)) {
+                $controlParamsCount++
+            }
+        }
+
+        # App Removal - collect selected apps from integrated UI
+        $selectedApps = @()
+        foreach ($child in $appsPanel.Children) {
+            if ($child -is [System.Windows.Controls.CheckBox] -and $child.IsChecked) {
+                $selectedApps += $child.Tag
+            }
+        }
+        
+        if ($selectedApps.Count -gt 0) {
+            # Check if Microsoft Store is selected
+            if ($selectedApps -contains "Microsoft.WindowsStore") {
+                $result = [System.Windows.MessageBox]::Show(
+                    'Are you sure you wish to uninstall the Microsoft Store? This app cannot easily be reinstalled.',
+                    'Are you sure?',
+                    [System.Windows.MessageBoxButton]::YesNo,
+                    [System.Windows.MessageBoxImage]::Warning
+                )
+
+                if ($result -eq [System.Windows.MessageBoxResult]::No) {
+                    return
+                }
+            }
+            
+            $script:SelectedApps = $selectedApps
+            AddParameter 'RemoveApps'
+            AddParameter 'Apps' ($script:SelectedApps -join ',')
+        }
+
+        # Apply dynamic tweaks selections
+        if ($script:UiControlMappings) {
+            foreach ($mappingKey in $script:UiControlMappings.Keys) {
+                $control = $window.FindName($mappingKey)
+                $isSelected = $false
+                $selectedIndex = 0
+                
+                # Check if it's a checkbox or combobox
+                if ($control -is [System.Windows.Controls.CheckBox]) {
+                    $isSelected = $control.IsChecked -eq $true
+                    $selectedIndex = if ($isSelected) { 1 } else { 0 }
+                }
+                elseif ($control -is [System.Windows.Controls.ComboBox]) {
+                    $isSelected = $control.SelectedIndex -gt 0
+                    $selectedIndex = $control.SelectedIndex
+                }
+                
+                if ($control -and $isSelected) {
+                    $mapping = $script:UiControlMappings[$mappingKey]
+                    if ($mapping.Type -eq 'group') {
+                        if ($selectedIndex -gt 0 -and $selectedIndex -le $mapping.Values.Count) {
+                            $selectedValue = $mapping.Values[$selectedIndex - 1]
+                            foreach ($fid in $selectedValue.FeatureIds) { 
+                                AddParameter $fid
+                            }
+                        }
+                    }
+                    elseif ($mapping.Type -eq 'feature') {
+                        AddParameter $mapping.FeatureId
+                    }
+                }
+            }
+        }
+
+        # Check RestorePointCheckBox
+        $restorePointCheckBox = $window.FindName('RestorePointCheckBox')
+        if ($restorePointCheckBox -and $restorePointCheckBox.IsChecked) {
+            AddParameter 'CreateRestorePoint'
+        }
+
+        # Check if any changes were selected
+        $totalChanges = $script:Params.Count - $controlParamsCount
+        if ($totalChanges -eq 0) {
+            [System.Windows.MessageBox]::Show(
+                'No changes have been selected. Please select at least one app to remove or one tweak to apply before continuing.',
+                'No Changes Selected',
+                [System.Windows.MessageBoxButton]::OK,
+                [System.Windows.MessageBoxImage]::Information
+            )
+            return
+        }
+        
+        # Store selected user mode
+        switch ($userSelectionCombo.SelectedIndex) {
+            1 { AddParameter User ($otherUsernameTextBox.Text.Trim()) }
+            2 { AddParameter Sysprep }
+        }
+
+        SaveSettings
+
+        # Navigate to Apply tab (last tab) and start applying changes
         $tabControl.SelectedIndex = $tabControl.Items.Count - 1
+        
+        # Disable navigation during apply
+        $previousBtn.IsEnabled = $false
+        $nextBtn.IsEnabled = $false
+        $overviewApplyBtn.IsEnabled = $false
+        
+        # Clear console and set initial status
+        $consoleOutput.Text = ""
+        $applyProgressText.Text = "Applying changes..."
+
+        Write-ToConsole "Total changes to apply: $totalChanges"
+        Write-ToConsole ""
+        
+        # Run changes in background to keep UI responsive
+        $window.Dispatcher.BeginInvoke([System.Windows.Threading.DispatcherPriority]::Background, [action]{
+            try {
+                $script:ApplyFromUI = $true
+                
+                # Execute all changes using the consolidated function
+                ExecuteAllChanges
+                
+                # Ask user if they want to restart Explorer now
+                $result = [System.Windows.MessageBox]::Show(
+                    'Would you like to restart the Windows Explorer process now to apply all changes? Some changes may not take effect until a restart is performed.',
+                    'Restart Windows Explorer?',
+                    [System.Windows.MessageBoxButton]::YesNo,
+                    [System.Windows.MessageBoxImage]::Question
+                )
+                
+                if ($result -eq [System.Windows.MessageBoxResult]::Yes) {
+                    RestartExplorer
+                }
+                else {
+                    Write-ToConsole "Explorer restart skipped by user, please manually reboot your PC to apply all changes"
+                }
+                
+                Write-ToConsole ""
+                Write-ToConsole "All changes have been applied. Please check the output above for any errors."
+                
+                $applyProgressText.Dispatcher.Invoke([action]{
+                    $applyProgressText.Text = "All changes have been applied. Please check the output above for any errors."
+                })
+                $finishBtn.Dispatcher.Invoke([action]{
+                    $finishBtn.Visibility = 'Visible'
+                })
+            }
+            catch {
+                Write-ToConsole "Error: $($_.Exception.Message)"
+                $applyProgressText.Dispatcher.Invoke([action]{
+                    $applyProgressText.Text = "An error occurred"
+                })
+                $finishBtn.Dispatcher.Invoke([action]{
+                    $finishBtn.Visibility = 'Visible'
+                })
+            }
+        })
+        
         UpdateNavigationButtons
     })
 
@@ -2169,745 +2779,6 @@ function ShowScriptUI {
         if ($restorePointCheckBox) {
             $restorePointCheckBox.IsChecked = $false
         }
-    })
-
-    # Start Apply button handler (on Apply tab)
-    $startApplyBtn.Add_Click({
-        # Calculate control params count
-        $controlParamsCount = 0
-        foreach ($Param in $script:ControlParams) {
-            if ($script:Params.ContainsKey($Param)) {
-                $controlParamsCount++
-            }
-        }
-        
-        # Disable navigation during apply
-        $previousBtn.IsEnabled = $false
-        $nextBtn.IsEnabled = $false
-        $startApplyBtn.IsEnabled = $false
-        
-        # Clear console
-        $consoleOutput.Text = ""
-        $applyStatusText.Text = "Applying changes..."
-        $applyProgressText.Text = "Processing..."
-
-        # App Removal - collect selected apps from integrated UI
-        $selectedApps = @()
-        foreach ($child in $appsPanel.Children) {
-            if ($child -is [System.Windows.Controls.CheckBox] -and $child.IsChecked) {
-                $selectedApps += $child.Tag
-            }
-        }
-        
-        if ($selectedApps.Count -gt 0) {
-            # Check if Microsoft Store is selected
-            if ($selectedApps -contains "Microsoft.WindowsStore") {
-                $result = [System.Windows.MessageBox]::Show(
-                    'Are you sure you wish to uninstall the Microsoft Store? This app cannot easily be reinstalled.',
-                    'Are you sure?',
-                    [System.Windows.MessageBoxButton]::YesNo,
-                    [System.Windows.MessageBoxImage]::Warning
-                )
-
-                if ($result -eq [System.Windows.MessageBoxResult]::No) {
-                    # Re-enable navigation buttons
-                    $previousBtn.IsEnabled = $true
-                    $nextBtn.IsEnabled = $true
-                    $startApplyBtn.IsEnabled = $true
-
-                    return
-                }
-            }
-            
-            $script:SelectedApps = $selectedApps
-            AddParameter 'RemoveApps'
-            AddParameter 'Apps' ($script:SelectedApps -join ',')
-        }
-
-        # Apply dynamic tweaks selections
-        if ($script:UiControlMappings) {
-            foreach ($mappingKey in $script:UiControlMappings.Keys) {
-                $control = $window.FindName($mappingKey)
-                $isSelected = $false
-                $selectedIndex = 0
-                
-                # Check if it's a checkbox or combobox
-                if ($control -is [System.Windows.Controls.CheckBox]) {
-                    $isSelected = $control.IsChecked -eq $true
-                    $selectedIndex = if ($isSelected) { 1 } else { 0 }
-                }
-                elseif ($control -is [System.Windows.Controls.ComboBox]) {
-                    $isSelected = $control.SelectedIndex -gt 0
-                    $selectedIndex = $control.SelectedIndex
-                }
-                
-                if ($control -and $isSelected) {
-                    $mapping = $script:UiControlMappings[$mappingKey]
-                    if ($mapping.Type -eq 'group') {
-                        if ($selectedIndex -gt 0 -and $selectedIndex -le $mapping.Values.Count) {
-                            $selectedValue = $mapping.Values[$selectedIndex - 1]
-                            foreach ($fid in $selectedValue.FeatureIds) { 
-                                AddParameter $fid
-                            }
-                        }
-                    }
-                    elseif ($mapping.Type -eq 'feature') {
-                        AddParameter $mapping.FeatureId
-                    }
-                }
-            }
-        }
-
-        # Check if any changes were selected
-        $totalChanges = $script:Params.Count - $controlParamsCount
-        if ($totalChanges -eq 0) {
-            [System.Windows.MessageBox]::Show(
-                'No changes have been selected. Please select at least one app to remove or one tweak to apply before continuing.',
-                'No Changes Selected',
-                [System.Windows.MessageBoxButton]::OK,
-                [System.Windows.MessageBoxImage]::Information
-            )
-            
-            # Re-enable navigation buttons
-            $previousBtn.IsEnabled = $true
-            $nextBtn.IsEnabled = $true
-            $startApplyBtn.IsEnabled = $true
-            
-            return
-        }
-        
-        # Store selected user mode
-        switch ($userSelectionCombo.SelectedIndex) {
-            1 { AddParameter User ($otherUsernameTextBox.Text.Trim()) }
-            2 { AddParameter Sysprep }
-        }
-
-        SaveSettings
-
-        Write-ToConsole "Starting configuration..."
-        Write-ToConsole "Total changes to apply: $totalChanges"
-        
-        # Run changes in background to keep UI responsive
-        $window.Dispatcher.BeginInvoke([System.Windows.Threading.DispatcherPriority]::Background, [action]{
-            try {
-                $script:ApplyFromUI = $true
-                
-                # Calculate total steps (exclude control parameters)
-                $totalSteps = $script:Params.Count - $controlParamsCount
-                $currentStep = 0
-                
-                # Get parent width for progress bar
-                $progressBarParent = $applyProgressBar.Parent
-                $maxWidth = 0
-                $progressBarParent.Dispatcher.Invoke([action]{ $maxWidth = $progressBarParent.ActualWidth })
-                
-                # Function to update progress
-                $updateProgress = {
-                    param($step, $total)
-                    $progressBarParent.Dispatcher.Invoke([action]{
-                        $progressPercent = ($step / $total) * 100
-                        $applyProgressBar.Width = ($maxWidth * $progressPercent / 100)
-                        $stepPadded = $step.ToString().PadLeft($total.ToString().Length, '0')
-                        $applyProgressText.Text = "Completed $stepPadded of $total changes"
-                    })
-                }
-                
-                Write-ToConsole "Applying configuration..."
-                Write-ToConsole ""
-                
-                # Create restore point if requested
-                if ($script:Params.ContainsKey("CreateRestorePoint")) {
-                    Write-ToConsole "Creating system restore point..."
-                    
-                    $SysRestore = Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SystemRestore" -Name "RPSessionInterval" -ErrorAction SilentlyContinue
-                    
-                    if ($SysRestore.RPSessionInterval -eq 0) {
-                        try {
-                            Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SystemRestore" -Name "RPSessionInterval" -Value 1440 -ErrorAction Stop
-                            Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SystemRestore" -Name "RPGlobalInterval" -Value 1440 -ErrorAction Stop
-                            Write-ToConsole "Enabled system restore point creation"
-                        }
-                        catch {
-                            Write-ToConsole "Warning: Could not enable system restore"
-                        }
-                    }
-                    
-                    $createRestorePointJob = Start-Job {
-                        try {
-                            Enable-ComputerRestore -Drive "$env:SYSTEMDRIVE" -ErrorAction SilentlyContinue | Out-Null
-                            Checkpoint-Computer -Description "Win11Debloat restore point" -RestorePointType "MODIFY_SETTINGS" -ErrorAction Stop
-                            return $true
-                        }
-                        catch {
-                            return $false
-                        }
-                    }
-                    
-                    $createRestorePointJobDone = $createRestorePointJob | Wait-Job -TimeOut 20
-                    
-                    if (-not $createRestorePointJobDone) {
-                        Write-ToConsole "Warning: Restore point creation timed out"
-                    }
-                    else {
-                        $result = Receive-Job -Job $createRestorePointJob
-                        if ($result) {
-                            Write-ToConsole "System restore point created successfully"
-                        }
-                        else {
-                            Write-ToConsole "Warning: Failed to create restore point"
-                        }
-                    }
-                    Write-ToConsole ""
-                }
-                
-                # Execute all selected/provided parameters
-                foreach ($paramKey in $script:Params.Keys) {
-                    if ($script:ControlParams -contains $paramKey) {
-                        continue
-                    }
-                    
-                    $currentStep++
-                    & $updateProgress $currentStep $totalSteps
-                    
-                    switch ($paramKey) {
-                        'RemoveApps' {
-                            Write-ToConsole "Removing selected apps..."
-                            $appsList = GenerateAppsList
-                            if ($appsList.Count -gt 0) {
-                                Write-ToConsole "$($appsList.Count) apps selected for removal"
-                                $appIndex = 0
-                                foreach ($app in $appsList) {
-                                    $appIndex++
-                                    $appIndexPadded = $appIndex.ToString().PadLeft($appsList.Count.ToString().Length, '0')
-                                    Write-ToConsole "[$appIndexPadded/$($appsList.Count)] Removing $app..."
-                                    
-                                    # Update status text
-                                    $applyStatusText.Dispatcher.Invoke([action]{
-                                        $applyStatusText.Text = "Removing apps... [$appIndexPadded/$($appsList.Count)]"
-                                    })
-                                    
-                                    RemoveApps @($app)
-                                    
-                                    # Update progress bar for each app
-                                    $subProgress = $currentStep + ($appIndex / $appsList.Count)
-                                    & $updateProgress ([Math]::Floor($subProgress)) $totalSteps
-                                    
-                                    # Force UI to process pending updates
-                                    $window.Dispatcher.Invoke([System.Windows.Threading.DispatcherPriority]::Background, [action]{})
-                                }
-                            }
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'RemoveAppsCustom' {
-                            Write-ToConsole "Removing selected apps..."
-                            $appsList = ReadAppslistFromFile $script:CustomAppsListFilePath
-                            if ($appsList.Count -gt 0) {
-                                Write-ToConsole "$($appsList.Count) apps selected for removal"
-                                $appIndex = 0
-                                foreach ($app in $appsList) {
-                                    $appIndex++
-                                    $appIndexPadded = $appIndex.ToString().PadLeft($appsList.Count.ToString().Length, ' ')
-                                    Write-ToConsole "[$appIndexPadded/$($appsList.Count)] Removing $app..."
-                                    
-                                    # Update status text
-                                    $applyStatusText.Dispatcher.Invoke([action]{
-                                        $applyStatusText.Text = "Removing apps... [$appIndexPadded/$($appsList.Count)]"
-                                    })
-                                    
-                                    RemoveApps @($app)
-                                    
-                                    # Update progress bar for each app
-                                    $subProgress = $currentStep + ($appIndex / $appsList.Count)
-                                    & $updateProgress ([Math]::Floor($subProgress)) $totalSteps
-                                    
-                                    # Force UI to process pending updates
-                                    $window.Dispatcher.Invoke([System.Windows.Threading.DispatcherPriority]::Background, [action]{})
-                                }
-                            }
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'RemoveCommApps' {
-                            Write-ToConsole "Removing Mail, Calendar and People apps..."
-                            $appsList = 'Microsoft.windowscommunicationsapps', 'Microsoft.People'
-                            RemoveApps $appsList
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'RemoveW11Outlook' {
-                            Write-ToConsole "Removing new Outlook for Windows app..."
-                            $appsList = 'Microsoft.OutlookForWindows'
-                            RemoveApps $appsList
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'RemoveGamingApps' {
-                            Write-ToConsole "Removing gaming related apps..."
-                            $appsList = 'Microsoft.GamingApp', 'Microsoft.XboxGameOverlay', 'Microsoft.XboxGamingOverlay'
-                            RemoveApps $appsList
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'RemoveHPApps' {
-                            Write-ToConsole "Removing HP apps..."
-                            $appsList = 'AD2F1837.HPAIExperienceCenter', 'AD2F1837.HPJumpStarts', 'AD2F1837.HPPCHardwareDiagnosticsWindows', 'AD2F1837.HPPowerManager', 'AD2F1837.HPPrivacySettings', 'AD2F1837.HPSupportAssistant', 'AD2F1837.HPSureShieldAI', 'AD2F1837.HPSystemInformation', 'AD2F1837.HPQuickDrop', 'AD2F1837.HPWorkWell', 'AD2F1837.myHP', 'AD2F1837.HPDesktopSupportUtilities', 'AD2F1837.HPQuickTouch', 'AD2F1837.HPEasyClean', 'AD2F1837.HPConnectedMusic', 'AD2F1837.HPFileViewer', 'AD2F1837.HPRegistration', 'AD2F1837.HPWelcome', 'AD2F1837.HPConnectedPhotopoweredbySnapfish', 'AD2F1837.HPPrinterControl'
-                            RemoveApps $appsList
-                            Write-ToConsole ""
-                            continue
-                        }
-                        "ForceRemoveEdge" {
-                            Write-ToConsole "Force removing Microsoft Edge..."
-                            ForceRemoveEdge
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'DisableDVR' {
-                            Write-ToConsole "Disabling Xbox game/screen recording..."
-                            RegImport "" "Disable_DVR.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'DisableGameBarIntegration' {
-                            Write-ToConsole "Disabling Game Bar integration..."
-                            RegImport "" "Disable_Game_Bar_Integration.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'DisableTelemetry' {
-                            Write-ToConsole "Disabling telemetry, diagnostic data and targeted ads..."
-                            RegImport "" "Disable_Telemetry.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        {$_ -in "DisableSuggestions", "DisableWindowsSuggestions"} {
-                            Write-ToConsole "Disabling tips, tricks and suggestions across Windows..."
-                            RegImport "" "Disable_Windows_Suggestions.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'DisableEdgeAds' {
-                            Write-ToConsole "Disabling ads and suggestions in Microsoft Edge..."
-                            RegImport "" "Disable_Edge_Ads_And_Suggestions.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        {$_ -in "DisableLockscrTips", "DisableLockscreenTips"} {
-                            Write-ToConsole "Disabling tips & tricks on the lockscreen..."
-                            RegImport "" "Disable_Lockscreen_Tips.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'DisableDesktopSpotlight' {
-                            Write-ToConsole "Disabling Windows Spotlight desktop background..."
-                            RegImport "" "Disable_Desktop_Spotlight.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'DisableSettings365Ads' {
-                            Write-ToConsole "Disabling Microsoft 365 ads in Settings..."
-                            RegImport "" "Disable_Settings_365_Ads.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'DisableSettingsHome' {
-                            Write-ToConsole "Disabling the Settings Home page..."
-                            RegImport "" "Disable_Settings_Home.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        {$_ -in "DisableBingSearches", "DisableBing"} {
-                            Write-ToConsole "Disabling Bing web search and Cortana..."
-                            RegImport "" "Disable_Bing_Cortana_In_Search.reg"
-                            $appsList = 'Microsoft.BingSearch'
-                            RemoveApps $appsList
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'DisableCopilot' {
-                            Write-ToConsole "Disabling Microsoft Copilot..."
-                            RegImport "" "Disable_Copilot.reg"
-                            $appsList = 'Microsoft.Copilot'
-                            RemoveApps $appsList
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'DisableRecall' {
-                            Write-ToConsole "Disabling Windows Recall..."
-                            RegImport "" "Disable_AI_Recall.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'DisableClickToDo' {
-                            Write-ToConsole "Disabling Click to Do..."
-                            RegImport "" "Disable_Click_to_Do.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'DisableEdgeAI' {
-                            Write-ToConsole "Disabling AI features in Microsoft Edge..."
-                            RegImport "" "Disable_Edge_AI_Features.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'DisablePaintAI' {
-                            Write-ToConsole "Disabling AI features in Paint..."
-                            RegImport "" "Disable_Paint_AI_Features.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'DisableNotepadAI' {
-                            Write-ToConsole "Disabling AI features in Notepad..."
-                            RegImport "" "Disable_Notepad_AI_Features.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'RevertContextMenu' {
-                            Write-ToConsole "Restoring Windows 10 style context menu..."
-                            RegImport "" "Disable_Show_More_Options_Context_Menu.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'DisableMouseAcceleration' {
-                            Write-ToConsole "Turning off Enhanced Pointer Precision..."
-                            RegImport "" "Disable_Enhance_Pointer_Precision.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'DisableStickyKeys' {
-                            Write-ToConsole "Disabling Sticky Keys keyboard shortcut..."
-                            RegImport "" "Disable_Sticky_Keys_Shortcut.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'DisableFastStartup' {
-                            Write-ToConsole "Disabling Fast Start-up..."
-                            RegImport "" "Disable_Fast_Startup.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'DisableModernStandbyNetworking' {
-                            Write-ToConsole "Disabling network during Modern Standby..."
-                            RegImport "" "Disable_Modern_Standby_Networking.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'ClearStart' {
-                            Write-ToConsole "Clearing start menu for user $(GetUserName)..."
-                            ReplaceStartMenu
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'ReplaceStart' {
-                            Write-ToConsole "Replacing start menu for user $(GetUserName)..."
-                            ReplaceStartMenu $script:Params.Item("ReplaceStart")
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'ClearStartAllUsers' {
-                            Write-ToConsole "Clearing start menu for all users..."
-                            ReplaceStartMenuForAllUsers
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'ReplaceStartAllUsers' {
-                            Write-ToConsole "Replacing start menu for all users..."
-                            ReplaceStartMenuForAllUsers $script:Params.Item("ReplaceStartAllUsers")
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'DisableStartRecommended' {
-                            Write-ToConsole "Disabling start menu recommended section..."
-                            RegImport "" "Disable_Start_Recommended.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'DisableStartPhoneLink' {
-                            Write-ToConsole "Disabling Phone Link in start menu..."
-                            RegImport "" "Disable_Phone_Link_In_Start.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'EnableDarkMode' {
-                            Write-ToConsole "Enabling dark mode..."
-                            RegImport "" "Enable_Dark_Mode.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'DisableTransparency' {
-                            Write-ToConsole "Disabling transparency effects..."
-                            RegImport "" "Disable_Transparency.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'DisableAnimations' {
-                            Write-ToConsole "Disabling animations and visual effects..."
-                            RegImport "" "Disable_Animations.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'TaskbarAlignLeft' {
-                            Write-ToConsole "Aligning taskbar buttons to the left..."
-                            RegImport "" "Align_Taskbar_Left.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'CombineTaskbarAlways' {
-                            Write-ToConsole "Setting taskbar to always combine buttons..."
-                            RegImport "" "Combine_Taskbar_Always.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'CombineTaskbarWhenFull' {
-                            Write-ToConsole "Setting taskbar to combine when full..."
-                            RegImport "" "Combine_Taskbar_When_Full.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'CombineTaskbarNever' {
-                            Write-ToConsole "Setting taskbar to never combine buttons..."
-                            RegImport "" "Combine_Taskbar_Never.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'CombineMMTaskbarAlways' {
-                            Write-ToConsole "Setting secondary taskbars to always combine buttons..."
-                            RegImport "" "Combine_MMTaskbar_Always.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'CombineMMTaskbarWhenFull' {
-                            Write-ToConsole "Setting secondary taskbars to combine when full..."
-                            RegImport "" "Combine_MMTaskbar_When_Full.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'CombineMMTaskbarNever' {
-                            Write-ToConsole "Setting secondary taskbars to never combine buttons..."
-                            RegImport "" "Combine_MMTaskbar_Never.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'MMTaskbarModeAll' {
-                            Write-ToConsole "Setting taskbar to show app icons on all taskbars..."
-                            RegImport "" "MMTaskbarMode_All.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'MMTaskbarModeMainActive' {
-                            Write-ToConsole "Setting taskbar to show on main and active..."
-                            RegImport "" "MMTaskbarMode_Main_Active.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'MMTaskbarModeActive' {
-                            Write-ToConsole "Setting taskbar to only show on active..."
-                            RegImport "" "MMTaskbarMode_Active.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'HideSearchTb' {
-                            Write-ToConsole "Hiding search icon from taskbar..."
-                            RegImport "" "Hide_Search_Taskbar.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'ShowSearchIconTb' {
-                            Write-ToConsole "Showing search icon on taskbar..."
-                            RegImport "" "Show_Search_Icon.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'ShowSearchLabelTb' {
-                            Write-ToConsole "Changing taskbar search to icon with label..."
-                            RegImport "" "Show_Search_Icon_And_Label.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'ShowSearchBoxTb' {
-                            Write-ToConsole "Changing taskbar search to search box..."
-                            RegImport "" "Show_Search_Box.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'HideTaskview' {
-                            Write-ToConsole "Hiding taskview button from taskbar..."
-                            RegImport "" "Hide_Taskview_Taskbar.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        {$_ -in "HideWidgets", "DisableWidgets"} {
-                            Write-ToConsole "Disabling widgets..."
-                            RegImport "" "Disable_Widgets_Service.reg"
-                            $appsList = 'Microsoft.StartExperiencesApp'
-                            RemoveApps $appsList
-                            Write-ToConsole ""
-                            continue
-                        }
-                        {$_ -in "HideChat", "DisableChat"} {
-                            Write-ToConsole "Hiding chat icon from taskbar..."
-                            RegImport "" "Disable_Chat_Taskbar.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'EnableEndTask' {
-                            Write-ToConsole "Enabling End Task in taskbar menu..."
-                            RegImport "" "Enable_End_Task.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'EnableLastActiveClick' {
-                            Write-ToConsole "Enabling Last Active Click behavior..."
-                            RegImport "" "Enable_Last_Active_Click.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'ExplorerToHome' {
-                            Write-ToConsole "Setting File Explorer to open to Home..."
-                            RegImport "" "Launch_File_Explorer_To_Home.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'ExplorerToThisPC' {
-                            Write-ToConsole "Setting File Explorer to open to This PC..."
-                            RegImport "" "Launch_File_Explorer_To_This_PC.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'ExplorerToDownloads' {
-                            Write-ToConsole "Setting File Explorer to open to Downloads..."
-                            RegImport "" "Launch_File_Explorer_To_Downloads.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'ExplorerToOneDrive' {
-                            Write-ToConsole "Setting File Explorer to open to OneDrive..."
-                            RegImport "" "Launch_File_Explorer_To_OneDrive.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'ShowHiddenFolders' {
-                            Write-ToConsole "Unhiding hidden files and folders..."
-                            RegImport "" "Show_Hidden_Folders.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'ShowKnownFileExt' {
-                            Write-ToConsole "Enabling file extensions for known file types..."
-                            RegImport "" "Show_Extensions_For_Known_File_Types.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'AddFoldersToThisPC' {
-                            Write-ToConsole "Adding common folders to This PC..."
-                            RegImport "" "Add_All_Folders_Under_This_PC.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'HideHome' {
-                            Write-ToConsole "Hiding Home from File Explorer..."
-                            RegImport "" "Hide_Home_from_Explorer.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'HideGallery' {
-                            Write-ToConsole "Hiding Gallery from File Explorer..."
-                            RegImport "" "Hide_Gallery_from_Explorer.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        'HideDupliDrive' {
-                            Write-ToConsole "Hiding duplicate removable drives..."
-                            RegImport "" "Hide_duplicate_removable_drives_from_navigation_pane_of_File_Explorer.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        {$_ -in "HideOnedrive", "DisableOnedrive"} {
-                            Write-ToConsole "Hiding OneDrive folder..."
-                            RegImport "" "Hide_Onedrive_Folder.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        {$_ -in "Hide3dObjects", "Disable3dObjects"} {
-                            Write-ToConsole "Hiding 3D Objects folder..."
-                            RegImport "" "Hide_3D_Objects_Folder.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        {$_ -in "HideMusic", "DisableMusic"} {
-                            Write-ToConsole "Hiding Music folder..."
-                            RegImport "" "Hide_Music_folder.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        {$_ -in "HideIncludeInLibrary", "DisableIncludeInLibrary"} {
-                            Write-ToConsole "Hiding Include in Library from context menu..."
-                            RegImport "" "Disable_Include_in_library_from_context_menu.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        {$_ -in "HideGiveAccessTo", "DisableGiveAccessTo"} {
-                            Write-ToConsole "Hiding Give Access To from context menu..."
-                            RegImport "" "Disable_Give_access_to_context_menu.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        {$_ -in "HideShare", "DisableShare"} {
-                            Write-ToConsole "Hiding Share from context menu..."
-                            RegImport "" "Disable_Share_from_context_menu.reg"
-                            Write-ToConsole ""
-                            continue
-                        }
-                        default {
-                            Write-ToConsole "ERROR: No matching case for parameter: $paramKey (Type: $($paramKey.GetType().Name))"
-                        }
-                    }
-                }
-                
-                Write-ToConsole ""
-                Write-ToConsole "Configuration complete!"
-                Write-ToConsole "All changes have been applied successfully."
-                
-                # Ask user if they want to restart Explorer now
-                $result = [System.Windows.MessageBox]::Show(
-                    'Configuration complete! Would you like to restart Windows Explorer now to apply all changes? You can also restart it later manually.',
-                    'Restart Windows Explorer?',
-                    [System.Windows.MessageBoxButton]::YesNo,
-                    [System.Windows.MessageBoxImage]::Question
-                )
-                
-                if ($result -eq [System.Windows.MessageBoxResult]::Yes) {
-                    Write-ToConsole "Restarting Windows Explorer..."
-                    RestartExplorer
-                    Write-ToConsole "Windows Explorer restarted successfully"
-                }
-                else {
-                    Write-ToConsole "Skipped Explorer restart - you can restart it manually later"
-                }
-                
-                $applyStatusText.Dispatcher.Invoke([action]{
-                    $applyStatusText.Text = "Changes applied successfully!"
-                })
-                $applyProgressText.Dispatcher.Invoke([action]{
-                    $applyProgressText.Text = "Completed"
-                })
-                $startApplyBtn.Dispatcher.Invoke([action]{
-                    $startApplyBtn.Visibility = 'Collapsed'
-                })
-                $finishBtn.Dispatcher.Invoke([action]{
-                    $finishBtn.Visibility = 'Visible'
-                })
-            }
-            catch {
-                Write-ToConsole "Error: $($_.Exception.Message)"
-                $applyStatusText.Dispatcher.Invoke([action]{
-                    $applyStatusText.Text = "An error occurred"
-                })
-                $startApplyBtn.Dispatcher.Invoke([action]{
-                    $startApplyBtn.IsEnabled = $true
-                })
-            }
-        })
     })
     
     # Finish button handler
@@ -3174,7 +3045,7 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
             $Mode = ShowScriptMenuOptions 
         }
         else {
-            $result = ShowScriptUI
+            $result = OpenGUI
             Exit
         }
     }
@@ -3208,381 +3079,9 @@ if (($controlParamsCount -eq $script:Params.Keys.Count) -or ($script:Params.Keys
     AwaitKeyToExit
 }
 
-# Create a system restore point if the CreateRestorePoint parameter was passed
-if ($script:Params.ContainsKey("CreateRestorePoint")) {
-    CreateSystemRestorePoint
-}
-
-# Execute all selected/provided parameters
-switch ($script:Params.Keys) {
-    'RemoveApps' {
-        Write-Output "> Removing selected apps..."
-        $appsList = GenerateAppsList
-
-        if ($appsList.Count -eq 0) {
-            Write-Host "No valid apps were selected for removal" -ForegroundColor Yellow
-            Write-Output ""
-            continue
-        }
-
-        Write-Output "$($appsList.Count) apps selected for removal"
-        RemoveApps $appsList
-        continue
-    }
-    'RemoveAppsCustom' {
-        Write-Output "> Removing selected apps..."
-        $appsList = ReadAppslistFromFile $script:CustomAppsListFilePath
-
-        if ($appsList.Count -eq 0) {
-            Write-Host "No valid apps were selected for removal" -ForegroundColor Yellow
-            Write-Output ""
-            continue
-        }
-
-        Write-Output "$($appsList.Count) apps selected for removal"
-        RemoveApps $appsList
-        continue
-    }
-    'RemoveCommApps' {
-        $appsList = 'Microsoft.windowscommunicationsapps', 'Microsoft.People'
-        Write-Output "> Removing Mail, Calendar and People apps..."
-        RemoveApps $appsList
-        continue
-    }
-    'RemoveW11Outlook' {
-        $appsList = 'Microsoft.OutlookForWindows'
-        Write-Output "> Removing new Outlook for Windows app..."
-        RemoveApps $appsList
-        continue
-    }
-    'RemoveGamingApps' {
-        $appsList = 'Microsoft.GamingApp', 'Microsoft.XboxGameOverlay', 'Microsoft.XboxGamingOverlay'
-        Write-Output "> Removing gaming related apps..."
-        RemoveApps $appsList
-        continue
-    }
-    'RemoveHPApps' {
-        $appsList = 'AD2F1837.HPAIExperienceCenter', 'AD2F1837.HPJumpStarts', 'AD2F1837.HPPCHardwareDiagnosticsWindows', 'AD2F1837.HPPowerManager', 'AD2F1837.HPPrivacySettings', 'AD2F1837.HPSupportAssistant', 'AD2F1837.HPSureShieldAI', 'AD2F1837.HPSystemInformation', 'AD2F1837.HPQuickDrop', 'AD2F1837.HPWorkWell', 'AD2F1837.myHP', 'AD2F1837.HPDesktopSupportUtilities', 'AD2F1837.HPQuickTouch', 'AD2F1837.HPEasyClean', 'AD2F1837.HPConnectedMusic', 'AD2F1837.HPFileViewer', 'AD2F1837.HPRegistration', 'AD2F1837.HPWelcome', 'AD2F1837.HPConnectedPhotopoweredbySnapfish', 'AD2F1837.HPPrinterControl'
-        Write-Output "> Removing HP apps..."
-        RemoveApps $appsList
-        continue
-    }
-    "ForceRemoveEdge" {
-        ForceRemoveEdge
-        continue
-    }
-    'DisableDVR' {
-        RegImport "> Disabling Xbox game/screen recording..." "Disable_DVR.reg"
-        continue
-    }
-    'DisableGameBarIntegration' {
-        RegImport "> Disabling Game Bar integration..." "Disable_Game_Bar_Integration.reg"
-        continue
-    }
-    'DisableTelemetry' {
-        RegImport "> Disabling telemetry, diagnostic data, activity history, app-launch tracking and targeted ads..." "Disable_Telemetry.reg"
-        continue
-    }
-    {$_ -in "DisableSuggestions", "DisableWindowsSuggestions"} {
-        RegImport "> Disabling tips, tricks, suggestions and ads across Windows..." "Disable_Windows_Suggestions.reg"
-        continue
-    }
-    'DisableEdgeAds' {
-        RegImport "> Disabling ads, suggestions and the MSN news feed in Microsoft Edge..." "Disable_Edge_Ads_And_Suggestions.reg"
-        continue
-    }
-    {$_ -in "DisableLockscrTips", "DisableLockscreenTips"} {
-        RegImport "> Disabling tips & tricks on the lockscreen..." "Disable_Lockscreen_Tips.reg"
-        continue
-    }
-    'DisableDesktopSpotlight' {
-        RegImport "> Disabling the 'Windows Spotlight' desktop background option..." "Disable_Desktop_Spotlight.reg"
-        continue
-    }
-    'DisableSettings365Ads' {
-        RegImport "> Disabling Microsoft 365 ads in Settings Home..." "Disable_Settings_365_Ads.reg"
-        continue
-    }
-    'DisableSettingsHome' {
-        RegImport "> Disabling the Settings Home page..." "Disable_Settings_Home.reg"
-        continue
-    }
-    {$_ -in "DisableBingSearches", "DisableBing"} {
-        RegImport "> Disabling Bing web search, Bing AI and Cortana from Windows search..." "Disable_Bing_Cortana_In_Search.reg"
-
-        # Also remove the app package for Bing search
-        $appsList = 'Microsoft.BingSearch'
-        RemoveApps $appsList
-        continue
-    }
-    'DisableCopilot' {
-        RegImport "> Disabling Microsoft Copilot..." "Disable_Copilot.reg"
-
-        # Also remove the app package for Copilot
-        $appsList = 'Microsoft.Copilot'
-        RemoveApps $appsList
-        continue
-    }
-    'DisableRecall' {
-        if ($WinVersion -lt 22000) {
-            Write-Output "> Disabling Windows Recall..."
-            Write-Host "Feature is not available on Windows 10" -ForegroundColor Yellow
-            Write-Output ""
-            continue
-        }
-
-        RegImport "> Disabling Windows Recall..." "Disable_AI_Recall.reg"
-        continue
-    }
-    'DisableClickToDo' {
-        if ($WinVersion -lt 22000) {
-            Write-Output "> Disabling Click to Do..."
-            Write-Host "Feature is not available on Windows 10" -ForegroundColor Yellow
-            Write-Output ""
-            continue
-        }
-
-        RegImport "> Disabling Click to Do..." "Disable_Click_to_Do.reg"
-        continue
-    }
-    'DisableEdgeAI' {
-        RegImport "> Disabling AI features in Microsoft Edge..." "Disable_Edge_AI_Features.reg"
-        continue
-    }
-    'DisablePaintAI' {
-        RegImport "> Disabling AI features in Paint..." "Disable_Paint_AI_Features.reg"
-        continue
-    }
-    'DisableNotepadAI' {
-        RegImport "> Disabling AI features in Notepad..." "Disable_Notepad_AI_Features.reg"
-        continue
-    }
-    'RevertContextMenu' {
-        RegImport "> Restoring the old Windows 10 style context menu..." "Disable_Show_More_Options_Context_Menu.reg"
-        continue
-    }
-    'DisableMouseAcceleration' {
-        RegImport "> Turning off Enhanced Pointer Precision..." "Disable_Enhance_Pointer_Precision.reg"
-        continue
-    }
-    'DisableStickyKeys' {
-        RegImport "> Disabling the Sticky Keys keyboard shortcut..." "Disable_Sticky_Keys_Shortcut.reg"
-        continue
-    }
-    'DisableFastStartup' {
-        RegImport "> Disabling Fast Start-up..." "Disable_Fast_Startup.reg"
-        continue
-    }
-    'DisableModernStandbyNetworking' {
-        if (-not $script:ModernStandbySupported) {
-            Write-Output "> Disabling network connectivity during Modern Standby..."
-            Write-Host "Device does not support modern standby" -ForegroundColor Yellow
-            Write-Output ""
-            continue
-        }
-
-        RegImport "> Disabling network connectivity during Modern Standby..." "Disable_Modern_Standby_Networking.reg"
-        continue
-    }
-    'ClearStart' {
-        Write-Output "> Removing all pinned apps from the start menu for user $(GetUserName)..."
-        ReplaceStartMenu
-        Write-Output ""
-        continue
-    }
-    'ReplaceStart' {
-        Write-Output "> Replacing the start menu for user $(GetUserName)..."
-        ReplaceStartMenu $script:Params.Item("ReplaceStart")
-        Write-Output ""
-        continue
-    }
-    'ClearStartAllUsers' {
-        ReplaceStartMenuForAllUsers
-        continue
-    }
-    'ReplaceStartAllUsers' {
-        ReplaceStartMenuForAllUsers $script:Params.Item("ReplaceStartAllUsers")
-        continue
-    }
-    'DisableStartRecommended' {
-        RegImport "> Disabling the start menu recommended section..." "Disable_Start_Recommended.reg"
-        continue
-    }
-    'DisableStartPhoneLink' {
-        RegImport "> Disabling the Phone Link mobile devices integration in the start menu..." "Disable_Phone_Link_In_Start.reg"
-        continue
-    }
-    'EnableDarkMode' {
-        RegImport "> Enabling dark mode for system and apps..." "Enable_Dark_Mode.reg"
-        continue
-    }
-    'DisableTransparency' {
-        RegImport "> Disabling transparency effects..." "Disable_Transparency.reg"
-        continue
-    }
-    'DisableAnimations' {
-        RegImport "> Disabling animations and visual effects..." "Disable_Animations.reg"
-        continue
-    }
-    'TaskbarAlignLeft' {
-        RegImport "> Aligning taskbar buttons to the left..." "Align_Taskbar_Left.reg"
-        continue
-    }
-    'CombineTaskbarAlways' {
-        RegImport "> Setting the taskbar on the main display to always combine buttons and hide labels..." "Combine_Taskbar_Always.reg"
-        continue
-    }
-    'CombineTaskbarWhenFull' {
-        RegImport "> Setting the taskbar on the main display to only combine buttons and hide labels when the taskbar is full..." "Combine_Taskbar_When_Full.reg"
-        continue
-    }
-    'CombineTaskbarNever' {
-        RegImport "> Setting the taskbar on the main display to never combine buttons or hide labels..." "Combine_Taskbar_Never.reg"
-        continue
-    }
-    'CombineMMTaskbarAlways' {
-        RegImport "> Setting the taskbar on secondary displays to always combine buttons and hide labels..." "Combine_MMTaskbar_Always.reg"
-        continue
-    }
-    'CombineMMTaskbarWhenFull' {
-        RegImport "> Setting the taskbar on secondary displays to only combine buttons and hide labels when the taskbar is full..." "Combine_MMTaskbar_When_Full.reg"
-        continue
-    }
-    'CombineMMTaskbarNever' {
-        RegImport "> Setting the taskbar on secondary displays to never combine buttons or hide labels..." "Combine_MMTaskbar_Never.reg"
-        continue
-    }
-    'MMTaskbarModeAll' {
-        RegImport "> Setting the taskbar to only show app icons on main taskbar..." "MMTaskbarMode_All.reg"
-        continue
-    }
-    'MMTaskbarModeMainActive' {
-        RegImport "> Setting the taskbar to show app icons on all taskbars..." "MMTaskbarMode_Main_Active.reg"
-        continue
-    }
-    'MMTaskbarModeActive' {
-        RegImport "> Setting the taskbar to only show app icons on the taskbar where the window is open..." "MMTaskbarMode_Active.reg"
-        continue
-    }
-    'HideSearchTb' {
-        RegImport "> Hiding the search icon from the taskbar..." "Hide_Search_Taskbar.reg"
-        continue
-    }
-    'ShowSearchIconTb' {
-        RegImport "> Changing taskbar search to icon only..." "Show_Search_Icon.reg"
-        continue
-    }
-    'ShowSearchLabelTb' {
-        RegImport "> Changing taskbar search to icon with label..." "Show_Search_Icon_And_Label.reg"
-        continue
-    }
-    'ShowSearchBoxTb' {
-        RegImport "> Changing taskbar search to search box..." "Show_Search_Box.reg"
-        continue
-    }
-    'HideTaskview' {
-        RegImport "> Hiding the taskview button from the taskbar..." "Hide_Taskview_Taskbar.reg"
-        continue
-    }
-    {$_ -in "HideWidgets", "DisableWidgets"} {
-        RegImport "> Disabling widgets on the taskbar & lockscreen..." "Disable_Widgets_Service.reg"
-
-        # Also remove the app package for Widgets
-        $appsList = 'Microsoft.StartExperiencesApp'
-        RemoveApps $appsList
-        continue
-    }
-    {$_ -in "HideChat", "DisableChat"} {
-        if ($WinVersion -ge 22000) {
-            Write-Output "> Hiding the chat icon from the taskbar..."
-            Write-Host "Feature is not available on Windows 11" -ForegroundColor Yellow
-            Write-Output ""
-            continue
-        }
-
-        RegImport "> Hiding the chat icon from the taskbar..." "Disable_Chat_Taskbar.reg"
-        continue
-    }
-    'EnableEndTask' {
-        RegImport "> Enabling the 'End Task' option in the taskbar right click menu..." "Enable_End_Task.reg"
-        continue
-    }
-    'EnableLastActiveClick' {
-        RegImport "> Enabling the 'Last Active Click' behavior in the taskbar app area..." "Enable_Last_Active_Click.reg"
-        continue
-    }
-    'ExplorerToHome' {
-        RegImport "> Changing the default location that File Explorer opens to `Home`..." "Launch_File_Explorer_To_Home.reg"
-        continue
-    }
-    'ExplorerToThisPC' {
-        RegImport "> Changing the default location that File Explorer opens to `This PC`..." "Launch_File_Explorer_To_This_PC.reg"
-        continue
-    }
-    'ExplorerToDownloads' {
-        RegImport "> Changing the default location that File Explorer opens to `Downloads`..." "Launch_File_Explorer_To_Downloads.reg"
-        continue
-    }
-    'ExplorerToOneDrive' {
-        RegImport "> Changing the default location that File Explorer opens to `OneDrive`..." "Launch_File_Explorer_To_OneDrive.reg"
-        continue
-    }
-    'ShowHiddenFolders' {
-        RegImport "> Unhiding hidden files, folders and drives..." "Show_Hidden_Folders.reg"
-        continue
-    }
-    'ShowKnownFileExt' {
-        RegImport "> Enabling file extensions for known file types..." "Show_Extensions_For_Known_File_Types.reg"
-        continue
-    }
-    'AddFoldersToThisPC' {
-        RegImport "> Adding all common folders (Desktop, Downloads, etc.) back to `This PC` in File Explorer..." "Add_All_Folders_Under_This_PC.reg"
-        continue
-    }
-    'HideHome' {
-        RegImport "> Hiding the home section from the File Explorer navigation pane..." "Hide_Home_from_Explorer.reg"
-        continue
-    }
-    'HideGallery' {
-        RegImport "> Hiding the gallery section from the File Explorer navigation pane..." "Hide_Gallery_from_Explorer.reg"
-        continue
-    }
-    'HideDupliDrive' {
-        RegImport "> Hiding duplicate removable drive entries from the File Explorer navigation pane..." "Hide_duplicate_removable_drives_from_navigation_pane_of_File_Explorer.reg"
-        continue
-    }
-    {$_ -in "HideOnedrive", "DisableOnedrive"} {
-        RegImport "> Hiding the OneDrive folder from the File Explorer navigation pane..." "Hide_Onedrive_Folder.reg"
-        continue
-    }
-    {$_ -in "Hide3dObjects", "Disable3dObjects"} {
-        if ($WinVersion -ge 22000) {
-            Write-Output "> Hiding the 3D objects folder from the File Explorer navigation pane..."
-            Write-Host "Feature is not available on Windows 11" -ForegroundColor Yellow
-            Write-Output ""
-            continue
-        }
-
-        RegImport "> Hiding the 3D objects folder from the File Explorer navigation pane..." "Hide_3D_Objects_Folder.reg"
-        continue
-    }
-    {$_ -in "HideMusic", "DisableMusic"} {
-        RegImport "> Hiding the music folder from the File Explorer navigation pane..." "Hide_Music_folder.reg"
-        continue
-    }
-    {$_ -in "HideIncludeInLibrary", "DisableIncludeInLibrary"} {
-        RegImport "> Hiding 'Include in library' in the context menu..." "Disable_Include_in_library_from_context_menu.reg"
-        continue
-    }
-    {$_ -in "HideGiveAccessTo", "DisableGiveAccessTo"} {
-        RegImport "> Hiding 'Give access to' in the context menu..." "Disable_Give_access_to_context_menu.reg"
-        continue
-    }
-    {$_ -in "HideShare", "DisableShare"} {
-        RegImport "> Hiding 'Share' in the context menu..." "Disable_Share_from_context_menu.reg"
-        continue
-    }
-}
+# Execute all selected/provided parameters using the consolidated function
+# (This also handles restore point creation if requested)
+ExecuteAllChanges
 
 RestartExplorer
 

@@ -44,7 +44,7 @@
     },
     {
       "GroupId": "ClearStart",
-      "Label": "Clear Start",
+      "Label": "Remove pinned apps from the start menu",
       "Category": "Start Menu",
       "Values": [
         { "Label": "Current user", "FeatureIds": ["ClearStart"] },
@@ -341,7 +341,7 @@
     },
     {
       "FeatureId": "DisableStartRecommended",
-      "Label": "recommended section in start",
+      "Label": "recommended section in the start menu",
       "Category": "Start Menu",
       "Action": "Hide",
       "RegistryKey": "Disable_Start_Recommended.reg",
@@ -352,7 +352,7 @@
     },
     {
       "FeatureId": "DisableStartPhoneLink",
-      "Label": "Phone Link integration in start",
+      "Label": "Phone Link integration in the start menu",
       "Category": "Start Menu",
       "Action": "Disable",
       "RegistryKey": "Disable_Phone_Link_In_Start.reg",

@@ -677,7 +677,7 @@
                         <!-- Header -->
                         <StackPanel Grid.Row="0" Margin="20,10,20,10">
                             <TextBlock Text="Applying Changes" FontWeight="Bold" FontSize="20" Margin="0,0,0,10" Foreground="{DynamicResource FgColor}"/>
-                            <TextBlock x:Name="ApplyStatusText" Text="Click 'Start' to begin applying changes..." FontSize="13" Foreground="{DynamicResource FgColor}" TextWrapping="Wrap"/>
+                            <TextBlock Text="Sit back and relax while Win11Debloat applies your selected changes" FontSize="13" Margin="0,0,0,10" Foreground="{DynamicResource FgColor}" TextWrapping="Wrap"/>
                         </StackPanel>
 
                         <!-- Console Output -->
@@ -687,31 +687,21 @@
                             </ScrollViewer>
                         </Border>
 
-                        <!-- Progress and Status -->
-                        <Border Grid.Row="2" Background="{DynamicResource ComboBgColor}" Padding="20,15">
+                        <!-- Progress and Finish Button -->
+                        <Border Grid.Row="2" Background="{DynamicResource TitleBarBg}" Padding="10,0">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
 
-                                <!-- Progress Bar -->
-                                <Grid Grid.Row="0" Margin="0,0,0,10">
-                                    <Border Background="{DynamicResource SecondaryButtonBg}" Height="6" CornerRadius="4">
-                                        <Border x:Name="ApplyProgressBar" Background="{DynamicResource ButtonBg}" Height="6" CornerRadius="4" HorizontalAlignment="Left" Width="0"/>
-                                    </Border>
-                                </Grid>
-
-                                <!-- Status and Button -->
-                                <Grid Grid.Row="1">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock x:Name="ApplyProgressText" Grid.Column="0" Text="Ready to start" Foreground="{DynamicResource FgColor}" FontSize="12" VerticalAlignment="Center"/>
-                                    <Button x:Name="StartApplyBtn" Grid.Column="1" Width="120" Height="36" Style="{StaticResource Win11Button}" Content="Start"/>
-                                    <Button x:Name="FinishBtn" Grid.Column="1" Width="120" Height="36" Style="{StaticResource Win11Button}" Content="Finish" Visibility="Collapsed"/>
-                                </Grid>
+                                <!-- Status and Finish Button -->
+                                <StackPanel Grid.Row="1" HorizontalAlignment="Center">
+                                    <TextBlock x:Name="ApplyProgressText" Text="Applying changes..." Foreground="{DynamicResource FgColor}" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                                    <Button x:Name="FinishBtn" Width="200" Height="48" Style="{StaticResource Win11Button}" Visibility="Hidden" Margin="0,0,0,10">
+                                        <TextBlock Text="Close Win11Debloat" VerticalAlignment="Center" FontSize="16" Margin="0,0,0,1"/>
+                                    </Button>
+                                </StackPanel>
                             </Grid>
                         </Border>
                     </Grid>

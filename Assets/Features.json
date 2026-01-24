@@ -1,5 +1,15 @@
 {
   "Version": "1.0",
+  "Categories": [
+    "File Explorer",
+    "Start Menu",
+    "Privacy & Suggested Content",
+    "System",
+    "Taskbar",
+    "AI",
+    "Gaming",
+    "Other"
+  ],
   "UiGroups": [
     {
       "GroupId": "SearchIcon",
@@ -47,8 +57,8 @@
       "Label": "Remove pinned apps from the start menu",
       "Category": "Start Menu",
       "Values": [
-        { "Label": "Current user", "FeatureIds": ["ClearStart"] },
-        { "Label": "All users", "FeatureIds": ["ClearStartAllUsers"] }
+        { "Label": "Remove for the current user", "FeatureIds": ["ClearStart"] },
+        { "Label": "Remove for all users", "FeatureIds": ["ClearStartAllUsers"] }
       ]
     },
     {

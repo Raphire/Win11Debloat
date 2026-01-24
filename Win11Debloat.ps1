@@ -2482,7 +2482,7 @@ function OpenGUI {
         
         if ($changesList.Count -eq 0) {
             $textBlock = New-Object System.Windows.Controls.TextBlock
-            $textBlock.Text = "No changes selected."
+            $textBlock.Text = "No changes selected"
             $textBlock.Foreground = $window.Resources["FgColor"]
             $textBlock.FontStyle = "Italic"
             $textBlock.Margin = "0,0,0,8"

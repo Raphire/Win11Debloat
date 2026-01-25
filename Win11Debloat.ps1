@@ -908,7 +908,6 @@ function OpenGUI {
         
         # Find and highlight all matching apps
         $firstMatch = $null
-        $usesDarkMode = $window.Resources["BgColor"].Color.R -lt 128
         $highlightBrush = if ($usesDarkMode) { $highlightColorDark } else { $highlightColor }
         
         foreach ($child in $appsPanel.Children) {
@@ -1356,8 +1355,6 @@ function OpenGUI {
                 })
             }
         })
-        
-        UpdateNavigationButtons
     })
 
     # Load all apps on startup and build tweaks UI dynamically

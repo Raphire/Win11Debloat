@@ -1008,29 +1008,32 @@ function OpenGUI {
 
         $username = $otherUsernameTextBox.Text.Trim()
 
+        $errorBrush = [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#c42b1c"))
+        $successBrush = [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#28a745"))
+
         if ($username.Length -eq 0) {
             $usernameValidationMessage.Text = "[X] Please enter a username"
-            $usernameValidationMessage.Foreground = "#c42b1c"
+            $usernameValidationMessage.Foreground = $errorBrush
             return $false
         }
         
         if ($username -eq $env:USERNAME) {
             $usernameValidationMessage.Text = "[X] Cannot enter your own username. Use 'Current User' option instead."
-            $usernameValidationMessage.Foreground = "#c42b1c"
+            $usernameValidationMessage.Foreground = $errorBrush
             return $false
         }
         
-        try {
-            $userProfile = Get-LocalUser -Name $username -ErrorAction Stop
-            $usernameValidationMessage.Text = "[OK] User found: $($userProfile.FullName)"
-            $usernameValidationMessage.Foreground = "#28a745"
+        $userExists = CheckIfUserExists -Username $username
+
+        if ($userExists) {
+            $usernameValidationMessage.Text = "[OK] User found: $username"
+            $usernameValidationMessage.Foreground = $successBrush
             return $true
         }
-        catch {
-            $usernameValidationMessage.Text = "[X] User not found. Please enter a valid username."
-            $usernameValidationMessage.Foreground = "#c42b1c"
-            return $false
-        }
+
+        $usernameValidationMessage.Text = "[X] User not found. Please enter a valid username."
+        $usernameValidationMessage.Foreground = $errorBrush
+        return $false
     }
 
     # Navigation button handlers
@@ -1944,6 +1947,32 @@ function CheckModernStandbySupport {
         Write-Host "Press any key to continue..."
         $null = [System.Console]::ReadKey()
         return $true
+    }
+
+    return $false
+}
+
+
+function CheckIfUserExists {
+    param (
+        $userName
+    )
+
+    try {
+        $userExists = Test-Path "$env:SystemDrive\Users\$userName"
+
+        if ($userExists) {
+            return $true
+        }
+
+        $userExists = Test-Path ($env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), "\$userName")
+
+        if ($userExists) {
+            return $true
+        }
+    }
+    catch {
+        Write-Error "Something went wrong when trying to find the user directory path for user $userName. Please ensure the user exists on this system"
     }
 
     return $false

@@ -561,11 +561,11 @@ function OpenGUI {
     $loadingAppsIndicator = $window.FindName('LoadingAppsIndicator')
     $appSelectionStatus = $window.FindName('AppSelectionStatus')
     $defaultAppsBtn = $window.FindName('DefaultAppsBtn')
-    $defaultAppsBtn.ToolTip = 'Selects the default apps'
+    $defaultAppsBtn.ToolTip = 'Select the default selection of apps'
     $loadLastUsedAppsBtn = $window.FindName('LoadLastUsedAppsBtn')
-    $loadLastUsedAppsBtn.ToolTip = 'Selects the apps that were selected the last time Win11Debloat was run'
+    $loadLastUsedAppsBtn.ToolTip = 'Select the apps that were selected the last time Win11Debloat was run'
     $clearAppSelectionBtn = $window.FindName('ClearAppSelectionBtn')
-    $clearAppSelectionBtn.ToolTip = 'Clears all selected apps'
+    $clearAppSelectionBtn.ToolTip = 'Clear all selected apps'
     
     # Track the last selected checkbox for shift-click range selection
     $script:MainWindowLastSelectedCheckbox = $null
@@ -1529,7 +1529,7 @@ function OpenGUI {
 
     # Handle Load Defaults button
     $loadDefaultsBtn = $window.FindName('LoadDefaultsBtn')
-    $loadDefaultsBtn.ToolTip = 'Selects the settings that are recommended for most people'
+    $loadDefaultsBtn.ToolTip = 'Select the settings that are recommended for most people'
     $loadDefaultsBtn.Add_Click({
         $defaultsJson = LoadJsonFile -filePath $script:DefaultSettingsFilePath -expectedVersion "1.0"
 
@@ -1542,7 +1542,7 @@ function OpenGUI {
 
     # Handle Load Last Used button
     $loadLastUsedBtn = $window.FindName('LoadLastUsedBtn')
-    $loadLastUsedBtn.ToolTip = 'Selects the settings that were used the last time Win11Debloat was run'
+    $loadLastUsedBtn.ToolTip = 'Select the settings that were used the last time Win11Debloat was run'
     $lastUsedJson = LoadJsonFile -filePath $script:SavedSettingsFilePath -expectedVersion "1.0" -optionalFile
     
     # Check if file exists and has settings with Value = true
@@ -1579,7 +1579,7 @@ function OpenGUI {
 
     # Clear All Tweaks button
     $clearAllTweaksBtn = $window.FindName('ClearAllTweaksBtn')
-    $clearAllTweaksBtn.ToolTip = 'Clears all selected tweaks'
+    $clearAllTweaksBtn.ToolTip = 'Clear all selected tweaks'
     $clearAllTweaksBtn.Add_Click({
         # Reset all ComboBoxes to index 0 (No Change) and uncheck all CheckBoxes
         if ($script:UiControlMappings) {

@@ -822,43 +822,7 @@ function OpenGUI {
 
     # Helper function to complete app loading with the WinGet list
     function script:LoadAppsWithList($listOfApps) {
-        # Store apps data for sorting
-        $appsToAdd = @()
-
-        # Read JSON file and parse apps
-        $jsonContent = Get-Content -Path $script:AppsListFilePath -Raw | ConvertFrom-Json
-        
-        # Go through appslist and collect apps
-        Foreach ($appData in $jsonContent.Apps) {
-            $appId = $appData.AppId.Trim()
-            $friendlyName = $appData.FriendlyName
-            $description = $appData.Description
-            $appChecked = $false  # Start with nothing checked
-
-            if ($appId.length -gt 0) {
-                if ($onlyInstalledAppsBox.IsChecked) {
-                    # Only include app if it's installed
-                    if (-not ($listOfApps -like ("*$appId*")) -and -not (Get-AppxPackage -Name $appId)) {
-                        continue
-                    }
-                    if (($appId -eq "Microsoft.Edge") -and -not ($listOfApps -like "* Microsoft.Edge *")) {
-                        continue
-                    }
-                }
-
-                # Combine friendly name and app ID for display
-                $displayName = if ($friendlyName) { "$friendlyName ($appId)" } else { $appId }
-                $appsToAdd += [PSCustomObject]@{ 
-                    AppId = $appId
-                    DisplayName = $displayName
-                    IsChecked = $appChecked
-                    Description = $description
-                    SelectedByDefault = $appData.SelectedByDefault
-                    IsGamingApp = $appData.IsGamingApp
-                    IsCommApp = $appData.IsCommApp
-                }
-            }
-        }
+        $appsToAdd = GetAppsFromJson -OnlyInstalled:$onlyInstalledAppsBox.IsChecked -InstalledList $listOfApps -InitialCheckedFromJson:$false
 
         # Reset the last selected checkbox when loading a new list
         $script:MainWindowLastSelectedCheckbox = $null
@@ -875,8 +839,6 @@ function OpenGUI {
             
             # Store metadata in checkbox for later use
             Add-Member -InputObject $checkbox -MemberType NoteProperty -Name "SelectedByDefault" -Value $_.SelectedByDefault
-            Add-Member -InputObject $checkbox -MemberType NoteProperty -Name "IsGamingApp" -Value $_.IsGamingApp
-            Add-Member -InputObject $checkbox -MemberType NoteProperty -Name "IsCommApp" -Value $_.IsCommApp
             
             # Add event handler to update status
             $checkbox.Add_Checked({ UpdateAppSelectionStatus })
@@ -922,9 +884,10 @@ function OpenGUI {
             $listOfApps = ""
 
             if ($onlyInstalledAppsBox.IsChecked -and ($script:WingetInstalled -eq $true)) {
-                # Start job to get list of installed apps via WinGet
-                $script:CurrentAppLoadJob = Start-Job { return winget list --accept-source-agreements --disable-interactivity }
-                $script:CurrentAppLoadJobStartTime = Get-Date
+                # Start job to get list of installed apps via WinGet (async helper)
+                $asyncJob = GetInstalledAppsViaWinget -Async
+                $script:CurrentAppLoadJob = $asyncJob.Job
+                $script:CurrentAppLoadJobStartTime = $asyncJob.StartTime
                 
                 # Create timer to poll job status without blocking UI
                 $script:CurrentAppLoadTimer = New-Object System.Windows.Threading.DispatcherTimer
@@ -1097,7 +1060,7 @@ function OpenGUI {
             # Get the ScrollViewer that contains the apps panel
             $scrollViewer = $null
             $parent = [System.Windows.Media.VisualTreeHelper]::GetParent($appsPanel)
-            while ($parent -ne $null) {
+            while ($null -ne $parent) {
                 if ($parent -is [System.Windows.Controls.ScrollViewer]) {
                     $scrollViewer = $parent
                     break
@@ -1664,49 +1627,15 @@ function OpenAppSelectionWindow {
 
         if ($onlyInstalledBox.IsChecked -and ($script:WingetInstalled -eq $true)) {
             # Attempt to get a list of installed apps via WinGet, times out after 10 seconds
-            $job = Start-Job { return winget list --accept-source-agreements --disable-interactivity }
-            $jobDone = $job | Wait-Job -TimeOut 10
-
-            if (-not $jobDone) {
+            $listOfApps = GetInstalledAppsViaWinget -TimeOut 10
+            if (-not $listOfApps) {
                 # Show error that the script was unable to get list of apps from WinGet
                 [System.Windows.MessageBox]::Show('Unable to load list of installed apps via WinGet.', 'Error', 'OK', 'Error') | Out-Null
                 $onlyInstalledBox.IsChecked = $false
             }
-            else {
-                # Add output of job (list of apps) to $listOfApps
-                $listOfApps = Receive-Job -Job $job
-            }
         }
 
-        # Store apps data for sorting
-        $appsToAdd = @()
-
-        # Read JSON file and parse apps
-        $jsonContent = Get-Content -Path $script:AppsListFilePath -Raw | ConvertFrom-Json
-        
-        # Go through appslist and collect apps
-        Foreach ($appData in $jsonContent.Apps) {
-            $appId = $appData.AppId.Trim()
-            $friendlyName = $appData.FriendlyName
-            $description = $appData.Description
-            $appChecked = $appData.SelectedByDefault
-
-            if ($appId.length -gt 0) {
-                if ($onlyInstalledBox.IsChecked) {
-                    # Only include app if it's installed
-                    if (-not ($listOfApps -like ("*$appId*")) -and -not (Get-AppxPackage -Name $appId)) {
-                        continue
-                    }
-                    if (($appId -eq "Microsoft.Edge") -and -not ($listOfApps -like "* Microsoft.Edge *")) {
-                        continue
-                    }
-                }
-
-                # Combine friendly name and app ID for display
-                $displayName = if ($friendlyName) { "$friendlyName ($appId)" } else { $appId }
-                $appsToAdd += [PSCustomObject]@{ AppId = $appId; DisplayName = $displayName; IsChecked = $appChecked; Description = $description }
-            }
-        }
+        $appsToAdd = GetAppsFromJson -OnlyInstalled:$onlyInstalledBox.IsChecked -InstalledList $listOfApps -InitialCheckedFromJson
 
         # Reset the last selected checkbox when loading a new list
         $script:AppSelectionWindowLastSelectedCheckbox = $null
@@ -1827,17 +1756,8 @@ function ValidateAppslist {
         $appsList
     )
 
-    $supportedAppsList = @()
+    $supportedAppsList = (GetAppsFromJson | ForEach-Object { $_.AppId })
     $validatedAppsList = @()
-
-    # Generate a list of supported apps from Apps.json
-    $jsonContent = Get-Content -Path $script:AppsListFilePath -Raw | ConvertFrom-Json
-    Foreach ($appData in $jsonContent.Apps) {
-        $appId = $appData.AppId.Trim()
-        if ($appId.length -gt 0) {
-            $supportedAppsList += $appId
-        }
-    }
 
     # Validate provided appsList against supportedAppsList
     Foreach ($app in $appsList) {
@@ -1899,6 +1819,77 @@ function ReadAppslistFromFile {
     catch {
         Write-Error "Unable to read apps list from file: $appsFilePath"
         AwaitKeyToExit
+    }
+}
+
+# Read Apps.json and return list of app objects with optional filtering
+function GetAppsFromJson {
+    param (
+        [switch]$OnlyInstalled,
+        [string]$InstalledList = "",
+        [switch]$InitialCheckedFromJson
+    )
+
+    $apps = @()
+    try {
+        $jsonContent = Get-Content -Path $script:AppsListFilePath -Raw | ConvertFrom-Json
+    }
+    catch {
+        Write-Error "Failed to read Apps.json: $_"
+        return $apps
+    }
+
+    foreach ($appData in $jsonContent.Apps) {
+        $appId = $appData.AppId.Trim()
+        if ($appId.length -eq 0) { continue }
+
+        if ($OnlyInstalled) {
+            if (-not ($InstalledList -like ("*$appId*")) -and -not (Get-AppxPackage -Name $appId)) {
+                continue
+            }
+            if (($appId -eq "Microsoft.Edge") -and -not ($InstalledList -like "* Microsoft.Edge *")) {
+                continue
+            }
+        }
+
+        $displayName = if ($appData.FriendlyName) { "$($appData.FriendlyName) ($appId)" } else { $appId }
+        $isChecked = if ($InitialCheckedFromJson) { $appData.SelectedByDefault } else { $false }
+
+        $apps += [PSCustomObject]@{
+            AppId = $appId
+            DisplayName = $displayName
+            IsChecked = $isChecked
+            Description = $appData.Description
+            SelectedByDefault = $appData.SelectedByDefault
+        }
+    }
+
+    return $apps
+}
+
+# Run winget list and return installed apps (sync or async)
+function GetInstalledAppsViaWinget {
+    param (
+        [int]$TimeOut = 10,
+        [switch]$Async
+    )
+
+    if (-not $script:WingetInstalled) { return $null }
+
+    if ($Async) {
+        $job = Start-Job { return winget list --accept-source-agreements --disable-interactivity }
+        return @{ Job = $job; StartTime = Get-Date }
+    }
+    else {
+        $job = Start-Job { return winget list --accept-source-agreements --disable-interactivity }
+        $jobDone = $job | Wait-Job -TimeOut $TimeOut
+        if (-not $jobDone) {
+            Remove-Job -Job $job -Force -ErrorAction SilentlyContinue
+            return $null
+        }
+        $result = Receive-Job -Job $job
+        Remove-Job -Job $job -ErrorAction SilentlyContinue
+        return $result
     }
 }
 

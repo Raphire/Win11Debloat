@@ -187,17 +187,6 @@
       "maxVersion": null
     },
     {
-      "FeatureId": "DisableBing",
-      "Label": "Bing web search from Windows search",
-      "Category": "Privacy & Suggested Content",
-      "Action": "Disable",
-      "RegistryKey": "Disable_Bing_Cortana_In_Search.reg",
-      "UndoAction": "Enable",
-      "RegistryUndoKey": "Enable_Bing_Cortana_In_Search.reg",
-      "minVersion": null,
-      "maxVersion": null
-    },
-    {
       "FeatureId": "DisableLockscreenTips",
       "Label": "Windows Spotlight for lockscreen",
       "Category": "Privacy & Suggested Content",
@@ -339,6 +328,17 @@
       "RegistryUndoKey": "Enable_Start_Recommended.reg",
       "minVersion": 22621,
       "maxVersion": 26199
+    },
+    {
+      "FeatureId": "DisableBing",
+      "Label": "Bing web search & Copilot integration",
+      "Category": "Start Menu",
+      "Action": "Disable",
+      "RegistryKey": "Disable_Bing_Cortana_In_Search.reg",
+      "UndoAction": "Enable",
+      "RegistryUndoKey": "Enable_Bing_Cortana_In_Search.reg",
+      "minVersion": null,
+      "maxVersion": null
     },
     {
       "FeatureId": "DisableStartPhoneLink",

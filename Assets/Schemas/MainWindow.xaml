@@ -523,7 +523,7 @@
                         <Border DockPanel.Dock="Top" Padding="20,10,20,0" Background="{DynamicResource TitleBarBg}">
                             <StackPanel>
                                 <TextBlock Text="System Tweaks" FontWeight="Bold" FontSize="20" Margin="0,0,0,5" Foreground="{DynamicResource FgColor}"/>
-                                <TextBlock Text="Configure Windows settings and apply system tweaks" FontSize="13" Margin="0,0,0,20" Foreground="{DynamicResource FgColor}" TextWrapping="Wrap"/>
+                                <TextBlock Text="Select which tweaks you want to apply to your system" FontSize="13" Margin="0,0,0,20" Foreground="{DynamicResource FgColor}" TextWrapping="Wrap"/>
                             
                                 <!-- Filter Options -->
                                 <Grid Margin="0,0,0,12">
@@ -628,7 +628,7 @@
                                     <Border BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource BgColor}" Padding="16,12" Margin="0,0,0,16">
                                         <StackPanel>
                                             <TextBlock Text="System Restore Point" FontWeight="Bold" FontSize="14" Foreground="{DynamicResource FgColor}" Margin="0,0,0,8"/>
-                                            <TextBlock Text="It's recommended to create a restore point before applying changes:" Foreground="{DynamicResource FgColor}" FontSize="12" Margin="0,0,0,10" TextWrapping="Wrap"/>
+                                            <TextBlock Text="A restore point will allow you to revert your system to a previous state using the built-in System Restore feature. (Recommended)" Foreground="{DynamicResource FgColor}" FontSize="12" Margin="0,0,0,10" TextWrapping="Wrap"/>
                                             <CheckBox x:Name="RestorePointCheckBox" Content="Create system restore point" Foreground="{DynamicResource FgColor}"/>
                                         </StackPanel>
                                     </Border>

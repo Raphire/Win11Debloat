@@ -63,6 +63,7 @@ param (
     [switch]$ClearStartAllUsers,
     [string]$ReplaceStartAllUsers,
     [switch]$RevertContextMenu,
+    [switch]$DisableDragTray,
     [switch]$DisableMouseAcceleration,
     [switch]$DisableStickyKeys,
     [switch]$HideHome,
@@ -125,6 +126,29 @@ catch {
     AwaitKeyToExit
 }
 
+# Display ASCII art launch logo in CLI
+Clear-Host
+Write-Host ""
+Write-Host ""
+Write-Host "                   " -NoNewline; Write-Host "      ^" -ForegroundColor Blue
+Write-Host "                   " -NoNewline; Write-Host "     / \" -ForegroundColor Blue
+Write-Host "                   " -NoNewline; Write-Host "    /   \" -ForegroundColor Blue
+Write-Host "                   " -NoNewline; Write-Host "   /     \" -ForegroundColor Blue
+Write-Host "                   " -NoNewline; Write-Host "  / ===== \" -ForegroundColor Blue
+Write-Host "                   " -NoNewline; Write-Host "  |" -ForegroundColor Blue -NoNewline; Write-Host "  ---  " -ForegroundColor White -NoNewline; Write-Host "|" -ForegroundColor Blue
+Write-Host "                   " -NoNewline; Write-Host "  |" -ForegroundColor Blue -NoNewline; Write-Host " ( O ) " -ForegroundColor DarkCyan -NoNewline; Write-Host "|" -ForegroundColor Blue
+Write-Host "                   " -NoNewline; Write-Host "  |" -ForegroundColor Blue -NoNewline; Write-Host "  ---  " -ForegroundColor White -NoNewline; Write-Host "|" -ForegroundColor Blue
+Write-Host "                   " -NoNewline; Write-Host "  |       |" -ForegroundColor Blue
+Write-Host "                   " -NoNewline; Write-Host " /|       |\" -ForegroundColor Blue
+Write-Host "                   " -NoNewline; Write-Host "/ |       | \" -ForegroundColor Blue
+Write-Host "                   " -NoNewline; Write-Host "  |  " -ForegroundColor DarkGray -NoNewline; Write-Host "'''" -ForegroundColor Red -NoNewline; Write-Host "  |" -ForegroundColor DarkGray -NoNewline; Write-Host "    *" -ForegroundColor Yellow
+Write-Host "                   " -NoNewline; Write-Host "   (" -ForegroundColor Yellow -NoNewline; Write-Host "'''" -ForegroundColor Red -NoNewline; Write-Host ") " -ForegroundColor Yellow -NoNewline; Write-Host "   *  *" -ForegroundColor DarkYellow
+Write-Host "                   " -NoNewline; Write-Host "   ( " -ForegroundColor DarkYellow -NoNewline; Write-Host "'" -ForegroundColor Red -NoNewline; Write-Host " )   " -ForegroundColor DarkYellow -NoNewline; Write-Host "*" -ForegroundColor Yellow
+Write-Host ""
+Write-Host "             Win11Debloat is launching..." -ForegroundColor White
+Write-Host "               Leave this window open" -ForegroundColor DarkGray
+Write-Host ""
+
 # Log script output to 'Win11Debloat.log' at the specified path
 if ($LogPath -and (Test-Path $LogPath)) {
     Start-Transcript -Path "$LogPath/Win11Debloat.log" -Append -IncludeInvocationHeader -Force | Out-Null
@@ -148,8 +172,7 @@ $script:GuiConsoleScrollViewer = $null
 $script:GuiWindow = $null
 
 
-# Unified output function that works for both CLI and GUI modes
-# In GUI mode, writes to the console panel. In CLI mode, uses Write-Output.
+# Writes to both GUI console output and standard console
 function Write-ToConsole {
     param(
         [string]$message,
@@ -346,30 +369,81 @@ function ApplySettingsToUiControls {
 }
 
 
-function OpenGUI {
-    # Display ASCII art logo in CLI
-    Clear-Host
-    Write-Host ""
-    Write-Host ""
-    Write-Host "                   " -NoNewline; Write-Host "      ^" -ForegroundColor Blue
-    Write-Host "                   " -NoNewline; Write-Host "     / \" -ForegroundColor Blue
-    Write-Host "                   " -NoNewline; Write-Host "    /   \" -ForegroundColor Blue
-    Write-Host "                   " -NoNewline; Write-Host "   /     \" -ForegroundColor Blue
-    Write-Host "                   " -NoNewline; Write-Host "  / ===== \" -ForegroundColor Blue
-    Write-Host "                   " -NoNewline; Write-Host "  |" -ForegroundColor Blue -NoNewline; Write-Host "  ---  " -ForegroundColor White -NoNewline; Write-Host "|" -ForegroundColor Blue
-    Write-Host "                   " -NoNewline; Write-Host "  |" -ForegroundColor Blue -NoNewline; Write-Host " ( O ) " -ForegroundColor DarkCyan -NoNewline; Write-Host "|" -ForegroundColor Blue
-    Write-Host "                   " -NoNewline; Write-Host "  |" -ForegroundColor Blue -NoNewline; Write-Host "  ---  " -ForegroundColor White -NoNewline; Write-Host "|" -ForegroundColor Blue
-    Write-Host "                   " -NoNewline; Write-Host "  |       |" -ForegroundColor Blue
-    Write-Host "                   " -NoNewline; Write-Host " /|       |\" -ForegroundColor Blue
-    Write-Host "                   " -NoNewline; Write-Host "/ |       | \" -ForegroundColor Blue
-    Write-Host "                   " -NoNewline; Write-Host "  |  " -ForegroundColor DarkGray -NoNewline; Write-Host "'''" -ForegroundColor Red -NoNewline; Write-Host "  |" -ForegroundColor DarkGray -NoNewline; Write-Host "    *" -ForegroundColor Yellow
-    Write-Host "                   " -NoNewline; Write-Host "   (" -ForegroundColor Yellow -NoNewline; Write-Host "'''" -ForegroundColor Red -NoNewline; Write-Host ") " -ForegroundColor Yellow -NoNewline; Write-Host "   *  *" -ForegroundColor DarkYellow
-    Write-Host "                   " -NoNewline; Write-Host "   ( " -ForegroundColor DarkYellow -NoNewline; Write-Host "'" -ForegroundColor Red -NoNewline; Write-Host " )   " -ForegroundColor DarkYellow -NoNewline; Write-Host "*" -ForegroundColor Yellow
-    Write-Host ""
-    Write-Host "             Win11Debloat is launching..." -ForegroundColor White
-    Write-Host "               Leave this window open" -ForegroundColor DarkGray
-    Write-Host ""
-    
+# Attaches shift-click selection behavior to a checkbox in an apps panel
+# Parameters:
+#   - $checkbox: The checkbox to attach the behavior to
+#   - $appsPanel: The StackPanel containing checkbox items
+#   - $lastSelectedCheckboxRef: A reference to a variable storing the last clicked checkbox
+#   - $updateStatusCallback: Optional callback to update selection status
+function AttachShiftClickBehavior {
+    param (
+        [System.Windows.Controls.CheckBox]$checkbox,
+        [System.Windows.Controls.StackPanel]$appsPanel,
+        [ref]$lastSelectedCheckboxRef,
+        [scriptblock]$updateStatusCallback = $null
+    )
+
+    # Use a closure to capture the parameters
+    $checkbox.Add_PreviewMouseLeftButtonDown({
+        param($sender, $e)
+        
+        $isShiftPressed = [System.Windows.Input.Keyboard]::IsKeyDown([System.Windows.Input.Key]::LeftShift) -or 
+                          [System.Windows.Input.Keyboard]::IsKeyDown([System.Windows.Input.Key]::RightShift)
+        
+        # Inline shift-click selection logic
+        if ($isShiftPressed -and $null -ne $lastSelectedCheckboxRef.Value) {
+            # Get all visible checkboxes in the panel
+            $visibleCheckboxes = @()
+            foreach ($child in $appsPanel.Children) {
+                if ($child -is [System.Windows.Controls.CheckBox] -and $child.Visibility -eq 'Visible') {
+                    $visibleCheckboxes += $child
+                }
+            }
+
+            # Find indices of the last selected and current checkbox
+            $lastIndex = -1
+            $currentIndex = -1
+
+            for ($i = 0; $i -lt $visibleCheckboxes.Count; $i++) {
+                if ($visibleCheckboxes[$i] -eq $lastSelectedCheckboxRef.Value) {
+                    $lastIndex = $i
+                }
+                if ($visibleCheckboxes[$i] -eq $sender) {
+                    $currentIndex = $i
+                }
+            }
+
+            if ($lastIndex -ge 0 -and $currentIndex -ge 0 -and $lastIndex -ne $currentIndex) {
+                # Determine the range
+                $startIndex = [Math]::Min($lastIndex, $currentIndex)
+                $endIndex = [Math]::Max($lastIndex, $currentIndex)
+
+                # Check if the clicked checkbox is already checked - if so, deselect the range
+                $shouldDeselect = $sender.IsChecked
+
+                # Set all checkboxes in the range to the appropriate state
+                for ($i = $startIndex; $i -le $endIndex; $i++) {
+                    $visibleCheckboxes[$i].IsChecked = -not $shouldDeselect
+                }
+
+                # Call update status callback if provided
+                if ($updateStatusCallback) {
+                    & $updateStatusCallback
+                }
+
+                # Mark the event as handled to prevent the default toggle behavior
+                $e.Handled = $true
+                return
+            }
+        }
+
+        # Update the last selected checkbox reference for next time
+        $lastSelectedCheckboxRef.Value = $sender
+    }.GetNewClosure())
+}
+
+
+function OpenGUI {    
     Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase | Out-Null
 
     # Get current Windows build version
@@ -455,6 +529,14 @@ function OpenGUI {
     $loadLastUsedAppsBtn = $window.FindName('LoadLastUsedAppsBtn')
     $clearAppSelectionBtn = $window.FindName('ClearAppSelectionBtn')
     
+    # Track the last selected checkbox for shift-click range selection
+    $script:MainWindowLastSelectedCheckbox = $null
+    
+    # Track current app loading operation to prevent race conditions
+    $script:CurrentAppLoadTimer = $null
+    $script:CurrentAppLoadJob = $null
+    $script:CurrentAppLoadJobStartTime = $null
+    
     # Apply Tab UI Elements
     $consoleOutput = $window.FindName('ConsoleOutput')
     $consoleScrollViewer = $window.FindName('ConsoleScrollViewer')
@@ -466,7 +548,7 @@ function OpenGUI {
     $script:GuiConsoleScrollViewer = $consoleScrollViewer
     $script:GuiWindow = $window
 
-    # Function to update selection status
+    # Updates app selection status text in the App Selection tab
     function UpdateAppSelectionStatus {
         $selectedCount = 0
         foreach ($child in $appsPanel.Children) {
@@ -477,7 +559,7 @@ function OpenGUI {
         $appSelectionStatus.Text = "$selectedCount app(s) selected for removal"
     }
 
-    # Function to dynamically build Tweaks UI from Features.json
+    # Dynamically builds Tweaks UI from Features.json
     function BuildDynamicTweaks {
         $featuresJson = LoadJsonFile -filePath $script:FeaturesFilePath -expectedVersion "1.0"
 
@@ -724,6 +806,9 @@ function OpenGUI {
             }
         }
 
+        # Reset the last selected checkbox when loading a new list
+        $script:MainWindowLastSelectedCheckbox = $null
+
         # Sort apps alphabetically and add to panel
         $appsToAdd | Sort-Object -Property DisplayName | ForEach-Object {
             $checkbox = New-Object System.Windows.Controls.CheckBox
@@ -743,6 +828,9 @@ function OpenGUI {
             $checkbox.Add_Checked({ UpdateAppSelectionStatus })
             $checkbox.Add_Unchecked({ UpdateAppSelectionStatus })
             
+            # Attach shift-click behavior for range selection
+            AttachShiftClickBehavior -checkbox $checkbox -appsPanel $appsPanel -lastSelectedCheckboxRef ([ref]$script:MainWindowLastSelectedCheckbox) -updateStatusCallback { UpdateAppSelectionStatus }
+            
             $appsPanel.Children.Add($checkbox) | Out-Null
         }
 
@@ -752,8 +840,19 @@ function OpenGUI {
         UpdateAppSelectionStatus
     }
 
-    # Function to load apps into the panel
+    # Loads apps into the UI
     function LoadAppsIntoMainUI {
+        # Cancel any existing load operation to prevent race conditions
+        if ($script:CurrentAppLoadTimer -and $script:CurrentAppLoadTimer.IsEnabled) {
+            $script:CurrentAppLoadTimer.Stop()
+        }
+        if ($script:CurrentAppLoadJob) {
+            Remove-Job -Job $script:CurrentAppLoadJob -Force -ErrorAction SilentlyContinue
+        }
+        $script:CurrentAppLoadTimer = $null
+        $script:CurrentAppLoadJob = $null
+        $script:CurrentAppLoadJobStartTime = $null
+        
         # Show loading indicator and navigation blocker, clear existing apps immediately
         $loadingAppsIndicator.Visibility = 'Visible'
         $appsPanel.Children.Clear()
@@ -767,33 +866,43 @@ function OpenGUI {
         # Schedule the actual loading work to run after UI has updated
         $window.Dispatcher.BeginInvoke([System.Windows.Threading.DispatcherPriority]::Background, [action]{
             $listOfApps = ""
-            $job = $null
-            $jobStartTime = $null
 
             if ($onlyInstalledAppsBox.IsChecked -and ($script:WingetInstalled -eq $true)) {
                 # Start job to get list of installed apps via winget
-                $job = Start-Job { return winget list --accept-source-agreements --disable-interactivity }
-                $jobStartTime = Get-Date
+                $script:CurrentAppLoadJob = Start-Job { return winget list --accept-source-agreements --disable-interactivity }
+                $script:CurrentAppLoadJobStartTime = Get-Date
                 
                 # Create timer to poll job status without blocking UI
-                $pollTimer = New-Object System.Windows.Threading.DispatcherTimer
-                $pollTimer.Interval = [TimeSpan]::FromMilliseconds(100)
+                $script:CurrentAppLoadTimer = New-Object System.Windows.Threading.DispatcherTimer
+                $script:CurrentAppLoadTimer.Interval = [TimeSpan]::FromMilliseconds(100)
                 
-                $pollTimer.Add_Tick({
-                    $elapsed = (Get-Date) - $jobStartTime
+                $script:CurrentAppLoadTimer.Add_Tick({
+                    # Check if this timer was cancelled (another load started)
+                    if (-not $script:CurrentAppLoadJob -or -not $script:CurrentAppLoadTimer -or -not $script:CurrentAppLoadJobStartTime) {
+                        if ($script:CurrentAppLoadTimer) { $script:CurrentAppLoadTimer.Stop() }
+                        return
+                    }
+                    
+                    $elapsed = (Get-Date) - $script:CurrentAppLoadJobStartTime
                     
                     # Check if job is complete or timed out (10 seconds)
-                    if ($job.State -eq 'Completed') {
-                        $pollTimer.Stop()
-                        $listOfApps = Receive-Job -Job $job
-                        Remove-Job -Job $job
+                    if ($script:CurrentAppLoadJob.State -eq 'Completed') {
+                        $script:CurrentAppLoadTimer.Stop()
+                        $listOfApps = Receive-Job -Job $script:CurrentAppLoadJob
+                        Remove-Job -Job $script:CurrentAppLoadJob
+                        $script:CurrentAppLoadJob = $null
+                        $script:CurrentAppLoadTimer = $null
+                        $script:CurrentAppLoadJobStartTime = $null
                         
                         # Continue with loading apps
                         LoadAppsWithList $listOfApps
                     }
-                    elseif ($elapsed.TotalSeconds -gt 10 -or $job.State -eq 'Failed') {
-                        $pollTimer.Stop()
-                        Remove-Job -Job $job -Force
+                    elseif ($elapsed.TotalSeconds -gt 10 -or $script:CurrentAppLoadJob.State -eq 'Failed') {
+                        $script:CurrentAppLoadTimer.Stop()
+                        Remove-Job -Job $script:CurrentAppLoadJob -Force
+                        $script:CurrentAppLoadJob = $null
+                        $script:CurrentAppLoadTimer = $null
+                        $script:CurrentAppLoadJobStartTime = $null
                         
                         # Show error that the script was unable to get list of apps from winget
                         [System.Windows.MessageBox]::Show('Unable to load list of installed apps via winget.', 'Error', 'OK', 'Error') | Out-Null
@@ -802,9 +911,9 @@ function OpenGUI {
                         # Continue with loading all apps (unchecked now)
                         LoadAppsWithList ""
                     }
-                }.GetNewClosure())
+                })
                 
-                $pollTimer.Start()
+                $script:CurrentAppLoadTimer.Start()
                 return  # Exit here, timer will continue the work
             }
 
@@ -909,7 +1018,6 @@ function OpenGUI {
         
         # Find and highlight all matching apps
         $firstMatch = $null
-        $usesDarkMode = $window.Resources["BgColor"].Color.R -lt 128
         $highlightBrush = if ($usesDarkMode) { $highlightColorDark } else { $highlightColor }
         
         foreach ($child in $appsPanel.Children) {
@@ -1010,29 +1118,32 @@ function OpenGUI {
 
         $username = $otherUsernameTextBox.Text.Trim()
 
+        $errorBrush = [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#c42b1c"))
+        $successBrush = [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#28a745"))
+
         if ($username.Length -eq 0) {
             $usernameValidationMessage.Text = "[X] Please enter a username"
-            $usernameValidationMessage.Foreground = "#c42b1c"
+            $usernameValidationMessage.Foreground = $errorBrush
             return $false
         }
         
         if ($username -eq $env:USERNAME) {
             $usernameValidationMessage.Text = "[X] Cannot enter your own username. Use 'Current User' option instead."
-            $usernameValidationMessage.Foreground = "#c42b1c"
+            $usernameValidationMessage.Foreground = $errorBrush
             return $false
         }
         
-        try {
-            $userProfile = Get-LocalUser -Name $username -ErrorAction Stop
-            $usernameValidationMessage.Text = "[OK] User found: $($userProfile.FullName)"
-            $usernameValidationMessage.Foreground = "#28a745"
+        $userExists = CheckIfUserExists -Username $username
+
+        if ($userExists) {
+            $usernameValidationMessage.Text = "[OK] User found: $username"
+            $usernameValidationMessage.Foreground = $successBrush
             return $true
         }
-        catch {
-            $usernameValidationMessage.Text = "[X] User not found. Please enter a valid username."
-            $usernameValidationMessage.Foreground = "#c42b1c"
-            return $false
-        }
+
+        $usernameValidationMessage.Text = "[X] User not found. Please enter a valid username."
+        $usernameValidationMessage.Foreground = $errorBrush
+        return $false
     }
 
     # Navigation button handlers
@@ -1197,11 +1308,10 @@ function OpenGUI {
     $overviewApplyBtn = $window.FindName('OverviewApplyBtn')
     $overviewApplyBtn.Add_Click({
         if (-not (ValidateOtherUsername)) {
-            [System.Windows.MessageBox]::Show("Please enter a valid username for 'Other User' selection.", "Invalid Username", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Warning) | Out-Null
+            [System.Windows.MessageBox]::Show("Please enter a valid username.", "Invalid Username", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Warning) | Out-Null
             return
         }
 
-        # Calculate control params count
         $controlParamsCount = 0
         foreach ($Param in $script:ControlParams) {
             if ($script:Params.ContainsKey($Param)) {
@@ -1232,7 +1342,7 @@ function OpenGUI {
                 }
             }
             
-            $script:SelectedApps = $selectedApps
+            SaveCustomAppsListToFile -appsList $selectedApps
             AddParameter 'RemoveApps'
             AddParameter 'Apps' ($script:SelectedApps -join ',')
         }
@@ -1309,14 +1419,13 @@ function OpenGUI {
         $consoleOutput.Text = ""
         $applyProgressText.Text = "Applying changes..."
 
+        Write-ToConsole "Applying changes to $(if ($script:Params.ContainsKey("Sysprep")) { "default user template" } else { "user $(GetUserName)" })"
         Write-ToConsole "Total changes to apply: $totalChanges"
         Write-ToConsole ""
         
         # Run changes in background to keep UI responsive
         $window.Dispatcher.BeginInvoke([System.Windows.Threading.DispatcherPriority]::Background, [action]{
             try {
-                $script:ApplyFromUI = $true
-                
                 # Execute all changes using the consolidated function
                 ExecuteAllChanges
                 
@@ -1357,8 +1466,6 @@ function OpenGUI {
                 })
             }
         })
-        
-        UpdateNavigationButtons
     })
 
     # Load all apps on startup and build tweaks UI dynamically
@@ -1529,8 +1636,11 @@ function OpenAppSelectionWindow {
     $loadingIndicator = $window.FindName('LoadingAppsIndicator')
     $titleBar = $window.FindName('TitleBar')
     $closeBtn = $window.FindName('CloseBtn')
+    
+    # Track the last selected checkbox for shift-click range selection
+    $script:AppSelectionWindowLastSelectedCheckbox = $null
 
-    # Function to load apps into the panel
+    # Loads apps into the apps UI
     function LoadApps {
         # Show loading indicator
         $loadingIndicator.Visibility = 'Visible'
@@ -1585,6 +1695,9 @@ function OpenAppSelectionWindow {
             }
         }
 
+        # Reset the last selected checkbox when loading a new list
+        $script:AppSelectionWindowLastSelectedCheckbox = $null
+
         # Sort apps alphabetically and add to panel
         $appsToAdd | Sort-Object -Property DisplayName | ForEach-Object {
             $checkbox = New-Object System.Windows.Controls.CheckBox
@@ -1594,6 +1707,10 @@ function OpenAppSelectionWindow {
             $checkbox.ToolTip = $_.Description
             $checkbox.Foreground = $fgColor
             $checkbox.Margin = "2,3,2,3"
+            
+            # Attach shift-click behavior for range selection
+            AttachShiftClickBehavior -checkbox $checkbox -appsPanel $appsPanel -lastSelectedCheckboxRef ([ref]$script:AppSelectionWindowLastSelectedCheckbox)
+            
             $appsPanel.Children.Add($checkbox) | Out-Null
         }
 
@@ -1656,14 +1773,7 @@ function OpenAppSelectionWindow {
             }
         }
 
-        $script:SelectedApps = $selectedApps
-
-        # Create file that stores selected apps if it doesn't exist
-        if (-not (Test-Path $script:CustomAppsListFilePath)) {
-            $null = New-Item $script:CustomAppsListFilePath -ItemType File
-        }
-
-        Set-Content -Path $script:CustomAppsListFilePath -Value $script:SelectedApps
+        SaveCustomAppsListToFile -appsList $selectedApps
 
         $window.DialogResult = $true
     })
@@ -1679,6 +1789,22 @@ function OpenAppSelectionWindow {
 
     # Show the window and return dialog result
     return $window.ShowDialog()
+}
+
+
+function SaveCustomAppsListToFile {
+    param (
+        $appsList
+    )
+
+    $script:SelectedApps = $appsList
+
+    # Create file that stores selected apps if it doesn't exist
+    if (-not (Test-Path $script:CustomAppsListFilePath)) {
+        $null = New-Item $script:CustomAppsListFilePath -ItemType File
+    }
+
+    Set-Content -Path $script:CustomAppsListFilePath -Value $script:SelectedApps
 }
 
 
@@ -1787,7 +1913,7 @@ function RemoveApps {
                 RegImport "Adding scheduled task to uninstall $app for user $(GetUserName)..." "Uninstall_$($appName).reg"
             }
             elseif ($script:Params.ContainsKey("Sysprep")) {
-                RegImport "Adding scheduled task to uninstall $app after new users log in..." "Uninstall_$($appName).reg"
+                RegImport "Adding scheduled task to uninstall $app after for new users..." "Uninstall_$($appName).reg"
             }
             else {
                 # Uninstall app via winget, with any progress indicators removed from the output
@@ -1954,6 +2080,32 @@ function CheckModernStandbySupport {
 }
 
 
+function CheckIfUserExists {
+    param (
+        $userName
+    )
+
+    try {
+        $userExists = Test-Path "$env:SystemDrive\Users\$userName"
+
+        if ($userExists) {
+            return $true
+        }
+
+        $userExists = Test-Path ($env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), "\$userName")
+
+        if ($userExists) {
+            return $true
+        }
+    }
+    catch {
+        Write-Error "Something went wrong when trying to find the user directory path for user $userName. Please ensure the user exists on this system"
+    }
+
+    return $false
+}
+
+
 # Returns the directory path of the specified user, exits script if user path can't be found
 function GetUserDirectory {
     param (
@@ -1996,6 +2148,9 @@ function RegImport {
 
     Write-ToConsole $message
 
+    # Reset exit code before running reg.exe for reliable success detection
+    $global:LASTEXITCODE = 0
+
     if ($script:Params.ContainsKey("Sysprep")) {
         $defaultUserPath = GetUserDirectory -userName "Default" -fileName "NTUSER.DAT"
 
@@ -2014,10 +2169,25 @@ function RegImport {
     else {
         $regOutput = reg import "$script:RegfilesPath\$path" 2>&1
     }
+
+    $hasSuccess = $LASTEXITCODE -eq 0
     
-    foreach ($line in $regOutput) { 
-        $lineText = if ($line -is [System.Management.Automation.ErrorRecord]) { $line.Exception.Message } else { $line.ToString() }
-        if ($lineText) { Write-ToConsole $lineText }
+    if ($regOutput) {
+        foreach ($line in $regOutput) {
+            $lineText = if ($line -is [System.Management.Automation.ErrorRecord]) { $line.Exception.Message } else { $line.ToString() }
+            if ($lineText -and $lineText.Length -gt 0) {
+                if ($hasSuccess) {
+                    Write-ToConsole $lineText
+                }
+                else {
+                    Write-ToConsole $lineText -ForegroundColor Red
+                }
+            }
+        }
+    }
+
+    if (-not $hasSuccess) {
+        Write-ToConsole "Failed importing registry file: $path" -ForegroundColor Red
     }
 
     Write-ToConsole ""
@@ -2322,7 +2492,6 @@ function GetUserName {
 
 
 # Executes a single parameter/feature based on its key
-# Used by both CLI and GUI execution paths
 # Parameters:
 #   $paramKey - The parameter name to execute
 function ExecuteParameter {
@@ -2453,6 +2622,10 @@ function ExecuteParameter {
         }
         'DisablePaintAI' {
             RegImport "> Disabling AI features in Paint..." "Disable_Paint_AI_Features.reg"
+            return
+        }
+        'DisableDragTray' {
+            RegImport "> Disabling Drag Tray..." "Disable_Share_Drag_Tray.reg"
             return
         }
         'DisableNotepadAI' {
@@ -2673,11 +2846,11 @@ function ExecuteParameter {
 
 
 # Executes all selected parameters/features
-# Used by both CLI and GUI execution paths
 # Parameters:
 function ExecuteAllChanges {    
     # Create restore point if requested (CLI only - GUI handles this separately)
     if ($script:Params.ContainsKey("CreateRestorePoint")) {
+        Write-ToConsole "> Attempting to create a system restore point..."
         CreateSystemRestorePoint
     }
     
@@ -2693,8 +2866,6 @@ function ExecuteAllChanges {
 
 
 function CreateSystemRestorePoint {
-    Write-ToConsole "> Attempting to create a system restore point..."
-
     $SysRestore = Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SystemRestore" -Name "RPSessionInterval"
 
     if ($SysRestore.RPSessionInterval -eq 0) {

@@ -276,10 +276,20 @@ function LoadSettingsToParams {
     if (-not $settingsJson -or -not $settingsJson.Settings) {
         throw "Failed to load settings from $(Split-Path $filePath -Leaf)"
     }
+
+    # Get current Windows build version
+    $WinVersion = Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' CurrentBuild
     
     foreach ($setting in $settingsJson.Settings) {
         if ($setting.Value -eq $false) {
             continue
+        }
+
+        $feature = $script:Features[$setting.Name]
+
+        # Check version and feature compatibility using Features.json
+        if (($feature.MinVersion -and $WinVersion -lt $feature.MinVersion) -or ($feature.MaxVersion -and $WinVersion -gt $feature.MaxVersion) -or ($feature.FeatureId -eq 'DisableModernStandbyNetworking' -and (-not $script:ModernStandbySupported))) {
+           continue
         }
         
         AddParameter $setting.Name $setting.Value
@@ -3141,7 +3151,7 @@ else {
     }
 }
 
-# Get current Windows build version to compare against features
+# Get current Windows build version
 $WinVersion = Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' CurrentBuild
 
 # Check if the machine supports Modern Standby, this is used to determine if the DisableModernStandbyNetworking option can be used

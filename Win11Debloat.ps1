@@ -2011,9 +2011,25 @@ function RegImport {
         $regOutput = reg import "$script:RegfilesPath\$path" 2>&1
     }
     
-    foreach ($line in $regOutput) { 
-        $lineText = if ($line -is [System.Management.Automation.ErrorRecord]) { $line.Exception.Message } else { $line.ToString() }
-        if ($lineText) { Write-ToConsole $lineText }
+    $isError = $false
+    if ($regOutput) {
+        foreach ($line in $regOutput) {
+            $lineText = if ($line -is [System.Management.Automation.ErrorRecord]) { $line.Exception.Message } else { $line.ToString() }
+            if ($lineText) {
+                # Check for common failure patterns and display them in red
+                if ($lineText -match '(?i)\b(error|failed|denied|unable|cannot|not found)\b') {
+                    Write-ToConsole $lineText -ForegroundColor Red
+                    $isError = $true
+                }
+                else {
+                    Write-ToConsole $lineText
+                }
+            }
+        }
+    }
+
+    if ($LASTEXITCODE -ne 0 -or $isError) {
+        Write-ToConsole "Failed importing registry file: $path" -ForegroundColor Red
     }
 
     Write-ToConsole ""

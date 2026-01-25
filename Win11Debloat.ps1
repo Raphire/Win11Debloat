@@ -170,8 +170,7 @@ $script:GuiConsoleScrollViewer = $null
 $script:GuiWindow = $null
 
 
-# Unified output function that works for both CLI and GUI modes
-# In GUI mode, writes to the console panel. In CLI mode, uses Write-Output.
+# Writes to both GUI console output and standard console
 function Write-ToConsole {
     param(
         [string]$message,
@@ -542,7 +541,7 @@ function OpenGUI {
     $script:GuiConsoleScrollViewer = $consoleScrollViewer
     $script:GuiWindow = $window
 
-    # Function to update selection status
+    # Updates app selection status text in the App Selection tab
     function UpdateAppSelectionStatus {
         $selectedCount = 0
         foreach ($child in $appsPanel.Children) {
@@ -553,7 +552,7 @@ function OpenGUI {
         $appSelectionStatus.Text = "$selectedCount app(s) selected for removal"
     }
 
-    # Function to dynamically build Tweaks UI from Features.json
+    # Dynamically builds Tweaks UI from Features.json
     function BuildDynamicTweaks {
         $featuresJson = LoadJsonFile -filePath $script:FeaturesFilePath -expectedVersion "1.0"
 
@@ -834,7 +833,7 @@ function OpenGUI {
         UpdateAppSelectionStatus
     }
 
-    # Function to load apps into the panel
+    # Loads apps into the UI
     function LoadAppsIntoMainUI {
         # Show loading indicator and navigation blocker, clear existing apps immediately
         $loadingAppsIndicator.Visibility = 'Visible'
@@ -1285,7 +1284,6 @@ function OpenGUI {
             return
         }
 
-        # Calculate control params count
         $controlParamsCount = 0
         foreach ($Param in $script:ControlParams) {
             if ($script:Params.ContainsKey($Param)) {
@@ -1614,7 +1612,7 @@ function OpenAppSelectionWindow {
     # Track the last selected checkbox for shift-click range selection
     $script:AppSelectionWindowLastSelectedCheckbox = $null
 
-    # Function to load apps into the panel
+    # Loads apps into the apps UI
     function LoadApps {
         # Show loading indicator
         $loadingIndicator.Visibility = 'Visible'
@@ -2140,25 +2138,26 @@ function RegImport {
     else {
         $regOutput = reg import "$script:RegfilesPath\$path" 2>&1
     }
+
+    $hasSuccess = $false
     
-    $isError = $false
     if ($regOutput) {
         foreach ($line in $regOutput) {
             $lineText = if ($line -is [System.Management.Automation.ErrorRecord]) { $line.Exception.Message } else { $line.ToString() }
-            if ($lineText) {
-                # Check for common failure patterns and display them in red
-                if ($lineText -match '(?i)\b(error|failed|denied|unable|cannot|not found)\b') {
-                    Write-ToConsole $lineText -ForegroundColor Red
-                    $isError = $true
+            if ($lineText -and $lineText.Length -gt 0) {
+                # Check for the standard success message from reg.exe
+                if ($lineText -match 'operation completed successfully') {
+                    $hasSuccess = $true
+                    Write-ToConsole $lineText
                 }
                 else {
-                    Write-ToConsole $lineText
+                    Write-ToConsole $lineText -ForegroundColor Red
                 }
             }
         }
     }
 
-    if ($LASTEXITCODE -ne 0 -or $isError) {
+    if (-not $hasSuccess) {
         Write-ToConsole "Failed importing registry file: $path" -ForegroundColor Red
     }
 
@@ -2464,7 +2463,6 @@ function GetUserName {
 
 
 # Executes a single parameter/feature based on its key
-# Used by both CLI and GUI execution paths
 # Parameters:
 #   $paramKey - The parameter name to execute
 function ExecuteParameter {
@@ -2811,7 +2809,6 @@ function ExecuteParameter {
 
 
 # Executes all selected parameters/features
-# Used by both CLI and GUI execution paths
 # Parameters:
 function ExecuteAllChanges {    
     # Create restore point if requested (CLI only - GUI handles this separately)

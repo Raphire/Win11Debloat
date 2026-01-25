@@ -62,6 +62,7 @@ param (
     [switch]$ClearStartAllUsers,
     [string]$ReplaceStartAllUsers,
     [switch]$RevertContextMenu,
+    [switch]$DisableDragTray,
     [switch]$DisableMouseAcceleration,
     [switch]$DisableStickyKeys,
     [switch]$HideHome,
@@ -2616,6 +2617,10 @@ function ExecuteParameter {
         }
         'DisablePaintAI' {
             RegImport "> Disabling AI features in Paint..." "Disable_Paint_AI_Features.reg"
+            return
+        }
+        'DisableDragTray' {
+            RegImport "> Disabling Drag Tray..." "Disable_Share_Drag_Tray.reg"
             return
         }
         'DisableNotepadAI' {

@@ -60,6 +60,7 @@ param (
     [switch]$ClearStartAllUsers,
     [string]$ReplaceStartAllUsers,
     [switch]$RevertContextMenu,
+    [switch]$DisableDragTray,
     [switch]$DisableMouseAcceleration,
     [switch]$DisableStickyKeys,
     [switch]$HideHome,

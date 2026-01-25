@@ -153,6 +153,7 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 
 #### Other
 
+- Disable the Drag Tray for sharing and moving content. (W11 only)
 - Disable Xbox Game Bar integration & game/screen recording. This also disables `ms-gamingoverlay`/`ms-gamebar` popups if you uninstall the Xbox Game Bar.
 - Disable Fast Start-up to ensure a full shutdown.
 - Disable network connectivity during Modern Standby to reduce battery drain. (W11 only)

@@ -2659,12 +2659,6 @@ function ExecuteParameter {
             return
         }
         'DisableModernStandbyNetworking' {
-            if (-not $script:ModernStandbySupported) {
-                Write-ToConsole "> Disabling network connectivity during Modern Standby..."
-                Write-ToConsole "Device does not support modern standby" -ForegroundColor Yellow
-                Write-ToConsole ""
-                return
-            }
             RegImport "> Disabling network connectivity during Modern Standby..." "Disable_Modern_Standby_Networking.reg"
             return
         }

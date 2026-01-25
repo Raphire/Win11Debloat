@@ -1317,19 +1317,21 @@ function OpenGUI {
                 # Execute all changes using the consolidated function
                 ExecuteAllChanges
                 
-                # Ask user if they want to restart Explorer now
-                $result = [System.Windows.MessageBox]::Show(
-                    'Would you like to restart the Windows Explorer process now to apply all changes? Some changes may not take effect until a restart is performed.',
-                    'Restart Windows Explorer?',
-                    [System.Windows.MessageBoxButton]::YesNo,
-                    [System.Windows.MessageBoxImage]::Question
-                )
-                
-                if ($result -eq [System.Windows.MessageBoxResult]::Yes) {
-                    RestartExplorer
-                }
-                else {
-                    Write-ToConsole "Explorer restart skipped by user, please manually reboot your PC to apply all changes"
+                if (-not $script:Params.ContainsKey("Sysprep") -and -not $script:Params.ContainsKey("User")) {
+                    # Ask user if they want to restart Explorer now
+                    $result = [System.Windows.MessageBox]::Show(
+                        'Would you like to restart the Windows Explorer process now to apply all changes? Some changes may not take effect until a restart is performed.',
+                        'Restart Windows Explorer?',
+                        [System.Windows.MessageBoxButton]::YesNo,
+                        [System.Windows.MessageBoxImage]::Question
+                    )
+                    
+                    if ($result -eq [System.Windows.MessageBoxResult]::Yes) {
+                        RestartExplorer
+                    }
+                    else {
+                        Write-ToConsole "Explorer restart skipped by user, please manually reboot your PC to apply all changes"
+                    }
                 }
                 
                 Write-ToConsole ""

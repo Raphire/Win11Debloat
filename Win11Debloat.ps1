@@ -530,6 +530,11 @@ function OpenGUI {
     # Track the last selected checkbox for shift-click range selection
     $script:MainWindowLastSelectedCheckbox = $null
     
+    # Track current app loading operation to prevent race conditions
+    $script:CurrentAppLoadTimer = $null
+    $script:CurrentAppLoadJob = $null
+    $script:CurrentAppLoadJobStartTime = $null
+    
     # Apply Tab UI Elements
     $consoleOutput = $window.FindName('ConsoleOutput')
     $consoleScrollViewer = $window.FindName('ConsoleScrollViewer')
@@ -835,6 +840,17 @@ function OpenGUI {
 
     # Loads apps into the UI
     function LoadAppsIntoMainUI {
+        # Cancel any existing load operation to prevent race conditions
+        if ($script:CurrentAppLoadTimer -and $script:CurrentAppLoadTimer.IsEnabled) {
+            $script:CurrentAppLoadTimer.Stop()
+        }
+        if ($script:CurrentAppLoadJob) {
+            Remove-Job -Job $script:CurrentAppLoadJob -Force -ErrorAction SilentlyContinue
+        }
+        $script:CurrentAppLoadTimer = $null
+        $script:CurrentAppLoadJob = $null
+        $script:CurrentAppLoadJobStartTime = $null
+        
         # Show loading indicator and navigation blocker, clear existing apps immediately
         $loadingAppsIndicator.Visibility = 'Visible'
         $appsPanel.Children.Clear()
@@ -848,33 +864,43 @@ function OpenGUI {
         # Schedule the actual loading work to run after UI has updated
         $window.Dispatcher.BeginInvoke([System.Windows.Threading.DispatcherPriority]::Background, [action]{
             $listOfApps = ""
-            $job = $null
-            $jobStartTime = $null
 
             if ($onlyInstalledAppsBox.IsChecked -and ($script:WingetInstalled -eq $true)) {
                 # Start job to get list of installed apps via winget
-                $job = Start-Job { return winget list --accept-source-agreements --disable-interactivity }
-                $jobStartTime = Get-Date
+                $script:CurrentAppLoadJob = Start-Job { return winget list --accept-source-agreements --disable-interactivity }
+                $script:CurrentAppLoadJobStartTime = Get-Date
                 
                 # Create timer to poll job status without blocking UI
-                $pollTimer = New-Object System.Windows.Threading.DispatcherTimer
-                $pollTimer.Interval = [TimeSpan]::FromMilliseconds(100)
+                $script:CurrentAppLoadTimer = New-Object System.Windows.Threading.DispatcherTimer
+                $script:CurrentAppLoadTimer.Interval = [TimeSpan]::FromMilliseconds(100)
                 
-                $pollTimer.Add_Tick({
-                    $elapsed = (Get-Date) - $jobStartTime
+                $script:CurrentAppLoadTimer.Add_Tick({
+                    # Check if this timer was cancelled (another load started)
+                    if (-not $script:CurrentAppLoadJob -or -not $script:CurrentAppLoadTimer -or -not $script:CurrentAppLoadJobStartTime) {
+                        if ($script:CurrentAppLoadTimer) { $script:CurrentAppLoadTimer.Stop() }
+                        return
+                    }
+                    
+                    $elapsed = (Get-Date) - $script:CurrentAppLoadJobStartTime
                     
                     # Check if job is complete or timed out (10 seconds)
-                    if ($job.State -eq 'Completed') {
-                        $pollTimer.Stop()
-                        $listOfApps = Receive-Job -Job $job
-                        Remove-Job -Job $job
+                    if ($script:CurrentAppLoadJob.State -eq 'Completed') {
+                        $script:CurrentAppLoadTimer.Stop()
+                        $listOfApps = Receive-Job -Job $script:CurrentAppLoadJob
+                        Remove-Job -Job $script:CurrentAppLoadJob
+                        $script:CurrentAppLoadJob = $null
+                        $script:CurrentAppLoadTimer = $null
+                        $script:CurrentAppLoadJobStartTime = $null
                         
                         # Continue with loading apps
                         LoadAppsWithList $listOfApps
                     }
-                    elseif ($elapsed.TotalSeconds -gt 10 -or $job.State -eq 'Failed') {
-                        $pollTimer.Stop()
-                        Remove-Job -Job $job -Force
+                    elseif ($elapsed.TotalSeconds -gt 10 -or $script:CurrentAppLoadJob.State -eq 'Failed') {
+                        $script:CurrentAppLoadTimer.Stop()
+                        Remove-Job -Job $script:CurrentAppLoadJob -Force
+                        $script:CurrentAppLoadJob = $null
+                        $script:CurrentAppLoadTimer = $null
+                        $script:CurrentAppLoadJobStartTime = $null
                         
                         # Show error that the script was unable to get list of apps from winget
                         [System.Windows.MessageBox]::Show('Unable to load list of installed apps via winget.', 'Error', 'OK', 'Error') | Out-Null
@@ -883,9 +909,9 @@ function OpenGUI {
                         # Continue with loading all apps (unchecked now)
                         LoadAppsWithList ""
                     }
-                }.GetNewClosure())
+                })
                 
-                $pollTimer.Start()
+                $script:CurrentAppLoadTimer.Start()
                 return  # Exit here, timer will continue the work
             }
 

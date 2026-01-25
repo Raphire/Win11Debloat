@@ -526,18 +526,24 @@ function SetWindowThemeResources {
 }
 
 
+# Checks if the system is set to use dark mode for apps
+function GetSystemUsesDarkMode {
+    try {
+        return  (Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize' -Name 'AppsUseLightTheme').AppsUseLightTheme -eq 0
+    }
+    catch {
+        return $false
+    }
+}
+
+
 function OpenGUI {    
     Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase | Out-Null
 
     # Get current Windows build version
     $WinVersion = Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' CurrentBuild
 
-    # Detect system theme (dark or light mode)
-    $usesDarkMode = $false
-    try {
-        $usesDarkMode = (Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize' -Name 'AppsUseLightTheme').AppsUseLightTheme -eq 0
-    }
-    catch {}
+    $usesDarkMode = GetSystemUsesDarkMode
 
     # Load XAML from file
     $xaml = Get-Content -Path $script:MainWindowSchema -Raw
@@ -1625,15 +1631,7 @@ function OpenGUI {
 function OpenAppSelectionWindow {
     Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase | Out-Null
 
-    # Detect system theme (dark or light mode)
-    $usesDarkMode = $false
-    try {
-        $appsTheme = Get-ItemPropertyValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" -Name "AppsUseLightTheme" -ErrorAction SilentlyContinue
-        $usesDarkMode = ($appsTheme -eq 0)
-    }
-    catch {
-        $usesDarkMode = $false
-    }
+    $usesDarkMode = GetSystemUsesDarkMode
 
     # Load XAML from file
     $xaml = Get-Content -Path $script:AppSelectionSchema -Raw

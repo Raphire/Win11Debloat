@@ -894,6 +894,17 @@
       "RegistryUndoKey": "Show_Music_Folder.reg",
       "minVersion": null,
       "maxVersion": 21999
+    },
+    {
+      "FeatureId": "DisableBraveBloat",
+      "Label": "bloat in Brave browser",
+      "Category": "Other",
+      "Action": "Disable",
+      "RegistryKey": "Disable_Brave_Bloat.reg",
+      "UndoAction": "Enable",
+      "RegistryUndoKey": "Enable_Brave_Bloat.reg",
+      "minVersion": null,
+      "maxVersion": null
     }
   ]
 }

@@ -2405,6 +2405,10 @@ function ExecuteParameter {
             RegImport "> Disabling ads, suggestions and the MSN news feed in Microsoft Edge..." "Disable_Edge_Ads_And_Suggestions.reg"
             return
         }
+        'DisableBraveBloat' {
+            RegImport "> Disabling Brave AI, Crypto, News, Rewards, Talk and VPN in Brave browser..." "Disable_Brave_Bloat.reg"
+            continue
+        }
         {$_ -in "DisableLockscrTips", "DisableLockscreenTips"} {
             RegImport "> Disabling tips & tricks on the lockscreen..." "Disable_Lockscreen_Tips.reg"
             return

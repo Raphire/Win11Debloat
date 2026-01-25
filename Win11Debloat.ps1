@@ -2120,6 +2120,9 @@ function RegImport {
 
     Write-ToConsole $message
 
+    # Reset exit code before running reg.exe for reliable success detection
+    $global:LASTEXITCODE = 0
+
     if ($script:Params.ContainsKey("Sysprep")) {
         $defaultUserPath = GetUserDirectory -userName "Default" -fileName "NTUSER.DAT"
 
@@ -2139,15 +2142,13 @@ function RegImport {
         $regOutput = reg import "$script:RegfilesPath\$path" 2>&1
     }
 
-    $hasSuccess = $false
+    $hasSuccess = $LASTEXITCODE -eq 0
     
     if ($regOutput) {
         foreach ($line in $regOutput) {
             $lineText = if ($line -is [System.Management.Automation.ErrorRecord]) { $line.Exception.Message } else { $line.ToString() }
             if ($lineText -and $lineText.Length -gt 0) {
-                # Check for the standard success message from reg.exe
-                if ($lineText -match 'operation completed successfully') {
-                    $hasSuccess = $true
+                if ($hasSuccess) {
                     Write-ToConsole $lineText
                 }
                 else {

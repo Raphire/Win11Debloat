@@ -120,7 +120,7 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 - Restore the old Windows 10 style context menu. (W11 only)
 - Turn off Enhance Pointer Precision, also known as mouse acceleration.
 - Disable the Sticky Keys keyboard shortcut. (W11 only)
-- Disable Fast Start-up to ensure a full shutdown.
+- Disable fast start-up to ensure a full shutdown.
 - Disable network connectivity during Modern Standby to reduce battery drain. (W11 only)
 
 #### Appearance
@@ -182,17 +182,18 @@ Alternatively, you can launch the script with the `-RunDefaults` or `-RunDefault
 - Remove the default or your custom selection of apps. (See below for the default selection of apps)
 - Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads.
 - Disable tips, tricks, suggestions & ads across Windows.
+- Disable 'Windows Spotlight' and tips & tricks on the lock screen.
 - Disable ads, suggestions and the MSN news feed in Microsoft Edge.
-- Disable & remove Bing web search, Bing AI and Cortana from Windows search.
+- Disable Bing web search & Copilot integration in Windows search.
+- Disable widgets on the taskbar & lock screen.
 - Disable & remove Microsoft Copilot.
 - Disable Windows Recall. (W11 only)
 - Disable Click to Do, AI text & image analysis tool. (W11 only)
 - Disable the Drag Tray for sharing & moving files. (W11 only)
-- Disable Fast Start-up to ensure a full shutdown.
-- Disable network connectivity during Modern Standby to reduce battery drain. (W11 only)
+- Disable fast start-up to ensure a full shutdown.
 - Show file extensions for known file types.
+- Disable network connectivity during Modern Standby to reduce battery drain. (W11 only)
 - Hide the 3D objects folder under 'This pc' from File Explorer. (W10 only)
-- Disable widgets on the taskbar & lock screen.
 - Hide the Chat (meet now) icon from the taskbar. (W10 only)
 
 #### Apps that ARE removed by default

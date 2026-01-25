@@ -2607,7 +2607,7 @@ function ExecuteParameter {
             RegImport "> Disabling telemetry, diagnostic data, activity history, app-launch tracking and targeted ads..." "Disable_Telemetry.reg"
             return
         }
-        {$_ -in "DisableSuggestions", "DisableWindowsSuggestions"} {
+        'DisableSuggestions' {
             RegImport "> Disabling tips, tricks, suggestions and ads across Windows..." "Disable_Windows_Suggestions.reg"
             return
         }
@@ -2619,7 +2619,7 @@ function ExecuteParameter {
             RegImport "> Disabling Brave AI, Crypto, News, Rewards, Talk and VPN in Brave browser..." "Disable_Brave_Bloat.reg"
             continue
         }
-        {$_ -in "DisableLockscrTips", "DisableLockscreenTips"} {
+        'DisableLockscreenTips' {
             RegImport "> Disabling tips & tricks on the lock screen..." "Disable_Lockscreen_Tips.reg"
             return
         }
@@ -2635,7 +2635,7 @@ function ExecuteParameter {
             RegImport "> Disabling the Settings Home page..." "Disable_Settings_Home.reg"
             return
         }
-        {$_ -in "DisableBingSearches", "DisableBing"} {
+        'DisableBing' {
             RegImport "> Disabling Bing web search, Bing AI and Cortana from Windows search..." "Disable_Bing_Cortana_In_Search.reg"
             # Also remove the app package for Bing search
             $appsList = 'Microsoft.BingSearch'

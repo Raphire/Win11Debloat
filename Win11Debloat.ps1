@@ -1233,7 +1233,7 @@ function OpenGUI {
                 }
             }
             
-            $script:SelectedApps = $selectedApps
+            SaveCustomAppsListToFile -appsList $selectedApps
             AddParameter 'RemoveApps'
             AddParameter 'Apps' ($script:SelectedApps -join ',')
         }
@@ -1654,14 +1654,7 @@ function OpenAppSelectionWindow {
             }
         }
 
-        $script:SelectedApps = $selectedApps
-
-        # Create file that stores selected apps if it doesn't exist
-        if (-not (Test-Path $script:CustomAppsListFilePath)) {
-            $null = New-Item $script:CustomAppsListFilePath -ItemType File
-        }
-
-        Set-Content -Path $script:CustomAppsListFilePath -Value $script:SelectedApps
+        SaveCustomAppsListToFile -appsList $selectedApps
 
         $window.DialogResult = $true
     })
@@ -1677,6 +1670,22 @@ function OpenAppSelectionWindow {
 
     # Show the window and return dialog result
     return $window.ShowDialog()
+}
+
+
+function SaveCustomAppsListToFile {
+    param (
+        $appsList
+    )
+
+    $script:SelectedApps = $appsList
+
+    # Create file that stores selected apps if it doesn't exist
+    if (-not (Test-Path $script:CustomAppsListFilePath)) {
+        $null = New-Item $script:CustomAppsListFilePath -ItemType File
+    }
+
+    Set-Content -Path $script:CustomAppsListFilePath -Value $script:SelectedApps
 }
 
 

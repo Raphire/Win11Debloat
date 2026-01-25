@@ -368,6 +368,80 @@ function ApplySettingsToUiControls {
 }
 
 
+# Attaches shift-click selection behavior to a checkbox in an apps panel
+# Parameters:
+#   - $checkbox: The checkbox to attach the behavior to
+#   - $appsPanel: The StackPanel containing checkbox items
+#   - $lastSelectedCheckboxRef: A reference to a variable storing the last clicked checkbox
+#   - $updateStatusCallback: Optional callback to update selection status
+function AttachShiftClickBehavior {
+    param (
+        [System.Windows.Controls.CheckBox]$checkbox,
+        [System.Windows.Controls.StackPanel]$appsPanel,
+        [ref]$lastSelectedCheckboxRef,
+        [scriptblock]$updateStatusCallback = $null
+    )
+
+    # Use a closure to capture the parameters
+    $checkbox.Add_PreviewMouseLeftButtonDown({
+        param($sender, $e)
+        
+        $isShiftPressed = [System.Windows.Input.Keyboard]::IsKeyDown([System.Windows.Input.Key]::LeftShift) -or 
+                          [System.Windows.Input.Keyboard]::IsKeyDown([System.Windows.Input.Key]::RightShift)
+        
+        # Inline shift-click selection logic
+        if ($isShiftPressed -and $null -ne $lastSelectedCheckboxRef.Value) {
+            # Get all visible checkboxes in the panel
+            $visibleCheckboxes = @()
+            foreach ($child in $appsPanel.Children) {
+                if ($child -is [System.Windows.Controls.CheckBox] -and $child.Visibility -eq 'Visible') {
+                    $visibleCheckboxes += $child
+                }
+            }
+
+            # Find indices of the last selected and current checkbox
+            $lastIndex = -1
+            $currentIndex = -1
+
+            for ($i = 0; $i -lt $visibleCheckboxes.Count; $i++) {
+                if ($visibleCheckboxes[$i] -eq $lastSelectedCheckboxRef.Value) {
+                    $lastIndex = $i
+                }
+                if ($visibleCheckboxes[$i] -eq $sender) {
+                    $currentIndex = $i
+                }
+            }
+
+            if ($lastIndex -ge 0 -and $currentIndex -ge 0 -and $lastIndex -ne $currentIndex) {
+                # Determine the range
+                $startIndex = [Math]::Min($lastIndex, $currentIndex)
+                $endIndex = [Math]::Max($lastIndex, $currentIndex)
+
+                # Check if the clicked checkbox is already checked - if so, deselect the range
+                $shouldDeselect = $sender.IsChecked
+
+                # Set all checkboxes in the range to the appropriate state
+                for ($i = $startIndex; $i -le $endIndex; $i++) {
+                    $visibleCheckboxes[$i].IsChecked = -not $shouldDeselect
+                }
+
+                # Call update status callback if provided
+                if ($updateStatusCallback) {
+                    & $updateStatusCallback
+                }
+
+                # Mark the event as handled to prevent the default toggle behavior
+                $e.Handled = $true
+                return
+            }
+        }
+
+        # Update the last selected checkbox reference for next time
+        $lastSelectedCheckboxRef.Value = $sender
+    }.GetNewClosure())
+}
+
+
 function OpenGUI {    
     Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase | Out-Null
 
@@ -453,6 +527,9 @@ function OpenGUI {
     $defaultAppsBtn = $window.FindName('DefaultAppsBtn')
     $loadLastUsedAppsBtn = $window.FindName('LoadLastUsedAppsBtn')
     $clearAppSelectionBtn = $window.FindName('ClearAppSelectionBtn')
+    
+    # Track the last selected checkbox for shift-click range selection
+    $script:MainWindowLastSelectedCheckbox = $null
     
     # Apply Tab UI Elements
     $consoleOutput = $window.FindName('ConsoleOutput')
@@ -723,6 +800,9 @@ function OpenGUI {
             }
         }
 
+        # Reset the last selected checkbox when loading a new list
+        $script:MainWindowLastSelectedCheckbox = $null
+
         # Sort apps alphabetically and add to panel
         $appsToAdd | Sort-Object -Property DisplayName | ForEach-Object {
             $checkbox = New-Object System.Windows.Controls.CheckBox
@@ -741,6 +821,9 @@ function OpenGUI {
             # Add event handler to update status
             $checkbox.Add_Checked({ UpdateAppSelectionStatus })
             $checkbox.Add_Unchecked({ UpdateAppSelectionStatus })
+            
+            # Attach shift-click behavior for range selection
+            AttachShiftClickBehavior -checkbox $checkbox -appsPanel $appsPanel -lastSelectedCheckboxRef ([ref]$script:MainWindowLastSelectedCheckbox) -updateStatusCallback { UpdateAppSelectionStatus }
             
             $appsPanel.Children.Add($checkbox) | Out-Null
         }
@@ -1527,6 +1610,9 @@ function OpenAppSelectionWindow {
     $loadingIndicator = $window.FindName('LoadingAppsIndicator')
     $titleBar = $window.FindName('TitleBar')
     $closeBtn = $window.FindName('CloseBtn')
+    
+    # Track the last selected checkbox for shift-click range selection
+    $script:AppSelectionWindowLastSelectedCheckbox = $null
 
     # Function to load apps into the panel
     function LoadApps {
@@ -1583,6 +1669,9 @@ function OpenAppSelectionWindow {
             }
         }
 
+        # Reset the last selected checkbox when loading a new list
+        $script:AppSelectionWindowLastSelectedCheckbox = $null
+
         # Sort apps alphabetically and add to panel
         $appsToAdd | Sort-Object -Property DisplayName | ForEach-Object {
             $checkbox = New-Object System.Windows.Controls.CheckBox
@@ -1592,6 +1681,10 @@ function OpenAppSelectionWindow {
             $checkbox.ToolTip = $_.Description
             $checkbox.Foreground = $fgColor
             $checkbox.Margin = "2,3,2,3"
+            
+            # Attach shift-click behavior for range selection
+            AttachShiftClickBehavior -checkbox $checkbox -appsPanel $appsPanel -lastSelectedCheckboxRef ([ref]$script:AppSelectionWindowLastSelectedCheckbox)
+            
             $appsPanel.Children.Add($checkbox) | Out-Null
         }
 

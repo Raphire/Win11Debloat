@@ -29,6 +29,7 @@ param (
     [switch]$DisableLockscreenTips,
     [switch]$DisableSuggestions,
     [switch]$DisableEdgeAds,
+    [switch]$DisableBraveBloat,
     [switch]$DisableSettings365Ads,
     [switch]$DisableSettingsHome,
     [switch]$ShowHiddenFolders,

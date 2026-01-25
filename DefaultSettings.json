@@ -210,6 +210,10 @@
             "Value": false
         },
         {
+            "Name": "AddFoldersToThisPC",
+            "Value": false
+        },
+        {
             "Name": "HideHome",
             "Value": false
         },

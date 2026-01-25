@@ -1,14 +1,15 @@
 {
   "Version": "1.0",
   "Categories": [
-    "File Explorer",
     "Start Menu",
-    "Privacy & Suggested Content",
     "System",
+    "Privacy & Suggested Content",
     "Taskbar",
+    "Appearance",
     "AI",
-    "Gaming",
-    "Other"
+    "Other",
+    "File Explorer",
+    "Gaming"
   ],
   "UiGroups": [
     {
@@ -263,28 +264,6 @@
       "maxVersion": null
     },
     {
-      "FeatureId": "DisableFastStartup",
-      "Label": "fast start-up",
-      "Category": "System",
-      "Action": "Disable",
-      "RegistryKey": "Disable_Fast_Startup.reg",
-      "UndoAction": "Enable",
-      "RegistryUndoKey": "Enable_Fast_Startup.reg",
-      "minVersion": null,
-      "maxVersion": null
-    },
-    {
-      "FeatureId": "DisableModernStandbyNetworking",
-      "Label": "Modern Standby network connectivity",
-      "Category": "System",
-      "Action": "Disable",
-      "RegistryKey": "Disable_Modern_Standby_Networking.reg",
-      "UndoAction": "Enable",
-      "RegistryUndoKey": "Enable_Modern_Standby_Networking.reg",
-      "minVersion": 22000,
-      "maxVersion": null
-    },
-    {
       "FeatureId": "DisableDVR",
       "Label": "Xbox game/screen recording",
       "Category": "Gaming",
@@ -439,14 +418,14 @@
       "maxVersion": null
     },
     {
-      "FeatureId": "RevertContextMenu",
-      "Label": "context menu style",
+      "FeatureId": "DisableDragTray",
+      "Label": "'Drag Tray' for sharing and moving content",
       "Category": "System",
-      "Action": "Use classic Windows 10",
-      "RegistryKey": "Disable_Show_More_Options_Context_Menu.reg",
-      "UndoAction": "Use modern Windows 11",
-      "RegistryUndoKey": "Enable_W11_Style_Context_Menu.reg",
-      "minVersion": 22000,
+      "Action": "Disable",
+      "RegistryKey": "Disable_Share_Drag_Tray.reg",
+      "UndoAction": "Enable",
+      "RegistryUndoKey": "Enable_Share_Drag_Tray.reg",
+      "minVersion": 26200,
       "maxVersion": null
     },
     {
@@ -469,6 +448,17 @@
       "UndoAction": "Enable",
       "RegistryUndoKey": "Enable_Sticky_Keys_Shortcut.reg",
       "minVersion": 26100,
+      "maxVersion": null
+    },
+    {
+      "FeatureId": "RevertContextMenu",
+      "Label": "context menu style",
+      "Category": "System",
+      "Action": "Use classic Windows 10",
+      "RegistryKey": "Disable_Show_More_Options_Context_Menu.reg",
+      "UndoAction": "Use modern Windows 11",
+      "RegistryUndoKey": "Enable_W11_Style_Context_Menu.reg",
+      "minVersion": 22000,
       "maxVersion": null
     },
     {
@@ -562,6 +552,28 @@
       "RegistryUndoKey": "Enable_Chat_Taskbar.reg",
       "minVersion": null,
       "maxVersion": 22621
+    },
+    {
+      "FeatureId": "DisableFastStartup",
+      "Label": "fast start-up",
+      "Category": "System",
+      "Action": "Disable",
+      "RegistryKey": "Disable_Fast_Startup.reg",
+      "UndoAction": "Enable",
+      "RegistryUndoKey": "Enable_Fast_Startup.reg",
+      "minVersion": null,
+      "maxVersion": null
+    },
+    {
+      "FeatureId": "DisableModernStandbyNetworking",
+      "Label": "Modern Standby network connectivity",
+      "Category": "System",
+      "Action": "Disable",
+      "RegistryKey": "Disable_Modern_Standby_Networking.reg",
+      "UndoAction": "Enable",
+      "RegistryUndoKey": "Enable_Modern_Standby_Networking.reg",
+      "minVersion": 22000,
+      "maxVersion": null
     },
     {
       "FeatureId": "EnableEndTask",

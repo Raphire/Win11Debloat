@@ -104,7 +104,7 @@
             </Style.Triggers>
         </Style>
 
-        <!-- ComboBox Style for Home Tab (no highlighting) -->
+        <!-- ComboBox Style for User Selection -->
         <Style x:Key="UserComboBoxStyle" TargetType="ComboBox">
             <Setter Property="Background" Value="{DynamicResource ComboBgColor}"/>
             <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
@@ -140,7 +140,7 @@
                             <Popup Name="Popup" Placement="Bottom" IsOpen="{TemplateBinding IsDropDownOpen}" AllowsTransparency="True" Focusable="False" PopupAnimation="Slide">
                                 <Grid Name="DropDown" SnapsToDevicePixels="True" MinWidth="{TemplateBinding ActualWidth}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
                                     <Border x:Name="DropDownBorder" Background="{DynamicResource ComboBgColor}" BorderThickness="1" BorderBrush="{DynamicResource BorderColor}" CornerRadius="4" Margin="0,2,0,0">
-                                        <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
+                                        <ScrollViewer Margin="2" SnapsToDevicePixels="True">
                                             <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained"/>
                                         </ScrollViewer>
                                     </Border>

@@ -1306,7 +1306,7 @@ function OpenGUI {
     $overviewApplyBtn = $window.FindName('OverviewApplyBtn')
     $overviewApplyBtn.Add_Click({
         if (-not (ValidateOtherUsername)) {
-            [System.Windows.MessageBox]::Show("Please enter a valid username for 'Other User' selection.", "Invalid Username", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Warning) | Out-Null
+            [System.Windows.MessageBox]::Show("Please enter a valid username.", "Invalid Username", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Warning) | Out-Null
             return
         }
 

@@ -124,6 +124,29 @@ catch {
     AwaitKeyToExit
 }
 
+# Display ASCII art launch logo in CLI
+Clear-Host
+Write-Host ""
+Write-Host ""
+Write-Host "                   " -NoNewline; Write-Host "      ^" -ForegroundColor Blue
+Write-Host "                   " -NoNewline; Write-Host "     / \" -ForegroundColor Blue
+Write-Host "                   " -NoNewline; Write-Host "    /   \" -ForegroundColor Blue
+Write-Host "                   " -NoNewline; Write-Host "   /     \" -ForegroundColor Blue
+Write-Host "                   " -NoNewline; Write-Host "  / ===== \" -ForegroundColor Blue
+Write-Host "                   " -NoNewline; Write-Host "  |" -ForegroundColor Blue -NoNewline; Write-Host "  ---  " -ForegroundColor White -NoNewline; Write-Host "|" -ForegroundColor Blue
+Write-Host "                   " -NoNewline; Write-Host "  |" -ForegroundColor Blue -NoNewline; Write-Host " ( O ) " -ForegroundColor DarkCyan -NoNewline; Write-Host "|" -ForegroundColor Blue
+Write-Host "                   " -NoNewline; Write-Host "  |" -ForegroundColor Blue -NoNewline; Write-Host "  ---  " -ForegroundColor White -NoNewline; Write-Host "|" -ForegroundColor Blue
+Write-Host "                   " -NoNewline; Write-Host "  |       |" -ForegroundColor Blue
+Write-Host "                   " -NoNewline; Write-Host " /|       |\" -ForegroundColor Blue
+Write-Host "                   " -NoNewline; Write-Host "/ |       | \" -ForegroundColor Blue
+Write-Host "                   " -NoNewline; Write-Host "  |  " -ForegroundColor DarkGray -NoNewline; Write-Host "'''" -ForegroundColor Red -NoNewline; Write-Host "  |" -ForegroundColor DarkGray -NoNewline; Write-Host "    *" -ForegroundColor Yellow
+Write-Host "                   " -NoNewline; Write-Host "   (" -ForegroundColor Yellow -NoNewline; Write-Host "'''" -ForegroundColor Red -NoNewline; Write-Host ") " -ForegroundColor Yellow -NoNewline; Write-Host "   *  *" -ForegroundColor DarkYellow
+Write-Host "                   " -NoNewline; Write-Host "   ( " -ForegroundColor DarkYellow -NoNewline; Write-Host "'" -ForegroundColor Red -NoNewline; Write-Host " )   " -ForegroundColor DarkYellow -NoNewline; Write-Host "*" -ForegroundColor Yellow
+Write-Host ""
+Write-Host "             Win11Debloat is launching..." -ForegroundColor White
+Write-Host "               Leave this window open" -ForegroundColor DarkGray
+Write-Host ""
+
 # Log script output to 'Win11Debloat.log' at the specified path
 if ($LogPath -and (Test-Path $LogPath)) {
     Start-Transcript -Path "$LogPath/Win11Debloat.log" -Append -IncludeInvocationHeader -Force | Out-Null
@@ -345,30 +368,7 @@ function ApplySettingsToUiControls {
 }
 
 
-function OpenGUI {
-    # Display ASCII art logo in CLI
-    Clear-Host
-    Write-Host ""
-    Write-Host ""
-    Write-Host "                   " -NoNewline; Write-Host "      ^" -ForegroundColor Blue
-    Write-Host "                   " -NoNewline; Write-Host "     / \" -ForegroundColor Blue
-    Write-Host "                   " -NoNewline; Write-Host "    /   \" -ForegroundColor Blue
-    Write-Host "                   " -NoNewline; Write-Host "   /     \" -ForegroundColor Blue
-    Write-Host "                   " -NoNewline; Write-Host "  / ===== \" -ForegroundColor Blue
-    Write-Host "                   " -NoNewline; Write-Host "  |" -ForegroundColor Blue -NoNewline; Write-Host "  ---  " -ForegroundColor White -NoNewline; Write-Host "|" -ForegroundColor Blue
-    Write-Host "                   " -NoNewline; Write-Host "  |" -ForegroundColor Blue -NoNewline; Write-Host " ( O ) " -ForegroundColor DarkCyan -NoNewline; Write-Host "|" -ForegroundColor Blue
-    Write-Host "                   " -NoNewline; Write-Host "  |" -ForegroundColor Blue -NoNewline; Write-Host "  ---  " -ForegroundColor White -NoNewline; Write-Host "|" -ForegroundColor Blue
-    Write-Host "                   " -NoNewline; Write-Host "  |       |" -ForegroundColor Blue
-    Write-Host "                   " -NoNewline; Write-Host " /|       |\" -ForegroundColor Blue
-    Write-Host "                   " -NoNewline; Write-Host "/ |       | \" -ForegroundColor Blue
-    Write-Host "                   " -NoNewline; Write-Host "  |  " -ForegroundColor DarkGray -NoNewline; Write-Host "'''" -ForegroundColor Red -NoNewline; Write-Host "  |" -ForegroundColor DarkGray -NoNewline; Write-Host "    *" -ForegroundColor Yellow
-    Write-Host "                   " -NoNewline; Write-Host "   (" -ForegroundColor Yellow -NoNewline; Write-Host "'''" -ForegroundColor Red -NoNewline; Write-Host ") " -ForegroundColor Yellow -NoNewline; Write-Host "   *  *" -ForegroundColor DarkYellow
-    Write-Host "                   " -NoNewline; Write-Host "   ( " -ForegroundColor DarkYellow -NoNewline; Write-Host "'" -ForegroundColor Red -NoNewline; Write-Host " )   " -ForegroundColor DarkYellow -NoNewline; Write-Host "*" -ForegroundColor Yellow
-    Write-Host ""
-    Write-Host "             Win11Debloat is launching..." -ForegroundColor White
-    Write-Host "               Leave this window open" -ForegroundColor DarkGray
-    Write-Host ""
-    
+function OpenGUI {    
     Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase | Out-Null
 
     # Get current Windows build version
@@ -1310,6 +1310,7 @@ function OpenGUI {
         $consoleOutput.Text = ""
         $applyProgressText.Text = "Applying changes..."
 
+        Write-ToConsole "Applying changes to $(if ($script:Params.ContainsKey("Sysprep")) { "default user template" } else { "user $(GetUserName)" })"
         Write-ToConsole "Total changes to apply: $totalChanges"
         Write-ToConsole ""
         
@@ -1784,7 +1785,7 @@ function RemoveApps {
                 RegImport "Adding scheduled task to uninstall $app for user $(GetUserName)..." "Uninstall_$($appName).reg"
             }
             elseif ($script:Params.ContainsKey("Sysprep")) {
-                RegImport "Adding scheduled task to uninstall $app after new users log in..." "Uninstall_$($appName).reg"
+                RegImport "Adding scheduled task to uninstall $app after for new users..." "Uninstall_$($appName).reg"
             }
             else {
                 # Uninstall app via winget, with any progress indicators removed from the output
@@ -2713,6 +2714,7 @@ function ExecuteParameter {
 function ExecuteAllChanges {    
     # Create restore point if requested (CLI only - GUI handles this separately)
     if ($script:Params.ContainsKey("CreateRestorePoint")) {
+        Write-ToConsole "> Attempting to create a system restore point..."
         CreateSystemRestorePoint
     }
     
@@ -2728,8 +2730,6 @@ function ExecuteAllChanges {
 
 
 function CreateSystemRestorePoint {
-    Write-ToConsole "> Attempting to create a system restore point..."
-
     $SysRestore = Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SystemRestore" -Name "RPSessionInterval"
 
     if ($SysRestore.RPSessionInterval -eq 0) {

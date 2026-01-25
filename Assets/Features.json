@@ -419,13 +419,24 @@
     },
     {
       "FeatureId": "DisableDragTray",
-      "Label": "'Drag Tray' for sharing and moving content",
+      "Label": "'Drag Tray' for sharing & moving files",
       "Category": "System",
       "Action": "Disable",
       "RegistryKey": "Disable_Share_Drag_Tray.reg",
       "UndoAction": "Enable",
       "RegistryUndoKey": "Enable_Share_Drag_Tray.reg",
       "minVersion": 26200,
+      "maxVersion": null
+    },
+    {
+      "FeatureId": "RevertContextMenu",
+      "Label": "context menu style",
+      "Category": "System",
+      "Action": "Use classic Windows 10",
+      "RegistryKey": "Disable_Show_More_Options_Context_Menu.reg",
+      "UndoAction": "Use modern Windows 11",
+      "RegistryUndoKey": "Enable_W11_Style_Context_Menu.reg",
+      "minVersion": 22000,
       "maxVersion": null
     },
     {
@@ -448,17 +459,6 @@
       "UndoAction": "Enable",
       "RegistryUndoKey": "Enable_Sticky_Keys_Shortcut.reg",
       "minVersion": 26100,
-      "maxVersion": null
-    },
-    {
-      "FeatureId": "RevertContextMenu",
-      "Label": "context menu style",
-      "Category": "System",
-      "Action": "Use classic Windows 10",
-      "RegistryKey": "Disable_Show_More_Options_Context_Menu.reg",
-      "UndoAction": "Use modern Windows 11",
-      "RegistryUndoKey": "Enable_W11_Style_Context_Menu.reg",
-      "minVersion": 22000,
       "maxVersion": null
     },
     {
@@ -799,7 +799,7 @@
     },
     {
       "FeatureId": "AddFoldersToThisPC",
-      "Label": "common folders to 'This PC'",
+      "Label": "common folders back to 'This PC' page",
       "Category": "File Explorer",
       "Action": "Add",
       "RegistryKey": "Add_All_Folders_Under_This_PC.reg",
@@ -909,7 +909,7 @@
     },
     {
       "FeatureId": "DisableBraveBloat",
-      "Label": "bloat in Brave browser",
+      "Label": "bloat in Brave browser (AI, Crypto, etc.)",
       "Category": "Other",
       "Action": "Disable",
       "RegistryKey": "Disable_Brave_Bloat.reg",

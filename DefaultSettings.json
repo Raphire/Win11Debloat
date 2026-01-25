@@ -50,6 +50,10 @@
             "Value": true
         },
         {
+            "Name": "DisableDragTray",
+            "Value": true
+        },
+        {
             "Name": "DisableFastStartup",
             "Value": true
         },

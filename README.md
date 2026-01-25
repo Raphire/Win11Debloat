@@ -154,7 +154,7 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 #### Other
 
 - Disable bloat in Brave browser (AI, Crypto, News, Etc)
-- Disable the Drag Tray for sharing and moving content. (W11 only)
+- Disable the Drag Tray for sharing & moving files. (W11 only)
 - Disable Xbox Game Bar integration & game/screen recording. This also disables `ms-gamingoverlay`/`ms-gamebar` popups if you uninstall the Xbox Game Bar.
 - Disable Fast Start-up to ensure a full shutdown.
 - Disable network connectivity during Modern Standby to reduce battery drain. (W11 only)
@@ -182,6 +182,7 @@ Alternatively, you can launch the script with the `-RunDefaults` or `-RunDefault
 - Disable & remove Microsoft Copilot.
 - Disable Windows Recall. (W11 only)
 - Disable Click to Do, AI text & image analysis tool. (W11 only)
+- Disable the Drag Tray for sharing & moving files. (W11 only)
 - Disable Fast Start-up to ensure a full shutdown.
 - Disable network connectivity during Modern Standby to reduce battery drain. (W11 only)
 - Show file extensions for known file types.

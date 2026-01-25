@@ -188,7 +188,7 @@
     },
     {
       "FeatureId": "DisableLockscreenTips",
-      "Label": "Windows Spotlight for lockscreen",
+      "Label": "tips & tricks on the lock screen",
       "Category": "Privacy & Suggested Content",
       "Action": "Disable",
       "RegistryKey": "Disable_Lockscreen_Tips.reg",
@@ -531,7 +531,7 @@
     },
     {
       "FeatureId": "DisableWidgets",
-      "Label": "widgets on the taskbar & lockscreen",
+      "Label": "widgets on the taskbar & lock screen",
       "Category": "Taskbar",
       "Priority": 4,
       "Action": "Disable",

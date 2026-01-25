@@ -96,18 +96,17 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 #### App Removal
 
 - Remove a wide variety of preinstalled apps. Click [here](https://github.com/Raphire/Win11Debloat/wiki/App-Removal) for more info.
-- Remove or replace all pinned apps from start for the current user, or for all existing & new users. (W11 only)
 
-#### Telemetry, Tracking & Suggested Content
+#### Privacy & Suggested Content
 
 - Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads.
 - Disable tips, tricks, suggestions & ads across Windows.
+- Disable 'Windows Spotlight' and tips & tricks on the lock screen.
+- Disable 'Windows Spotlight' desktop background option.
 - Disable ads, suggestions and the MSN news feed in Microsoft Edge.
-- Disable the 'Windows Spotlight' desktop background option.
 
-#### Bing Web Search, Copilot & AI Features
+#### AI Features
 
-- Disable & remove Bing web search, Bing AI and Cortana from Windows search.
 - Disable & remove Microsoft Copilot.
 - Disable Windows Recall. (W11 only)
 - Disable Click to Do, AI text & image analysis tool. (W11 only)
@@ -115,49 +114,55 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 - Disable AI Features in Paint. (W11 only)
 - Disable AI Features in Notepad. (W11 only)
 
-#### Personalisation
+#### System
 
-- Enable dark mode for system and apps.
-- Disable transparency, animations and visual effects.
+- Disable the Drag Tray for sharing & moving files. (W11 only)
+- Restore the old Windows 10 style context menu. (W11 only)
 - Turn off Enhance Pointer Precision, also known as mouse acceleration.
 - Disable the Sticky Keys keyboard shortcut. (W11 only)
-- Restore the old Windows 10 style context menu. (W11 only)
-- Hide the 'Include in library', 'Give access to' and 'Share' options from the context menu. (W10 only)
+- Disable Fast Start-up to ensure a full shutdown.
+- Disable network connectivity during Modern Standby to reduce battery drain. (W11 only)
+
+#### Appearance
+
+- Enable dark mode for system and apps.
+- Disable transparency effects
+- Disable animations and visual effects.
 
 #### File Explorer
 
 - Change the default location that File Explorer opens to.
-- Show hidden files, folders and drives.
 - Show file extensions for known file types.
-- Add all common folders (Desktop, Downloads, etc.) back to 'This PC' in File Explorer. (W11 only)
+- Show hidden files, folders and drives.
 - Hide the Home or Gallery section from the File Explorer navigation pane. (W11 only)
-- Hide the 3D objects, music or OneDrive folder from the File Explorer navigation pane. (W10 only)
 - Hide duplicate removable drive entries from the File Explorer navigation pane, so only the entry under 'This PC' remains.
+- Add all common folders (Desktop, Downloads, etc.) back to 'This PC' in File Explorer. (W11 only)
+- Hide the 3D objects, music or OneDrive folder from the File Explorer navigation pane. (W10 only)
+- Hide the 'Include in library', 'Give access to' and 'Share' options from the context menu. (W10 only)
 
 #### Taskbar
 
 - Align taskbar icons to the left. (W11 only)
-- Choose combine mode for taskbar buttons and labels. (W11 only)
-- Choose how app icons are shown on the taskbar when using multiple monitors. (W11 only)
 - Hide or change the search icon/box on the taskbar. (W11 only)
 - Hide the taskview button from the taskbar. (W11 only)
-- Disable widgets on the taskbar & lockscreen.
+- Disable widgets on the taskbar & lock screen.
 - Hide the chat (meet now) icon from the taskbar. (W10 only)
 - Enable the 'End Task' option in the taskbar right click menu. (W11 only)
 - Enable the 'Last Active Click' behavior in the taskbar app area. This allows you to repeatedly click on an application's icon in the taskbar to switch focus between the open windows of that application.
+- Choose how app icons are shown on the taskbar when using multiple monitors. (W11 only)
+- Choose combine mode for taskbar buttons and labels. (W11 only)
 
 #### Start
 
+- Remove or replace all pinned apps from start for the current user, or for all existing & new users. (W11 only)
 - Disable the recommended section in the start menu. (W11 only)
+- Disable Bing web search & Copilot integration in Windows search.
 - Disable the Phone Link mobile devices integration in the start menu. (W11 only)
 
 #### Other
 
-- Disable bloat in Brave browser (AI, Crypto, News, Etc)
-- Disable the Drag Tray for sharing & moving files. (W11 only)
 - Disable Xbox Game Bar integration & game/screen recording. This also disables `ms-gamingoverlay`/`ms-gamebar` popups if you uninstall the Xbox Game Bar.
-- Disable Fast Start-up to ensure a full shutdown.
-- Disable network connectivity during Modern Standby to reduce battery drain. (W11 only)
+- Disable bloat in Brave browser (AI, Crypto, News, Etc)
 
 #### Advanced Features
 
@@ -187,7 +192,7 @@ Alternatively, you can launch the script with the `-RunDefaults` or `-RunDefault
 - Disable network connectivity during Modern Standby to reduce battery drain. (W11 only)
 - Show file extensions for known file types.
 - Hide the 3D objects folder under 'This pc' from File Explorer. (W10 only)
-- Disable widgets on the taskbar & lockscreen.
+- Disable widgets on the taskbar & lock screen.
 - Hide the Chat (meet now) icon from the taskbar. (W10 only)
 
 #### Apps that ARE removed by default

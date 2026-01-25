@@ -2620,7 +2620,7 @@ function ExecuteParameter {
             continue
         }
         {$_ -in "DisableLockscrTips", "DisableLockscreenTips"} {
-            RegImport "> Disabling tips & tricks on the lockscreen..." "Disable_Lockscreen_Tips.reg"
+            RegImport "> Disabling tips & tricks on the lock screen..." "Disable_Lockscreen_Tips.reg"
             return
         }
         'DisableDesktopSpotlight' {
@@ -2794,7 +2794,7 @@ function ExecuteParameter {
             return
         }
         {$_ -in "HideWidgets", "DisableWidgets"} {
-            RegImport "> Disabling widgets on the taskbar & lockscreen..." "Disable_Widgets_Service.reg"
+            RegImport "> Disabling widgets on the taskbar & lock screen..." "Disable_Widgets_Service.reg"
             # Also remove the app package for Widgets
             $appsList = 'Microsoft.StartExperiencesApp'
             RemoveApps $appsList

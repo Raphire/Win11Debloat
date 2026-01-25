@@ -1023,6 +1023,8 @@ function OpenGUI {
         
         try {
             $userProfile = Get-LocalUser -Name $username -ErrorAction Stop
+            $usernameValidationMessage.Text = "[OK] User found: $($userProfile.FullName)"
+            $usernameValidationMessage.Foreground = "#28a745"
             return $true
         }
         catch {
@@ -1268,22 +1270,22 @@ function OpenGUI {
             }
         }
 
-        # Check RestorePointCheckBox
-        $restorePointCheckBox = $window.FindName('RestorePointCheckBox')
-        if ($restorePointCheckBox -and $restorePointCheckBox.IsChecked) {
-            AddParameter 'CreateRestorePoint'
-        }
-
         # Check if any changes were selected
         $totalChanges = $script:Params.Count - $controlParamsCount
         if ($totalChanges -eq 0) {
             [System.Windows.MessageBox]::Show(
-                'No changes have been selected. Please select at least one app to remove or one tweak to apply before continuing.',
+                'No changes have been selected, please select at least one item to proceed.',
                 'No Changes Selected',
                 [System.Windows.MessageBoxButton]::OK,
                 [System.Windows.MessageBoxImage]::Information
             )
             return
+        }
+
+        # Check RestorePointCheckBox
+        $restorePointCheckBox = $window.FindName('RestorePointCheckBox')
+        if ($restorePointCheckBox -and $restorePointCheckBox.IsChecked) {
+            AddParameter 'CreateRestorePoint'
         }
         
         # Store selected user mode
@@ -2772,7 +2774,7 @@ function CreateSystemRestorePoint {
 
 function ShowScriptMenuOptions {
     Do { 
-        $ModeSelectionMessage = "Please select an option (1/2/3/0)" 
+        $ModeSelectionMessage = "Please select an option (1/2)" 
 
         PrintHeader 'Menu'
 

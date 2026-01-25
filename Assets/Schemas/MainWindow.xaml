@@ -440,7 +440,7 @@
                             <!-- Title -->
                             <TextBlock Text="Welcome to Win11Debloat" FontSize="24" FontWeight="Bold" Foreground="{DynamicResource FgColor}" HorizontalAlignment="Center" Margin="0,0,0,10"/>
                             <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource FgColor}" FontSize="13" LineHeight="22" HorizontalAlignment="Center" Margin="0,0,0,30">
-                                <Run Text="Your clean Windows installation is just a few clicks away!"/>
+                                <Run Text="Your clean Windows experience is just a few clicks away!"/>
                             </TextBlock>
                             
                             <!-- Start Button -->

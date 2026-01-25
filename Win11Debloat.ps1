@@ -1316,8 +1316,6 @@ function OpenGUI {
         # Run changes in background to keep UI responsive
         $window.Dispatcher.BeginInvoke([System.Windows.Threading.DispatcherPriority]::Background, [action]{
             try {
-                $script:ApplyFromUI = $true
-                
                 # Execute all changes using the consolidated function
                 ExecuteAllChanges
                 

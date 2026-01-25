@@ -2591,7 +2591,7 @@ function ExecuteParameter {
         }
         'DisableBraveBloat' {
             RegImport "> Disabling Brave AI, Crypto, News, Rewards, Talk and VPN in Brave browser..." "Disable_Brave_Bloat.reg"
-            continue
+            return
         }
         'DisableLockscreenTips' {
             RegImport "> Disabling tips & tricks on the lock screen..." "Disable_Lockscreen_Tips.reg"

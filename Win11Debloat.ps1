@@ -105,27 +105,6 @@ if ($ExecutionContext.SessionState.LanguageMode -ne "FullLanguage") {
     Exit
 }
 
-# Check if script does not see file dependencies
-if (-not ((Test-Path $script:DefaultSettingsFilePath) -and (Test-Path $script:AppsListFilePath) -and (Test-Path $script:RegfilesPath) -and (Test-Path $script:AssetsPath) -and (Test-Path $script:AppSelectionSchema) -and (Test-Path $script:FeaturesFilePath))) {
-    Write-Error "Win11Debloat is unable to find required files, please ensure all script files are present"
-    Write-Output "Press any key to exit..."
-    $null = [System.Console]::ReadKey()
-    Exit
-}
-
-# Load feature info from file
-$script:Features = @{}
-try {
-    $featuresData = Get-Content -Path $script:FeaturesFilePath -Raw | ConvertFrom-Json
-    foreach ($feature in $featuresData.Features) {
-        $script:Features[$feature.FeatureId] = $feature
-    }
-}
-catch {
-    Write-Error "Failed to load feature info from Features.json file"
-    AwaitKeyToExit
-}
-
 # Display ASCII art launch logo in CLI
 Clear-Host
 Write-Host ""
@@ -155,6 +134,52 @@ if ($LogPath -and (Test-Path $LogPath)) {
 }
 else {
     Start-Transcript -Path $script:DefaultLogPath -Append -IncludeInvocationHeader -Force | Out-Null
+}
+
+# Check if script has all required files
+if (-not ((Test-Path $script:DefaultSettingsFilePath) -and (Test-Path $script:AppsListFilePath) -and (Test-Path $script:RegfilesPath) -and (Test-Path $script:AssetsPath) -and (Test-Path $script:AppSelectionSchema) -and (Test-Path $script:FeaturesFilePath))) {
+    Write-Error "Win11Debloat is unable to find required files, please ensure all script files are present"
+    Write-Output ""
+    Write-Output "Press any key to exit..."
+    $null = [System.Console]::ReadKey()
+    Exit
+}
+
+# Load feature info from file
+$script:Features = @{}
+try {
+    $featuresData = Get-Content -Path $script:FeaturesFilePath -Raw | ConvertFrom-Json
+    foreach ($feature in $featuresData.Features) {
+        $script:Features[$feature.FeatureId] = $feature
+    }
+}
+catch {
+    Write-Error "Failed to load feature info from Features.json file"
+    Write-Output ""
+    Write-Output "Press any key to exit..."
+    $null = [System.Console]::ReadKey()
+    Exit
+}
+
+# Check if WinGet is installed & if it is, check if the version is at least v1.4
+try {
+    if ([int](((winget -v) -replace 'v','').split('.')[0..1] -join '') -gt 14) {
+        $script:WingetInstalled = $true
+    }
+    else {
+        $script:WingetInstalled = $false
+    }
+}
+catch {
+    $script:WingetInstalled = $false
+}
+
+# Show WinGet warning that requires user confirmation, Suppress confirmation if Silent parameter was passed
+if (-not $script:WingetInstalled -and -not $Silent) {
+    Write-Warning "WinGet is not installed or outdated, this may prevent Win11Debloat from removing certain apps"
+    Write-Output ""
+    Write-Output "Press any key to continue anyway..."
+    $null = [System.Console]::ReadKey()
 }
 
 
@@ -776,7 +801,7 @@ function OpenGUI {
         }
     }
 
-    # Helper function to complete app loading with the winget list
+    # Helper function to complete app loading with the WinGet list
     function script:LoadAppsWithList($listOfApps) {
         # Store apps data for sorting
         $appsToAdd = @()
@@ -878,7 +903,7 @@ function OpenGUI {
             $listOfApps = ""
 
             if ($onlyInstalledAppsBox.IsChecked -and ($script:WingetInstalled -eq $true)) {
-                # Start job to get list of installed apps via winget
+                # Start job to get list of installed apps via WinGet
                 $script:CurrentAppLoadJob = Start-Job { return winget list --accept-source-agreements --disable-interactivity }
                 $script:CurrentAppLoadJobStartTime = Get-Date
                 
@@ -914,8 +939,8 @@ function OpenGUI {
                         $script:CurrentAppLoadTimer = $null
                         $script:CurrentAppLoadJobStartTime = $null
                         
-                        # Show error that the script was unable to get list of apps from winget
-                        [System.Windows.MessageBox]::Show('Unable to load list of installed apps via winget.', 'Error', 'OK', 'Error') | Out-Null
+                        # Show error that the script was unable to get list of apps from WinGet
+                        [System.Windows.MessageBox]::Show('Unable to load list of installed apps via WinGet.', 'Error', 'OK', 'Error') | Out-Null
                         $onlyInstalledAppsBox.IsChecked = $false
                         
                         # Continue with loading all apps (unchecked now)
@@ -1660,13 +1685,13 @@ function OpenAppSelectionWindow {
         $listOfApps = ""
 
         if ($onlyInstalledBox.IsChecked -and ($script:WingetInstalled -eq $true)) {
-            # Attempt to get a list of installed apps via winget, times out after 10 seconds
+            # Attempt to get a list of installed apps via WinGet, times out after 10 seconds
             $job = Start-Job { return winget list --accept-source-agreements --disable-interactivity }
             $jobDone = $job | Wait-Job -TimeOut 10
 
             if (-not $jobDone) {
-                # Show error that the script was unable to get list of apps from winget
-                [System.Windows.MessageBox]::Show('Unable to load list of installed apps via winget.', 'Error', 'OK', 'Error') | Out-Null
+                # Show error that the script was unable to get list of apps from WinGet
+                [System.Windows.MessageBox]::Show('Unable to load list of installed apps via WinGet.', 'Error', 'OK', 'Error') | Out-Null
                 $onlyInstalledBox.IsChecked = $false
             }
             else {
@@ -1909,7 +1934,7 @@ function RemoveApps {
     Foreach ($app in $appsList) {
         Write-ToConsole "Attempting to remove $app..."
 
-        # Use winget only to remove OneDrive and Edge
+        # Use WinGet only to remove OneDrive and Edge
         if (($app -eq "Microsoft.OneDrive") -or ($app -eq "Microsoft.Edge")) {
             if ($script:WingetInstalled -eq $false) {
                 Write-ToConsole "WinGet is either not installed or is outdated, $app could not be removed" -ForegroundColor Red
@@ -1918,7 +1943,7 @@ function RemoveApps {
 
             $appName = $app -replace '\.', '_'
 
-            # Uninstall app via winget, or create a scheduled task to uninstall it later
+            # Uninstall app via WinGet, or create a scheduled task to uninstall it later
             if ($script:Params.ContainsKey("User")) {
                 RegImport "Adding scheduled task to uninstall $app for user $(GetUserName)..." "Uninstall_$($appName).reg"
             }
@@ -1926,11 +1951,11 @@ function RemoveApps {
                 RegImport "Adding scheduled task to uninstall $app after for new users..." "Uninstall_$($appName).reg"
             }
             else {
-                # Uninstall app via winget, with any progress indicators removed from the output
+                # Uninstall app via WinGet, with any progress indicators removed from the output
                 StripProgress -ScriptBlock { winget uninstall --accept-source-agreements --disable-interactivity --id $app } | Tee-Object -Variable wingetOutput
 
                 If (($app -eq "Microsoft.Edge") -and (Select-String -InputObject $wingetOutput -Pattern "Uninstall failed with exit code")) {
-                    Write-ToConsole "Unable to uninstall Microsoft Edge via Winget" -ForegroundColor Red
+                    Write-ToConsole "Unable to uninstall Microsoft Edge via WinGet" -ForegroundColor Red
                     Write-ToConsole ""
 
                     # Only prompt in CLI mode (not GUI)
@@ -3128,22 +3153,6 @@ function LoadAndShowLastUsedSettings {
 ##################################################################################################################
 
 
-
-# Check if winget is installed & if it is, check if the version is at least v1.4
-if ((Get-AppxPackage -Name "*Microsoft.DesktopAppInstaller*") -and ([int](((winget -v) -replace 'v','').split('.')[0..1] -join '') -gt 14)) {
-    $script:WingetInstalled = $true
-}
-else {
-    $script:WingetInstalled = $false
-
-    # Show warning that requires user confirmation, Suppress confirmation if Silent parameter was passed
-    if (-not $Silent) {
-        Write-Warning "Winget is not installed or outdated, this may prevent Win11Debloat from removing certain apps"
-        Write-Output ""
-        Write-Output "Press any key to continue anyway..."
-        $null = [System.Console]::ReadKey()
-    }
-}
 
 # Get current Windows build version
 $WinVersion = Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' CurrentBuild

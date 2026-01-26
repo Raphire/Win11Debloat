@@ -97,6 +97,11 @@ $script:FeaturesFilePath = "$script:AssetsPath/Features.json"
 
 $script:ControlParams = 'WhatIf', 'Confirm', 'Verbose', 'Debug', 'LogPath', 'Silent', 'Sysprep', 'User', 'NoRestartExplorer', 'RunDefaults', 'RunDefaultsLite', 'RunSavedSettings', 'RunAppsListGenerator', 'CLI'
 
+# Script-level variables for GUI elements
+$script:GuiConsoleOutput = $null
+$script:GuiConsoleScrollViewer = $null
+$script:GuiWindow = $null
+
 # Check if current powershell environment is limited by security policies
 if ($ExecutionContext.SessionState.LanguageMode -ne "FullLanguage") {
     Write-Error "Win11Debloat is unable to run on your system, powershell execution is restricted by security policies"
@@ -190,11 +195,6 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 #                                                                                                                #
 ##################################################################################################################
 
-
-# Script-level variables for output mode (GUI vs CLI)
-$script:GuiConsoleOutput = $null
-$script:GuiConsoleScrollViewer = $null
-$script:GuiWindow = $null
 
 
 # Writes to both GUI console output and standard console
@@ -420,12 +420,14 @@ function AttachShiftClickBehavior {
 
     # Use a closure to capture the parameters
     $checkbox.Add_PreviewMouseLeftButtonDown({
-        param($sender, $e)
+        param(
+            $sender,
+            $e
+        )
         
         $isShiftPressed = [System.Windows.Input.Keyboard]::IsKeyDown([System.Windows.Input.Key]::LeftShift) -or 
                           [System.Windows.Input.Keyboard]::IsKeyDown([System.Windows.Input.Key]::RightShift)
         
-        # Inline shift-click selection logic
         if ($isShiftPressed -and $null -ne $lastSelectedCheckboxRef.Value) {
             # Get all visible checkboxes in the panel
             $visibleCheckboxes = @()
@@ -449,11 +451,9 @@ function AttachShiftClickBehavior {
             }
 
             if ($lastIndex -ge 0 -and $currentIndex -ge 0 -and $lastIndex -ne $currentIndex) {
-                # Determine the range
                 $startIndex = [Math]::Min($lastIndex, $currentIndex)
                 $endIndex = [Math]::Max($lastIndex, $currentIndex)
 
-                # Check if the clicked checkbox is already checked - if so, deselect the range
                 $shouldDeselect = $sender.IsChecked
 
                 # Set all checkboxes in the range to the appropriate state
@@ -461,7 +461,6 @@ function AttachShiftClickBehavior {
                     $visibleCheckboxes[$i].IsChecked = -not $shouldDeselect
                 }
 
-                # Call update status callback if provided
                 if ($updateStatusCallback) {
                     & $updateStatusCallback
                 }
@@ -537,6 +536,7 @@ function GetSystemUsesDarkMode {
 }
 
 
+# Initializes and opens the main GUI window
 function OpenGUI {    
     Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase | Out-Null
 
@@ -597,7 +597,7 @@ function OpenGUI {
     $applyProgressText = $window.FindName('ApplyProgressText')
     $finishBtn = $window.FindName('FinishBtn')
     
-    # Set script-level variables for unified Write-ToConsole function
+    # Set script-level variables for Write-ToConsole function
     $script:GuiConsoleOutput = $consoleOutput
     $script:GuiConsoleScrollViewer = $consoleScrollViewer
     $script:GuiWindow = $window
@@ -683,7 +683,7 @@ function OpenGUI {
             $combo.SelectedIndex = 0
             $parent.Children.Add($combo) | Out-Null
             
-            # Register the combo box with the window's name scope so FindName works
+            # Register the combo box with the window's name scope
             try {
                 [System.Windows.NameScope]::SetNameScope($combo, [System.Windows.NameScope]::GetNameScope($window))
                 $window.RegisterName($comboName, $combo)
@@ -1095,6 +1095,70 @@ function OpenGUI {
     $usernameTextBoxPlaceholder = $window.FindName('UsernameTextBoxPlaceholder')
     $usernameValidationMessage = $window.FindName('UsernameValidationMessage')
 
+    # Navigation button handlers
+    function UpdateNavigationButtons {
+        $currentIndex = $tabControl.SelectedIndex
+        $totalTabs = $tabControl.Items.Count
+        
+        $homeIndex = 0
+        $overviewIndex = $totalTabs - 2
+        $applyIndex = $totalTabs - 1
+
+        # Navigation button visibility
+        if ($currentIndex -eq $homeIndex) {
+            $nextBtn.Visibility = 'Collapsed'
+            $previousBtn.Visibility = 'Collapsed'
+        } elseif ($currentIndex -eq $overviewIndex) {
+            $nextBtn.Visibility = 'Collapsed'
+            $previousBtn.Visibility = 'Visible'
+        } elseif ($currentIndex -eq $applyIndex) {
+            $nextBtn.Visibility = 'Collapsed'
+            $previousBtn.Visibility = 'Collapsed'
+        } else {
+            $nextBtn.Visibility = 'Visible'
+            $previousBtn.Visibility = 'Visible'
+        }
+        
+        # Update progress indicators
+        # Tab indices: 0=Home, 1=App Removal, 2=Tweaks, 3=Overview, 4=Apply
+        $blueColor = "#0067c0"
+        $greyColor = "#808080"
+        
+        $progressIndicator1 = $window.FindName('ProgressIndicator1') # App Removal
+        $progressIndicator2 = $window.FindName('ProgressIndicator2') # Tweaks
+        $progressIndicator3 = $window.FindName('ProgressIndicator3') # Overview
+        $bottomNavGrid = $window.FindName('BottomNavGrid')
+        
+        # Hide bottom navigation on home page and apply tab
+        if ($currentIndex -eq 0 -or $currentIndex -eq $applyIndex) {
+            $bottomNavGrid.Visibility = 'Collapsed'
+        } else {
+            $bottomNavGrid.Visibility = 'Visible'
+        }
+        
+        # Update indicator colors based on current tab
+        # Indicator 1 (App Removal) - tab index 1
+        if ($currentIndex -ge 1) {
+            $progressIndicator1.Fill = $blueColor
+        } else {
+            $progressIndicator1.Fill = $greyColor
+        }
+        
+        # Indicator 2 (Tweaks) - tab index 2
+        if ($currentIndex -ge 2) {
+            $progressIndicator2.Fill = $blueColor
+        } else {
+            $progressIndicator2.Fill = $greyColor
+        }
+        
+        # Indicator 3 (Overview) - tab index 3
+        if ($currentIndex -ge 3) {
+            $progressIndicator3.Fill = $blueColor
+        } else {
+            $progressIndicator3.Fill = $greyColor
+        }
+    }
+
     # Update user selection description and show/hide other user panel
     $userSelectionCombo.Add_SelectionChanged({
         switch ($userSelectionCombo.SelectedIndex) {
@@ -1161,70 +1225,6 @@ function OpenGUI {
         $usernameValidationMessage.Text = "[X] User not found. Please enter a valid username."
         $usernameValidationMessage.Foreground = $errorBrush
         return $false
-    }
-
-    # Navigation button handlers
-    function UpdateNavigationButtons {
-        $currentIndex = $tabControl.SelectedIndex
-        $totalTabs = $tabControl.Items.Count
-        
-        $homeIndex = 0
-        $overviewIndex = $totalTabs - 2
-        $applyIndex = $totalTabs - 1
-
-        # Navigation button visibility
-        if ($currentIndex -eq $homeIndex) {
-            $nextBtn.Visibility = 'Collapsed'
-            $previousBtn.Visibility = 'Collapsed'
-        } elseif ($currentIndex -eq $overviewIndex) {
-            $nextBtn.Visibility = 'Collapsed'
-            $previousBtn.Visibility = 'Visible'
-        } elseif ($currentIndex -eq $applyIndex) {
-            $nextBtn.Visibility = 'Collapsed'
-            $previousBtn.Visibility = 'Collapsed'
-        } else {
-            $nextBtn.Visibility = 'Visible'
-            $previousBtn.Visibility = 'Visible'
-        }
-        
-        # Update progress indicators
-        # Tab indices: 0=Home, 1=App Removal, 2=Tweaks, 3=Overview, 4=Apply
-        $blueColor = "#0067c0"
-        $greyColor = "#808080"
-        
-        $progressIndicator1 = $window.FindName('ProgressIndicator1') # App Removal
-        $progressIndicator2 = $window.FindName('ProgressIndicator2') # Tweaks
-        $progressIndicator3 = $window.FindName('ProgressIndicator3') # Overview
-        $bottomNavGrid = $window.FindName('BottomNavGrid')
-        
-        # Hide bottom navigation on home page and apply tab
-        if ($currentIndex -eq 0 -or $currentIndex -eq $applyIndex) {
-            $bottomNavGrid.Visibility = 'Collapsed'
-        } else {
-            $bottomNavGrid.Visibility = 'Visible'
-        }
-        
-        # Update indicator colors based on current tab
-        # Indicator 1 (App Removal) - tab index 1
-        if ($currentIndex -ge 1) {
-            $progressIndicator1.Fill = $blueColor
-        } else {
-            $progressIndicator1.Fill = $greyColor
-        }
-        
-        # Indicator 2 (Tweaks) - tab index 2
-        if ($currentIndex -ge 2) {
-            $progressIndicator2.Fill = $blueColor
-        } else {
-            $progressIndicator2.Fill = $greyColor
-        }
-        
-        # Indicator 3 (Overview) - tab index 3
-        if ($currentIndex -ge 3) {
-            $progressIndicator3.Fill = $blueColor
-        } else {
-            $progressIndicator3.Fill = $greyColor
-        }
     }
 
     function GenerateOverview {
@@ -1443,7 +1443,6 @@ function OpenGUI {
         # Run changes in background to keep UI responsive
         $window.Dispatcher.BeginInvoke([System.Windows.Threading.DispatcherPriority]::Background, [action]{
             try {
-                # Execute all changes using the consolidated function
                 ExecuteAllChanges
                 
                 if (-not $script:Params.ContainsKey("Sysprep") -and -not $script:Params.ContainsKey("User")) {
@@ -1476,7 +1475,7 @@ function OpenGUI {
             catch {
                 Write-ToConsole "Error: $($_.Exception.Message)"
                 $applyProgressText.Dispatcher.Invoke([action]{
-                    $applyProgressText.Text = "An error occurred"
+                    $applyProgressText.Text = "An error occurred while applying changes!"
                 })
                 $finishBtn.Dispatcher.Invoke([action]{
                     $finishBtn.Visibility = 'Visible'
@@ -1485,15 +1484,12 @@ function OpenGUI {
         })
     })
 
-    # Load all apps on startup and build tweaks UI dynamically
+    # Initialize UI elements on window load
     $window.Add_Loaded({
-        # Build dynamic tweaks controls
         BuildDynamicTweaks
 
-        # Load all apps (not just installed ones)
         LoadAppsIntoMainUI
 
-        # Initialize navigation buttons
         UpdateNavigationButtons
     })
 
@@ -1580,7 +1576,7 @@ function OpenGUI {
         }
     })
     
-    # Finish button handler
+    # Finish (Close Win11Debloat) button handler
     $finishBtn.Add_Click({
         $window.Close()
     })
@@ -1734,6 +1730,7 @@ function OpenAppSelectionWindow {
 }
 
 
+# Saves the provided appsList to the CustomAppsList file
 function SaveCustomAppsListToFile {
     param (
         $appsList
@@ -2503,6 +2500,35 @@ function ExecuteParameter {
         [string]$paramKey
     )
     
+    # Check if this feature has metadata in Features.json
+    $feature = $null
+    if ($script:Features.ContainsKey($paramKey)) {
+        $feature = $script:Features[$paramKey]
+    }
+    
+    # If feature has RegistryKey and ApplyText, use dynamic RegImport
+    if ($feature -and $feature.RegistryKey -and $feature.ApplyText) {
+        RegImport $feature.ApplyText $feature.RegistryKey
+        
+        # Handle special cases that have additional logic after RegImport
+        switch ($paramKey) {
+            'DisableBing' {
+                # Also remove the app package for Bing search
+                RemoveApps 'Microsoft.BingSearch'
+            }
+            'DisableCopilot' {
+                # Also remove the app package for Copilot
+                RemoveApps 'Microsoft.Copilot'
+            }
+            {$_ -in "HideWidgets", "DisableWidgets"} {
+                # Also remove the app package for Widgets
+                RemoveApps 'Microsoft.StartExperiencesApp'
+            }
+        }
+        return
+    }
+    
+    # Handle features without RegistryKey or with special logic
     switch ($paramKey) {
         'RemoveApps' {
             Write-ToConsole "> Removing selected apps..."
@@ -2558,104 +2584,6 @@ function ExecuteParameter {
             ForceRemoveEdge
             return
         }
-        'DisableDVR' {
-            RegImport "> Disabling Xbox game/screen recording..." "Disable_DVR.reg"
-            return
-        }
-        'DisableGameBarIntegration' {
-            RegImport "> Disabling Game Bar integration..." "Disable_Game_Bar_Integration.reg"
-            return
-        }
-        'DisableTelemetry' {
-            RegImport "> Disabling telemetry, diagnostic data, activity history, app-launch tracking and targeted ads..." "Disable_Telemetry.reg"
-            return
-        }
-        'DisableSuggestions' {
-            RegImport "> Disabling tips, tricks, suggestions and ads across Windows..." "Disable_Windows_Suggestions.reg"
-            return
-        }
-        'DisableEdgeAds' {
-            RegImport "> Disabling ads, suggestions and the MSN news feed in Microsoft Edge..." "Disable_Edge_Ads_And_Suggestions.reg"
-            return
-        }
-        'DisableBraveBloat' {
-            RegImport "> Disabling Brave AI, Crypto, News, Rewards, Talk and VPN in Brave browser..." "Disable_Brave_Bloat.reg"
-            return
-        }
-        'DisableLockscreenTips' {
-            RegImport "> Disabling tips & tricks on the lock screen..." "Disable_Lockscreen_Tips.reg"
-            return
-        }
-        'DisableDesktopSpotlight' {
-            RegImport "> Disabling the 'Windows Spotlight' desktop background option..." "Disable_Desktop_Spotlight.reg"
-            return
-        }
-        'DisableSettings365Ads' {
-            RegImport "> Disabling Microsoft 365 ads in Settings Home..." "Disable_Settings_365_Ads.reg"
-            return
-        }
-        'DisableSettingsHome' {
-            RegImport "> Disabling the Settings Home page..." "Disable_Settings_Home.reg"
-            return
-        }
-        'DisableBing' {
-            RegImport "> Disabling Bing web search, Bing AI and Cortana from Windows search..." "Disable_Bing_Cortana_In_Search.reg"
-            # Also remove the app package for Bing search
-            $appsList = 'Microsoft.BingSearch'
-            RemoveApps $appsList
-            return
-        }
-        'DisableCopilot' {
-            RegImport "> Disabling Microsoft Copilot..." "Disable_Copilot.reg"
-            # Also remove the app package for Copilot
-            $appsList = 'Microsoft.Copilot'
-            RemoveApps $appsList
-            return
-        }
-        'DisableRecall' {
-            RegImport "> Disabling Windows Recall..." "Disable_AI_Recall.reg"
-            return
-        }
-        'DisableClickToDo' {
-            RegImport "> Disabling Click to Do..." "Disable_Click_to_Do.reg"
-            return
-        }
-        'DisableEdgeAI' {
-            RegImport "> Disabling AI features in Microsoft Edge..." "Disable_Edge_AI_Features.reg"
-            return
-        }
-        'DisablePaintAI' {
-            RegImport "> Disabling AI features in Paint..." "Disable_Paint_AI_Features.reg"
-            return
-        }
-        'DisableDragTray' {
-            RegImport "> Disabling Drag Tray..." "Disable_Share_Drag_Tray.reg"
-            return
-        }
-        'DisableNotepadAI' {
-            RegImport "> Disabling AI features in Notepad..." "Disable_Notepad_AI_Features.reg"
-            return
-        }
-        'RevertContextMenu' {
-            RegImport "> Restoring the old Windows 10 style context menu..." "Disable_Show_More_Options_Context_Menu.reg"
-            return
-        }
-        'DisableMouseAcceleration' {
-            RegImport "> Turning off Enhanced Pointer Precision..." "Disable_Enhance_Pointer_Precision.reg"
-            return
-        }
-        'DisableStickyKeys' {
-            RegImport "> Disabling the Sticky Keys keyboard shortcut..." "Disable_Sticky_Keys_Shortcut.reg"
-            return
-        }
-        'DisableFastStartup' {
-            RegImport "> Disabling Fast Start-up..." "Disable_Fast_Startup.reg"
-            return
-        }
-        'DisableModernStandbyNetworking' {
-            RegImport "> Disabling network connectivity during Modern Standby..." "Disable_Modern_Standby_Networking.reg"
-            return
-        }
         'ClearStart' {
             Write-ToConsole "> Removing all pinned apps from the start menu for user $(GetUserName)..."
             ReplaceStartMenu
@@ -2674,169 +2602,6 @@ function ExecuteParameter {
         }
         'ReplaceStartAllUsers' {
             ReplaceStartMenuForAllUsers $script:Params.Item("ReplaceStartAllUsers")
-            return
-        }
-        'DisableStartRecommended' {
-            RegImport "> Disabling the start menu recommended section..." "Disable_Start_Recommended.reg"
-            return
-        }
-        'DisableStartPhoneLink' {
-            RegImport "> Disabling the Phone Link mobile devices integration in the start menu..." "Disable_Phone_Link_In_Start.reg"
-            return
-        }
-        'EnableDarkMode' {
-            RegImport "> Enabling dark mode for system and apps..." "Enable_Dark_Mode.reg"
-            return
-        }
-        'DisableTransparency' {
-            RegImport "> Disabling transparency effects..." "Disable_Transparency.reg"
-            return
-        }
-        'DisableAnimations' {
-            RegImport "> Disabling animations and visual effects..." "Disable_Animations.reg"
-            return
-        }
-        'TaskbarAlignLeft' {
-            RegImport "> Aligning taskbar buttons to the left..." "Align_Taskbar_Left.reg"
-            return
-        }
-        'CombineTaskbarAlways' {
-            RegImport "> Setting the taskbar on the main display to always combine buttons and hide labels..." "Combine_Taskbar_Always.reg"
-            return
-        }
-        'CombineTaskbarWhenFull' {
-            RegImport "> Setting the taskbar on the main display to only combine buttons and hide labels when the taskbar is full..." "Combine_Taskbar_When_Full.reg"
-            return
-        }
-        'CombineTaskbarNever' {
-            RegImport "> Setting the taskbar on the main display to never combine buttons or hide labels..." "Combine_Taskbar_Never.reg"
-            return
-        }
-        'CombineMMTaskbarAlways' {
-            RegImport "> Setting the taskbar on secondary displays to always combine buttons and hide labels..." "Combine_MMTaskbar_Always.reg"
-            return
-        }
-        'CombineMMTaskbarWhenFull' {
-            RegImport "> Setting the taskbar on secondary displays to only combine buttons and hide labels when the taskbar is full..." "Combine_MMTaskbar_When_Full.reg"
-            return
-        }
-        'CombineMMTaskbarNever' {
-            RegImport "> Setting the taskbar on secondary displays to never combine buttons or hide labels..." "Combine_MMTaskbar_Never.reg"
-            return
-        }
-        'MMTaskbarModeAll' {
-            RegImport "> Setting the taskbar to only show app icons on main taskbar..." "MMTaskbarMode_All.reg"
-            return
-        }
-        'MMTaskbarModeMainActive' {
-            RegImport "> Setting the taskbar to show app icons on all taskbars..." "MMTaskbarMode_Main_Active.reg"
-            return
-        }
-        'MMTaskbarModeActive' {
-            RegImport "> Setting the taskbar to only show app icons on the taskbar where the window is open..." "MMTaskbarMode_Active.reg"
-            return
-        }
-        'HideSearchTb' {
-            RegImport "> Hiding the search icon from the taskbar..." "Hide_Search_Taskbar.reg"
-            return
-        }
-        'ShowSearchIconTb' {
-            RegImport "> Changing taskbar search to icon only..." "Show_Search_Icon.reg"
-            return
-        }
-        'ShowSearchLabelTb' {
-            RegImport "> Changing taskbar search to icon with label..." "Show_Search_Icon_And_Label.reg"
-            return
-        }
-        'ShowSearchBoxTb' {
-            RegImport "> Changing taskbar search to search box..." "Show_Search_Box.reg"
-            return
-        }
-        'HideTaskview' {
-            RegImport "> Hiding the taskview button from the taskbar..." "Hide_Taskview_Taskbar.reg"
-            return
-        }
-        {$_ -in "HideWidgets", "DisableWidgets"} {
-            RegImport "> Disabling widgets on the taskbar & lock screen..." "Disable_Widgets_Service.reg"
-            # Also remove the app package for Widgets
-            $appsList = 'Microsoft.StartExperiencesApp'
-            RemoveApps $appsList
-            return
-        }
-        {$_ -in "HideChat", "DisableChat"} {
-            RegImport "> Hiding the chat icon from the taskbar..." "Disable_Chat_Taskbar.reg"
-            return
-        }
-        'EnableEndTask' {
-            RegImport "> Enabling the 'End Task' option in the taskbar right click menu..." "Enable_End_Task.reg"
-            return
-        }
-        'EnableLastActiveClick' {
-            RegImport "> Enabling the 'Last Active Click' behavior in the taskbar app area..." "Enable_Last_Active_Click.reg"
-            return
-        }
-        'ExplorerToHome' {
-            RegImport "> Changing the default location that File Explorer opens to 'Home'..." "Launch_File_Explorer_To_Home.reg"
-            return
-        }
-        'ExplorerToThisPC' {
-            RegImport "> Changing the default location that File Explorer opens to 'This PC'..." "Launch_File_Explorer_To_This_PC.reg"
-            return
-        }
-        'ExplorerToDownloads' {
-            RegImport "> Changing the default location that File Explorer opens to 'Downloads'..." "Launch_File_Explorer_To_Downloads.reg"
-            return
-        }
-        'ExplorerToOneDrive' {
-            RegImport "> Changing the default location that File Explorer opens to 'OneDrive'..." "Launch_File_Explorer_To_OneDrive.reg"
-            return
-        }
-        'ShowHiddenFolders' {
-            RegImport "> Unhiding hidden files, folders and drives..." "Show_Hidden_Folders.reg"
-            return
-        }
-        'ShowKnownFileExt' {
-            RegImport "> Enabling file extensions for known file types..." "Show_Extensions_For_Known_File_Types.reg"
-            return
-        }
-        'AddFoldersToThisPC' {
-            RegImport "> Adding all common folders (Desktop, Downloads, etc.) back to 'This PC' in File Explorer..." "Add_All_Folders_Under_This_PC.reg"
-            return
-        }
-        'HideHome' {
-            RegImport "> Hiding the home section from the File Explorer navigation pane..." "Hide_Home_from_Explorer.reg"
-            return
-        }
-        'HideGallery' {
-            RegImport "> Hiding the gallery section from the File Explorer navigation pane..." "Hide_Gallery_from_Explorer.reg"
-            return
-        }
-        'HideDupliDrive' {
-            RegImport "> Hiding duplicate removable drive entries from the File Explorer navigation pane..." "Hide_duplicate_removable_drives_from_navigation_pane_of_File_Explorer.reg"
-            return
-        }
-        {$_ -in "HideOnedrive", "DisableOnedrive"} {
-            RegImport "> Hiding the OneDrive folder from the File Explorer navigation pane..." "Hide_Onedrive_Folder.reg"
-            return
-        }
-        {$_ -in "Hide3dObjects", "Disable3dObjects"} {
-            RegImport "> Hiding the 3D objects folder from the File Explorer navigation pane..." "Hide_3D_Objects_Folder.reg"
-            return
-        }
-        {$_ -in "HideMusic", "DisableMusic"} {
-            RegImport "> Hiding the music folder from the File Explorer navigation pane..." "Hide_Music_folder.reg"
-            return
-        }
-        {$_ -in "HideIncludeInLibrary", "DisableIncludeInLibrary"} {
-            RegImport "> Hiding 'Include in library' in the context menu..." "Disable_Include_in_library_from_context_menu.reg"
-            return
-        }
-        {$_ -in "HideGiveAccessTo", "DisableGiveAccessTo"} {
-            RegImport "> Hiding 'Give access to' in the context menu..." "Disable_Give_access_to_context_menu.reg"
-            return
-        }
-        {$_ -in "HideShare", "DisableShare"} {
-            RegImport "> Hiding 'Share' in the context menu..." "Disable_Share_from_context_menu.reg"
             return
         }
     }

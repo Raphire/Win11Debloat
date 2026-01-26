@@ -52,7 +52,7 @@ param (
     [switch]$DisablePaintAI,
     [switch]$DisableNotepadAI,
     [switch]$DisableEdgeAI,
-    [switch]$DisableWidgets, [switch]$HideWidgets,
+    [switch]$DisableWidgets,
     [switch]$HideChat,
     [switch]$EnableEndTask,
     [switch]$EnableLastActiveClick,

@@ -54,7 +54,7 @@ param (
     [switch]$DisablePaintAI,
     [switch]$DisableNotepadAI,
     [switch]$DisableEdgeAI,
-    [switch]$DisableWidgets, [switch]$HideWidgets,
+    [switch]$DisableWidgets,
     [switch]$HideChat,
     [switch]$EnableEndTask,
     [switch]$EnableLastActiveClick,
@@ -2520,7 +2520,7 @@ function ExecuteParameter {
                 # Also remove the app package for Copilot
                 RemoveApps 'Microsoft.Copilot'
             }
-            {$_ -in "HideWidgets", "DisableWidgets"} {
+            'DisableWidgets' {
                 # Also remove the app package for Widgets
                 RemoveApps 'Microsoft.StartExperiencesApp'
             }

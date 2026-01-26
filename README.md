@@ -162,7 +162,7 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 #### Other
 
 - Disable Xbox Game Bar integration & game/screen recording. This also disables `ms-gamingoverlay`/`ms-gamebar` popups if you uninstall the Xbox Game Bar.
-- Disable bloat in Brave browser (AI, Crypto, News, Etc)
+- Disable bloat in Brave browser (AI, Crypto, News, etc.)
 
 #### Advanced Features
 

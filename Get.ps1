@@ -71,12 +71,12 @@ param (
     [switch]$ExplorerToDownloads,
     [switch]$ExplorerToOneDrive,
     [switch]$AddFoldersToThisPC,
-    [switch]$DisableOnedrive,
-    [switch]$Disable3dObjects,
-    [switch]$DisableMusic,
-    [switch]$DisableIncludeInLibrary,
-    [switch]$DisableGiveAccessTo,
-    [switch]$DisableShare
+    [switch]$HideOnedrive,
+    [switch]$Hide3dObjects,
+    [switch]$HideMusic,
+    [switch]$HideIncludeInLibrary,
+    [switch]$HideGiveAccessTo,
+    [switch]$HideShare
 )
 
 # Show error if current powershell environment does not have LanguageMode set to FullLanguage 

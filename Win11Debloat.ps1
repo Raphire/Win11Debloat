@@ -78,7 +78,7 @@ param (
     [switch]$HideMusic,
     [switch]$HideIncludeInLibrary,
     [switch]$HideGiveAccessTo,
-    [switch]$HideShare,
+    [switch]$HideShare
 )
 
 

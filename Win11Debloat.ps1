@@ -55,7 +55,7 @@ param (
     [switch]$DisableNotepadAI,
     [switch]$DisableEdgeAI,
     [switch]$DisableWidgets, [switch]$HideWidgets,
-    [switch]$HideChat, [switch]$DisableChat,
+    [switch]$HideChat,
     [switch]$EnableEndTask,
     [switch]$EnableLastActiveClick,
     [switch]$ClearStart,
@@ -73,12 +73,12 @@ param (
     [switch]$ExplorerToDownloads,
     [switch]$ExplorerToOneDrive,
     [switch]$AddFoldersToThisPC,
-    [switch]$HideOnedrive, [switch]$DisableOnedrive,
-    [switch]$Hide3dObjects, [switch]$Disable3dObjects,
-    [switch]$HideMusic, [switch]$DisableMusic,
-    [switch]$HideIncludeInLibrary, [switch]$DisableIncludeInLibrary,
-    [switch]$HideGiveAccessTo, [switch]$DisableGiveAccessTo,
-    [switch]$HideShare, [switch]$DisableShare
+    [switch]$HideOnedrive,
+    [switch]$Hide3dObjects,
+    [switch]$HideMusic,
+    [switch]$HideIncludeInLibrary,
+    [switch]$HideGiveAccessTo,
+    [switch]$HideShare,
 )
 
 

@@ -53,7 +53,7 @@ param (
     [switch]$DisableNotepadAI,
     [switch]$DisableEdgeAI,
     [switch]$DisableWidgets, [switch]$HideWidgets,
-    [switch]$DisableChat, [switch]$HideChat,
+    [switch]$HideChat,
     [switch]$EnableEndTask,
     [switch]$EnableLastActiveClick,
     [switch]$ClearStart,
@@ -71,12 +71,12 @@ param (
     [switch]$ExplorerToDownloads,
     [switch]$ExplorerToOneDrive,
     [switch]$AddFoldersToThisPC,
-    [switch]$DisableOnedrive, [switch]$HideOnedrive,
-    [switch]$Disable3dObjects, [switch]$Hide3dObjects,
-    [switch]$DisableMusic, [switch]$HideMusic,
-    [switch]$DisableIncludeInLibrary, [switch]$HideIncludeInLibrary,
-    [switch]$DisableGiveAccessTo, [switch]$HideGiveAccessTo,
-    [switch]$DisableShare, [switch]$HideShare
+    [switch]$DisableOnedrive,
+    [switch]$Disable3dObjects,
+    [switch]$DisableMusic,
+    [switch]$DisableIncludeInLibrary,
+    [switch]$DisableGiveAccessTo,
+    [switch]$DisableShare
 )
 
 # Show error if current powershell environment does not have LanguageMode set to FullLanguage 

@@ -2092,6 +2092,10 @@ function CheckIfUserExists {
         return $false
     }
 
+    if ([string]::IsNullOrWhiteSpace($userName)) {
+        return $false
+    }
+
     try {
         $userExists = Test-Path "$env:SystemDrive\Users\$userName"
 

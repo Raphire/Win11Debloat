@@ -2088,6 +2088,10 @@ function CheckIfUserExists {
         $userName
     )
 
+    if ($userName -match '[<>:"|?*]') {
+        return $false
+    }
+
     try {
         $userExists = Test-Path "$env:SystemDrive\Users\$userName"
 
@@ -2116,6 +2120,11 @@ function GetUserDirectory {
         $fileName = "",
         $exitIfPathNotFound = $true
     )
+
+    if (-not (CheckIfUserExists -userName $userName)) {
+        Write-Error "User $userName does not exist on this system"
+        AwaitKeyToExit
+    }
 
     try {
         $userDirectoryExists = Test-Path "$env:SystemDrive\Users\$userName"

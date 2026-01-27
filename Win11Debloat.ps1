@@ -2151,6 +2151,13 @@ function RegImport {
 
     Write-ToConsole $message
 
+    # Validate that the regfile exists in both locations
+    if (-not (Test-Path "$script:RegfilesPath\$path") -or -not (Test-Path "$script:RegfilesPath\Sysprep\$path")) {
+        Write-ToConsole "Error: Unable to find registry file: $path" -ForegroundColor Red
+        Write-ToConsole ""
+        return
+    }
+
     # Reset exit code before running reg.exe for reliable success detection
     $global:LASTEXITCODE = 0
 

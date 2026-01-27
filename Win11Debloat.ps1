@@ -906,7 +906,7 @@ function OpenGUI {
                     if ($script:CurrentAppLoadJob.State -eq 'Completed') {
                         $script:CurrentAppLoadTimer.Stop()
                         $listOfApps = Receive-Job -Job $script:CurrentAppLoadJob
-                        Remove-Job -Job $script:CurrentAppLoadJob
+                        Remove-Job -Job $script:CurrentAppLoadJob -ErrorAction SilentlyContinue
                         $script:CurrentAppLoadJob = $null
                         $script:CurrentAppLoadTimer = $null
                         $script:CurrentAppLoadJobStartTime = $null
@@ -916,7 +916,7 @@ function OpenGUI {
                     }
                     elseif ($elapsed.TotalSeconds -gt 10 -or $script:CurrentAppLoadJob.State -eq 'Failed') {
                         $script:CurrentAppLoadTimer.Stop()
-                        Remove-Job -Job $script:CurrentAppLoadJob -Force
+                        Remove-Job -Job $script:CurrentAppLoadJob -Force -ErrorAction SilentlyContinue
                         $script:CurrentAppLoadJob = $null
                         $script:CurrentAppLoadTimer = $null
                         $script:CurrentAppLoadJobStartTime = $null
@@ -1874,18 +1874,18 @@ function GetInstalledAppsViaWinget {
     if (-not $script:WingetInstalled) { return $null }
 
     if ($Async) {
-        $job = Start-Job { return winget list --accept-source-agreements --disable-interactivity }
-        return @{ Job = $job; StartTime = Get-Date }
+        $wingetListJob = Start-Job { return winget list --accept-source-agreements --disable-interactivity }
+        return @{ Job = $wingetListJob; StartTime = Get-Date }
     }
     else {
-        $job = Start-Job { return winget list --accept-source-agreements --disable-interactivity }
-        $jobDone = $job | Wait-Job -TimeOut $TimeOut
+        $wingetListJob = Start-Job { return winget list --accept-source-agreements --disable-interactivity }
+        $jobDone = $wingetListJob | Wait-Job -TimeOut $TimeOut
         if (-not $jobDone) {
-            Remove-Job -Job $job -Force -ErrorAction SilentlyContinue
+            Remove-Job -Job $wingetListJob -Force -ErrorAction SilentlyContinue
             return $null
         }
-        $result = Receive-Job -Job $job
-        Remove-Job -Job $job -ErrorAction SilentlyContinue
+        $result = Receive-Job -Job $wingetListJob
+        Remove-Job -Job $wingetListJob -ErrorAction SilentlyContinue
         return $result
     }
 }

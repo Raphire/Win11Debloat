@@ -2986,6 +2986,8 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
         else {
             try {
                 $result = OpenGUI
+            
+                Stop-Transcript
                 Exit
             }
             catch {

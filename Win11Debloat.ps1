@@ -2984,7 +2984,6 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
             $Mode = ShowScriptMenuOptions 
         }
         else {
-        else {
             try {
                 $result = OpenGUI
                 Exit
@@ -2993,7 +2992,6 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
                 Write-Warning "Unable to load WPF GUI (not supported in this environment), falling back to CLI mode"
                 $Mode = ShowScriptMenuOptions
             }
-        }
         }
     }
 

@@ -1361,7 +1361,7 @@ function OpenGUI {
             
             SaveCustomAppsListToFile -appsList $selectedApps
             AddParameter 'RemoveApps'
-            AddParameter 'Apps' ($script:SelectedApps -join ',')
+            AddParameter 'Apps' ($selectedApps -join ',')
         }
 
         # Apply dynamic tweaks selections

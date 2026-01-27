@@ -1211,7 +1211,7 @@ function OpenGUI {
         }
         
         if ($username -eq $env:USERNAME) {
-            $usernameValidationMessage.Text = "[X] Cannot enter your own username. Use 'Current User' option instead."
+            $usernameValidationMessage.Text = "[X] Cannot enter your own username, use 'Current User' option instead"
             $usernameValidationMessage.Foreground = $errorBrush
             return $false
         }
@@ -1224,7 +1224,7 @@ function OpenGUI {
             return $true
         }
 
-        $usernameValidationMessage.Text = "[X] User not found. Please enter a valid username."
+        $usernameValidationMessage.Text = "[X] User not found, please enter a valid username"
         $usernameValidationMessage.Foreground = $errorBrush
         return $false
     }

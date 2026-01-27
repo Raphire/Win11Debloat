@@ -560,7 +560,9 @@ function OpenGUI {
 
     # Title bar event handlers
     $titleBar.Add_MouseLeftButtonDown({
-        $window.DragMove()
+        if ($_.OriginalSource -is [System.Windows.Controls.Grid] -or $_.OriginalSource -is [System.Windows.Controls.Border] -or $_.OriginalSource -is [System.Windows.Controls.TextBlock]) {
+            $window.DragMove()
+        }
     })
 
     $closeBtn.Add_Click({

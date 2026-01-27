@@ -2645,7 +2645,7 @@ function CreateSystemRestorePoint {
             }
 
             $enableSystemRestoreJobDone = $enableSystemRestoreJob | Wait-Job -TimeOut 20
-            
+
             if (-not $enableSystemRestoreJobDone) {
                 Remove-Job -Job $enableSystemRestoreJob -Force -ErrorAction SilentlyContinue
                 Write-ToConsole "Error: Failed to enable system restore and create restore point, operation timed out" -ForegroundColor Red
@@ -2692,10 +2692,12 @@ function CreateSystemRestorePoint {
     $createRestorePointJobDone = $createRestorePointJob | Wait-Job -TimeOut 20
 
     if (-not $createRestorePointJobDone) {
+        Remove-Job -Job $createRestorePointJob -Force -ErrorAction SilentlyContinue
         Write-ToConsole "Error: Failed to create system restore point, operation timed out" -ForegroundColor Red
     }
     else {
         $result = Receive-Job $createRestorePointJob
+        Remove-Job -Job $createRestorePointJob -ErrorAction SilentlyContinue
         if ($result.Success) {
             if ($result.Warning) {
                 Write-ToConsole $result.Message -ForegroundColor Yellow

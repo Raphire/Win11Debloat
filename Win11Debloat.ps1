@@ -547,9 +547,14 @@ function OpenGUI {
 
     # Load XAML from file
     $xaml = Get-Content -Path $script:MainWindowSchema -Raw
+    $xaml = Get-Content -Path $script:MainWindowSchema -Raw
     $reader = [System.Xml.XmlReader]::Create([System.IO.StringReader]::new($xaml))
-    $window = [System.Windows.Markup.XamlReader]::Load($reader)
-    $reader.Close()
+    try {
+        $window = [System.Windows.Markup.XamlReader]::Load($reader)
+    }
+    finally {
+        $reader.Close()
+    }
 
     SetWindowThemeResources -window $window -usesDarkMode $usesDarkMode
 

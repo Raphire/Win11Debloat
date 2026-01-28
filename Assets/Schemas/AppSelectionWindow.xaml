@@ -179,7 +179,7 @@
     <Border BorderBrush="{DynamicResource BorderColor}" 
             BorderThickness="1" 
             CornerRadius="8" 
-            Background="{DynamicResource TitleBarBg}">
+            Background="{DynamicResource BgColor}">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="32"/>
@@ -188,7 +188,7 @@
 
             <!-- Custom Title Bar -->
             <Grid Grid.Row="0" x:Name="TitleBar">
-                <Border Background="{DynamicResource TitleBarBg}" CornerRadius="8,8,0,0">
+                <Border Background="{DynamicResource BgColor}" CornerRadius="8,8,0,0">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -227,7 +227,7 @@
                         <CheckBox x:Name="CheckAllBox" Content="Check/Uncheck all" Margin="8,0,15,0" Foreground="{DynamicResource FgColor}"/>
                     </StackPanel>
 
-                    <Border Grid.Row="2" BorderBrush="{DynamicResource BorderColor}" CornerRadius="4" BorderThickness="1" Margin="0,0,0,10" Background="{DynamicResource BgColor}">
+                    <Border Grid.Row="2" BorderBrush="{DynamicResource BorderColor}" CornerRadius="4" BorderThickness="1" Margin="0,0,0,10" Background="{DynamicResource CardBgColor}">
                         <Grid>
                             <ScrollViewer VerticalScrollBarVisibility="Auto">
                                 <StackPanel x:Name="AppsPanel" Margin="5"/>

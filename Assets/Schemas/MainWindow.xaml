@@ -345,7 +345,7 @@
                     <Setter Property="Background" Value="{DynamicResource ButtonBg}"/>
                 </Trigger>
                 <Trigger Property="IsPressed" Value="True">
-                    <Setter Property="Background" Value="#005A9E"/>
+                    <Setter Property="Background" Value="{DynamicResource ButtonHover}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -354,7 +354,7 @@
     <Border BorderBrush="{DynamicResource BorderColor}" 
             BorderThickness="1" 
             CornerRadius="8" 
-            Background="{DynamicResource TitleBarBg}">
+            Background="{DynamicResource BgColor}">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="32"/>
@@ -364,7 +364,7 @@
 
             <!-- Custom Title Bar -->
             <Grid Grid.Row="0" x:Name="TitleBar">
-                <Border Background="{DynamicResource TitleBarBg}" CornerRadius="8,8,0,0">
+                <Border Background="{DynamicResource BgColor}" CornerRadius="8,8,0,0">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -385,7 +385,7 @@
             </Grid>
 
             <!-- Main Content with Tabs -->
-            <TabControl Grid.Row="1" Background="{DynamicResource TitleBarBg}" BorderThickness="0" Margin="0" Padding="0" Name="MainTabControl">
+            <TabControl Grid.Row="1" Background="{DynamicResource BgColor}" BorderThickness="0" Margin="0" Padding="0" Name="MainTabControl">
                 <TabControl.Resources>
                     <Style TargetType="TabItem">
                         <Setter Property="Template">
@@ -397,7 +397,7 @@
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsSelected" Value="True">
                                             <Setter TargetName="Border" Property="Background" Value="{DynamicResource ButtonBg}"/>
-                                            <Setter Property="Foreground" Value="#FFFFFF"/>
+                                            <Setter Property="Foreground" Value="White"/>
                                         </Trigger>
                                         <Trigger Property="IsSelected" Value="False">
                                             <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
@@ -497,7 +497,7 @@
                         <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="20,0">
                             <StackPanel>
                             <!-- Apps List -->
-                            <Border BorderBrush="{DynamicResource BorderColor}" CornerRadius="4" BorderThickness="1" Margin="0,0,0,10" Background="{DynamicResource BgColor}" Height="510">
+                            <Border BorderBrush="{DynamicResource BorderColor}" CornerRadius="4" BorderThickness="1" Margin="0,0,0,10" Background="{DynamicResource CardBgColor}" Height="510">
                                 <Grid>
                                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                                         <StackPanel x:Name="AppSelectionPanel" Margin="8"/>
@@ -520,7 +520,7 @@
                 <!-- Tweaks Tab -->
                 <TabItem Header="Tweaks">
                     <DockPanel>
-                        <Border DockPanel.Dock="Top" Padding="20,10,20,0" Background="{DynamicResource TitleBarBg}">
+                        <Border DockPanel.Dock="Top" Padding="20,10,20,0" Background="{DynamicResource BgColor}">
                             <StackPanel>
                                 <TextBlock Text="System Tweaks" FontWeight="Bold" FontSize="20" Margin="0,0,0,5" Foreground="{DynamicResource FgColor}"/>
                                 <TextBlock Text="Select which tweaks you want to apply to your system" FontSize="13" Margin="0,0,0,20" Foreground="{DynamicResource FgColor}" TextWrapping="Wrap"/>
@@ -555,7 +555,7 @@
                                 </Grid>
                             </ScrollViewer>
                             <!-- Top fade gradient -->
-                            <Border IsHitTestVisible="False" VerticalAlignment="Top" Height="10" Margin="0,-12,20,0" Background="{DynamicResource TitleBarBg}">
+                            <Border IsHitTestVisible="False" VerticalAlignment="Top" Height="10" Margin="0,-12,20,0" Background="{DynamicResource BgColor}">
                                 <Border.OpacityMask>
                                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                                         <GradientStop Color="Black" Offset="0"/>
@@ -565,7 +565,7 @@
                                 </Border.OpacityMask>
                             </Border>
                             <!-- Bottom fade gradient -->
-                            <Border IsHitTestVisible="False" VerticalAlignment="Bottom" Height="20" Margin="0,0,20,0" Background="{DynamicResource TitleBarBg}">
+                            <Border IsHitTestVisible="False" VerticalAlignment="Bottom" Height="20" Margin="0,0,20,0" Background="{DynamicResource BgColor}">
                                 <Border.OpacityMask>
                                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                                         <GradientStop Color="Transparent" Offset="0"/>
@@ -590,7 +590,7 @@
                             <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,-20,0,0" Padding="20,10,20,0">
                                 <StackPanel Margin="0,10,0,5">
                                     <!-- Apply Changes To -->
-                                    <Border BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource BgColor}" Padding="20" Margin="0,0,0,16">
+                                    <Border BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="20" Margin="0,0,0,16">
                                         <StackPanel>
                                             <TextBlock Text="Apply Changes To" FontWeight="Bold" FontSize="14" Foreground="{DynamicResource FgColor}" Margin="0,0,0,8"/>
                                             <ComboBox x:Name="UserSelectionCombo" Margin="0,0,0,12" Style="{StaticResource UserComboBoxStyle}">
@@ -617,7 +617,7 @@
                                     </Border>
 
                                     <!-- Selected Changes -->
-                                    <Border BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource BgColor}" Padding="16,12" Margin="0,0,0,16">
+                                    <Border BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="16,12" Margin="0,0,0,16">
                                         <StackPanel>
                                             <TextBlock Text="Selected Changes" FontWeight="Bold" FontSize="14" Foreground="{DynamicResource FgColor}" Margin="0,0,0,12"/>
                                             <StackPanel x:Name="OverviewChangesPanel"/>
@@ -625,7 +625,7 @@
                                     </Border>
                                     
                                     <!-- System Restore Point -->
-                                    <Border BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource BgColor}" Padding="16,12" Margin="0,0,0,16">
+                                    <Border BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="16,12" Margin="0,0,0,16">
                                         <StackPanel>
                                             <TextBlock Text="System Restore Point" FontWeight="Bold" FontSize="14" Foreground="{DynamicResource FgColor}" Margin="0,0,0,8"/>
                                             <TextBlock Text="A restore point will allow you to revert your system to a previous state using the built-in System Restore feature. (Recommended)" Foreground="{DynamicResource FgColor}" FontSize="12" Margin="0,0,0,10" TextWrapping="Wrap"/>
@@ -643,7 +643,7 @@
                                 </StackPanel>
                             </ScrollViewer>
                             <!-- Top fade gradient -->
-                            <Border IsHitTestVisible="False" VerticalAlignment="Top" Height="15" Margin="0,-15,20,0" Background="{DynamicResource TitleBarBg}">
+                            <Border IsHitTestVisible="False" VerticalAlignment="Top" Height="15" Margin="0,-15,20,0" Background="{DynamicResource BgColor}">
                                 <Border.OpacityMask>
                                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                                         <GradientStop Color="Black" Offset="0"/>
@@ -653,7 +653,7 @@
                                 </Border.OpacityMask>
                             </Border>
                             <!-- Bottom fade gradient -->
-                            <Border IsHitTestVisible="False" VerticalAlignment="Bottom" Height="20" Margin="0,0,20,0" Background="{DynamicResource TitleBarBg}">
+                            <Border IsHitTestVisible="False" VerticalAlignment="Bottom" Height="20" Margin="0,0,20,0" Background="{DynamicResource BgColor}">
                                 <Border.OpacityMask>
                                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                                         <GradientStop Color="Transparent" Offset="0"/>
@@ -688,7 +688,7 @@
                         </Border>
 
                         <!-- Progress and Finish Button -->
-                        <Border Grid.Row="2" Background="{DynamicResource TitleBarBg}" Padding="10,0">
+                        <Border Grid.Row="2" Background="{DynamicResource BgColor}" Padding="10,0">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>

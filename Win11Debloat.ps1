@@ -1512,6 +1512,7 @@ function OpenGUI {
 
         if (-not $defaultsJson) {
             [System.Windows.MessageBox]::Show("Failed to load default settings file", "Error", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Error)
+            return
         }
         
         ApplySettingsToUiControls -window $window -settingsJson $defaultsJson -uiControlMappings $script:UiControlMappings

@@ -36,7 +36,7 @@
     },
     {
       "GroupId": "CombineButtons",
-      "Label": "Combine taskbar buttons",
+      "Label": "Combine taskbar buttons on the main display",
       "Category": "Taskbar",
       "Values": [
         { "Label": "Always", "FeatureIds": ["CombineTaskbarAlways"] },

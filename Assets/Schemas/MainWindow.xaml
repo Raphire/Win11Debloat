@@ -25,7 +25,7 @@
                                                 <Setter Property="Background" Value="{DynamicResource ScrollBarThumbColor}"/>
                                                 <Setter Property="Template">
                                                     <Setter.Value>
-                                                        <ControlTemplate>
+                                                        <ControlTemplate TargetType="Thumb">
                                                             <Border Background="{TemplateBinding Background}" CornerRadius="4"/>
                                                         </ControlTemplate>
                                                     </Setter.Value>
@@ -378,7 +378,7 @@
                                    FontSize="12"/>
                         <StackPanel Grid.Column="1" Orientation="Horizontal">
                             <Button x:Name="HelpBtn" Content="?" FontFamily="Segoe UI" FontSize="15" Style="{StaticResource HelpButton}" ToolTip="Open Wiki"/>
-                            <Button x:Name="CloseBtn" Content="&#xE8BB;" Style="{StaticResource CloseButton}" ToolTip="Close"/>
+                            <Button x:Name="CloseBtn" Content="&#xE8BB;" Style="{StaticResource CloseButton}" ToolTip="Close" IsCancel="True"/>
                         </StackPanel>
                     </Grid>
                 </Border>

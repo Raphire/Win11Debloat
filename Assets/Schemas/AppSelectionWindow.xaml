@@ -25,7 +25,7 @@
                                                 <Setter Property="Background" Value="{DynamicResource ScrollBarThumbColor}"/>
                                                 <Setter Property="Template">
                                                     <Setter.Value>
-                                                        <ControlTemplate>
+                                                        <ControlTemplate TargetType="Thumb">
                                                             <Border Background="{TemplateBinding Background}" CornerRadius="4"/>
                                                         </ControlTemplate>
                                                     </Setter.Value>
@@ -201,7 +201,7 @@
                                    Margin="12,0,0,0"
                                    FontSize="12"/>
                         <StackPanel Grid.Column="1" Orientation="Horizontal">
-                            <Button x:Name="CloseBtn" Content="&#xE8BB;" Style="{StaticResource CloseButton}"/>
+                            <Button x:Name="CloseBtn" Content="&#xE8BB;" Style="{StaticResource CloseButton}" ToolTip="Close" IsCancel="True"/>
                         </StackPanel>
                     </Grid>
                 </Border>
@@ -243,7 +243,7 @@
                             <CheckBox x:Name="OnlyInstalledBox" Content="Only show installed apps" Foreground="{DynamicResource FgColor}" />
                         </Grid>
                         <Button x:Name="ConfirmBtn" Width="80" Height="32" Margin="0,0,10,0" Content="Confirm" Style="{StaticResource Win11Button}"/>
-                        <Button x:Name="CancelBtn" Width="80" Height="32" Content="Cancel" Style="{StaticResource Win11ButtonSecondary}"/>
+                        <Button x:Name="CancelBtn" Width="80" Height="32" Content="Cancel" Style="{StaticResource Win11ButtonSecondary}" IsCancel="True"/>
                     </StackPanel>
                 </Grid>
             </Grid>

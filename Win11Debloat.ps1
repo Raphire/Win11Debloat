@@ -555,7 +555,6 @@ function OpenGUI {
 
     # Get named elements
     $titleBar = $window.FindName('TitleBar')
-    $closeBtn = $window.FindName('CloseBtn')
     $helpBtn = $window.FindName('HelpBtn')
 
     # Title bar event handlers
@@ -563,10 +562,6 @@ function OpenGUI {
         if ($_.OriginalSource -is [System.Windows.Controls.Grid] -or $_.OriginalSource -is [System.Windows.Controls.Border] -or $_.OriginalSource -is [System.Windows.Controls.TextBlock]) {
             $window.DragMove()
         }
-    })
-
-    $closeBtn.Add_Click({
-        $window.Close()
     })
     
     $helpBtn.Add_Click({
@@ -1606,10 +1601,8 @@ function OpenAppSelectionWindow {
     $checkAllBox = $window.FindName('CheckAllBox')
     $onlyInstalledBox = $window.FindName('OnlyInstalledBox')
     $confirmBtn = $window.FindName('ConfirmBtn')
-    $cancelBtn = $window.FindName('CancelBtn')
     $loadingIndicator = $window.FindName('LoadingAppsIndicator')
     $titleBar = $window.FindName('TitleBar')
-    $closeBtn = $window.FindName('CloseBtn')
     
     # Track the last selected checkbox for shift-click range selection
     $script:AppSelectionWindowLastSelectedCheckbox = $null
@@ -1663,10 +1656,6 @@ function OpenAppSelectionWindow {
         $window.DragMove()
     })
 
-    $closeBtn.Add_Click({
-        $window.Close()
-    })
-
     $checkAllBox.Add_Checked({
         foreach ($child in $appsPanel.Children) {
             if ($child -is [System.Windows.Controls.CheckBox]) {
@@ -1716,10 +1705,6 @@ function OpenAppSelectionWindow {
         SaveCustomAppsListToFile -appsList $selectedApps
 
         $window.DialogResult = $true
-    })
-
-    $cancelBtn.Add_Click({
-        $window.Close()
     })
 
     # Load apps after window is shown (allows UI to render first)

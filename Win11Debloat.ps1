@@ -560,6 +560,7 @@ function OpenGUI {
     # Get named elements
     $titleBar = $window.FindName('TitleBar')
     $helpBtn = $window.FindName('HelpBtn')
+    $closeBtn = $window.FindName('CloseBtn')
 
     # Title bar event handlers
     $titleBar.Add_MouseLeftButtonDown({
@@ -570,6 +571,10 @@ function OpenGUI {
     
     $helpBtn.Add_Click({
         Start-Process "https://github.com/Raphire/Win11Debloat/wiki"
+    })
+
+    $closeBtn.Add_Click({
+        $window.Close()
     })
 
     # Integrated App Selection UI

@@ -733,7 +733,7 @@ function OpenGUI {
             $header = New-Object System.Windows.Controls.TextBlock
             $header.Text = $category
             $header.FontWeight = 'Bold'
-            $header.FontSize = 14
+            $header.FontSize = 15
             $header.Margin = '0,0,0,10'
             $header.SetResourceReference([System.Windows.Controls.TextBlock]::ForegroundProperty, 'FgColor')
             $panel.Children.Add($header) | Out-Null

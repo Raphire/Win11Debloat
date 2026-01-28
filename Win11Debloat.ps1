@@ -1598,7 +1598,14 @@ function OpenAppSelectionWindow {
     $xaml = Get-Content -Path $script:AppSelectionSchema -Raw
     $reader = [System.Xml.XmlReader]::Create([System.IO.StringReader]::new($xaml))
     $window = [System.Windows.Markup.XamlReader]::Load($reader)
-    $reader.Close()
+    $xaml = Get-Content -Path $script:AppSelectionSchema -Raw
+    $reader = [System.Xml.XmlReader]::Create([System.IO.StringReader]::new($xaml))
+    try {
+        $window = [System.Windows.Markup.XamlReader]::Load($reader)
+    }
+    finally {
+        $reader.Close()
+    }
 
     SetWindowThemeResources -window $window -usesDarkMode $usesDarkMode
 

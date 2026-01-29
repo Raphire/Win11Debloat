@@ -592,11 +592,7 @@ function OpenGUI {
     $loadingAppsIndicator = $window.FindName('LoadingAppsIndicator')
     $appSelectionStatus = $window.FindName('AppSelectionStatus')
     $defaultAppsBtn = $window.FindName('DefaultAppsBtn')
-    $defaultAppsBtn.ToolTip = 'Select the default selection of apps'
-    $loadLastUsedAppsBtn = $window.FindName('LoadLastUsedAppsBtn')
-    $loadLastUsedAppsBtn.ToolTip = 'Select the apps that were selected the last time Win11Debloat was run'
     $clearAppSelectionBtn = $window.FindName('ClearAppSelectionBtn')
-    $clearAppSelectionBtn.ToolTip = 'Clear all selected apps'
     
     # Track the last selected checkbox for shift-click range selection
     $script:MainWindowLastSelectedCheckbox = $null
@@ -1479,7 +1475,6 @@ function OpenGUI {
 
     # Handle Load Defaults button
     $loadDefaultsBtn = $window.FindName('LoadDefaultsBtn')
-    $loadDefaultsBtn.ToolTip = 'Select the settings that are recommended for most people'
     $loadDefaultsBtn.Add_Click({
         $defaultsJson = LoadJsonFile -filePath $script:DefaultSettingsFilePath -expectedVersion "1.0"
 
@@ -1493,9 +1488,7 @@ function OpenGUI {
 
     # Handle Load Last Used settings and Load Last Used apps
     $loadLastUsedBtn = $window.FindName('LoadLastUsedBtn')
-    $loadLastUsedBtn.ToolTip = 'Select the settings that were used the last time Win11Debloat was run'
     $loadLastUsedAppsBtn = $window.FindName('LoadLastUsedAppsBtn')
-    $loadLastUsedAppsBtn.ToolTip = 'Select the apps that were selected the last time Win11Debloat was run'
 
     $lastUsedSettingsJson = LoadJsonFile -filePath $script:SavedSettingsFilePath -expectedVersion "1.0" -optionalFile
 
@@ -1550,7 +1543,6 @@ function OpenGUI {
 
     # Clear All Tweaks button
     $clearAllTweaksBtn = $window.FindName('ClearAllTweaksBtn')
-    $clearAllTweaksBtn.ToolTip = 'Clear all selected tweaks'
     $clearAllTweaksBtn.Add_Click({
         # Reset all ComboBoxes to index 0 (No Change) and uncheck all CheckBoxes
         if ($script:UiControlMappings) {

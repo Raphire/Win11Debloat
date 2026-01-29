@@ -499,9 +499,9 @@
                                     </Grid.ColumnDefinitions>
                                     
                                     <StackPanel Orientation="Horizontal" Grid.Column="0">
-                                        <Button x:Name="DefaultAppsBtn" Content="Select Default Apps" Style="{StaticResource Win11ButtonSecondary}" Height="32" Padding="10,0" Margin="0,0,10,0"/>
-                                        <Button x:Name="LoadLastUsedAppsBtn" Content="Select Last Used Selection" Style="{StaticResource Win11ButtonSecondary}" Height="32" Padding="10,0" Margin="0,0,10,0"/>
-                                        <Button x:Name="ClearAppSelectionBtn" Content="Clear Selection" Style="{StaticResource Win11ButtonSecondary}" Height="32"  Padding="10,0" Margin="0,0,10,0"/>
+                                        <Button x:Name="DefaultAppsBtn" Content="Select Default Apps" ToolTip="Select the default selection of apps" Style="{StaticResource Win11ButtonSecondary}" Height="32" Padding="10,0" Margin="0,0,10,0"/>
+                                        <Button x:Name="LoadLastUsedAppsBtn" Content="Select Last Used Selection" ToolTip="Select the apps that were selected the last time Win11Debloat was run" Style="{StaticResource Win11ButtonSecondary}" Height="32" Padding="10,0" Margin="0,0,10,0"/>
+                                        <Button x:Name="ClearAppSelectionBtn" Content="Clear Selection" ToolTip="Clear all selected apps" Style="{StaticResource Win11ButtonSecondary}" Height="32"  Padding="10,0" Margin="0,0,10,0"/>
                                     </StackPanel>
                                     
                                     <CheckBox x:Name="OnlyInstalledAppsBox" Grid.Column="2" Content="Only show installed apps" IsChecked="False" Foreground="{DynamicResource FgColor}" VerticalAlignment="Center"/>
@@ -554,9 +554,9 @@
                                 <!-- Filter Options -->
                                 <Grid Margin="0,0,0,12">
                                     <StackPanel Orientation="Horizontal">
-                                        <Button x:Name="LoadDefaultsBtn" Content="Select Default Settings" Style="{StaticResource Win11ButtonSecondary}" Padding="10,0" Height="32" Margin="0,0,10,0"/>
-                                        <Button x:Name="LoadLastUsedBtn" Content="Select Last Used Settings" Style="{StaticResource Win11ButtonSecondary}" Padding="10,0" Height="32" Margin="0,0,10,0"/>
-                                        <Button x:Name="ClearAllTweaksBtn" Content="Clear Selection" Style="{StaticResource Win11ButtonSecondary}" Padding="10,0" Height="32" Margin="0,0,10,0"/>
+                                        <Button x:Name="LoadDefaultsBtn" Content="Select Default Settings" ToolTip="Select the settings that are recommended for most people" Style="{StaticResource Win11ButtonSecondary}" Padding="10,0" Height="32" Margin="0,0,10,0"/>
+                                        <Button x:Name="LoadLastUsedBtn" Content="Select Last Used Settings" ToolTip="Select the settings that were used the last time Win11Debloat was run" Style="{StaticResource Win11ButtonSecondary}" Padding="10,0" Height="32" Margin="0,0,10,0"/>
+                                        <Button x:Name="ClearAllTweaksBtn" Content="Clear Selection" ToolTip="Clear all selected tweaks" Style="{StaticResource Win11ButtonSecondary}" Padding="10,0" Height="32" Margin="0,0,10,0"/>
                                     </StackPanel>
                                 </Grid>
                             </StackPanel>

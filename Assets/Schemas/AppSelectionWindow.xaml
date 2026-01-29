@@ -152,16 +152,23 @@
                 </Setter.Value>
             </Setter>
             <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="{DynamicResource SecondaryButtonDisabled}"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource FgDisabledColor}"/>
+                </Trigger>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="{DynamicResource SecondaryButtonHover}"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderColor}"/>
                 </Trigger>
                 <Trigger Property="IsPressed" Value="True">
                     <Setter Property="Background" Value="{DynamicResource SecondaryButtonPressed}"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderColor}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
         
-        <!-- Title Bar Style -->
+        <!-- Title Bar Button Style -->
         <Style x:Key="TitleBarButton" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>

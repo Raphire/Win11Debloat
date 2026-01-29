@@ -974,44 +974,6 @@ function OpenGUI {
         }
     })
 
-    # Load Last Used App Selection button - only visible if CustomAppsList exists and has content
-    if ((Test-Path $script:CustomAppsListFilePath)) {
-        try {
-            $savedApps = ReadAppslistFromFile $script:CustomAppsListFilePath
-            if ($savedApps -and $savedApps.Count -gt 0) {
-                $loadLastUsedAppsBtn.Add_Click({
-                    try {
-                        $savedApps = ReadAppslistFromFile $script:CustomAppsListFilePath
-                        foreach ($child in $appsPanel.Children) {
-                            if ($child -is [System.Windows.Controls.CheckBox]) {
-                                if ($savedApps -contains $child.Tag) {
-                                    $child.IsChecked = $true
-                                } else {
-                                    $child.IsChecked = $false
-                                }
-                            }
-                        }
-                    }
-                    catch {
-                        [System.Windows.MessageBox]::Show("Failed to load last used app selection: $_", "Error", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Error)
-                    }
-                })
-            }
-            else {
-                # Hide the button if CustomAppsList is empty
-                $loadLastUsedAppsBtn.Visibility = 'Collapsed'
-            }
-        }
-        catch {
-            # Hide the button if there's an error reading the file
-            $loadLastUsedAppsBtn.Visibility = 'Collapsed'
-        }
-    }
-    else {
-        # Hide the button if CustomAppsList doesn't exist
-        $loadLastUsedAppsBtn.Visibility = 'Collapsed'
-    }
-
     $clearAppSelectionBtn.Add_Click({
         foreach ($child in $appsPanel.Children) {
             if ($child -is [System.Windows.Controls.CheckBox]) {
@@ -1373,7 +1335,6 @@ function OpenGUI {
                 }
             }
             
-            SaveCustomAppsListToFile -appsList $selectedApps
             AddParameter 'RemoveApps'
             AddParameter 'Apps' ($selectedApps -join ',')
         }
@@ -1530,32 +1491,29 @@ function OpenGUI {
         ApplySettingsToUiControls -window $window -settingsJson $defaultsJson -uiControlMappings $script:UiControlMappings
     })
 
-    # Handle Load Last Used button
+    # Handle Load Last Used settings and Load Last Used apps
     $loadLastUsedBtn = $window.FindName('LoadLastUsedBtn')
     $loadLastUsedBtn.ToolTip = 'Select the settings that were used the last time Win11Debloat was run'
-    $lastUsedJson = LoadJsonFile -filePath $script:SavedSettingsFilePath -expectedVersion "1.0" -optionalFile
-    
-    # Check if file exists and has settings with Value = true
+    $loadLastUsedAppsBtn = $window.FindName('LoadLastUsedAppsBtn')
+    $loadLastUsedAppsBtn.ToolTip = 'Select the apps that were selected the last time Win11Debloat was run'
+
+    $lastUsedSettingsJson = LoadJsonFile -filePath $script:SavedSettingsFilePath -expectedVersion "1.0" -optionalFile
+
     $hasSettings = $false
-    if ($lastUsedJson -and $lastUsedJson.Settings) {
-        foreach ($setting in $lastUsedJson.Settings) {
-            if ($setting.Value -eq $true) {
-                $hasSettings = $true
-                break
-            }
+    $appsSetting = $null
+    if ($lastUsedSettingsJson -and $lastUsedSettingsJson.Settings) {
+        foreach ($s in $lastUsedSettingsJson.Settings) {
+            # Only count as hasSettings if a setting other than RemoveApps/Apps is present and true
+            if ($s.Value -eq $true -and $s.Name -ne 'RemoveApps' -and $s.Name -ne 'Apps') { $hasSettings = $true }
+            if ($s.Name -eq 'Apps' -and $s.Value) { $appsSetting = $s.Value }
         }
     }
-    
+
+    # Show option to load last used settings if they exist
     if ($hasSettings) {
         $loadLastUsedBtn.Add_Click({
             try {
-                $lastUsedJson = LoadJsonFile -filePath $script:SavedSettingsFilePath -expectedVersion "1.0"
-                if ($lastUsedJson) {
-                    ApplySettingsToUiControls -window $window -settingsJson $lastUsedJson -uiControlMappings $script:UiControlMappings
-                }
-                else {
-                    [System.Windows.MessageBox]::Show("Failed to load last used settings file", "Error", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Error)
-                }
+                ApplySettingsToUiControls -window $window -settingsJson $lastUsedSettingsJson -uiControlMappings $script:UiControlMappings
             }
             catch {
                 [System.Windows.MessageBox]::Show("Failed to load last used settings: $_", "Error", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Error)
@@ -1563,8 +1521,31 @@ function OpenGUI {
         })
     }
     else {
-        # Hide the button if LastUsedSettings.json doesn't exist or has no settings
         $loadLastUsedBtn.Visibility = 'Collapsed'
+    }
+
+    # Show option to load last used apps if they exist
+    if ($appsSetting -and $appsSetting.ToString().Trim().Length -gt 0) {
+        $loadLastUsedAppsBtn.Add_Click({
+            try {
+                $savedApps = @()
+                if ($appsSetting -is [string]) { $savedApps = $appsSetting.Split(',') }
+                elseif ($appsSetting -is [array]) { $savedApps = $appsSetting }
+                $savedApps = $savedApps | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne '' }
+
+                foreach ($child in $appsPanel.Children) {
+                    if ($child -is [System.Windows.Controls.CheckBox]) {
+                        if ($savedApps -contains $child.Tag) { $child.IsChecked = $true } else { $child.IsChecked = $false }
+                    }
+                }
+            }
+            catch {
+                [System.Windows.MessageBox]::Show("Failed to load last used app selection: $_", "Error", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Error)
+            }
+        })
+    }
+    else {
+        $loadLastUsedAppsBtn.Visibility = 'Collapsed'
     }
 
     # Clear All Tweaks button

@@ -653,9 +653,8 @@ function OpenGUI {
                 $checkbox = New-Object System.Windows.Controls.CheckBox
                 $checkbox.Content = $labelText
                 $checkbox.Name = $comboName
-                $checkbox.Margin = '0,0,0,10'
-                $checkbox.Padding = '0,2'
                 $checkbox.IsChecked = $false
+                $checkbox.Style = $window.Resources["FeatureCheckboxStyle"]
                 $parent.Children.Add($checkbox) | Out-Null
                 
                 # Register the checkbox with the window's name scope
@@ -836,8 +835,7 @@ function OpenGUI {
             $checkbox.Tag = $_.AppId
             $checkbox.IsChecked = $_.IsChecked
             $checkbox.ToolTip = $_.Description
-            $checkbox.SetResourceReference([System.Windows.Controls.Control]::ForegroundProperty, "FgColor")
-            $checkbox.Margin = "2,3,2,3"
+            $checkbox.Style = $window.Resources["AppsPanelCheckBoxStyle"]
             
             # Store metadata in checkbox for later use
             Add-Member -InputObject $checkbox -MemberType NoteProperty -Name "SelectedByDefault" -Value $_.SelectedByDefault
@@ -1616,8 +1614,7 @@ function OpenAppSelectionWindow {
             $checkbox.Tag = $_.AppId
             $checkbox.IsChecked = $_.IsChecked
             $checkbox.ToolTip = $_.Description
-            $checkbox.Foreground = $window.Resources["FgColor"]
-            $checkbox.Margin = "2,3,2,3"
+            $checkbox.Style = $window.Resources["AppsPanelCheckBoxStyle"]
             
             # Attach shift-click behavior for range selection
             AttachShiftClickBehavior -checkbox $checkbox -appsPanel $appsPanel -lastSelectedCheckboxRef ([ref]$script:AppSelectionWindowLastSelectedCheckbox)

@@ -215,6 +215,24 @@
             <Setter Property="Margin" Value="0,0,0,3"/>
         </Style>
 
+        <!-- Category card border style -->
+        <Style x:Key="CategoryCardBorderStyle" TargetType="Border">
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="Background" Value="{DynamicResource CardBgColor}"/>
+            <Setter Property="Padding" Value="16,12"/>
+            <Setter Property="Margin" Value="0,0,0,16"/>
+        </Style>
+
+        <!-- Category header text style -->
+        <Style x:Key="CategoryHeaderTextBlock" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+            <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
+        </Style> 
+
         <!-- TextBox Style for search -->
         <Style TargetType="TextBox">
             <Setter Property="CaretBrush" Value="{DynamicResource FgColor}"/>

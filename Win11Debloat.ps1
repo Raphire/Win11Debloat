@@ -714,12 +714,7 @@ function OpenGUI {
             $target = $columns | Sort-Object { $_.Children.Count } | Select-Object -First 1
 
             $border = New-Object System.Windows.Controls.Border
-            $border.BorderBrush = $window.Resources['BorderColor']
-            $border.BorderThickness = 1
-            $border.CornerRadius = New-Object System.Windows.CornerRadius(4)
-            $border.Background = $window.Resources['CardBgColor']
-            $border.Padding = '16,12'
-            $border.Margin = '0,0,0,16'
+            $border.Style = $window.Resources['CategoryCardBorderStyle']
             $border.Tag = 'DynamicCategory'
 
             $panel = New-Object System.Windows.Controls.StackPanel
@@ -728,10 +723,7 @@ function OpenGUI {
 
             $header = New-Object System.Windows.Controls.TextBlock
             $header.Text = $category
-            $header.FontWeight = 'Bold'
-            $header.FontSize = 15
-            $header.Margin = '0,0,0,10'
-            $header.SetResourceReference([System.Windows.Controls.TextBlock]::ForegroundProperty, 'FgColor')
+            $header.Style = $window.Resources['CategoryHeaderTextBlock']
             $panel.Children.Add($header) | Out-Null
 
             $border.Child = $panel

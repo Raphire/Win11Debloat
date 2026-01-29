@@ -1245,18 +1245,14 @@ function OpenGUI {
         if ($changesList.Count -eq 0) {
             $textBlock = New-Object System.Windows.Controls.TextBlock
             $textBlock.Text = "No changes selected"
-            $textBlock.Foreground = $window.Resources["FgColor"]
-            $textBlock.FontStyle = "Italic"
-            $textBlock.Margin = "0,0,0,8"
+            $textBlock.Style = $window.Resources["OverviewNoChangesTextStyle"]
             $overviewChangesPanel.Children.Add($textBlock) | Out-Null
         }
         else {
             foreach ($change in $changesList) {
                 $bullet = New-Object System.Windows.Controls.TextBlock
                 $bullet.Text = "- $change"
-                $bullet.Foreground = $window.Resources["FgColor"]
-                $bullet.Margin = "0,0,0,8"
-                $bullet.TextWrapping = "Wrap"
+                $bullet.Style = $window.Resources["OverviewChangeBulletStyle"]
                 $overviewChangesPanel.Children.Add($bullet) | Out-Null
             }
         }

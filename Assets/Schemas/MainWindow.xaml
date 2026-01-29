@@ -233,6 +233,19 @@
             <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
         </Style> 
 
+        <!-- Overview changes text style -->
+        <Style x:Key="OverviewNoChangesTextStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
+            <Setter Property="FontStyle" Value="Italic"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+        </Style>
+
+        <Style x:Key="OverviewChangeBulletStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+
         <!-- TextBox Style for search -->
         <Style TargetType="TextBox">
             <Setter Property="CaretBrush" Value="{DynamicResource FgColor}"/>

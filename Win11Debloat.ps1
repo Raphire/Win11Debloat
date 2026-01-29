@@ -1398,11 +1398,6 @@ function OpenGUI {
         # Navigate to Apply tab (last tab) and start applying changes
         $tabControl.SelectedIndex = $tabControl.Items.Count - 1
         
-        # Disable navigation during apply
-        $previousBtn.IsEnabled = $false
-        $nextBtn.IsEnabled = $false
-        $overviewApplyBtn.IsEnabled = $false
-        
         # Clear console and set initial status
         $consoleOutput.Text = ""
         $applyProgressText.Text = "Applying changes..."

@@ -90,6 +90,11 @@
             </Setter>
         </Style>
 
+        <!-- CheckBox style for apps panels -->
+        <Style x:Key="AppsPanelCheckBoxStyle" TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
+            <Setter Property="Margin" Value="2,3,2,3"/>
+        </Style>
+
         <!-- Button Style -->
         <Style x:Key="Win11Button" TargetType="Button">
             <Setter Property="Background" Value="{DynamicResource ButtonBg}"/>

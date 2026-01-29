@@ -14,7 +14,7 @@
   "UiGroups": [
     {
       "GroupId": "SearchIcon",
-      "Label": "Taskbar search item",
+      "Label": "Taskbar search style",
       "Category": "Taskbar",
       "Priority": 2,
       "Values": [

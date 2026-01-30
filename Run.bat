@@ -27,14 +27,24 @@ if defined wtPath (
 :: Check if the script has finished running
 :checkScript
 if exist "%~dp0Win11Debloat.ps1" (
+    for /f "tokens=2 delims== " %%a in ('wmic os get lastbootuptime ^| findstr /r /c:"[0-9]{2}:[0-9]{2}:[0-9]{2} [0-9]{2}:[0-9]{2} [0-9]{4}"') do (
+        set "uptime=%%a"
+    )
+    for /f "tokens=1-3 delims=: " %%a in ("!uptime!") do (
+        set "hours=%%a"
+        set "minutes=%%b"
+        set "seconds=%%c"
+    )
+    set /a "totalSeconds=%hours%*3600+%minutes%*60+%seconds%"
+    set /a "elapsedMinutes=%totalSeconds%/60"
     ping -n 1 127.0.0.1 >nul
     if errorlevel 1 (
-        echo The script has finished running. >> "%logFile%"
+        echo [!elapsedMinutes!:!~4!:!~5!:!~6! !~7!:!~8! !~9! !~10!] The script has finished running. >> "%logFile%"
     ) else (
-        echo The script is still successfully running, Rechecking in 10 seconds... >> "%logFile%"
-        timeout /t 10 /nobreak >nul
+        echo [!elapsedMinutes!:!~4!:!~5!:!~6! !~7!:!~8! !~9! !~10!] The script is still running. Waiting for 5 seconds... >> "%logFile%"
+        timeout /t 5 /nobreak >nul
         goto :checkScript
     )
 ) else (
-    echo The script has finished running. >> "%logFile%"
+    echo [!elapsedMinutes!:!~4!:!~5!:!~6! !~7!:!~8! !~9! !~10!] Failure when checking for existence of Win11Debloat.ps1 running. >> "%logFile%"
 )

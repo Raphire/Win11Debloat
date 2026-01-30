@@ -465,7 +465,7 @@
             </Grid>
 
             <!-- Main Content with Tabs -->
-            <TabControl Grid.Row="1" Background="{DynamicResource BgColor}" BorderThickness="0" Margin="0" Padding="0" Name="MainTabControl">
+            <TabControl Grid.Row="1" Background="Transparent" BorderThickness="0" Margin="0" Padding="0" Name="MainTabControl">
                 <TabControl.Resources>
                     <Style TargetType="TabItem">
                         <Setter Property="Template">
@@ -493,6 +493,7 @@
                         <Setter Property="Visibility" Value="Collapsed"/>
                     </Style>
                 </TabControl.ItemContainerStyle>
+
                 <!-- Home Tab -->
                 <TabItem Header="Home" x:Name="HomeTab">
                     <Grid>
@@ -768,7 +769,7 @@
                         </Border>
 
                         <!-- Progress and Finish Button -->
-                        <Border Grid.Row="2" Background="{DynamicResource BgColor}" Padding="10,0">
+                        <Border Grid.Row="2" Background="{DynamicResource BgColor}" Padding="10,0" CornerRadius="0,0,8,8" Margin="20,0,20,20">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>

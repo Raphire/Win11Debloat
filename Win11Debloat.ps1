@@ -1418,7 +1418,7 @@ function OpenGUI {
                         RestartExplorer
                     }
                     else {
-                        Write-ToConsole "Explorer restart skipped by user, please manually reboot your PC to apply all changes"
+                        Write-ToConsole "Explorer process restart was skipped, please manually reboot your PC to apply all changes"
                     }
                 }
                 
@@ -2190,7 +2190,7 @@ function RestartExplorer {
     Write-ToConsole "> Attempting to restart the Windows Explorer process to apply all changes..."
     
     if ($script:Params.ContainsKey("Sysprep") -or $script:Params.ContainsKey("User") -or $script:Params.ContainsKey("NoRestartExplorer")) {
-        Write-ToConsole "Process restart was skipped, please manually reboot your PC to apply all changes" -ForegroundColor Yellow
+        Write-ToConsole "Explorer process restart was skipped, please manually reboot your PC to apply all changes" -ForegroundColor Yellow
         return
     }
 

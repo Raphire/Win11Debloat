@@ -594,7 +594,7 @@ function OpenGUI {
         $window.Close()
     })
 
-    # Ensure closing the window via other means properly exits the script
+    # Ensure closing the window via any means properly exits the script
     $window.Add_Closing({
         Stop-Transcript
         Exit

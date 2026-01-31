@@ -594,6 +594,12 @@ function OpenGUI {
         $window.Close()
     })
 
+    # Ensure closing the window via other means properly exits the script
+    $window.Add_Closing({
+        Stop-Transcript
+        Exit
+    })
+
     # Integrated App Selection UI
     $appsPanel = $window.FindName('AppSelectionPanel')
     $onlyInstalledAppsBox = $window.FindName('OnlyInstalledAppsBox')

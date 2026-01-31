@@ -762,14 +762,14 @@
                         </StackPanel>
 
                         <!-- Console Output -->
-                        <Border Grid.Row="1" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="#0C0C0C" Margin="20,0,20,10">
+                        <Border Grid.Row="1" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="#0C0C0C" Margin="20,0">
                             <ScrollViewer x:Name="ConsoleScrollViewer" VerticalScrollBarVisibility="Auto" Padding="10">
                                 <TextBlock x:Name="ConsoleOutput" FontFamily="Consolas" FontSize="12" Foreground="#CCCCCC" TextWrapping="Wrap" Text=""/>
                             </ScrollViewer>
                         </Border>
 
                         <!-- Progress and Finish Button -->
-                        <Border Grid.Row="2" Background="{DynamicResource BgColor}" Padding="10,0" CornerRadius="0,0,8,8" Margin="20,0,20,20">
+                        <Border Grid.Row="2" Background="{DynamicResource BgColor}" Padding="10,0" CornerRadius="0,0,8,8" Margin="20,16,20,16">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
@@ -778,9 +778,8 @@
 
                                 <!-- Status and Finish Button -->
                                 <StackPanel Grid.Row="1" HorizontalAlignment="Center">
-                                    <TextBlock x:Name="ApplyProgressText" Text="Applying changes..." Foreground="{DynamicResource FgColor}" HorizontalAlignment="Center" Margin="0,0,0,10"/>
-                                    <Button x:Name="FinishBtn" Width="200" Height="48" Style="{StaticResource Win11Button}" Visibility="Hidden" Margin="0,0,0,10">
-                                        <TextBlock Text="Close Win11Debloat" VerticalAlignment="Center" FontSize="16" Margin="0,0,0,1"/>
+                                    <Button x:Name="FinishBtn" Width="200" Height="48" Style="{StaticResource Win11Button}" Margin="0" IsEnabled="False">
+                                        <TextBlock x:Name="FinishBtnText" Text="Applying changes..." VerticalAlignment="Center" FontSize="16" Margin="0,0,0,1"/>
                                     </Button>
                                 </StackPanel>
                             </Grid>

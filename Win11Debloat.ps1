@@ -613,8 +613,8 @@ function OpenGUI {
     # Apply Tab UI Elements
     $consoleOutput = $window.FindName('ConsoleOutput')
     $consoleScrollViewer = $window.FindName('ConsoleScrollViewer')
-    $applyProgressText = $window.FindName('ApplyProgressText')
     $finishBtn = $window.FindName('FinishBtn')
+    $finishBtnText = $window.FindName('FinishBtnText')
     
     # Set script-level variables for Write-ToConsole function
     $script:GuiConsoleOutput = $consoleOutput
@@ -1394,7 +1394,6 @@ function OpenGUI {
         
         # Clear console and set initial status
         $consoleOutput.Text = ""
-        $applyProgressText.Text = "Applying changes..."
 
         Write-ToConsole "Applying changes to $(if ($script:Params.ContainsKey("Sysprep")) { "default user template" } else { "user $(GetUserName)" })"
         Write-ToConsole "Total changes to apply: $totalChanges"
@@ -1425,20 +1424,16 @@ function OpenGUI {
                 Write-ToConsole ""
                 Write-ToConsole "All changes have been applied. Please check the output above for any errors."
                 
-                $applyProgressText.Dispatcher.Invoke([action]{
-                    $applyProgressText.Text = "All changes have been applied. Please check the output above for any errors."
-                })
                 $finishBtn.Dispatcher.Invoke([action]{
-                    $finishBtn.Visibility = 'Visible'
+                    $finishBtn.IsEnabled = $true
+                    $finishBtnText.Text = "Close Win11Debloat"
                 })
             }
             catch {
                 Write-ToConsole "Error: $($_.Exception.Message)"
-                $applyProgressText.Dispatcher.Invoke([action]{
-                    $applyProgressText.Text = "An error occurred while applying changes!"
-                })
                 $finishBtn.Dispatcher.Invoke([action]{
-                    $finishBtn.Visibility = 'Visible'
+                    $finishBtn.IsEnabled = $true
+                    $finishBtnText.Text = "Close Win11Debloat"
                 })
             }
         })

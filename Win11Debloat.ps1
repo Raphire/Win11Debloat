@@ -684,17 +684,25 @@ function OpenGUI {
             }
             
             # Otherwise use a combobox for multiple options
+            # Wrap label in a Border for search highlighting
+            $lblBorder = New-Object System.Windows.Controls.Border
+            $lblBorder.Style = $window.Resources['LabelBorderStyle']
+            $labelBorderName = "$comboName`_LabelBorder"
+            $lblBorder.Name = $labelBorderName
+            
             $lbl = New-Object System.Windows.Controls.TextBlock
             $lbl.Text = $labelText
             $lbl.Style = $window.Resources['LabelStyle']
             $labelName = "$comboName`_Label"
             $lbl.Name = $labelName
-            $parent.Children.Add($lbl) | Out-Null
             
-            # Register the label with the window's name scope
+            $lblBorder.Child = $lbl
+            $parent.Children.Add($lblBorder) | Out-Null
+            
+            # Register the label border with the window's name scope
             try {
-                [System.Windows.NameScope]::SetNameScope($lbl, [System.Windows.NameScope]::GetNameScope($window))
-                $window.RegisterName($labelName, $lbl)
+                [System.Windows.NameScope]::SetNameScope($lblBorder, [System.Windows.NameScope]::GetNameScope($window))
+                $window.RegisterName($labelBorderName, $lblBorder)
             }
             catch {
                 # Name might already be registered, ignore
@@ -982,21 +990,74 @@ function OpenGUI {
         }
     })
 
+    # Shared search highlighting configuration
+    $script:SearchHighlightColor = [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#FFF4CE"))
+    $script:SearchHighlightColorDark = [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#4A4A2A"))
+    
+    # Helper function to get the appropriate highlight brush based on theme
+    function GetSearchHighlightBrush {
+        if ($usesDarkMode) { return $script:SearchHighlightColorDark }
+        return $script:SearchHighlightColor
+    }
+    
+    # Helper function to scroll to an item if it's not visible, centering it in the viewport
+    function ScrollToItemIfNotVisible {
+        param (
+            [System.Windows.Controls.ScrollViewer]$scrollViewer,
+            [System.Windows.UIElement]$item,
+            [System.Windows.UIElement]$container
+        )
+        
+        if (-not $scrollViewer -or -not $item -or -not $container) { return }
+        
+        try {
+            $itemPosition = $item.TransformToAncestor($container).Transform([System.Windows.Point]::new(0, 0)).Y
+            $viewportHeight = $scrollViewer.ViewportHeight
+            $itemHeight = $item.ActualHeight
+            $currentOffset = $scrollViewer.VerticalOffset
+            
+            # Check if the item is currently visible in the viewport
+            $itemTop = $itemPosition - $currentOffset
+            $itemBottom = $itemTop + $itemHeight
+            
+            $isVisible = ($itemTop -ge 0) -and ($itemBottom -le $viewportHeight)
+            
+            # Only scroll if the item is not visible
+            if (-not $isVisible) {
+                # Center the item in the viewport
+                $targetOffset = $itemPosition - ($viewportHeight / 2) + ($itemHeight / 2)
+                $scrollViewer.ScrollToVerticalOffset([Math]::Max(0, $targetOffset))
+            }
+        }
+        catch {
+            # Fallback to simple bring into view
+            $item.BringIntoView()
+        }
+    }
+    
+    # Helper function to find the parent ScrollViewer of an element
+    function FindParentScrollViewer {
+        param ([System.Windows.UIElement]$element)
+        
+        $parent = [System.Windows.Media.VisualTreeHelper]::GetParent($element)
+        while ($null -ne $parent) {
+            if ($parent -is [System.Windows.Controls.ScrollViewer]) {
+                return $parent
+            }
+            $parent = [System.Windows.Media.VisualTreeHelper]::GetParent($parent)
+        }
+        return $null
+    }
+
     # App Search Box functionality
     $appSearchBox = $window.FindName('AppSearchBox')
     $appSearchPlaceholder = $window.FindName('AppSearchPlaceholder')
-    $highlightColor = [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#FFF4CE"))
-    $highlightColorDark = [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#4A4A2A"))
     
     $appSearchBox.Add_TextChanged({
         $searchText = $appSearchBox.Text.ToLower().Trim()
         
         # Show/hide placeholder
-        if ([string]::IsNullOrWhiteSpace($appSearchBox.Text)) {
-            $appSearchPlaceholder.Visibility = 'Visible'
-        } else {
-            $appSearchPlaceholder.Visibility = 'Collapsed'
-        }
+        $appSearchPlaceholder.Visibility = if ([string]::IsNullOrWhiteSpace($appSearchBox.Text)) { 'Visible' } else { 'Collapsed' }
         
         # Clear all highlights first
         foreach ($child in $appsPanel.Children) {
@@ -1005,58 +1066,121 @@ function OpenGUI {
             }
         }
         
-        if ([string]::IsNullOrWhiteSpace($searchText)) {
-            return
-        }
+        if ([string]::IsNullOrWhiteSpace($searchText)) { return }
         
         # Find and highlight all matching apps
         $firstMatch = $null
-        $highlightBrush = if ($usesDarkMode) { $highlightColorDark } else { $highlightColor }
+        $highlightBrush = GetSearchHighlightBrush
         
         foreach ($child in $appsPanel.Children) {
-            if ($child -is [System.Windows.Controls.CheckBox]) {
-                # Only consider visible apps (not filtered out by installed filter)
-                if ($child.Visibility -eq 'Visible') {
-                    $appName = $child.Content.ToString().ToLower()
-                    if ($appName.Contains($searchText)) {
-                        # Highlight the matching app
-                        $child.Background = $highlightBrush
+            if ($child -is [System.Windows.Controls.CheckBox] -and $child.Visibility -eq 'Visible') {
+                if ($child.Content.ToString().ToLower().Contains($searchText)) {
+                    $child.Background = $highlightBrush
+                    if ($null -eq $firstMatch) { $firstMatch = $child }
+                }
+            }
+        }
+        
+        # Scroll to first match if not visible
+        if ($firstMatch) {
+            $scrollViewer = FindParentScrollViewer -element $appsPanel
+            if ($scrollViewer) {
+                ScrollToItemIfNotVisible -scrollViewer $scrollViewer -item $firstMatch -container $appsPanel
+            }
+        }
+    })
+
+    # Tweak Search Box functionality
+    $tweakSearchBox = $window.FindName('TweakSearchBox')
+    $tweakSearchPlaceholder = $window.FindName('TweakSearchPlaceholder')
+    $tweaksScrollViewer = $window.FindName('TweaksScrollViewer')
+    $tweaksGrid = $window.FindName('TweaksGrid')
+    $col0 = $window.FindName('Column0Panel')
+    $col1 = $window.FindName('Column1Panel')
+    $col2 = $window.FindName('Column2Panel')
+    
+    # Helper function to clear all tweak highlights
+    function ClearTweakHighlights {
+        $columns = @($col0, $col1, $col2) | Where-Object { $_ -ne $null }
+        foreach ($column in $columns) {
+            foreach ($card in $column.Children) {
+                if ($card -is [System.Windows.Controls.Border] -and $card.Child -is [System.Windows.Controls.StackPanel]) {
+                    foreach ($control in $card.Child.Children) {
+                        if ($control -is [System.Windows.Controls.CheckBox] -or 
+                            ($control -is [System.Windows.Controls.Border] -and $control.Name -like '*_LabelBorder')) {
+                            $control.Background = [System.Windows.Media.Brushes]::Transparent
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    # Helper function to check if a ComboBox contains matching items
+    function ComboBoxContainsMatch {
+        param ([System.Windows.Controls.ComboBox]$comboBox, [string]$searchText)
+        
+        foreach ($item in $comboBox.Items) {
+            $itemText = if ($item -is [System.Windows.Controls.ComboBoxItem]) { $item.Content.ToString().ToLower() } else { $item.ToString().ToLower() }
+            if ($itemText.Contains($searchText)) { return $true }
+        }
+        return $false
+    }
+    
+    $tweakSearchBox.Add_TextChanged({
+        $searchText = $tweakSearchBox.Text.ToLower().Trim()
+        
+        # Show/hide placeholder
+        $tweakSearchPlaceholder.Visibility = if ([string]::IsNullOrWhiteSpace($tweakSearchBox.Text)) { 'Visible' } else { 'Collapsed' }
+        
+        # Clear all highlights
+        ClearTweakHighlights
+        
+        if ([string]::IsNullOrWhiteSpace($searchText)) { return }
+        
+        # Find and highlight all matching tweaks
+        $firstMatch = $null
+        $highlightBrush = GetSearchHighlightBrush
+        $columns = @($col0, $col1, $col2) | Where-Object { $_ -ne $null }
+        
+        foreach ($column in $columns) {
+            foreach ($card in $column.Children) {
+                if ($card -is [System.Windows.Controls.Border] -and $card.Child -is [System.Windows.Controls.StackPanel]) {
+                    $controlsList = @($card.Child.Children)
+                    for ($i = 0; $i -lt $controlsList.Count; $i++) {
+                        $control = $controlsList[$i]
+                        $matchFound = $false
+                        $controlToHighlight = $null
                         
-                        # Remember first match for scrolling
-                        if ($null -eq $firstMatch) {
-                            $firstMatch = $child
+                        if ($control -is [System.Windows.Controls.CheckBox]) {
+                            if ($control.Content.ToString().ToLower().Contains($searchText)) {
+                                $matchFound = $true
+                                $controlToHighlight = $control
+                            }
+                        }
+                        elseif ($control -is [System.Windows.Controls.Border] -and $control.Name -like '*_LabelBorder') {
+                            $labelText = if ($control.Child) { $control.Child.Text.ToLower() } else { "" }
+                            $comboBox = if ($i + 1 -lt $controlsList.Count -and $controlsList[$i + 1] -is [System.Windows.Controls.ComboBox]) { $controlsList[$i + 1] } else { $null }
+                            
+                            # Check label text or combo box items
+                            if ($labelText.Contains($searchText) -or ($comboBox -and (ComboBoxContainsMatch -comboBox $comboBox -searchText $searchText))) {
+                                $matchFound = $true
+                                $controlToHighlight = $control
+                            }
+                        }
+                        
+                        if ($matchFound -and $controlToHighlight) {
+                            $controlToHighlight.Background = $highlightBrush
+                            if ($null -eq $firstMatch) { $firstMatch = $controlToHighlight }
                         }
                     }
                 }
             }
         }
         
-        # Scroll to first match - centered
-        if ($firstMatch) {
-            # Get the ScrollViewer that contains the apps panel
-            $scrollViewer = $null
-            $parent = [System.Windows.Media.VisualTreeHelper]::GetParent($appsPanel)
-            while ($null -ne $parent) {
-                if ($parent -is [System.Windows.Controls.ScrollViewer]) {
-                    $scrollViewer = $parent
-                    break
-                }
-                $parent = [System.Windows.Media.VisualTreeHelper]::GetParent($parent)
-            }
-            
-            if ($scrollViewer) {
-                # Calculate the position to scroll to for centering
-                $itemPosition = $firstMatch.TransformToAncestor($appsPanel).Transform([System.Windows.Point]::new(0, 0)).Y
-                $viewportHeight = $scrollViewer.ViewportHeight
-                $itemHeight = $firstMatch.ActualHeight
-                
-                # Center the item in the viewport
-                $targetOffset = $itemPosition - ($viewportHeight / 2) + ($itemHeight / 2)
-                $scrollViewer.ScrollToVerticalOffset([Math]::Max(0, $targetOffset))
-            } else {
-                # Fallback to simple bring into view
-                $firstMatch.BringIntoView()
-            }
+        # Scroll to first match if not visible
+        if ($firstMatch -and $tweaksScrollViewer) {
+            ScrollToItemIfNotVisible -scrollViewer $tweaksScrollViewer -item $firstMatch -container $tweaksGrid
         }
     })
 

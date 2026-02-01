@@ -2989,6 +2989,12 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
             }
             catch {
                 Write-Warning "Unable to load WPF GUI (not supported in this environment), falling back to CLI mode"
+                if (-not $Silent) {
+                    Write-Host ""
+                    Write-Host "Press any key to continue..."
+                    $null = [System.Console]::ReadKey()
+                }
+
                 $Mode = ShowScriptMenuOptions
             }
         }

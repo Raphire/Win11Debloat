@@ -22,7 +22,7 @@
 
 The script also includes many features that system administrators and power users will enjoy. Such as support for Windows Audit mode, the option to make changes to other Windows users and the ability to access all of Win11Debloat's features right from the command-line. Please refer to our [wiki](https://github.com/Raphire/Win11Debloat/wiki/) for more details.
 
-![Win11Debloat Menu](/Assets/menu.png)
+![Win11Debloat Menu](/Assets/Images/menu.png)
 
 #### Did this script help you? Please consider buying me a cup of coffee to support my work
 

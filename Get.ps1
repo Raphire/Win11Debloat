@@ -140,8 +140,15 @@ $arguments = $($PSBoundParameters.GetEnumerator() | ForEach-Object {
 Write-Output ""
 Write-Output "> Running Win11Debloat..."
 
+# Minimize the powershell window when CLI is not specified
+if (-not $CLI) {
+    $windowStyle = "Minimized"
+} else {
+    $windowStyle = "Normal"
+}
+
 # Run Win11Debloat script with the provided arguments
-$debloatProcess = Start-Process powershell.exe -PassThru -ArgumentList "-executionpolicy bypass -File $env:TEMP\Win11Debloat\Win11Debloat.ps1 $arguments" -Verb RunAs
+$debloatProcess = Start-Process powershell.exe -WindowStyle $windowStyle -PassThru -ArgumentList "-executionpolicy bypass -File $env:TEMP\Win11Debloat\Win11Debloat.ps1 $arguments" -Verb RunAs
 
 # Wait for the process to finish before continuing
 if ($null -ne $debloatProcess) {

@@ -140,10 +140,11 @@ $arguments = $($PSBoundParameters.GetEnumerator() | ForEach-Object {
 Write-Output ""
 Write-Output "> Running Win11Debloat..."
 
-# Minimize the powershell window when CLI is not specified
-if (-not $CLI) {
+# Minimize the powershell window when no parameters are provided
+if ($arguments.Count -eq 0) {
     $windowStyle = "Minimized"
-} else {
+}
+else {
     $windowStyle = "Normal"
 }
 

@@ -1,0 +1,825 @@
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Win11Debloat" 
+        Width="1024" Height="768" 
+        ResizeMode="NoResize" 
+        SnapsToDevicePixels="True"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        Foreground="{DynamicResource FgColor}">
+    <Window.Resources>
+        <!-- ScrollBar Style -->
+        <Style TargetType="{x:Type ScrollBar}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Width" Value="8"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ScrollBar}">
+                        <Grid>
+                            <Track Name="PART_Track" IsDirectionReversed="true">
+                                <Track.Thumb>
+                                    <Thumb>
+                                        <Thumb.Style>
+                                            <Style TargetType="Thumb">
+                                                <Setter Property="Background" Value="{DynamicResource ScrollBarThumbColor}"/>
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="Thumb">
+                                                            <Border Background="{TemplateBinding Background}" CornerRadius="4"/>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Background" Value="{DynamicResource ScrollBarThumbHoverColor}"/>
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Thumb.Style>
+                                    </Thumb>
+                                </Track.Thumb>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ComboBox Style -->
+        <Style TargetType="ComboBox">
+            <Setter Property="Background" Value="{DynamicResource ComboBgColor}"/>
+            <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Margin" Value="0,4,0,8"/>
+            <Setter Property="MinHeight" Value="33"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <!-- Left accent line -->
+                            <Border x:Name="ClosedAccentLine" Width="3" Height="18" HorizontalAlignment="Left" VerticalAlignment="Stretch" Background="{DynamicResource ButtonBg}" CornerRadius="1.5" Panel.ZIndex="2"/>
+                            <ToggleButton x:Name="ToggleButton" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Focusable="False" IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" ClickMode="Press">
+                                <ToggleButton.Style>
+                                    <Style TargetType="ToggleButton">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="ToggleButton">
+                                                    <Border x:Name="Border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="4">
+                                                        <TextBlock x:Name="Arrow"
+                                                                Text="&#xE70D;"
+                                                                FontFamily="Segoe MDL2 Assets"
+                                                                FontSize="10"
+                                                                HorizontalAlignment="Right"
+                                                                VerticalAlignment="Center"
+                                                                Margin="0,0,8,0"
+                                                                Foreground="{DynamicResource FgColor}"
+                                                                RenderTransformOrigin="0.5,0.5">
+                                                            <TextBlock.RenderTransform>
+                                                                <RotateTransform x:Name="ArrowRotation" Angle="0"/>
+                                                            </TextBlock.RenderTransform>
+                                                        </TextBlock>
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource ComboHoverColor}"/>
+                                                        </Trigger>
+                                                        <Trigger Property="IsChecked" Value="True">
+                                                            <Trigger.EnterActions>
+                                                                <BeginStoryboard>
+                                                                    <Storyboard>
+                                                                        <DoubleAnimation Storyboard.TargetName="Arrow" Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)" To="180" Duration="0:0:0.2">
+                                                                            <DoubleAnimation.EasingFunction>
+                                                                                <CubicEase EasingMode="EaseOut"/>
+                                                                            </DoubleAnimation.EasingFunction>
+                                                                        </DoubleAnimation>
+                                                                    </Storyboard>
+                                                                </BeginStoryboard>
+                                                            </Trigger.EnterActions>
+                                                            <Trigger.ExitActions>
+                                                                <BeginStoryboard>
+                                                                    <Storyboard>
+                                                                        <DoubleAnimation Storyboard.TargetName="Arrow" Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)" To="0" Duration="0:0:0.2">
+                                                                            <DoubleAnimation.EasingFunction>
+                                                                                <CubicEase EasingMode="EaseOut"/>
+                                                                            </DoubleAnimation.EasingFunction>
+                                                                        </DoubleAnimation>
+                                                                    </Storyboard>
+                                                                </BeginStoryboard>
+                                                            </Trigger.ExitActions>
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </ToggleButton.Style>
+                            </ToggleButton>
+                            <ContentPresenter x:Name="ContentPresenter"
+                                            IsHitTestVisible="False"
+                                            Margin="10,0,20,0"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Content="{TemplateBinding SelectionBoxItem}"
+                                            ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                            ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"/>
+                            <Popup x:Name="Popup"
+                                Placement="Bottom"
+                                IsOpen="{TemplateBinding IsDropDownOpen}"
+                                AllowsTransparency="True"
+                                Focusable="False"
+                                PopupAnimation="Fade"
+                                StaysOpen="False"
+                                PlacementTarget="{Binding ElementName=ToggleButton}"
+                                VerticalOffset="1"
+                                HorizontalOffset="0">
+                                <Grid x:Name="DropDown" MinWidth="{TemplateBinding ActualWidth}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                    <Border x:Name="DropDownBorder"
+                                            Background="{DynamicResource ComboItemBgColor}"
+                                            BorderBrush="{DynamicResource BorderColor}"
+                                            BorderThickness="1"
+                                            CornerRadius="4"
+                                            Padding="5,4,5,1">
+                                        <ScrollViewer Margin="0,2,0,0"
+                                                    VerticalScrollBarVisibility="Auto"
+                                                    HorizontalScrollBarVisibility="Disabled">
+                                            <ItemsPresenter Margin="0,0,0,1"/>
+                                        </ScrollViewer>
+                                    </Border>
+                                </Grid>
+                            </Popup>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="SelectedIndex" Value="0">
+                                <Setter TargetName="ClosedAccentLine" Property="Visibility" Value="Collapsed"/>
+                            </Trigger>
+                            <Trigger Property="SelectedIndex" Value="-1">
+                                <Setter TargetName="ClosedAccentLine" Property="Visibility" Value="Collapsed"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ComboBoxItem Style -->
+        <Style TargetType="ComboBoxItem">
+            <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="Margin" Value="0,0,0,4"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBoxItem">
+                        <Grid>
+                            <Border x:Name="ItemBorder"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    Padding="{TemplateBinding Padding}"
+                                    CornerRadius="4">
+                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                            </Border>
+                            <!-- Left accent line -->
+                            <Border x:Name="AccentLine"
+                                    Width="3"
+                                    Height="15"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Stretch"
+                                    Background="{DynamicResource ButtonBg}"
+                                    CornerRadius="1.5"
+                                    Margin="0"
+                                    Visibility="Collapsed"/>
+                        </Grid>
+                        <ControlTemplate.Triggers> 
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="AccentLine" Property="Visibility" Value="Visible"/>
+                                <Setter TargetName="ItemBorder" Property="Background" Value="{DynamicResource ComboItemSelectedColor}"/>
+                            </Trigger>
+                            <Trigger Property="IsHighlighted" Value="True">
+                                <Setter TargetName="ItemBorder" Property="Background" Value="{DynamicResource ComboItemHoverColor}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- TextBlock Label Style -->
+        <Style x:Key="LabelStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Margin" Value="0,0,0,3"/>
+        </Style>
+
+        <!-- Category card border style -->
+        <Style x:Key="CategoryCardBorderStyle" TargetType="Border">
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="Background" Value="{DynamicResource CardBgColor}"/>
+            <Setter Property="Padding" Value="16,12"/>
+            <Setter Property="Margin" Value="0,0,0,16"/>
+        </Style>
+
+        <!-- Category header text style -->
+        <Style x:Key="CategoryHeaderTextBlock" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+            <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
+        </Style> 
+
+        <!-- Overview changes text style -->
+        <Style x:Key="OverviewNoChangesTextStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
+            <Setter Property="FontStyle" Value="Italic"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+        </Style>
+
+        <Style x:Key="OverviewChangeBulletStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+
+        <!-- TextBox Style for search -->
+        <Style TargetType="TextBox">
+            <Setter Property="CaretBrush" Value="{DynamicResource FgColor}"/>
+        </Style>
+
+        <!-- CheckBox Style -->
+        <Style TargetType="CheckBox">
+            <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Padding" Value="4,2"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <Border Background="{TemplateBinding Background}" BorderThickness="0" CornerRadius="4" Padding="{TemplateBinding Padding}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Border x:Name="CheckBoxBorder" Grid.Column="0" Width="18" Height="18" Background="{DynamicResource CheckBoxBgColor}" BorderBrush="{DynamicResource CheckBoxBorderColor}" BorderThickness="1" CornerRadius="4" Margin="0,0,8,0">
+                                    <TextBlock x:Name="CheckMark" Text="&#xE73E;" FontFamily="Segoe MDL2 Assets" FontSize="12" Foreground="{DynamicResource ButtonBg}" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed"/>
+                                </Border>
+                                <ContentPresenter Grid.Column="1" VerticalAlignment="Center" Margin="0,0,0,1"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="CheckBoxBorder" Property="Background" Value="{DynamicResource CheckBoxHoverColor}"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="CheckMark" Property="Visibility" Value="Visible"/>
+                                <Setter TargetName="CheckBoxBorder" Property="Background" Value="{DynamicResource ButtonBg}"/>
+                                <Setter TargetName="CheckBoxBorder" Property="BorderBrush" Value="{DynamicResource ButtonBg}"/>
+                                <Setter TargetName="CheckMark" Property="Foreground" Value="White"/>
+                            </Trigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsMouseOver" Value="True"/>
+                                    <Condition Property="IsChecked" Value="True"/>
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="CheckBoxBorder" Property="Background" Value="{DynamicResource ButtonHover}"/>
+                                <Setter TargetName="CheckBoxBorder" Property="BorderBrush" Value="{DynamicResource ButtonHover}"/>
+                            </MultiTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- CheckBox style for feature toggles -->
+        <Style x:Key="FeatureCheckboxStyle" TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
+            <Setter Property="Margin" Value="0,0,0,10"/>
+            <Setter Property="Padding" Value="0,2"/>
+        </Style>
+
+        <!-- CheckBox style for apps panels -->
+        <Style x:Key="AppsPanelCheckBoxStyle" TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
+            <Setter Property="Margin" Value="2,3,2,3"/>
+        </Style>
+
+        <!-- Button Style -->
+        <Style x:Key="Win11Button" TargetType="Button">
+            <Setter Property="Background" Value="{DynamicResource ButtonBg}"/>
+            <Setter Property="Foreground" Value="white"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource ButtonBg}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="{DynamicResource ButtonDisabled}"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource ButtonDisabled}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource ButtonTextDisabled}"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource ButtonHover}"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource ButtonHover}"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource ButtonPressed}"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource ButtonPressed}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Secondary Button Style -->
+        <Style x:Key="Win11ButtonSecondary" TargetType="Button">
+            <Setter Property="Background" Value="{DynamicResource SecondaryButtonBg}"/>
+            <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderColor}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,1"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="{DynamicResource SecondaryButtonDisabled}"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource SecondaryButtonTextDisabled}"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource SecondaryButtonHover}"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderColor}"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource SecondaryButtonPressed}"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderColor}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Title Bar Button Style -->
+        <Style x:Key="TitleBarButton" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Width" Value="46"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" BorderThickness="0" CornerRadius="0,8,0,0">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="CloseButton" TargetType="Button" BasedOn="{StaticResource TitleBarButton}">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource CloseHover}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="HelpButton" TargetType="Button" BasedOn="{StaticResource TitleBarButton}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" BorderThickness="0" CornerRadius="0">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,3"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource ButtonBg}"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource ButtonHover}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Border BorderBrush="{DynamicResource BorderColor}" 
+            BorderThickness="1" 
+            CornerRadius="8" 
+            Background="{DynamicResource BgColor}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="32"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Custom Title Bar -->
+            <Grid Grid.Row="0" x:Name="TitleBar">
+                <Border Background="{DynamicResource BgColor}" CornerRadius="8,8,0,0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" 
+                                   Text="Win11Debloat" 
+                                   Foreground="{DynamicResource FgColor}"
+                                   VerticalAlignment="Center" 
+                                   Margin="12,0,0,0"
+                                   FontSize="12"/>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                            <Button x:Name="HelpBtn" Content="?" FontFamily="Segoe UI" FontSize="15" Style="{StaticResource HelpButton}" ToolTip="Open Wiki"/>
+                            <Button x:Name="CloseBtn" Content="&#xE8BB;" Style="{StaticResource CloseButton}" ToolTip="Close"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- Main Content with Tabs -->
+            <TabControl Grid.Row="1" Background="Transparent" BorderThickness="0" Margin="0" Padding="0" Name="MainTabControl">
+                <TabControl.Resources>
+                    <Style TargetType="TabItem">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="TabItem">
+                                    <Border Name="Border" Background="{DynamicResource SecondaryButtonBg}" BorderThickness="0" CornerRadius="0" Padding="10,10" Margin="0">
+                                        <ContentPresenter ContentSource="Header" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource ButtonBg}"/>
+                                            <Setter Property="Foreground" Value="White"/>
+                                        </Trigger>
+                                        <Trigger Property="IsSelected" Value="False">
+                                            <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </TabControl.Resources>
+                <TabControl.ItemContainerStyle>
+                    <Style TargetType="TabItem">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                    </Style>
+                </TabControl.ItemContainerStyle>
+
+                <!-- Home Tab -->
+                <TabItem Header="Home" x:Name="HomeTab">
+                    <Grid>
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="600">
+                            <!-- Logo -->
+                            <Viewbox Width="220" Height="220" Margin="0,32,0,10" HorizontalAlignment="Center">
+                                <Grid Width="220" Height="220">
+                                    <!-- Windows logo style icon -->
+                                    <Path x:Name="LogoFallback" Data="M0,0 L80,0 L80,80 L0,80 Z M90,0 L170,0 L170,80 L90,80 Z M0,90 L80,90 L80,170 L0,170 Z M90,90 L170,90 L170,170 L90,170 Z" 
+                                        Fill="{DynamicResource ButtonBg}" Stretch="Uniform" Margin="10"/>
+                                    <!-- Sparkle effects -->
+                                    <Canvas HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="45" Height="45" Margin="0,0,2,2">
+                                        <Path Canvas.Left="10" Canvas.Top="16" Data="M12,0 L14,10 L24,12 L14,14 L12,24 L10,14 L0,12 L10,10 Z" 
+                                              Fill="{DynamicResource AccentColor}" Width="38" Height="38" Stretch="Uniform"/>
+                                        <Path Canvas.Left="0" Canvas.Top="0" Data="M6,0 L7,5 L12,6 L7,7 L6,12 L5,7 L0,6 L5,5 Z" 
+                                              Fill="{DynamicResource AccentColor}" Width="20" Height="20" Stretch="Uniform"/>
+                                        <Path Canvas.Left="35" Canvas.Top="8" Data="M4,0 L5,3 L8,4 L5,5 L4,8 L3,5 L0,4 L3,3 Z" 
+                                              Fill="{DynamicResource AccentColor}" Width="15" Height="15" Stretch="Uniform"/>
+                                    </Canvas>
+                                    <!-- Actual logo image if available -->
+                                    <Image x:Name="LogoImage" Stretch="Uniform"/>
+                                </Grid>
+                            </Viewbox>
+                            
+                            <!-- Title -->
+                            <TextBlock Text="Welcome to Win11Debloat" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource FgColor}" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                            <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource FgColor}" FontSize="16" LineHeight="22" HorizontalAlignment="Center" Margin="0,0,0,30">
+                                <Run Text="Your clean Windows experience is just a few clicks away!"/>
+                            </TextBlock>
+                            
+                            <!-- Start Button -->
+                            <Button x:Name="HomeStartBtn" Width="200" Height="48" Style="{StaticResource Win11Button}" HorizontalAlignment="Center" Margin="0,50,0,0">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <TextBlock Text="Start" VerticalAlignment="Center" FontSize="20" Margin="0,0,0,2"/>
+                                    <TextBlock Text="&#xE72A;" FontFamily="Segoe MDL2 Assets" FontSize="16" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+                </TabItem>
+
+                <!-- App Removal Tab -->
+                <TabItem Header="App Removal">
+                    <DockPanel>
+                        <Border DockPanel.Dock="Top" Padding="20,10,20,0">
+                            <StackPanel>
+                                <TextBlock Text="App Removal" FontWeight="Bold" FontSize="20" Margin="0,0,0,5" Foreground="{DynamicResource FgColor}"/>
+                                <TextBlock Text="Select which apps you want to remove from your system" FontSize="13" Margin="0,0,0,20" Foreground="{DynamicResource FgColor}" TextWrapping="Wrap"/>
+
+                                <!-- Filter Options -->
+                                <Grid Margin="0,0,0,12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    
+                                    <StackPanel Orientation="Horizontal" Grid.Column="0">
+                                        <Button x:Name="DefaultAppsBtn" Content="Select Default Apps" ToolTip="Select the default selection of apps" Style="{StaticResource Win11ButtonSecondary}" Height="32" Padding="10,0" Margin="0,0,10,0"/>
+                                        <Button x:Name="LoadLastUsedAppsBtn" Content="Select Last Used Selection" ToolTip="Select the apps that were selected the last time Win11Debloat was run" Style="{StaticResource Win11ButtonSecondary}" Height="32" Padding="10,0" Margin="0,0,10,0"/>
+                                        <Button x:Name="ClearAppSelectionBtn" Content="Clear Selection" ToolTip="Clear all selected apps" Style="{StaticResource Win11ButtonSecondary}" Height="32"  Padding="10,0" Margin="0,0,10,0"/>
+                                    </StackPanel>
+                                    
+                                    <CheckBox x:Name="OnlyInstalledAppsBox" Grid.Column="2" Content="Only show installed apps" IsChecked="False" Foreground="{DynamicResource FgColor}" VerticalAlignment="Center"/>
+
+                                    <Border Grid.Column="4" BorderBrush="{DynamicResource ButtonBorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource ComboBgColor}" Width="300" Padding="8,6">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0" Text="&#xE721;" FontFamily="Segoe MDL2 Assets" FontSize="14" VerticalAlignment="Center" Margin="4,0,8,0" Foreground="{DynamicResource FgColor}"/>
+                                            <TextBlock x:Name="AppSearchPlaceholder" Grid.Column="1" Text="Search app" Foreground="{DynamicResource FgColor}" Opacity="0.5" FontSize="13" Margin="3,0,0,1" VerticalAlignment="Center" IsHitTestVisible="False"/>
+                                            <TextBox x:Name="AppSearchBox" Grid.Column="1" Background="Transparent" Foreground="{DynamicResource FgColor}" BorderThickness="0" FontSize="13" Margin="1,0,0,1" VerticalAlignment="Center" Text=""/>
+                                        </Grid>
+                                    </Border>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="20,0">
+                            <StackPanel>
+                            <!-- Apps List -->
+                            <Border BorderBrush="{DynamicResource BorderColor}" CornerRadius="4" BorderThickness="1" Margin="0,0,0,10" Background="{DynamicResource CardBgColor}" Height="510">
+                                <Grid>
+                                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                        <StackPanel x:Name="AppSelectionPanel" Margin="8"/>
+                                    </ScrollViewer>
+                                    <Border x:Name="LoadingAppsIndicator" CornerRadius="4" Background="{DynamicResource ScrollBarThumbColor}" Opacity="0.8" Visibility="Collapsed">
+                                        <TextBlock Text="Loading apps..." FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource FgColor}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </Grid>
+                            </Border>
+
+                            <!-- Status Info -->
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock x:Name="AppSelectionStatus" Text="" Foreground="{DynamicResource FgColor}" Margin="10,0,0,0" HorizontalAlignment="Left"/>
+                            </StackPanel>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </DockPanel>
+                </TabItem>
+
+                <!-- Tweaks Tab -->
+                <TabItem Header="Tweaks">
+                    <DockPanel>
+                        <Border DockPanel.Dock="Top" Padding="20,10,20,0" Background="{DynamicResource BgColor}">
+                            <StackPanel>
+                                <TextBlock Text="System Tweaks" FontWeight="Bold" FontSize="20" Margin="0,0,0,5" Foreground="{DynamicResource FgColor}"/>
+                                <TextBlock Text="Select which tweaks you want to apply to your system" FontSize="13" Margin="0,0,0,20" Foreground="{DynamicResource FgColor}" TextWrapping="Wrap"/>
+                            
+                                <!-- Filter Options -->
+                                <Grid Margin="0,0,0,12">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Button x:Name="LoadDefaultsBtn" Content="Select Default Settings" ToolTip="Select the settings that are recommended for most people" Style="{StaticResource Win11ButtonSecondary}" Padding="10,0" Height="32" Margin="0,0,10,0"/>
+                                        <Button x:Name="LoadLastUsedBtn" Content="Select Last Used Settings" ToolTip="Select the settings that were used the last time Win11Debloat was run" Style="{StaticResource Win11ButtonSecondary}" Padding="10,0" Height="32" Margin="0,0,10,0"/>
+                                        <Button x:Name="ClearAllTweaksBtn" Content="Clear Selection" ToolTip="Clear all selected tweaks" Style="{StaticResource Win11ButtonSecondary}" Padding="10,0" Height="32" Margin="0,0,10,0"/>
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                        <Grid>
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,-20,0,0" Padding="20,10,20,0">
+                                <Grid Margin="0,10,0,5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Column 1: Dynamically populated -->
+                                    <StackPanel Grid.Column="0" x:Name="Column0Panel" Margin="0,0,15,0"/>
+
+                                    <!-- Column 2: Dynamically populated -->
+                                    <StackPanel Grid.Column="1" x:Name="Column1Panel" Margin="0,0,15,0"/>
+
+                                    <!-- Column 3: Dynamically populated -->
+                                    <StackPanel Grid.Column="2" x:Name="Column2Panel"/>
+                                </Grid>
+                            </ScrollViewer>
+                            <!-- Top fade gradient -->
+                            <Border IsHitTestVisible="False" VerticalAlignment="Top" Height="10" Margin="0,-12,20,0" Background="{DynamicResource BgColor}">
+                                <Border.OpacityMask>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                        <GradientStop Color="Black" Offset="0"/>
+                                        <GradientStop Color="Black" Offset="0.5"/>
+                                        <GradientStop Color="Transparent" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Border.OpacityMask>
+                            </Border>
+                            <!-- Bottom fade gradient -->
+                            <Border IsHitTestVisible="False" VerticalAlignment="Bottom" Height="20" Margin="0,0,20,0" Background="{DynamicResource BgColor}">
+                                <Border.OpacityMask>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                        <GradientStop Color="Transparent" Offset="0"/>
+                                        <GradientStop Color="Black" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Border.OpacityMask>
+                            </Border>
+                        </Grid>
+                    </DockPanel>
+                </TabItem>
+
+                <!-- Overview Tab -->
+                <TabItem Header="Overview" x:Name="OverviewTab">
+                    <DockPanel>
+                        <Border DockPanel.Dock="Top" Padding="20,10,20,0">
+                            <StackPanel>
+                                <TextBlock Text="Overview" FontWeight="Bold" FontSize="20" Margin="0,0,0,5" Foreground="{DynamicResource FgColor}"/>
+                                <TextBlock Text="Review and confirm your choices before proceeding" FontSize="13" Margin="0,0,0,20" Foreground="{DynamicResource FgColor}" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Border>
+                        <Grid>
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,-20,0,0" Padding="20,10,20,0">
+                                <StackPanel Margin="0,10,0,5">
+                                    <!-- Apply Changes To -->
+                                    <Border BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="20" Margin="0,0,0,16">
+                                        <StackPanel>
+                                            <TextBlock Text="Apply Changes To" FontWeight="Bold" FontSize="14" Foreground="{DynamicResource FgColor}" Margin="0,0,0,8"/>
+                                            <ComboBox x:Name="UserSelectionCombo" Margin="0,0,0,12">
+                                                <ComboBoxItem Content="Current User" IsSelected="True"/>
+                                                <ComboBoxItem Content="Other User"/>
+                                                <ComboBoxItem Content="Windows Default User (Sysprep)"/>
+                                            </ComboBox>
+                                            <StackPanel x:Name="OtherUserPanel" Visibility="Collapsed" Margin="0,0,0,12">
+                                                <TextBlock x:Name="UsernameValidationMessage" Text="" FontStyle="Italic" Foreground="{DynamicResource CloseHover}" FontSize="11" Margin="3,0,0,4" TextWrapping="Wrap"/>
+                                                <Border BorderBrush="{DynamicResource ButtonBorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource ComboBgColor}" Padding="8,6">
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition Width="*"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Grid.Column="0" Text="&#xE77B;" FontFamily="Segoe MDL2 Assets" FontSize="14" VerticalAlignment="Center" Margin="4,0,8,0" Foreground="{DynamicResource FgColor}"/>
+                                                        <TextBlock x:Name="UsernameTextBoxPlaceholder" Grid.Column="1" Text="Enter username" Foreground="{DynamicResource FgColor}" Opacity="0.5" FontSize="13" Margin="3,0,0,1" VerticalAlignment="Center" IsHitTestVisible="False"/>
+                                                        <TextBox x:Name="OtherUsernameTextBox" Grid.Column="1" Background="Transparent" Foreground="{DynamicResource FgColor}" BorderThickness="0" FontSize="13" Margin="1,0,0,1" VerticalAlignment="Center" Text="" Padding="0"/>
+                                                    </Grid>
+                                                </Border>
+                                            </StackPanel>
+                                            <TextBlock x:Name="UserSelectionDescription" Text="Changes will be applied to the currently logged-in user profile." Foreground="{DynamicResource FgColor}" FontSize="12" TextWrapping="Wrap"/>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- Selected Changes -->
+                                    <Border BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="16,12" Margin="0,0,0,16">
+                                        <StackPanel>
+                                            <TextBlock Text="Selected Changes" FontWeight="Bold" FontSize="14" Foreground="{DynamicResource FgColor}" Margin="0,0,0,12"/>
+                                            <StackPanel x:Name="OverviewChangesPanel"/>
+                                        </StackPanel>
+                                    </Border>
+                                    
+                                    <!-- System Restore Point -->
+                                    <Border BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="16,12" Margin="0,0,0,16">
+                                        <StackPanel>
+                                            <TextBlock Text="System Restore Point" FontWeight="Bold" FontSize="14" Foreground="{DynamicResource FgColor}" Margin="0,0,0,8"/>
+                                            <TextBlock Text="A restore point will allow you to revert your system to a previous state using the built-in System Restore feature. (Recommended)" Foreground="{DynamicResource FgColor}" FontSize="12" Margin="0,0,0,10" TextWrapping="Wrap"/>
+                                            <CheckBox x:Name="RestorePointCheckBox" Content="Create system restore point" Foreground="{DynamicResource FgColor}"/>
+                                        </StackPanel>
+                                    </Border>
+                                    
+                                    <!-- Apply Changes Button -->
+                                    <Button x:Name="OverviewApplyBtn" Style="{StaticResource Win11Button}" Padding="14,8" Margin="0,0,0,15" HorizontalAlignment="Center">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <TextBlock Text="Apply Changes" VerticalAlignment="Center" FontSize="16" Margin="0,0,0,2"/>
+                                            <TextBlock Text="&#xE73E;" FontFamily="Segoe MDL2 Assets" FontSize="16" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+                            </ScrollViewer>
+                            <!-- Top fade gradient -->
+                            <Border IsHitTestVisible="False" VerticalAlignment="Top" Height="15" Margin="0,-15,20,0" Background="{DynamicResource BgColor}">
+                                <Border.OpacityMask>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                        <GradientStop Color="Black" Offset="0"/>
+                                        <GradientStop Color="Black" Offset="0.5"/>
+                                        <GradientStop Color="Transparent" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Border.OpacityMask>
+                            </Border>
+                            <!-- Bottom fade gradient -->
+                            <Border IsHitTestVisible="False" VerticalAlignment="Bottom" Height="20" Margin="0,0,20,0" Background="{DynamicResource BgColor}">
+                                <Border.OpacityMask>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                        <GradientStop Color="Transparent" Offset="0"/>
+                                        <GradientStop Color="Black" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Border.OpacityMask>
+                            </Border>
+                        </Grid>
+                    </DockPanel>
+                </TabItem>
+
+                <!-- Apply Tab -->
+                <TabItem Header="Apply" x:Name="ApplyTab">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Header -->
+                        <StackPanel Grid.Row="0" Margin="20,10,20,10">
+                            <TextBlock Text="Applying Changes" FontWeight="Bold" FontSize="20" Margin="0,0,0,10" Foreground="{DynamicResource FgColor}"/>
+                            <TextBlock Text="Sit back and relax while Win11Debloat applies your selected changes" FontSize="13" Margin="0,0,0,10" Foreground="{DynamicResource FgColor}" TextWrapping="Wrap"/>
+                        </StackPanel>
+
+                        <!-- Console Output -->
+                        <Border Grid.Row="1" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="#0C0C0C" Margin="20,0">
+                            <ScrollViewer x:Name="ConsoleScrollViewer" VerticalScrollBarVisibility="Auto" Padding="10">
+                                <TextBlock x:Name="ConsoleOutput" FontFamily="Consolas" FontSize="12" Foreground="#CCCCCC" TextWrapping="Wrap" Text=""/>
+                            </ScrollViewer>
+                        </Border>
+
+                        <!-- Progress and Finish Button -->
+                        <Border Grid.Row="2" Background="{DynamicResource BgColor}" Padding="10,0" CornerRadius="0,0,8,8" Margin="20,16,20,16">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <!-- Status and Finish Button -->
+                                <StackPanel Grid.Row="1" HorizontalAlignment="Center">
+                                    <Button x:Name="FinishBtn" Width="200" Height="48" Style="{StaticResource Win11Button}" Margin="0" IsEnabled="False">
+                                        <TextBlock x:Name="FinishBtnText" Text="Applying changes..." VerticalAlignment="Center" FontSize="16" Margin="0,0,0,1"/>
+                                    </Button>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+
+            <!-- Bottom Navigation Buttons -->
+            <Grid Grid.Row="2" Height="56" x:Name="BottomNavGrid">
+                <Grid Margin="20,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="PreviousBtn" Grid.Column="0" Width="120" Height="36" Style="{StaticResource Win11ButtonSecondary}" Visibility="Collapsed" Margin="10,0,0,0">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="&#xE72B;" FontFamily="Segoe MDL2 Assets" FontSize="12" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="Previous" VerticalAlignment="Center" FontSize="14" Margin="0,0,0,1"/>
+                        </StackPanel>
+                    </Button>
+                    
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button x:Name="NextBtn" Width="120" Height="36" Margin="0,0,10,0" Style="{StaticResource Win11Button}">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="Next" VerticalAlignment="Center" FontSize="14" Margin="0,0,0,1"/>
+                                <TextBlock Text="&#xE72A;" FontFamily="Segoe MDL2 Assets" FontSize="12" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+                
+                <!-- Progress Indicators - Centered independently -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Ellipse x:Name="ProgressIndicator1" Width="10" Height="10" Margin="4,0" Fill="#808080" ToolTip="App Removal"/>
+                    <Ellipse x:Name="ProgressIndicator2" Width="10" Height="10" Margin="4,0" Fill="#808080" ToolTip="System Tweaks"/>
+                    <Ellipse x:Name="ProgressIndicator3" Width="10" Height="10" Margin="4,0" Fill="#808080" ToolTip="Overview"/>
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>

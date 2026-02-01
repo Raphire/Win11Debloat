@@ -1,0 +1,833 @@
+{
+  "Version": "1.0",
+  "Apps": [
+    {
+      "FriendlyName": "Clipchamp",
+      "AppId": "Clipchamp.Clipchamp",
+      "Description": "Video editor from Microsoft",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "3D Builder",
+      "AppId": "Microsoft.3DBuilder",
+      "Description": "Basic 3D modeling software",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Cortana",
+      "AppId": "Microsoft.549981C3F5F10",
+      "Description": "Microsoft Cortana voice assistant (Discontinued)",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Bing Finance",
+      "AppId": "Microsoft.BingFinance",
+      "Description": "Finance news and tracking via Bing (Discontinued)",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Bing Food And Drink",
+      "AppId": "Microsoft.BingFoodAndDrink",
+      "Description": "Recipes and food news via Bing (Discontinued)",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Bing Health And Fitness",
+      "AppId": "Microsoft.BingHealthAndFitness",
+      "Description": "Health and fitness tracking/news via Bing (Discontinued)",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Bing News",
+      "AppId": "Microsoft.BingNews",
+      "Description": "News aggregator via Bing (Replaced by Microsoft News/Start)",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Bing Sports",
+      "AppId": "Microsoft.BingSports",
+      "Description": "Sports news and scores via Bing (Discontinued)",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Bing Translator",
+      "AppId": "Microsoft.BingTranslator",
+      "Description": "Translation service via Bing",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Bing Travel",
+      "AppId": "Microsoft.BingTravel",
+      "Description": "Travel planning and news via Bing (Discontinued)",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Bing Weather",
+      "AppId": "Microsoft.BingWeather",
+      "Description": "Weather forecast via Bing",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Copilot",
+      "AppId": "Microsoft.Copilot",
+      "Description": "AI assistant integrated into Windows",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Get Started",
+      "AppId": "Microsoft.Getstarted",
+      "Description": "Tips and introductory guide for Windows (Cannot be uninstalled in Windows 11)",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Messaging",
+      "AppId": "Microsoft.Messaging",
+      "Description": "Messaging app, often integrates with Skype (Largely deprecated)",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "3D Viewer",
+      "AppId": "Microsoft.Microsoft3DViewer",
+      "Description": "Viewer for 3D models",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Microsoft Journal",
+      "AppId": "Microsoft.MicrosoftJournal",
+      "Description": "Digital note-taking app optimized for pen input",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Office Hub",
+      "AppId": "Microsoft.MicrosoftOfficeHub",
+      "Description": "Hub to access Microsoft Office apps and documents (Precursor to Microsoft 365 app)",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Power BI",
+      "AppId": "Microsoft.MicrosoftPowerBIForWindows",
+      "Description": "Business analytics service client",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Solitaire Collection",
+      "AppId": "Microsoft.MicrosoftSolitaireCollection",
+      "Description": "Collection of solitaire card games",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Sticky Notes",
+      "AppId": "Microsoft.MicrosoftStickyNotes",
+      "Description": "Digital sticky notes app (Deprecated & replaced by OneNote)",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Mixed Reality Portal",
+      "AppId": "Microsoft.MixedReality.Portal",
+      "Description": "Portal for Windows Mixed Reality headsets",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Network Speed Test",
+      "AppId": "Microsoft.NetworkSpeedTest",
+      "Description": "Internet connection speed test utility",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Microsoft News",
+      "AppId": "Microsoft.News",
+      "Description": "News aggregator (Replaced Bing News, now part of Microsoft Start)",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "OneNote",
+      "AppId": "Microsoft.Office.OneNote",
+      "Description": "Digital note-taking app (Universal Windows Platform version)",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Sway",
+      "AppId": "Microsoft.Office.Sway",
+      "Description": "Presentation and storytelling app",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "One Connect",
+      "AppId": "Microsoft.OneConnect",
+      "Description": "Mobile Operator management app (Replaced by Mobile Plans)",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Print 3D",
+      "AppId": "Microsoft.Print3D",
+      "Description": "3D printing preparation software",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Power Automate",
+      "AppId": "Microsoft.PowerAutomateDesktop",
+      "Description": "Desktop automation tool (RPA)",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Skype (UWP)",
+      "AppId": "Microsoft.SkypeApp",
+      "Description": "Skype communication app, Universal Windows Platform version (Discontinued)",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Microsoft To Do",
+      "AppId": "Microsoft.Todos",
+      "Description": "To-do list and task management app",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Dev Home",
+      "AppId": "Microsoft.Windows.DevHome",
+      "Description": "Developer dashboard and tool configuration utility (Discontinued)",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Alarms & Clock",
+      "AppId": "Microsoft.WindowsAlarms",
+      "Description": "Alarms & Clock app",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Feedback Hub",
+      "AppId": "Microsoft.WindowsFeedbackHub",
+      "Description": "App for providing feedback to Microsoft on Windows",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Windows Maps",
+      "AppId": "Microsoft.WindowsMaps",
+      "Description": "Mapping and navigation app",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Sound Recorder",
+      "AppId": "Microsoft.WindowsSoundRecorder",
+      "Description": "Basic audio recording app",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Xbox Console Companion",
+      "AppId": "Microsoft.XboxApp",
+      "Description": "Old Xbox Console Companion App (Discontinued)",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Movies & TV",
+      "AppId": "Microsoft.ZuneVideo",
+      "Description": "Movies & TV app for renting/buying/playing video content (Rebranded as \"Films & TV\")",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Family Safety",
+      "AppId": "MicrosoftCorporationII.MicrosoftFamily",
+      "Description": "Family Safety App for managing family accounts and settings",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Quick Assist",
+      "AppId": "MicrosoftCorporationII.QuickAssist",
+      "Description": "Remote assistance tool",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "MS Teams (Old)",
+      "AppId": "MicrosoftTeams",
+      "Description": "Old MS Teams personal (MS Store version)",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "MS Teams (New)",
+      "AppId": "MSTeams",
+      "Description": "New MS Teams app (Work/School or Personal)",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "ACG Media Player",
+      "AppId": "ACGMediaPlayer",
+      "Description": "Media player app",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Actipro Software",
+      "AppId": "ActiproSoftwareLLC",
+      "Description": "Potentially UI controls or software components, often bundled by OEMs",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Adobe Photoshop Express",
+      "AppId": "AdobeSystemsIncorporated.AdobePhotoshopExpress",
+      "Description": "Basic photo editing app from Adobe",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Amazon",
+      "AppId": "Amazon.com.Amazon",
+      "Description": "Amazon shopping app",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Prime Video",
+      "AppId": "AmazonVideo.PrimeVideo",
+      "Description": "Amazon Prime Video streaming service app",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Asphalt 8",
+      "AppId": "Asphalt8Airborne",
+      "Description": "Racing game",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Autodesk SketchBook",
+      "AppId": "AutodeskSketchBook",
+      "Description": "Digital drawing and sketching app",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Caesars Slots",
+      "AppId": "CaesarsSlotsFreeCasino",
+      "Description": "Casino slot machine game",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Cooking Fever",
+      "AppId": "COOKINGFEVER",
+      "Description": "Restaurant simulation game",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "CyberLink Media Suite",
+      "AppId": "CyberLinkMediaSuiteEssentials",
+      "Description": "Multimedia software suite (often preinstalled by OEMs)",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Disney Magic Kingdoms",
+      "AppId": "DisneyMagicKingdoms",
+      "Description": "Disney theme park building game",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Disney",
+      "AppId": "Disney",
+      "Description": "General Disney content app (may vary by region/OEM, often Disney+)",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Drawboard PDF",
+      "AppId": "DrawboardPDF",
+      "Description": "PDF viewing and annotation app, often focused on pen input",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Duolingo",
+      "AppId": "Duolingo-LearnLanguagesforFree",
+      "Description": "Language learning app",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Eclipse Manager",
+      "AppId": "EclipseManager",
+      "Description": "Often related to specific OEM software or utilities (e.g., for managing screen settings)",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Facebook",
+      "AppId": "Facebook",
+      "Description": "Facebook social media app",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "FarmVille 2",
+      "AppId": "FarmVille2CountryEscape",
+      "Description": "Farming simulation game",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Fitbit",
+      "AppId": "fitbit",
+      "Description": "Fitbit activity tracker companion app",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Flipboard",
+      "AppId": "Flipboard",
+      "Description": "News and social network aggregator styled as a magazine",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Hidden City",
+      "AppId": "HiddenCity",
+      "Description": "Hidden object puzzle adventure game",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Hulu",
+      "AppId": "HULULLC.HULUPLUS",
+      "Description": "Hulu streaming service app",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "iHeartRadio",
+      "AppId": "iHeartRadio",
+      "Description": "Internet radio streaming app",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Instagram",
+      "AppId": "Instagram",
+      "Description": "Instagram social media app",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Bubble Witch 3",
+      "AppId": "king.com.BubbleWitch3Saga",
+      "Description": "Puzzle game from King",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Candy Crush Saga",
+      "AppId": "king.com.CandyCrushSaga",
+      "Description": "Puzzle game from King",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Candy Crush Soda",
+      "AppId": "king.com.CandyCrushSodaSaga",
+      "Description": "Puzzle game from King",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "LinkedIn",
+      "AppId": "LinkedInforWindows",
+      "Description": "LinkedIn professional networking app",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "March of Empires",
+      "AppId": "MarchofEmpires",
+      "Description": "Strategy game",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Netflix",
+      "AppId": "Netflix",
+      "Description": "Netflix streaming service app",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "NYT Crossword",
+      "AppId": "NYTCrossword",
+      "Description": "New York Times crossword puzzle app",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "One Calendar",
+      "AppId": "OneCalendar",
+      "Description": "Calendar aggregation app",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Pandora",
+      "AppId": "PandoraMediaInc",
+      "Description": "Pandora music streaming app",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Phototastic Collage",
+      "AppId": "PhototasticCollage",
+      "Description": "Photo collage creation app",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "PicsArt",
+      "AppId": "PicsArt-PhotoStudio",
+      "Description": "Photo editing and creative app",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Plex",
+      "AppId": "Plex",
+      "Description": "Media server and player app",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Polarr Photo Editor",
+      "AppId": "PolarrPhotoEditorAcademicEdition",
+      "Description": "Photo editing app (Academic Edition)",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Royal Revolt",
+      "AppId": "Royal Revolt",
+      "Description": "Tower defense / strategy game",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Shazam",
+      "AppId": "Shazam",
+      "Description": "Music identification app",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Live Wallpaper",
+      "AppId": "Sidia.LiveWallpaper",
+      "Description": "Live wallpaper app",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Sling TV",
+      "AppId": "SlingTV",
+      "Description": "Live TV streaming service app",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Spotify",
+      "AppId": "Spotify",
+      "Description": "Spotify music streaming app",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "TikTok",
+      "AppId": "TikTok",
+      "Description": "TikTok short-form video app",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "TuneIn Radio",
+      "AppId": "TuneInRadio",
+      "Description": "Internet radio streaming app",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Twitter",
+      "AppId": "Twitter",
+      "Description": "Twitter (now X) social media app",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Viber",
+      "AppId": "Viber",
+      "Description": "Messaging and calling app",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "WinZip",
+      "AppId": "WinZipUniversal",
+      "Description": "File compression and extraction utility (Universal Windows Platform version)",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Wunderlist",
+      "AppId": "Wunderlist",
+      "Description": "To-do list app (Acquired by Microsoft, functionality moved to Microsoft To Do)",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "XING",
+      "AppId": "XING",
+      "Description": "Professional networking platform popular in German-speaking countries",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Bing Search",
+      "AppId": "Microsoft.BingSearch",
+      "Description": "Web Search from Microsoft Bing (Integrates into Windows Search)",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "Microsoft Edge",
+      "AppId": "Microsoft.Edge",
+      "Description": "Edge browser (Can only be uninstalled in European Economic Area)",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "Xbox Gaming App",
+      "AppId": "Microsoft.GamingApp",
+      "Description": "Modern Xbox Gaming App, required for installing some PC games",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "Get Help",
+      "AppId": "Microsoft.GetHelp",
+      "Description": "Required for some Windows 11 Troubleshooters and support interactions",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "Microsoft 365 Companions",
+      "AppId": "Microsoft.M365Companions",
+      "Description": "Microsoft 365 (Business) Calendar, Files and People mini-apps, these apps may be reinstalled if enabled by your Microsoft 365 admin",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "Paint 3D",
+      "AppId": "Microsoft.MSPaint",
+      "Description": "Paint 3D (Modern paint application with 3D features)",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "OneDrive",
+      "AppId": "Microsoft.OneDrive",
+      "Description": "OneDrive consumer cloud storage client",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "Outlook for Windows",
+      "AppId": "Microsoft.OutlookForWindows",
+      "Description": "New Outlook for Windows mail client",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "Paint",
+      "AppId": "Microsoft.Paint",
+      "Description": "Classic Paint (Traditional 2D paint application)",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "People",
+      "AppId": "Microsoft.People",
+      "Description": "Required for & included with Mail & Calendar (Contacts management)",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "Remote Desktop",
+      "AppId": "Microsoft.RemoteDesktop",
+      "Description": "Remote Desktop client app",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "Snipping Tool",
+      "AppId": "Microsoft.ScreenSketch",
+      "Description": "Snipping Tool (Screenshot and annotation tool)",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "Widgets Experience",
+      "AppId": "Microsoft.StartExperiencesApp",
+      "Description": "This app powers Windows Widgets My Feed",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "Whiteboard",
+      "AppId": "Microsoft.Whiteboard",
+      "Description": "Digital collaborative whiteboard app",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "Photos",
+      "AppId": "Microsoft.Windows.Photos",
+      "Description": "Default photo viewing and basic editing app",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "Calculator",
+      "AppId": "Microsoft.WindowsCalculator",
+      "Description": "Calculator app",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "Camera",
+      "AppId": "Microsoft.WindowsCamera",
+      "Description": "Camera app for using built-in or connected cameras",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "Mail & Calendar",
+      "AppId": "Microsoft.windowscommunicationsapps",
+      "Description": "Mail & Calendar app suite (Discontinued)",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "Notepad",
+      "AppId": "Microsoft.WindowsNotepad",
+      "Description": "Notepad text editor app",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "Microsoft Store",
+      "AppId": "Microsoft.WindowsStore",
+      "Description": "Microsoft Store, WARNING: This app cannot be reinstalled easily if removed!",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "Windows Terminal",
+      "AppId": "Microsoft.WindowsTerminal",
+      "Description": "Default terminal app in windows 11 (Command Prompt, PowerShell, WSL)",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "Xbox TCUI Framework",
+      "AppId": "Microsoft.Xbox.TCUI",
+      "Description": "UI framework, seems to be required for MS store, photos and certain games",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "Xbox Game Overlay",
+      "AppId": "Microsoft.XboxGameOverlay",
+      "Description": "Game overlay, required/useful for some games (Part of Xbox Game Bar)",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "Xbox Gaming Overlay",
+      "AppId": "Microsoft.XboxGamingOverlay",
+      "Description": "Game overlay, required/useful for some games (Part of Xbox Game Bar)",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "Xbox Identity Provider",
+      "AppId": "Microsoft.XboxIdentityProvider",
+      "Description": "Xbox sign-in framework, required for some games and Xbox services",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "Xbox Speech To Text",
+      "AppId": "Microsoft.XboxSpeechToTextOverlay",
+      "Description": "Accessibility feature required for some games, WARNING: This app cannot be reinstalled easily!",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "Phone Link",
+      "AppId": "Microsoft.YourPhone",
+      "Description": "Phone link (Connects Android/iOS phone to PC)",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "Media Player",
+      "AppId": "Microsoft.ZuneMusic",
+      "Description": "Modern Media Player (Replaced Groove Music, plays local audio/video)",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "Cross Device Experience",
+      "AppId": "MicrosoftWindows.CrossDevice",
+      "Description": "Phone integration within File Explorer, Camera and more (Part of Phone Link features)",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "HP AI Experience Center",
+      "AppId": "AD2F1837.HPAIExperienceCenter",
+      "Description": "HP OEM software, AI-enhanced features and support",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "HP Connected Music",
+      "AppId": "AD2F1837.HPConnectedMusic",
+      "Description": "HP OEM software for music (Potentially discontinued)",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "HP Connected Photo",
+      "AppId": "AD2F1837.HPConnectedPhotopoweredbySnapfish",
+      "Description": "HP OEM software for photos, integrated with Snapfish (Potentially discontinued)",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "HP Desktop Support Utilities",
+      "AppId": "AD2F1837.HPDesktopSupportUtilities",
+      "Description": "HP OEM software providing desktop support tools",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "HP Easy Clean",
+      "AppId": "AD2F1837.HPEasyClean",
+      "Description": "HP OEM software for system cleaning or optimization",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "HP File Viewer",
+      "AppId": "AD2F1837.HPFileViewer",
+      "Description": "HP OEM software for viewing specific file types",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "HP JumpStarts",
+      "AppId": "AD2F1837.HPJumpStarts",
+      "Description": "HP OEM software for tutorials, app discovery, or quick access to HP features",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "HP PC Hardware Diagnostics",
+      "AppId": "AD2F1837.HPPCHardwareDiagnosticsWindows",
+      "Description": "HP OEM software for PC hardware diagnostics",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "HP Power Manager",
+      "AppId": "AD2F1837.HPPowerManager",
+      "Description": "HP OEM software for managing power settings and battery",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "HP Printer Control",
+      "AppId": "AD2F1837.HPPrinterControl",
+      "Description": "HP OEM software for managing HP printers",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "HP Privacy Settings",
+      "AppId": "AD2F1837.HPPrivacySettings",
+      "Description": "HP OEM software for managing privacy settings",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "HP QuickDrop",
+      "AppId": "AD2F1837.HPQuickDrop",
+      "Description": "HP OEM software for quick file transfer between devices",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "HP QuickTouch",
+      "AppId": "AD2F1837.HPQuickTouch",
+      "Description": "HP OEM software, possibly for touch-specific shortcuts or controls",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "HP Registration",
+      "AppId": "AD2F1837.HPRegistration",
+      "Description": "HP OEM software for product registration",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "HP Support Assistant",
+      "AppId": "AD2F1837.HPSupportAssistant",
+      "Description": "HP OEM software for support, updates, and troubleshooting",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "HP Sure Shield AI",
+      "AppId": "AD2F1837.HPSureShieldAI",
+      "Description": "HP OEM security software, likely AI-based threat protection",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "HP System Information",
+      "AppId": "AD2F1837.HPSystemInformation",
+      "Description": "HP OEM software for displaying system information",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "HP Welcome",
+      "AppId": "AD2F1837.HPWelcome",
+      "Description": "HP OEM software providing a welcome experience or initial setup help",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "HP WorkWell",
+      "AppId": "AD2F1837.HPWorkWell",
+      "Description": "HP OEM software focused on well-being, possibly with break reminders or ergonomic tips",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "myHP",
+      "AppId": "AD2F1837.myHP",
+      "Description": "HP OEM central hub app for device info, support, and services",
+      "SelectedByDefault": false
+    }
+  ]
+}

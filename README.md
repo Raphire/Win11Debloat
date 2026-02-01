@@ -104,6 +104,7 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 - Disable 'Windows Spotlight' and tips & tricks on the lock screen.
 - Disable 'Windows Spotlight' desktop background option.
 - Disable ads, suggestions and the MSN news feed in Microsoft Edge.
+- Hide Microsoft 365 ads on the Settings 'Home' page, or hide the 'Home' page entirely.
 
 #### AI Features
 
@@ -129,16 +130,12 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 - Disable transparency effects
 - Disable animations and visual effects.
 
-#### File Explorer
+#### Start Menu
 
-- Change the default location that File Explorer opens to.
-- Show file extensions for known file types.
-- Show hidden files, folders and drives.
-- Hide the Home or Gallery section from the File Explorer navigation pane. (W11 only)
-- Hide duplicate removable drive entries from the File Explorer navigation pane, so only the entry under 'This PC' remains.
-- Add all common folders (Desktop, Downloads, etc.) back to 'This PC' in File Explorer. (W11 only)
-- Hide the 3D objects, music or OneDrive folder from the File Explorer navigation pane. (W10 only)
-- Hide the 'Include in library', 'Give access to' and 'Share' options from the context menu. (W10 only)
+- Remove or replace all pinned apps from start for the current user, or for all existing & new users. (W11 only)
+- Disable the recommended section in the start menu. (W11 only)
+- Disable Bing web search & Copilot integration in Windows search.
+- Disable the Phone Link mobile devices integration in the start menu. (W11 only)
 
 #### Taskbar
 
@@ -152,12 +149,16 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 - Choose how app icons are shown on the taskbar when using multiple monitors. (W11 only)
 - Choose combine mode for taskbar buttons and labels. (W11 only)
 
-#### Start
+#### File Explorer
 
-- Remove or replace all pinned apps from start for the current user, or for all existing & new users. (W11 only)
-- Disable the recommended section in the start menu. (W11 only)
-- Disable Bing web search & Copilot integration in Windows search.
-- Disable the Phone Link mobile devices integration in the start menu. (W11 only)
+- Change the default location that File Explorer opens to.
+- Show file extensions for known file types.
+- Show hidden files, folders and drives.
+- Hide the Home or Gallery section from the File Explorer navigation pane. (W11 only)
+- Hide duplicate removable drive entries from the File Explorer navigation pane, so only the entry under 'This PC' remains.
+- Add all common folders (Desktop, Downloads, etc.) back to 'This PC' in File Explorer. (W11 only)
+- Hide the 3D objects, music or OneDrive folder from the File Explorer navigation pane. (W10 only)
+- Hide the 'Include in library', 'Give access to' and 'Share' options from the context menu. (W10 only)
 
 #### Other
 

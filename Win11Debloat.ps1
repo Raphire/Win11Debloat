@@ -1371,6 +1371,12 @@ function OpenGUI {
 
         # Check if any changes were selected
         $totalChanges = $script:Params.Count - $controlParamsCount
+
+        # Apps parameter does not count as a change itself
+        if ($script:Params.ContainsKey('Apps')) {
+            $totalChanges--
+        }
+
         if ($totalChanges -eq 0) {
             [System.Windows.MessageBox]::Show(
                 'No changes have been selected, please select at least one item to proceed.',

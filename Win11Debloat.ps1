@@ -1419,7 +1419,7 @@ function OpenGUI {
             try {
                 ExecuteAllChanges
                 
-                if (-not $script:Params.ContainsKey("Sysprep") -and -not $script:Params.ContainsKey("User")) {
+                if (-not $script:Params.ContainsKey("Sysprep") -and -not $script:Params.ContainsKey("User") -and -not $script:Params.ContainsKey("NoRestartExplorer")) {
                     # Ask user if they want to restart Explorer now
                     $result = [System.Windows.MessageBox]::Show(
                         'Would you like to restart the Windows Explorer process now to apply all changes? Some changes may not take effect until a restart is performed.',

@@ -688,8 +688,8 @@ function OpenGUI {
             # Wrap label in a Border for search highlighting
             $lblBorder = New-Object System.Windows.Controls.Border
             $lblBorder.Style = $window.Resources['LabelBorderStyle']
-            $labelBorderName = "$comboName`_LabelBorder"
-            $lblBorder.Name = $labelBorderName
+            $lblBorderName = "$comboName`_LabelBorder"
+            $lblBorder.Name = $lblBorderName
             
             $lbl = New-Object System.Windows.Controls.TextBlock
             $lbl.Text = $labelText
@@ -703,7 +703,7 @@ function OpenGUI {
             # Register the label border with the window's name scope
             try {
                 [System.Windows.NameScope]::SetNameScope($lblBorder, [System.Windows.NameScope]::GetNameScope($window))
-                $window.RegisterName($labelBorderName, $lblBorder)
+                $window.RegisterName($lblBorderName, $lblBorder)
             }
             catch {
                 # Name might already be registered, ignore

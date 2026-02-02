@@ -667,6 +667,7 @@ function OpenGUI {
                 $checkbox = New-Object System.Windows.Controls.CheckBox
                 $checkbox.Content = $labelText
                 $checkbox.Name = $comboName
+                $checkbox.SetValue([System.Windows.Automation.AutomationProperties]::NameProperty, $labelText)
                 $checkbox.IsChecked = $false
                 $checkbox.Style = $window.Resources["FeatureCheckboxStyle"]
                 $parent.Children.Add($checkbox) | Out-Null
@@ -702,6 +703,7 @@ function OpenGUI {
 
             $combo = New-Object System.Windows.Controls.ComboBox
             $combo.Name = $comboName
+            $combo.SetValue([System.Windows.Automation.AutomationProperties]::NameProperty, $labelText)
             foreach ($it in $items) { $cbItem = New-Object System.Windows.Controls.ComboBoxItem; $cbItem.Content = $it; $combo.Items.Add($cbItem) | Out-Null }
             $combo.SelectedIndex = 0
             $parent.Children.Add($combo) | Out-Null
@@ -846,6 +848,7 @@ function OpenGUI {
         $appsToAdd | Sort-Object -Property DisplayName | ForEach-Object {
             $checkbox = New-Object System.Windows.Controls.CheckBox
             $checkbox.Content = $_.DisplayName
+            $checkbox.SetValue([System.Windows.Automation.AutomationProperties]::NameProperty, $_.DisplayName)
             $checkbox.Tag = $_.AppId
             $checkbox.IsChecked = $_.IsChecked
             $checkbox.ToolTip = $_.Description
@@ -1626,6 +1629,7 @@ function OpenAppSelectionWindow {
         $appsToAdd | Sort-Object -Property DisplayName | ForEach-Object {
             $checkbox = New-Object System.Windows.Controls.CheckBox
             $checkbox.Content = $_.DisplayName
+            $checkbox.SetValue([System.Windows.Automation.AutomationProperties]::NameProperty, $_.DisplayName)
             $checkbox.Tag = $_.AppId
             $checkbox.IsChecked = $_.IsChecked
             $checkbox.ToolTip = $_.Description

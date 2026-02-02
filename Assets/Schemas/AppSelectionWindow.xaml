@@ -227,7 +227,7 @@
                                    Margin="12,0,0,0"
                                    FontSize="12"/>
                         <StackPanel Grid.Column="1" Orientation="Horizontal">
-                            <Button x:Name="CloseBtn" Content="&#xE8BB;" Style="{StaticResource CloseButton}" ToolTip="Close" IsCancel="True"/>
+                            <Button x:Name="CloseBtn" Content="&#xE8BB;" Style="{StaticResource CloseButton}" ToolTip="Close" IsCancel="True" AutomationProperties.Name="Close"/>
                         </StackPanel>
                     </Grid>
                 </Border>
@@ -250,7 +250,7 @@
                             Margin="0,0,0,10"/>
 
                     <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,8">
-                        <CheckBox x:Name="CheckAllBox" Content="Check/Uncheck all" Margin="8,0,15,0" Foreground="{DynamicResource FgColor}"/>
+                        <CheckBox x:Name="CheckAllBox" Content="Check/Uncheck all" Margin="8,0,15,0" Foreground="{DynamicResource FgColor}" AutomationProperties.Name="Check or Uncheck all"/>
                     </StackPanel>
 
                     <Border Grid.Row="2" BorderBrush="{DynamicResource BorderColor}" CornerRadius="4" BorderThickness="1" Margin="0,0,0,10" Background="{DynamicResource CardBgColor}">
@@ -266,10 +266,10 @@
 
                     <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
                         <Grid Margin="0,8,10,10">
-                            <CheckBox x:Name="OnlyInstalledBox" Content="Only show installed apps" Foreground="{DynamicResource FgColor}" />
+                            <CheckBox x:Name="OnlyInstalledBox" Content="Only show installed apps" Foreground="{DynamicResource FgColor}" AutomationProperties.Name="Only show installed apps"/>
                         </Grid>
-                        <Button x:Name="ConfirmBtn" Width="80" Height="32" Margin="0,0,10,0" Content="Confirm" Style="{StaticResource Win11Button}"/>
-                        <Button x:Name="CancelBtn" Width="80" Height="32" Content="Cancel" Style="{StaticResource Win11ButtonSecondary}" IsCancel="True"/>
+                        <Button x:Name="ConfirmBtn" Width="80" Height="32" Margin="0,0,10,0" Content="Confirm" Style="{StaticResource Win11Button}" AutomationProperties.Name="Confirm"/>
+                        <Button x:Name="CancelBtn" Width="80" Height="32" Content="Cancel" Style="{StaticResource Win11ButtonSecondary}" IsCancel="True" AutomationProperties.Name="Cancel"/>
                     </StackPanel>
                 </Grid>
             </Grid>

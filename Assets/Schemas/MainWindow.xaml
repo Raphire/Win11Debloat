@@ -212,7 +212,16 @@
         <Style x:Key="LabelStyle" TargetType="TextBlock">
             <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
             <Setter Property="FontSize" Value="12"/>
-            <Setter Property="Margin" Value="0,0,0,3"/>
+            <Setter Property="Margin" Value="0,0,0,2"/>
+        </Style>
+
+        <!-- Label Border Style for ComboBox labels -->
+        <Style x:Key="LabelBorderStyle" TargetType="Border">
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="Padding" Value="6,2"/>
+            <Setter Property="Margin" Value="-4,-2,-4,0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
         </Style>
 
         <!-- Category card border style -->
@@ -221,7 +230,7 @@
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="CornerRadius" Value="4"/>
             <Setter Property="Background" Value="{DynamicResource CardBgColor}"/>
-            <Setter Property="Padding" Value="16,12"/>
+            <Setter Property="Padding" Value="16,12,16,2"/>
             <Setter Property="Margin" Value="0,0,0,16"/>
         </Style>
 
@@ -268,7 +277,7 @@
                                 <Border x:Name="CheckBoxBorder" Grid.Column="0" Width="18" Height="18" Background="{DynamicResource CheckBoxBgColor}" BorderBrush="{DynamicResource CheckBoxBorderColor}" BorderThickness="1" CornerRadius="4" Margin="0,0,8,0">
                                     <TextBlock x:Name="CheckMark" Text="&#xE73E;" FontFamily="Segoe MDL2 Assets" FontSize="12" Foreground="{DynamicResource ButtonBg}" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed"/>
                                 </Border>
-                                <ContentPresenter Grid.Column="1" VerticalAlignment="Center" Margin="0,0,0,1"/>
+                                <ContentPresenter Grid.Column="1" VerticalAlignment="Center" Margin="0,0,0,2"/>
                             </Grid>
                         </Border>
                         <ControlTemplate.Triggers>
@@ -297,8 +306,8 @@
 
         <!-- CheckBox style for feature toggles -->
         <Style x:Key="FeatureCheckboxStyle" TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
-            <Setter Property="Margin" Value="0,0,0,10"/>
-            <Setter Property="Padding" Value="0,2"/>
+            <Setter Property="Margin" Value="-4,-2,-4,10"/>
+            <Setter Property="Padding" Value="4,2"/>
         </Style>
 
         <!-- CheckBox style for apps panels -->
@@ -608,17 +617,35 @@
                             
                                 <!-- Filter Options -->
                                 <Grid Margin="0,0,0,12">
-                                    <StackPanel Orientation="Horizontal">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    
+                                    <StackPanel Grid.Column="0" Orientation="Horizontal">
                                         <Button x:Name="LoadDefaultsBtn" Content="Select Default Settings" ToolTip="Select the settings that are recommended for most people" Style="{StaticResource Win11ButtonSecondary}" Padding="10,0" Height="32" Margin="0,0,10,0" AutomationProperties.Name="Select Default Settings"/>
                                         <Button x:Name="LoadLastUsedBtn" Content="Select Last Used Settings" ToolTip="Select the settings that were used the last time Win11Debloat was run" Style="{StaticResource Win11ButtonSecondary}" Padding="10,0" Height="32" Margin="0,0,10,0" AutomationProperties.Name="Select Last Used Settings"/>
                                         <Button x:Name="ClearAllTweaksBtn" Content="Clear Selection" ToolTip="Clear all selected tweaks" Style="{StaticResource Win11ButtonSecondary}" Padding="10,0" Height="32" Margin="0,0,10,0" AutomationProperties.Name="Clear Selection"/>
                                     </StackPanel>
+
+                                    <Border Grid.Column="2" BorderBrush="{DynamicResource ButtonBorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource ComboBgColor}" Width="300" Padding="8,6">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0" Text="&#xE721;" FontFamily="Segoe MDL2 Assets" FontSize="14" VerticalAlignment="Center" Margin="4,0,8,0" Foreground="{DynamicResource FgColor}"/>
+                                            <TextBlock x:Name="TweakSearchPlaceholder" Grid.Column="1" Text="Search setting" Foreground="{DynamicResource FgColor}" Opacity="0.5" FontSize="13" Margin="3,0,0,1" VerticalAlignment="Center" IsHitTestVisible="False"/>
+                                            <TextBox x:Name="TweakSearchBox" Grid.Column="1" Background="Transparent" Foreground="{DynamicResource FgColor}" BorderThickness="0" FontSize="13" Margin="1,0,0,1" VerticalAlignment="Center" Text=""/>
+                                        </Grid>
+                                    </Border>
                                 </Grid>
                             </StackPanel>
                         </Border>
                         <Grid>
-                            <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,-20,0,0" Padding="20,10,20,0">
-                                <Grid Margin="0,10,0,5">
+                            <ScrollViewer x:Name="TweaksScrollViewer" VerticalScrollBarVisibility="Auto" Margin="0,-20,0,0" Padding="20,10,20,0">
+                                <Grid x:Name="TweaksGrid" Margin="0,10,0,5">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>

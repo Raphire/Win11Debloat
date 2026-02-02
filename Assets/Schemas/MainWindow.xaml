@@ -457,8 +457,8 @@
                                    Margin="12,0,0,0"
                                    FontSize="12"/>
                         <StackPanel Grid.Column="1" Orientation="Horizontal">
-                            <Button x:Name="HelpBtn" Content="?" FontFamily="Segoe UI" FontSize="15" Style="{StaticResource HelpButton}" ToolTip="Open Wiki"/>
-                            <Button x:Name="CloseBtn" Content="&#xE8BB;" Style="{StaticResource CloseButton}" ToolTip="Close"/>
+                            <Button x:Name="HelpBtn" Content="?" FontFamily="Segoe UI" FontSize="15" Style="{StaticResource HelpButton}" ToolTip="Open Wiki" AutomationProperties.Name="Open Wiki"/>
+                            <Button x:Name="CloseBtn" Content="&#xE8BB;" Style="{StaticResource CloseButton}" ToolTip="Close" AutomationProperties.Name="Close"/>
                         </StackPanel>
                     </Grid>
                 </Border>
@@ -525,7 +525,7 @@
                             </TextBlock>
                             
                             <!-- Start Button -->
-                            <Button x:Name="HomeStartBtn" Width="200" Height="48" Style="{StaticResource Win11Button}" HorizontalAlignment="Center" Margin="0,50,0,0">
+                            <Button x:Name="HomeStartBtn" Width="200" Height="48" Style="{StaticResource Win11Button}" HorizontalAlignment="Center" Margin="0,50,0,0" AutomationProperties.Name="Start">
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                     <TextBlock Text="Start" VerticalAlignment="Center" FontSize="20" Margin="0,0,0,2"/>
                                     <TextBlock Text="&#xE72A;" FontFamily="Segoe MDL2 Assets" FontSize="16" Margin="8,0,0,0" VerticalAlignment="Center"/>
@@ -554,12 +554,12 @@
                                     </Grid.ColumnDefinitions>
                                     
                                     <StackPanel Orientation="Horizontal" Grid.Column="0">
-                                        <Button x:Name="DefaultAppsBtn" Content="Select Default Apps" ToolTip="Select the default selection of apps" Style="{StaticResource Win11ButtonSecondary}" Height="32" Padding="10,0" Margin="0,0,10,0"/>
-                                        <Button x:Name="LoadLastUsedAppsBtn" Content="Select Last Used Selection" ToolTip="Select the apps that were selected the last time Win11Debloat was run" Style="{StaticResource Win11ButtonSecondary}" Height="32" Padding="10,0" Margin="0,0,10,0"/>
-                                        <Button x:Name="ClearAppSelectionBtn" Content="Clear Selection" ToolTip="Clear all selected apps" Style="{StaticResource Win11ButtonSecondary}" Height="32"  Padding="10,0" Margin="0,0,10,0"/>
+                                        <Button x:Name="DefaultAppsBtn" Content="Select Default Apps" ToolTip="Select the default selection of apps" Style="{StaticResource Win11ButtonSecondary}" Height="32" Padding="10,0" Margin="0,0,10,0" AutomationProperties.Name="Select Default Apps"/>
+                                        <Button x:Name="LoadLastUsedAppsBtn" Content="Select Last Used Selection" ToolTip="Select the apps that were selected the last time Win11Debloat was run" Style="{StaticResource Win11ButtonSecondary}" Height="32" Padding="10,0" Margin="0,0,10,0" AutomationProperties.Name="Select Last Used Selection"/>
+                                        <Button x:Name="ClearAppSelectionBtn" Content="Clear Selection" ToolTip="Clear all selected apps" Style="{StaticResource Win11ButtonSecondary}" Height="32"  Padding="10,0" Margin="0,0,10,0" AutomationProperties.Name="Clear Selection"/>
                                     </StackPanel>
                                     
-                                    <CheckBox x:Name="OnlyInstalledAppsBox" Grid.Column="2" Content="Only show installed apps" IsChecked="False" Foreground="{DynamicResource FgColor}" VerticalAlignment="Center"/>
+                                    <CheckBox x:Name="OnlyInstalledAppsBox" Grid.Column="2" Content="Only show installed apps" IsChecked="False" Foreground="{DynamicResource FgColor}" VerticalAlignment="Center" AutomationProperties.Name="Only show installed apps"/>
 
                                     <Border Grid.Column="4" BorderBrush="{DynamicResource ButtonBorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource ComboBgColor}" Width="300" Padding="8,6">
                                         <Grid>
@@ -569,7 +569,7 @@
                                             </Grid.ColumnDefinitions>
                                             <TextBlock Grid.Column="0" Text="&#xE721;" FontFamily="Segoe MDL2 Assets" FontSize="14" VerticalAlignment="Center" Margin="4,0,8,0" Foreground="{DynamicResource FgColor}"/>
                                             <TextBlock x:Name="AppSearchPlaceholder" Grid.Column="1" Text="Search app" Foreground="{DynamicResource FgColor}" Opacity="0.5" FontSize="13" Margin="3,0,0,1" VerticalAlignment="Center" IsHitTestVisible="False"/>
-                                            <TextBox x:Name="AppSearchBox" Grid.Column="1" Background="Transparent" Foreground="{DynamicResource FgColor}" BorderThickness="0" FontSize="13" Margin="1,0,0,1" VerticalAlignment="Center" Text=""/>
+                                            <TextBox x:Name="AppSearchBox" Grid.Column="1" Background="Transparent" Foreground="{DynamicResource FgColor}" BorderThickness="0" FontSize="13" Margin="1,0,0,1" VerticalAlignment="Center" Text="" AutomationProperties.Name="Search app"/>
                                         </Grid>
                                     </Border>
                                 </Grid>
@@ -609,9 +609,9 @@
                                 <!-- Filter Options -->
                                 <Grid Margin="0,0,0,12">
                                     <StackPanel Orientation="Horizontal">
-                                        <Button x:Name="LoadDefaultsBtn" Content="Select Default Settings" ToolTip="Select the settings that are recommended for most people" Style="{StaticResource Win11ButtonSecondary}" Padding="10,0" Height="32" Margin="0,0,10,0"/>
-                                        <Button x:Name="LoadLastUsedBtn" Content="Select Last Used Settings" ToolTip="Select the settings that were used the last time Win11Debloat was run" Style="{StaticResource Win11ButtonSecondary}" Padding="10,0" Height="32" Margin="0,0,10,0"/>
-                                        <Button x:Name="ClearAllTweaksBtn" Content="Clear Selection" ToolTip="Clear all selected tweaks" Style="{StaticResource Win11ButtonSecondary}" Padding="10,0" Height="32" Margin="0,0,10,0"/>
+                                        <Button x:Name="LoadDefaultsBtn" Content="Select Default Settings" ToolTip="Select the settings that are recommended for most people" Style="{StaticResource Win11ButtonSecondary}" Padding="10,0" Height="32" Margin="0,0,10,0" AutomationProperties.Name="Select Default Settings"/>
+                                        <Button x:Name="LoadLastUsedBtn" Content="Select Last Used Settings" ToolTip="Select the settings that were used the last time Win11Debloat was run" Style="{StaticResource Win11ButtonSecondary}" Padding="10,0" Height="32" Margin="0,0,10,0" AutomationProperties.Name="Select Last Used Settings"/>
+                                        <Button x:Name="ClearAllTweaksBtn" Content="Clear Selection" ToolTip="Clear all selected tweaks" Style="{StaticResource Win11ButtonSecondary}" Padding="10,0" Height="32" Margin="0,0,10,0" AutomationProperties.Name="Clear Selection"/>
                                     </StackPanel>
                                 </Grid>
                             </StackPanel>
@@ -674,7 +674,7 @@
                                     <Border BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="20" Margin="0,0,0,16">
                                         <StackPanel>
                                             <TextBlock Text="Apply Changes To" FontWeight="Bold" FontSize="14" Foreground="{DynamicResource FgColor}" Margin="0,0,0,8"/>
-                                            <ComboBox x:Name="UserSelectionCombo" Margin="0,0,0,12">
+                                            <ComboBox x:Name="UserSelectionCombo" Margin="0,0,0,12" AutomationProperties.Name="Apply Changes To">
                                                 <ComboBoxItem Content="Current User" IsSelected="True"/>
                                                 <ComboBoxItem Content="Other User"/>
                                                 <ComboBoxItem Content="Windows Default User (Sysprep)"/>
@@ -689,7 +689,7 @@
                                                         </Grid.ColumnDefinitions>
                                                         <TextBlock Grid.Column="0" Text="&#xE77B;" FontFamily="Segoe MDL2 Assets" FontSize="14" VerticalAlignment="Center" Margin="4,0,8,0" Foreground="{DynamicResource FgColor}"/>
                                                         <TextBlock x:Name="UsernameTextBoxPlaceholder" Grid.Column="1" Text="Enter username" Foreground="{DynamicResource FgColor}" Opacity="0.5" FontSize="13" Margin="3,0,0,1" VerticalAlignment="Center" IsHitTestVisible="False"/>
-                                                        <TextBox x:Name="OtherUsernameTextBox" Grid.Column="1" Background="Transparent" Foreground="{DynamicResource FgColor}" BorderThickness="0" FontSize="13" Margin="1,0,0,1" VerticalAlignment="Center" Text="" Padding="0"/>
+                                                        <TextBox x:Name="OtherUsernameTextBox" Grid.Column="1" Background="Transparent" Foreground="{DynamicResource FgColor}" BorderThickness="0" FontSize="13" Margin="1,0,0,1" VerticalAlignment="Center" Text="" Padding="0" AutomationProperties.Name="Enter username"/>
                                                     </Grid>
                                                 </Border>
                                             </StackPanel>
@@ -710,12 +710,12 @@
                                         <StackPanel>
                                             <TextBlock Text="System Restore Point" FontWeight="Bold" FontSize="14" Foreground="{DynamicResource FgColor}" Margin="0,0,0,8"/>
                                             <TextBlock Text="A restore point will allow you to revert your system to a previous state using the built-in System Restore feature. (Recommended)" Foreground="{DynamicResource FgColor}" FontSize="12" Margin="0,0,0,10" TextWrapping="Wrap"/>
-                                            <CheckBox x:Name="RestorePointCheckBox" Content="Create system restore point" Foreground="{DynamicResource FgColor}"/>
+                                            <CheckBox x:Name="RestorePointCheckBox" Content="Create system restore point" Foreground="{DynamicResource FgColor}" AutomationProperties.Name="Create system restore point"/>
                                         </StackPanel>
                                     </Border>
                                     
                                     <!-- Apply Changes Button -->
-                                    <Button x:Name="OverviewApplyBtn" Style="{StaticResource Win11Button}" Padding="14,8" Margin="0,0,0,15" HorizontalAlignment="Center">
+                                    <Button x:Name="OverviewApplyBtn" Style="{StaticResource Win11Button}" Padding="14,8" Margin="0,0,0,15" HorizontalAlignment="Center" AutomationProperties.Name="Apply Changes">
                                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                             <TextBlock Text="Apply Changes" VerticalAlignment="Center" FontSize="16" Margin="0,0,0,2"/>
                                             <TextBlock Text="&#xE73E;" FontFamily="Segoe MDL2 Assets" FontSize="16" Margin="8,0,0,0" VerticalAlignment="Center"/>
@@ -764,7 +764,7 @@
                         <!-- Console Output -->
                         <Border Grid.Row="1" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="#0C0C0C" Margin="20,0">
                             <ScrollViewer x:Name="ConsoleScrollViewer" VerticalScrollBarVisibility="Auto" Padding="10">
-                                <TextBlock x:Name="ConsoleOutput" FontFamily="Consolas" FontSize="12" Foreground="#CCCCCC" TextWrapping="Wrap" Text=""/>
+                                <TextBlock x:Name="ConsoleOutput" FontFamily="Consolas" FontSize="12" Foreground="#CCCCCC" TextWrapping="Wrap" Text="" AutomationProperties.LiveSetting="Polite"/>
                             </ScrollViewer>
                         </Border>
 
@@ -778,7 +778,7 @@
 
                                 <!-- Status and Finish Button -->
                                 <StackPanel Grid.Row="1" HorizontalAlignment="Center">
-                                    <Button x:Name="FinishBtn" Width="200" Height="48" Style="{StaticResource Win11Button}" Margin="0" IsEnabled="False">
+                                    <Button x:Name="FinishBtn" Width="200" Height="48" Style="{StaticResource Win11Button}" Margin="0" IsEnabled="False" AutomationProperties.Name="Finish">
                                         <TextBlock x:Name="FinishBtnText" Text="Applying changes..." VerticalAlignment="Center" FontSize="16" Margin="0,0,0,1"/>
                                     </Button>
                                 </StackPanel>
@@ -796,7 +796,7 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <Button x:Name="PreviousBtn" Grid.Column="0" Width="120" Height="36" Style="{StaticResource Win11ButtonSecondary}" Visibility="Collapsed" Margin="10,0,0,0">
+                    <Button x:Name="PreviousBtn" Grid.Column="0" Width="120" Height="36" Style="{StaticResource Win11ButtonSecondary}" Visibility="Collapsed" Margin="10,0,0,0" AutomationProperties.Name="Previous">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <TextBlock Text="&#xE72B;" FontFamily="Segoe MDL2 Assets" FontSize="12" Margin="0,0,8,0" VerticalAlignment="Center"/>
                             <TextBlock Text="Previous" VerticalAlignment="Center" FontSize="14" Margin="0,0,0,1"/>
@@ -804,7 +804,7 @@
                     </Button>
                     
                     <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Button x:Name="NextBtn" Width="120" Height="36" Margin="0,0,10,0" Style="{StaticResource Win11Button}">
+                        <Button x:Name="NextBtn" Width="120" Height="36" Margin="0,0,10,0" Style="{StaticResource Win11Button}" AutomationProperties.Name="Next">
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                 <TextBlock Text="Next" VerticalAlignment="Center" FontSize="14" Margin="0,0,0,1"/>
                                 <TextBlock Text="&#xE72A;" FontFamily="Segoe MDL2 Assets" FontSize="12" Margin="8,0,0,0" VerticalAlignment="Center"/>

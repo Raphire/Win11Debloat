@@ -1,0 +1,5 @@
+Windows Registry Editor Version 5.00
+
+; Allow automatic restarts after updates while signed in
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU]
+"NoAutoRebootWithLoggedOnUsers"=-

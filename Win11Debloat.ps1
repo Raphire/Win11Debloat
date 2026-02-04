@@ -863,7 +863,7 @@ function OpenGUI {
             if ($script:CategoryCardMap.ContainsKey($category)) { return $script:CategoryCardMap[$category] }
 
             # Create a new card Border + StackPanel and add to shortest column
-            $target = $columns | Sort-Object { $_.Children.Count } | Select-Object -First 1
+            $target = $columns | Sort-Object @{Expression={$_.Children.Count}; Ascending=$true}, @{Expression={$columns.IndexOf($_)}; Ascending=$true} | Select-Object -First 1
 
             $border = New-Object System.Windows.Controls.Border
             $border.Style = $window.Resources['CategoryCardBorderStyle']

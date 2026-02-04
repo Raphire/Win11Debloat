@@ -110,6 +110,12 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 - Disable fast start-up to ensure a full shutdown.
 - Disable network connectivity during Modern Standby to reduce battery drain. (W11 only)
 
+#### Windows Update
+
+- Prevent Windows from getting updates as soon as they're available.
+- Prevent automatic restarts after updates while signed in.
+- Disable sharing of downloaded updates with other PCs, also known as Delivery Optimization.
+
 #### Appearance
 
 - Enable dark mode for system and apps.

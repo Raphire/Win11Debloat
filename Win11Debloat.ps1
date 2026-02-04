@@ -1327,6 +1327,29 @@ function OpenGUI {
         }
     })
 
+    # Add Ctrl+F keyboard shortcut to focus search box on current tab
+    $window.Add_KeyDown({
+        param($sender, $e)
+        
+        # Check if Ctrl+F was pressed
+        if ($e.Key -eq [System.Windows.Input.Key]::F -and 
+            ([System.Windows.Input.Keyboard]::Modifiers -band [System.Windows.Input.ModifierKeys]::Control)) {
+            
+            $currentTab = $tabControl.SelectedItem
+            
+            # Focus AppSearchBox if on App Removal tab
+            if ($currentTab.Header -eq "App Removal" -and $appSearchBox) {
+                $appSearchBox.Focus()
+                $e.Handled = $true
+            }
+            # Focus TweakSearchBox if on Tweaks tab
+            elseif ($currentTab.Header -eq "Tweaks" -and $tweakSearchBox) {
+                $tweakSearchBox.Focus()
+                $e.Handled = $true
+            }
+        }
+    })
+
     # Wizard Navigation
     $tabControl = $window.FindName('MainTabControl')
     $previousBtn = $window.FindName('PreviousBtn')

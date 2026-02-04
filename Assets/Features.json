@@ -609,6 +609,18 @@
       "MaxVersion": null
     },
     {
+      "FeatureId": "DisableBitlockerAutoEncryption",
+      "Label": "BitLocker automatic device encryption",
+      "Category": "System",
+      "Action": "Disable",
+      "RegistryKey": "Disable_Bitlocker_Auto_Encryption.reg",
+      "ApplyText": "> Disabling BitLocker automatic device encryption...",
+      "UndoAction": "Enable",
+      "RegistryUndoKey": "Enable_Bitlocker_Auto_Encryption.reg",
+      "MinVersion": 22000,
+      "MaxVersion": null
+    },
+    {
       "FeatureId": "DisableModernStandbyNetworking",
       "Label": "Modern Standby network connectivity",
       "Category": "System",

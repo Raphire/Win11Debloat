@@ -108,6 +108,7 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 - Turn off Enhance Pointer Precision, also known as mouse acceleration.
 - Disable the Sticky Keys keyboard shortcut. (W11 only)
 - Disable fast start-up to ensure a full shutdown.
+- Disable BitLocker automatic device encryption.
 - Disable network connectivity during Modern Standby to reduce battery drain. (W11 only)
 
 #### Appearance

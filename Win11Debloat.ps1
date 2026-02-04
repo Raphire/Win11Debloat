@@ -25,6 +25,7 @@ param (
     [switch]$DisableGameBarIntegration,
     [switch]$DisableTelemetry,
     [switch]$DisableFastStartup,
+    [switch]$DisableBitlockerAutoEncryption,
     [switch]$DisableModernStandbyNetworking,
     [switch]$DisableBing,
     [switch]$DisableDesktopSpotlight,

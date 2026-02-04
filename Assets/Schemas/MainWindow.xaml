@@ -1,8 +1,8 @@
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Win11Debloat" 
-        Width="1024" Height="768" 
-        ResizeMode="NoResize" 
+        MinWidth="1024" MinHeight="640"
+        ResizeMode="CanResize" 
         SnapsToDevicePixels="True"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
@@ -53,7 +53,7 @@
             <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
             <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Margin" Value="0,4,0,8"/>
+            <Setter Property="Margin" Value="0,4,0,12"/>
             <Setter Property="MinHeight" Value="33"/>
             <Setter Property="Template">
                 <Setter.Value>
@@ -246,12 +246,12 @@
         <Style x:Key="OverviewNoChangesTextStyle" TargetType="TextBlock">
             <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
             <Setter Property="FontStyle" Value="Italic"/>
-            <Setter Property="Margin" Value="0,0,0,8"/>
+            <Setter Property="Margin" Value="0,8,0,0"/>
         </Style>
 
         <Style x:Key="OverviewChangeBulletStyle" TargetType="TextBlock">
             <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
-            <Setter Property="Margin" Value="0,0,0,8"/>
+            <Setter Property="Margin" Value="0,8,0,0"/>
             <Setter Property="TextWrapping" Value="Wrap"/>
         </Style>
 
@@ -438,6 +438,21 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+
+        <!-- SearchBox Border Style -->
+        <Style x:Key="SearchBoxBorderStyle" TargetType="Border">
+            <Setter Property="Background" Value="{DynamicResource ComboBgColor}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderColor}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="Width" Value="300"/>
+            <Setter Property="Padding" Value="8,6"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource ComboHoverColor}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
 
     <Border BorderBrush="{DynamicResource BorderColor}" 
@@ -450,6 +465,16 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
+
+            <!-- Resize Borders -->
+            <Rectangle x:Name="ResizeLeft" Width="5" HorizontalAlignment="Left" Fill="Transparent" Cursor="SizeWE" Grid.Row="0" Grid.RowSpan="3" Panel.ZIndex="100"/>
+            <Rectangle x:Name="ResizeRight" Width="5" HorizontalAlignment="Right" Fill="Transparent" Cursor="SizeWE" Grid.Row="0" Grid.RowSpan="3" Panel.ZIndex="100"/>
+            <Rectangle x:Name="ResizeTop" Height="5" VerticalAlignment="Top" Fill="Transparent" Cursor="SizeNS" Grid.Row="0" Panel.ZIndex="100"/>
+            <Rectangle x:Name="ResizeBottom" Height="5" VerticalAlignment="Bottom" Fill="Transparent" Cursor="SizeNS" Grid.Row="2" Panel.ZIndex="100"/>
+            <Rectangle x:Name="ResizeTopLeft" Width="8" Height="8" HorizontalAlignment="Left" VerticalAlignment="Top" Fill="Transparent" Cursor="SizeNWSE" Grid.Row="0" Panel.ZIndex="101"/>
+            <Rectangle x:Name="ResizeTopRight" Width="8" Height="8" HorizontalAlignment="Right" VerticalAlignment="Top" Fill="Transparent" Cursor="SizeNESW" Grid.Row="0" Panel.ZIndex="101"/>
+            <Rectangle x:Name="ResizeBottomLeft" Width="8" Height="8" HorizontalAlignment="Left" VerticalAlignment="Bottom" Fill="Transparent" Cursor="SizeNESW" Grid.Row="2" Panel.ZIndex="101"/>
+            <Rectangle x:Name="ResizeBottomRight" Width="8" Height="8" HorizontalAlignment="Right" VerticalAlignment="Bottom" Fill="Transparent" Cursor="SizeNWSE" Grid.Row="2" Panel.ZIndex="101"/>
 
             <!-- Custom Title Bar -->
             <Grid Grid.Row="0" x:Name="TitleBar">
@@ -558,7 +583,7 @@
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="10"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
                                     
@@ -570,7 +595,16 @@
                                     
                                     <CheckBox x:Name="OnlyInstalledAppsBox" Grid.Column="2" Content="Only show installed apps" IsChecked="False" Foreground="{DynamicResource FgColor}" VerticalAlignment="Center" AutomationProperties.Name="Only show installed apps"/>
 
-                                    <Border Grid.Column="4" BorderBrush="{DynamicResource ButtonBorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource ComboBgColor}" Width="300" Padding="8,6">
+                                    <Border x:Name="AppSearchBorder" Grid.Column="4">
+                                        <Border.Style>
+                                            <Style TargetType="Border" BasedOn="{StaticResource SearchBoxBorderStyle}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding ElementName=AppSearchBox, Path=IsFocused}" Value="True">
+                                                        <Setter Property="Background" Value="{DynamicResource SecondaryButtonHover}"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto"/>
@@ -584,10 +618,14 @@
                                 </Grid>
                             </StackPanel>
                         </Border>
-                        <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="20,0">
-                            <StackPanel>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            
                             <!-- Apps List -->
-                            <Border BorderBrush="{DynamicResource BorderColor}" CornerRadius="4" BorderThickness="1" Margin="0,0,0,10" Background="{DynamicResource CardBgColor}" Height="510">
+                            <Border Grid.Row="0" BorderBrush="{DynamicResource BorderColor}" CornerRadius="4" BorderThickness="1" Margin="20,0,20,10" Background="{DynamicResource CardBgColor}">
                                 <Grid>
                                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                                         <StackPanel x:Name="AppSelectionPanel" Margin="8"/>
@@ -599,11 +637,10 @@
                             </Border>
 
                             <!-- Status Info -->
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock x:Name="AppSelectionStatus" Text="" Foreground="{DynamicResource FgColor}" Margin="10,0,0,0" HorizontalAlignment="Left"/>
+                            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="20,0,20,0">
+                                <TextBlock x:Name="AppSelectionStatus" Text="" Foreground="{DynamicResource FgColor}" Margin="10,0,0,5" HorizontalAlignment="Left"/>
                             </StackPanel>
-                            </StackPanel>
-                        </ScrollViewer>
+                        </Grid>
                     </DockPanel>
                 </TabItem>
 
@@ -629,7 +666,16 @@
                                         <Button x:Name="ClearAllTweaksBtn" Content="Clear Selection" ToolTip="Clear all selected tweaks" Style="{StaticResource Win11ButtonSecondary}" Padding="10,0" Height="32" Margin="0,0,10,0" AutomationProperties.Name="Clear Selection"/>
                                     </StackPanel>
 
-                                    <Border Grid.Column="2" BorderBrush="{DynamicResource ButtonBorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource ComboBgColor}" Width="300" Padding="8,6">
+                                    <Border x:Name="TweakSearchBorder" Grid.Column="2">
+                                        <Border.Style>
+                                            <Style TargetType="Border" BasedOn="{StaticResource SearchBoxBorderStyle}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding ElementName=TweakSearchBox, Path=IsFocused}" Value="True">
+                                                        <Setter Property="Background" Value="{DynamicResource SecondaryButtonHover}"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto"/>
@@ -698,7 +744,7 @@
                             <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,-20,0,0" Padding="20,10,20,0">
                                 <StackPanel Margin="0,10,0,5">
                                     <!-- Apply Changes To -->
-                                    <Border BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="20" Margin="0,0,0,16">
+                                    <Border BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="16,12" Margin="0,0,0,16">
                                         <StackPanel>
                                             <TextBlock Text="Apply Changes To" FontWeight="Bold" FontSize="14" Foreground="{DynamicResource FgColor}" Margin="0,0,0,8"/>
                                             <ComboBox x:Name="UserSelectionCombo" Margin="0,0,0,12" AutomationProperties.Name="Apply Changes To">
@@ -727,7 +773,7 @@
                                     <!-- Selected Changes -->
                                     <Border BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="16,12" Margin="0,0,0,16">
                                         <StackPanel>
-                                            <TextBlock Text="Selected Changes" FontWeight="Bold" FontSize="14" Foreground="{DynamicResource FgColor}" Margin="0,0,0,12"/>
+                                            <TextBlock Text="Selected Changes" FontWeight="Bold" FontSize="14" Foreground="{DynamicResource FgColor}"/>
                                             <StackPanel x:Name="OverviewChangesPanel"/>
                                         </StackPanel>
                                     </Border>

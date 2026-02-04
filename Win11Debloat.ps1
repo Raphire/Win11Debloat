@@ -1235,6 +1235,7 @@ function OpenGUI {
     # Monitor scrollbar visibility and adjust searchbar margin
     $tweaksScrollViewer.Add_ScrollChanged({
         if ($tweaksScrollViewer.ScrollableHeight -gt 0) {
+            # The 17px accounts for the scrollbar width + some padding
             $tweakSearchBorder.Margin = [System.Windows.Thickness]::new(0, 0, 17, 0)
         } else {
             $tweakSearchBorder.Margin = [System.Windows.Thickness]::new(0, 0, 0, 0)

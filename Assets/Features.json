@@ -924,7 +924,7 @@
       "MaxVersion": null
     },
     {
-      "FeatureId": "PreventAutoReboot",
+      "FeatureId": "PreventUpdateAutoReboot",
       "Label": "automatic restarts after updates while signed in",
       "Category": "Windows Update",
       "Action": "Prevent",

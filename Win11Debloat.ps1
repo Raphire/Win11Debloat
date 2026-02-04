@@ -2228,12 +2228,12 @@ function GetUserDirectory {
         $exitIfPathNotFound = $true
     )
 
-    if (-not (CheckIfUserExists -userName $userName)) {
-        Write-Error "User $userName does not exist on this system"
-        AwaitKeyToExit
-    }
-
     try {
+        if (-not (CheckIfUserExists -userName $userName) -and $userName -ne "*") {
+            Write-Error "User $userName does not exist on this system"
+            AwaitKeyToExit
+        }
+
         $userDirectoryExists = Test-Path "$env:SystemDrive\Users\$userName"
         $userPath = "$env:SystemDrive\Users\$userName\$fileName"
 

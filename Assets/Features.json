@@ -1,14 +1,15 @@
 {
   "Version": "1.0",
   "Categories": [
-    "Start Menu",
-    "System",
     "Privacy & Suggested Content",
+    "System",
+    "Start Menu",
+    "AI",
+    "Windows Update",
     "Taskbar",
     "Appearance",
-    "AI",
-    "Other",
     "File Explorer",
+    "Other",
     "Gaming"
   ],
   "UiGroups": [
@@ -186,11 +187,11 @@
     },
     {
       "FeatureId": "DisableSuggestions",
-      "Label": "tips, tricks & suggested content",
+      "Label": "tips, tricks & suggested content throughout Windows",
       "Category": "Privacy & Suggested Content",
       "Action": "Disable",
       "RegistryKey": "Disable_Windows_Suggestions.reg",
-      "ApplyText": "> Disabling tips, tricks, suggestions and ads across Windows...",
+      "ApplyText": "> Disabling tips, tricks, suggestions and ads throughout Windows...",
       "UndoAction": "Enable",
       "RegistryUndoKey": "Enable_Windows_Suggestions.reg",
       "MinVersion": null,
@@ -895,6 +896,42 @@
       "ApplyText": "> Disabling animations and visual effects...",
       "UndoAction": "Enable",
       "RegistryUndoKey": "Enable_Animations.reg",
+      "MinVersion": null,
+      "MaxVersion": null
+    },
+    {
+      "FeatureId": "DisableUpdateASAP",
+      "Label": "updates as soon as they're available",
+      "Category": "Windows Update",
+      "Action": "Prevent getting",
+      "RegistryKey": "Disable_Update_ASAP.reg",
+      "ApplyText": "> Preventing Windows from getting updates as soon as they are available...",
+      "UndoAction": "Get",
+      "RegistryUndoKey": "Enable_Update_ASAP.reg",
+      "MinVersion": null,
+      "MaxVersion": null
+    },
+    {
+      "FeatureId": "PreventAutoReboot",
+      "Label": "automatic restarts after updates while signed in",
+      "Category": "Windows Update",
+      "Action": "Prevent",
+      "RegistryKey": "Prevent_Auto_Reboot.reg",
+      "ApplyText": "> Preventing automatic restarts after updates while signed in...",
+      "UndoAction": "Allow",
+      "RegistryUndoKey": "Allow_Auto_Reboot.reg",
+      "MinVersion": null,
+      "MaxVersion": null
+    },
+    {
+      "FeatureId": "DisableDeliveryOptimization",
+      "Label": "sharing downloaded updates with other PCs",
+      "Category": "Windows Update",
+      "Action": "Disable",
+      "RegistryKey": "Disable_Delivery_Optimization.reg",
+      "ApplyText": "> Disabling sharing of downloaded updates with other PCs...",
+      "UndoAction": "Enable",
+      "RegistryUndoKey": "Enable_Delivery_Optimization.reg",
       "MinVersion": null,
       "MaxVersion": null
     },

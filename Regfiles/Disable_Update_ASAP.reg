@@ -1,0 +1,5 @@
+Windows Registry Editor Version 5.00
+
+; Turn Off "Get the latest updates as soon as they're available"
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings]
+"IsContinuousInnovationOptedIn"=dword:00000000

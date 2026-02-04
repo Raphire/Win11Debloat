@@ -555,7 +555,7 @@ function GetSystemUsesDarkMode {
 
 # Initializes and opens the main GUI window
 function OpenGUI {    
-    Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase | Out-Null
+    Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase,System.Windows.Forms | Out-Null
 
     # Get current Windows build version
     $WinVersion = Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' CurrentBuild
@@ -599,6 +599,135 @@ function OpenGUI {
         Stop-Transcript
         Exit
     })
+
+    # Implement window resize functionality
+    $resizeLeft = $window.FindName('ResizeLeft')
+    $resizeRight = $window.FindName('ResizeRight')
+    $resizeTop = $window.FindName('ResizeTop')
+    $resizeBottom = $window.FindName('ResizeBottom')
+    $resizeTopLeft = $window.FindName('ResizeTopLeft')
+    $resizeTopRight = $window.FindName('ResizeTopRight')
+    $resizeBottomLeft = $window.FindName('ResizeBottomLeft')
+    $resizeBottomRight = $window.FindName('ResizeBottomRight')
+
+    $script:resizing = $false
+    $script:resizeEdges = $null
+    $script:resizeStart = $null
+    $script:windowStart = $null
+    $script:resizeElement = $null
+
+    $resizeHandler = {
+        param($sender, $e)
+        
+        $script:resizing = $true
+        $script:resizeElement = $sender
+        $script:resizeStart = [System.Windows.Forms.Cursor]::Position
+        $script:windowStart = @{
+            Left = $window.Left
+            Top = $window.Top
+            Width = $window.ActualWidth
+            Height = $window.ActualHeight
+        }
+        
+        # Parse direction tag into edge flags for cleaner resize logic
+        $direction = $sender.Tag
+        $script:resizeEdges = @{
+            Left = $direction -match 'Left'
+            Right = $direction -match 'Right'
+            Top = $direction -match 'Top'
+            Bottom = $direction -match 'Bottom'
+        }
+        
+        $sender.CaptureMouse()
+        $e.Handled = $true
+    }
+
+    $moveHandler = {
+        param($sender, $e)
+        if (-not $script:resizing) { return }
+        
+        $current = [System.Windows.Forms.Cursor]::Position
+        $deltaX = $current.X - $script:resizeStart.X
+        $deltaY = $current.Y - $script:resizeStart.Y
+
+        # Handle horizontal resize
+        if ($script:resizeEdges.Left) {
+            $newWidth = [Math]::Max($window.MinWidth, $script:windowStart.Width - $deltaX)
+            if ($newWidth -ne $window.Width) {
+                $window.Left = $script:windowStart.Left + ($script:windowStart.Width - $newWidth)
+                $window.Width = $newWidth
+            }
+        }
+        elseif ($script:resizeEdges.Right) {
+            $window.Width = [Math]::Max($window.MinWidth, $script:windowStart.Width + $deltaX)
+        }
+
+        # Handle vertical resize
+        if ($script:resizeEdges.Top) {
+            $newHeight = [Math]::Max($window.MinHeight, $script:windowStart.Height - $deltaY)
+            if ($newHeight -ne $window.Height) {
+                $window.Top = $script:windowStart.Top + ($script:windowStart.Height - $newHeight)
+                $window.Height = $newHeight
+            }
+        }
+        elseif ($script:resizeEdges.Bottom) {
+            $window.Height = [Math]::Max($window.MinHeight, $script:windowStart.Height + $deltaY)
+        }
+        
+        $e.Handled = $true
+    }
+
+    $releaseHandler = {
+        param($sender, $e)
+        if ($script:resizing -and $script:resizeElement) {
+            $script:resizing = $false
+            $script:resizeEdges = $null
+            $script:resizeElement.ReleaseMouseCapture()
+            $script:resizeElement = $null
+            $e.Handled = $true
+        }
+    }
+
+    # Set tags and add event handlers for resize borders
+    $resizeLeft.Tag = 'Left'
+    $resizeLeft.Add_PreviewMouseLeftButtonDown($resizeHandler)
+    $resizeLeft.Add_MouseMove($moveHandler)
+    $resizeLeft.Add_MouseLeftButtonUp($releaseHandler)
+    
+    $resizeRight.Tag = 'Right'
+    $resizeRight.Add_PreviewMouseLeftButtonDown($resizeHandler)
+    $resizeRight.Add_MouseMove($moveHandler)
+    $resizeRight.Add_MouseLeftButtonUp($releaseHandler)
+    
+    $resizeTop.Tag = 'Top'
+    $resizeTop.Add_PreviewMouseLeftButtonDown($resizeHandler)
+    $resizeTop.Add_MouseMove($moveHandler)
+    $resizeTop.Add_MouseLeftButtonUp($releaseHandler)
+    
+    $resizeBottom.Tag = 'Bottom'
+    $resizeBottom.Add_PreviewMouseLeftButtonDown($resizeHandler)
+    $resizeBottom.Add_MouseMove($moveHandler)
+    $resizeBottom.Add_MouseLeftButtonUp($releaseHandler)
+    
+    $resizeTopLeft.Tag = 'TopLeft'
+    $resizeTopLeft.Add_PreviewMouseLeftButtonDown($resizeHandler)
+    $resizeTopLeft.Add_MouseMove($moveHandler)
+    $resizeTopLeft.Add_MouseLeftButtonUp($releaseHandler)
+    
+    $resizeTopRight.Tag = 'TopRight'
+    $resizeTopRight.Add_PreviewMouseLeftButtonDown($resizeHandler)
+    $resizeTopRight.Add_MouseMove($moveHandler)
+    $resizeTopRight.Add_MouseLeftButtonUp($releaseHandler)
+    
+    $resizeBottomLeft.Tag = 'BottomLeft'
+    $resizeBottomLeft.Add_PreviewMouseLeftButtonDown($resizeHandler)
+    $resizeBottomLeft.Add_MouseMove($moveHandler)
+    $resizeBottomLeft.Add_MouseLeftButtonUp($releaseHandler)
+    
+    $resizeBottomRight.Tag = 'BottomRight'
+    $resizeBottomRight.Add_PreviewMouseLeftButtonDown($resizeHandler)
+    $resizeBottomRight.Add_MouseMove($moveHandler)
+    $resizeBottomRight.Add_MouseLeftButtonUp($releaseHandler)
 
     # Integrated App Selection UI
     $appsPanel = $window.FindName('AppSelectionPanel')
@@ -1096,11 +1225,22 @@ function OpenGUI {
     # Tweak Search Box functionality
     $tweakSearchBox = $window.FindName('TweakSearchBox')
     $tweakSearchPlaceholder = $window.FindName('TweakSearchPlaceholder')
+    $tweakSearchBorder = $window.FindName('TweakSearchBorder')
     $tweaksScrollViewer = $window.FindName('TweaksScrollViewer')
     $tweaksGrid = $window.FindName('TweaksGrid')
     $col0 = $window.FindName('Column0Panel')
     $col1 = $window.FindName('Column1Panel')
     $col2 = $window.FindName('Column2Panel')
+    
+    # Monitor scrollbar visibility and adjust searchbar margin
+    $tweaksScrollViewer.Add_ScrollChanged({
+        if ($tweaksScrollViewer.ScrollableHeight -gt 0) {
+            # The 17px accounts for the scrollbar width + some padding
+            $tweakSearchBorder.Margin = [System.Windows.Thickness]::new(0, 0, 17, 0)
+        } else {
+            $tweakSearchBorder.Margin = [System.Windows.Thickness]::new(0, 0, 0, 0)
+        }
+    })
     
     # Helper function to clear all tweak highlights
     function ClearTweakHighlights {

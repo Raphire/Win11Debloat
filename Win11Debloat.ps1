@@ -1710,21 +1710,10 @@ function OpenGUI {
             try {
                 ExecuteAllChanges
                 
-                if (-not $script:Params.ContainsKey("Sysprep") -and -not $script:Params.ContainsKey("User") -and -not $script:Params.ContainsKey("NoRestartExplorer")) {
-                    # Ask user if they want to restart Explorer now
-                    $result = [System.Windows.MessageBox]::Show(
-                        'Would you like to restart the Windows Explorer process now to apply all changes? Some changes may not take effect until a restart is performed.',
-                        'Restart Windows Explorer?',
-                        [System.Windows.MessageBoxButton]::YesNo,
-                        [System.Windows.MessageBoxImage]::Question
-                    )
-                    
-                    if ($result -eq [System.Windows.MessageBoxResult]::Yes) {
-                        RestartExplorer
-                    }
-                    else {
-                        Write-ToConsole "Explorer process restart was skipped, please manually reboot your PC to apply all changes"
-                    }
+                # Check if user wants to restart explorer (from checkbox)
+                $restartExplorerCheckBox = $window.FindName('RestartExplorerCheckBox')
+                if ($restartExplorerCheckBox -and $restartExplorerCheckBox.IsChecked) {
+                    RestartExplorer
                 }
                 
                 Write-ToConsole ""
@@ -1750,6 +1739,33 @@ function OpenGUI {
         BuildDynamicTweaks
 
         LoadAppsIntoMainUI
+
+        # Update Current User label with username
+        if ($userSelectionCombo -and $userSelectionCombo.Items.Count -gt 0) {
+            $currentUserItem = $userSelectionCombo.Items[0]
+            if ($currentUserItem -is [System.Windows.Controls.ComboBoxItem]) {
+                $currentUserItem.Content = "Current User ($(GetUserName))"
+            }
+        }
+
+        # Disable Restart Explorer option if NoRestartExplorer parameter is set
+        $restartExplorerCheckBox = $window.FindName('RestartExplorerCheckBox')
+        if ($restartExplorerCheckBox -and $script:Params.ContainsKey("NoRestartExplorer")) {
+            $restartExplorerCheckBox.IsChecked = $false
+            $restartExplorerCheckBox.IsEnabled = $false
+        }
+
+        # Force Apply Changes To setting if Sysprep or User parameters are set
+        if ($script:Params.ContainsKey("Sysprep")) {
+            $userSelectionCombo.SelectedIndex = 2
+            $userSelectionCombo.IsEnabled = $false
+        }
+        elseif ($script:Params.ContainsKey("User")) {
+            $userSelectionCombo.SelectedIndex = 1
+            $userSelectionCombo.IsEnabled = $false
+            $otherUsernameTextBox.Text = $script:Params.Item("User")
+            $otherUsernameTextBox.IsEnabled = $false
+        }
 
         UpdateNavigationButtons
     })

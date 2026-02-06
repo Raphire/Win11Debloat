@@ -159,6 +159,13 @@
                             <Trigger Property="SelectedIndex" Value="-1">
                                 <Setter TargetName="ClosedAccentLine" Property="Visibility" Value="Collapsed"/>
                             </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="ClosedAccentLine" Property="Visibility" Value="Collapsed"/>
+                                <Setter Property="Background" Value="{DynamicResource ButtonDisabled}"/>
+                                <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource ButtonTextDisabled}"/>
+                                <Setter Property="Opacity" Value="0.6"/>
+                            </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
@@ -238,27 +245,64 @@
         <!-- Category header text style -->
         <Style x:Key="CategoryHeaderTextBlock" TargetType="TextBlock">
             <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontSize" Value="16"/>
             <Setter Property="Margin" Value="0,0,0,10"/>
             <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
-        </Style> 
+        </Style>
 
         <!-- Overview changes text style -->
         <Style x:Key="OverviewNoChangesTextStyle" TargetType="TextBlock">
             <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+            <Setter Property="FontSize" Value="12"/>
             <Setter Property="FontStyle" Value="Italic"/>
-            <Setter Property="Margin" Value="0,8,0,0"/>
         </Style>
 
         <Style x:Key="OverviewChangeBulletStyle" TargetType="TextBlock">
             <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
-            <Setter Property="Margin" Value="0,8,0,0"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+            <Setter Property="FontSize" Value="12"/>
             <Setter Property="TextWrapping" Value="Wrap"/>
         </Style>
 
         <!-- TextBox Style for search -->
         <Style TargetType="TextBox">
             <Setter Property="CaretBrush" Value="{DynamicResource FgColor}"/>
+        </Style>
+
+        <!-- User TextBox Style with disabled state -->
+        <Style x:Key="UserTextBoxStyle" TargetType="TextBox">
+            <Setter Property="CaretBrush" Value="{DynamicResource FgColor}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Margin" Value="1,0,0,1"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="0"/>
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="{DynamicResource ButtonDisabled}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource ButtonTextDisabled}"/>
+                    <Setter Property="Opacity" Value="0.6"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- User TextBox Border Style with disabled state -->
+        <Style x:Key="UserTextBoxBorderStyle" TargetType="Border">
+            <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderColor}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="Background" Value="{DynamicResource ComboBgColor}"/>
+            <Setter Property="Padding" Value="8,6"/>
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="{DynamicResource ButtonDisabled}"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+                    <Setter Property="Opacity" Value="0.6"/>
+                </Trigger>
+            </Style.Triggers>
         </Style>
 
         <!-- CheckBox Style -->
@@ -290,6 +334,13 @@
                                 <Setter TargetName="CheckBoxBorder" Property="Background" Value="{DynamicResource ButtonBg}"/>
                                 <Setter TargetName="CheckBoxBorder" Property="BorderBrush" Value="{DynamicResource ButtonBg}"/>
                                 <Setter TargetName="CheckMark" Property="Foreground" Value="White"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="CheckBoxBorder" Property="Background" Value="{DynamicResource ButtonDisabled}"/>
+                                <Setter TargetName="CheckBoxBorder" Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource ButtonTextDisabled}"/>
+                                <Setter Property="Opacity" Value="0.6"/>
+                                <Setter TargetName="CheckMark" Property="Foreground" Value="{DynamicResource ButtonTextDisabled}"/>
                             </Trigger>
                             <MultiTrigger>
                                 <MultiTrigger.Conditions>
@@ -744,18 +795,27 @@
                         <Grid>
                             <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,-20,0,0" Padding="20,10,20,0">
                                 <StackPanel Margin="0,10,0,5">
+                                    <!-- Selected Changes -->
+                                    <Border BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="16,12,16,4" Margin="0,0,0,16">
+                                        <StackPanel>
+                                            <TextBlock Text="Selected Changes" Style="{StaticResource CategoryHeaderTextBlock}"/>
+                                            <StackPanel x:Name="OverviewChangesPanel"/>
+                                            <StackPanel Margin="0,0,0,3"/>
+                                        </StackPanel>
+                                    </Border>
+
                                     <!-- Apply Changes To -->
                                     <Border BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="16,12" Margin="0,0,0,16">
                                         <StackPanel>
-                                            <TextBlock Text="Apply Changes To" FontWeight="Bold" FontSize="14" Foreground="{DynamicResource FgColor}" Margin="0,0,0,8"/>
-                                            <ComboBox x:Name="UserSelectionCombo" Margin="0,0,0,12" AutomationProperties.Name="Apply Changes To">
+                                            <TextBlock Text="Apply Changes To" Style="{StaticResource CategoryHeaderTextBlock}"/>
+                                            <ComboBox x:Name="UserSelectionCombo" Margin="0,0,0,6" AutomationProperties.Name="Apply Changes To">
                                                 <ComboBoxItem Content="Current User" IsSelected="True"/>
                                                 <ComboBoxItem Content="Other User"/>
                                                 <ComboBoxItem Content="Windows Default User (Sysprep)"/>
                                             </ComboBox>
-                                            <StackPanel x:Name="OtherUserPanel" Visibility="Collapsed" Margin="0,0,0,12">
+                                            <StackPanel x:Name="OtherUserPanel" Visibility="Collapsed" Margin="0,0,0,6">
                                                 <TextBlock x:Name="UsernameValidationMessage" Text="" FontStyle="Italic" Foreground="{DynamicResource CloseHover}" FontSize="11" Margin="3,0,0,4" TextWrapping="Wrap"/>
-                                                <Border BorderBrush="{DynamicResource ButtonBorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource ComboBgColor}" Padding="8,6">
+                                                <Border Style="{StaticResource UserTextBoxBorderStyle}" IsEnabled="{Binding ElementName=OtherUsernameTextBox, Path=IsEnabled}">
                                                     <Grid>
                                                         <Grid.ColumnDefinitions>
                                                             <ColumnDefinition Width="Auto"/>
@@ -763,28 +823,30 @@
                                                         </Grid.ColumnDefinitions>
                                                         <TextBlock Grid.Column="0" Text="&#xE77B;" FontFamily="Segoe MDL2 Assets" FontSize="14" VerticalAlignment="Center" Margin="4,0,8,0" Foreground="{DynamicResource FgColor}"/>
                                                         <TextBlock x:Name="UsernameTextBoxPlaceholder" Grid.Column="1" Text="Enter username" Foreground="{DynamicResource FgColor}" Opacity="0.5" FontSize="13" Margin="3,0,0,1" VerticalAlignment="Center" IsHitTestVisible="False"/>
-                                                        <TextBox x:Name="OtherUsernameTextBox" Grid.Column="1" Background="Transparent" Foreground="{DynamicResource FgColor}" BorderThickness="0" FontSize="13" Margin="1,0,0,1" VerticalAlignment="Center" Text="" Padding="0" AutomationProperties.Name="Enter username"/>
+                                                        <TextBox x:Name="OtherUsernameTextBox" Grid.Column="1" Style="{StaticResource UserTextBoxStyle}" Text="" AutomationProperties.Name="Enter username"/>
                                                     </Grid>
                                                 </Border>
                                             </StackPanel>
-                                            <TextBlock x:Name="UserSelectionDescription" Text="Changes will be applied to the currently logged-in user profile." Foreground="{DynamicResource FgColor}" FontSize="12" TextWrapping="Wrap"/>
+                                            <TextBlock x:Name="UserSelectionDescription" Text="Changes will be applied to the currently logged-in user profile." Foreground="{DynamicResource FgColor}" FontSize="12" TextWrapping="Wrap" Margin="0,6,0,3"/>
                                         </StackPanel>
                                     </Border>
 
-                                    <!-- Selected Changes -->
+                                    <!-- Options -->
                                     <Border BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="16,12" Margin="0,0,0,16">
                                         <StackPanel>
-                                            <TextBlock Text="Selected Changes" FontWeight="Bold" FontSize="14" Foreground="{DynamicResource FgColor}"/>
-                                            <StackPanel x:Name="OverviewChangesPanel"/>
-                                        </StackPanel>
-                                    </Border>
-                                    
-                                    <!-- System Restore Point -->
-                                    <Border BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="16,12" Margin="0,0,0,16">
-                                        <StackPanel>
-                                            <TextBlock Text="System Restore Point" FontWeight="Bold" FontSize="14" Foreground="{DynamicResource FgColor}" Margin="0,0,0,8"/>
-                                            <TextBlock Text="A restore point will allow you to revert your system to a previous state using the built-in System Restore feature. (Recommended)" Foreground="{DynamicResource FgColor}" FontSize="12" Margin="0,0,0,10" TextWrapping="Wrap"/>
-                                            <CheckBox x:Name="RestorePointCheckBox" Content="Create system restore point" Foreground="{DynamicResource FgColor}" AutomationProperties.Name="Create system restore point"/>
+                                            <TextBlock Text="Options" Style="{StaticResource CategoryHeaderTextBlock}"/>
+
+                                            <!-- Restore Point Option -->
+                                            <StackPanel Margin="0,0,0,8">
+                                                <CheckBox x:Name="RestorePointCheckBox" Content="Create a system restore point (Recommended)" AutomationProperties.Name="Create a system restore point (Recommended)"/>
+                                            </StackPanel>
+                                            
+                                            <!-- Restart Explorer Option -->
+                                            <StackPanel>
+                                                <CheckBox x:Name="RestartExplorerCheckBox" Content="Restart the Windows Explorer process to apply all changes immediately" AutomationProperties.Name="Restart the Windows Explorer process to apply all changes immediately"/>
+                                            </StackPanel>
+
+                                            <StackPanel Margin="0,0,0,3"/>
                                         </StackPanel>
                                     </Border>
                                     

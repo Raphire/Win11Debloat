@@ -105,6 +105,7 @@ $script:ControlParams = 'WhatIf', 'Confirm', 'Verbose', 'Debug', 'LogPath', 'Sil
 $script:GuiConsoleOutput = $null
 $script:GuiConsoleScrollViewer = $null
 $script:GuiWindow = $null
+$script:CancelRequested = $false
 
 # Check if current powershell environment is limited by security policies
 if ($ExecutionContext.SessionState.LanguageMode -ne "FullLanguage") {
@@ -598,10 +599,9 @@ function OpenGUI {
         $window.Close()
     })
 
-    # Ensure closing the window via any means properly exits the script
+    # Ensure closing the main window stops all execution
     $window.Add_Closing({
-        Stop-Transcript
-        Exit
+        $script:CancelRequested = $true
     })
 
     # Implement window resize functionality
@@ -1710,25 +1710,18 @@ function OpenGUI {
             try {
                 ExecuteAllChanges
                 
-                if (-not $script:Params.ContainsKey("Sysprep") -and -not $script:Params.ContainsKey("User") -and -not $script:Params.ContainsKey("NoRestartExplorer")) {
-                    # Ask user if they want to restart Explorer now
-                    $result = [System.Windows.MessageBox]::Show(
-                        'Would you like to restart the Windows Explorer process now to apply all changes? Some changes may not take effect until a restart is performed.',
-                        'Restart Windows Explorer?',
-                        [System.Windows.MessageBoxButton]::YesNo,
-                        [System.Windows.MessageBoxImage]::Question
-                    )
-                    
-                    if ($result -eq [System.Windows.MessageBoxResult]::Yes) {
-                        RestartExplorer
-                    }
-                    else {
-                        Write-ToConsole "Explorer process restart was skipped, please manually reboot your PC to apply all changes"
-                    }
+                # Check if user wants to restart explorer (from checkbox)
+                $restartExplorerCheckBox = $window.FindName('RestartExplorerCheckBox')
+                if ($restartExplorerCheckBox -and $restartExplorerCheckBox.IsChecked -and -not $script:CancelRequested) {
+                    RestartExplorer
                 }
                 
                 Write-ToConsole ""
-                Write-ToConsole "All changes have been applied. Please check the output above for any errors."
+                if ($script:CancelRequested) {
+                    Write-ToConsole "Script execution was cancelled by the user. Some changes may not have been applied."
+                } else {
+                    Write-ToConsole "All changes have been applied. Please check the output above for any errors."
+                }
                 
                 $finishBtn.Dispatcher.Invoke([action]{
                     $finishBtn.IsEnabled = $true
@@ -1750,6 +1743,33 @@ function OpenGUI {
         BuildDynamicTweaks
 
         LoadAppsIntoMainUI
+
+        # Update Current User label with username
+        if ($userSelectionCombo -and $userSelectionCombo.Items.Count -gt 0) {
+            $currentUserItem = $userSelectionCombo.Items[0]
+            if ($currentUserItem -is [System.Windows.Controls.ComboBoxItem]) {
+                $currentUserItem.Content = "Current User ($(GetUserName))"
+            }
+        }
+
+        # Disable Restart Explorer option if NoRestartExplorer parameter is set
+        $restartExplorerCheckBox = $window.FindName('RestartExplorerCheckBox')
+        if ($restartExplorerCheckBox -and $script:Params.ContainsKey("NoRestartExplorer")) {
+            $restartExplorerCheckBox.IsChecked = $false
+            $restartExplorerCheckBox.IsEnabled = $false
+        }
+
+        # Force Apply Changes To setting if Sysprep or User parameters are set
+        if ($script:Params.ContainsKey("Sysprep")) {
+            $userSelectionCombo.SelectedIndex = 2
+            $userSelectionCombo.IsEnabled = $false
+        }
+        elseif ($script:Params.ContainsKey("User")) {
+            $userSelectionCombo.SelectedIndex = 1
+            $userSelectionCombo.IsEnabled = $false
+            $otherUsernameTextBox.Text = $script:Params.Item("User")
+            $otherUsernameTextBox.IsEnabled = $false
+        }
 
         UpdateNavigationButtons
     })
@@ -2170,6 +2190,10 @@ function RemoveApps {
     )
 
     Foreach ($app in $appsList) {
+        if ($script:CancelRequested) {
+            return
+        }
+
         Write-ToConsole "Attempting to remove $app..."
 
         # Use WinGet only to remove OneDrive and Edge
@@ -2911,6 +2935,10 @@ function ExecuteAllChanges {
     
     # Execute all parameters
     foreach ($paramKey in $script:Params.Keys) {
+        if ($script:CancelRequested) { 
+            return
+        }
+
         if ($script:ControlParams -contains $paramKey) {
             continue
         }

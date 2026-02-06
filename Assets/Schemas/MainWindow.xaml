@@ -832,21 +832,19 @@
                                     </Border>
 
                                     <!-- Options -->
-                                    <Border BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="16,12" Margin="0,0,0,16">
+                                    <Border BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="16,12,16,3" Margin="0,0,0,16">
                                         <StackPanel>
                                             <TextBlock Text="Options" Style="{StaticResource CategoryHeaderTextBlock}"/>
 
                                             <!-- Restore Point Option -->
-                                            <StackPanel Margin="0,0,0,8">
-                                                <CheckBox x:Name="RestorePointCheckBox" Content="Create a system restore point (Recommended)" AutomationProperties.Name="Create a system restore point (Recommended)"/>
+                                            <StackPanel>
+                                                <CheckBox x:Name="RestorePointCheckBox" Style="{StaticResource FeatureCheckboxStyle}" Content="Create a system restore point (Recommended)" AutomationProperties.Name="Create a system restore point (Recommended)"/>
                                             </StackPanel>
                                             
                                             <!-- Restart Explorer Option -->
                                             <StackPanel>
-                                                <CheckBox x:Name="RestartExplorerCheckBox" Content="Restart the Windows Explorer process to apply all changes immediately" AutomationProperties.Name="Restart the Windows Explorer process to apply all changes immediately"/>
+                                                <CheckBox x:Name="RestartExplorerCheckBox" Style="{StaticResource FeatureCheckboxStyle}" Content="Restart the Windows Explorer process to apply all changes immediately" AutomationProperties.Name="Restart the Windows Explorer process to apply all changes immediately"/>
                                             </StackPanel>
-
-                                            <StackPanel Margin="0,0,0,3"/>
                                         </StackPanel>
                                     </Border>
                                     

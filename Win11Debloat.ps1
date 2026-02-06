@@ -105,6 +105,7 @@ $script:ControlParams = 'WhatIf', 'Confirm', 'Verbose', 'Debug', 'LogPath', 'Sil
 $script:GuiConsoleOutput = $null
 $script:GuiConsoleScrollViewer = $null
 $script:GuiWindow = $null
+$script:CancelRequested = $false
 
 # Check if current powershell environment is limited by security policies
 if ($ExecutionContext.SessionState.LanguageMode -ne "FullLanguage") {
@@ -598,10 +599,9 @@ function OpenGUI {
         $window.Close()
     })
 
-    # Ensure closing the window via any means properly exits the script
+    # Ensure closing the main window stops all execution
     $window.Add_Closing({
-        Stop-Transcript
-        Exit
+        $script:CancelRequested = $true
     })
 
     # Implement window resize functionality
@@ -1712,12 +1712,16 @@ function OpenGUI {
                 
                 # Check if user wants to restart explorer (from checkbox)
                 $restartExplorerCheckBox = $window.FindName('RestartExplorerCheckBox')
-                if ($restartExplorerCheckBox -and $restartExplorerCheckBox.IsChecked) {
+                if ($restartExplorerCheckBox -and $restartExplorerCheckBox.IsChecked -and -not $script:CancelRequested) {
                     RestartExplorer
                 }
                 
                 Write-ToConsole ""
-                Write-ToConsole "All changes have been applied. Please check the output above for any errors."
+                if ($script:CancelRequested) {
+                    Write-ToConsole "Script execution was cancelled by the user. Some changes may not have been applied."
+                } else {
+                    Write-ToConsole "All changes have been applied. Please check the output above for any errors."
+                }
                 
                 $finishBtn.Dispatcher.Invoke([action]{
                     $finishBtn.IsEnabled = $true
@@ -2186,6 +2190,10 @@ function RemoveApps {
     )
 
     Foreach ($app in $appsList) {
+        if ($script:CancelRequested) {
+            return
+        }
+
         Write-ToConsole "Attempting to remove $app..."
 
         # Use WinGet only to remove OneDrive and Edge
@@ -2927,6 +2935,10 @@ function ExecuteAllChanges {
     
     # Execute all parameters
     foreach ($paramKey in $script:Params.Keys) {
+        if ($script:CancelRequested) { 
+            return
+        }
+
         if ($script:ControlParams -contains $paramKey) {
             continue
         }

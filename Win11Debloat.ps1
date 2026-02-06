@@ -2194,10 +2194,8 @@ function RemoveApps {
 
                 If (($app -eq "Microsoft.Edge") -and (Select-String -InputObject $wingetOutput -Pattern "Uninstall failed with exit code")) {
                     Write-ToConsole "Unable to uninstall Microsoft Edge via WinGet" -ForegroundColor Red
-                    Write-ToConsole ""
 
                     if ($script:GuiConsoleOutput) {
-                        # If we're in GUI mode, show a message box with the option to force uninstall Edge
                         $result = [System.Windows.MessageBox]::Show(
                             'Unable to uninstall Microsoft Edge via WinGet. Would you like to forcefully uninstall it? NOT RECOMMENDED!',
                             'Force Uninstall Microsoft Edge?',
@@ -2206,6 +2204,7 @@ function RemoveApps {
                         )
 
                         if ($result -eq [System.Windows.MessageBoxResult]::Yes) {
+                            Write-ToConsole ""
                             ForceRemoveEdge
                         }
                     }
@@ -2305,8 +2304,6 @@ function ForceRemoveEdge {
         Write-ToConsole ""
         Write-ToConsole "Error: Unable to forcefully uninstall Microsoft Edge, uninstaller could not be found" -ForegroundColor Red
     }
-
-    Write-ToConsole ""
 }
 
 

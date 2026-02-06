@@ -351,7 +351,7 @@
       "UndoAction": "Show",
       "RegistryUndoKey": "Enable_Start_Recommended.reg",
       "MinVersion": 22621,
-      "MaxVersion": 26199
+      "MaxVersion": null
     },
     {
       "FeatureId": "DisableBing",

@@ -2218,10 +2218,21 @@ function RemoveApps {
 
                 If (($app -eq "Microsoft.Edge") -and (Select-String -InputObject $wingetOutput -Pattern "Uninstall failed with exit code")) {
                     Write-ToConsole "Unable to uninstall Microsoft Edge via WinGet" -ForegroundColor Red
-                    Write-ToConsole ""
 
-                    # Only prompt in CLI mode (not GUI)
-                    if (-not $script:GuiConsoleOutput -and $( Read-Host -Prompt "Would you like to forcefully uninstall Microsoft Edge? NOT RECOMMENDED! (y/n)" ) -eq 'y') {
+                    if ($script:GuiConsoleOutput) {
+                        $result = [System.Windows.MessageBox]::Show(
+                            'Unable to uninstall Microsoft Edge via WinGet. Would you like to forcefully uninstall it? NOT RECOMMENDED!',
+                            'Force Uninstall Microsoft Edge?',
+                            [System.Windows.MessageBoxButton]::YesNo,
+                            [System.Windows.MessageBoxImage]::Warning
+                        )
+
+                        if ($result -eq [System.Windows.MessageBoxResult]::Yes) {
+                            Write-ToConsole ""
+                            ForceRemoveEdge
+                        }
+                    }
+                    elseif ($( Read-Host -Prompt "Would you like to forcefully uninstall Microsoft Edge? NOT RECOMMENDED! (y/n)" ) -eq 'y') {
                         Write-ToConsole ""
                         ForceRemoveEdge
                     }
@@ -2272,7 +2283,7 @@ function ForceRemoveEdge {
     $hklm = [Microsoft.Win32.RegistryKey]::OpenBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, $regView)
     $hklm.CreateSubKey('SOFTWARE\Microsoft\EdgeUpdateDev').SetValue('AllowUninstall', '')
 
-    # Create stub (Creating this somehow allows uninstalling Edge)
+    # Create stub (This somehow allows uninstalling Edge)
     $edgeStub = "$env:SystemRoot\SystemApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe"
     New-Item $edgeStub -ItemType Directory | Out-Null
     New-Item "$edgeStub\MicrosoftEdge.exe" | Out-Null
@@ -2314,11 +2325,8 @@ function ForceRemoveEdge {
         Write-ToConsole "Microsoft Edge was uninstalled"
     }
     else {
-        Write-ToConsole ""
-        Write-ToConsole "Error: Unable to forcefully uninstall Microsoft Edge, uninstaller could not be found" -ForegroundColor Red
+        Write-ToConsole "Unable to forcefully uninstall Microsoft Edge, uninstaller could not be found" -ForegroundColor Red
     }
-
-    Write-ToConsole ""
 }
 
 
@@ -2931,6 +2939,7 @@ function ExecuteAllChanges {
     if ($script:Params.ContainsKey("CreateRestorePoint")) {
         Write-ToConsole "> Attempting to create a system restore point..."
         CreateSystemRestorePoint
+        Write-ToConsole ""
     }
     
     # Execute all parameters
@@ -3030,8 +3039,6 @@ function CreateSystemRestorePoint {
             Write-ToConsole $result.Message -ForegroundColor Red
         }
     }
-
-    Write-ToConsole ""
 }
 
 

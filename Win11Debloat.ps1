@@ -2259,7 +2259,7 @@ function ForceRemoveEdge {
     $hklm = [Microsoft.Win32.RegistryKey]::OpenBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, $regView)
     $hklm.CreateSubKey('SOFTWARE\Microsoft\EdgeUpdateDev').SetValue('AllowUninstall', '')
 
-    # Create stub (Creating this somehow allows uninstalling Edge)
+    # Create stub (This somehow allows uninstalling Edge)
     $edgeStub = "$env:SystemRoot\SystemApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe"
     New-Item $edgeStub -ItemType Directory | Out-Null
     New-Item "$edgeStub\MicrosoftEdge.exe" | Out-Null
@@ -2301,7 +2301,7 @@ function ForceRemoveEdge {
         Write-ToConsole "Microsoft Edge was uninstalled"
     }
     else {
-        Write-ToConsole "Error: Unable to forcefully uninstall Microsoft Edge, uninstaller could not be found" -ForegroundColor Red
+        Write-ToConsole "Unable to forcefully uninstall Microsoft Edge, uninstaller could not be found" -ForegroundColor Red
     }
 }
 

@@ -2196,8 +2196,20 @@ function RemoveApps {
                     Write-ToConsole "Unable to uninstall Microsoft Edge via WinGet" -ForegroundColor Red
                     Write-ToConsole ""
 
-                    # Only prompt in CLI mode (not GUI)
-                    if (-not $script:GuiConsoleOutput -and $( Read-Host -Prompt "Would you like to forcefully uninstall Microsoft Edge? NOT RECOMMENDED! (y/n)" ) -eq 'y') {
+                    if ($script:GuiConsoleOutput) {
+                        # If we're in GUI mode, show a message box with the option to force uninstall Edge
+                        $result = [System.Windows.MessageBox]::Show(
+                            'Unable to uninstall Microsoft Edge via WinGet. Would you like to forcefully uninstall it? NOT RECOMMENDED!',
+                            'Force Uninstall Microsoft Edge?',
+                            [System.Windows.MessageBoxButton]::YesNo,
+                            [System.Windows.MessageBoxImage]::Warning
+                        )
+
+                        if ($result -eq [System.Windows.MessageBoxResult]::Yes) {
+                            ForceRemoveEdge
+                        }
+                    }
+                    elseif ($( Read-Host -Prompt "Would you like to forcefully uninstall Microsoft Edge? NOT RECOMMENDED! (y/n)" ) -eq 'y') {
                         Write-ToConsole ""
                         ForceRemoveEdge
                     }
@@ -2907,6 +2919,7 @@ function ExecuteAllChanges {
     if ($script:Params.ContainsKey("CreateRestorePoint")) {
         Write-ToConsole "> Attempting to create a system restore point..."
         CreateSystemRestorePoint
+        Write-ToConsole ""
     }
     
     # Execute all parameters
@@ -3002,8 +3015,6 @@ function CreateSystemRestorePoint {
             Write-ToConsole $result.Message -ForegroundColor Red
         }
     }
-
-    Write-ToConsole ""
 }
 
 

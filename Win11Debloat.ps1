@@ -2301,7 +2301,6 @@ function ForceRemoveEdge {
         Write-ToConsole "Microsoft Edge was uninstalled"
     }
     else {
-        Write-ToConsole ""
         Write-ToConsole "Error: Unable to forcefully uninstall Microsoft Edge, uninstaller could not be found" -ForegroundColor Red
     }
 }

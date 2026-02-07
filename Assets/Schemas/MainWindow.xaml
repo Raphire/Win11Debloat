@@ -932,10 +932,12 @@
                         </Grid.RowDefinitions>
 
                         <!-- Header -->
-                        <StackPanel Grid.Row="0" Margin="20,10,20,10">
-                            <TextBlock Text="Applying Changes" FontWeight="Bold" FontSize="20" Margin="0,0,0,10" Foreground="{DynamicResource FgColor}"/>
-                            <TextBlock Text="Sit back and relax while Win11Debloat applies your selected changes" FontSize="13" Margin="0,0,0,10" Foreground="{DynamicResource FgColor}" TextWrapping="Wrap"/>
-                        </StackPanel>
+                        <Border DockPanel.Dock="Top" Padding="20,10,20,0">
+                            <StackPanel Grid.Row="0">
+                                <TextBlock Text="Applying Changes" FontWeight="Bold" FontSize="20" Margin="0,0,0,5" Foreground="{DynamicResource FgColor}"/>
+                                <TextBlock Text="Sit back and relax while Win11Debloat applies your selected changes" FontSize="13" Margin="0,0,0,20" Foreground="{DynamicResource FgColor}" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Border>
 
                         <!-- Console Output -->
                         <Border Grid.Row="1" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="#0C0C0C" Margin="20,0">

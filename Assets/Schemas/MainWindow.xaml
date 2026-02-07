@@ -611,10 +611,9 @@
                             </TextBlock>
                             
                             <!-- Start Button -->
-                            <Button x:Name="HomeStartBtn" Width="200" Height="48" Style="{StaticResource Win11Button}" HorizontalAlignment="Center" Margin="0,50,0,0" AutomationProperties.Name="Start">
+                            <Button x:Name="HomeStartBtn" Width="125" Height="53" Style="{StaticResource Win11Button}" HorizontalAlignment="Center" Margin="0,20,0,0" AutomationProperties.Name="Start">
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock Text="Start" VerticalAlignment="Center" FontSize="20" Margin="0,0,0,2"/>
-                                    <TextBlock Text="&#xE72A;" FontFamily="Segoe MDL2 Assets" FontSize="16" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Start" FontWeight="SemiBold" VerticalAlignment="Center" FontSize="24" Margin="0,0,0,3"/>
                                 </StackPanel>
                             </Button>
                         </StackPanel>
@@ -849,10 +848,10 @@
                                     </Border>
                                     
                                     <!-- Apply Changes Button -->
-                                    <Button x:Name="OverviewApplyBtn" Style="{StaticResource Win11Button}" Padding="14,8" Margin="0,0,0,15" HorizontalAlignment="Center" AutomationProperties.Name="Apply Changes">
+                                    <Button x:Name="OverviewApplyBtn" Style="{StaticResource Win11Button}" Width="190" Height="44" Margin="0,0,0,15" HorizontalAlignment="Center" AutomationProperties.Name="Apply Changes">
                                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                            <TextBlock Text="Apply Changes" VerticalAlignment="Center" FontSize="16" Margin="0,0,0,2"/>
-                                            <TextBlock Text="&#xE73E;" FontFamily="Segoe MDL2 Assets" FontSize="16" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                            <TextBlock Text="&#xE73E;" FontFamily="Segoe MDL2 Assets" FontSize="20" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                            <TextBlock Text="Apply Changes" VerticalAlignment="Center" FontSize="18" FontWeight="SemiBold"  Margin="8,0,0,4"/>
                                         </StackPanel>
                                     </Button>
                                 </StackPanel>

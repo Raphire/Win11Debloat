@@ -861,6 +861,17 @@ function OpenGUI {
             return $combo
         }
 
+        function GetWikiUrlForCategory($category) {
+            if (-not $category) { return 'https://github.com/Raphire/Win11Debloat/wiki/Features' }
+
+            $slug = $category.ToLowerInvariant()
+            $slug = $slug -replace '&', ''
+            $slug = $slug -replace '[^a-z0-9\s-]', ''
+            $slug = $slug -replace '\s', '-'
+
+            return "https://github.com/Raphire/Win11Debloat/wiki/Features#$slug"
+        }
+
         function GetOrCreateCategoryCard($category) {
             if (-not $category) { $category = 'Other' }
 
@@ -877,10 +888,30 @@ function OpenGUI {
             $safe = ($category -replace '[^a-zA-Z0-9_]','_')
             $panel.Name = "Category_{0}_Panel" -f $safe
 
+            $headerRow = New-Object System.Windows.Controls.StackPanel
+            $headerRow.Orientation = 'Horizontal'
+
             $header = New-Object System.Windows.Controls.TextBlock
             $header.Text = $category
             $header.Style = $window.Resources['CategoryHeaderTextBlock']
-            $panel.Children.Add($header) | Out-Null
+            $headerRow.Children.Add($header) | Out-Null
+
+            $helpIcon = New-Object System.Windows.Controls.TextBlock
+            $helpIcon.Text = '(?)'
+            $helpIcon.Style = $window.Resources['CategoryHelpLinkTextStyle']
+
+            $helpBtn = New-Object System.Windows.Controls.Button
+            $helpBtn.Content = $helpIcon
+            $helpBtn.ToolTip = "Open wiki for more info on $category features"
+            $helpBtn.Tag = (GetWikiUrlForCategory -category $category)
+            $helpBtn.Style = $window.Resources['CategoryHelpLinkButtonStyle']
+            $helpBtn.Add_Click({
+                param($sender, $e)
+                if ($sender.Tag) { Start-Process $sender.Tag }
+            })
+            $headerRow.Children.Add($helpBtn) | Out-Null
+
+            $panel.Children.Add($headerRow) | Out-Null
 
             $border.Child = $panel
             $target.Children.Add($border) | Out-Null

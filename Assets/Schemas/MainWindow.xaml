@@ -334,16 +334,19 @@
 
         <!-- User TextBox Border Style with disabled state -->
         <Style x:Key="UserTextBoxBorderStyle" TargetType="Border">
+            <Setter Property="Background" Value="{DynamicResource ComboBgColor}"/>
             <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderColor}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="CornerRadius" Value="4"/>
-            <Setter Property="Background" Value="{DynamicResource ComboBgColor}"/>
             <Setter Property="Padding" Value="8,6"/>
             <Style.Triggers>
                 <Trigger Property="IsEnabled" Value="False">
                     <Setter Property="Background" Value="{DynamicResource ButtonDisabled}"/>
                     <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
                     <Setter Property="Opacity" Value="0.6"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource ComboHoverColor}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -694,7 +697,7 @@
                                             <Style TargetType="Border" BasedOn="{StaticResource SearchBoxBorderStyle}">
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding ElementName=AppSearchBox, Path=IsFocused}" Value="True">
-                                                        <Setter Property="Background" Value="{DynamicResource SecondaryButtonHover}"/>
+                                                        <Setter Property="Background" Value="{DynamicResource InputFocusColor}"/>
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
@@ -765,7 +768,7 @@
                                             <Style TargetType="Border" BasedOn="{StaticResource SearchBoxBorderStyle}">
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding ElementName=TweakSearchBox, Path=IsFocused}" Value="True">
-                                                        <Setter Property="Background" Value="{DynamicResource SecondaryButtonHover}"/>
+                                                        <Setter Property="Background" Value="{DynamicResource InputFocusColor}"/>
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
@@ -857,7 +860,16 @@
                                             </ComboBox>
                                             <StackPanel x:Name="OtherUserPanel" Visibility="Collapsed" Margin="0,0,0,6">
                                                 <TextBlock x:Name="UsernameValidationMessage" Text="" FontStyle="Italic" Foreground="{DynamicResource CloseHover}" FontSize="11" Margin="3,0,0,4" TextWrapping="Wrap"/>
-                                                <Border Style="{StaticResource UserTextBoxBorderStyle}" IsEnabled="{Binding ElementName=OtherUsernameTextBox, Path=IsEnabled}">
+                                                <Border IsEnabled="{Binding ElementName=OtherUsernameTextBox, Path=IsEnabled}">
+                                                    <Border.Style>
+                                                        <Style TargetType="Border" BasedOn="{StaticResource UserTextBoxBorderStyle}">
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding ElementName=OtherUsernameTextBox, Path=IsFocused}" Value="True">
+                                                                    <Setter Property="Background" Value="{DynamicResource InputFocusColor}"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Border.Style>
                                                     <Grid>
                                                         <Grid.ColumnDefinitions>
                                                             <ColumnDefinition Width="Auto"/>

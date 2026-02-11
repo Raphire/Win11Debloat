@@ -107,6 +107,10 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 - Restore the old Windows 10 style context menu. (W11 only)
 - Turn off Enhance Pointer Precision, also known as mouse acceleration.
 - Disable the Sticky Keys keyboard shortcut. (W11 only)
+- Disable window snapping. (W11 only)
+- Disable Snap Assist suggestions when snapping a window. (W11 only)
+- Disable Snap Layout suggestions on top of screen and maximise button. (W11 only)
+- Change if tabs are shown when snapping or pressing Alt+Tab (W11 only)
 - Disable fast start-up to ensure a full shutdown.
 - Disable BitLocker automatic device encryption.
 - Disable network connectivity during Modern Standby to reduce battery drain. (W11 only)

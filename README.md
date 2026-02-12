@@ -153,6 +153,13 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 - Hide the 3D objects, music or OneDrive folder from the File Explorer navigation pane. (W10 only)
 - Hide the 'Include in library', 'Give access to' and 'Share' options from the context menu. (W10 only)
 
+#### Multi-tasking
+
+- Disable window snapping. (W11 only)
+- Disable Snap Assist suggestions when snapping a window. (W11 only)
+- Disable Snap Layout suggestions when dragging windows to the top of screen and when hovering on the maximize button. (W11 only)
+- Change if tabs are shown when snapping or pressing Alt+Tab. (W11 only)
+
 #### Other
 
 - Disable Xbox Game Bar integration & game/screen recording. This also disables `ms-gamingoverlay`/`ms-gamebar` popups if you uninstall the Xbox Game Bar.

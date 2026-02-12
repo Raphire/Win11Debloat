@@ -9,6 +9,7 @@
     "Taskbar",
     "Appearance",
     "File Explorer",
+    "Multi-tasking",
     "Other",
     "Gaming"
   ],
@@ -73,6 +74,18 @@
         { "Label": "This PC", "FeatureIds": ["ExplorerToThisPC"] },
         { "Label": "Downloads", "FeatureIds": ["ExplorerToDownloads"] },
         { "Label": "OneDrive", "FeatureIds": ["ExplorerToOneDrive"] }
+      ]
+    },
+    {
+      "GroupId": "ShowTabsInAltTab",
+      "Label": "Show tabs from apps when snapping or pressing Alt+Tab",
+      "Category": "Multi-tasking",
+      "Priority": 10,
+      "Values": [
+        { "Label": "Don't show tabs", "FeatureIds": ["HideTabsInAltTab"] },
+        { "Label": "Show 3 most recent tabs", "FeatureIds": ["Show3TabsInAltTab"] },
+        { "Label": "Show 5 most recent tabs", "FeatureIds": ["Show5TabsInAltTab"] },
+        { "Label": "Show 20 most recent tabs", "FeatureIds": ["Show20TabsInAltTab"] }
       ]
     }
   ],
@@ -487,7 +500,7 @@
     },
     {
       "FeatureId": "DisableStickyKeys",
-      "Label": "Sticky Keys keyboard shortcut",
+      "Label": "Sticky Keys keyboard shortcut (5x shift)",
       "Category": "System",
       "Action": "Disable",
       "RegistryKey": "Disable_Sticky_Keys_Shortcut.reg",
@@ -495,6 +508,93 @@
       "UndoAction": "Enable",
       "RegistryUndoKey": "Enable_Sticky_Keys_Shortcut.reg",
       "MinVersion": 26100,
+      "MaxVersion": null
+    },
+    {
+      "FeatureId": "DisableWindowSnapping",
+      "Label": "window snapping",
+      "Category": "Multi-tasking",
+      "Priority": 1,
+      "Action": "Disable",
+      "RegistryKey": "Disable_Window_Snapping.reg",
+      "ApplyText": "> Disabling window snapping...",
+      "UndoAction": "Enable",
+      "RegistryUndoKey": "Enable_Window_Snapping.reg",
+      "MinVersion": null,
+      "MaxVersion": null
+    },
+    {
+      "FeatureId": "DisableSnapAssist",
+      "Label": "showing app suggestions when snapping windows",
+      "Category": "Multi-tasking",
+      "Priority": 2,
+      "Action": "Disable",
+      "RegistryKey": "Disable_Snap_Assist.reg",
+      "ApplyText": "> Disabling the Snap Assist suggestions...",
+      "UndoAction": "Enable",
+      "RegistryUndoKey": "Enable_Snap_Assist.reg",
+      "MinVersion": 22000,
+      "MaxVersion": null
+    },
+    {
+      "FeatureId": "DisableSnapLayouts",
+      "Label": "snap layout flyout at top of screen and on maximize button",
+      "Category": "Multi-tasking",
+      "Priority": 3,
+      "Action": "Hide",
+      "RegistryKey": "Disable_Snap_Layouts.reg",
+      "ApplyText": "> Hiding snap layouts when dragging windows to top of the screen and on maximize button...",
+      "UndoAction": "Show",
+      "RegistryUndoKey": "Enable_Snap_Layouts.reg",
+      "MinVersion": 22000,
+      "MaxVersion": null
+    },
+    {
+      "FeatureId": "HideTabsInAltTab",
+      "Label": "tabs from apps when snapping or pressing Alt+Tab",
+      "Category": "Multi-tasking",
+      "Action": "Hide",
+      "RegistryKey": "Hide_Tabs_In_Alt_Tab.reg",
+      "ApplyText": "> Disable showing tabs from apps when snapping or pressing Alt+Tab...",
+      "UndoAction": null,
+      "RegistryUndoKey": null,
+      "MinVersion": 22000,
+      "MaxVersion": null
+    },
+    {
+      "FeatureId": "Show3TabsInAltTab",
+      "Label": "tabs from apps when snapping or pressing Alt+Tab",
+      "Category": "Multi-tasking",
+      "Action": "Show 3",
+      "RegistryKey": "Show_3_Tabs_In_Alt_Tab.reg",
+      "ApplyText": "> Enable showing 3 tabs from apps when snapping or pressing Alt+Tab...",
+      "UndoAction": null,
+      "RegistryUndoKey": null,
+      "MinVersion": 22000,
+      "MaxVersion": null
+    },
+    {
+      "FeatureId": "Show5TabsInAltTab",
+      "Label": "tabs from apps when snapping or pressing Alt+Tab",
+      "Category": "Multi-tasking",
+      "Action": "Show 5",
+      "RegistryKey": "Show_5_Tabs_In_Alt_Tab.reg",
+      "ApplyText": "> Enable showing 5 tabs from apps when snapping or pressing Alt+Tab...",
+      "UndoAction": null,
+      "RegistryUndoKey": null,
+      "MinVersion": 22000,
+      "MaxVersion": null
+    },
+    {
+      "FeatureId": "Show20TabsInAltTab",
+      "Label": "tabs from apps when snapping or pressing Alt+Tab",
+      "Category": "Multi-tasking",
+      "Action": "Show 20",
+      "RegistryKey": "Show_20_Tabs_In_Alt_Tab.reg",
+      "ApplyText": "> Enable showing 20 tabs from apps when snapping or pressing Alt+Tab...",
+      "UndoAction": null,
+      "RegistryUndoKey": null,
+      "MinVersion": 22000,
       "MaxVersion": null
     },
     {

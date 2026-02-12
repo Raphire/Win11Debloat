@@ -894,7 +894,7 @@
                                                 <ComboBoxItem x:Name="AppRemovalScopeCurrentUser" Content="Current user only"/>
                                                 <ComboBoxItem x:Name="AppRemovalScopeTargetUser" Content="Target user only" Visibility="Collapsed"/>
                                             </ComboBox>
-                                            <TextBlock x:Name="AppRemovalScopeDescription" Text="Apps will be removed for all users and from the Windows image (prevents reinstall for new users)." Foreground="{DynamicResource FgColor}" FontSize="12" TextWrapping="Wrap" Margin="0,6,0,3"/>
+                                            <TextBlock x:Name="AppRemovalScopeDescription" Text="Apps will be removed for all users and from the Windows image to prevent reinstallation for new users." Foreground="{DynamicResource FgColor}" FontSize="12" TextWrapping="Wrap" Margin="0,6,0,3"/>
                                         </StackPanel>
                                     </Border>
 

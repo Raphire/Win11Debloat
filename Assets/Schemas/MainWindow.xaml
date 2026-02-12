@@ -885,6 +885,19 @@
                                         </StackPanel>
                                     </Border>
 
+                                    <!-- App Removal Scope -->
+                                    <Border x:Name="AppRemovalScopeSection" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="16,12" Margin="0,0,0,16">
+                                        <StackPanel>
+                                            <TextBlock Text="Remove Apps From" Style="{StaticResource CategoryHeaderTextBlock}"/>
+                                            <ComboBox x:Name="AppRemovalScopeCombo" Margin="0,0,0,6" AutomationProperties.Name="App Removal Scope">
+                                                <ComboBoxItem x:Name="AppRemovalScopeAllUsers" Content="All users" IsSelected="True"/>
+                                                <ComboBoxItem x:Name="AppRemovalScopeCurrentUser" Content="Current user only"/>
+                                                <ComboBoxItem x:Name="AppRemovalScopeTargetUser" Content="Target user only" Visibility="Collapsed"/>
+                                            </ComboBox>
+                                            <TextBlock x:Name="AppRemovalScopeDescription" Text="Apps will be removed for all users and from the Windows image (prevents reinstall for new users)." Foreground="{DynamicResource FgColor}" FontSize="12" TextWrapping="Wrap" Margin="0,6,0,3"/>
+                                        </StackPanel>
+                                    </Border>
+
                                     <!-- Options -->
                                     <Border BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="16,12,16,3" Margin="0,0,0,16">
                                         <StackPanel>

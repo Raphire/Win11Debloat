@@ -2625,7 +2625,6 @@ function RegImport {
         reg load "HKU\Default" $userPath | Out-Null
         $regOutput = reg import "$script:RegfilesPath\Sysprep\$path" 2>&1
         reg unload "HKU\Default" | Out-Null
-
     }
     else {
         $regOutput = reg import "$script:RegfilesPath\$path" 2>&1
@@ -3400,9 +3399,12 @@ if ($script:Params.ContainsKey("Sysprep")) {
     }
 }
 
-# Make sure all requirements for User mode are met, if User is specified
+# Ensure that target user exists, if User or AppRemovalTarget parameter was provided
 if ($script:Params.ContainsKey("User")) {
     $userPath = GetUserDirectory -userName $script:Params.Item("User")
+}
+if ($script:Params.ContainsKey("AppRemovalTarget")) {
+    $userPath = GetUserDirectory -userName $script:Params.Item("AppRemovalTarget")
 }
 
 # Remove LastUsedSettings.json file if it exists and is empty

@@ -33,7 +33,7 @@ Download & run the script automatically via PowerShell.
 3. Wait for the script to automatically download Win11Debloat.
 4. Carefully read through and follow the on-screen instructions.
 
-This method supports command-line parameters to customize the behaviour of the script. Please click [here](https://github.com/Raphire/Win11Debloat/wiki/How-To-Use#parameters) for more information.
+This method supports command-line parameters to customize the behaviour of the script. Please click [here](https://github.com/Raphire/Win11Debloat/wiki/Command%E2%80%90line-Interface#parameters) for more information.
 
 ### Traditional method
 
@@ -69,7 +69,7 @@ This method supports command-line parameters to customize the behaviour of the s
 
   6. Carefully read through and follow the on-screen instructions.
 
-  This method supports command-line parameters to customize the behaviour of the script. Please click [here](https://github.com/Raphire/Win11Debloat/wiki/How-To-Use#parameters) for more information.
+  This method supports command-line parameters to customize the behaviour of the script. Please click [here](https://github.com/Raphire/Win11Debloat/wiki/Command%E2%80%90line-Interface#parameters) for more information.
 </details>
 
 ## Features

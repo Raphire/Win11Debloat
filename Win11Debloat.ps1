@@ -14,6 +14,7 @@ param (
     [switch]$RunDefaultsLite,
     [switch]$RunSavedSettings,
     [string]$Apps,
+    [string]$AppRemovalTarget,
     [switch]$RemoveApps,
     [switch]$RemoveAppsCustom,
     [switch]$RemoveGamingApps,
@@ -99,7 +100,7 @@ $script:AppSelectionSchema = "$script:AssetsPath/Schemas/AppSelectionWindow.xaml
 $script:MainWindowSchema = "$script:AssetsPath/Schemas/MainWindow.xaml"
 $script:FeaturesFilePath = "$script:AssetsPath/Features.json"
 
-$script:ControlParams = 'WhatIf', 'Confirm', 'Verbose', 'Debug', 'LogPath', 'Silent', 'Sysprep', 'User', 'NoRestartExplorer', 'RunDefaults', 'RunDefaultsLite', 'RunSavedSettings', 'RunAppsListGenerator', 'CLI'
+$script:ControlParams = 'WhatIf', 'Confirm', 'Verbose', 'Debug', 'LogPath', 'Silent', 'Sysprep', 'User', 'NoRestartExplorer', 'RunDefaults', 'RunDefaultsLite', 'RunSavedSettings', 'RunAppsListGenerator', 'CLI', 'AppRemovalTarget'
 
 # Script-level variables for GUI elements
 $script:GuiConsoleOutput = $null
@@ -1397,6 +1398,11 @@ function OpenGUI {
     $otherUsernameTextBox = $window.FindName('OtherUsernameTextBox')
     $usernameTextBoxPlaceholder = $window.FindName('UsernameTextBoxPlaceholder')
     $usernameValidationMessage = $window.FindName('UsernameValidationMessage')
+    $appRemovalScopeCombo = $window.FindName('AppRemovalScopeCombo')
+    $appRemovalScopeDescription = $window.FindName('AppRemovalScopeDescription')
+    $appRemovalScopeSection = $window.FindName('AppRemovalScopeSection')
+    $appRemovalScopeCurrentUser = $window.FindName('AppRemovalScopeCurrentUser')
+    $appRemovalScopeTargetUser = $window.FindName('AppRemovalScopeTargetUser')
 
     # Navigation button handlers
     function UpdateNavigationButtons {
@@ -1469,18 +1475,59 @@ function OpenGUI {
                 $userSelectionDescription.Text = "Changes will be applied to the currently logged-in user profile."
                 $otherUserPanel.Visibility = 'Collapsed'
                 $usernameValidationMessage.Text = ""
+                # Show "Current user only" option, hide "Target user only" option
+                $appRemovalScopeCurrentUser.Visibility = 'Visible'
+                $appRemovalScopeTargetUser.Visibility = 'Collapsed'
+                # Enable app removal scope selection for current user
+                $appRemovalScopeCombo.IsEnabled = $true
+                $appRemovalScopeCombo.SelectedIndex = 0
             }
             1 { 
                 $userSelectionDescription.Text = "Changes will be applied to a different user profile on this system."
                 $otherUserPanel.Visibility = 'Visible'
                 $usernameValidationMessage.Text = ""
+                # Hide "Current user only" option, show "Target user only" option
+                $appRemovalScopeCurrentUser.Visibility = 'Collapsed'
+                $appRemovalScopeTargetUser.Visibility = 'Visible'
+                # Enable app removal scope selection for other user
+                $appRemovalScopeCombo.IsEnabled = $true
+                $appRemovalScopeCombo.SelectedIndex = 0
             }
             2 { 
                 $userSelectionDescription.Text = "Changes will be applied to the default user template, affecting all new users created after this point. Useful for Sysprep deployment."
                 $otherUserPanel.Visibility = 'Collapsed'
                 $usernameValidationMessage.Text = ""
+                # Hide other user options since they don't apply to default user template
+                $appRemovalScopeCurrentUser.Visibility = 'Collapsed'
+                $appRemovalScopeTargetUser.Visibility = 'Collapsed'
+                # Lock app removal scope to "All users" when applying to sysprep
+                $appRemovalScopeCombo.IsEnabled = $false
+                $appRemovalScopeCombo.SelectedIndex = 0
             }
         }
+    })
+
+    # Helper function to update app removal scope description
+    function UpdateAppRemovalScopeDescription {
+        $selectedItem = $appRemovalScopeCombo.SelectedItem
+        if ($selectedItem) {
+            switch ($selectedItem.Content) {
+                "All users" { 
+                    $appRemovalScopeDescription.Text = "Apps will be removed for all users and from the Windows image to prevent reinstallation for new users."
+                }
+                "Current user only" { 
+                    $appRemovalScopeDescription.Text = "Apps will only be removed for the current user. Other users and new users will not be affected."
+                }
+                "Target user only" { 
+                    $appRemovalScopeDescription.Text = "Apps will only be removed for the specified target user. Other users and new users will not be affected."
+                }
+            }
+        }
+    }
+
+    # Update app removal scope description
+    $appRemovalScopeCombo.Add_SelectionChanged({
+        UpdateAppRemovalScopeDescription
     })
 
     $otherUsernameTextBox.Add_TextChanged({
@@ -1547,6 +1594,22 @@ function OpenGUI {
         }
         if ($selectedAppsCount -gt 0) {
             $changesList += "Remove $selectedAppsCount selected application(s)"
+        }
+        
+        # Update app removal scope section based on whether apps are selected
+        if ($selectedAppsCount -gt 0) {
+            # Enable app removal scope selection (unless locked by sysprep mode)
+            if ($userSelectionCombo.SelectedIndex -ne 2) {
+                $appRemovalScopeCombo.IsEnabled = $true
+            }
+            $appRemovalScopeSection.Opacity = 1.0
+            UpdateAppRemovalScopeDescription
+        }
+        else {
+            # Disable app removal scope selection when no apps selected
+            $appRemovalScopeCombo.IsEnabled = $false
+            $appRemovalScopeSection.Opacity = 0.5
+            $appRemovalScopeDescription.Text = "No apps selected for removal."
         }
         
         # Collect all ComboBox/CheckBox selections from dynamically created controls
@@ -1628,13 +1691,6 @@ function OpenGUI {
             return
         }
 
-        $controlParamsCount = 0
-        foreach ($Param in $script:ControlParams) {
-            if ($script:Params.ContainsKey($Param)) {
-                $controlParamsCount++
-            }
-        }
-
         # App Removal - collect selected apps from integrated UI
         $selectedApps = @()
         foreach ($child in $appsPanel.Children) {
@@ -1660,6 +1716,23 @@ function OpenGUI {
             
             AddParameter 'RemoveApps'
             AddParameter 'Apps' ($selectedApps -join ',')
+            
+            # Add app removal target parameter based on selection
+            $selectedScopeItem = $appRemovalScopeCombo.SelectedItem
+            if ($selectedScopeItem) {
+                switch ($selectedScopeItem.Content) {
+                    "All users" { 
+                        AddParameter 'AppRemovalTarget' 'AllUsers'
+                    }
+                    "Current user only" { 
+                        AddParameter 'AppRemovalTarget' 'CurrentUser'
+                    }
+                    "Target user only" { 
+                        # Use the target username from Other User panel
+                        AddParameter 'AppRemovalTarget' ($otherUsernameTextBox.Text.Trim())
+                    }
+                }
+            }
         }
 
         # Apply dynamic tweaks selections
@@ -1696,12 +1769,19 @@ function OpenGUI {
             }
         }
 
+        $controlParamsCount = 0
+        foreach ($Param in $script:ControlParams) {
+            if ($script:Params.ContainsKey($Param)) {
+                $controlParamsCount++
+            }
+        }
+
         # Check if any changes were selected
         $totalChanges = $script:Params.Count - $controlParamsCount
 
         # Apps parameter does not count as a change itself
         if ($script:Params.ContainsKey('Apps')) {
-            $totalChanges--
+            $totalChanges = $totalChanges - 1
         }
 
         if ($totalChanges -eq 0) {
@@ -2216,11 +2296,36 @@ function GetInstalledAppsViaWinget {
 }
 
 
-# Removes apps specified during function call from all user accounts and from the OS image.
+# Target is determined from $script:Params["AppRemovalTarget"] or defaults to "AllUsers"
+# Target values: "AllUsers" (removes for all users + from image), "CurrentUser", or a specific username
+function GetTargetUserForAppRemoval {
+    if ($script:Params.ContainsKey("AppRemovalTarget")) {
+        return $script:Params["AppRemovalTarget"]
+    }
+    
+    return "AllUsers"
+}
+
+
+function GetFriendlyTargetUserName {
+    $target = GetTargetUserForAppRemoval
+
+    switch ($target) {
+        "AllUsers" { return "all users" }
+        "CurrentUser" { return "the current user" }
+        default { return "user $target" }
+    }
+}
+
+
+# Removes apps specified during function call based on the target scope.
 function RemoveApps {
     param (
         $appslist
     )
+
+    # Determine target from script-level params, defaulting to AllUsers
+    $targetUser = GetTargetUserForAppRemoval
 
     Foreach ($app in $appsList) {
         if ($script:CancelRequested) {
@@ -2276,30 +2381,37 @@ function RemoveApps {
         }
 
         # Use Remove-AppxPackage to remove all other apps
-        $app = '*' + $app + '*'
+        $appPattern = '*' + $app + '*'
 
-        # Remove installed app for all existing users
         try {
-            Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage -AllUsers -ErrorAction Continue
+            switch ($targetUser) {
+                "AllUsers" {
+                    # Remove installed app for all existing users
+                    Get-AppxPackage -Name $appPattern -AllUsers | Remove-AppxPackage -AllUsers -ErrorAction Continue
 
-            if ($DebugPreference -ne "SilentlyContinue") {
-                Write-ToConsole "Removed $app for all users" -ForegroundColor DarkGray
+                    # Remove provisioned app from OS image, so the app won't be installed for any new users
+                    Get-AppxProvisionedPackage -Online | Where-Object { $_.PackageName -like $appPattern } | ForEach-Object { Remove-ProvisionedAppxPackage -Online -AllUsers -PackageName $_.PackageName }
+                }
+                "CurrentUser" {
+                    # Remove installed app for current user only
+                    Get-AppxPackage -Name $appPattern | Remove-AppxPackage -ErrorAction Continue
+                }
+                default {
+                    # Target is a specific username - remove app for that user only
+                    # Get the user's SID
+                    $userAccount = New-Object System.Security.Principal.NTAccount($targetUser)
+                    $userSid = $userAccount.Translate([System.Security.Principal.SecurityIdentifier]).Value
+                    
+                    # Remove the app package for the specific user
+                    Get-AppxPackage -Name $appPattern -User $userSid | Remove-AppxPackage -User $userSid -ErrorAction Continue
+                }
             }
         }
         catch {
             if ($DebugPreference -ne "SilentlyContinue") {
-                Write-ToConsole "Unable to remove $app for all users" -ForegroundColor Yellow
+                Write-ToConsole "Something went wrong while trying to remove $app" -ForegroundColor Yellow
                 Write-Host $psitem.Exception.StackTrace -ForegroundColor Gray
             }
-        }
-
-        # Remove provisioned app from OS image, so the app won't be installed for any new users
-        try {
-            Get-AppxProvisionedPackage -Online | Where-Object { $_.PackageName -like $app } | ForEach-Object { Remove-ProvisionedAppxPackage -Online -AllUsers -PackageName $_.PackageName }
-        }
-        catch {
-            Write-ToConsole "Unable to remove $app from windows image" -ForegroundColor Yellow
-            Write-Host $psitem.Exception.StackTrace -ForegroundColor Gray
         }
     }
 
@@ -2522,7 +2634,6 @@ function RegImport {
         reg load "HKU\Default" $userPath | Out-Null
         $regOutput = reg import "$script:RegfilesPath\Sysprep\$path" 2>&1
         reg unload "HKU\Default" | Out-Null
-
     }
     else {
         $regOutput = reg import "$script:RegfilesPath\$path" 2>&1
@@ -2888,7 +2999,7 @@ function ExecuteParameter {
     # Handle features without RegistryKey or with special logic
     switch ($paramKey) {
         'RemoveApps' {
-            Write-ToConsole "> Removing selected apps..."
+            Write-ToConsole "> Removing selected apps for $(GetFriendlyTargetUserName)..."
             $appsList = GenerateAppsList
 
             if ($appsList.Count -eq 0) {
@@ -3297,9 +3408,12 @@ if ($script:Params.ContainsKey("Sysprep")) {
     }
 }
 
-# Make sure all requirements for User mode are met, if User is specified
+# Ensure that target user exists, if User or AppRemovalTarget parameter was provided
 if ($script:Params.ContainsKey("User")) {
     $userPath = GetUserDirectory -userName $script:Params.Item("User")
+}
+if ($script:Params.ContainsKey("AppRemovalTarget")) {
+    $userPath = GetUserDirectory -userName $script:Params.Item("AppRemovalTarget")
 }
 
 # Remove LastUsedSettings.json file if it exists and is empty

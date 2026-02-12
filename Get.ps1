@@ -12,6 +12,7 @@ param (
     [switch]$RunDefaultsLite,
     [switch]$RunSavedSettings,
     [string]$Apps,
+    [string]$AppRemovalTarget,
     [switch]$RemoveApps,
     [switch]$RemoveAppsCustom,
     [switch]$RemoveGamingApps,

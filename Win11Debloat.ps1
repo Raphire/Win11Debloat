@@ -1507,6 +1507,29 @@ function OpenGUI {
         }
     })
 
+    # Helper function to update app removal scope description
+    function UpdateAppRemovalScopeDescription {
+        $selectedItem = $appRemovalScopeCombo.SelectedItem
+        if ($selectedItem) {
+            switch ($selectedItem.Content) {
+                "All users" { 
+                    $appRemovalScopeDescription.Text = "Apps will be removed for all users and from the Windows image to prevent reinstallation for new users."
+                }
+                "Current user only" { 
+                    $appRemovalScopeDescription.Text = "Apps will only be removed for the current user. Other users and new users will not be affected."
+                }
+                "Target user only" { 
+                    $appRemovalScopeDescription.Text = "Apps will only be removed for the specified target user. Other users and new users will not be affected."
+                }
+            }
+        }
+    }
+
+    # Update app removal scope description
+    $appRemovalScopeCombo.Add_SelectionChanged({
+        UpdateAppRemovalScopeDescription
+    })
+
     $otherUsernameTextBox.Add_TextChanged({
         # Show/hide placeholder
         if ([string]::IsNullOrWhiteSpace($otherUsernameTextBox.Text)) {
@@ -1580,21 +1603,7 @@ function OpenGUI {
                 $appRemovalScopeCombo.IsEnabled = $true
             }
             $appRemovalScopeSection.Opacity = 1.0
-            # Update description based on current selection
-            $selectedItem = $appRemovalScopeCombo.SelectedItem
-            if ($selectedItem) {
-                switch ($selectedItem.Content) {
-                    "All users" { 
-                        $appRemovalScopeDescription.Text = "Apps will be removed for all users and from the Windows image to prevent reinstallation for new users."
-                    }
-                    "Current user only" { 
-                        $appRemovalScopeDescription.Text = "Apps will only be removed for the current user. Other users and new users will not be affected."
-                    }
-                    "Target user only" { 
-                        $appRemovalScopeDescription.Text = "Apps will only be removed for the specified target user. Other users and new users will not be affected."
-                    }
-                }
-            }
+            UpdateAppRemovalScopeDescription
         }
         else {
             # Disable app removal scope selection when no apps selected

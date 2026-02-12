@@ -1691,13 +1691,6 @@ function OpenGUI {
             return
         }
 
-        $controlParamsCount = 0
-        foreach ($Param in $script:ControlParams) {
-            if ($script:Params.ContainsKey($Param)) {
-                $controlParamsCount++
-            }
-        }
-
         # App Removal - collect selected apps from integrated UI
         $selectedApps = @()
         foreach ($child in $appsPanel.Children) {
@@ -1776,12 +1769,19 @@ function OpenGUI {
             }
         }
 
+        $controlParamsCount = 0
+        foreach ($Param in $script:ControlParams) {
+            if ($script:Params.ContainsKey($Param)) {
+                $controlParamsCount++
+            }
+        }
+
         # Check if any changes were selected
         $totalChanges = $script:Params.Count - $controlParamsCount
 
         # Apps parameter does not count as a change itself
         if ($script:Params.ContainsKey('Apps')) {
-            $totalChanges--
+            $totalChanges = $totalChanges - 1
         }
 
         if ($totalChanges -eq 0) {

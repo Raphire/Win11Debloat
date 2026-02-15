@@ -1,5 +1,5 @@
 # Shows a Windows 11 styled custom message box
-function Show-ModernMessageBox {
+function Show-MessageBox {
     param (
         [Parameter(Mandatory=$true)]
         [string]$Message,

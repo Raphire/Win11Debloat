@@ -993,7 +993,7 @@ function CreateSystemRestorePoint {
             }
         }
 
-        $createRestorePointJobDone = $createRestorePointJob | Wait-Job -TimeOut 1
+        $createRestorePointJobDone = $createRestorePointJob | Wait-Job -TimeOut 20
 
         if (-not $createRestorePointJobDone) {
             Remove-Job -Job $createRestorePointJob -Force -ErrorAction SilentlyContinue

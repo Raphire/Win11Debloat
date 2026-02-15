@@ -4,7 +4,10 @@ setlocal EnableDelayedExpansion
 :: Set Windows Terminal installation paths. (Default and Scoop installation)
 set "wtDefaultPath=%LOCALAPPDATA%\Microsoft\WindowsApps\wt.exe"
 set "wtScoopPath=%USERPROFILE%\scoop\apps\windows-terminal\current\wt.exe"
-set "logFile=%~dp0Win11Debloat.log"
+set "logFile=%~dp0Logs\Win11Debloat-Run.log"
+
+:: Ensure Logs folder exists
+if not exist "%~dp0Logs" mkdir "%~dp0Logs"
 
 :: Determine which terminal exists
 if exist "%wtDefaultPath%" (

@@ -3107,6 +3107,7 @@ function ExecuteAllChanges {
 
 function CreateSystemRestorePoint {
     $SysRestore = Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SystemRestore" -Name "RPSessionInterval"
+    $failed = $false
 
     if ($SysRestore.RPSessionInterval -eq 0) {
         # In GUI mode, skip the prompt and just try to enable it
@@ -3126,66 +3127,91 @@ function CreateSystemRestorePoint {
             if (-not $enableSystemRestoreJobDone) {
                 Remove-Job -Job $enableSystemRestoreJob -Force -ErrorAction SilentlyContinue
                 Write-ToConsole "Error: Failed to enable system restore and create restore point, operation timed out" -ForegroundColor Red
-                return
+                $failed = $true
             }
             else {
                 $result = Receive-Job $enableSystemRestoreJob
                 Remove-Job -Job $enableSystemRestoreJob -ErrorAction SilentlyContinue
                 if ($result) {
                     Write-ToConsole $result -ForegroundColor Red
-                    return
+                    $failed = $true
                 }
             }
         }
         else {
             Write-ToConsole ""
-            return
+            $failed = $true
         }
     }
 
-    $createRestorePointJob = Start-Job {
-        # Find existing restore points that are less than 24 hours old
-        try {
-            $recentRestorePoints = Get-ComputerRestorePoint | Where-Object { (Get-Date) - [System.Management.ManagementDateTimeConverter]::ToDateTime($_.CreationTime) -le (New-TimeSpan -Hours 24) }
-        }
-        catch {
-            return @{ Success = $false; Message = "Error: Unable to retrieve existing restore points: $_" }
-        }
-
-        if ($recentRestorePoints.Count -eq 0) {
+    if (-not $failed) {
+        $createRestorePointJob = Start-Job {
+            # Find existing restore points that are less than 24 hours old
             try {
-                Checkpoint-Computer -Description "Restore point created by Win11Debloat" -RestorePointType "MODIFY_SETTINGS"
-                return @{ Success = $true; Message = "System restore point created successfully" }
+                $recentRestorePoints = Get-ComputerRestorePoint | Where-Object { (Get-Date) - [System.Management.ManagementDateTimeConverter]::ToDateTime($_.CreationTime) -le (New-TimeSpan -Hours 24) }
             }
             catch {
-                return @{ Success = $false; Message = "Error: Unable to create restore point: $_" }
+                return @{ Success = $false; Message = "Error: Unable to retrieve existing restore points: $_" }
             }
-        }
-        else {
-            return @{ Success = $true; Message = "A recent restore point already exists, no new restore point was created"; Warning = $true }
-        }
-    }
 
-    $createRestorePointJobDone = $createRestorePointJob | Wait-Job -TimeOut 20
-
-    if (-not $createRestorePointJobDone) {
-        Remove-Job -Job $createRestorePointJob -Force -ErrorAction SilentlyContinue
-        Write-ToConsole "Error: Failed to create system restore point, operation timed out" -ForegroundColor Red
-    }
-    else {
-        $result = Receive-Job $createRestorePointJob
-        Remove-Job -Job $createRestorePointJob -ErrorAction SilentlyContinue
-        if ($result.Success) {
-            if ($result.Warning) {
-                Write-ToConsole $result.Message -ForegroundColor Yellow
+            if ($recentRestorePoints.Count -eq 0) {
+                try {
+                    Checkpoint-Computer -Description "Restore point created by Win11Debloat" -RestorePointType "MODIFY_SETTINGS"
+                    return @{ Success = $true; Message = "System restore point created successfully" }
+                }
+                catch {
+                    return @{ Success = $false; Message = "Error: Unable to create restore point: $_" }
+                }
             }
             else {
-                Write-ToConsole $result.Message
+                return @{ Success = $true; Message = "A recent restore point already exists, no new restore point was created" }
             }
         }
-        else {
-            Write-ToConsole $result.Message -ForegroundColor Red
+
+        $createRestorePointJobDone = $createRestorePointJob | Wait-Job -TimeOut 20
+
+        if (-not $createRestorePointJobDone) {
+            Remove-Job -Job $createRestorePointJob -Force -ErrorAction SilentlyContinue
+            Write-ToConsole "Error: Failed to create system restore point, operation timed out" -ForegroundColor Red
+            $failed = $true
         }
+        else {
+            $result = Receive-Job $createRestorePointJob
+            Remove-Job -Job $createRestorePointJob -ErrorAction SilentlyContinue
+            if ($result.Success) {
+                Write-ToConsole $result.Message
+            }
+            else {
+                Write-ToConsole $result.Message -ForegroundColor Red
+                $failed = $true
+            }
+        }
+    }
+
+    # Ensure that the user is aware if creating a restore point failed, and give them the option to continue without a restore point or cancel the script
+    if ($failed) {
+        if ($script:GuiConsoleOutput) {
+            $result = [System.Windows.MessageBox]::Show(
+                'Failed to create a system restore point. Do you want to continue without a restore point?',
+                'Restore Point Creation Failed',
+                [System.Windows.MessageBoxButton]::YesNo,
+                [System.Windows.MessageBoxImage]::Warning
+            )
+
+            if ($result -ne [System.Windows.MessageBoxResult]::Yes) {
+                $script:CancelRequested = $true
+                return
+            }
+        }
+        elseif (-not $Silent) {
+            Write-ToConsole "Failed to create a system restore point. Do you want to continue without a restore point? (y/n)" -ForegroundColor Yellow
+            if ($( Read-Host ) -ne 'y') {
+                $script:CancelRequested = $true
+                return
+            }
+        }
+
+        Write-ToConsole "Warning: Continuing without restore point" -ForegroundColor Yellow
     }
 }
 

@@ -414,7 +414,7 @@
         </Style>
 
         <!-- Button Style -->
-        <Style x:Key="Win11Button" TargetType="Button">
+        <Style x:Key="PrimaryButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="{DynamicResource ButtonBg}"/>
             <Setter Property="Foreground" Value="white"/>
             <Setter Property="BorderBrush" Value="{DynamicResource ButtonBg}"/>
@@ -453,7 +453,7 @@
         </Style>
 
         <!-- Secondary Button Style -->
-        <Style x:Key="Win11ButtonSecondary" TargetType="Button">
+        <Style x:Key="SecondaryButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="{DynamicResource SecondaryButtonBg}"/>
             <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
             <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderColor}"/>
@@ -517,22 +517,22 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-        <Style x:Key="HelpButton" TargetType="Button" BasedOn="{StaticResource TitleBarButton}">
+        <Style x:Key="TitlebarButton" TargetType="Button" BasedOn="{StaticResource TitleBarButton}">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border Background="{TemplateBinding Background}" BorderThickness="0" CornerRadius="0">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,3"/>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{DynamicResource ButtonBg}"/>
+                    <Setter Property="Background" Value="{DynamicResource SecondaryButtonHover}"/>
                 </Trigger>
                 <Trigger Property="IsPressed" Value="True">
-                    <Setter Property="Background" Value="{DynamicResource ButtonHover}"/>
+                    <Setter Property="Background" Value="{DynamicResource SecondaryButtonPressed}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -551,12 +551,81 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+
+        <!-- ContextMenu Style -->
+        <Style TargetType="ContextMenu">
+            <Setter Property="Background" Value="{DynamicResource CardBgColor}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="4"/>
+            <Setter Property="HasDropShadow" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ContextMenu">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4"
+                                Padding="{TemplateBinding Padding}">
+                            <StackPanel IsItemsHost="True"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- MenuItem Style -->
+        <Style TargetType="MenuItem">
+            <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="MenuItem">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderThickness="0"
+                                CornerRadius="4"
+                                Padding="{TemplateBinding Padding}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="24"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <ContentPresenter Grid.Column="0" ContentSource="Icon" 
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Center"/>
+                                <ContentPresenter Grid.Column="1" ContentSource="Header" 
+                                                VerticalAlignment="Center"
+                                                Margin="8,0,0,1"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsHighlighted" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource ComboItemHoverColor}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource ComboItemSelectedColor}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
 
     <Border BorderBrush="{DynamicResource BorderColor}" 
             BorderThickness="1" 
             CornerRadius="8" 
-            Background="{DynamicResource BgColor}">
+            Background="{DynamicResource BgColor}"
+            Margin="25">
+        <Border.Effect>
+            <DropShadowEffect Color="Black" 
+                            Opacity="0.15" 
+                            BlurRadius="20" 
+                            ShadowDepth="0" 
+                            Direction="0"/>
+        </Border.Effect>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="32"/>
@@ -589,7 +658,28 @@
                                    Margin="12,0,0,0"
                                    FontSize="12"/>
                         <StackPanel Grid.Column="1" Orientation="Horizontal">
-                            <Button x:Name="HelpBtn" Content="?" FontFamily="Segoe UI" FontSize="15" Style="{StaticResource HelpButton}" ToolTip="Open Wiki" AutomationProperties.Name="Open Wiki"/>
+                            <Button x:Name="KofiBtn" Content="&#xEB52;" FontFamily="Segoe Fluent Icons" FontSize="15" Style="{StaticResource TitlebarButton}" ToolTip="Support on Ko-fi" AutomationProperties.Name="Support on Ko-fi"/>
+                            <Button x:Name="MenuBtn" Content="&#xE700;" FontFamily="Segoe Fluent Icons" FontSize="15" Style="{StaticResource TitlebarButton}" ToolTip="Menu" AutomationProperties.Name="Menu">
+                                <Button.ContextMenu>
+                                    <ContextMenu x:Name="MainMenu">
+                                        <MenuItem x:Name="MenuDocumentation" Header="Documentation">
+                                            <MenuItem.Icon>
+                                                <TextBlock Text="&#xe736;" FontFamily="Segoe MDL2 Assets" FontSize="16" Foreground="{DynamicResource FgColor}"/>
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <MenuItem x:Name="MenuReportBug" Header="Report a bug">
+                                            <MenuItem.Icon>
+                                                <TextBlock Text="&#xEBE8;" FontFamily="Segoe Fluent Icons" FontSize="16" Foreground="{DynamicResource FgColor}"/>
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <MenuItem x:Name="MenuLogs" Header="Logs">
+                                            <MenuItem.Icon>
+                                                <TextBlock Text="&#xf0e3;" FontFamily="Segoe Fluent Icons" FontSize="16" Foreground="{DynamicResource FgColor}"/>
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                    </ContextMenu>
+                                </Button.ContextMenu>
+                            </Button>
                             <Button x:Name="CloseBtn" Content="&#xE8BB;" Style="{StaticResource CloseButton}" ToolTip="Close" AutomationProperties.Name="Close"/>
                         </StackPanel>
                     </Grid>
@@ -657,7 +747,7 @@
                             </TextBlock>
                             
                             <!-- Start Button -->
-                            <Button x:Name="HomeStartBtn" Width="125" Height="53" Style="{StaticResource Win11Button}" HorizontalAlignment="Center" Margin="0,20,0,0" AutomationProperties.Name="Start">
+                            <Button x:Name="HomeStartBtn" Width="125" Height="53" Style="{StaticResource PrimaryButtonStyle}" HorizontalAlignment="Center" Margin="0,20,0,0" AutomationProperties.Name="Start">
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                     <TextBlock Text="Start" FontWeight="SemiBold" VerticalAlignment="Center" FontSize="24" Margin="0,0,0,3"/>
                                 </StackPanel>
@@ -685,9 +775,9 @@
                                     </Grid.ColumnDefinitions>
                                     
                                     <StackPanel Orientation="Horizontal" Grid.Column="0">
-                                        <Button x:Name="DefaultAppsBtn" Content="Select Default Apps" ToolTip="Select the default selection of apps" Style="{StaticResource Win11ButtonSecondary}" Height="32" Padding="10,0" Margin="0,0,10,0" AutomationProperties.Name="Select Default Apps"/>
-                                        <Button x:Name="LoadLastUsedAppsBtn" Content="Select Last Used Selection" ToolTip="Select the apps that were selected the last time Win11Debloat was run" Style="{StaticResource Win11ButtonSecondary}" Height="32" Padding="10,0" Margin="0,0,10,0" AutomationProperties.Name="Select Last Used Selection"/>
-                                        <Button x:Name="ClearAppSelectionBtn" Content="Clear Selection" ToolTip="Clear all selected apps" Style="{StaticResource Win11ButtonSecondary}" Height="32"  Padding="10,0" Margin="0,0,10,0" AutomationProperties.Name="Clear Selection"/>
+                                        <Button x:Name="DefaultAppsBtn" Content="Select Default Apps" ToolTip="Select the default selection of apps" Style="{StaticResource SecondaryButtonStyle}" Height="32" Padding="10,0" Margin="0,0,10,0" AutomationProperties.Name="Select Default Apps"/>
+                                        <Button x:Name="LoadLastUsedAppsBtn" Content="Select Last Used Selection" ToolTip="Select the apps that were selected the last time Win11Debloat was run" Style="{StaticResource SecondaryButtonStyle}" Height="32" Padding="10,0" Margin="0,0,10,0" AutomationProperties.Name="Select Last Used Selection"/>
+                                        <Button x:Name="ClearAppSelectionBtn" Content="Clear Selection" ToolTip="Clear all selected apps" Style="{StaticResource SecondaryButtonStyle}" Height="32"  Padding="10,0" Margin="0,0,10,0" AutomationProperties.Name="Clear Selection"/>
                                     </StackPanel>
                                     
                                     <CheckBox x:Name="OnlyInstalledAppsBox" Grid.Column="2" Content="Only show installed apps" IsChecked="False" Foreground="{DynamicResource FgColor}" VerticalAlignment="Center" AutomationProperties.Name="Only show installed apps"/>
@@ -758,9 +848,9 @@
                                     </Grid.ColumnDefinitions>
                                     
                                     <StackPanel Grid.Column="0" Orientation="Horizontal">
-                                        <Button x:Name="LoadDefaultsBtn" Content="Select Default Settings" ToolTip="Select the settings that are recommended for most people" Style="{StaticResource Win11ButtonSecondary}" Padding="10,0" Height="32" Margin="0,0,10,0" AutomationProperties.Name="Select Default Settings"/>
-                                        <Button x:Name="LoadLastUsedBtn" Content="Select Last Used Settings" ToolTip="Select the settings that were used the last time Win11Debloat was run" Style="{StaticResource Win11ButtonSecondary}" Padding="10,0" Height="32" Margin="0,0,10,0" AutomationProperties.Name="Select Last Used Settings"/>
-                                        <Button x:Name="ClearAllTweaksBtn" Content="Clear Selection" ToolTip="Clear all selected tweaks" Style="{StaticResource Win11ButtonSecondary}" Padding="10,0" Height="32" Margin="0,0,10,0" AutomationProperties.Name="Clear Selection"/>
+                                        <Button x:Name="LoadDefaultsBtn" Content="Select Default Settings" ToolTip="Select the settings that are recommended for most people" Style="{StaticResource SecondaryButtonStyle}" Padding="10,0" Height="32" Margin="0,0,10,0" AutomationProperties.Name="Select Default Settings"/>
+                                        <Button x:Name="LoadLastUsedBtn" Content="Select Last Used Settings" ToolTip="Select the settings that were used the last time Win11Debloat was run" Style="{StaticResource SecondaryButtonStyle}" Padding="10,0" Height="32" Margin="0,0,10,0" AutomationProperties.Name="Select Last Used Settings"/>
+                                        <Button x:Name="ClearAllTweaksBtn" Content="Clear Selection" ToolTip="Clear all selected tweaks" Style="{StaticResource SecondaryButtonStyle}" Padding="10,0" Height="32" Margin="0,0,10,0" AutomationProperties.Name="Clear Selection"/>
                                     </StackPanel>
 
                                     <Border x:Name="TweakSearchBorder" Grid.Column="2">
@@ -916,7 +1006,7 @@
                                     </Border>
                                     
                                     <!-- Apply Changes Button -->
-                                    <Button x:Name="OverviewApplyBtn" Style="{StaticResource Win11Button}" Width="190" Height="44" Margin="0,0,0,15" HorizontalAlignment="Center" AutomationProperties.Name="Apply Changes">
+                                    <Button x:Name="OverviewApplyBtn" Style="{StaticResource PrimaryButtonStyle}" Width="190" Height="44" Margin="0,0,0,15" HorizontalAlignment="Center" AutomationProperties.Name="Apply Changes">
                                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                             <TextBlock Text="&#xE73E;" FontFamily="Segoe MDL2 Assets" FontSize="20" FontWeight="SemiBold" VerticalAlignment="Center"/>
                                             <TextBlock Text="Apply Changes" VerticalAlignment="Center" FontSize="18" FontWeight="SemiBold"  Margin="8,0,0,4"/>
@@ -981,7 +1071,7 @@
 
                                 <!-- Status and Finish Button -->
                                 <StackPanel Grid.Row="1" HorizontalAlignment="Center">
-                                    <Button x:Name="FinishBtn" Width="200" Height="48" Style="{StaticResource Win11Button}" Margin="0" IsEnabled="False" AutomationProperties.Name="Finish">
+                                    <Button x:Name="FinishBtn" Width="200" Height="48" Style="{StaticResource PrimaryButtonStyle}" Margin="0" IsEnabled="False" AutomationProperties.Name="Finish">
                                         <TextBlock x:Name="FinishBtnText" Text="Applying changes..." VerticalAlignment="Center" FontSize="16" Margin="0,0,0,1"/>
                                     </Button>
                                 </StackPanel>
@@ -999,7 +1089,7 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <Button x:Name="PreviousBtn" Grid.Column="0" Width="120" Height="36" Style="{StaticResource Win11ButtonSecondary}" Visibility="Collapsed" Margin="10,0,0,0" AutomationProperties.Name="Previous">
+                    <Button x:Name="PreviousBtn" Grid.Column="0" Width="120" Height="36" Style="{StaticResource SecondaryButtonStyle}" Visibility="Collapsed" Margin="10,0,0,0" AutomationProperties.Name="Previous">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <TextBlock Text="&#xE72B;" FontFamily="Segoe MDL2 Assets" FontSize="12" Margin="0,0,8,0" VerticalAlignment="Center"/>
                             <TextBlock Text="Previous" VerticalAlignment="Center" FontSize="14" Margin="0,0,0,1"/>
@@ -1007,7 +1097,7 @@
                     </Button>
                     
                     <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Button x:Name="NextBtn" Width="120" Height="36" Margin="0,0,10,0" Style="{StaticResource Win11Button}" AutomationProperties.Name="Next">
+                        <Button x:Name="NextBtn" Width="120" Height="36" Margin="0,0,10,0" Style="{StaticResource PrimaryButtonStyle}" AutomationProperties.Name="Next">
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                 <TextBlock Text="Next" VerticalAlignment="Center" FontSize="14" Margin="0,0,0,1"/>
                                 <TextBlock Text="&#xE72A;" FontFamily="Segoe MDL2 Assets" FontSize="12" Margin="8,0,0,0" VerticalAlignment="Center"/>
@@ -1023,6 +1113,16 @@
                     <Ellipse x:Name="ProgressIndicator3" Width="10" Height="10" Margin="4,0" Fill="#808080" ToolTip="Overview"/>
                 </StackPanel>
             </Grid>
+            
+            <!-- Modal Overlay for MessageBoxes -->
+            <Rectangle x:Name="ModalOverlay" 
+                       Grid.RowSpan="3" 
+                       Fill="#80000000" 
+                       Visibility="Collapsed" 
+                       Panel.ZIndex="1000"
+                       RadiusX="8"
+                       RadiusY="8"
+                       Margin="-1"/>
         </Grid>
     </Border>
 </Window>

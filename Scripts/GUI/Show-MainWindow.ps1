@@ -489,6 +489,17 @@ function Show-MainWindow {
                     $items = @('No Change') + ($group.Values | ForEach-Object { $_.Label })
                     $comboName = 'Group_{0}Combo' -f $group.GroupId
                     $combo = CreateLabeledCombo -parent $panel -labelText $group.Label -comboName $comboName -items $items
+                    # attach tooltip from UiGroups if present
+                    if ($group.ToolTip) {
+                        $tipBlock = New-Object System.Windows.Controls.TextBlock
+                        $tipBlock.Text = $group.ToolTip
+                        $tipBlock.TextWrapping = 'Wrap'
+                        $tipBlock.MaxWidth = 420
+                        $combo.ToolTip = $tipBlock
+                        $lblBorderObj = $null
+                        try { $lblBorderObj = $window.FindName("$comboName`_LabelBorder") } catch {}
+                        if ($lblBorderObj) { $lblBorderObj.ToolTip = $tipBlock }
+                    }
                     $script:UiControlMappings[$comboName] = @{ Type='group'; Values = $group.Values; Label = $group.Label }
                 }
                 elseif ($item.Type -eq 'feature') {
@@ -498,6 +509,17 @@ function Show-MainWindow {
                     $items = @('No Change', $opt)
                     $comboName = ("Feature_{0}_Combo" -f $feature.FeatureId) -replace '[^a-zA-Z0-9_]',''
                     $combo = CreateLabeledCombo -parent $panel -labelText ($feature.Action + ' ' + $feature.Label) -comboName $comboName -items $items
+                    # attach tooltip from Features.json if present
+                    if ($feature.ToolTip) {
+                        $tipBlock = New-Object System.Windows.Controls.TextBlock
+                        $tipBlock.Text = $feature.ToolTip
+                        $tipBlock.TextWrapping = 'Wrap'
+                        $tipBlock.MaxWidth = 420
+                        $combo.ToolTip = $tipBlock
+                        $lblBorderObj = $null
+                        try { $lblBorderObj = $window.FindName("$comboName`_LabelBorder") } catch {}
+                        if ($lblBorderObj) { $lblBorderObj.ToolTip = $tipBlock }
+                    }
                     $script:UiControlMappings[$comboName] = @{ Type='feature'; FeatureId = $feature.FeatureId; Action = $feature.Action }
                 }
             }

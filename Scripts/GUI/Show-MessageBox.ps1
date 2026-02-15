@@ -8,7 +8,7 @@ function Show-MessageBox {
         [string]$Title = "Win11Debloat",
         
         [Parameter(Mandatory=$false)]
-        [ValidateSet('OK', 'OKCancel', 'YesNo', 'YesNoCancel')]
+        [ValidateSet('OK', 'OKCancel', 'YesNo')]
         [string]$Button = 'OK',
         
         [Parameter(Mandatory=$false)]
@@ -113,13 +113,6 @@ function Show-MessageBox {
             $button2.Visibility = 'Visible'
         }
         'YesNo' {
-            $button1.Content = 'Yes'
-            $button2.Content = 'No'
-            $button1.Add_Click({ $msgWindow.Tag = 'Yes'; $msgWindow.Close() })
-            $button2.Add_Click({ $msgWindow.Tag = 'No'; $msgWindow.Close() })
-            $button2.Visibility = 'Visible'
-        }
-        'YesNoCancel' {
             $button1.Content = 'Yes'
             $button2.Content = 'No'
             $button1.Add_Click({ $msgWindow.Tag = 'Yes'; $msgWindow.Close() })

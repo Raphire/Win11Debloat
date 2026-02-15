@@ -1,17 +1,50 @@
 {
   "Version": "1.0",
   "Categories": [
-    "Privacy & Suggested Content",
-    "System",
-    "Start Menu",
-    "AI",
-    "Windows Update",
-    "Taskbar",
-    "Appearance",
-    "File Explorer",
-    "Multi-tasking",
-    "Other",
-    "Gaming"
+    {
+      "Name": "Privacy & Suggested Content",
+      "Icon": "&#xE72E;"
+    },
+    {
+      "Name": "System",
+      "Icon": "&#xe770;"
+    },
+    {
+      "Name": "Start Menu",
+      "Icon": "&#xe8fc;"
+    },
+    {
+      "Name": "AI",
+      "Icon": "&#xe794;"
+    },
+    {
+      "Name": "Windows Update",
+      "Icon": "&#xe895;"
+    },
+    {
+      "Name": "Taskbar",
+      "Icon": "&#xe75b;"
+    },
+    {
+      "Name": "Appearance",
+      "Icon": "&#xE771;"
+    },
+    {
+      "Name": "File Explorer",
+      "Icon": "&#xec50;"
+    },
+    {
+      "Name": "Multi-tasking",
+      "Icon": "&#xE7C4;"
+    },
+    {
+      "Name": "Other",
+      "Icon": "&#xE713;"
+    },
+    {
+      "Name": "Gaming",
+      "Icon": "&#xE7FC;"
+    }
   ],
   "UiGroups": [
     {
@@ -20,10 +53,30 @@
       "Category": "Taskbar",
       "Priority": 2,
       "Values": [
-        { "Label": "Hide", "FeatureIds": ["HideSearchTb"] },
-        { "Label": "Show search icon only", "FeatureIds": ["ShowSearchIconTb"] },
-        { "Label": "Show search icon and label", "FeatureIds": ["ShowSearchLabelTb"] },
-        { "Label": "Show search box", "FeatureIds": ["ShowSearchBoxTb"] }
+        {
+          "Label": "Hide",
+          "FeatureIds": [
+            "HideSearchTb"
+          ]
+        },
+        {
+          "Label": "Show search icon only",
+          "FeatureIds": [
+            "ShowSearchIconTb"
+          ]
+        },
+        {
+          "Label": "Show search icon and label",
+          "FeatureIds": [
+            "ShowSearchLabelTb"
+          ]
+        },
+        {
+          "Label": "Show search box",
+          "FeatureIds": [
+            "ShowSearchBoxTb"
+          ]
+        }
       ]
     },
     {
@@ -31,9 +84,24 @@
       "Label": "Show taskbar apps on",
       "Category": "Taskbar",
       "Values": [
-        { "Label": "All taskbars", "FeatureIds": ["MMTaskbarModeAll"] },
-        { "Label": "Main taskbar and taskbar where window is open", "FeatureIds": ["MMTaskbarModeMainActive"] },
-        { "Label": "Taskbar where window is open", "FeatureIds": ["MMTaskbarModeActive"] }
+        {
+          "Label": "All taskbars",
+          "FeatureIds": [
+            "MMTaskbarModeAll"
+          ]
+        },
+        {
+          "Label": "Main taskbar and taskbar where window is open",
+          "FeatureIds": [
+            "MMTaskbarModeMainActive"
+          ]
+        },
+        {
+          "Label": "Taskbar where window is open",
+          "FeatureIds": [
+            "MMTaskbarModeActive"
+          ]
+        }
       ]
     },
     {
@@ -41,9 +109,24 @@
       "Label": "Combine taskbar buttons on the main display",
       "Category": "Taskbar",
       "Values": [
-        { "Label": "Always", "FeatureIds": ["CombineTaskbarAlways"] },
-        { "Label": "When taskbar is full", "FeatureIds": ["CombineTaskbarWhenFull"] },
-        { "Label": "Never", "FeatureIds": ["CombineTaskbarNever"] }
+        {
+          "Label": "Always",
+          "FeatureIds": [
+            "CombineTaskbarAlways"
+          ]
+        },
+        {
+          "Label": "When taskbar is full",
+          "FeatureIds": [
+            "CombineTaskbarWhenFull"
+          ]
+        },
+        {
+          "Label": "Never",
+          "FeatureIds": [
+            "CombineTaskbarNever"
+          ]
+        }
       ]
     },
     {
@@ -51,9 +134,24 @@
       "Label": "Combine taskbar buttons on secondary displays",
       "Category": "Taskbar",
       "Values": [
-        { "Label": "Always", "FeatureIds": ["CombineMMTaskbarAlways"] },
-        { "Label": "When taskbar is full", "FeatureIds": ["CombineMMTaskbarWhenFull"] },
-        { "Label": "Never", "FeatureIds": ["CombineMMTaskbarNever"] }
+        {
+          "Label": "Always",
+          "FeatureIds": [
+            "CombineMMTaskbarAlways"
+          ]
+        },
+        {
+          "Label": "When taskbar is full",
+          "FeatureIds": [
+            "CombineMMTaskbarWhenFull"
+          ]
+        },
+        {
+          "Label": "Never",
+          "FeatureIds": [
+            "CombineMMTaskbarNever"
+          ]
+        }
       ]
     },
     {
@@ -61,8 +159,18 @@
       "Label": "Remove pinned apps from the start menu",
       "Category": "Start Menu",
       "Values": [
-        { "Label": "Remove for the current user", "FeatureIds": ["ClearStart"] },
-        { "Label": "Remove for all users", "FeatureIds": ["ClearStartAllUsers"] }
+        {
+          "Label": "Remove for the current user",
+          "FeatureIds": [
+            "ClearStart"
+          ]
+        },
+        {
+          "Label": "Remove for all users",
+          "FeatureIds": [
+            "ClearStartAllUsers"
+          ]
+        }
       ]
     },
     {
@@ -70,10 +178,30 @@
       "Label": "Open File Explorer to",
       "Category": "File Explorer",
       "Values": [
-        { "Label": "Home", "FeatureIds": ["ExplorerToHome"] },
-        { "Label": "This PC", "FeatureIds": ["ExplorerToThisPC"] },
-        { "Label": "Downloads", "FeatureIds": ["ExplorerToDownloads"] },
-        { "Label": "OneDrive", "FeatureIds": ["ExplorerToOneDrive"] }
+        {
+          "Label": "Home",
+          "FeatureIds": [
+            "ExplorerToHome"
+          ]
+        },
+        {
+          "Label": "This PC",
+          "FeatureIds": [
+            "ExplorerToThisPC"
+          ]
+        },
+        {
+          "Label": "Downloads",
+          "FeatureIds": [
+            "ExplorerToDownloads"
+          ]
+        },
+        {
+          "Label": "OneDrive",
+          "FeatureIds": [
+            "ExplorerToOneDrive"
+          ]
+        }
       ]
     },
     {
@@ -82,10 +210,30 @@
       "Category": "Multi-tasking",
       "Priority": 10,
       "Values": [
-        { "Label": "Don't show tabs", "FeatureIds": ["HideTabsInAltTab"] },
-        { "Label": "Show 3 most recent tabs", "FeatureIds": ["Show3TabsInAltTab"] },
-        { "Label": "Show 5 most recent tabs", "FeatureIds": ["Show5TabsInAltTab"] },
-        { "Label": "Show 20 most recent tabs", "FeatureIds": ["Show20TabsInAltTab"] }
+        {
+          "Label": "Don't show tabs",
+          "FeatureIds": [
+            "HideTabsInAltTab"
+          ]
+        },
+        {
+          "Label": "Show 3 most recent tabs",
+          "FeatureIds": [
+            "Show3TabsInAltTab"
+          ]
+        },
+        {
+          "Label": "Show 5 most recent tabs",
+          "FeatureIds": [
+            "Show5TabsInAltTab"
+          ]
+        },
+        {
+          "Label": "Show 20 most recent tabs",
+          "FeatureIds": [
+            "Show20TabsInAltTab"
+          ]
+        }
       ]
     }
   ],

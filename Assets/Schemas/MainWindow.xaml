@@ -71,7 +71,7 @@
                                                     <Border x:Name="Border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="4">
                                                         <TextBlock x:Name="Arrow"
                                                                 Text="&#xE70D;"
-                                                                FontFamily="Segoe MDL2 Assets"
+                                                                FontFamily="Segoe Fluent Icons"
                                                                 FontSize="10"
                                                                 HorizontalAlignment="Right"
                                                                 VerticalAlignment="Center"
@@ -246,8 +246,17 @@
         <Style x:Key="CategoryHeaderTextBlock" TargetType="TextBlock">
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="FontSize" Value="16"/>
-            <Setter Property="Margin" Value="0,0,0,10"/>
+            <Setter Property="Margin" Value="0,0,0,13"/>
             <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
+        </Style>
+
+        <!-- Category header icon style -->
+        <Style x:Key="CategoryHeaderIcon" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="Segoe Fluent Icons"/>
+            <Setter Property="FontSize" Value="19"/>
+            <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
+            <Setter Property="Margin" Value="0,0,8,12"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
 
         <!-- Category help link button/text styles -->
@@ -256,7 +265,7 @@
             <Setter Property="BorderBrush" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Padding" Value="0"/>
-            <Setter Property="Margin" Value="6,1,0,10"/>
+            <Setter Property="Margin" Value="6,1,0,13"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Focusable" Value="False"/>
             <Setter Property="IsTabStop" Value="False"/>
@@ -366,7 +375,7 @@
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <Border x:Name="CheckBoxBorder" Grid.Column="0" Width="18" Height="18" Background="{DynamicResource CheckBoxBgColor}" BorderBrush="{DynamicResource CheckBoxBorderColor}" BorderThickness="1" CornerRadius="4" Margin="0,0,8,0">
-                                    <TextBlock x:Name="CheckMark" Text="&#xE73E;" FontFamily="Segoe MDL2 Assets" FontSize="12" Foreground="{DynamicResource ButtonBg}" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed"/>
+                                    <TextBlock x:Name="CheckMark" Text="&#xE73E;" FontFamily="Segoe Fluent Icons" FontSize="12" Foreground="{DynamicResource ButtonBg}" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed"/>
                                 </Border>
                                 <ContentPresenter Grid.Column="1" VerticalAlignment="Center" Margin="0,0,0,2"/>
                             </Grid>
@@ -498,7 +507,7 @@
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Width" Value="46"/>
             <Setter Property="Height" Value="32"/>
-            <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
+            <Setter Property="FontFamily" Value="Segoe Fluent Icons"/>
             <Setter Property="FontSize" Value="10"/>
             <Setter Property="Template">
                 <Setter.Value>
@@ -802,7 +811,7 @@
                                                 <ColumnDefinition Width="Auto"/>
                                                 <ColumnDefinition Width="*"/>
                                             </Grid.ColumnDefinitions>
-                                            <TextBlock Grid.Column="0" Text="&#xE721;" FontFamily="Segoe MDL2 Assets" FontSize="14" VerticalAlignment="Center" Margin="4,0,8,0" Foreground="{DynamicResource FgColor}"/>
+                                            <TextBlock Grid.Column="0" Text="&#xE721;" FontFamily="Segoe Fluent Icons" FontSize="14" VerticalAlignment="Center" Margin="4,0,8,0" Foreground="{DynamicResource FgColor}"/>
                                             <TextBlock x:Name="AppSearchPlaceholder" Grid.Column="1" Text="Search app" Foreground="{DynamicResource FgColor}" Opacity="0.5" FontSize="13" Margin="3,0,0,1" VerticalAlignment="Center" IsHitTestVisible="False"/>
                                             <TextBox x:Name="AppSearchBox" Grid.Column="1" Background="Transparent" Foreground="{DynamicResource FgColor}" BorderThickness="0" FontSize="13" Margin="1,0,0,1" VerticalAlignment="Center" Text="" AutomationProperties.Name="Search app"/>
                                         </Grid>
@@ -873,7 +882,7 @@
                                                 <ColumnDefinition Width="Auto"/>
                                                 <ColumnDefinition Width="*"/>
                                             </Grid.ColumnDefinitions>
-                                            <TextBlock Grid.Column="0" Text="&#xE721;" FontFamily="Segoe MDL2 Assets" FontSize="14" VerticalAlignment="Center" Margin="4,0,8,0" Foreground="{DynamicResource FgColor}"/>
+                                            <TextBlock Grid.Column="0" Text="&#xE721;" FontFamily="Segoe Fluent Icons" FontSize="14" VerticalAlignment="Center" Margin="4,0,8,0" Foreground="{DynamicResource FgColor}"/>
                                             <TextBlock x:Name="TweakSearchPlaceholder" Grid.Column="1" Text="Search setting" Foreground="{DynamicResource FgColor}" Opacity="0.5" FontSize="13" Margin="3,0,0,1" VerticalAlignment="Center" IsHitTestVisible="False"/>
                                             <TextBox x:Name="TweakSearchBox" Grid.Column="1" Background="Transparent" Foreground="{DynamicResource FgColor}" BorderThickness="0" FontSize="13" Margin="1,0,0,1" VerticalAlignment="Center" Text=""/>
                                         </Grid>
@@ -970,7 +979,7 @@
                                                             <ColumnDefinition Width="Auto"/>
                                                             <ColumnDefinition Width="*"/>
                                                         </Grid.ColumnDefinitions>
-                                                        <TextBlock Grid.Column="0" Text="&#xE77B;" FontFamily="Segoe MDL2 Assets" FontSize="14" VerticalAlignment="Center" Margin="4,0,8,0" Foreground="{DynamicResource FgColor}"/>
+                                                        <TextBlock Grid.Column="0" Text="&#xE77B;" FontFamily="Segoe Fluent Icons" FontSize="14" VerticalAlignment="Center" Margin="4,0,8,0" Foreground="{DynamicResource FgColor}"/>
                                                         <TextBlock x:Name="UsernameTextBoxPlaceholder" Grid.Column="1" Text="Enter username" Foreground="{DynamicResource FgColor}" Opacity="0.5" FontSize="13" Margin="3,0,0,1" VerticalAlignment="Center" IsHitTestVisible="False"/>
                                                         <TextBox x:Name="OtherUsernameTextBox" Grid.Column="1" Style="{StaticResource UserTextBoxStyle}" Text="" AutomationProperties.Name="Enter username"/>
                                                     </Grid>
@@ -1013,7 +1022,7 @@
                                     <!-- Apply Changes Button -->
                                     <Button x:Name="OverviewApplyBtn" Style="{StaticResource PrimaryButtonStyle}" Width="190" Height="44" Margin="0,0,0,15" HorizontalAlignment="Center" AutomationProperties.Name="Apply Changes">
                                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                            <TextBlock Text="&#xE73E;" FontFamily="Segoe MDL2 Assets" FontSize="20" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                            <TextBlock Text="&#xE73E;" FontFamily="Segoe Fluent Icons" FontSize="20" FontWeight="SemiBold" VerticalAlignment="Center"/>
                                             <TextBlock Text="Apply Changes" VerticalAlignment="Center" FontSize="18" FontWeight="SemiBold"  Margin="8,0,0,4"/>
                                         </StackPanel>
                                     </Button>
@@ -1096,7 +1105,7 @@
                     </Grid.ColumnDefinitions>
                     <Button x:Name="PreviousBtn" Grid.Column="0" Width="120" Height="36" Style="{StaticResource SecondaryButtonStyle}" Visibility="Collapsed" Margin="10,0,0,0" AutomationProperties.Name="Previous">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock Text="&#xE72B;" FontFamily="Segoe MDL2 Assets" FontSize="12" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="&#xE72B;" FontFamily="Segoe Fluent Icons" FontSize="12" Margin="0,0,8,0" VerticalAlignment="Center"/>
                             <TextBlock Text="Previous" VerticalAlignment="Center" FontSize="14" Margin="0,0,0,1"/>
                         </StackPanel>
                     </Button>
@@ -1105,7 +1114,7 @@
                         <Button x:Name="NextBtn" Width="120" Height="36" Margin="0,0,10,0" Style="{StaticResource PrimaryButtonStyle}" AutomationProperties.Name="Next">
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                 <TextBlock Text="Next" VerticalAlignment="Center" FontSize="14" Margin="0,0,0,1"/>
-                                <TextBlock Text="&#xE72A;" FontFamily="Segoe MDL2 Assets" FontSize="12" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="&#xE72A;" FontFamily="Segoe Fluent Icons" FontSize="12" Margin="8,0,0,0" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
                     </StackPanel>

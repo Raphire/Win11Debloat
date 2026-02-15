@@ -1179,10 +1179,11 @@ function OpenGUI {
             return "https://github.com/Raphire/Win11Debloat/wiki/Features#$slug"
         }
 
-        function GetOrCreateCategoryCard($category) {
-            if (-not $category) { $category = 'Other' }
+        function GetOrCreateCategoryCard($categoryObj) {
+            $categoryName = $categoryObj.Name
+            $categoryIcon = $categoryObj.Icon
 
-            if ($script:CategoryCardMap.ContainsKey($category)) { return $script:CategoryCardMap[$category] }
+            if ($script:CategoryCardMap.ContainsKey($categoryName)) { return $script:CategoryCardMap[$categoryName] }
 
             # Create a new card Border + StackPanel and add to shortest column
             $target = $columns | Sort-Object @{Expression={$_.Children.Count}; Ascending=$true}, @{Expression={$columns.IndexOf($_)}; Ascending=$true} | Select-Object -First 1
@@ -1192,14 +1193,24 @@ function OpenGUI {
             $border.Tag = 'DynamicCategory'
 
             $panel = New-Object System.Windows.Controls.StackPanel
-            $safe = ($category -replace '[^a-zA-Z0-9_]','_')
+            $safe = ($categoryName -replace '[^a-zA-Z0-9_]','_')
             $panel.Name = "Category_{0}_Panel" -f $safe
 
             $headerRow = New-Object System.Windows.Controls.StackPanel
             $headerRow.Orientation = 'Horizontal'
 
+            # Add category icon
+            $icon = New-Object System.Windows.Controls.TextBlock
+            # Convert HTML entity to character (e.g., &#xE72E; -> actual character)
+            if ($categoryIcon -match '&#x([0-9A-Fa-f]+);') {
+                $hexValue = [Convert]::ToInt32($matches[1], 16)
+                $icon.Text = [char]$hexValue
+            }
+            $icon.Style = $window.Resources['CategoryHeaderIcon']
+            $headerRow.Children.Add($icon) | Out-Null
+
             $header = New-Object System.Windows.Controls.TextBlock
-            $header.Text = $category
+            $header.Text = $categoryName
             $header.Style = $window.Resources['CategoryHeaderTextBlock']
             $headerRow.Children.Add($header) | Out-Null
 
@@ -1209,8 +1220,8 @@ function OpenGUI {
 
             $helpBtn = New-Object System.Windows.Controls.Button
             $helpBtn.Content = $helpIcon
-            $helpBtn.ToolTip = "Open wiki for more info on $category features"
-            $helpBtn.Tag = (GetWikiUrlForCategory -category $category)
+            $helpBtn.ToolTip = "Open wiki for more info on '$categoryName' tweaks"
+            $helpBtn.Tag = (GetWikiUrlForCategory -category $categoryName)
             $helpBtn.Style = $window.Resources['CategoryHelpLinkButtonStyle']
             $helpBtn.Add_Click({
                 param($sender, $e)
@@ -1223,7 +1234,7 @@ function OpenGUI {
             $border.Child = $panel
             $target.Children.Add($border) | Out-Null
 
-            $script:CategoryCardMap[$category] = $panel
+            $script:CategoryCardMap[$categoryName] = $panel
             return $panel
         }
 
@@ -1237,14 +1248,26 @@ function OpenGUI {
         # Create cards in the order defined in Features.json Categories (if present)
         $orderedCategories = @()
         if ($featuresJson.Categories) {
-            foreach ($c in $featuresJson.Categories) { if ($categoriesPresent.ContainsKey($c)) { $orderedCategories += $c } }
+            foreach ($c in $featuresJson.Categories) {
+                $categoryName = if ($c -is [string]) { $c } else { $c.Name }
+                if ($categoriesPresent.ContainsKey($categoryName)) {
+                    # Store the full category object (or create one with default icon for string categories)
+                    $categoryObj = if ($c -is [string]) { @{Name = $c; Icon = '&#xE712;'} } else { $c }
+                    $orderedCategories += $categoryObj
+                }
+            }
         } else {
-            $orderedCategories = $categoriesPresent.Keys
+            # For backward compatibility, create category objects from keys
+            foreach ($catName in $categoriesPresent.Keys) {
+                $orderedCategories += @{Name = $catName; Icon = '&#xE712;'}
+            }
         }
 
-        foreach ($category in $orderedCategories) {
+        foreach ($categoryObj in $orderedCategories) {
+            $categoryName = $categoryObj.Name
+            
             # Create/get card for this category
-            $panel = GetOrCreateCategoryCard -category $category
+            $panel = GetOrCreateCategoryCard -categoryObj $categoryObj
             if (-not $panel) { continue }
 
             # Collect groups and features for this category, then sort by priority
@@ -1254,7 +1277,7 @@ function OpenGUI {
             if ($featuresJson.UiGroups) {
                 $groupIndex = 0
                 foreach ($group in $featuresJson.UiGroups) {
-                    if ($group.Category -ne $category) { $groupIndex++; continue }
+                    if ($group.Category -ne $categoryName) { $groupIndex++; continue }
                     $categoryItems += [PSCustomObject]@{
                         Type = 'group'
                         Data = $group
@@ -1268,7 +1291,7 @@ function OpenGUI {
             # Add individual features for this category
             $featureIndex = 0
             foreach ($feature in $featuresJson.Features) {
-                if ($feature.Category -ne $category) { $featureIndex++; continue }
+                if ($feature.Category -ne $categoryName) { $featureIndex++; continue }
                 
                 # Check version and feature compatibility using Features.json
                 if (($feature.MinVersion -and $WinVersion -lt $feature.MinVersion) -or ($feature.MaxVersion -and $WinVersion -gt $feature.MaxVersion) -or ($feature.FeatureId -eq 'DisableModernStandbyNetworking' -and (-not $script:ModernStandbySupported))) {

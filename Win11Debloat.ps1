@@ -93,6 +93,7 @@ param (
 
 
 # Define script-level variables & paths
+$script:Version = "2026.02.12"
 $script:DefaultSettingsFilePath = "$PSScriptRoot/DefaultSettings.json"
 $script:AppsListFilePath = "$PSScriptRoot/Apps.json"
 $script:SavedSettingsFilePath = "$PSScriptRoot/LastUsedSettings.json"
@@ -102,6 +103,8 @@ $script:RegfilesPath = "$PSScriptRoot/Regfiles"
 $script:AssetsPath = "$PSScriptRoot/Assets"
 $script:AppSelectionSchema = "$script:AssetsPath/Schemas/AppSelectionWindow.xaml"
 $script:MainWindowSchema = "$script:AssetsPath/Schemas/MainWindow.xaml"
+$script:MessageBoxSchema = "$script:AssetsPath/Schemas/MessageBoxWindow.xaml"
+$script:AboutWindowSchema = "$script:AssetsPath/Schemas/AboutWindow.xaml"
 $script:FeaturesFilePath = "$script:AssetsPath/Features.json"
 
 $script:ControlParams = 'WhatIf', 'Confirm', 'Verbose', 'Debug', 'LogPath', 'Silent', 'Sysprep', 'User', 'NoRestartExplorer', 'RunDefaults', 'RunDefaultsLite', 'RunSavedSettings', 'RunAppsListGenerator', 'CLI', 'AppRemovalTarget'
@@ -551,6 +554,10 @@ function SetWindowThemeResources {
     $window.Resources.Add("ButtonHover", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#1E88E5")))
     $window.Resources.Add("ButtonPressed", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#3284cc")))
     $window.Resources.Add("CloseHover", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#c42b1c")))
+    $window.Resources.Add("InformationIconColor", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#0078D4")))
+    $window.Resources.Add("WarningIconColor", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#FFB900")))
+    $window.Resources.Add("ErrorIconColor", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#E81123")))
+    $window.Resources.Add("QuestionIconColor", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#0078D4")))
 }
 
 
@@ -563,6 +570,266 @@ function GetSystemUsesDarkMode {
         return $false
     }
 }
+
+
+# Shows a Windows 11 styled custom message box
+function Show-ModernMessageBox {
+    param (
+        [Parameter(Mandatory=$true)]
+        [string]$Message,
+        
+        [Parameter(Mandatory=$false)]
+        [string]$Title = "Win11Debloat",
+        
+        [Parameter(Mandatory=$false)]
+        [ValidateSet('OK', 'OKCancel', 'YesNo', 'YesNoCancel')]
+        [string]$Button = 'OK',
+        
+        [Parameter(Mandatory=$false)]
+        [ValidateSet('None', 'Information', 'Warning', 'Error', 'Question')]
+        [string]$Icon = 'None',
+        
+        [Parameter(Mandatory=$false)]
+        [System.Windows.Window]$Owner = $null
+    )
+    
+    Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase | Out-Null
+    
+    $usesDarkMode = GetSystemUsesDarkMode
+    
+    # Determine owner window - use provided Owner, or fall back to main GUI window
+    $ownerWindow = if ($Owner) { $Owner } else { $script:GuiWindow }
+    
+    # Show overlay if owner window exists
+    $overlay = $null
+    if ($ownerWindow) {
+        try {
+            $overlay = $ownerWindow.FindName('ModalOverlay')
+            if ($overlay) {
+                $ownerWindow.Dispatcher.Invoke([action]{ $overlay.Visibility = 'Visible' })
+            }
+        }
+        catch { }
+    }
+    
+    # Load XAML from file
+    $xaml = Get-Content -Path $script:MessageBoxSchema -Raw
+    $reader = [System.Xml.XmlReader]::Create([System.IO.StringReader]::new($xaml))
+    try {
+        $msgWindow = [System.Windows.Markup.XamlReader]::Load($reader)
+    }
+    finally {
+        $reader.Close()
+    }
+    
+    # Set owner to owner window if it exists
+    if ($ownerWindow) {
+        try {
+            $msgWindow.Owner = $ownerWindow
+        }
+        catch { }
+    }
+    
+    # Apply theme resources
+    SetWindowThemeResources -window $msgWindow -usesDarkMode $usesDarkMode
+    
+    # Get UI elements
+    $titleText = $msgWindow.FindName('TitleText')
+    $messageText = $msgWindow.FindName('MessageText')
+    $iconText = $msgWindow.FindName('IconText')
+    $button1 = $msgWindow.FindName('Button1')
+    $button2 = $msgWindow.FindName('Button2')
+    $titleBar = $msgWindow.FindName('TitleBar')
+    
+    # Set title and message
+    $titleText.Text = $Title
+    $messageText.Text = $Message
+    
+    # Configure icon
+    switch ($Icon) {
+        'Information' { 
+            $iconText.Text = [char]0xE946
+            $iconText.Foreground = $msgWindow.FindResource('InformationIconColor')
+            $iconText.Visibility = 'Visible'
+        }
+        'Warning' { 
+            $iconText.Text = [char]0xE7BA
+            $iconText.Foreground = $msgWindow.FindResource('WarningIconColor')
+            $iconText.Visibility = 'Visible'
+        }
+        'Error' { 
+            $iconText.Text = [char]0xEA39
+            $iconText.Foreground = $msgWindow.FindResource('ErrorIconColor')
+            $iconText.Visibility = 'Visible'
+        }
+        'Question' { 
+            $iconText.Text = [char]0xE897
+            $iconText.Foreground = $msgWindow.FindResource('QuestionIconColor')
+            $iconText.Visibility = 'Visible'
+        }
+        default {
+            $iconText.Visibility = 'Collapsed'
+        }
+    }
+    
+    # Configure buttons - store result in window's Tag property
+    switch ($Button) {
+        'OK' {
+            $button1.Content = 'OK'
+            $button1.Add_Click({ $msgWindow.Tag = 'OK'; $msgWindow.Close() })
+            $button2.Visibility = 'Collapsed'
+        }
+        'OKCancel' {
+            $button1.Content = 'OK'
+            $button2.Content = 'Cancel'
+            $button1.Add_Click({ $msgWindow.Tag = 'OK'; $msgWindow.Close() })
+            $button2.Add_Click({ $msgWindow.Tag = 'Cancel'; $msgWindow.Close() })
+            $button2.Visibility = 'Visible'
+        }
+        'YesNo' {
+            $button1.Content = 'Yes'
+            $button2.Content = 'No'
+            $button1.Add_Click({ $msgWindow.Tag = 'Yes'; $msgWindow.Close() })
+            $button2.Add_Click({ $msgWindow.Tag = 'No'; $msgWindow.Close() })
+            $button2.Visibility = 'Visible'
+        }
+        'YesNoCancel' {
+            $button1.Content = 'Yes'
+            $button2.Content = 'No'
+            $button1.Add_Click({ $msgWindow.Tag = 'Yes'; $msgWindow.Close() })
+            $button2.Add_Click({ $msgWindow.Tag = 'No'; $msgWindow.Close() })
+            $button2.Visibility = 'Visible'
+        }
+    }
+    
+    # Title bar drag to move window
+    $titleBar.Add_MouseLeftButtonDown({
+        $msgWindow.DragMove()
+    })
+    
+    # Handle Escape key to close
+    $msgWindow.Add_KeyDown({
+        param($sender, $e)
+        if ($e.Key -eq 'Escape') {
+            if ($Button -eq 'OK') {
+                $msgWindow.Tag = 'OK'
+            } else {
+                $msgWindow.Tag = 'Cancel'
+            }
+            $msgWindow.Close()
+        }
+    })
+    
+    # Show dialog and return result from Tag
+    $msgWindow.ShowDialog() | Out-Null
+    
+    # Hide overlay after dialog closes
+    if ($overlay) {
+        try {
+            $ownerWindow.Dispatcher.Invoke([action]{ $overlay.Visibility = 'Collapsed' })
+        }
+        catch { }
+    }
+    
+    return $msgWindow.Tag
+}
+
+function Show-AboutDialog {
+    param (
+        [Parameter(Mandatory=$false)]
+        [System.Windows.Window]$Owner = $null
+    )
+    
+    Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase | Out-Null
+    
+    $usesDarkMode = GetSystemUsesDarkMode
+    
+    # Determine owner window
+    $ownerWindow = if ($Owner) { $Owner } else { $script:GuiWindow }
+    
+    # Show overlay if owner window exists
+    $overlay = $null
+    if ($ownerWindow) {
+        try {
+            $overlay = $ownerWindow.FindName('ModalOverlay')
+            if ($overlay) {
+                $ownerWindow.Dispatcher.Invoke([action]{ $overlay.Visibility = 'Visible' })
+            }
+        }
+        catch { }
+    }
+    
+    # Load XAML from file
+    $xaml = Get-Content -Path $script:AboutWindowSchema -Raw
+    $reader = [System.Xml.XmlReader]::Create([System.IO.StringReader]::new($xaml))
+    try {
+        $aboutWindow = [System.Windows.Markup.XamlReader]::Load($reader)
+    }
+    finally {
+        $reader.Close()
+    }
+    
+    # Set owner to owner window if it exists
+    if ($ownerWindow) {
+        try {
+            $aboutWindow.Owner = $ownerWindow
+        }
+        catch { }
+    }
+    
+    # Apply theme resources
+    SetWindowThemeResources -window $aboutWindow -usesDarkMode $usesDarkMode
+    
+    # Get UI elements
+    $titleBar = $aboutWindow.FindName('TitleBar')
+    $versionText = $aboutWindow.FindName('VersionText')
+    $projectLink = $aboutWindow.FindName('ProjectLink')
+    $kofiLink = $aboutWindow.FindName('KofiLink')
+    $closeButton = $aboutWindow.FindName('CloseButton')
+    
+    # Set version
+    $versionText.Text = $script:Version
+    
+    # Title bar drag to move window
+    $titleBar.Add_MouseLeftButtonDown({
+        $aboutWindow.DragMove()
+    })
+    
+    # Project link click handler
+    $projectLink.Add_MouseLeftButtonDown({
+        Start-Process "https://github.com/Raphire/Win11Debloat"
+    })
+    
+    # Ko-fi link click handler
+    $kofiLink.Add_MouseLeftButtonDown({
+        Start-Process "https://ko-fi.com/raphire"
+    })
+    
+    # Close button handler
+    $closeButton.Add_Click({
+        $aboutWindow.Close()
+    })
+    
+    # Handle Escape key to close
+    $aboutWindow.Add_KeyDown({
+        param($sender, $e)
+        if ($e.Key -eq 'Escape') {
+            $aboutWindow.Close()
+        }
+    })
+    
+    # Show dialog
+    $aboutWindow.ShowDialog() | Out-Null
+    
+    # Hide overlay after dialog closes
+    if ($overlay) {
+        try {
+            $ownerWindow.Dispatcher.Invoke([action]{ $overlay.Visibility = 'Collapsed' })
+        }
+        catch { }
+    }
+}
+
 
 
 # Initializes and opens the main GUI window
@@ -588,8 +855,13 @@ function OpenGUI {
 
     # Get named elements
     $titleBar = $window.FindName('TitleBar')
-    $helpBtn = $window.FindName('HelpBtn')
+    $kofiBtn = $window.FindName('KofiBtn')
+    $menuBtn = $window.FindName('MenuBtn')
     $closeBtn = $window.FindName('CloseBtn')
+    $menuDocumentation = $window.FindName('MenuDocumentation')
+    $menuReportBug = $window.FindName('MenuReportBug')
+    $menuLogs = $window.FindName('MenuLogs')
+    $menuAbout = $window.FindName('MenuAbout')
 
     # Title bar event handlers
     $titleBar.Add_MouseLeftButtonDown({
@@ -598,8 +870,36 @@ function OpenGUI {
         }
     })
     
-    $helpBtn.Add_Click({
+    $kofiBtn.Add_Click({
+        Start-Process "https://ko-fi.com/raphire"
+    })
+    
+    $menuBtn.Add_Click({
+        $menuBtn.ContextMenu.PlacementTarget = $menuBtn
+        $menuBtn.ContextMenu.Placement = [System.Windows.Controls.Primitives.PlacementMode]::Bottom
+        $menuBtn.ContextMenu.IsOpen = $true
+    })
+
+    $menuDocumentation.Add_Click({
         Start-Process "https://github.com/Raphire/Win11Debloat/wiki"
+    })
+
+    $menuReportBug.Add_Click({
+        Start-Process "https://github.com/Raphire/Win11Debloat/issues"
+    })
+
+    $menuLogs.Add_Click({
+        $logPath = Join-Path $PSScriptRoot "Win11Debloat.log"
+        if (Test-Path $logPath) {
+            Start-Process "notepad.exe" -ArgumentList $logPath
+        }
+        else {
+            Show-ModernMessageBox -Message "No log file found at: $logPath" -Title "Logs" -Button 'OK' -Icon 'Information'
+        }
+    })
+
+    $menuAbout.Add_Click({
+        Show-AboutDialog -Owner $window
     })
 
     $closeBtn.Add_Click({
@@ -783,7 +1083,7 @@ function OpenGUI {
         $featuresJson = LoadJsonFile -filePath $script:FeaturesFilePath -expectedVersion "1.0"
 
         if (-not $featuresJson) {
-            [System.Windows.MessageBox]::Show("Unable to load Features.json file!","Error",[System.Windows.MessageBoxButton]::OK,[System.Windows.MessageBoxImage]::Error) | Out-Null
+            Show-ModernMessageBox -Message "Unable to load Features.json file!" -Title "Error" -Button 'OK' -Icon 'Error' | Out-Null
             Exit
         }
 
@@ -1118,7 +1418,7 @@ function OpenGUI {
                         $script:CurrentAppLoadJobStartTime = $null
                         
                         # Show error that the script was unable to get list of apps from WinGet
-                        [System.Windows.MessageBox]::Show('Unable to load list of installed apps via WinGet.', 'Error', 'OK', 'Error') | Out-Null
+                        Show-ModernMessageBox -Message 'Unable to load list of installed apps via WinGet.' -Title 'Error' -Button 'OK' -Icon 'Error' | Out-Null
                         $onlyInstalledAppsBox.IsChecked = $false
                         
                         # Continue with loading all apps (unchecked now)
@@ -1691,7 +1991,7 @@ function OpenGUI {
     $overviewApplyBtn = $window.FindName('OverviewApplyBtn')
     $overviewApplyBtn.Add_Click({
         if (-not (ValidateOtherUsername)) {
-            [System.Windows.MessageBox]::Show("Please enter a valid username.", "Invalid Username", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Warning) | Out-Null
+            Show-ModernMessageBox -Message "Please enter a valid username." -Title "Invalid Username" -Button 'OK' -Icon 'Warning' | Out-Null
             return
         }
 
@@ -1706,14 +2006,9 @@ function OpenGUI {
         if ($selectedApps.Count -gt 0) {
             # Check if Microsoft Store is selected
             if ($selectedApps -contains "Microsoft.WindowsStore") {
-                $result = [System.Windows.MessageBox]::Show(
-                    'Are you sure you wish to uninstall the Microsoft Store? This app cannot easily be reinstalled.',
-                    'Are you sure?',
-                    [System.Windows.MessageBoxButton]::YesNo,
-                    [System.Windows.MessageBoxImage]::Warning
-                )
+                $result = Show-ModernMessageBox -Message 'Are you sure you wish to uninstall the Microsoft Store? This app cannot easily be reinstalled.' -Title 'Are you sure?' -Button 'YesNo' -Icon 'Warning'
 
-                if ($result -eq [System.Windows.MessageBoxResult]::No) {
+                if ($result -eq 'No') {
                     return
                 }
             }
@@ -1789,12 +2084,7 @@ function OpenGUI {
         }
 
         if ($totalChanges -eq 0) {
-            [System.Windows.MessageBox]::Show(
-                'No changes have been selected, please select at least one item to proceed.',
-                'No Changes Selected',
-                [System.Windows.MessageBoxButton]::OK,
-                [System.Windows.MessageBoxImage]::Information
-            )
+            Show-ModernMessageBox -Message 'No changes have been selected, please select at least one option to proceed.' -Title 'No Changes Selected' -Button 'OK' -Icon 'Information'
             return
         }
 
@@ -1906,7 +2196,7 @@ function OpenGUI {
         $defaultsJson = LoadJsonFile -filePath $script:DefaultSettingsFilePath -expectedVersion "1.0"
 
         if (-not $defaultsJson) {
-            [System.Windows.MessageBox]::Show("Failed to load default settings file", "Error", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Error)
+            Show-ModernMessageBox -Message "Failed to load default settings file" -Title "Error" -Button 'OK' -Icon 'Error'
             return
         }
         
@@ -1936,7 +2226,7 @@ function OpenGUI {
                 ApplySettingsToUiControls -window $window -settingsJson $lastUsedSettingsJson -uiControlMappings $script:UiControlMappings
             }
             catch {
-                [System.Windows.MessageBox]::Show("Failed to load last used settings: $_", "Error", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Error)
+                Show-ModernMessageBox -Message "Failed to load last used settings: $_" -Title "Error" -Button 'OK' -Icon 'Error'
             }
         })
     }
@@ -1960,7 +2250,7 @@ function OpenGUI {
                 }
             }
             catch {
-                [System.Windows.MessageBox]::Show("Failed to load last used app selection: $_", "Error", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Error)
+                Show-ModernMessageBox -Message "Failed to load last used app selection: $_" -Title "Error" -Button 'OK' -Icon 'Error'
             }
         })
     }
@@ -2043,7 +2333,7 @@ function OpenAppSelectionWindow {
             $listOfApps = GetInstalledAppsViaWinget -TimeOut 10
             if (-not $listOfApps) {
                 # Show error that the script was unable to get list of apps from WinGet
-                [System.Windows.MessageBox]::Show('Unable to load list of installed apps via WinGet.', 'Error', 'OK', 'Error') | Out-Null
+                Show-ModernMessageBox -Message 'Unable to load list of installed apps via WinGet.' -Title 'Error' -Button 'OK' -Icon 'Error' -Owner $window | Out-Null
                 $onlyInstalledBox.IsChecked = $false
             }
         }
@@ -2112,14 +2402,9 @@ function OpenAppSelectionWindow {
         }
 
         if ($selectedApps -contains "Microsoft.WindowsStore" -and -not $Silent) {
-            $result = [System.Windows.MessageBox]::Show(
-                'Are you sure you wish to uninstall the Microsoft Store? This app cannot easily be reinstalled.',
-                'Are you sure?',
-                [System.Windows.MessageBoxButton]::YesNo,
-                [System.Windows.MessageBoxImage]::Warning
-            )
+            $result = Show-ModernMessageBox -Message 'Are you sure you wish to uninstall the Microsoft Store? This app cannot easily be reinstalled.' -Title 'Are you sure?' -Button 'YesNo' -Icon 'Warning' -Owner $window
 
-            if ($result -eq [System.Windows.MessageBoxResult]::No) {
+            if ($result -eq 'No') {
                 return
             }
         }
@@ -2362,14 +2647,9 @@ function RemoveApps {
                     Write-ToConsole "Unable to uninstall Microsoft Edge via WinGet" -ForegroundColor Red
 
                     if ($script:GuiConsoleOutput) {
-                        $result = [System.Windows.MessageBox]::Show(
-                            'Unable to uninstall Microsoft Edge via WinGet. Would you like to forcefully uninstall it? NOT RECOMMENDED!',
-                            'Force Uninstall Microsoft Edge?',
-                            [System.Windows.MessageBoxButton]::YesNo,
-                            [System.Windows.MessageBoxImage]::Warning
-                        )
+                        $result = Show-ModernMessageBox -Message 'Unable to uninstall Microsoft Edge via WinGet. Would you like to forcefully uninstall it? NOT RECOMMENDED!' -Title 'Force Uninstall Microsoft Edge?' -Button 'YesNo' -Icon 'Warning'
 
-                        if ($result -eq [System.Windows.MessageBoxResult]::Yes) {
+                        if ($result -eq 'Yes') {
                             Write-ToConsole ""
                             ForceRemoveEdge
                         }

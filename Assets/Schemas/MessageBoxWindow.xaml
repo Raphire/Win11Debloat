@@ -1,0 +1,168 @@
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MessageBox" 
+        Width="440"
+        SizeToContent="Height"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        Topmost="True"
+        ShowInTaskbar="False">
+    
+    <Window.Resources>
+        <!-- Button Style -->
+        <Style x:Key="MessageBoxButton" TargetType="Button">
+            <Setter Property="Background" Value="{DynamicResource SecondaryButtonBg}"/>
+            <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderColor}"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="MinWidth" Value="80"/>
+            <Setter Property="Margin" Value="4,0"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Border" 
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="{DynamicResource SecondaryButtonHover}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="{DynamicResource SecondaryButtonPressed}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Primary Button Style -->
+        <Style x:Key="PrimaryMessageBoxButton" TargetType="Button" BasedOn="{StaticResource MessageBoxButton}">
+            <Setter Property="Background" Value="{DynamicResource ButtonBg}"/>
+            <Setter Property="Foreground" Value="white"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource ButtonBg}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,1"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="{DynamicResource ButtonDisabled}"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource ButtonDisabled}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource ButtonTextDisabled}"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource ButtonHover}"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource ButtonHover}"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource ButtonPressed}"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource ButtonPressed}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Border BorderBrush="{DynamicResource BorderColor}" 
+            BorderThickness="1" 
+            CornerRadius="8"
+            Background="{DynamicResource CardBgColor}"
+            Margin="25">
+        <Border.Effect>
+            <DropShadowEffect Color="Black" 
+                            Opacity="0.15" 
+                            BlurRadius="20" 
+                            ShadowDepth="0" 
+                            Direction="0"/>
+        </Border.Effect>
+        
+        <Grid Margin="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Title Bar -->
+            <Grid Grid.Row="0" x:Name="TitleBar" Height="40" Background="Transparent">
+                <TextBlock x:Name="TitleText" 
+                           Text="Message" 
+                           Foreground="{DynamicResource FgColor}"
+                           FontSize="16"
+                           FontWeight="SemiBold"
+                           VerticalAlignment="Center" 
+                           Margin="16,0,0,0"/>
+            </Grid>
+
+            <!-- Message Content -->
+            <Grid Grid.Row="1" Margin="24,12,24,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Icon -->
+                <TextBlock x:Name="IconText"
+                           Grid.Column="0"
+                           FontFamily="Segoe Fluent Icons"
+                           FontSize="24"
+                           Foreground="{DynamicResource FgColor}"
+                           VerticalAlignment="Center"
+                           Margin="0,2,14,0"
+                           Visibility="Collapsed"/>
+
+                <!-- Message Text -->
+                <TextBlock x:Name="MessageText"
+                           Grid.Column="1"
+                           Text="Message content goes here"
+                           TextWrapping="Wrap"
+                           FontSize="14"
+                           LineHeight="20"
+                           Foreground="{DynamicResource FgColor}"
+                           VerticalAlignment="Center"/>
+            </Grid>
+
+            <!-- Button Panel -->
+            <Border Grid.Row="2" 
+                    Background="{DynamicResource BgColor}"
+                    BorderBrush="{DynamicResource BorderColor}"
+                    BorderThickness="0,1,0,0"
+                    Padding="16,12"
+                    CornerRadius="0,0,8,8">
+                <StackPanel x:Name="ButtonPanel"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Right">
+                    <Button x:Name="Button1" 
+                            Content="OK" 
+                            Style="{StaticResource PrimaryMessageBoxButton}"/>
+                    <Button x:Name="Button2" 
+                            Content="Cancel" 
+                            Style="{StaticResource MessageBoxButton}"
+                            Visibility="Collapsed"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

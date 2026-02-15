@@ -205,7 +205,15 @@
     <Border BorderBrush="{DynamicResource BorderColor}" 
             BorderThickness="1" 
             CornerRadius="8" 
-            Background="{DynamicResource BgColor}">
+            Background="{DynamicResource BgColor}"
+            Margin="25">
+        <Border.Effect>
+            <DropShadowEffect Color="Black" 
+                            Opacity="0.15" 
+                            BlurRadius="20" 
+                            ShadowDepth="0" 
+                            Direction="0"/>
+        </Border.Effect>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="32"/>
@@ -273,6 +281,16 @@
                     </StackPanel>
                 </Grid>
             </Grid>
+            
+            <!-- Modal Overlay for MessageBoxes -->
+            <Rectangle x:Name="ModalOverlay" 
+                       Grid.RowSpan="2" 
+                       Fill="#80000000" 
+                       Visibility="Collapsed" 
+                       Panel.ZIndex="1000"
+                       RadiusX="8"
+                       RadiusY="8"
+                       Margin="-1"/>
         </Grid>
     </Border>
 </Window>

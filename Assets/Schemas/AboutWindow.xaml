@@ -1,0 +1,253 @@
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="About Win11Debloat" 
+        Width="500"
+        SizeToContent="Height"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        Topmost="True"
+        ShowInTaskbar="False">
+    
+    <Window.Resources>
+        <Style x:Key="HyperlinkStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#0078D4"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="#106EBE"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
+        <!-- Button Style -->
+        <Style x:Key="MessageBoxButton" TargetType="Button">
+            <Setter Property="Background" Value="{DynamicResource SecondaryButtonBg}"/>
+            <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderColor}"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="MinWidth" Value="80"/>
+            <Setter Property="Margin" Value="4,0"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Border" 
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,1"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="{DynamicResource SecondaryButtonHover}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="{DynamicResource SecondaryButtonPressed}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Primary Button Style -->
+        <Style x:Key="PrimaryMessageBoxButton" TargetType="Button" BasedOn="{StaticResource MessageBoxButton}">
+            <Setter Property="Background" Value="{DynamicResource ButtonBg}"/>
+            <Setter Property="Foreground" Value="white"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource ButtonBg}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,1"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="{DynamicResource ButtonDisabled}"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource ButtonDisabled}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource ButtonTextDisabled}"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource ButtonHover}"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource ButtonHover}"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource ButtonPressed}"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource ButtonPressed}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Border BorderBrush="{DynamicResource BorderColor}" 
+            BorderThickness="1" 
+            CornerRadius="8"
+            Background="{DynamicResource CardBgColor}"
+            Margin="25">
+        <Border.Effect>
+            <DropShadowEffect Color="Black" 
+                            Opacity="0.15" 
+                            BlurRadius="20" 
+                            ShadowDepth="0" 
+                            Direction="0"/>
+        </Border.Effect>
+        
+        <Grid Margin="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Title Bar -->
+            <Grid Grid.Row="0" x:Name="TitleBar" Height="48" Background="Transparent">
+                <TextBlock Text="About Win11Debloat" 
+                           Foreground="{DynamicResource FgColor}"
+                           FontSize="18"
+                           FontWeight="SemiBold"
+                           VerticalAlignment="Center" 
+                           Margin="20,0,0,0"/>
+            </Grid>
+
+            <!-- Message Content -->
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Message Text -->
+                <Grid Grid.Row="0" Margin="24,12,24,20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    
+                    <!-- Version -->
+                    <TextBlock Grid.Row="0" Grid.Column="0"
+                            Text="Version:" 
+                            FontSize="14"
+                            Foreground="{DynamicResource FgColor}"
+                            FontWeight="SemiBold"
+                            Margin="0,0,16,8"/>
+                    <TextBlock x:Name="VersionText"
+                            Grid.Row="0" Grid.Column="1"
+                            Text="0.0.0" 
+                            FontSize="14"
+                            Foreground="{DynamicResource FgColor}"
+                            Margin="0,0,0,8"/>
+                    
+                    <!-- Author -->
+                    <TextBlock Grid.Row="1" Grid.Column="0"
+                            Text="Author:" 
+                            FontSize="14"
+                            Foreground="{DynamicResource FgColor}"
+                            FontWeight="SemiBold"
+                            Margin="0,0,16,8"/>
+                    <TextBlock Grid.Row="1" Grid.Column="1"
+                            Text="Raphire" 
+                            FontSize="14"
+                            Foreground="{DynamicResource FgColor}"
+                            Margin="0,0,0,8"/>
+                    
+                    <!-- Project Link -->
+                    <TextBlock Grid.Row="2" Grid.Column="0"
+                            Text="Project:" 
+                            FontSize="14"
+                            Foreground="{DynamicResource FgColor}"
+                            FontWeight="SemiBold"
+                            Margin="0,0,16,0"/>
+                    <TextBlock x:Name="ProjectLink"
+                            Grid.Row="2" Grid.Column="1"
+                            Text="https://github.com/Raphire/Win11Debloat" 
+                            FontSize="14"
+                            Style="{StaticResource HyperlinkStyle}"
+                            Margin="0,0,0,0"/>
+                </Grid>
+
+                <!-- Separator -->
+                <Border Grid.Row="1" 
+                        Height="1" 
+                        Background="{DynamicResource BorderColor}"
+                        Margin="10,0"/>
+
+                <!-- Content -->
+                <StackPanel Grid.Row="2" Margin="24,20">
+                    <!-- Donation Message -->
+                    <TextBlock Text="If you found this tool helpful, please consider making a small donation to help keep it going." 
+                            FontSize="14"
+                            Foreground="{DynamicResource FgColor}"
+                            TextWrapping="Wrap"
+                            Margin="0,0,0,15"/>
+
+                    <!-- Ko-fi Link -->
+                    <Grid HorizontalAlignment="Left">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock x:Name="KofiLinkIcon"
+                                Grid.Column="0"
+                                FontSize="14"
+                                Style="{StaticResource HyperlinkStyle}"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontWeight="SemiBold"
+                                FontFamily="Segoe Fluent Icons"
+                                Text="&#xEB52;" 
+                                Foreground="{DynamicResource CloseHover}"
+                                Margin="0,0,8,0"/>
+                        
+                        <TextBlock x:Name="KofiLink"
+                                Grid.Column="1"
+                                FontSize="14"
+                                Style="{StaticResource HyperlinkStyle}"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontWeight="SemiBold"
+                                Text="Support on Ko-fi"/>
+                    </Grid>
+                </StackPanel>
+            </Grid>
+
+            <!-- Button Panel -->
+            <Border Grid.Row="2" 
+                    Background="{DynamicResource BgColor}"
+                    BorderBrush="{DynamicResource BorderColor}"
+                    BorderThickness="0,1,0,0"
+                    Padding="16,12"
+                    CornerRadius="0,0,8,8">
+                <StackPanel x:Name="ButtonPanel"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Right">
+                    <Button x:Name="CloseButton" 
+                            Content="Close" 
+                            Style="{StaticResource MessageBoxButton}"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

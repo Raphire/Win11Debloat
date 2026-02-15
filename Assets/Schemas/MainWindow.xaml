@@ -677,6 +677,11 @@
                                                 <TextBlock Text="&#xf0e3;" FontFamily="Segoe Fluent Icons" FontSize="16" Foreground="{DynamicResource FgColor}"/>
                                             </MenuItem.Icon>
                                         </MenuItem>
+                                        <MenuItem x:Name="MenuAbout" Header="About" AutomationProperties.Name="About">
+                                            <MenuItem.Icon>
+                                                <TextBlock Text="&#xE946;" FontFamily="Segoe Fluent Icons" FontSize="16" Foreground="{DynamicResource FgColor}"/>
+                                            </MenuItem.Icon>
+                                        </MenuItem>
                                     </ContextMenu>
                                 </Button.ContextMenu>
                             </Button>

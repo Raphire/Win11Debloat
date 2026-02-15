@@ -65,7 +65,7 @@ function Show-AppSelectionWindow {
             }
         }
 
-        $appsToAdd = LoadAppsDetailsFromJson -OnlyInstalled:$onlyInstalledBox.IsChecked -InstalledList $listOfApps -InitialCheckedFromJson
+        $appsToAdd = LoadAppsDetailsFromJson -OnlyInstalled:$onlyInstalledBox.IsChecked -InstalledList $listOfApps -InitialCheckedFromJson:$true
 
         # Reset the last selected checkbox when loading a new list
         $script:AppSelectionWindowLastSelectedCheckbox = $null

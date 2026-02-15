@@ -222,7 +222,7 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 . "$PSScriptRoot/Scripts/GUI/SetWindowThemeResources.ps1"
 . "$PSScriptRoot/Scripts/GUI/AttachShiftClickBehavior.ps1"
 . "$PSScriptRoot/Scripts/GUI/ApplySettingsToUiControls.ps1"
-. "$PSScriptRoot/Scripts/GUI/Show-ModernMessageBox.ps1"
+. "$PSScriptRoot/Scripts/GUI/Show-MessageBox.ps1"
 . "$PSScriptRoot/Scripts/GUI/Show-AppSelectionWindow.ps1"
 . "$PSScriptRoot/Scripts/GUI/Show-MainWindow.ps1"
 . "$PSScriptRoot/Scripts/GUI/Show-AboutDialog.ps1"
@@ -510,7 +510,7 @@ function RemoveApps {
                     Write-ToConsole "Unable to uninstall Microsoft Edge via WinGet" -ForegroundColor Red
 
                     if ($script:GuiConsoleOutput) {
-                        $result = Show-ModernMessageBox -Message 'Unable to uninstall Microsoft Edge via WinGet. Would you like to forcefully uninstall it? NOT RECOMMENDED!' -Title 'Force Uninstall Microsoft Edge?' -Button 'YesNo' -Icon 'Warning'
+                        $result = Show-MessageBox -Message 'Unable to uninstall Microsoft Edge via WinGet. Would you like to forcefully uninstall it? NOT RECOMMENDED!' -Title 'Force Uninstall Microsoft Edge?' -Button 'YesNo' -Icon 'Warning'
 
                         if ($result -eq 'Yes') {
                             Write-ToConsole ""
@@ -1016,7 +1016,7 @@ function CreateSystemRestorePoint {
     # Ensure that the user is aware if creating a restore point failed, and give them the option to continue without a restore point or cancel the script
     if ($failed) {
         if ($script:GuiConsoleOutput) {
-            $result = Show-ModernMessageBox "Failed to create a system restore point. Do you want to continue without a restore point?" "Restore Point Creation Failed" "YesNo" "Warning"
+            $result = Show-MessageBox "Failed to create a system restore point. Do you want to continue without a restore point?" "Restore Point Creation Failed" "YesNo" "Warning"
 
             if ($result -ne "Yes") {
                 $script:CancelRequested = $true

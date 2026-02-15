@@ -60,7 +60,7 @@ function Show-AppSelectionWindow {
             $listOfApps = GetInstalledAppsViaWinget -TimeOut 10
             if (-not $listOfApps) {
                 # Show error that the script was unable to get list of apps from WinGet
-                Show-ModernMessageBox -Message 'Unable to load list of installed apps via WinGet.' -Title 'Error' -Button 'OK' -Icon 'Error' -Owner $window | Out-Null
+                Show-MessageBox -Message 'Unable to load list of installed apps via WinGet.' -Title 'Error' -Button 'OK' -Icon 'Error' -Owner $window | Out-Null
                 $onlyInstalledBox.IsChecked = $false
             }
         }
@@ -129,7 +129,7 @@ function Show-AppSelectionWindow {
         }
 
         if ($selectedApps -contains "Microsoft.WindowsStore" -and -not $Silent) {
-            $result = Show-ModernMessageBox -Message 'Are you sure you wish to uninstall the Microsoft Store? This app cannot easily be reinstalled.' -Title 'Are you sure?' -Button 'YesNo' -Icon 'Warning' -Owner $window
+            $result = Show-MessageBox -Message 'Are you sure you wish to uninstall the Microsoft Store? This app cannot easily be reinstalled.' -Title 'Are you sure?' -Button 'YesNo' -Icon 'Warning' -Owner $window
 
             if ($result -eq 'No') {
                 return

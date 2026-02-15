@@ -59,7 +59,7 @@ function Show-MainWindow {
             Start-Process "explorer.exe" -ArgumentList $logsFolder
         }
         else {
-            Show-ModernMessageBox -Message "No logs folder found at: $logsFolder" -Title "Logs" -Button 'OK' -Icon 'Information'
+            Show-MessageBox -Message "No logs folder found at: $logsFolder" -Title "Logs" -Button 'OK' -Icon 'Information'
         }
     })
 
@@ -248,7 +248,7 @@ function Show-MainWindow {
         $featuresJson = LoadJsonFile -filePath $script:FeaturesFilePath -expectedVersion "1.0"
 
         if (-not $featuresJson) {
-            Show-ModernMessageBox -Message "Unable to load Features.json file!" -Title "Error" -Button 'OK' -Icon 'Error' | Out-Null
+            Show-MessageBox -Message "Unable to load Features.json file!" -Title "Error" -Button 'OK' -Icon 'Error' | Out-Null
             Exit
         }
 
@@ -606,7 +606,7 @@ function Show-MainWindow {
                         $script:CurrentAppLoadJobStartTime = $null
                         
                         # Show error that the script was unable to get list of apps from WinGet
-                        Show-ModernMessageBox -Message 'Unable to load list of installed apps via WinGet.' -Title 'Error' -Button 'OK' -Icon 'Error' | Out-Null
+                        Show-MessageBox -Message 'Unable to load list of installed apps via WinGet.' -Title 'Error' -Button 'OK' -Icon 'Error' | Out-Null
                         $onlyInstalledAppsBox.IsChecked = $false
                         
                         # Continue with loading all apps (unchecked now)
@@ -1179,7 +1179,7 @@ function Show-MainWindow {
     $overviewApplyBtn = $window.FindName('OverviewApplyBtn')
     $overviewApplyBtn.Add_Click({
         if (-not (ValidateOtherUsername)) {
-            Show-ModernMessageBox -Message "Please enter a valid username." -Title "Invalid Username" -Button 'OK' -Icon 'Warning' | Out-Null
+            Show-MessageBox -Message "Please enter a valid username." -Title "Invalid Username" -Button 'OK' -Icon 'Warning' | Out-Null
             return
         }
 
@@ -1194,7 +1194,7 @@ function Show-MainWindow {
         if ($selectedApps.Count -gt 0) {
             # Check if Microsoft Store is selected
             if ($selectedApps -contains "Microsoft.WindowsStore") {
-                $result = Show-ModernMessageBox -Message 'Are you sure you wish to uninstall the Microsoft Store? This app cannot easily be reinstalled.' -Title 'Are you sure?' -Button 'YesNo' -Icon 'Warning'
+                $result = Show-MessageBox -Message 'Are you sure you wish to uninstall the Microsoft Store? This app cannot easily be reinstalled.' -Title 'Are you sure?' -Button 'YesNo' -Icon 'Warning'
 
                 if ($result -eq 'No') {
                     return
@@ -1272,7 +1272,7 @@ function Show-MainWindow {
         }
 
         if ($totalChanges -eq 0) {
-            Show-ModernMessageBox -Message 'No changes have been selected, please select at least one option to proceed.' -Title 'No Changes Selected' -Button 'OK' -Icon 'Information'
+            Show-MessageBox -Message 'No changes have been selected, please select at least one option to proceed.' -Title 'No Changes Selected' -Button 'OK' -Icon 'Information'
             return
         }
 
@@ -1384,7 +1384,7 @@ function Show-MainWindow {
         $defaultsJson = LoadJsonFile -filePath $script:DefaultSettingsFilePath -expectedVersion "1.0"
 
         if (-not $defaultsJson) {
-            Show-ModernMessageBox -Message "Failed to load default settings file" -Title "Error" -Button 'OK' -Icon 'Error'
+            Show-MessageBox -Message "Failed to load default settings file" -Title "Error" -Button 'OK' -Icon 'Error'
             return
         }
         
@@ -1414,7 +1414,7 @@ function Show-MainWindow {
                 ApplySettingsToUiControls -window $window -settingsJson $lastUsedSettingsJson -uiControlMappings $script:UiControlMappings
             }
             catch {
-                Show-ModernMessageBox -Message "Failed to load last used settings: $_" -Title "Error" -Button 'OK' -Icon 'Error'
+                Show-MessageBox -Message "Failed to load last used settings: $_" -Title "Error" -Button 'OK' -Icon 'Error'
             }
         })
     }
@@ -1438,7 +1438,7 @@ function Show-MainWindow {
                 }
             }
             catch {
-                Show-ModernMessageBox -Message "Failed to load last used app selection: $_" -Title "Error" -Button 'OK' -Icon 'Error'
+                Show-MessageBox -Message "Failed to load last used app selection: $_" -Title "Error" -Button 'OK' -Icon 'Error'
             }
         })
     }

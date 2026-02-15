@@ -357,7 +357,7 @@
     {
       "FeatureId": "DisableSuggestions",
       "Label": "tips, tricks & suggested content throughout Windows",
-      "ToolTip": "Disabling this will disable various tips, tricks, suggestions and ads throughout Windows.",
+      "ToolTip": "This will disable various tips, tricks, suggestions and ads throughout Windows.",
       "Category": "Privacy & Suggested Content",
       "Action": "Disable",
       "RegistryKey": "Disable_Windows_Suggestions.reg",
@@ -370,7 +370,7 @@
     {
       "FeatureId": "DisableLockscreenTips",
       "Label": "tips & tricks on the lock screen",
-      "ToolTip": "Disabling this will turn off the tips, tricks and fun facts that appear on the lock screen.",
+      "ToolTip": "This will turn off the tips, tricks and fun facts that appear on the lock screen.",
       "Category": "Privacy & Suggested Content",
       "Action": "Disable",
       "RegistryKey": "Disable_Lockscreen_Tips.reg",
@@ -383,7 +383,7 @@
     {
       "FeatureId": "DisableDesktopSpotlight",
       "Label": "Windows Spotlight for desktop",
-      "ToolTip": "Disabling this will turn off the 'Windows Spotlight' feature for the desktop background, which shows different background images and occasionally tips and fun facts on the desktop.",
+      "ToolTip": "This will turn off the 'Windows Spotlight' feature for the desktop background, which shows different background images and occasionally tips and fun facts on the desktop.",
       "Category": "Privacy & Suggested Content",
       "Action": "Disable",
       "RegistryKey": "Disable_Desktop_Spotlight.reg",
@@ -396,7 +396,7 @@
     {
       "FeatureId": "DisableEdgeAds",
       "Label": "ads, suggestions and newsfeed in Edge",
-      "ToolTip": "Disabling this will turn off various distractions from Microsoft Edge such as ads, suggestions and the MSN news feed. This setting uses policies, which means some settings will be locked.",
+      "ToolTip": "This will turn off various distractions from Microsoft Edge such as ads, suggestions and the MSN news feed. This setting uses policies, which means some settings will be locked.",
       "Category": "Privacy & Suggested Content",
       "Action": "Disable",
       "RegistryKey": "Disable_Edge_Ads_And_Suggestions.reg",
@@ -409,7 +409,7 @@
     {
       "FeatureId": "DisableCopilot",
       "Label": "Microsoft Copilot",
-      "ToolTip": "Disabling this will turn off and uninstall Microsoft Copilot, the AI assistant integrated throughout Windows.",
+      "ToolTip": "This will turn off and uninstall Microsoft Copilot, the AI assistant integrated throughout Windows.",
       "Category": "AI",
       "Action": "Disable",
       "RegistryKey": "Disable_Copilot.reg",
@@ -422,7 +422,7 @@
     {
       "FeatureId": "DisableRecall",
       "Label": "Windows Recall",
-      "ToolTip": "Disabling this will turn off Windows Recall, an AI-powered feature that provides quick access to recently used files, apps and activities.",
+      "ToolTip": "This will turn off Windows Recall, an AI-powered feature that provides quick access to recently used files, apps and activities.",
       "Category": "AI",
       "Action": "Disable",
       "RegistryKey": "Disable_AI_Recall.reg",
@@ -435,7 +435,7 @@
     {
       "FeatureId": "DisableClickToDo",
       "Label": "Click To Do, AI text & image analysis",
-      "ToolTip": "Disabling this will turn off Click To Do, which provides AI-powered text and image analysis features in Windows.",
+      "ToolTip": "This will turn off Click To Do, which provides AI-powered text and image analysis features in Windows.",
       "Category": "AI",
       "Action": "Disable",
       "RegistryKey": "Disable_Click_to_Do.reg",
@@ -448,7 +448,7 @@
     {
       "FeatureId": "DisableDVR",
       "Label": "Xbox game/screen recording",
-      "ToolTip": "Disabling this will turn off the Xbox game/screen recording features included with the Game Bar app.",
+      "ToolTip": "This will turn off the Xbox game/screen recording features included with the Game Bar app.",
       "Category": "Gaming",
       "Action": "Disable",
       "RegistryKey": "Disable_DVR.reg",
@@ -461,7 +461,7 @@
     {
       "FeatureId": "DisableGameBarIntegration",
       "Label": "Game Bar integration",
-      "ToolTip": "Disabling this will turn off the Game Bar integration features such as the Game Bar overlay that appears when pressing Win+G.",
+      "ToolTip": "This will turn off the Game Bar integration features such as the Game Bar overlay that appears when pressing Win+G.",
       "Category": "Gaming",
       "Action": "Disable",
       "RegistryKey": "Disable_Game_Bar_Integration.reg",
@@ -522,7 +522,7 @@
     {
       "FeatureId": "DisableStartRecommended",
       "Label": "recommended section in the start menu",
-      "ToolTip": "Disabling this will hide the recommended section in the start menu, which shows recently added apps, recently opened files and app recommendations.",
+      "ToolTip": "This will hide the recommended section in the start menu, which shows recently added apps, recently opened files and app recommendations.",
       "Category": "Start Menu",
       "Action": "Hide",
       "RegistryKey": "Disable_Start_Recommended.reg",
@@ -535,7 +535,7 @@
     {
       "FeatureId": "DisableBing",
       "Label": "Bing web search & Copilot integration",
-      "ToolTip": "Disabling this will turn off Bing web search results and Copilot integration in the Windows search experience.",
+      "ToolTip": "This will turn off Bing web search results and Copilot integration in the Windows search experience.",
       "Category": "Start Menu",
       "Action": "Disable",
       "RegistryKey": "Disable_Bing_Cortana_In_Search.reg",
@@ -548,7 +548,7 @@
     {
       "FeatureId": "DisableStartPhoneLink",
       "Label": "Phone Link integration in the start menu",
-      "ToolTip": "Disabling this will remove the Phone Link integration that appears in the start menu when you have a mobile device linked to your PC.",
+      "ToolTip": "This will remove the Phone Link integration that appears in the start menu when you have a mobile device linked to your PC.",
       "Category": "Start Menu",
       "Action": "Disable",
       "RegistryKey": "Disable_Phone_Link_In_Start.reg",
@@ -561,7 +561,7 @@
     {
       "FeatureId": "DisableSettings365Ads",
       "Label": "Microsoft 365 Copilot ads in Settings Home",
-      "ToolTip": "Disabling this will turn off the Microsoft 365 Copilot ads that appear in the Settings Home page.",
+      "ToolTip": "This will turn off the Microsoft 365 Copilot ads that appear in the Settings Home page.",
       "Category": "Privacy & Suggested Content",
       "Action": "Hide",
       "RegistryKey": "Disable_Settings_365_Ads.reg",
@@ -587,7 +587,7 @@
     {
       "FeatureId": "DisableEdgeAI",
       "Label": "AI features in Microsoft Edge",
-      "ToolTip": "Disabling this will turn off AI features in Microsoft Edge, such as the AI-powered sidebar and Copilot features. This setting uses policies, which means some settings will be locked.",
+      "ToolTip": "This will turn off AI features in Microsoft Edge, such as the AI-powered sidebar and Copilot features. This setting uses policies, which means some settings will be locked.",
       "Category": "AI",
       "Action": "Disable",
       "RegistryKey": "Disable_Edge_AI_Features.reg",
@@ -600,7 +600,7 @@
     {
       "FeatureId": "DisablePaintAI",
       "Label": "AI features in Paint",
-      "ToolTip": "Disabling this will turn off AI features in Paint, such as the AI-powered image generation and editing tools.",
+      "ToolTip": "This will turn off AI features in Paint, such as the AI-powered image generation and editing tools.",
       "Category": "AI",
       "Action": "Disable",
       "RegistryKey": "Disable_Paint_AI_Features.reg",
@@ -613,7 +613,7 @@
     {
       "FeatureId": "DisableNotepadAI",
       "Label": "AI features in Notepad",
-      "ToolTip": "Disabling this will turn off AI features in Notepad, such as the AI-powered writing suggestions.",
+      "ToolTip": "This will turn off AI features in Notepad, such as the AI-powered writing suggestions.",
       "Category": "AI",
       "Action": "Disable",
       "RegistryKey": "Disable_Notepad_AI_Features.reg",
@@ -626,7 +626,7 @@
     {
       "FeatureId": "EnableDarkMode",
       "Label": "theme for system and apps",
-      "ToolTip": "Enabling this will set the default app mode and system theme to dark mode, which changes the appearance of Windows and supported apps.",
+      "ToolTip": "This will set the default app mode and system theme to dark mode, which changes the appearance of Windows and supported apps.",
       "Category": "Appearance",
       "Action": "Enable dark",
       "RegistryKey": "Enable_Dark_Mode.reg",
@@ -678,7 +678,7 @@
     {
       "FeatureId": "DisableStickyKeys",
       "Label": "Sticky Keys keyboard shortcut (5x shift)",
-      "ToolTip": "Disabling this will prevent the Sticky Keys dialog from appearing when you press the Shift key 5 times in a row.",
+      "ToolTip": "This will prevent the Sticky Keys dialog from appearing when you press the Shift key 5 times in a row.",
       "Category": "System",
       "Action": "Disable",
       "RegistryKey": "Disable_Sticky_Keys_Shortcut.reg",
@@ -691,7 +691,7 @@
     {
       "FeatureId": "DisableWindowSnapping",
       "Label": "window snapping",
-      "ToolTip": "Disabling this will turn off the ability to snap windows to the sides or corners of the screen.",
+      "ToolTip": "This will turn off the ability to snap windows to the sides or corners of the screen.",
       "Category": "Multi-tasking",
       "Priority": 1,
       "Action": "Disable",
@@ -705,7 +705,7 @@
     {
       "FeatureId": "DisableSnapAssist",
       "Label": "showing app suggestions when snapping windows",
-      "ToolTip": "Disabling this will turn off app suggestions when you snap windows to the sides or corners of the screen.",
+      "ToolTip": "This will turn off app suggestions when you snap windows to the sides or corners of the screen.",
       "Category": "Multi-tasking",
       "Priority": 2,
       "Action": "Disable",
@@ -719,7 +719,7 @@
     {
       "FeatureId": "DisableSnapLayouts",
       "Label": "snap layout flyout at top of screen and on maximize button",
-      "ToolTip": "Disabling this will turn off the snap layout flyout that appears when you hover over the maximize button or drag windows to the top of the screen.",
+      "ToolTip": "This will turn off the snap layout flyout that appears when you hover over the maximize button or drag windows to the top of the screen.",
       "Category": "Multi-tasking",
       "Priority": 3,
       "Action": "Hide",
@@ -843,7 +843,7 @@
     {
       "FeatureId": "HideTaskview",
       "Label": "'Task view' button on the taskbar",
-      "ToolTip": "Disabling this will turn off the 'Task view' button on the taskbar, which allows you to see all your open windows and virtual desktops.",
+      "ToolTip": "This will disable the 'Task view' button on the taskbar, which allows you to see all your open windows and virtual desktops.",
       "Category": "Taskbar",
       "Priority": 3,
       "Action": "Hide",
@@ -857,7 +857,7 @@
     {
       "FeatureId": "DisableWidgets",
       "Label": "widgets on the taskbar & lock screen",
-      "ToolTip": "Disabling this will turn off the widgets features in Windows, including the widgets button on the taskbar and the widgets that can appear on the lock screen.",
+      "ToolTip": "This will disable the widgets features in Windows, including the widgets button on the taskbar and the widgets that can appear on the lock screen.",
       "Category": "Taskbar",
       "Priority": 4,
       "Action": "Disable",
@@ -871,7 +871,7 @@
     {
       "FeatureId": "HideChat",
       "Label": "Chat (meet now) icon on the taskbar",
-      "ToolTip": "Disabling this will turn off the Chat (meet now) icon on the taskbar.",
+      "ToolTip": "This will disable the Chat (meet now) icon on the taskbar.",
       "Category": "Taskbar",
       "Priority": 5,
       "Action": "Hide",
@@ -1108,7 +1108,7 @@
     {
       "FeatureId": "ShowKnownFileExt",
       "Label": "file extensions for known file types",
-      "ToolTip": "Enabling this will show file extensions for known file types. By default, Windows hides file extensions for known file types which can lead to confusion and security risks.",
+      "ToolTip": "This will show file extensions for known file types. By default, Windows hides file extensions for known file types which can lead to confusion and security risks.",
       "Category": "File Explorer",
       "Action": "Show",
       "RegistryKey": "Show_Extensions_For_Known_File_Types.reg",
@@ -1186,7 +1186,7 @@
     {
       "FeatureId": "DisableTransparency",
       "Label": "transparency effects",
-      "ToolTip": "Disabling this will turn off transparency effects on Windows and interfaces. Which can help improve performance on older hardware.",
+      "ToolTip": "This will disable transparency effects on Windows and interfaces. Which can help improve performance on older hardware.",
       "Category": "Appearance",
       "Action": "Disable",
       "RegistryKey": "Disable_Transparency.reg",
@@ -1199,7 +1199,7 @@
     {
       "FeatureId": "DisableAnimations",
       "Label": "animations and visual effects",
-      "ToolTip": "Disabling this will turn off animations and some visual effects in Windows, which can make the interface feel snappier and more responsive, especially on older hardware.",
+      "ToolTip": "This will disable animations and some visual effects in Windows, which can make the interface feel snappier and more responsive, especially on older hardware.",
       "Category": "Appearance",
       "Action": "Disable",
       "RegistryKey": "Disable_Animations.reg",
@@ -1212,7 +1212,7 @@
     {
       "FeatureId": "DisableUpdateASAP",
       "Label": "updates as soon as they're available",
-      "ToolTip": "Disabling this will prevent your PC from being among the first to receive new non-security updates. Your PC will still receive these updates eventually.",
+      "ToolTip": "This will prevent your PC from being among the first to receive new non-security updates. Your PC will still receive these updates eventually.",
       "Category": "Windows Update",
       "Action": "Prevent getting",
       "RegistryKey": "Disable_Update_ASAP.reg",
@@ -1225,7 +1225,7 @@
     {
       "FeatureId": "PreventUpdateAutoReboot",
       "Label": "automatic restarts after updates while signed in",
-      "ToolTip": "Disabling this will prevent your PC from automatically restarting after updates while any user is signed in.",
+      "ToolTip": "This will prevent your PC from automatically restarting after updates while any user is signed in.",
       "Category": "Windows Update",
       "Action": "Prevent",
       "RegistryKey": "Prevent_Auto_Reboot.reg",
@@ -1238,7 +1238,7 @@
     {
       "FeatureId": "DisableDeliveryOptimization",
       "Label": "sharing downloaded updates with other PCs",
-      "ToolTip": "Disabling this will prevent your PC from sharing downloaded updates with other PCs on the local network or on the internet. This also prevents your PC from downloading updates from other PCs.",
+      "ToolTip": "This will prevent your PC from sharing downloaded updates with other PCs on the local network or on the internet. This also prevents your PC from downloading updates from other PCs.",
       "Category": "Windows Update",
       "Action": "Disable",
       "RegistryKey": "Disable_Delivery_Optimization.reg",
@@ -1341,7 +1341,7 @@
     {
       "FeatureId": "DisableBraveBloat",
       "Label": "bloat in Brave browser (AI, Crypto, etc.)",
-      "ToolTip": "Disabling this will turn off Brave's built-in AI features, Crypto wallet, News, Rewards, Talk and VPN.",
+      "ToolTip": "This will turn off Brave's built-in AI features, Crypto wallet, News, Rewards, Talk and VPN.",
       "Category": "Other",
       "Action": "Disable",
       "RegistryKey": "Disable_Brave_Bloat.reg",

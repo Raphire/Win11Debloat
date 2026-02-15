@@ -1,5 +1,5 @@
 # Read Apps.json and return list of app objects with optional filtering
-function LoadAppDetailsFromJson {
+function LoadAppsDetailsFromJson {
     param (
         [switch]$OnlyInstalled,
         [string]$InstalledList = "",

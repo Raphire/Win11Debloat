@@ -13,11 +13,11 @@
     
     <Window.Resources>
         <Style x:Key="HyperlinkStyle" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="#0078D4"/>
+            <Setter Property="Foreground" Value="{DynamicResource ButtonBg}"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Foreground" Value="#106EBE"/>
+                    <Setter Property="Foreground" Value="{DynamicResource ButtonHover}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -196,7 +196,7 @@
                 <!-- Content -->
                 <StackPanel Grid.Row="2" Margin="24,20">
                     <!-- Donation Message -->
-                    <TextBlock Text="If you found this tool helpful, please consider making a small donation to help keep it going." 
+                    <TextBlock Text="Win11Debloat is a passion project that I maintain in my free time. If you've found this tool useful, please consider making a small donation to support its development. I really appreciate it!"
                             FontSize="14"
                             Foreground="{DynamicResource FgColor}"
                             TextWrapping="Wrap"
@@ -211,7 +211,7 @@
 
                         <TextBlock x:Name="KofiLinkIcon"
                                 Grid.Column="0"
-                                FontSize="14"
+                                FontSize="16"
                                 Style="{StaticResource HyperlinkStyle}"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
@@ -223,12 +223,12 @@
                         
                         <TextBlock x:Name="KofiLink"
                                 Grid.Column="1"
-                                FontSize="14"
+                                FontSize="16"
                                 Style="{StaticResource HyperlinkStyle}"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 FontWeight="SemiBold"
-                                Text="Support on Ko-fi"/>
+                                Text="Support me on Ko-fi"/>
                     </Grid>
                 </StackPanel>
             </Grid>

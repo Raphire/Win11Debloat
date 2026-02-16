@@ -344,7 +344,7 @@
     {
       "FeatureId": "DisableTelemetry",
       "Label": "telemetry, tracking & targeted ads",
-      "ToolTip": "This settings disables telemetry, diagnostic data collection, activity history, app-launch tracking and targeted ads. This limits the data that is sent to Microsoft about your device and usage.",
+      "ToolTip": "This setting disables telemetry, diagnostic data collection, activity history, app-launch tracking, targeted ads and more. It limits the data that is sent to Microsoft about your device and usage.",
       "Category": "Privacy & Suggested Content",
       "Action": "Disable",
       "RegistryKey": "Disable_Telemetry.reg",
@@ -357,7 +357,7 @@
     {
       "FeatureId": "DisableSuggestions",
       "Label": "tips, tricks & suggested content throughout Windows",
-      "ToolTip": "This will disable various tips, tricks, suggestions and ads throughout Windows.",
+      "ToolTip": "This setting removes many annoying distractions from Windows.",
       "Category": "Privacy & Suggested Content",
       "Action": "Disable",
       "RegistryKey": "Disable_Windows_Suggestions.reg",
@@ -409,7 +409,7 @@
     {
       "FeatureId": "DisableCopilot",
       "Label": "Microsoft Copilot",
-      "ToolTip": "This will turn off and uninstall Microsoft Copilot, the AI assistant integrated throughout Windows.",
+      "ToolTip": "This will disable and uninstall Microsoft Copilot, Windows' built-in AI assistant.",
       "Category": "AI",
       "Action": "Disable",
       "RegistryKey": "Disable_Copilot.reg",
@@ -422,7 +422,7 @@
     {
       "FeatureId": "DisableRecall",
       "Label": "Windows Recall",
-      "ToolTip": "This will turn off Windows Recall, an AI-powered feature that provides quick access to recently used files, apps and activities.",
+      "ToolTip": "This will disable Windows Recall, an AI-powered feature that provides quick access to recently used files, apps and activities.",
       "Category": "AI",
       "Action": "Disable",
       "RegistryKey": "Disable_AI_Recall.reg",
@@ -435,7 +435,7 @@
     {
       "FeatureId": "DisableClickToDo",
       "Label": "Click To Do, AI text & image analysis",
-      "ToolTip": "This will turn off Click To Do, which provides AI-powered text and image analysis features in Windows.",
+      "ToolTip": "This will disable Click To Do, which provides AI-powered text and image analysis features in Windows.",
       "Category": "AI",
       "Action": "Disable",
       "RegistryKey": "Disable_Click_to_Do.reg",
@@ -448,7 +448,7 @@
     {
       "FeatureId": "DisableDVR",
       "Label": "Xbox game/screen recording",
-      "ToolTip": "This will turn off the Xbox game/screen recording features included with the Game Bar app.",
+      "ToolTip": "This will disable the Xbox game/screen recording features included with the Game Bar app.",
       "Category": "Gaming",
       "Action": "Disable",
       "RegistryKey": "Disable_DVR.reg",
@@ -461,7 +461,7 @@
     {
       "FeatureId": "DisableGameBarIntegration",
       "Label": "Game Bar integration",
-      "ToolTip": "This will turn off the Game Bar integration features such as the Game Bar overlay that appears when pressing Win+G.",
+      "ToolTip": "This will disable the Game Bar integration with games and controllers. This stops annoying ms-gamebar popups when launching games or connecting a controller.",
       "Category": "Gaming",
       "Action": "Disable",
       "RegistryKey": "Disable_Game_Bar_Integration.reg",
@@ -548,7 +548,7 @@
     {
       "FeatureId": "DisableStartPhoneLink",
       "Label": "Phone Link integration in the start menu",
-      "ToolTip": "This will remove the Phone Link integration that appears in the start menu when you have a mobile device linked to your PC.",
+      "ToolTip": "This will remove the Phone Link integration in the start menu when you have a mobile device linked to your PC.",
       "Category": "Start Menu",
       "Action": "Disable",
       "RegistryKey": "Disable_Phone_Link_In_Start.reg",
@@ -626,7 +626,7 @@
     {
       "FeatureId": "EnableDarkMode",
       "Label": "theme for system and apps",
-      "ToolTip": "This will set the default app mode and system theme to dark mode, which changes the appearance of Windows and supported apps.",
+      "ToolTip": "This will set the app and system theme to dark mode.",
       "Category": "Appearance",
       "Action": "Enable dark",
       "RegistryKey": "Enable_Dark_Mode.reg",
@@ -665,7 +665,7 @@
     {
       "FeatureId": "DisableMouseAcceleration",
       "Label": "Enhance Pointer Precision (mouse acceleration)",
-      "ToolTip": "By default, Windows has a mouse acceleration enabled, which can make the mouse movement less predictable, especially for gaming. Disabling this will make the mouse movement more consistent.",
+      "ToolTip": "This will disable mouse acceleration which is enabled by default in Windows. This makes mouse movement more consistent and predictable.",
       "Category": "System",
       "Action": "Disable",
       "RegistryKey": "Disable_Enhance_Pointer_Precision.reg",
@@ -781,7 +781,7 @@
     {
       "FeatureId": "TaskbarAlignLeft",
       "Label": "taskbar alignment",
-      "ToolTip": "By default, Windows 11 has the taskbar buttons centered. Enabling this will align the taskbar buttons to the left, similar to previous versions of Windows.",
+      "ToolTip": "By default, Windows 11 has the taskbar buttons centered. Enabling this setting will move the taskbar buttons to the left, similar to previous versions of Windows.",
       "Category": "Taskbar",
       "Priority": 1,
       "Action": "Left",
@@ -911,7 +911,7 @@
     {
       "FeatureId": "DisableModernStandbyNetworking",
       "Label": "Modern Standby network connectivity",
-      "ToolTip": "By default, devices that support Modern Standby maintain network connectivity while in sleep mode to allow for features like receiving calls or messages while asleep. Disabling network connectivity during Modern Standby can help save battery life.",
+      "ToolTip": "By default, devices that support Modern Standby maintain network connectivity while in sleep mode. Disabling network connectivity during Modern Standby can help save battery life.",
       "Category": "System",
       "Action": "Disable",
       "RegistryKey": "Disable_Modern_Standby_Networking.reg",
@@ -924,7 +924,7 @@
     {
       "FeatureId": "EnableEndTask",
       "Label": "'End Task' option in taskbar context menu",
-      "ToolTip": "When enabled, adds an 'End Task' option to the right-click context menu for apps in the taskbar, allowing you to quickly force close apps without opening Task Manager.",
+      "ToolTip": "When enabled, adds an 'End Task' option to the right-click context menu for apps in the taskbar, allowing you to quickly force close apps.",
       "Category": "Taskbar",
       "Priority": 6,
       "Action": "Show",
@@ -938,7 +938,7 @@
     {
       "FeatureId": "EnableLastActiveClick",
       "Label": "'Last Active Click' behavior for taskbar apps",
-      "ToolTip": "When enabled, clicking on an app in the taskbar will switch to the last active window of that app, instead of showing the thumbnail preview.",
+      "ToolTip": "When enabled, clicking on an app in the taskbar will switch to the last active window of that app, instead of only showing the thumbnail preview.",
       "Category": "Taskbar",
       "Priority": 7,
       "Action": "Enable",
@@ -1121,7 +1121,7 @@
     {
       "FeatureId": "ShowHiddenFolders",
       "Label": "hidden files, folders and drives",
-      "ToolTip": "By default, Windows hides certain files, folders and drives to prevent accidental modification or deletion. Enabling this will show hidden files, folders and drives in File Explorer.",
+      "ToolTip": "By default, Windows hides certain files, folders and drives to prevent accidental modification or deletion. Turn this on to show all files in File Explorer.",
       "Category": "File Explorer",
       "Action": "Show",
       "RegistryKey": "Show_Hidden_Folders.reg",
@@ -1160,7 +1160,7 @@
     {
       "FeatureId": "HideDupliDrive",
       "Label": "duplicate removable drive entries",
-      "ToolTip": "When you connect a removable drive, Windows shows the drive both under 'This PC' and in the navigation pane with its own entry. Hiding duplicate removable drive entries will only show the drive under 'This PC' and remove it from the navigation pane.",
+      "ToolTip": "By default, Windows shows removable drives both under 'This PC' and in the navigation pane with its own entry. Enable this setting to only show removable drives under 'This PC'.",
       "Category": "File Explorer",
       "Action": "Hide",
       "RegistryKey": "Hide_duplicate_removable_drives_from_navigation_pane_of_File_Explorer.reg",
@@ -1199,7 +1199,7 @@
     {
       "FeatureId": "DisableAnimations",
       "Label": "animations and visual effects",
-      "ToolTip": "This will disable animations and some visual effects in Windows, which can make the interface feel snappier and more responsive, especially on older hardware.",
+      "ToolTip": "This will disable animations and some visual effects in Windows, which can make the interface feel snappier, especially on older hardware.",
       "Category": "Appearance",
       "Action": "Disable",
       "RegistryKey": "Disable_Animations.reg",
@@ -1341,7 +1341,7 @@
     {
       "FeatureId": "DisableBraveBloat",
       "Label": "bloat in Brave browser (AI, Crypto, etc.)",
-      "ToolTip": "This will turn off Brave's built-in AI features, Crypto wallet, News, Rewards, Talk and VPN.",
+      "ToolTip": "This will disable Brave's built-in AI features, Crypto wallet, News, Rewards, Talk and VPN.",
       "Category": "Other",
       "Action": "Disable",
       "RegistryKey": "Disable_Brave_Bloat.reg",

@@ -866,7 +866,7 @@
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="300"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="App Name" FontWeight="SemiBold" FontSize="14" Foreground="{DynamicResource FgColor}" Margin="16,0,0,0"/>
+                                        <TextBlock Grid.Column="0" Text="Name" FontWeight="SemiBold" FontSize="14" Foreground="{DynamicResource FgColor}" Margin="16,0,0,0"/>
                                         <TextBlock Grid.Column="1" Text="Description" FontWeight="SemiBold" FontSize="14" Foreground="{DynamicResource FgColor}" Margin="24,0,0,0"/>
                                         <TextBlock Grid.Column="2" Text="App ID" FontWeight="SemiBold" FontSize="14" Foreground="{DynamicResource FgColor}"/>
                                     </Grid>

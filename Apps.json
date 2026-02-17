@@ -236,15 +236,15 @@
       "SelectedByDefault": true
     },
     {
-      "FriendlyName": "MS Teams (Old)",
+      "FriendlyName": "Microsoft Teams (Old)",
       "AppId": "MicrosoftTeams",
-      "Description": "Old MS Teams personal (MS Store version)",
+      "Description": "Old Microsoft Teams personal (MS Store version)",
       "SelectedByDefault": true
     },
     {
-      "FriendlyName": "MS Teams (New)",
+      "FriendlyName": "Microsoft Teams (New)",
       "AppId": "MSTeams",
-      "Description": "New MS Teams app (Work/School or Personal)",
+      "Description": "New Microsoft Teams app (Work/School or Personal)",
       "SelectedByDefault": true
     },
     {
@@ -664,7 +664,7 @@
     {
       "FriendlyName": "Xbox TCUI Framework",
       "AppId": "Microsoft.Xbox.TCUI",
-      "Description": "UI framework, seems to be required for MS store, photos and certain games",
+      "Description": "UI framework, seems to be required for Microsoft Store, photos and certain games",
       "SelectedByDefault": false
     },
     {

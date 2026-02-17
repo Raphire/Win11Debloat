@@ -28,11 +28,13 @@ function LoadAppsDetailsFromJson {
             }
         }
 
+        $friendlyName = if ($appData.FriendlyName) { $appData.FriendlyName } else { $appId }
         $displayName = if ($appData.FriendlyName) { "$($appData.FriendlyName) ($appId)" } else { $appId }
         $isChecked = if ($InitialCheckedFromJson) { $appData.SelectedByDefault } else { $false }
 
         $apps += [PSCustomObject]@{
             AppId = $appId
+            FriendlyName = $friendlyName
             DisplayName = $displayName
             IsChecked = $isChecked
             Description = $appData.Description

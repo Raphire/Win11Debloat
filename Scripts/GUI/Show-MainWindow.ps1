@@ -534,16 +534,45 @@ function Show-MainWindow {
         $script:MainWindowLastSelectedCheckbox = $null
 
         # Sort apps alphabetically and add to panel
-        $appsToAdd | Sort-Object -Property DisplayName | ForEach-Object {
+        $appsToAdd | Sort-Object -Property FriendlyName | ForEach-Object {
             $checkbox = New-Object System.Windows.Controls.CheckBox
-            $checkbox.Content = $_.DisplayName
-            $checkbox.SetValue([System.Windows.Automation.AutomationProperties]::NameProperty, $_.DisplayName)
+            $checkbox.SetValue([System.Windows.Automation.AutomationProperties]::NameProperty, $_.FriendlyName)
             $checkbox.Tag = $_.AppId
             $checkbox.IsChecked = $_.IsChecked
-            $checkbox.ToolTip = $_.Description
             $checkbox.Style = $window.Resources["AppsPanelCheckBoxStyle"]
-            
+
+            # Build table row content: App Name | Description | App ID
+            $row = New-Object System.Windows.Controls.Grid
+            $c0 = New-Object System.Windows.Controls.ColumnDefinition; $c0.Width = [System.Windows.GridLength]::new(160)
+            $c1 = New-Object System.Windows.Controls.ColumnDefinition; $c1.Width = [System.Windows.GridLength]::new(1, [System.Windows.GridUnitType]::Star)
+            $c2 = New-Object System.Windows.Controls.ColumnDefinition; $c2.Width = [System.Windows.GridLength]::new(286)
+            $row.ColumnDefinitions.Add($c0); $row.ColumnDefinitions.Add($c1); $row.ColumnDefinitions.Add($c2)
+
+            $tbName = New-Object System.Windows.Controls.TextBlock
+            $tbName.Text = $_.FriendlyName
+            $tbName.Style = $window.Resources["AppNameTextStyle"]
+            [System.Windows.Controls.Grid]::SetColumn($tbName, 0)
+
+            $tbDesc = New-Object System.Windows.Controls.TextBlock
+            $tbDesc.Text = $_.Description
+            $tbDesc.Style = $window.Resources["AppDescTextStyle"]
+            $tbDesc.ToolTip = $_.Description
+            [System.Windows.Controls.Grid]::SetColumn($tbDesc, 1)
+
+            $tbId = New-Object System.Windows.Controls.TextBlock
+            $tbId.Text = $_.AppId
+            $tbId.Style = $window.Resources["AppIdTextStyle"]
+            $tbId.ToolTip = $_.AppId
+            [System.Windows.Controls.Grid]::SetColumn($tbId, 2)
+
+            $row.Children.Add($tbName) | Out-Null
+            $row.Children.Add($tbDesc) | Out-Null
+            $row.Children.Add($tbId) | Out-Null
+            $checkbox.Content = $row
+
             # Store metadata in checkbox for later use
+            Add-Member -InputObject $checkbox -MemberType NoteProperty -Name "AppName" -Value $_.FriendlyName
+            Add-Member -InputObject $checkbox -MemberType NoteProperty -Name "AppDescription" -Value $_.Description
             Add-Member -InputObject $checkbox -MemberType NoteProperty -Name "SelectedByDefault" -Value $_.SelectedByDefault
             
             # Add event handler to update status
@@ -674,16 +703,6 @@ function Show-MainWindow {
         }
     })
 
-    # Shared search highlighting configuration
-    $script:SearchHighlightColor = [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#FFF4CE"))
-    $script:SearchHighlightColorDark = [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#4A4A2A"))
-    
-    # Helper function to get the appropriate highlight brush based on theme
-    function GetSearchHighlightBrush {
-        if ($usesDarkMode) { return $script:SearchHighlightColorDark }
-        return $script:SearchHighlightColor
-    }
-    
     # Helper function to scroll to an item if it's not visible, centering it in the viewport
     function ScrollToItemIfNotVisible {
         param (
@@ -737,6 +756,10 @@ function Show-MainWindow {
     $appSearchBox = $window.FindName('AppSearchBox')
     $appSearchPlaceholder = $window.FindName('AppSearchPlaceholder')
     
+    # Track current search matches and active index for Enter-key navigation
+    $script:AppSearchMatches = @()
+    $script:AppSearchMatchIndex = -1
+    
     $appSearchBox.Add_TextChanged({
         $searchText = $appSearchBox.Text.ToLower().Trim()
         
@@ -750,27 +773,52 @@ function Show-MainWindow {
             }
         }
         
+        $script:AppSearchMatches = @()
+        $script:AppSearchMatchIndex = -1
+        
         if ([string]::IsNullOrWhiteSpace($searchText)) { return }
         
         # Find and highlight all matching apps
-        $firstMatch = $null
-        $highlightBrush = GetSearchHighlightBrush
+        $highlightBrush = $window.Resources["SearchHighlightColor"]
+        $activeHighlightBrush = $window.Resources["SearchHighlightActiveColor"]
         
         foreach ($child in $appsPanel.Children) {
             if ($child -is [System.Windows.Controls.CheckBox] -and $child.Visibility -eq 'Visible') {
-                if ($child.Content.ToString().ToLower().Contains($searchText)) {
+                $appName = if ($child.AppName) { $child.AppName } else { '' }
+                $appId = if ($child.Tag) { $child.Tag.ToString() } else { '' }
+                $appDesc = if ($child.AppDescription) { $child.AppDescription } else { '' }
+                if ($appName.ToLower().Contains($searchText) -or $appId.ToLower().Contains($searchText) -or $appDesc.ToLower().Contains($searchText)) {
                     $child.Background = $highlightBrush
-                    if ($null -eq $firstMatch) { $firstMatch = $child }
+                    $script:AppSearchMatches += $child
                 }
             }
         }
         
-        # Scroll to first match if not visible
-        if ($firstMatch) {
+        # Scroll to first match and mark it as active
+        if ($script:AppSearchMatches.Count -gt 0) {
+            $script:AppSearchMatchIndex = 0
+            $script:AppSearchMatches[0].Background = $activeHighlightBrush
             $scrollViewer = FindParentScrollViewer -element $appsPanel
             if ($scrollViewer) {
-                ScrollToItemIfNotVisible -scrollViewer $scrollViewer -item $firstMatch -container $appsPanel
+                ScrollToItemIfNotVisible -scrollViewer $scrollViewer -item $script:AppSearchMatches[0] -container $appsPanel
             }
+        }
+    })
+    
+    $appSearchBox.Add_KeyDown({
+        param($sender, $e)
+        if ($e.Key -eq [System.Windows.Input.Key]::Enter -and $script:AppSearchMatches.Count -gt 0) {
+            # Reset background of current active match
+            $script:AppSearchMatches[$script:AppSearchMatchIndex].Background = $window.Resources["SearchHighlightColor"]
+            # Advance to next match (wrapping)
+            $script:AppSearchMatchIndex = ($script:AppSearchMatchIndex + 1) % $script:AppSearchMatches.Count
+            # Highlight new active match
+            $script:AppSearchMatches[$script:AppSearchMatchIndex].Background = $window.Resources["SearchHighlightActiveColor"]
+            $scrollViewer = FindParentScrollViewer -element $appsPanel
+            if ($scrollViewer) {
+                ScrollToItemIfNotVisible -scrollViewer $scrollViewer -item $script:AppSearchMatches[$script:AppSearchMatchIndex] -container $appsPanel
+            }
+            $e.Handled = $true
         }
     })
 
@@ -835,7 +883,7 @@ function Show-MainWindow {
         
         # Find and highlight all matching tweaks
         $firstMatch = $null
-        $highlightBrush = GetSearchHighlightBrush
+        $highlightBrush = $window.Resources["SearchHighlightColor"]
         $columns = @($col0, $col1, $col2) | Where-Object { $_ -ne $null }
         
         foreach ($column in $columns) {

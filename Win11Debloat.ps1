@@ -882,14 +882,14 @@ function ExecuteParameter {
         }
         "EnableWindowsSandbox" {
             Write-ToConsole "> Enabling Windows Sandbox..."
-            Enable-WindowsOptionalFeature -Online -FeatureName "Containers-DisposableClientVM" -All -NoRestart
+            EnableWindowsFeature "Containers-DisposableClientVM"
             Write-ToConsole ""
             return
         }
         "EnableWindowsSubsystemForLinux" {
             Write-ToConsole "> Enabling Windows Subsystem for Linux..."
-            Enable-WindowsOptionalFeature -Online -FeatureName "VirtualMachinePlatform" -All -NoRestart
-            Enable-WindowsOptionalFeature -Online -FeatureName "Microsoft-Windows-Subsystem-Linux" -All -NoRestart
+            EnableWindowsFeature "VirtualMachinePlatform"
+            EnableWindowsFeature "Microsoft-Windows-Subsystem-Linux"
             Write-ToConsole ""
             return
         }
@@ -1045,6 +1045,18 @@ function CreateSystemRestorePoint {
 
         Write-ToConsole "Warning: Continuing without restore point" -ForegroundColor Yellow
     }
+}
+
+
+# Enables a Windows optional feature and pipes its output to Write-ToConsole
+function EnableWindowsFeature {
+    param (
+        [string]$FeatureName
+    )
+
+    Enable-WindowsOptionalFeature -Online -FeatureName $FeatureName -All -NoRestart *>&1 `
+        | Where-Object { $_ -isnot [Microsoft.Dism.Commands.ImageObject] -and $_.ToString() -notlike '*Restart is suppressed*' } `
+        | ForEach-Object { $msg = $_.ToString().Trim(); if ($msg) { Write-ToConsole $msg } }
 }
 
 

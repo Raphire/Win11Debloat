@@ -372,6 +372,19 @@
       "MaxVersion": null
     },
     {
+      "FeatureId": "DisableSearchHistory",
+      "Label": "local Windows Search history",
+      "ToolTip": "This setting disables local search history in Windows Search. This does not affect web search history or the search history saved in Microsoft Edge.",
+      "Category": "Privacy & Suggested Content",
+      "Action": "Disable",
+      "RegistryKey": "Disable_Search_History.reg",
+      "ApplyText": "> Disabling search history...",
+      "UndoAction": "Enable",
+      "RegistryUndoKey": "Enable_Search_History.reg",
+      "MinVersion": null,
+      "MaxVersion": null
+    },
+    {
       "FeatureId": "DisableLockscreenTips",
       "Label": "tips & tricks on the lock screen",
       "ToolTip": "This will turn off the tips, tricks and fun facts that appear on the lock screen.",
@@ -394,19 +407,6 @@
       "ApplyText": "> Disabling the 'Windows Spotlight' desktop background option...",
       "UndoAction": "Enable",
       "RegistryUndoKey": "Enable_Desktop_Spotlight.reg",
-      "MinVersion": null,
-      "MaxVersion": null
-    },
-    {
-      "FeatureId": "DisableSearchHistory",
-      "Label": "local Windows Search history",
-      "ToolTip": "This setting disables local search history in Windows Search. This does not affect web search history or the search history saved in Microsoft Edge.",
-      "Category": "Privacy & Suggested Content",
-      "Action": "Disable",
-      "RegistryKey": "Disable_Search_History.reg",
-      "ApplyText": "> Disabling search history...",
-      "UndoAction": "Enable",
-      "RegistryUndoKey": "Enable_Search_History.reg",
       "MinVersion": null,
       "MaxVersion": null
     },

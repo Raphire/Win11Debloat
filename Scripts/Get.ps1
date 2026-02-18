@@ -22,6 +22,8 @@ param (
     [switch]$ForceRemoveEdge,
     [switch]$DisableDVR,
     [switch]$DisableGameBarIntegration,
+    [switch]$EnableWindowsSandbox,
+    [switch]$EnableWindowsSubsystemForLinux,
     [switch]$DisableTelemetry,
     [switch]$DisableSearchHistory,
     [switch]$DisableFastStartup,

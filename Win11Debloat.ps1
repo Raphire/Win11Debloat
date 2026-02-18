@@ -24,6 +24,8 @@ param (
     [switch]$ForceRemoveEdge,
     [switch]$DisableDVR,
     [switch]$DisableGameBarIntegration,
+    [switch]$EnableWindowsSandbox,
+    [switch]$EnableWindowsSubsystemForLinux,
     [switch]$DisableTelemetry,
     [switch]$DisableSearchHistory,
     [switch]$DisableFastStartup,
@@ -878,8 +880,17 @@ function ExecuteParameter {
             RemoveApps $appsList
             return
         }
-        "ForceRemoveEdge" {
-            ForceRemoveEdge
+        "EnableWindowsSandbox" {
+            Write-ToConsole "> Enabling Windows Sandbox..."
+            Enable-WindowsOptionalFeature -Online -FeatureName "Containers-DisposableClientVM" -All -NoRestart
+            Write-ToConsole ""
+            return
+        }
+        "EnableWindowsSubsystemForLinux" {
+            Write-ToConsole "> Enabling Windows Subsystem for Linux..."
+            Enable-WindowsOptionalFeature -Online -FeatureName "VirtualMachinePlatform" -All -NoRestart
+            Enable-WindowsOptionalFeature -Online -FeatureName "Microsoft-Windows-Subsystem-Linux" -All -NoRestart
+            Write-ToConsole ""
             return
         }
         'ClearStart' {
@@ -1044,6 +1055,14 @@ function RestartExplorer {
     if ($script:Params.ContainsKey("Sysprep") -or $script:Params.ContainsKey("User") -or $script:Params.ContainsKey("NoRestartExplorer")) {
         Write-ToConsole "Explorer process restart was skipped, please manually reboot your PC to apply all changes" -ForegroundColor Yellow
         return
+    }
+
+    if ($script:Params.ContainsKey("EnableWindowsSandbox")) {
+        Write-ToConsole "Warning: The Windows Sandbox feature will only be available after a reboot" -ForegroundColor Yellow
+    }
+
+    if ($script:Params.ContainsKey("EnableWindowsSubsystemForLinux")) {
+        Write-ToConsole "Warning: The Windows Subsystem for Linux feature will only be available after a reboot" -ForegroundColor Yellow
     }
 
     if ($script:Params.ContainsKey("DisableMouseAcceleration")) {

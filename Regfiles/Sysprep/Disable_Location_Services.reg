@@ -1,9 +1,4 @@
 Windows Registry Editor Version 5.00
 
-; Disable the Windows Location Service (system-wide)
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location]
-"Value"="Deny"
-
-; Deny app access to location for new/default users
-[hkey_users\default\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location]
-"Value"="Deny"
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\LocationAndSensors]
+"DisableLocation"=dword:00000001

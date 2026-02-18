@@ -374,7 +374,7 @@
     {
       "FeatureId": "DisableLocationServices",
       "Label": "Windows location services & app location access",
-      "ToolTip": "This will turn off Windows Location Services and deny apps access to your location.",
+      "ToolTip": "This will turn off Windows Location Services and deny apps access to your location. This feature uses policies, some settings will be locked.",
       "Category": "Privacy & Suggested Content",
       "Action": "Disable",
       "RegistryKey": "Disable_Location_Services.reg",

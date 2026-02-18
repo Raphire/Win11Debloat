@@ -859,7 +859,7 @@
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
                                 <!-- Column Headers -->
-                                <Border Grid.Row="0" Background="{DynamicResource ComboBgColor}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1,1,1,0" CornerRadius="4,4,0,0">
+                                <Border Grid.Row="0" Background="{DynamicResource TableHeaderColor}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1,1,1,0" CornerRadius="4,4,0,0">
                                     <Grid Margin="26,6,8,8">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="160"/>

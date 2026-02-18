@@ -34,16 +34,20 @@
       "Icon": "&#xec50;"
     },
     {
+      "Name": "Gaming",
+      "Icon": "&#xE7FC;"
+    },
+    {
       "Name": "Multi-tasking",
       "Icon": "&#xE7C4;"
     },
     {
-      "Name": "Other",
-      "Icon": "&#xE713;"
+      "Name": "Optional Windows Features",
+      "Icon": "&#xefda;"
     },
     {
-      "Name": "Gaming",
-      "Icon": "&#xE7FC;"
+      "Name": "Other",
+      "Icon": "&#xE713;"
     }
   ],
   "UiGroups": [
@@ -355,6 +359,19 @@
       "MaxVersion": null
     },
     {
+      "FeatureId": "DisableSearchHistory",
+      "Label": "local Windows Search history",
+      "ToolTip": "This setting disables local search history in Windows Search. This does not affect web search history or the search history saved in Microsoft Edge.",
+      "Category": "Privacy & Suggested Content",
+      "Action": "Disable",
+      "RegistryKey": "Disable_Search_History.reg",
+      "ApplyText": "> Disabling search history...",
+      "UndoAction": "Enable",
+      "RegistryUndoKey": "Enable_Search_History.reg",
+      "MinVersion": null,
+      "MaxVersion": null
+    },
+    {
       "FeatureId": "DisableSuggestions",
       "Label": "tips, tricks & suggested content throughout Windows",
       "ToolTip": "This setting removes many annoying distractions from Windows.",
@@ -396,7 +413,7 @@
     {
       "FeatureId": "DisableEdgeAds",
       "Label": "ads, suggestions and newsfeed in Edge",
-      "ToolTip": "This will turn off various distractions from Microsoft Edge such as ads, suggestions and the MSN news feed. This setting uses policies, which means some settings will be locked.",
+      "ToolTip": "This will turn off various distractions from Microsoft Edge such as ads, suggestions and the MSN news feed. This feature uses policies, some settings will be locked.",
       "Category": "Privacy & Suggested Content",
       "Action": "Disable",
       "RegistryKey": "Disable_Edge_Ads_And_Suggestions.reg",
@@ -587,7 +604,7 @@
     {
       "FeatureId": "DisableEdgeAI",
       "Label": "AI features in Microsoft Edge",
-      "ToolTip": "This will turn off AI features in Microsoft Edge, such as the AI-powered sidebar and Copilot features. This setting uses policies, which means some settings will be locked.",
+      "ToolTip": "This will turn off AI features in Microsoft Edge, such as the AI-powered sidebar and Copilot features. This feature uses policies, some settings will be locked.",
       "Category": "AI",
       "Action": "Disable",
       "RegistryKey": "Disable_Edge_AI_Features.reg",
@@ -857,7 +874,7 @@
     {
       "FeatureId": "DisableWidgets",
       "Label": "widgets on the taskbar & lock screen",
-      "ToolTip": "This will disable the widgets features in Windows, including the widgets button on the taskbar and the widgets that can appear on the lock screen.",
+      "ToolTip": "This will disable the widgets features in Windows, including the widgets button on the taskbar and the widgets that can appear on the lock screen. This feature uses policies, some settings will be locked.",
       "Category": "Taskbar",
       "Priority": 4,
       "Action": "Disable",
@@ -1349,6 +1366,32 @@
       "UndoAction": "Enable",
       "RegistryUndoKey": "Enable_Brave_Bloat.reg",
       "MinVersion": null,
+      "MaxVersion": null
+    },
+    {
+      "FeatureId": "EnableWindowsSandbox",
+      "Label": "Windows Sandbox",
+       "ToolTip": "Windows Sandbox is a lightweight desktop environment for safely running applications in isolation. Software installed inside the Windows Sandbox environment remains 'sandboxed' and runs separately from the host machine. Only supported on Windows 11 Pro, Workstation, and Enterprise editions.",
+      "Category": "Optional Windows Features",
+      "Action": "Enable",
+      "RegistryKey": null,
+      "ApplyText": "> Enabling Windows Sandbox...",
+      "UndoAction": null,
+      "RegistryUndoKey": null,
+      "MinVersion": 22483,
+      "MaxVersion": null
+    },
+    {
+      "FeatureId": "EnableWindowsSubsystemForLinux",
+      "Label": "Windows Subsystem for Linux",
+      "ToolTip": "Windows Subsystem for Linux allows you to run a Linux environment directly on Windows without the need for a virtual machine.",
+      "Category": "Optional Windows Features",
+      "Action": "Enable",
+      "RegistryKey": null,
+      "ApplyText": "> Enabling Windows Subsystem for Linux...",
+      "UndoAction": null,
+      "RegistryUndoKey": null,
+      "MinVersion": 22000,
       "MaxVersion": null
     }
   ]

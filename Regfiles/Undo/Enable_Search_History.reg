@@ -1,0 +1,5 @@
+Windows Registry Editor Version 5.00
+
+; Disable Windows search history
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\SearchSettings]
+"IsDeviceSearchHistoryEnabled"=dword:00000001

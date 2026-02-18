@@ -86,6 +86,7 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 #### Privacy & Suggested Content
 
 - Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads.
+- Disable local Windows search history.
 - Disable tips, tricks, suggestions & ads across Windows.
 - Disable 'Windows Spotlight' and tips & tricks on the lock screen.
 - Disable 'Windows Spotlight' desktop background option.
@@ -159,6 +160,11 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 - Disable Snap Assist suggestions when snapping a window. (W11 only)
 - Disable Snap Layout suggestions when dragging windows to the top of screen and when hovering on the maximize button. (W11 only)
 - Change if tabs are shown when snapping or pressing Alt+Tab. (W11 only)
+
+#### Optional Windows Features
+
+- Enable Windows Sandbox, a lightweight desktop environment for safely running applications in isolation. (W11 only)
+- Enable Windows Subsystem for Linux which allows you to run a Linux environment directly on Windows. (W11 only)
 
 #### Other
 

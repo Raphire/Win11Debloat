@@ -36,6 +36,7 @@ param (
     [switch]$DisableDesktopSpotlight,
     [switch]$DisableLockscreenTips,
     [switch]$DisableSuggestions,
+    [switch]$DisableLocationServices,
     [switch]$DisableEdgeAds,
     [switch]$DisableBraveBloat,
     [switch]$DisableSettings365Ads,

@@ -898,7 +898,7 @@
                         <Border DockPanel.Dock="Top" Padding="20,10,20,0" Background="{DynamicResource BgColor}">
                             <StackPanel>
                                 <TextBlock Text="System Tweaks" FontWeight="Bold" FontSize="20" Margin="0,0,0,5" Foreground="{DynamicResource FgColor}"/>
-                                <TextBlock Text="Select which tweaks you want to apply to your system" FontSize="13" Margin="0,0,0,20" Foreground="{DynamicResource FgColor}" TextWrapping="Wrap"/>
+                                <TextBlock Text="Select which tweaks you want to apply to your system, hover over settings for more information" FontSize="13" Margin="0,0,0,20" Foreground="{DynamicResource FgColor}" TextWrapping="Wrap"/>
                             
                                 <!-- Filter Options -->
                                 <Grid Margin="0,0,0,12">

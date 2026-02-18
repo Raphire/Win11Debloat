@@ -1,0 +1,9 @@
+Windows Registry Editor Version 5.00
+
+; Re-enable the Windows Location Service (system-wide)
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location]
+"Value"="Allow"
+
+; Re-allow app access to location for the current user
+[HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location]
+"Value"="Allow"

@@ -372,6 +372,19 @@
       "MaxVersion": null
     },
     {
+      "FeatureId": "DisableLocationServices",
+      "Label": "Windows location services & app location access",
+      "ToolTip": "This will turn off Windows Location Services and deny apps access to your location.",
+      "Category": "Privacy & Suggested Content",
+      "Action": "Disable",
+      "RegistryKey": "Disable_Location_Services.reg",
+      "ApplyText": "> Disabling Windows location services and app location access...",
+      "UndoAction": "Enable",
+      "RegistryUndoKey": "Enable_Location_Services.reg",
+      "MinVersion": null,
+      "MaxVersion": null
+    },
+    {
       "FeatureId": "DisableSearchHistory",
       "Label": "local Windows Search history",
       "ToolTip": "This setting disables local search history in Windows Search. This does not affect web search history or the search history saved in Microsoft Edge.",

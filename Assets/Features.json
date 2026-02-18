@@ -355,6 +355,19 @@
       "MaxVersion": null
     },
     {
+      "FeatureId": "DisableSearchHistory",
+      "Label": "local Windows Search history",
+      "ToolTip": "This setting disables local search history in Windows Search. This does not affect web search history or the search history saved in Microsoft Edge.",
+      "Category": "Privacy & Suggested Content",
+      "Action": "Disable",
+      "RegistryKey": "Disable_Search_History.reg",
+      "ApplyText": "> Disabling search history...",
+      "UndoAction": "Enable",
+      "RegistryUndoKey": "Enable_Search_History.reg",
+      "MinVersion": null,
+      "MaxVersion": null
+    },
+    {
       "FeatureId": "DisableSuggestions",
       "Label": "tips, tricks & suggested content throughout Windows",
       "ToolTip": "This setting removes many annoying distractions from Windows.",

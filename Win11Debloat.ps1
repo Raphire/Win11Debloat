@@ -25,6 +25,7 @@ param (
     [switch]$DisableDVR,
     [switch]$DisableGameBarIntegration,
     [switch]$DisableTelemetry,
+    [switch]$DisableSearchHistory,
     [switch]$DisableFastStartup,
     [switch]$DisableBitlockerAutoEncryption,
     [switch]$DisableModernStandbyNetworking,

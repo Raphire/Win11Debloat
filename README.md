@@ -86,6 +86,7 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 #### Privacy & Suggested Content
 
 - Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads.
+- Disable local Windows search history.
 - Disable tips, tricks, suggestions & ads across Windows.
 - Disable 'Windows Spotlight' and tips & tricks on the lock screen.
 - Disable 'Windows Spotlight' desktop background option.

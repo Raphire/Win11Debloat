@@ -787,12 +787,21 @@
                                 <Run Text="Your clean Windows experience is just a few clicks away!"/>
                             </TextBlock>
                             
-                            <!-- Start Button -->
-                            <Button x:Name="HomeStartBtn" Width="125" Height="53" Style="{StaticResource PrimaryButtonStyle}" HorizontalAlignment="Center" Margin="0,20,0,0" AutomationProperties.Name="Start">
-                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock Text="Start" FontWeight="SemiBold" VerticalAlignment="Center" FontSize="24" Margin="0,0,0,3"/>
-                                </StackPanel>
-                            </Button>
+                            <!-- Action Buttons -->
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
+                                <Button x:Name="HomeDefaultModeBtn" Width="180" Height="50" Style="{StaticResource PrimaryButtonStyle}" Margin="0,0,12,0" AutomationProperties.Name="Default Mode">
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock Text="&#xe735;" FontFamily="Segoe Fluent Icons" FontSize="16" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                        <TextBlock Text="Default Mode" ToolTip="Quickly select the recommended settings" FontWeight="SemiBold" VerticalAlignment="Center" FontSize="17" Margin="0,0,0,2"/>
+                                    </StackPanel>
+                                </Button>
+                                <Button x:Name="HomeStartBtn" Width="180" Height="50" Style="{StaticResource SecondaryButtonStyle}" AutomationProperties.Name="Custom Setup">
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock Text="&#xe90f;" FontFamily="Segoe Fluent Icons" FontSize="14" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                        <TextBlock Text="Custom Setup" ToolTip="Manually select your preferred settings" FontWeight="SemiBold" VerticalAlignment="Center" FontSize="17" Margin="0,0,0,2"/>
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
                         </StackPanel>
                     </Grid>
                 </TabItem>

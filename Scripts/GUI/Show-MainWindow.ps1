@@ -1245,6 +1245,27 @@ function Show-MainWindow {
         UpdateNavigationButtons
     })
 
+    # Handle Home Default Mode button - apply defaults and navigate directly to overview
+    $homeDefaultModeBtn = $window.FindName('HomeDefaultModeBtn')
+    $homeDefaultModeBtn.Add_Click({
+        # Load and apply default settings
+        $defaultsJson = LoadJsonFile -filePath $script:DefaultSettingsFilePath -expectedVersion "1.0"
+        if ($defaultsJson) {
+            ApplySettingsToUiControls -window $window -settingsJson $defaultsJson -uiControlMappings $script:UiControlMappings
+        }
+
+        # Select default apps
+        foreach ($child in $appsPanel.Children) {
+            if ($child -is [System.Windows.Controls.CheckBox]) {
+                $child.IsChecked = ($child.SelectedByDefault -eq $true)
+            }
+        }
+
+        # Navigate directly to the Overview tab
+        $tabControl.SelectedIndex = 3
+        UpdateNavigationButtons
+    })
+
     # Handle Overview Apply Changes button - validates and immediately starts applying changes
     $overviewApplyBtn = $window.FindName('OverviewApplyBtn')
     $overviewApplyBtn.Add_Click({

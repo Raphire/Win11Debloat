@@ -1123,7 +1123,7 @@
                         </Border>
 
                         <!-- Progress and Finish Button -->
-                        <Border Grid.Row="2" Background="{DynamicResource BgColor}" Padding="10,0" CornerRadius="0,0,8,8" Margin="20,16,20,16">
+                        <Border Grid.Row="2" Background="{DynamicResource BgColor}" Padding="10,0" CornerRadius="0,0,8,8" Margin="20,16,20,8">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
@@ -1133,7 +1133,7 @@
                                 <!-- Status and Finish Button -->
                                 <StackPanel Grid.Row="1" HorizontalAlignment="Center">
                                     <Button x:Name="FinishBtn" Width="200" Height="48" Style="{StaticResource PrimaryButtonStyle}" Margin="0" IsEnabled="False" AutomationProperties.Name="Finish">
-                                        <TextBlock x:Name="FinishBtnText" Text="Applying changes..." VerticalAlignment="Center" FontSize="16" Margin="0,0,0,1"/>
+                                        <TextBlock x:Name="FinishBtnText" Text="Applying changes..." VerticalAlignment="Center" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,1"/>
                                     </Button>
                                 </StackPanel>
                             </Grid>

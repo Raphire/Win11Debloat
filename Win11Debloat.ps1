@@ -508,7 +508,7 @@ function RemoveApps {
             }
             else {
                 # Uninstall app via WinGet
-                winget uninstall --accept-source-agreements --disable-interactivity --id $app
+                $wingetOutput = winget uninstall --accept-source-agreements --disable-interactivity --id $app
 
                 If (($app -eq "Microsoft.Edge") -and (Select-String -InputObject $wingetOutput -Pattern "Uninstall failed with exit code")) {
                     Write-ToConsole "Unable to uninstall Microsoft Edge via WinGet" -ForegroundColor Red

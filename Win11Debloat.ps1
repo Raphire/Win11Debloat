@@ -185,7 +185,7 @@ catch {
 
 # Check if WinGet is installed & if it is, check if the version is at least v1.4
 try {
-    if ([int](((winget -v) -replace 'v','').split('.')[0..1] -join '') -gt 14) {
+    if (Get-Command winget -ErrorAction SilentlyContinue) {
         $script:WingetInstalled = $true
     }
     else {
@@ -193,6 +193,7 @@ try {
     }
 }
 catch {
+    Write-Error "Unable to determine if WinGet is installed, winget command failed: $_"
     $script:WingetInstalled = $false
 }
 

@@ -544,7 +544,7 @@
     {
       "FriendlyName": "Microsoft Edge",
       "AppId": "Microsoft.Edge",
-      "Description": "Edge browser (Can only be uninstalled in European Economic Area). WARNING: also removes the only browser from Windows Sandbox, requires re-install of Windows Sandbox.",
+      "Description": "Edge browser (can only be uninstalled in European Economic Area). WARNING: also removes the only browser from Windows Sandbox, requires re-install of Windows Sandbox.",
       "SelectedByDefault": false
     },
     {

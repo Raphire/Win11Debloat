@@ -361,7 +361,7 @@
     {
       "FeatureId": "DisableSuggestions",
       "Label": "tips, tricks & suggested content throughout Windows",
-      "ToolTip": "This setting removes many annoying distractions from Windows.",
+      "ToolTip": "This setting removes many annoying distractions from Windows. This includes things like notifications, reminders and sync provider ads. It also prevents automated installation of suggested apps.",
       "Category": "Privacy & Suggested Content",
       "Action": "Disable",
       "RegistryKey": "Disable_Windows_Suggestions.reg",
@@ -374,7 +374,7 @@
     {
       "FeatureId": "DisableLocationServices",
       "Label": "Windows location services & app location access",
-      "ToolTip": "This will turn off Windows Location Services and deny apps access to your location. This feature uses policies, some settings will be locked.",
+      "ToolTip": "This will turn off Windows Location Services and deny apps access to your location. This feature uses policies, which will lock down certain settings.",
       "Category": "Privacy & Suggested Content",
       "Action": "Disable",
       "RegistryKey": "Disable_Location_Services.reg",
@@ -426,7 +426,7 @@
     {
       "FeatureId": "DisableEdgeAds",
       "Label": "ads, suggestions and newsfeed in Edge",
-      "ToolTip": "This will turn off various distractions from Microsoft Edge such as ads, suggestions and the MSN news feed. This feature uses policies, some settings will be locked.",
+      "ToolTip": "This will turn off various distractions from Microsoft Edge such as ads, suggestions and the MSN news feed. This feature uses policies, which will lock down certain settings.",
       "Category": "Privacy & Suggested Content",
       "Action": "Disable",
       "RegistryKey": "Disable_Edge_Ads_And_Suggestions.reg",
@@ -452,7 +452,7 @@
     {
       "FeatureId": "DisableRecall",
       "Label": "Windows Recall",
-      "ToolTip": "This will disable Windows Recall, an AI-powered feature that provides quick access to recently used files, apps and activities.",
+      "ToolTip": "This will disable Windows Recall, an AI-powered feature that provides quick access to recently used files, apps and activities. This feature uses policies, which will lock down certain settings.",
       "Category": "AI",
       "Action": "Disable",
       "RegistryKey": "Disable_AI_Recall.reg",
@@ -465,7 +465,7 @@
     {
       "FeatureId": "DisableClickToDo",
       "Label": "Click To Do, AI text & image analysis",
-      "ToolTip": "This will disable Click To Do, which provides AI-powered text and image analysis features in Windows.",
+      "ToolTip": "This will disable Click To Do, which provides AI-powered text and image analysis features in Windows. This feature uses policies, which will lock down certain settings.",
       "Category": "AI",
       "Action": "Disable",
       "RegistryKey": "Disable_Click_to_Do.reg",
@@ -478,7 +478,7 @@
     {
       "FeatureId": "DisableDVR",
       "Label": "Xbox game/screen recording",
-      "ToolTip": "This will disable the Xbox game/screen recording features included with the Game Bar app.",
+      "ToolTip": "This will disable the Xbox game/screen recording features included with the Game Bar app. This feature uses policies, which will lock down certain settings.",
       "Category": "Gaming",
       "Action": "Disable",
       "RegistryKey": "Disable_DVR.reg",
@@ -552,7 +552,7 @@
     {
       "FeatureId": "DisableStartRecommended",
       "Label": "recommended section in the start menu",
-      "ToolTip": "This will hide the recommended section in the start menu, which shows recently added apps, recently opened files and app recommendations.",
+      "ToolTip": "This will hide the recommended section in the start menu, which shows recently added apps, recently opened files and app recommendations. This feature uses policies, which will lock down certain settings.",
       "Category": "Start Menu",
       "Action": "Hide",
       "RegistryKey": "Disable_Start_Recommended.reg",
@@ -565,7 +565,7 @@
     {
       "FeatureId": "DisableBing",
       "Label": "Bing web search & Copilot integration",
-      "ToolTip": "This will turn off Bing web search results and Copilot integration in the Windows search experience.",
+      "ToolTip": "This will turn off Bing web search results and Copilot integration in the Windows search experience. This feature uses policies, which will lock down certain settings.",
       "Category": "Start Menu",
       "Action": "Disable",
       "RegistryKey": "Disable_Bing_Cortana_In_Search.reg",
@@ -617,7 +617,7 @@
     {
       "FeatureId": "DisableEdgeAI",
       "Label": "AI features in Microsoft Edge",
-      "ToolTip": "This will turn off AI features in Microsoft Edge, such as the AI-powered sidebar and Copilot features. This feature uses policies, some settings will be locked.",
+      "ToolTip": "This will turn off AI features in Microsoft Edge, such as the AI-powered sidebar and Copilot features. This feature uses policies, which will lock down certain settings.",
       "Category": "AI",
       "Action": "Disable",
       "RegistryKey": "Disable_Edge_AI_Features.reg",
@@ -630,7 +630,7 @@
     {
       "FeatureId": "DisablePaintAI",
       "Label": "AI features in Paint",
-      "ToolTip": "This will turn off AI features in Paint, such as the AI-powered image generation and editing tools.",
+      "ToolTip": "This will turn off AI features in Paint, such as the AI-powered image generation and editing tools. This feature uses policies, which will lock down certain settings.",
       "Category": "AI",
       "Action": "Disable",
       "RegistryKey": "Disable_Paint_AI_Features.reg",
@@ -643,7 +643,7 @@
     {
       "FeatureId": "DisableNotepadAI",
       "Label": "AI features in Notepad",
-      "ToolTip": "This will turn off AI features in Notepad, such as the AI-powered writing suggestions.",
+      "ToolTip": "This will turn off AI features in Notepad, such as the AI-powered writing suggestions. This feature uses policies, which will lock down certain settings.",
       "Category": "AI",
       "Action": "Disable",
       "RegistryKey": "Disable_Notepad_AI_Features.reg",
@@ -682,7 +682,7 @@
     {
       "FeatureId": "RevertContextMenu",
       "Label": "context menu style",
-      "ToolTip": "This will restore the classic Windows 10 style context menu instead of the modern Windows 11 style menu.",
+      "ToolTip": "This will restore the classic Windows 10 style context menu, which is normally hidden behind the 'Show more options' entry in the new Windows 11 context menu.",
       "Category": "System",
       "Action": "Use classic Windows 10",
       "RegistryKey": "Disable_Show_More_Options_Context_Menu.reg",
@@ -887,7 +887,7 @@
     {
       "FeatureId": "DisableWidgets",
       "Label": "widgets on the taskbar & lock screen",
-      "ToolTip": "This will disable the widgets features in Windows, including the widgets button on the taskbar and the widgets that can appear on the lock screen. This feature uses policies, some settings will be locked.",
+      "ToolTip": "This will disable the widgets features in Windows, including the widgets button on the taskbar and the widgets that can appear on the lock screen. This feature uses policies, which will lock down certain settings.",
       "Category": "Taskbar",
       "Priority": 4,
       "Action": "Disable",
@@ -1371,7 +1371,7 @@
     {
       "FeatureId": "DisableBraveBloat",
       "Label": "bloat in Brave browser (AI, Crypto, etc.)",
-      "ToolTip": "This will disable Brave's built-in AI features, Crypto wallet, News, Rewards, Talk and VPN.",
+      "ToolTip": "This will disable Brave's built-in AI features, Crypto wallet, News, Rewards, Talk and VPN. This feature uses policies, which will lock down certain settings.",
       "Category": "Other",
       "Action": "Disable",
       "RegistryKey": "Disable_Brave_Bloat.reg",

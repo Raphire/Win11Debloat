@@ -60,6 +60,7 @@ param (
     [switch]$DisableCopilot,
     [switch]$DisableRecall,
     [switch]$DisableClickToDo,
+    [switch]$DisableAISvcAutoStart,
     [switch]$DisablePaintAI,
     [switch]$DisableNotepadAI,
     [switch]$DisableEdgeAI,

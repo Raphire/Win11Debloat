@@ -35,6 +35,7 @@ param (
     [switch]$PreventUpdateAutoReboot,
     [switch]$DisableDeliveryOptimization,
     [switch]$DisableBing,
+    [switch]$DisableSearchHighlights,
     [switch]$DisableDesktopSpotlight,
     [switch]$DisableLockscreenTips,
     [switch]$DisableSuggestions,
@@ -62,6 +63,7 @@ param (
     [switch]$DisableClickToDo,
     [switch]$DisablePaintAI,
     [switch]$DisableNotepadAI,
+    [switch]$DisablePhotoAI,
     [switch]$DisableEdgeAI,
     [switch]$DisableWidgets,
     [switch]$HideChat,
@@ -763,7 +765,7 @@ function ReplaceStartMenu {
     }
     else {
         Write-ToConsole "Unable to find original start2.bin file for user $userName, no backup was created for this user" -ForegroundColor Yellow
-        New-Item -ItemType File -Path $startMenuBinFile -Force
+        New-Item -ItemType File -Path $startMenuBinFile -Force | Out-Null
     }
 
     # Copy template file

@@ -576,6 +576,19 @@
       "MaxVersion": null
     },
     {
+      "FeatureId": "DisableSearchHighlights",
+      "Label": "Search Highlights (dynamic/branded content in Windows search box)",
+      "ToolTip": "This will turn off Search Highlights, which shows dynamically curated branded content and trending topics in the Windows search box on the taskbar.",
+      "Category": "Privacy & Suggested Content",
+      "Action": "Disable",
+      "RegistryKey": "Disable_Search_Highlights.reg",
+      "ApplyText": "> Disabling Search Highlights in the Windows search box...",
+      "UndoAction": "Enable",
+      "RegistryUndoKey": "Enable_Search_Highlights.reg",
+      "MinVersion": 22621,
+      "MaxVersion": null
+    },
+    {
       "FeatureId": "DisableStartPhoneLink",
       "Label": "Phone Link integration in the start menu",
       "ToolTip": "This will remove the Phone Link integration in the start menu when you have a mobile device linked to your PC.",
@@ -651,6 +664,19 @@
       "UndoAction": "Enable",
       "RegistryUndoKey": "Enable_Notepad_AI_Features.reg",
       "MinVersion": 22621,
+      "MaxVersion": null
+    },
+    {
+      "FeatureId": "DisablePhotoAI",
+      "Label": "AI features in Photos (Generative Erase, Restyle, Background Blur)",
+      "ToolTip": "This will turn off AI-powered features in the Windows Photos app, including Generative Erase, Restyle and Background Blur. Requires Windows 11 24H2 (Build 26100) or later.",
+      "Category": "AI",
+      "Action": "Disable",
+      "RegistryKey": "Disable_Photo_AI_Features.reg",
+      "ApplyText": "> Disabling AI features in Photos (Generative Erase, Restyle, Background Blur)...",
+      "UndoAction": "Enable",
+      "RegistryUndoKey": "Enable_Photo_AI_Features.reg",
+      "MinVersion": 26100,
       "MaxVersion": null
     },
     {

@@ -74,6 +74,18 @@
       "SelectedByDefault": true
     },
     {
+      "FriendlyName": "Copilot+ AI Hub",
+      "AppId": "Microsoft.Windows.AIHub",
+      "Description": "Copilot+ AI Hub app (Windows 11 24H2+)",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Microsoft PC Manager",
+      "AppId": "Microsoft.PCManager",
+      "Description": "Microsoft PC Manager system cleanup and optimization tool (often preinstalled)",
+      "SelectedByDefault": true
+    },
+    {
       "FriendlyName": "Get Started",
       "AppId": "Microsoft.Getstarted",
       "Description": "Tips and introductory guide for Windows (Cannot be uninstalled in Windows 11)",

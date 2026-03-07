@@ -218,7 +218,12 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 #                                                                                                                #
 ##################################################################################################################
 
+# Load app removal functions
+. "$PSScriptRoot/Scripts/AppRemoval/ForceRemoveEdge.ps1"
+. "$PSScriptRoot/Scripts/AppRemoval/RemoveApps.ps1"
+
 # Load CLI functions
+. "$PSScriptRoot/Scripts/CLI/AwaitKeyToExit.ps1"
 . "$PSScriptRoot/Scripts/CLI/ShowCLILastUsedSettings.ps1"  
 . "$PSScriptRoot/Scripts/CLI/ShowCLIDefaultModeAppRemovalOptions.ps1"
 . "$PSScriptRoot/Scripts/CLI/ShowCLIDefaultModeOptions.ps1"
@@ -226,6 +231,14 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 . "$PSScriptRoot/Scripts/CLI/ShowCLIMenuOptions.ps1"
 . "$PSScriptRoot/Scripts/CLI/PrintPendingChanges.ps1"
 . "$PSScriptRoot/Scripts/CLI/PrintHeader.ps1"
+
+# Load Feature functions
+. "$PSScriptRoot/Scripts/Features/CreateSystemRestorePoint.ps1"
+. "$PSScriptRoot/Scripts/Features/DisableStoreSearchSuggestions.ps1"
+. "$PSScriptRoot/Scripts/Features/EnableWindowsFeature.ps1"
+. "$PSScriptRoot/Scripts/Features/ImportRegistryFile.ps1"
+. "$PSScriptRoot/Scripts/Features/ReplaceStartMenu.ps1"
+. "$PSScriptRoot/Scripts/Features/RestartExplorer.ps1"
 
 # Load GUI functions
 . "$PSScriptRoot/Scripts/GUI/GetSystemUsesDarkMode.ps1"
@@ -481,388 +494,6 @@ function CheckModernStandbySupport {
 }
 
 
-# Removes apps specified during function call based on the target scope.
-function RemoveApps {
-    param (
-        $appslist
-    )
-
-    # Determine target from script-level params, defaulting to AllUsers
-    $targetUser = GetTargetUserForAppRemoval
-
-    $appIndex = 0
-    $appCount = @($appsList).Count
-
-    Foreach ($app in $appsList) {
-        if ($script:CancelRequested) {
-            return
-        }
-
-        $appIndex++
-
-        # Update step name and sub-progress to show which app is being removed (only for bulk removal)
-        if ($script:ApplySubStepCallback -and $appCount -gt 1) {
-            & $script:ApplySubStepCallback "Removing apps ($appIndex/$appCount)" $appIndex $appCount
-        }
-
-        Write-Host "Attempting to remove $app..."
-
-        # Use WinGet only to remove OneDrive and Edge
-        if (($app -eq "Microsoft.OneDrive") -or ($app -eq "Microsoft.Edge")) {
-            if ($script:WingetInstalled -eq $false) {
-                Write-Host "WinGet is either not installed or is outdated, $app could not be removed" -ForegroundColor Red
-                continue
-            }
-
-            $appName = $app -replace '\.', '_'
-
-            # Uninstall app via WinGet, or create a scheduled task to uninstall it later
-            if ($script:Params.ContainsKey("User")) {
-                RegImport "Adding scheduled task to uninstall $app for user $(GetUserName)..." "Uninstall_$($appName).reg"
-            }
-            elseif ($script:Params.ContainsKey("Sysprep")) {
-                RegImport "Adding scheduled task to uninstall $app after for new users..." "Uninstall_$($appName).reg"
-            }
-            else {
-                # Uninstall app via WinGet
-                $wingetOutput = Invoke-NonBlocking -ScriptBlock {
-                    param($appId)
-                    winget uninstall --accept-source-agreements --disable-interactivity --id $appId
-                } -ArgumentList $app
-
-                If (($app -eq "Microsoft.Edge") -and (Select-String -InputObject $wingetOutput -Pattern "Uninstall failed with exit code")) {
-                    Write-Host "Unable to uninstall Microsoft Edge via WinGet" -ForegroundColor Red
-
-                    if ($script:GuiWindow) {
-                        $result = Show-MessageBox -Message 'Unable to uninstall Microsoft Edge via WinGet. Would you like to forcefully uninstall it? NOT RECOMMENDED!' -Title 'Force Uninstall Microsoft Edge?' -Button 'YesNo' -Icon 'Warning'
-
-                        if ($result -eq 'Yes') {
-                            Write-Host ""
-                            ForceRemoveEdge
-                        }
-                    }
-                    elseif ($( Read-Host -Prompt "Would you like to forcefully uninstall Microsoft Edge? NOT RECOMMENDED! (y/n)" ) -eq 'y') {
-                        Write-Host ""
-                        ForceRemoveEdge
-                    }
-                }
-            }
-
-            continue
-        }
-
-        # Use Remove-AppxPackage to remove all other apps
-        $appPattern = '*' + $app + '*'
-
-        try {
-            switch ($targetUser) {
-                "AllUsers" {
-                    # Remove installed app for all existing users, and from OS image
-                    Invoke-NonBlocking -ScriptBlock {
-                        param($pattern)
-                        Get-AppxPackage -Name $pattern -AllUsers | Remove-AppxPackage -AllUsers -ErrorAction Continue
-                        Get-AppxProvisionedPackage -Online | Where-Object { $_.PackageName -like $pattern } | ForEach-Object { Remove-ProvisionedAppxPackage -Online -AllUsers -PackageName $_.PackageName }
-                    } -ArgumentList $appPattern
-                }
-                "CurrentUser" {
-                    # Remove installed app for current user only
-                    Invoke-NonBlocking -ScriptBlock {
-                        param($pattern)
-                        Get-AppxPackage -Name $pattern | Remove-AppxPackage -ErrorAction Continue
-                    } -ArgumentList $appPattern
-                }
-                default {
-                    # Target is a specific username - remove app for that user only
-                    Invoke-NonBlocking -ScriptBlock {
-                        param($pattern, $user)
-                        $userAccount = New-Object System.Security.Principal.NTAccount($user)
-                        $userSid = $userAccount.Translate([System.Security.Principal.SecurityIdentifier]).Value
-                        Get-AppxPackage -Name $pattern -User $userSid | Remove-AppxPackage -User $userSid -ErrorAction Continue
-                    } -ArgumentList @($appPattern, $targetUser)
-                }
-            }
-        }
-        catch {
-            if ($DebugPreference -ne "SilentlyContinue") {
-                Write-Host "Something went wrong while trying to remove $app" -ForegroundColor Yellow
-                Write-Host $psitem.Exception.StackTrace -ForegroundColor Gray
-            }
-        }
-    }
-
-    Write-Host ""
-}
-
-
-# Forcefully removes Microsoft Edge using its uninstaller
-# Credit: Based on work from loadstring1 & ave9858
-function ForceRemoveEdge {
-    Write-Host "> Forcefully uninstalling Microsoft Edge..."
-
-    $regView = [Microsoft.Win32.RegistryView]::Registry32
-    $hklm = [Microsoft.Win32.RegistryKey]::OpenBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, $regView)
-    $hklm.CreateSubKey('SOFTWARE\Microsoft\EdgeUpdateDev').SetValue('AllowUninstall', '')
-
-    # Create stub (This somehow allows uninstalling Edge)
-    $edgeStub = "$env:SystemRoot\SystemApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe"
-    New-Item $edgeStub -ItemType Directory | Out-Null
-    New-Item "$edgeStub\MicrosoftEdge.exe" | Out-Null
-
-    # Remove edge
-    $uninstallRegKey = $hklm.OpenSubKey('SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft Edge')
-    if ($null -ne $uninstallRegKey) {
-        Write-Host "Running uninstaller..."
-        $uninstallString = $uninstallRegKey.GetValue('UninstallString') + ' --force-uninstall'
-        Invoke-NonBlocking -ScriptBlock {
-            param($cmd)
-            Start-Process cmd.exe "/c $cmd" -WindowStyle Hidden -Wait
-        } -ArgumentList $uninstallString
-
-        Write-Host "Removing leftover files..."
-
-        $edgePaths = @(
-            "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Microsoft Edge.lnk",
-            "$env:APPDATA\Microsoft\Internet Explorer\Quick Launch\Microsoft Edge.lnk",
-            "$env:APPDATA\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar\Microsoft Edge.lnk",
-            "$env:APPDATA\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar\Tombstones\Microsoft Edge.lnk",
-            "$env:PUBLIC\Desktop\Microsoft Edge.lnk",
-            "$env:USERPROFILE\Desktop\Microsoft Edge.lnk",
-            "$edgeStub"
-        )
-
-        foreach ($path in $edgePaths) {
-            if (Test-Path -Path $path) {
-                Remove-Item -Path $path -Force -Recurse -ErrorAction SilentlyContinue
-                Write-Host "  Removed $path" -ForegroundColor DarkGray
-            }
-        }
-
-        Write-Host "Cleaning up registry..."
-
-        # Remove MS Edge from autostart
-        reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run" /v "MicrosoftEdgeAutoLaunch_A9F6DCE4ABADF4F51CF45CD7129E3C6C" /f *>$null
-        reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run" /v "Microsoft Edge Update" /f *>$null
-        reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run" /v "MicrosoftEdgeAutoLaunch_A9F6DCE4ABADF4F51CF45CD7129E3C6C" /f *>$null
-        reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run" /v "Microsoft Edge Update" /f *>$null
-
-        Write-Host "Microsoft Edge was uninstalled"
-    }
-    else {
-        Write-Host "Unable to forcefully uninstall Microsoft Edge, uninstaller could not be found" -ForegroundColor Red
-    }
-}
-
-
-# Import & execute regfile
-function RegImport {
-    param (
-        $message,
-        $path
-    )
-
-    Write-Host $message
-
-    # Validate that the regfile exists in both locations
-    if (-not (Test-Path "$script:RegfilesPath\$path") -or -not (Test-Path "$script:RegfilesPath\Sysprep\$path")) {
-        Write-Host "Error: Unable to find registry file: $path" -ForegroundColor Red
-        Write-Host ""
-        return
-    }
-
-    # Reset exit code before running reg.exe for reliable success detection
-    $global:LASTEXITCODE = 0
-
-    if ($script:Params.ContainsKey("Sysprep") -or $script:Params.ContainsKey("User")) {
-        # Sysprep targets Default user, User targets the specified user
-        $hiveDatPath = if ($script:Params.ContainsKey("Sysprep")) {
-            GetUserDirectory -userName "Default" -fileName "NTUSER.DAT"
-        } else {
-            GetUserDirectory -userName $script:Params.Item("User") -fileName "NTUSER.DAT"
-        }
-
-        $regResult = Invoke-NonBlocking -ScriptBlock {
-            param($datPath, $regFilePath)
-            $global:LASTEXITCODE = 0
-            reg load "HKU\Default" $datPath | Out-Null
-            $output = reg import $regFilePath 2>&1
-            $code = $LASTEXITCODE
-            reg unload "HKU\Default" | Out-Null
-            return @{ Output = $output; ExitCode = $code }
-        } -ArgumentList @($hiveDatPath, "$script:RegfilesPath\Sysprep\$path")
-    }
-    else {
-        $regResult = Invoke-NonBlocking -ScriptBlock {
-            param($regFilePath)
-            $global:LASTEXITCODE = 0
-            $output = reg import $regFilePath 2>&1
-            return @{ Output = $output; ExitCode = $LASTEXITCODE }
-        } -ArgumentList "$script:RegfilesPath\$path"
-    }
-
-    $regOutput = $regResult.Output
-    $hasSuccess = $regResult.ExitCode -eq 0
-    
-    if ($regOutput) {
-        foreach ($line in $regOutput) {
-            $lineText = if ($line -is [System.Management.Automation.ErrorRecord]) { $line.Exception.Message } else { $line.ToString() }
-            if ($lineText -and $lineText.Length -gt 0) {
-                if ($hasSuccess) {
-                    Write-Host $lineText
-                }
-                else {
-                    Write-Host $lineText -ForegroundColor Red
-                }
-            }
-        }
-    }
-
-    if (-not $hasSuccess) {
-        Write-Host "Failed importing registry file: $path" -ForegroundColor Red
-    }
-
-    Write-Host ""
-}
-
-
-# Replace the startmenu for all users, when using the default startmenuTemplate this clears all pinned apps
-# Credit: https://lazyadmin.nl/win-11/customize-windows-11-start-menu-layout/
-function ReplaceStartMenuForAllUsers {
-    param (
-        $startMenuTemplate = "$script:AssetsPath/Start/start2.bin"
-    )
-
-    Write-Host "> Removing all pinned apps from the start menu for all users..."
-
-    # Check if template bin file exists
-    if (-not (Test-Path $startMenuTemplate)) {
-        Write-Host "Error: Unable to clear start menu, start2.bin file missing from script folder" -ForegroundColor Red
-        Write-Host ""
-        return
-    }
-
-    # Get path to start menu file for all users
-    $userPathString = GetUserDirectory -userName "*" -fileName "AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState"
-    $usersStartMenuPaths = get-childitem -path $userPathString
-
-    # Go through all users and replace the start menu file
-    ForEach ($startMenuPath in $usersStartMenuPaths) {
-        ReplaceStartMenu $startMenuTemplate "$($startMenuPath.Fullname)\start2.bin"
-    }
-
-    # Also replace the start menu file for the default user profile
-    $defaultStartMenuPath = GetUserDirectory -userName "Default" -fileName "AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState" -exitIfPathNotFound $false
-
-    # Create folder if it doesn't exist
-    if (-not (Test-Path $defaultStartMenuPath)) {
-        new-item $defaultStartMenuPath -ItemType Directory -Force | Out-Null
-        Write-Host "Created LocalState folder for default user profile"
-    }
-
-    # Copy template to default profile
-    Copy-Item -Path $startMenuTemplate -Destination $defaultStartMenuPath -Force
-    Write-Host "Replaced start menu for the default user profile"
-    Write-Host ""
-}
-
-
-# Replace the startmenu for all users, when using the default startmenuTemplate this clears all pinned apps
-# Credit: https://lazyadmin.nl/win-11/customize-windows-11-start-menu-layout/
-function ReplaceStartMenu {
-    param (
-        $startMenuTemplate = "$script:AssetsPath/Start/start2.bin",
-        $startMenuBinFile = "$env:LOCALAPPDATA\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState\start2.bin"
-    )
-
-    # Change path to correct user if a user was specified
-    if ($script:Params.ContainsKey("User")) {
-        $startMenuBinFile = GetUserDirectory -userName "$(GetUserName)" -fileName "AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState\start2.bin" -exitIfPathNotFound $false
-    }
-
-    # Check if template bin file exists
-    if (-not (Test-Path $startMenuTemplate)) {
-        Write-Host "Error: Unable to replace start menu, template file not found" -ForegroundColor Red
-        return
-    }
-
-    if ([IO.Path]::GetExtension($startMenuTemplate) -ne ".bin" ) {
-        Write-Host "Error: Unable to replace start menu, template file is not a valid .bin file" -ForegroundColor Red
-        return
-    }
-
-    $userName = [regex]::Match($startMenuBinFile, '(?:Users\\)([^\\]+)(?:\\AppData)').Groups[1].Value
-
-    $backupBinFile = $startMenuBinFile + ".bak"
-
-    if (Test-Path $startMenuBinFile) {
-        # Backup current start menu file
-        Move-Item -Path $startMenuBinFile -Destination $backupBinFile -Force
-    }
-    else {
-        Write-Host "Unable to find original start2.bin file for user $userName, no backup was created for this user" -ForegroundColor Yellow
-        New-Item -ItemType File -Path $startMenuBinFile -Force
-    }
-
-    # Copy template file
-    Copy-Item -Path $startMenuTemplate -Destination $startMenuBinFile -Force
-
-    Write-Host "Replaced start menu for user $userName"
-}
-
-
-# Disables Microsoft Store search suggestions in the start menu for all users by denying access to the Store app database file for each user
-function DisableStartSearchSuggestionsForAllUsers {
-    # Get path to Store app database for all users
-    $userPathString = GetUserDirectory -userName "*" -fileName "AppData\Local\Packages"
-    $usersStoreDbPaths = get-childitem -path $userPathString
-
-    # Go through all users and disable start search suggestions
-    ForEach ($storeDbPath in $usersStoreDbPaths) {
-        DisableStartSearchSuggestions ($storeDbPath.FullName + "\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalState\store.db")
-    }
-
-    # Also disable start search suggestions for the default user profile
-    $defaultStoreDbPath = GetUserDirectory -userName "Default" -fileName "AppData\Local\Packages\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalState\store.db" -exitIfPathNotFound $false
-    DisableStartSearchSuggestions $defaultStoreDbPath
-}
-
-
-# Disables Microsoft Store search suggestions in the start menu by denying access to the Store app database file
-function DisableStartSearchSuggestions {
-    param (
-        $StoreAppsDatabase = "$env:LocalAppData\Packages\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalState\store.db"
-    )
-
-    # Change path to correct user if a user was specified
-    if ($script:Params.ContainsKey("User")) {
-        $StoreAppsDatabase = GetUserDirectory -userName "$(GetUserName)" -fileName "AppData\Local\Packages\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalState\store.db" -exitIfPathNotFound $false
-    }
-
-    $userName = [regex]::Match($StoreAppsDatabase, '(?:Users\\)([^\\]+)(?:\\AppData)').Groups[1].Value
-
-    # This file doesn't exist in EEA (No Store app suggestions).
-    if (-not (Test-Path -Path $StoreAppsDatabase))
-    {
-        Write-Host "Unable to find Store app database for user $userName, creating it now to prevent Windows from creating it later..." -ForegroundColor Yellow
-
-        $storeDbDir = Split-Path -Path $StoreAppsDatabase -Parent
-
-        if (-not (Test-Path -Path $storeDbDir)) {
-            New-Item -Path $storeDbDir -ItemType Directory -Force | Out-Null
-        }
-
-        New-Item -Path $StoreAppsDatabase -ItemType File -Force | Out-Null
-    }
-    
-    $AccountSid = [System.Security.Principal.SecurityIdentifier]::new('S-1-1-0') # 'EVERYONE' group
-    $Acl = Get-Acl -Path $StoreAppsDatabase
-    $Ace = [System.Security.AccessControl.FileSystemAccessRule]::new($AccountSid, 'FullControl', 'Deny')
-    $Acl.SetAccessRule($Ace) | Out-Null
-    Set-Acl -Path $StoreAppsDatabase -AclObject $Acl | Out-Null
-
-    Write-Host "Disabled Microsoft Store search suggestions for user $userName"
-}
-
-
 # Generates a list of apps to remove based on the Apps parameter
 function GenerateAppsList {
     if (-not ($script:Params["Apps"] -and $script:Params["Apps"] -is [string])) {
@@ -898,11 +529,11 @@ function ExecuteParameter {
         $feature = $script:Features[$paramKey]
     }
     
-    # If feature has RegistryKey and ApplyText, use dynamic RegImport
+    # If feature has RegistryKey and ApplyText, use dynamic ImportRegistryFile
     if ($feature -and $feature.RegistryKey -and $feature.ApplyText) {
-        RegImport "> $($feature.ApplyText)" $feature.RegistryKey
+        ImportRegistryFile "> $($feature.ApplyText)" $feature.RegistryKey
         
-        # Handle special cases that have additional logic after RegImport
+        # Handle special cases that have additional logic after ImportRegistryFile
         switch ($paramKey) {
             'DisableBing' {
                 # Also remove the app package for Bing search
@@ -1008,14 +639,14 @@ function ExecuteParameter {
         'DisableStoreSearchSuggestions' {
             if ($script:Params.ContainsKey("Sysprep")) {
                 Write-Host "> Disabling Microsoft Store search suggestions in the start menu for all users..."
-                DisableStartSearchSuggestionsForAllUsers
+                DisableStoreSearchSuggestionsForAllUsers
                 Write-Host ""
+                return
             }
-            else {
-                Write-Host "> Disabling Microsoft Store search suggestions for user $(GetUserName)..."
-                DisableStartSearchSuggestions
-                Write-Host ""
-            }
+
+            Write-Host "> Disabling Microsoft Store search suggestions for user $(GetUserName)..."
+            DisableStoreSearchSuggestions
+            Write-Host ""
             return
         }
     }
@@ -1080,171 +711,6 @@ function ExecuteAllChanges {
         
         ExecuteParameter -paramKey $paramKey
     }
-}
-
-
-function CreateSystemRestorePoint {
-    $SysRestore = Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SystemRestore" -Name "RPSessionInterval"
-    $failed = $false
-
-    if ($SysRestore.RPSessionInterval -eq 0) {
-        # In GUI mode, skip the prompt and just try to enable it
-        if ($script:GuiWindow -or $Silent -or $( Read-Host -Prompt "System restore is disabled, would you like to enable it and create a restore point? (y/n)") -eq 'y') {
-            $enableSystemRestoreJob = Start-Job {
-                try {
-                    Enable-ComputerRestore -Drive "$env:SystemDrive"
-                }
-                catch {
-                    return "Error: Failed to enable System Restore: $_"
-                }
-                return $null
-            }
-
-            $enableSystemRestoreJobDone = $enableSystemRestoreJob | Wait-Job -TimeOut 20
-
-            if (-not $enableSystemRestoreJobDone) {
-                Remove-Job -Job $enableSystemRestoreJob -Force -ErrorAction SilentlyContinue
-                Write-Host "Error: Failed to enable system restore and create restore point, operation timed out" -ForegroundColor Red
-                $failed = $true
-            }
-            else {
-                $result = Receive-Job $enableSystemRestoreJob
-                Remove-Job -Job $enableSystemRestoreJob -ErrorAction SilentlyContinue
-                if ($result) {
-                    Write-Host $result -ForegroundColor Red
-                    $failed = $true
-                }
-            }
-        }
-        else {
-            Write-Host ""
-            $failed = $true
-        }
-    }
-
-    if (-not $failed) {
-        $createRestorePointJob = Start-Job {
-            # Find existing restore points that are less than 24 hours old
-            try {
-                $recentRestorePoints = Get-ComputerRestorePoint | Where-Object { (Get-Date) - [System.Management.ManagementDateTimeConverter]::ToDateTime($_.CreationTime) -le (New-TimeSpan -Hours 24) }
-            }
-            catch {
-                return @{ Success = $false; Message = "Error: Unable to retrieve existing restore points: $_" }
-            }
-
-            if ($recentRestorePoints.Count -eq 0) {
-                try {
-                    Checkpoint-Computer -Description "Restore point created by Win11Debloat" -RestorePointType "MODIFY_SETTINGS"
-                    return @{ Success = $true; Message = "System restore point created successfully" }
-                }
-                catch {
-                    return @{ Success = $false; Message = "Error: Unable to create restore point: $_" }
-                }
-            }
-            else {
-                return @{ Success = $true; Message = "A recent restore point already exists, no new restore point was created" }
-            }
-        }
-
-        $createRestorePointJobDone = $createRestorePointJob | Wait-Job -TimeOut 20
-
-        if (-not $createRestorePointJobDone) {
-            Remove-Job -Job $createRestorePointJob -Force -ErrorAction SilentlyContinue
-            Write-Host "Error: Failed to create system restore point, operation timed out" -ForegroundColor Red
-            $failed = $true
-        }
-        else {
-            $result = Receive-Job $createRestorePointJob
-            Remove-Job -Job $createRestorePointJob -ErrorAction SilentlyContinue
-            if ($result.Success) {
-                Write-Host $result.Message
-            }
-            else {
-                Write-Host $result.Message -ForegroundColor Red
-                $failed = $true
-            }
-        }
-    }
-
-    # Ensure that the user is aware if creating a restore point failed, and give them the option to continue without a restore point or cancel the script
-    if ($failed) {
-        if ($script:GuiWindow) {
-            $result = Show-MessageBox "Failed to create a system restore point. Do you want to continue without a restore point?" "Restore Point Creation Failed" "YesNo" "Warning"
-
-            if ($result -ne "Yes") {
-                $script:CancelRequested = $true
-                return
-            }
-        }
-        elseif (-not $Silent) {
-            Write-Host "Failed to create a system restore point. Do you want to continue without a restore point? (y/n)" -ForegroundColor Yellow
-            if ($( Read-Host ) -ne 'y') {
-                $script:CancelRequested = $true
-                return
-            }
-        }
-
-        Write-Host "Warning: Continuing without restore point" -ForegroundColor Yellow
-    }
-}
-
-
-# Enables a Windows optional feature and pipes its output to the console
-function EnableWindowsFeature {
-    param (
-        [string]$FeatureName
-    )
-
-    $result = Invoke-NonBlocking -ScriptBlock {
-        param($name)
-        Enable-WindowsOptionalFeature -Online -FeatureName $name -All -NoRestart
-    } -ArgumentList $FeatureName
-
-    $dismResult = @($result) | Where-Object { $_ -is [Microsoft.Dism.Commands.ImageObject] }
-    if ($dismResult) {
-        Write-Host ($dismResult | Out-String).Trim()
-    }
-}
-
-
-# Restart the Windows Explorer process
-function RestartExplorer {
-    Write-Host "> Attempting to restart the Windows Explorer process to apply all changes..."
-    
-    if ($script:Params.ContainsKey("Sysprep") -or $script:Params.ContainsKey("User") -or $script:Params.ContainsKey("NoRestartExplorer")) {
-        Write-Host "Explorer process restart was skipped, please manually reboot your PC to apply all changes" -ForegroundColor Yellow
-        return
-    }
-
-    foreach ($paramKey in $script:Params.Keys) {
-        if ($script:Features.ContainsKey($paramKey) -and $script:Features[$paramKey].RequiresReboot -eq $true) {
-            $feature = $script:Features[$paramKey]
-            Write-Host "Warning: '$($feature.Action) $($feature.Label)' requires a reboot to take full effect" -ForegroundColor Yellow
-        }
-    }
-
-    # Only restart if the powershell process matches the OS architecture.
-    # Restarting explorer from a 32bit PowerShell window will fail on a 64bit OS
-    if ([Environment]::Is64BitProcess -eq [Environment]::Is64BitOperatingSystem) {
-        Write-Host "Restarting the Windows Explorer process... (This may cause your screen to flicker)"
-        Stop-Process -processName: Explorer -Force
-    }
-    else {
-        Write-Host "Unable to restart Windows Explorer process, please manually reboot your PC to apply all changes" -ForegroundColor Yellow
-    }
-}
-
-
-function AwaitKeyToExit {
-    # Suppress prompt if Silent parameter was passed
-    if (-not $Silent) {
-        Write-Output ""
-        Write-Output "Press any key to exit..."
-        $null = [System.Console]::ReadKey()
-    }
-
-    Stop-Transcript
-    Exit
 }
 
 

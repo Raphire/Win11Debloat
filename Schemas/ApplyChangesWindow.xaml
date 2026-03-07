@@ -141,7 +141,7 @@
                             Style="{DynamicResource ModalTitleStyle}"/>
                     
                     <TextBlock x:Name="ApplyCompletionMessage" 
-                            Text="All changes have been applied successfully!" 
+                            Text="Your clean system is ready. Thanks for using Win11Debloat!" 
                             Style="{DynamicResource ModalSubtextStyle}"/>
                 </StackPanel>
 

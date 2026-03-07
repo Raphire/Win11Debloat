@@ -74,6 +74,18 @@
       "SelectedByDefault": true
     },
     {
+      "FriendlyName": "Copilot+ AI Hub",
+      "AppId": "Microsoft.Windows.AIHub",
+      "Description": "Copilot+ AI Hub app (Windows 11 24H2+)",
+      "SelectedByDefault": true
+    },
+    {
+      "FriendlyName": "Microsoft PC Manager",
+      "AppId": "Microsoft.PCManager",
+      "Description": "Microsoft PC Manager system cleanup and optimization tool (often preinstalled)",
+      "SelectedByDefault": true
+    },
+    {
       "FriendlyName": "Get Started",
       "AppId": "Microsoft.Getstarted",
       "Description": "Tips and introductory guide for Windows (Cannot be uninstalled in Windows 11)",
@@ -827,6 +839,36 @@
       "FriendlyName": "myHP",
       "AppId": "AD2F1837.myHP",
       "Description": "HP OEM central hub app for device info, support, and services",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "Lenovo Vantage",
+      "AppId": "E046963F.LenovoCompanion",
+      "Description": "Lenovo OEM hub app for device settings, updates, and support",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "Lenovo Vantage Service",
+      "AppId": "LenovoCompanyLimited.LenovoVantageService",
+      "Description": "Background service component for Lenovo Vantage",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "Dell SupportAssist",
+      "AppId": "DellInc.DellSupportAssistforPCs",
+      "Description": "Dell OEM support, diagnostic, and update tool",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "Dell Digital Delivery Services",
+      "AppId": "DellInc.DellDigitalDelivery",
+      "Description": "Dell OEM software for delivering pre-purchased software",
+      "SelectedByDefault": false
+    },
+    {
+      "FriendlyName": "Dell Mobile Connect",
+      "AppId": "DellInc.DellMobileConnect",
+      "Description": "Dell OEM app for linking Android/iOS phone to PC (superseded by Phone Link)",
       "SelectedByDefault": false
     }
   ]

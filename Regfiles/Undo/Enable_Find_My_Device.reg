@@ -1,0 +1,5 @@
+Windows Registry Editor Version 5.00
+
+; Restore Find My Device to Windows default
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\FindMyDevice]
+"AllowFindMyDevice"=-

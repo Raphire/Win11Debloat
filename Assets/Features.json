@@ -386,6 +386,19 @@
       "MaxVersion": null
     },
     {
+      "FeatureId": "DisableFindMyDevice",
+      "Label": "Find My Device location tracking",
+      "ToolTip": "This will turn off the 'Find My Device' feature, which periodically sends your device's location to Microsoft. This feature uses policies, which will lock down certain settings.",
+      "Category": "Privacy & Suggested Content",
+      "Action": "Disable",
+      "RegistryKey": "Disable_Find_My_Device.reg",
+      "ApplyText": "> Disabling Find My Device location tracking...",
+      "UndoAction": "Enable",
+      "RegistryUndoKey": "Enable_Find_My_Device.reg",
+      "MinVersion": null,
+      "MaxVersion": null
+    },
+    {
       "FeatureId": "DisableLockscreenTips",
       "Label": "tips & tricks on the lock screen",
       "ToolTip": "This will turn off the tips, tricks and fun facts that appear on the lock screen.",
@@ -574,6 +587,19 @@
       "UndoAction": "Enable",
       "RegistryUndoKey": "Enable_Bing_Cortana_In_Search.reg",
       "MinVersion": null,
+      "MaxVersion": null
+    },
+    {
+      "FeatureId": "DisableSearchHighlights",
+      "Label": "Search Highlights (dynamic/branded content in Windows search box)",
+      "ToolTip": "This will turn off Search Highlights, which shows dynamically curated branded content and trending topics in the Windows search box on the taskbar.",
+      "Category": "Privacy & Suggested Content",
+      "Action": "Disable",
+      "RegistryKey": "Disable_Search_Highlights.reg",
+      "ApplyText": "> Disabling Search Highlights in the Windows search box...",
+      "UndoAction": "Enable",
+      "RegistryUndoKey": "Enable_Search_Highlights.reg",
+      "MinVersion": 22621,
       "MaxVersion": null
     },
     {

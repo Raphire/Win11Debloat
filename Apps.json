@@ -556,7 +556,7 @@
     {
       "FriendlyName": "Microsoft Edge",
       "AppId": "Microsoft.Edge",
-      "Description": "Edge browser (Can only be uninstalled in European Economic Area)",
+      "Description": "Windows' default browser. WARNING: Removing this app also removes the only browser from Windows Sandbox and could affect other apps.",
       "SelectedByDefault": false
     },
     {

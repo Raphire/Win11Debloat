@@ -74,4 +74,17 @@ function SetWindowThemeResources {
     $window.Resources.Add("WarningIconColor", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#FFB900")))
     $window.Resources.Add("ErrorIconColor", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#E81123")))
     $window.Resources.Add("QuestionIconColor", [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#0078D4")))
+
+    # Load and merge shared styles
+    if ($script:SharedStylesSchema -and (Test-Path $script:SharedStylesSchema)) {
+        $sharedXaml = Get-Content -Path $script:SharedStylesSchema -Raw
+        $sharedReader = [System.Xml.XmlReader]::Create([System.IO.StringReader]::new($sharedXaml))
+        try {
+            $sharedDict = [System.Windows.Markup.XamlReader]::Load($sharedReader)
+            $window.Resources.MergedDictionaries.Add($sharedDict)
+        }
+        finally {
+            $sharedReader.Close()
+        }
+    }
 }

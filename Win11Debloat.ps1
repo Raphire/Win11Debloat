@@ -111,15 +111,17 @@ $script:AppSelectionSchema = "$PSScriptRoot/Schemas/AppSelectionWindow.xaml"
 $script:MainWindowSchema = "$PSScriptRoot/Schemas/MainWindow.xaml"
 $script:MessageBoxSchema = "$PSScriptRoot/Schemas/MessageBoxWindow.xaml"
 $script:AboutWindowSchema = "$PSScriptRoot/Schemas/AboutWindow.xaml"
+$script:ApplyChangesWindowSchema = "$PSScriptRoot/Schemas/ApplyChangesWindow.xaml"
+$script:SharedStylesSchema = "$PSScriptRoot/Schemas/SharedStyles.xaml"
 $script:FeaturesFilePath = "$script:AssetsPath/Features.json"
 
 $script:ControlParams = 'WhatIf', 'Confirm', 'Verbose', 'Debug', 'LogPath', 'Silent', 'Sysprep', 'User', 'NoRestartExplorer', 'RunDefaults', 'RunDefaultsLite', 'RunSavedSettings', 'RunAppsListGenerator', 'CLI', 'AppRemovalTarget'
 
 # Script-level variables for GUI elements
-$script:GuiConsoleOutput = $null
-$script:GuiConsoleScrollViewer = $null
 $script:GuiWindow = $null
 $script:CancelRequested = $false
+$script:ApplyProgressCallback = $null
+$script:ApplySubStepCallback = $null
 
 # Check if current powershell environment is limited by security policies
 if ($ExecutionContext.SessionState.LanguageMode -ne "FullLanguage") {
@@ -161,7 +163,7 @@ else {
 }
 
 # Check if script has all required files
-if (-not ((Test-Path $script:DefaultSettingsFilePath) -and (Test-Path $script:AppsListFilePath) -and (Test-Path $script:RegfilesPath) -and (Test-Path $script:AssetsPath) -and (Test-Path $script:AppSelectionSchema) -and (Test-Path $script:FeaturesFilePath))) {
+if (-not ((Test-Path $script:DefaultSettingsFilePath) -and (Test-Path $script:AppsListFilePath) -and (Test-Path $script:RegfilesPath) -and (Test-Path $script:AssetsPath) -and (Test-Path $script:AppSelectionSchema) -and (Test-Path $script:ApplyChangesWindowSchema) -and (Test-Path $script:SharedStylesSchema) -and (Test-Path $script:FeaturesFilePath))) {
     Write-Error "Win11Debloat is unable to find required files, please ensure all script files are present"
     Write-Output ""
     Write-Output "Press any key to exit..."
@@ -230,6 +232,7 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 . "$PSScriptRoot/Scripts/GUI/AttachShiftClickBehavior.ps1"
 . "$PSScriptRoot/Scripts/GUI/ApplySettingsToUiControls.ps1"
 . "$PSScriptRoot/Scripts/GUI/Show-MessageBox.ps1"
+. "$PSScriptRoot/Scripts/GUI/Show-ApplyModal.ps1"
 . "$PSScriptRoot/Scripts/GUI/Show-AppSelectionWindow.ps1"
 . "$PSScriptRoot/Scripts/GUI/Show-MainWindow.ps1"
 . "$PSScriptRoot/Scripts/GUI/Show-AboutDialog.ps1"
@@ -243,59 +246,59 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 . "$PSScriptRoot/Scripts/FileIO/LoadAppsFromFile.ps1"
 . "$PSScriptRoot/Scripts/FileIO/LoadAppsDetailsFromJson.ps1"
 
-# Writes to both GUI console output and standard console
-function Write-ToConsole {
-    param(
-        [string]$message,
-        [string]$ForegroundColor = $null
+# Processes all pending WPF window messages (input, render, etc.) to keep the UI responsive
+# during long-running operations on the UI thread. Equivalent to Application.DoEvents().
+function DoEvents {
+    if (-not $script:GuiWindow) { return }
+    $frame = [System.Windows.Threading.DispatcherFrame]::new()
+    [System.Windows.Threading.Dispatcher]::CurrentDispatcher.BeginInvoke(
+        [System.Windows.Threading.DispatcherPriority]::Background,
+        [System.Windows.Threading.DispatcherOperationCallback]{
+            param($f)
+            $f.Continue = $false
+            return $null
+        },
+        $frame
     )
-    
-    if ($script:GuiConsoleOutput) {
-        # GUI mode
-        $timestamp = Get-Date -Format "HH:mm:ss"
-        $script:GuiConsoleOutput.Dispatcher.Invoke([System.Windows.Threading.DispatcherPriority]::Send, [action]{
-            try {
-                $runText = "[$timestamp] $message`n"
-                $run = New-Object System.Windows.Documents.Run $runText
+    [System.Windows.Threading.Dispatcher]::PushFrame($frame)
+}
 
-                if ($ForegroundColor) {
-                    try {
-                        $colorObj = [System.Windows.Media.ColorConverter]::ConvertFromString($ForegroundColor)
-                        if ($colorObj) {
-                            $brush = [System.Windows.Media.SolidColorBrush]::new($colorObj)
-                            $run.Foreground = $brush
-                        }
-                    }
-                    catch {
-                        # Invalid color string - ignore and fall back to default
-                    }
-                }
 
-                $script:GuiConsoleOutput.Inlines.Add($run)
-                if ($script:GuiConsoleScrollViewer) { $script:GuiConsoleScrollViewer.ScrollToEnd() }
-            }
-            catch {
-                # If any UI update fails, fall back to simple text append
-                try { $script:GuiConsoleOutput.Text += "[$timestamp] $message`n" } catch {}
-            }
-        })
+# Runs a scriptblock in a background PowerShell runspace while keeping the UI responsive.
+# In GUI mode, the work executes on a separate thread and the UI thread pumps messages (~60fps).
+# In CLI mode, the scriptblock runs directly in the current session.
+function Invoke-NonBlocking {
+    param(
+        [scriptblock]$ScriptBlock,
+        [object[]]$ArgumentList = @()
+    )
 
-        # Force UI to process pending updates for real-time display
-        if ($script:GuiWindow) {
-            $script:GuiWindow.Dispatcher.Invoke([System.Windows.Threading.DispatcherPriority]::Background, [action]{})
-        }
+    if (-not $script:GuiWindow) {
+        return (& $ScriptBlock @ArgumentList)
     }
 
+    $ps = [powershell]::Create()
     try {
-        if ($ForegroundColor) {
-            Write-Host $message -ForegroundColor $ForegroundColor
+        $null = $ps.AddScript($ScriptBlock.ToString())
+        foreach ($arg in $ArgumentList) {
+            $null = $ps.AddArgument($arg)
         }
-        else {
-            Write-Host $message
+
+        $handle = $ps.BeginInvoke()
+
+        while (-not $handle.IsCompleted) {
+            DoEvents
+            Start-Sleep -Milliseconds 16
         }
+
+        $result = $ps.EndInvoke($handle)
+
+        if ($result.Count -eq 0) { return $null }
+        if ($result.Count -eq 1) { return $result[0] }
+        return @($result)
     }
-    catch {
-        Write-Host $message
+    finally {
+        $ps.Dispose()
     }
 }
 
@@ -486,17 +489,27 @@ function RemoveApps {
     # Determine target from script-level params, defaulting to AllUsers
     $targetUser = GetTargetUserForAppRemoval
 
+    $appIndex = 0
+    $appCount = @($appsList).Count
+
     Foreach ($app in $appsList) {
         if ($script:CancelRequested) {
             return
         }
 
-        Write-ToConsole "Attempting to remove $app..."
+        $appIndex++
+
+        # Update step name and sub-progress to show which app is being removed (only for bulk removal)
+        if ($script:ApplySubStepCallback -and $appCount -gt 1) {
+            & $script:ApplySubStepCallback "Removing apps ($appIndex/$appCount)" $appIndex $appCount
+        }
+
+        Write-Host "Attempting to remove $app..."
 
         # Use WinGet only to remove OneDrive and Edge
         if (($app -eq "Microsoft.OneDrive") -or ($app -eq "Microsoft.Edge")) {
             if ($script:WingetInstalled -eq $false) {
-                Write-ToConsole "WinGet is either not installed or is outdated, $app could not be removed" -ForegroundColor Red
+                Write-Host "WinGet is either not installed or is outdated, $app could not be removed" -ForegroundColor Red
                 continue
             }
 
@@ -511,21 +524,24 @@ function RemoveApps {
             }
             else {
                 # Uninstall app via WinGet
-                $wingetOutput = winget uninstall --accept-source-agreements --disable-interactivity --id $app
+                $wingetOutput = Invoke-NonBlocking -ScriptBlock {
+                    param($appId)
+                    winget uninstall --accept-source-agreements --disable-interactivity --id $appId
+                } -ArgumentList $app
 
                 If (($app -eq "Microsoft.Edge") -and (Select-String -InputObject $wingetOutput -Pattern "Uninstall failed with exit code")) {
-                    Write-ToConsole "Unable to uninstall Microsoft Edge via WinGet" -ForegroundColor Red
+                    Write-Host "Unable to uninstall Microsoft Edge via WinGet" -ForegroundColor Red
 
-                    if ($script:GuiConsoleOutput) {
+                    if ($script:GuiWindow) {
                         $result = Show-MessageBox -Message 'Unable to uninstall Microsoft Edge via WinGet. Would you like to forcefully uninstall it? NOT RECOMMENDED!' -Title 'Force Uninstall Microsoft Edge?' -Button 'YesNo' -Icon 'Warning'
 
                         if ($result -eq 'Yes') {
-                            Write-ToConsole ""
+                            Write-Host ""
                             ForceRemoveEdge
                         }
                     }
                     elseif ($( Read-Host -Prompt "Would you like to forcefully uninstall Microsoft Edge? NOT RECOMMENDED! (y/n)" ) -eq 'y') {
-                        Write-ToConsole ""
+                        Write-Host ""
                         ForceRemoveEdge
                     }
                 }
@@ -540,43 +556,47 @@ function RemoveApps {
         try {
             switch ($targetUser) {
                 "AllUsers" {
-                    # Remove installed app for all existing users
-                    Get-AppxPackage -Name $appPattern -AllUsers | Remove-AppxPackage -AllUsers -ErrorAction Continue
-
-                    # Remove provisioned app from OS image, so the app won't be installed for any new users
-                    Get-AppxProvisionedPackage -Online | Where-Object { $_.PackageName -like $appPattern } | ForEach-Object { Remove-ProvisionedAppxPackage -Online -AllUsers -PackageName $_.PackageName }
+                    # Remove installed app for all existing users, and from OS image
+                    Invoke-NonBlocking -ScriptBlock {
+                        param($pattern)
+                        Get-AppxPackage -Name $pattern -AllUsers | Remove-AppxPackage -AllUsers -ErrorAction Continue
+                        Get-AppxProvisionedPackage -Online | Where-Object { $_.PackageName -like $pattern } | ForEach-Object { Remove-ProvisionedAppxPackage -Online -AllUsers -PackageName $_.PackageName }
+                    } -ArgumentList $appPattern
                 }
                 "CurrentUser" {
                     # Remove installed app for current user only
-                    Get-AppxPackage -Name $appPattern | Remove-AppxPackage -ErrorAction Continue
+                    Invoke-NonBlocking -ScriptBlock {
+                        param($pattern)
+                        Get-AppxPackage -Name $pattern | Remove-AppxPackage -ErrorAction Continue
+                    } -ArgumentList $appPattern
                 }
                 default {
                     # Target is a specific username - remove app for that user only
-                    # Get the user's SID
-                    $userAccount = New-Object System.Security.Principal.NTAccount($targetUser)
-                    $userSid = $userAccount.Translate([System.Security.Principal.SecurityIdentifier]).Value
-                    
-                    # Remove the app package for the specific user
-                    Get-AppxPackage -Name $appPattern -User $userSid | Remove-AppxPackage -User $userSid -ErrorAction Continue
+                    Invoke-NonBlocking -ScriptBlock {
+                        param($pattern, $user)
+                        $userAccount = New-Object System.Security.Principal.NTAccount($user)
+                        $userSid = $userAccount.Translate([System.Security.Principal.SecurityIdentifier]).Value
+                        Get-AppxPackage -Name $pattern -User $userSid | Remove-AppxPackage -User $userSid -ErrorAction Continue
+                    } -ArgumentList @($appPattern, $targetUser)
                 }
             }
         }
         catch {
             if ($DebugPreference -ne "SilentlyContinue") {
-                Write-ToConsole "Something went wrong while trying to remove $app" -ForegroundColor Yellow
+                Write-Host "Something went wrong while trying to remove $app" -ForegroundColor Yellow
                 Write-Host $psitem.Exception.StackTrace -ForegroundColor Gray
             }
         }
     }
 
-    Write-ToConsole ""
+    Write-Host ""
 }
 
 
 # Forcefully removes Microsoft Edge using its uninstaller
 # Credit: Based on work from loadstring1 & ave9858
 function ForceRemoveEdge {
-    Write-ToConsole "> Forcefully uninstalling Microsoft Edge..."
+    Write-Host "> Forcefully uninstalling Microsoft Edge..."
 
     $regView = [Microsoft.Win32.RegistryView]::Registry32
     $hklm = [Microsoft.Win32.RegistryKey]::OpenBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, $regView)
@@ -590,11 +610,14 @@ function ForceRemoveEdge {
     # Remove edge
     $uninstallRegKey = $hklm.OpenSubKey('SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft Edge')
     if ($null -ne $uninstallRegKey) {
-        Write-ToConsole "Running uninstaller..."
+        Write-Host "Running uninstaller..."
         $uninstallString = $uninstallRegKey.GetValue('UninstallString') + ' --force-uninstall'
-        Start-Process cmd.exe "/c $uninstallString" -WindowStyle Hidden -Wait
+        Invoke-NonBlocking -ScriptBlock {
+            param($cmd)
+            Start-Process cmd.exe "/c $cmd" -WindowStyle Hidden -Wait
+        } -ArgumentList $uninstallString
 
-        Write-ToConsole "Removing leftover files..."
+        Write-Host "Removing leftover files..."
 
         $edgePaths = @(
             "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Microsoft Edge.lnk",
@@ -609,11 +632,11 @@ function ForceRemoveEdge {
         foreach ($path in $edgePaths) {
             if (Test-Path -Path $path) {
                 Remove-Item -Path $path -Force -Recurse -ErrorAction SilentlyContinue
-                Write-ToConsole "  Removed $path" -ForegroundColor DarkGray
+                Write-Host "  Removed $path" -ForegroundColor DarkGray
             }
         }
 
-        Write-ToConsole "Cleaning up registry..."
+        Write-Host "Cleaning up registry..."
 
         # Remove MS Edge from autostart
         reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run" /v "MicrosoftEdgeAutoLaunch_A9F6DCE4ABADF4F51CF45CD7129E3C6C" /f *>$null
@@ -621,10 +644,10 @@ function ForceRemoveEdge {
         reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run" /v "MicrosoftEdgeAutoLaunch_A9F6DCE4ABADF4F51CF45CD7129E3C6C" /f *>$null
         reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run" /v "Microsoft Edge Update" /f *>$null
 
-        Write-ToConsole "Microsoft Edge was uninstalled"
+        Write-Host "Microsoft Edge was uninstalled"
     }
     else {
-        Write-ToConsole "Unable to forcefully uninstall Microsoft Edge, uninstaller could not be found" -ForegroundColor Red
+        Write-Host "Unable to forcefully uninstall Microsoft Edge, uninstaller could not be found" -ForegroundColor Red
     }
 }
 
@@ -636,57 +659,67 @@ function RegImport {
         $path
     )
 
-    Write-ToConsole $message
+    Write-Host $message
 
     # Validate that the regfile exists in both locations
     if (-not (Test-Path "$script:RegfilesPath\$path") -or -not (Test-Path "$script:RegfilesPath\Sysprep\$path")) {
-        Write-ToConsole "Error: Unable to find registry file: $path" -ForegroundColor Red
-        Write-ToConsole ""
+        Write-Host "Error: Unable to find registry file: $path" -ForegroundColor Red
+        Write-Host ""
         return
     }
 
     # Reset exit code before running reg.exe for reliable success detection
     $global:LASTEXITCODE = 0
 
-    if ($script:Params.ContainsKey("Sysprep")) {
-        $defaultUserPath = GetUserDirectory -userName "Default" -fileName "NTUSER.DAT"
+    if ($script:Params.ContainsKey("Sysprep") -or $script:Params.ContainsKey("User")) {
+        # Sysprep targets Default user, User targets the specified user
+        $hiveDatPath = if ($script:Params.ContainsKey("Sysprep")) {
+            GetUserDirectory -userName "Default" -fileName "NTUSER.DAT"
+        } else {
+            GetUserDirectory -userName $script:Params.Item("User") -fileName "NTUSER.DAT"
+        }
 
-        reg load "HKU\Default" $defaultUserPath | Out-Null
-        $regOutput = reg import "$script:RegfilesPath\Sysprep\$path" 2>&1
-        reg unload "HKU\Default" | Out-Null
-    }
-    elseif ($script:Params.ContainsKey("User")) {
-        $userPath = GetUserDirectory -userName $script:Params.Item("User") -fileName "NTUSER.DAT"
-
-        reg load "HKU\Default" $userPath | Out-Null
-        $regOutput = reg import "$script:RegfilesPath\Sysprep\$path" 2>&1
-        reg unload "HKU\Default" | Out-Null
+        $regResult = Invoke-NonBlocking -ScriptBlock {
+            param($datPath, $regFilePath)
+            $global:LASTEXITCODE = 0
+            reg load "HKU\Default" $datPath | Out-Null
+            $output = reg import $regFilePath 2>&1
+            $code = $LASTEXITCODE
+            reg unload "HKU\Default" | Out-Null
+            return @{ Output = $output; ExitCode = $code }
+        } -ArgumentList @($hiveDatPath, "$script:RegfilesPath\Sysprep\$path")
     }
     else {
-        $regOutput = reg import "$script:RegfilesPath\$path" 2>&1
+        $regResult = Invoke-NonBlocking -ScriptBlock {
+            param($regFilePath)
+            $global:LASTEXITCODE = 0
+            $output = reg import $regFilePath 2>&1
+            return @{ Output = $output; ExitCode = $LASTEXITCODE }
+        } -ArgumentList "$script:RegfilesPath\$path"
     }
 
-    $hasSuccess = $LASTEXITCODE -eq 0
+    $regOutput = $regResult.Output
+    $hasSuccess = $regResult.ExitCode -eq 0
     
     if ($regOutput) {
         foreach ($line in $regOutput) {
             $lineText = if ($line -is [System.Management.Automation.ErrorRecord]) { $line.Exception.Message } else { $line.ToString() }
             if ($lineText -and $lineText.Length -gt 0) {
                 if ($hasSuccess) {
-                    Write-ToConsole $lineText
+                    Write-Host $lineText
                 }
                 else {
-                    Write-ToConsole $lineText -ForegroundColor Red
+                    Write-Host $lineText -ForegroundColor Red
                 }
             }
         }
     }
 
     if (-not $hasSuccess) {
-        Write-ToConsole "Failed importing registry file: $path" -ForegroundColor Red
+        Write-Host "Failed importing registry file: $path" -ForegroundColor Red
     }
 
-    Write-ToConsole ""
+    Write-Host ""
 }
 
 
@@ -697,12 +730,12 @@ function ReplaceStartMenuForAllUsers {
         $startMenuTemplate = "$script:AssetsPath/Start/start2.bin"
     )
 
-    Write-ToConsole "> Removing all pinned apps from the start menu for all users..."
+    Write-Host "> Removing all pinned apps from the start menu for all users..."
 
     # Check if template bin file exists
     if (-not (Test-Path $startMenuTemplate)) {
-        Write-ToConsole "Error: Unable to clear start menu, start2.bin file missing from script folder" -ForegroundColor Red
-        Write-ToConsole ""
+        Write-Host "Error: Unable to clear start menu, start2.bin file missing from script folder" -ForegroundColor Red
+        Write-Host ""
         return
     }
 
@@ -721,13 +754,13 @@ function ReplaceStartMenuForAllUsers {
     # Create folder if it doesn't exist
     if (-not (Test-Path $defaultStartMenuPath)) {
         new-item $defaultStartMenuPath -ItemType Directory -Force | Out-Null
-        Write-ToConsole "Created LocalState folder for default user profile"
+        Write-Host "Created LocalState folder for default user profile"
     }
 
     # Copy template to default profile
     Copy-Item -Path $startMenuTemplate -Destination $defaultStartMenuPath -Force
-    Write-ToConsole "Replaced start menu for the default user profile"
-    Write-ToConsole ""
+    Write-Host "Replaced start menu for the default user profile"
+    Write-Host ""
 }
 
 
@@ -746,12 +779,12 @@ function ReplaceStartMenu {
 
     # Check if template bin file exists
     if (-not (Test-Path $startMenuTemplate)) {
-        Write-ToConsole "Error: Unable to replace start menu, template file not found" -ForegroundColor Red
+        Write-Host "Error: Unable to replace start menu, template file not found" -ForegroundColor Red
         return
     }
 
     if ([IO.Path]::GetExtension($startMenuTemplate) -ne ".bin" ) {
-        Write-ToConsole "Error: Unable to replace start menu, template file is not a valid .bin file" -ForegroundColor Red
+        Write-Host "Error: Unable to replace start menu, template file is not a valid .bin file" -ForegroundColor Red
         return
     }
 
@@ -764,14 +797,14 @@ function ReplaceStartMenu {
         Move-Item -Path $startMenuBinFile -Destination $backupBinFile -Force
     }
     else {
-        Write-ToConsole "Unable to find original start2.bin file for user $userName, no backup was created for this user" -ForegroundColor Yellow
-        New-Item -ItemType File -Path $startMenuBinFile -Force | Out-Null
+        Write-Host "Unable to find original start2.bin file for user $userName, no backup was created for this user" -ForegroundColor Yellow
+        New-Item -ItemType File -Path $startMenuBinFile -Force
     }
 
     # Copy template file
     Copy-Item -Path $startMenuTemplate -Destination $startMenuBinFile -Force
 
-    Write-ToConsole "Replaced start menu for user $userName"
+    Write-Host "Replaced start menu for user $userName"
 }
 
 
@@ -812,7 +845,7 @@ function ExecuteParameter {
     
     # If feature has RegistryKey and ApplyText, use dynamic RegImport
     if ($feature -and $feature.RegistryKey -and $feature.ApplyText) {
-        RegImport $feature.ApplyText $feature.RegistryKey
+        RegImport "> $($feature.ApplyText)" $feature.RegistryKey
         
         # Handle special cases that have additional logic after RegImport
         switch ($paramKey) {
@@ -835,78 +868,78 @@ function ExecuteParameter {
     # Handle features without RegistryKey or with special logic
     switch ($paramKey) {
         'RemoveApps' {
-            Write-ToConsole "> Removing selected apps for $(GetFriendlyTargetUserName)..."
+            Write-Host "> Removing selected apps for $(GetFriendlyTargetUserName)..."
             $appsList = GenerateAppsList
 
             if ($appsList.Count -eq 0) {
-                Write-ToConsole "No valid apps were selected for removal" -ForegroundColor Yellow
-                Write-ToConsole ""
+                Write-Host "No valid apps were selected for removal" -ForegroundColor Yellow
+                Write-Host ""
                 return
             }
 
-            Write-ToConsole "$($appsList.Count) apps selected for removal"
+            Write-Host "$($appsList.Count) apps selected for removal"
             RemoveApps $appsList
         }
         'RemoveAppsCustom' {
-            Write-ToConsole "> Removing selected apps..."
+            Write-Host "> Removing selected apps..."
             $appsList = LoadAppsFromFile $script:CustomAppsListFilePath
 
             if ($appsList.Count -eq 0) {
-                Write-ToConsole "No valid apps were selected for removal" -ForegroundColor Yellow
-                Write-ToConsole ""
+                Write-Host "No valid apps were selected for removal" -ForegroundColor Yellow
+                Write-Host ""
                 return
             }
 
-            Write-ToConsole "$($appsList.Count) apps selected for removal"
+            Write-Host "$($appsList.Count) apps selected for removal"
             RemoveApps $appsList
         }
         'RemoveCommApps' {
             $appsList = 'Microsoft.windowscommunicationsapps', 'Microsoft.People'
-            Write-ToConsole "> Removing Mail, Calendar and People apps..."
+            Write-Host "> Removing Mail, Calendar and People apps..."
             RemoveApps $appsList
             return
         }
         'RemoveW11Outlook' {
             $appsList = 'Microsoft.OutlookForWindows'
-            Write-ToConsole "> Removing new Outlook for Windows app..."
+            Write-Host "> Removing new Outlook for Windows app..."
             RemoveApps $appsList
             return
         }
         'RemoveGamingApps' {
             $appsList = 'Microsoft.GamingApp', 'Microsoft.XboxGameOverlay', 'Microsoft.XboxGamingOverlay'
-            Write-ToConsole "> Removing gaming related apps..."
+            Write-Host "> Removing gaming related apps..."
             RemoveApps $appsList
             return
         }
         'RemoveHPApps' {
             $appsList = 'AD2F1837.HPAIExperienceCenter', 'AD2F1837.HPJumpStarts', 'AD2F1837.HPPCHardwareDiagnosticsWindows', 'AD2F1837.HPPowerManager', 'AD2F1837.HPPrivacySettings', 'AD2F1837.HPSupportAssistant', 'AD2F1837.HPSureShieldAI', 'AD2F1837.HPSystemInformation', 'AD2F1837.HPQuickDrop', 'AD2F1837.HPWorkWell', 'AD2F1837.myHP', 'AD2F1837.HPDesktopSupportUtilities', 'AD2F1837.HPQuickTouch', 'AD2F1837.HPEasyClean', 'AD2F1837.HPConnectedMusic', 'AD2F1837.HPFileViewer', 'AD2F1837.HPRegistration', 'AD2F1837.HPWelcome', 'AD2F1837.HPConnectedPhotopoweredbySnapfish', 'AD2F1837.HPPrinterControl'
-            Write-ToConsole "> Removing HP apps..."
+            Write-Host "> Removing HP apps..."
             RemoveApps $appsList
             return
         }
         "EnableWindowsSandbox" {
-            Write-ToConsole "> Enabling Windows Sandbox..."
+            Write-Host "> Enabling Windows Sandbox..."
             EnableWindowsFeature "Containers-DisposableClientVM"
-            Write-ToConsole ""
+            Write-Host ""
             return
         }
         "EnableWindowsSubsystemForLinux" {
-            Write-ToConsole "> Enabling Windows Subsystem for Linux..."
+            Write-Host "> Enabling Windows Subsystem for Linux..."
             EnableWindowsFeature "VirtualMachinePlatform"
             EnableWindowsFeature "Microsoft-Windows-Subsystem-Linux"
-            Write-ToConsole ""
+            Write-Host ""
             return
         }
         'ClearStart' {
-            Write-ToConsole "> Removing all pinned apps from the start menu for user $(GetUserName)..."
+            Write-Host "> Removing all pinned apps from the start menu for user $(GetUserName)..."
             ReplaceStartMenu
-            Write-ToConsole ""
+            Write-Host ""
             return
         }
         'ReplaceStart' {
-            Write-ToConsole "> Replacing the start menu for user $(GetUserName)..."
+            Write-Host "> Replacing the start menu for user $(GetUserName)..."
             ReplaceStartMenu $script:Params.Item("ReplaceStart")
-            Write-ToConsole ""
+            Write-Host ""
             return
         }
         'ClearStartAllUsers' {
@@ -924,21 +957,57 @@ function ExecuteParameter {
 # Executes all selected parameters/features
 # Parameters:
 function ExecuteAllChanges {    
+    # Build list of actionable parameters (skip control params and data-only params)
+    $actionableKeys = @()
+    foreach ($paramKey in $script:Params.Keys) {
+        if ($script:ControlParams -contains $paramKey) { continue }
+        if ($paramKey -eq 'Apps') { continue }
+        if ($paramKey -eq 'CreateRestorePoint') { continue }
+        $actionableKeys += $paramKey
+    }
+    
+    $totalSteps = $actionableKeys.Count
+    if ($script:Params.ContainsKey("CreateRestorePoint")) { $totalSteps++ }
+    $currentStep = 0
+    
     # Create restore point if requested (CLI only - GUI handles this separately)
     if ($script:Params.ContainsKey("CreateRestorePoint")) {
-        Write-ToConsole "> Attempting to create a system restore point..."
+        $currentStep++
+        if ($script:ApplyProgressCallback) {
+            & $script:ApplyProgressCallback $currentStep $totalSteps "Creating system restore point"
+        }
+        Write-Host "> Attempting to create a system restore point..."
         CreateSystemRestorePoint
-        Write-ToConsole ""
+        Write-Host ""
     }
     
     # Execute all parameters
-    foreach ($paramKey in $script:Params.Keys) {
+    foreach ($paramKey in $actionableKeys) {
         if ($script:CancelRequested) { 
             return
         }
 
-        if ($script:ControlParams -contains $paramKey) {
-            continue
+        $currentStep++
+        
+        # Get friendly name for the step
+        $stepName = $paramKey
+        if ($script:Features.ContainsKey($paramKey)) {
+            $feature = $script:Features[$paramKey]
+            if ($feature.ApplyText) {
+                # Prefer explicit ApplyText when provided
+                $stepName = $feature.ApplyText
+            } elseif ($feature.Label) {
+                # Fallback: construct a name from Action and Label, or just Label
+                if ($feature.Action) {
+                    $stepName = "$($feature.Action) $($feature.Label)"
+                } else {
+                    $stepName = $feature.Label
+                }
+            }
+        }
+        
+        if ($script:ApplyProgressCallback) {
+            & $script:ApplyProgressCallback $currentStep $totalSteps $stepName
         }
         
         ExecuteParameter -paramKey $paramKey
@@ -952,7 +1021,7 @@ function CreateSystemRestorePoint {
 
     if ($SysRestore.RPSessionInterval -eq 0) {
         # In GUI mode, skip the prompt and just try to enable it
-        if ($script:GuiConsoleOutput -or $Silent -or $( Read-Host -Prompt "System restore is disabled, would you like to enable it and create a restore point? (y/n)") -eq 'y') {
+        if ($script:GuiWindow -or $Silent -or $( Read-Host -Prompt "System restore is disabled, would you like to enable it and create a restore point? (y/n)") -eq 'y') {
             $enableSystemRestoreJob = Start-Job {
                 try {
                     Enable-ComputerRestore -Drive "$env:SystemDrive"
@@ -967,20 +1036,20 @@ function CreateSystemRestorePoint {
 
             if (-not $enableSystemRestoreJobDone) {
                 Remove-Job -Job $enableSystemRestoreJob -Force -ErrorAction SilentlyContinue
-                Write-ToConsole "Error: Failed to enable system restore and create restore point, operation timed out" -ForegroundColor Red
+                Write-Host "Error: Failed to enable system restore and create restore point, operation timed out" -ForegroundColor Red
                 $failed = $true
             }
             else {
                 $result = Receive-Job $enableSystemRestoreJob
                 Remove-Job -Job $enableSystemRestoreJob -ErrorAction SilentlyContinue
                 if ($result) {
-                    Write-ToConsole $result -ForegroundColor Red
+                    Write-Host $result -ForegroundColor Red
                     $failed = $true
                 }
             }
         }
         else {
-            Write-ToConsole ""
+            Write-Host ""
             $failed = $true
         }
     }
@@ -1013,17 +1082,17 @@ function CreateSystemRestorePoint {
 
         if (-not $createRestorePointJobDone) {
             Remove-Job -Job $createRestorePointJob -Force -ErrorAction SilentlyContinue
-            Write-ToConsole "Error: Failed to create system restore point, operation timed out" -ForegroundColor Red
+            Write-Host "Error: Failed to create system restore point, operation timed out" -ForegroundColor Red
             $failed = $true
         }
         else {
             $result = Receive-Job $createRestorePointJob
             Remove-Job -Job $createRestorePointJob -ErrorAction SilentlyContinue
             if ($result.Success) {
-                Write-ToConsole $result.Message
+                Write-Host $result.Message
             }
             else {
-                Write-ToConsole $result.Message -ForegroundColor Red
+                Write-Host $result.Message -ForegroundColor Red
                 $failed = $true
             }
         }
@@ -1031,7 +1100,7 @@ function CreateSystemRestorePoint {
 
     # Ensure that the user is aware if creating a restore point failed, and give them the option to continue without a restore point or cancel the script
     if ($failed) {
-        if ($script:GuiConsoleOutput) {
+        if ($script:GuiWindow) {
             $result = Show-MessageBox "Failed to create a system restore point. Do you want to continue without a restore point?" "Restore Point Creation Failed" "YesNo" "Warning"
 
             if ($result -ne "Yes") {
@@ -1040,67 +1109,60 @@ function CreateSystemRestorePoint {
             }
         }
         elseif (-not $Silent) {
-            Write-ToConsole "Failed to create a system restore point. Do you want to continue without a restore point? (y/n)" -ForegroundColor Yellow
+            Write-Host "Failed to create a system restore point. Do you want to continue without a restore point? (y/n)" -ForegroundColor Yellow
             if ($( Read-Host ) -ne 'y') {
                 $script:CancelRequested = $true
                 return
             }
         }
 
-        Write-ToConsole "Warning: Continuing without restore point" -ForegroundColor Yellow
+        Write-Host "Warning: Continuing without restore point" -ForegroundColor Yellow
     }
 }
 
 
-# Enables a Windows optional feature and pipes its output to Write-ToConsole
+# Enables a Windows optional feature and pipes its output to the console
 function EnableWindowsFeature {
     param (
         [string]$FeatureName
     )
 
-    Enable-WindowsOptionalFeature -Online -FeatureName $FeatureName -All -NoRestart *>&1 `
-        | Where-Object { $_ -isnot [Microsoft.Dism.Commands.ImageObject] -and $_.ToString() -notlike '*Restart is suppressed*' } `
-        | ForEach-Object { $msg = $_.ToString().Trim(); if ($msg) { Write-ToConsole $msg } }
+    $result = Invoke-NonBlocking -ScriptBlock {
+        param($name)
+        Enable-WindowsOptionalFeature -Online -FeatureName $name -All -NoRestart
+    } -ArgumentList $FeatureName
+
+    $dismResult = @($result) | Where-Object { $_ -is [Microsoft.Dism.Commands.ImageObject] }
+    if ($dismResult) {
+        Write-Host ($dismResult | Out-String).Trim()
+    }
 }
 
 
 # Restart the Windows Explorer process
 function RestartExplorer {
-    Write-ToConsole "> Attempting to restart the Windows Explorer process to apply all changes..."
+    Write-Host "> Attempting to restart the Windows Explorer process to apply all changes..."
     
     if ($script:Params.ContainsKey("Sysprep") -or $script:Params.ContainsKey("User") -or $script:Params.ContainsKey("NoRestartExplorer")) {
-        Write-ToConsole "Explorer process restart was skipped, please manually reboot your PC to apply all changes" -ForegroundColor Yellow
+        Write-Host "Explorer process restart was skipped, please manually reboot your PC to apply all changes" -ForegroundColor Yellow
         return
     }
 
-    if ($script:Params.ContainsKey("EnableWindowsSandbox")) {
-        Write-ToConsole "Warning: The Windows Sandbox feature will only be available after a reboot" -ForegroundColor Yellow
-    }
-
-    if ($script:Params.ContainsKey("EnableWindowsSubsystemForLinux")) {
-        Write-ToConsole "Warning: The Windows Subsystem for Linux feature will only be available after a reboot" -ForegroundColor Yellow
-    }
-
-    if ($script:Params.ContainsKey("DisableMouseAcceleration")) {
-        Write-ToConsole "Warning: Changes to the Enhance Pointer Precision setting will only take effect after a reboot" -ForegroundColor Yellow
-    }
-
-    if ($script:Params.ContainsKey("DisableStickyKeys")) {
-        Write-ToConsole "Warning: Changes to the Sticky Keys setting will only take effect after a reboot" -ForegroundColor Yellow
-    }
-
-    if ($script:Params.ContainsKey("DisableAnimations")) {
-        Write-ToConsole "Warning: Animations will only be disabled after a reboot" -ForegroundColor Yellow
+    foreach ($paramKey in $script:Params.Keys) {
+        if ($script:Features.ContainsKey($paramKey) -and $script:Features[$paramKey].RequiresReboot -eq $true) {
+            $feature = $script:Features[$paramKey]
+            Write-Host "Warning: '$($feature.Action) $($feature.Label)' requires a reboot to take full effect" -ForegroundColor Yellow
+        }
     }
 
     # Only restart if the powershell process matches the OS architecture.
     # Restarting explorer from a 32bit PowerShell window will fail on a 64bit OS
     if ([Environment]::Is64BitProcess -eq [Environment]::Is64BitOperatingSystem) {
-        Write-ToConsole "Restarting the Windows Explorer process... (This may cause your screen to flicker)"
+        Write-Host "Restarting the Windows Explorer process... (This may cause your screen to flicker)"
         Stop-Process -processName: Explorer -Force
     }
     else {
-        Write-ToConsole "Unable to restart Windows Explorer process, please manually reboot your PC to apply all changes" -ForegroundColor Yellow
+        Write-Host "Unable to restart Windows Explorer process, please manually reboot your PC to apply all changes" -ForegroundColor Yellow
     }
 }
 

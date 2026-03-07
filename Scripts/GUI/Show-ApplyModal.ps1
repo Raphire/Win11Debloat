@@ -110,7 +110,7 @@ function Show-ApplyModal {
             if ($script:CancelRequested) {
                 Write-Host "Script execution was cancelled by the user. Some changes may not have been applied."
             } else {
-                Write-Host "All changes have been applied successfully."
+                Write-Host "All changes have been applied successfully!"
             }
             
             # Show completion state
@@ -125,7 +125,7 @@ function Show-ApplyModal {
                 $script:ApplyCompletionMessageEl.Text = "Script execution was cancelled by the user."
             } else {
                 $script:ApplyCompletionTitleEl.Text = "Changes Applied"
-                $script:ApplyCompletionMessageEl.Text = "All changes have been applied successfully!"
+                $script:ApplyCompletionMessageEl.Text = "Your clean system is ready. Thanks for using Win11Debloat!"
             }
             $applyWindow.Dispatcher.Invoke([System.Windows.Threading.DispatcherPriority]::Render, [action]{})
         }

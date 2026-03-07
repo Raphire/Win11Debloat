@@ -150,6 +150,7 @@
                 <Border x:Name="ApplyRebootPanel"
                         Visibility="Collapsed"
                         BorderBrush="{DynamicResource BorderColor}"
+                        HorizontalAlignment="Center"
                         BorderThickness="0,1,0,1"
                         Padding="24,12,24,14">
                     <StackPanel>
@@ -160,7 +161,7 @@
                                        Foreground="#e8912d"
                                        VerticalAlignment="Center"
                                        Margin="0,0,8,0"/>
-                            <TextBlock Text="A restart is required for these changes to take effect:"
+                            <TextBlock Text="A reboot is required for these changes to take effect:"
                                        FontSize="13"
                                        FontWeight="SemiBold"
                                        Foreground="{DynamicResource FgColor}"

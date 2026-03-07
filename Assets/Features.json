@@ -385,6 +385,19 @@
       "MaxVersion": null
     },
     {
+      "FeatureId": "DisableFindMyDevice",
+      "Label": "Find My Device location tracking",
+      "ToolTip": "This will turn off the 'Find My Device' feature, which periodically sends your device's location to Microsoft. This feature uses policies, which will lock down certain settings.",
+      "Category": "Privacy & Suggested Content",
+      "Action": "Disable",
+      "RegistryKey": "Disable_Find_My_Device.reg",
+      "ApplyText": "> Disabling Find My Device location tracking...",
+      "UndoAction": "Enable",
+      "RegistryUndoKey": "Enable_Find_My_Device.reg",
+      "MinVersion": null,
+      "MaxVersion": null
+    },
+    {
       "FeatureId": "DisableSearchHistory",
       "Label": "local Windows Search history",
       "ToolTip": "This setting disables local search history in Windows Search. This does not affect web search history or the search history saved in Microsoft Edge.",
@@ -664,19 +677,6 @@
       "UndoAction": "Enable",
       "RegistryUndoKey": "Enable_Notepad_AI_Features.reg",
       "MinVersion": 22621,
-      "MaxVersion": null
-    },
-    {
-      "FeatureId": "DisablePhotoAI",
-      "Label": "AI features in Photos (Generative Erase, Restyle, Background Blur)",
-      "ToolTip": "This will turn off AI-powered features in the Windows Photos app, including Generative Erase, Restyle and Background Blur. Requires Windows 11 24H2 (Build 26100) or later.",
-      "Category": "AI",
-      "Action": "Disable",
-      "RegistryKey": "Disable_Photo_AI_Features.reg",
-      "ApplyText": "> Disabling AI features in Photos (Generative Erase, Restyle, Background Blur)...",
-      "UndoAction": "Enable",
-      "RegistryUndoKey": "Enable_Photo_AI_Features.reg",
-      "MinVersion": 26100,
       "MaxVersion": null
     },
     {

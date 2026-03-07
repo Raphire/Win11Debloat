@@ -1,5 +1,0 @@
-Windows Registry Editor Version 5.00
-
-; Disable AI-powered features in the Windows Photos app (Generative Erase, Restyle, Background Blur)
-[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Photos]
-"DisableAIFeatures"=dword:00000001

@@ -1,0 +1,5 @@
+Windows Registry Editor Version 5.00
+
+; Disable Find My Device location tracking
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\FindMyDevice]
+"AllowFindMyDevice"=dword:00000000

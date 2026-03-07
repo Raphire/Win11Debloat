@@ -926,6 +926,19 @@
       "MaxVersion": null
     },
     {
+      "FeatureId": "DisableStartupDelay",
+      "Label": "startup delay",
+      "ToolTip": "Windows 11 delays app startup until the system is idle. This can cause slow startup for apps. Disable this to start apps immediately. Note: On slow computers, this may slightly reduce performance during startup.",
+      "Category": "System",
+      "Action": "Disable",
+      "RegistryKey": "Disable_Startup_Delay.reg",
+      "ApplyText": "> Disabling startup delay...",
+      "UndoAction": "Enable",
+      "RegistryUndoKey": "Enable_Startup_Delay.reg",
+      "MinVersion": 22000,
+      "MaxVersion": null
+    },
+    {
       "FeatureId": "DisableBitlockerAutoEncryption",
       "Label": "BitLocker automatic device encryption",
       "ToolTip": "For devices that support it, Windows 11 automatically enables BitLocker device encryption. Disabling this will turn off automatic encryption of the device, but you can still manually enable BitLocker encryption if desired.",

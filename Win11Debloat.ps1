@@ -991,7 +991,17 @@ function ExecuteAllChanges {
         $stepName = $paramKey
         if ($script:Features.ContainsKey($paramKey)) {
             $feature = $script:Features[$paramKey]
-            if ($feature.Label) { $stepName = $feature.ApplyText }
+            if ($feature.ApplyText) {
+                # Prefer explicit ApplyText when provided
+                $stepName = $feature.ApplyText
+            } elseif ($feature.Label) {
+                # Fallback: construct a name from Action and Label, or just Label
+                if ($feature.Action) {
+                    $stepName = "$($feature.Action) $($feature.Label)"
+                } else {
+                    $stepName = $feature.Label
+                }
+            }
         }
         
         if ($script:ApplyProgressCallback) {

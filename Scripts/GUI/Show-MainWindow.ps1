@@ -1203,7 +1203,7 @@ function Show-MainWindow {
             return
         }
 
-        $message = ($changesList | ForEach-Object { "- $_" }) -join "`n"
+        $message = ($changesList | ForEach-Object { "$([char]0x2022) $_" }) -join "`n"
         Show-MessageBox -Message $message -Title 'Selected Changes' -Button 'OK' -Icon 'None' -Width 600
     }
 

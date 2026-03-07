@@ -141,9 +141,34 @@
                             Style="{DynamicResource ModalTitleStyle}"/>
                     
                     <TextBlock x:Name="ApplyCompletionMessage" 
-                            Text="Your clean system is ready. Thanks for using Win11Debloat!" 
+                            Text="Please note that some changes will only take effect after a reboot. Thanks for using Win11Debloat!"
+                            TextWrapping="Wrap"
                             Style="{DynamicResource ModalSubtextStyle}"/>
                 </StackPanel>
+
+                <!-- Reboot required section -->
+                <Border x:Name="ApplyRebootPanel"
+                        Visibility="Collapsed"
+                        BorderBrush="{DynamicResource BorderColor}"
+                        BorderThickness="0,1,0,1"
+                        Padding="24,12,24,14">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                            <TextBlock Text="&#xE7BA;"
+                                       FontFamily="Segoe Fluent Icons"
+                                       FontSize="14"
+                                       Foreground="#e8912d"
+                                       VerticalAlignment="Center"
+                                       Margin="0,0,8,0"/>
+                            <TextBlock Text="A restart is required for these changes to take effect:"
+                                       FontSize="13"
+                                       FontWeight="SemiBold"
+                                       Foreground="{DynamicResource FgColor}"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <StackPanel x:Name="ApplyRebootList" Margin="22,0,0,0"/>
+                    </StackPanel>
+                </Border>
 
                 <!-- Button Panel -->
                 <Border Background="{DynamicResource BgColor}"

@@ -915,6 +915,19 @@
       "MaxVersion": 22621
     },
     {
+      "FeatureId": "DisableStorageSense",
+      "Label": "Storage Sense automatic disk cleanup",
+      "ToolTip": "This will disable Storage Sense, which automatically frees up disk space by deleting temporary files, emptying the recycle bin and cleaning up files in the Downloads folder.",
+      "Category": "System",
+      "Action": "Disable",
+      "RegistryKey": "Disable_Storage_Sense.reg",
+      "ApplyText": "Disabling Storage Sense automatic disk cleanup...",
+      "UndoAction": "Enable",
+      "RegistryUndoKey": "Enable_Storage_Sense.reg",
+      "MinVersion": 22000,
+      "MaxVersion": null
+    },
+    {
       "FeatureId": "DisableFastStartup",
       "Label": "fast start-up",
       "ToolTip": "Fast Start-up helps your PC start faster after shutdown by saving a system image to disk. Disabling Fast Start-up can help with certain issues, but may result in slightly longer boot times.",

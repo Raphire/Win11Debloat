@@ -564,7 +564,7 @@
     },
     {
       "FeatureId": "DisableBing",
-      "Label": "Bing web search & Copilot integration",
+      "Label": "Bing web search & Copilot integration in search",
       "ToolTip": "This will turn off Bing web search results and Copilot integration in the Windows search experience. This feature uses policies, which will lock down certain settings.",
       "Category": "Start Menu",
       "Action": "Disable",

@@ -221,15 +221,7 @@ function Show-MainWindow {
     $script:CurrentAppLoadJob = $null
     $script:CurrentAppLoadJobStartTime = $null
     
-    # Apply Tab UI Elements
-    $consoleOutput = $window.FindName('ConsoleOutput')
-    $consoleScrollViewer = $window.FindName('ConsoleScrollViewer')
-    $finishBtn = $window.FindName('FinishBtn')
-    $finishBtnText = $window.FindName('FinishBtnText')
-    
-    # Set script-level variables for Write-ToConsole function
-    $script:GuiConsoleOutput = $consoleOutput
-    $script:GuiConsoleScrollViewer = $consoleScrollViewer
+    # Set script-level variable for GUI window reference
     $script:GuiWindow = $window
 
     # Updates app selection status text in the App Selection tab
@@ -972,8 +964,7 @@ function Show-MainWindow {
         $totalTabs = $tabControl.Items.Count
         
         $homeIndex = 0
-        $overviewIndex = $totalTabs - 2
-        $applyIndex = $totalTabs - 1
+        $overviewIndex = $totalTabs - 1
 
         # Navigation button visibility
         if ($currentIndex -eq $homeIndex) {
@@ -982,16 +973,13 @@ function Show-MainWindow {
         } elseif ($currentIndex -eq $overviewIndex) {
             $nextBtn.Visibility = 'Collapsed'
             $previousBtn.Visibility = 'Visible'
-        } elseif ($currentIndex -eq $applyIndex) {
-            $nextBtn.Visibility = 'Collapsed'
-            $previousBtn.Visibility = 'Collapsed'
         } else {
             $nextBtn.Visibility = 'Visible'
             $previousBtn.Visibility = 'Visible'
         }
         
         # Update progress indicators
-        # Tab indices: 0=Home, 1=App Removal, 2=Tweaks, 3=Overview, 4=Apply
+        # Tab indices: 0=Home, 1=App Removal, 2=Tweaks, 3=Overview
         $blueColor = "#0067c0"
         $greyColor = "#808080"
         
@@ -1000,8 +988,8 @@ function Show-MainWindow {
         $progressIndicator3 = $window.FindName('ProgressIndicator3') # Overview
         $bottomNavGrid = $window.FindName('BottomNavGrid')
         
-        # Hide bottom navigation on home page and apply tab
-        if ($currentIndex -eq 0 -or $currentIndex -eq $applyIndex) {
+        # Hide bottom navigation on home page
+        if ($currentIndex -eq 0) {
             $bottomNavGrid.Visibility = 'Collapsed'
         } else {
             $bottomNavGrid.Visibility = 'Visible'
@@ -1381,47 +1369,15 @@ function Show-MainWindow {
 
         SaveSettings
 
-        # Navigate to Apply tab (last tab) and start applying changes
-        $tabControl.SelectedIndex = $tabControl.Items.Count - 1
-        
-        # Clear console and set initial status
-        $consoleOutput.Text = ""
+        # Check if user wants to restart explorer
+        $restartExplorerCheckBox = $window.FindName('RestartExplorerCheckBox')
+        $shouldRestartExplorer = $restartExplorerCheckBox -and $restartExplorerCheckBox.IsChecked
 
-        Write-ToConsole "Applying changes to $(if ($script:Params.ContainsKey("Sysprep")) { "default user template" } else { "user $(GetUserName)" })"
-        Write-ToConsole "Total changes to apply: $totalChanges"
-        Write-ToConsole ""
-        
-        # Run changes in background to keep UI responsive
-        $window.Dispatcher.BeginInvoke([System.Windows.Threading.DispatcherPriority]::Background, [action]{
-            try {
-                ExecuteAllChanges
-                
-                # Check if user wants to restart explorer (from checkbox)
-                $restartExplorerCheckBox = $window.FindName('RestartExplorerCheckBox')
-                if ($restartExplorerCheckBox -and $restartExplorerCheckBox.IsChecked -and -not $script:CancelRequested) {
-                    RestartExplorer
-                }
-                
-                Write-ToConsole ""
-                if ($script:CancelRequested) {
-                    Write-ToConsole "Script execution was cancelled by the user. Some changes may not have been applied."
-                } else {
-                    Write-ToConsole "All changes have been applied. Please check the output above for any errors."
-                }
-                
-                $finishBtn.Dispatcher.Invoke([action]{
-                    $finishBtn.IsEnabled = $true
-                    $finishBtnText.Text = "Close Win11Debloat"
-                })
-            }
-            catch {
-                Write-ToConsole "Error: $($_.Exception.Message)"
-                $finishBtn.Dispatcher.Invoke([action]{
-                    $finishBtn.IsEnabled = $true
-                    $finishBtnText.Text = "Close Win11Debloat"
-                })
-            }
-        })
+        # Show the apply changes window
+        Show-ApplyModal -Owner $window -RestartExplorer $shouldRestartExplorer
+
+        # Close the main window after the apply dialog closes
+        $window.Close()
     })
 
     # Initialize UI elements on window load
@@ -1463,7 +1419,7 @@ function Show-MainWindow {
     # Add event handler for tab changes
     $tabControl.Add_SelectionChanged({
         # Regenerate overview when switching to Overview tab
-        if ($tabControl.SelectedIndex -eq ($tabControl.Items.Count - 2)) {
+        if ($tabControl.SelectedIndex -eq ($tabControl.Items.Count - 1)) {
             GenerateOverview
         }
         UpdateNavigationButtons
@@ -1558,11 +1514,6 @@ function Show-MainWindow {
         if ($restorePointCheckBox) {
             $restorePointCheckBox.IsChecked = $false
         }
-    })
-    
-    # Finish (Close Win11Debloat) button handler
-    $finishBtn.Add_Click({
-        $window.Close()
     })
 
     # Show the window

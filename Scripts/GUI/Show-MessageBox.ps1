@@ -28,11 +28,15 @@ function Show-MessageBox {
     
     # Show overlay if owner window exists
     $overlay = $null
+    $overlayWasAlreadyVisible = $false
     if ($ownerWindow) {
         try {
             $overlay = $ownerWindow.FindName('ModalOverlay')
             if ($overlay) {
-                $ownerWindow.Dispatcher.Invoke([action]{ $overlay.Visibility = 'Visible' })
+                $overlayWasAlreadyVisible = ($overlay.Visibility -eq 'Visible')
+                if (-not $overlayWasAlreadyVisible) {
+                    $ownerWindow.Dispatcher.Invoke([action]{ $overlay.Visibility = 'Visible' })
+                }
             }
         }
         catch { }
@@ -142,8 +146,8 @@ function Show-MessageBox {
     # Show dialog and return result from Tag
     $msgWindow.ShowDialog() | Out-Null
     
-    # Hide overlay after dialog closes
-    if ($overlay) {
+    # Hide overlay after dialog closes (only if this dialog was the one that showed it)
+    if ($overlay -and -not $overlayWasAlreadyVisible) {
         try {
             $ownerWindow.Dispatcher.Invoke([action]{ $overlay.Visibility = 'Collapsed' })
         }

@@ -4,86 +4,12 @@
         Width="440"
         SizeToContent="Height"
         ResizeMode="NoResize"
-        WindowStartupLocation="CenterScreen"
+        WindowStartupLocation="CenterOwner"
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
         Topmost="True"
         ShowInTaskbar="False">
-    
-    <Window.Resources>
-        <!-- Button Style -->
-        <Style x:Key="MessageBoxButton" TargetType="Button">
-            <Setter Property="Background" Value="{DynamicResource SecondaryButtonBg}"/>
-            <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderColor}"/>
-            <Setter Property="Padding" Value="0"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Height" Value="32"/>
-            <Setter Property="MinWidth" Value="80"/>
-            <Setter Property="Margin" Value="4,0"/>
-            <Setter Property="FontWeight" Value="Normal"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border x:Name="Border" 
-                                Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="4"
-                                Padding="{TemplateBinding Padding}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Border" Property="Background" Value="{DynamicResource SecondaryButtonHover}"/>
-                            </Trigger>
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="Border" Property="Background" Value="{DynamicResource SecondaryButtonPressed}"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <!-- Primary Button Style -->
-        <Style x:Key="PrimaryMessageBoxButton" TargetType="Button" BasedOn="{StaticResource MessageBoxButton}">
-            <Setter Property="Background" Value="{DynamicResource ButtonBg}"/>
-            <Setter Property="Foreground" Value="white"/>
-            <Setter Property="BorderBrush" Value="{DynamicResource ButtonBg}"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}" 
-                                BorderBrush="{TemplateBinding BorderBrush}" 
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="4"
-                                Padding="{TemplateBinding Padding}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,1"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsEnabled" Value="False">
-                    <Setter Property="Background" Value="{DynamicResource ButtonDisabled}"/>
-                    <Setter Property="BorderBrush" Value="{DynamicResource ButtonDisabled}"/>
-                    <Setter Property="Foreground" Value="{DynamicResource ButtonTextDisabled}"/>
-                </Trigger>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{DynamicResource ButtonHover}"/>
-                    <Setter Property="BorderBrush" Value="{DynamicResource ButtonHover}"/>
-                </Trigger>
-                <Trigger Property="IsPressed" Value="True">
-                    <Setter Property="Background" Value="{DynamicResource ButtonPressed}"/>
-                    <Setter Property="BorderBrush" Value="{DynamicResource ButtonPressed}"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-    </Window.Resources>
 
     <Border BorderBrush="{DynamicResource BorderColor}" 
             BorderThickness="1" 
@@ -156,10 +82,12 @@
                             HorizontalAlignment="Right">
                     <Button x:Name="Button1" 
                             Content="OK" 
-                            Style="{StaticResource PrimaryMessageBoxButton}"/>
+                            Height="32" MinWidth="80" Margin="4,0"
+                            Style="{DynamicResource PrimaryButtonStyle}"/>
                     <Button x:Name="Button2" 
                             Content="Cancel" 
-                            Style="{StaticResource MessageBoxButton}"
+                            Height="32" MinWidth="80" Margin="4,0"
+                            Style="{DynamicResource SecondaryButtonStyle}"
                             Visibility="Collapsed"/>
                 </StackPanel>
             </Border>

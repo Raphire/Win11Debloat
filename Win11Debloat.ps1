@@ -102,7 +102,7 @@ param (
 
 
 # Define script-level variables & paths
-$script:Version = "2026.02.19"
+$script:Version = "2026.03.07"
 $script:DefaultSettingsFilePath = "$PSScriptRoot/DefaultSettings.json"
 $script:AppsListFilePath = "$PSScriptRoot/Apps.json"
 $script:SavedSettingsFilePath = "$PSScriptRoot/LastUsedSettings.json"

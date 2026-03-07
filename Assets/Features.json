@@ -702,6 +702,7 @@
       "ApplyText": "Turning off Enhanced Pointer Precision...",
       "UndoAction": "Enable",
       "RegistryUndoKey": "Enable_Enhance_Pointer_Precision.reg",
+      "RequiresReboot": true,
       "MinVersion": null,
       "MaxVersion": null
     },
@@ -715,6 +716,7 @@
       "ApplyText": "Disabling the Sticky Keys keyboard shortcut...",
       "UndoAction": "Enable",
       "RegistryUndoKey": "Enable_Sticky_Keys_Shortcut.reg",
+      "RequiresReboot": true,
       "MinVersion": 26100,
       "MaxVersion": null
     },
@@ -1236,6 +1238,7 @@
       "ApplyText": "Disabling animations and visual effects...",
       "UndoAction": "Enable",
       "RegistryUndoKey": "Enable_Animations.reg",
+      "RequiresReboot": true,
       "MinVersion": null,
       "MaxVersion": null
     },
@@ -1384,13 +1387,14 @@
     {
       "FeatureId": "EnableWindowsSandbox",
       "Label": "Windows Sandbox",
-       "ToolTip": "Windows Sandbox is a lightweight desktop environment for safely running applications in isolation. Software installed inside the Windows Sandbox environment remains 'sandboxed' and runs separately from the host machine. Only supported on Windows 11 Pro, Workstation, and Enterprise editions.",
+      "ToolTip": "Windows Sandbox is a lightweight desktop environment for safely running applications in isolation. Software installed inside the Windows Sandbox environment remains 'sandboxed' and runs separately from the host machine. Only supported on Windows 11 Pro, Workstation, and Enterprise editions.",
       "Category": "Optional Windows Features",
       "Action": "Enable",
       "RegistryKey": null,
       "ApplyText": "Enabling Windows Sandbox...",
       "UndoAction": null,
       "RegistryUndoKey": null,
+      "RequiresReboot": true,
       "MinVersion": 22483,
       "MaxVersion": null
     },
@@ -1404,6 +1408,7 @@
       "ApplyText": "Enabling Windows Subsystem for Linux...",
       "UndoAction": null,
       "RegistryUndoKey": null,
+      "RequiresReboot": true,
       "MinVersion": 22000,
       "MaxVersion": null
     }

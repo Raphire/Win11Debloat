@@ -1146,24 +1146,11 @@ function RestartExplorer {
         return
     }
 
-    if ($script:Params.ContainsKey("EnableWindowsSandbox")) {
-        Write-Host "Warning: The Windows Sandbox feature will only be available after a reboot" -ForegroundColor Yellow
-    }
-
-    if ($script:Params.ContainsKey("EnableWindowsSubsystemForLinux")) {
-        Write-Host "Warning: The Windows Subsystem for Linux feature will only be available after a reboot" -ForegroundColor Yellow
-    }
-
-    if ($script:Params.ContainsKey("DisableMouseAcceleration")) {
-        Write-Host "Warning: Changes to the Enhance Pointer Precision setting will only take effect after a reboot" -ForegroundColor Yellow
-    }
-
-    if ($script:Params.ContainsKey("DisableStickyKeys")) {
-        Write-Host "Warning: Changes to the Sticky Keys setting will only take effect after a reboot" -ForegroundColor Yellow
-    }
-
-    if ($script:Params.ContainsKey("DisableAnimations")) {
-        Write-Host "Warning: Animations will only be disabled after a reboot" -ForegroundColor Yellow
+    foreach ($paramKey in $script:Params.Keys) {
+        if ($script:Features.ContainsKey($paramKey) -and $script:Features[$paramKey].RequiresReboot -eq $true) {
+            $feature = $script:Features[$paramKey]
+            Write-Host "Warning: '$($feature.Action) $($feature.Label)' requires a reboot to take full effect" -ForegroundColor Yellow
+        }
     }
 
     # Only restart if the powershell process matches the OS architecture.

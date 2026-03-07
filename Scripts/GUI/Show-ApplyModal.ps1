@@ -55,6 +55,8 @@ function Show-ApplyModal {
     $script:ApplyCompletionTitleEl = $applyWindow.FindName('ApplyCompletionTitle')
     $script:ApplyCompletionMessageEl = $applyWindow.FindName('ApplyCompletionMessage')
     $script:ApplyCompletionIconEl = $applyWindow.FindName('ApplyCompletionIcon')
+    $applyRebootPanel = $applyWindow.FindName('ApplyRebootPanel')
+    $applyRebootList = $applyWindow.FindName('ApplyRebootList')
     $applyCloseBtn = $applyWindow.FindName('ApplyCloseBtn')
     $applyKofiBtn = $applyWindow.FindName('ApplyKofiBtn')
     $applyCancelBtn = $applyWindow.FindName('ApplyCancelBtn')
@@ -125,7 +127,33 @@ function Show-ApplyModal {
                 $script:ApplyCompletionMessageEl.Text = "Script execution was cancelled by the user."
             } else {
                 $script:ApplyCompletionTitleEl.Text = "Changes Applied"
-                $script:ApplyCompletionMessageEl.Text = "Your clean system is ready. Thanks for using Win11Debloat!"
+
+                # Show completion message with reboot instructions if any applied features require reboot
+                if ($RestartExplorer) {
+                    $rebootFeatures = @()
+                    foreach ($paramKey in $script:Params.Keys) {
+                        if ($script:Features.ContainsKey($paramKey) -and $script:Features[$paramKey].RequiresReboot -eq $true) {
+                            $feature = $script:Features[$paramKey]
+                            $rebootFeatures += "$($feature.Action) $($feature.Label)"
+                        }
+                    }
+
+                    if ($rebootFeatures.Count -gt 0) {
+                        foreach ($featureName in $rebootFeatures) {
+                            $tb = [System.Windows.Controls.TextBlock]::new()
+                            $tb.Text = "$([char]0x2022) $featureName"
+                            $tb.FontSize = 12
+                            $tb.SetResourceReference([System.Windows.Controls.TextBlock]::ForegroundProperty, 'FgColor')
+                            $tb.Opacity = 0.85
+                            $tb.Margin = [System.Windows.Thickness]::new(0, 2, 0, 0)
+                            $applyRebootList.Children.Add($tb) | Out-Null
+                        }
+                        $applyRebootPanel.Visibility = 'Visible'
+                    }
+                    else {
+                        $script:ApplyCompletionMessageEl.Text = "Your clean system is ready. Thanks for using Win11Debloat!"
+                    }
+                }
             }
             $applyWindow.Dispatcher.Invoke([System.Windows.Threading.DispatcherPriority]::Render, [action]{})
         }

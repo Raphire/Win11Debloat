@@ -16,7 +16,10 @@ function Show-MessageBox {
         [string]$Icon = 'None',
         
         [Parameter(Mandatory=$false)]
-        [System.Windows.Window]$Owner = $null
+        [System.Windows.Window]$Owner = $null,
+        
+        [Parameter(Mandatory=$false)]
+        [int]$Width = 0
     )
     
     Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase | Out-Null
@@ -28,11 +31,15 @@ function Show-MessageBox {
     
     # Show overlay if owner window exists
     $overlay = $null
+    $overlayWasAlreadyVisible = $false
     if ($ownerWindow) {
         try {
             $overlay = $ownerWindow.FindName('ModalOverlay')
             if ($overlay) {
-                $ownerWindow.Dispatcher.Invoke([action]{ $overlay.Visibility = 'Visible' })
+                $overlayWasAlreadyVisible = ($overlay.Visibility -eq 'Visible')
+                if (-not $overlayWasAlreadyVisible) {
+                    $ownerWindow.Dispatcher.Invoke([action]{ $overlay.Visibility = 'Visible' })
+                }
             }
         }
         catch { }
@@ -54,6 +61,11 @@ function Show-MessageBox {
             $msgWindow.Owner = $ownerWindow
         }
         catch { }
+    }
+    
+    # Apply custom width if specified
+    if ($Width -gt 0) {
+        $msgWindow.Width = $Width
     }
     
     # Apply theme resources
@@ -142,8 +154,8 @@ function Show-MessageBox {
     # Show dialog and return result from Tag
     $msgWindow.ShowDialog() | Out-Null
     
-    # Hide overlay after dialog closes
-    if ($overlay) {
+    # Hide overlay after dialog closes (only if this dialog was the one that showed it)
+    if ($overlay -and -not $overlayWasAlreadyVisible) {
         try {
             $ownerWindow.Dispatcher.Invoke([action]{ $overlay.Visibility = 'Collapsed' })
         }

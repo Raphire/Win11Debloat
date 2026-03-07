@@ -9,43 +9,6 @@
         Background="Transparent"
         Foreground="{DynamicResource FgColor}">
     <Window.Resources>
-        <!-- ScrollBar Style -->
-        <Style TargetType="{x:Type ScrollBar}">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Width" Value="8"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ScrollBar}">
-                        <Grid>
-                            <Track Name="PART_Track" IsDirectionReversed="true">
-                                <Track.Thumb>
-                                    <Thumb>
-                                        <Thumb.Style>
-                                            <Style TargetType="Thumb">
-                                                <Setter Property="Background" Value="{DynamicResource ScrollBarThumbColor}"/>
-                                                <Setter Property="Template">
-                                                    <Setter.Value>
-                                                        <ControlTemplate TargetType="Thumb">
-                                                            <Border Background="{TemplateBinding Background}" CornerRadius="4"/>
-                                                        </ControlTemplate>
-                                                    </Setter.Value>
-                                                </Setter>
-                                                <Style.Triggers>
-                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                        <Setter Property="Background" Value="{DynamicResource ScrollBarThumbHoverColor}"/>
-                                                    </Trigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Thumb.Style>
-                                    </Thumb>
-                                </Track.Thumb>
-                            </Track>
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
         <!-- CheckBox Style -->
         <Style TargetType="CheckBox">
             <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
@@ -93,84 +56,6 @@
         <!-- CheckBox style for apps panels -->
         <Style x:Key="AppsPanelCheckBoxStyle" TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
             <Setter Property="Margin" Value="2,3,2,3"/>
-        </Style>
-
-        <!-- Button Style -->
-        <Style x:Key="Win11Button" TargetType="Button">
-            <Setter Property="Background" Value="{DynamicResource ButtonBg}"/>
-            <Setter Property="Foreground" Value="white"/>
-            <Setter Property="BorderBrush" Value="{DynamicResource ButtonBg}"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Padding" Value="0"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}" 
-                                BorderBrush="{TemplateBinding BorderBrush}" 
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="4"
-                                Padding="{TemplateBinding Padding}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsEnabled" Value="False">
-                    <Setter Property="Background" Value="{DynamicResource ButtonDisabled}"/>
-                    <Setter Property="BorderBrush" Value="{DynamicResource ButtonDisabled}"/>
-                    <Setter Property="Foreground" Value="{DynamicResource ButtonTextDisabled}"/>
-                </Trigger>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{DynamicResource ButtonHover}"/>
-                    <Setter Property="BorderBrush" Value="{DynamicResource ButtonHover}"/>
-                </Trigger>
-                <Trigger Property="IsPressed" Value="True">
-                    <Setter Property="Background" Value="{DynamicResource ButtonPressed}"/>
-                    <Setter Property="BorderBrush" Value="{DynamicResource ButtonPressed}"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-
-        <!-- Secondary Button Style -->
-        <Style x:Key="Win11ButtonSecondary" TargetType="Button">
-            <Setter Property="Background" Value="{DynamicResource SecondaryButtonBg}"/>
-            <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
-            <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderColor}"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Padding" Value="0"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}" 
-                                BorderBrush="{TemplateBinding BorderBrush}" 
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="4"
-                                Padding="{TemplateBinding Padding}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,1"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsEnabled" Value="False">
-                    <Setter Property="Background" Value="{DynamicResource SecondaryButtonDisabled}"/>
-                    <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
-                    <Setter Property="Foreground" Value="{DynamicResource SecondaryButtonTextDisabled}"/>
-                </Trigger>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{DynamicResource SecondaryButtonHover}"/>
-                    <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderColor}"/>
-                </Trigger>
-                <Trigger Property="IsPressed" Value="True">
-                    <Setter Property="Background" Value="{DynamicResource SecondaryButtonPressed}"/>
-                    <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderColor}"/>
-                </Trigger>
-            </Style.Triggers>
         </Style>
         
         <!-- Title Bar Button Style -->
@@ -276,8 +161,8 @@
                         <Grid Margin="0,8,10,10">
                             <CheckBox x:Name="OnlyInstalledBox" Content="Only show installed apps" Foreground="{DynamicResource FgColor}" AutomationProperties.Name="Only show installed apps"/>
                         </Grid>
-                        <Button x:Name="ConfirmBtn" Width="80" Height="32" Margin="0,0,10,0" Content="Confirm" Style="{StaticResource Win11Button}" AutomationProperties.Name="Confirm"/>
-                        <Button x:Name="CancelBtn" Width="80" Height="32" Content="Cancel" Style="{StaticResource Win11ButtonSecondary}" IsCancel="True" AutomationProperties.Name="Cancel"/>
+                        <Button x:Name="ConfirmBtn" Width="80" Height="32" Margin="0,0,10,0" Content="Confirm" Style="{DynamicResource PrimaryButtonStyle}" AutomationProperties.Name="Confirm"/>
+                        <Button x:Name="CancelBtn" Width="80" Height="32" Content="Cancel" Style="{DynamicResource SecondaryButtonStyle}" IsCancel="True" AutomationProperties.Name="Cancel"/>
                     </StackPanel>
                 </Grid>
             </Grid>

@@ -24,20 +24,13 @@ function ApplySettingsToUiControls {
         }
     }
     
-    # Also uncheck RestorePointCheckBox
-    $restorePointCheckBox = $window.FindName('RestorePointCheckBox')
-    if ($restorePointCheckBox) {
-        $restorePointCheckBox.IsChecked = $false
-    }
-    
     # Apply settings from JSON
     foreach ($setting in $settingsJson.Settings) {
         if ($setting.Value -ne $true) { continue }
         $paramName = $setting.Name
 
-        # Handle RestorePointCheckBox separately
+        # Skip RestorePointCheckBox, this is always checked by default
         if ($paramName -eq 'CreateRestorePoint') {
-            if ($restorePointCheckBox) { $restorePointCheckBox.IsChecked = $true }
             continue
         }
 

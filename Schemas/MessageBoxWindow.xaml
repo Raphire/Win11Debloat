@@ -3,6 +3,7 @@
         Title="MessageBox" 
         Width="440"
         SizeToContent="Height"
+        MaxHeight="500"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner"
         WindowStyle="None"
@@ -43,32 +44,34 @@
             </Grid>
 
             <!-- Message Content -->
-            <Grid Grid.Row="1" Margin="24,12,24,20">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" MaxHeight="500" Padding="0" Margin="20,12,1,20">
+                <Grid Margin="0,0,20,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
 
-                <!-- Icon -->
-                <TextBlock x:Name="IconText"
-                           Grid.Column="0"
-                           FontFamily="Segoe Fluent Icons"
-                           FontSize="24"
-                           Foreground="{DynamicResource FgColor}"
-                           VerticalAlignment="Center"
-                           Margin="0,2,14,0"
-                           Visibility="Collapsed"/>
+                    <!-- Icon -->
+                    <TextBlock x:Name="IconText"
+                               Grid.Column="0"
+                               FontFamily="Segoe Fluent Icons"
+                               FontSize="24"
+                               Foreground="{DynamicResource FgColor}"
+                               VerticalAlignment="Center"
+                               Margin="4,2,14,0"
+                               Visibility="Collapsed"/>
 
-                <!-- Message Text -->
-                <TextBlock x:Name="MessageText"
-                           Grid.Column="1"
-                           Text="Message content goes here"
-                           TextWrapping="Wrap"
-                           FontSize="14"
-                           LineHeight="20"
-                           Foreground="{DynamicResource FgColor}"
-                           VerticalAlignment="Center"/>
-            </Grid>
+                    <!-- Message Text -->
+                    <TextBlock x:Name="MessageText"
+                               Grid.Column="1"
+                               Text="Message content goes here"
+                               TextWrapping="Wrap"
+                               FontSize="14"
+                               LineHeight="20"
+                               Foreground="{DynamicResource FgColor}"
+                               VerticalAlignment="Center"/>
+                </Grid>
+            </ScrollViewer>
 
             <!-- Button Panel -->
             <Border Grid.Row="2" 

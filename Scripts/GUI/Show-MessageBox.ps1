@@ -16,7 +16,10 @@ function Show-MessageBox {
         [string]$Icon = 'None',
         
         [Parameter(Mandatory=$false)]
-        [System.Windows.Window]$Owner = $null
+        [System.Windows.Window]$Owner = $null,
+        
+        [Parameter(Mandatory=$false)]
+        [int]$Width = 0
     )
     
     Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase | Out-Null
@@ -58,6 +61,11 @@ function Show-MessageBox {
             $msgWindow.Owner = $ownerWindow
         }
         catch { }
+    }
+    
+    # Apply custom width if specified
+    if ($Width -gt 0) {
+        $msgWindow.Width = $Width
     }
     
     # Apply theme resources

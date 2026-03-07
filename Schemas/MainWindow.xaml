@@ -1,7 +1,7 @@
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Win11Debloat" 
-        MinWidth="1080" MinHeight="600"
+        MinWidth="1130" MinHeight="600"
         MaxWidth="1400"
         ResizeMode="CanResize" 
         SnapsToDevicePixels="True"
@@ -11,43 +11,6 @@
         Background="Transparent"
         Foreground="{DynamicResource FgColor}">
     <Window.Resources>
-        <!-- ScrollBar Style -->
-        <Style TargetType="{x:Type ScrollBar}">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Width" Value="8"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ScrollBar}">
-                        <Grid>
-                            <Track Name="PART_Track" IsDirectionReversed="true">
-                                <Track.Thumb>
-                                    <Thumb>
-                                        <Thumb.Style>
-                                            <Style TargetType="Thumb">
-                                                <Setter Property="Background" Value="{DynamicResource ScrollBarThumbColor}"/>
-                                                <Setter Property="Template">
-                                                    <Setter.Value>
-                                                        <ControlTemplate TargetType="Thumb">
-                                                            <Border Background="{TemplateBinding Background}" CornerRadius="4"/>
-                                                        </ControlTemplate>
-                                                    </Setter.Value>
-                                                </Setter>
-                                                <Style.Triggers>
-                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                        <Setter Property="Background" Value="{DynamicResource ScrollBarThumbHoverColor}"/>
-                                                    </Trigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Thumb.Style>
-                                    </Thumb>
-                                </Track.Thumb>
-                            </Track>
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
         <!-- ComboBox Style -->
         <Style TargetType="ComboBox">
             <Setter Property="Background" Value="{DynamicResource ComboBgColor}"/>
@@ -910,28 +873,33 @@
                     </DockPanel>
                 </TabItem>
 
-                <!-- Overview Tab -->
-                <TabItem Header="Overview" x:Name="OverviewTab">
+                <!-- Deployment Settings Tab -->
+                <TabItem Header="Deployment Settings" x:Name="DeploymentSettingsTab">
                     <DockPanel>
                         <Border DockPanel.Dock="Top" Padding="20,10,20,0">
                             <StackPanel>
-                                <TextBlock Text="Overview" FontWeight="Bold" FontSize="20" Margin="0,0,0,5" Foreground="{DynamicResource FgColor}"/>
-                                <TextBlock Text="Review and confirm your choices before proceeding" FontSize="13" Margin="0,0,0,20" Foreground="{DynamicResource FgColor}" TextWrapping="Wrap"/>
-                                <Grid>
-                                    <StackPanel Margin="0,0,0,0">
-                                        <!-- Selected Changes -->
-                                        <Border BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="16,12,1,0" Margin="0,0,0,16">
-                                            <StackPanel>
-                                                <TextBlock Text="Selected Changes" Style="{StaticResource CategoryHeaderTextBlock}"/>
-                                                <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="283">
-                                                    <StackPanel x:Name="OverviewChangesPanel" Margin="0,-4,0,0"/>
-                                                </ScrollViewer>
-                                                <StackPanel Margin="0,0,0,1"/>
-                                            </StackPanel>
-                                        </Border>
+                                <TextBlock Text="Deployment Settings" FontWeight="Bold" FontSize="20" Margin="0,0,0,5" Foreground="{DynamicResource FgColor}"/>
+                                <TextBlock Text="Configure how your changes will be applied and more" FontSize="13" Margin="0,0,0,20" Foreground="{DynamicResource FgColor}" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="0">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,-20,0,0" Padding="20,10,20,0">
+                                    <Grid Margin="0,10,0,5">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
 
                                         <!-- Apply Changes To -->
-                                        <Border BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="16,12" Margin="0,0,0,16">
+                                        <Border Grid.Row="0" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="16,12" Margin="0,0,0,16">
                                             <StackPanel>
                                                 <TextBlock Text="Apply Changes To" Style="{StaticResource CategoryHeaderTextBlock}"/>
                                                 <ComboBox x:Name="UserSelectionCombo" Margin="0,0,0,6" AutomationProperties.Name="Apply Changes To">
@@ -967,7 +935,7 @@
                                         </Border>
 
                                         <!-- App Removal Scope -->
-                                        <Border x:Name="AppRemovalScopeSection" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="16,12" Margin="0,0,0,16">
+                                        <Border Grid.Row="1" x:Name="AppRemovalScopeSection" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="16,12" Margin="0,0,0,16">
                                             <StackPanel>
                                                 <TextBlock Text="Remove Apps For" Style="{StaticResource CategoryHeaderTextBlock}"/>
                                                 <ComboBox x:Name="AppRemovalScopeCombo" Margin="0,0,0,6" AutomationProperties.Name="App Removal Scope">
@@ -980,13 +948,13 @@
                                         </Border>
 
                                         <!-- Options -->
-                                        <Border BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="16,12,16,3" Margin="0,0,0,16">
+                                        <Border Grid.Row="2" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="16,12,16,3" Margin="0,0,0,16">
                                             <StackPanel>
                                                 <TextBlock Text="Options" Style="{StaticResource CategoryHeaderTextBlock}"/>
 
                                                 <!-- Restore Point Option -->
                                                 <StackPanel>
-                                                    <CheckBox x:Name="RestorePointCheckBox" Style="{StaticResource FeatureCheckboxStyle}" Content="Create a system restore point (Recommended)" AutomationProperties.Name="Create a system restore point (Recommended)"/>
+                                                    <CheckBox x:Name="RestorePointCheckBox" Style="{StaticResource FeatureCheckboxStyle}" IsChecked="True" Content="Create a system restore point (Recommended)" AutomationProperties.Name="Create a system restore point (Recommended)"/>
                                                 </StackPanel>
                                                 
                                                 <!-- Restart Explorer Option -->
@@ -995,18 +963,54 @@
                                                 </StackPanel>
                                             </StackPanel>
                                         </Border>
-                                        
-                                        <!-- Apply Changes Button -->
-                                        <Button x:Name="OverviewApplyBtn" Style="{DynamicResource PrimaryButtonStyle}" Width="190" Height="44" Margin="0,0,0,15" HorizontalAlignment="Center" AutomationProperties.Name="Apply Changes">
-                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                                <TextBlock Text="&#xE73E;" FontFamily="Segoe Fluent Icons" FontSize="20" FontWeight="SemiBold" VerticalAlignment="Center"/>
-                                                <TextBlock Text="Apply Changes" VerticalAlignment="Center" FontSize="18" FontWeight="SemiBold"  Margin="8,0,0,4"/>
-                                            </StackPanel>
-                                        </Button>
+                                    </Grid>
+                                </ScrollViewer>
+                                <!-- Top fade gradient -->
+                                <Border IsHitTestVisible="False" VerticalAlignment="Top" Height="10" Margin="0,-12,20,0" Background="{DynamicResource BgColor}">
+                                    <Border.OpacityMask>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                            <GradientStop Color="Black" Offset="0"/>
+                                            <GradientStop Color="Black" Offset="0.5"/>
+                                            <GradientStop Color="Transparent" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Border.OpacityMask>
+                                </Border>
+                                <!-- Bottom fade gradient -->
+                                <Border IsHitTestVisible="False" VerticalAlignment="Bottom" Height="20" Margin="0,0,20,0" Background="{DynamicResource BgColor}">
+                                    <Border.OpacityMask>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                            <GradientStop Color="Transparent" Offset="0"/>
+                                            <GradientStop Color="Black" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Border.OpacityMask>
+                                </Border>
+                            </Grid>
+
+                            <!-- Review & Apply Section -->
+                            <StackPanel Grid.Row="1" HorizontalAlignment="Stretch" Background="{DynamicResource BgColor}">
+                                <Button x:Name="ReviewChangesBtn" Background="Transparent" BorderThickness="0" Cursor="Hand" HorizontalAlignment="Center" Margin="0,4,0,8" AutomationProperties.Name="Review selected changes">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <TextBlock x:Name="LinkText" Text="Review selected changes" FontSize="14" Foreground="{DynamicResource ButtonBg}" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="LinkText" Property="Foreground" Value="{DynamicResource ButtonHover}"/>
+                                                </Trigger>
+                                                <Trigger Property="IsPressed" Value="True">
+                                                    <Setter TargetName="LinkText" Property="Foreground" Value="{DynamicResource ButtonPressed}"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                                <Button x:Name="DeploymentApplyBtn" Style="{DynamicResource PrimaryButtonStyle}" Width="190" Height="44" HorizontalAlignment="Center" AutomationProperties.Name="Apply Changes">
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock Text="&#xE73E;" FontFamily="Segoe Fluent Icons" FontSize="20" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                        <TextBlock Text="Apply Changes" VerticalAlignment="Center" FontSize="18" FontWeight="SemiBold" Margin="8,0,0,4"/>
                                     </StackPanel>
-                                </Grid>
+                                </Button>
                             </StackPanel>
-                        </Border>
+                        </Grid>
                     </DockPanel>
                 </TabItem>
             </TabControl>
@@ -1040,7 +1044,7 @@
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <Ellipse x:Name="ProgressIndicator1" Width="10" Height="10" Margin="4,0" Fill="#808080" ToolTip="App Removal"/>
                     <Ellipse x:Name="ProgressIndicator2" Width="10" Height="10" Margin="4,0" Fill="#808080" ToolTip="System Tweaks"/>
-                    <Ellipse x:Name="ProgressIndicator3" Width="10" Height="10" Margin="4,0" Fill="#808080" ToolTip="Overview"/>
+                    <Ellipse x:Name="ProgressIndicator3" Width="10" Height="10" Margin="4,0" Fill="#808080" ToolTip="Deployment Settings"/>
                 </StackPanel>
             </Grid>
             

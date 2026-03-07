@@ -979,13 +979,13 @@ function Show-MainWindow {
         }
         
         # Update progress indicators
-        # Tab indices: 0=Home, 1=App Removal, 2=Tweaks, 3=Overview
+        # Tab indices: 0=Home, 1=App Removal, 2=Tweaks, 3=Deployment Settings
         $blueColor = "#0067c0"
         $greyColor = "#808080"
         
         $progressIndicator1 = $window.FindName('ProgressIndicator1') # App Removal
         $progressIndicator2 = $window.FindName('ProgressIndicator2') # Tweaks
-        $progressIndicator3 = $window.FindName('ProgressIndicator3') # Overview
+        $progressIndicator3 = $window.FindName('ProgressIndicator3') # Deployment Settings
         $bottomNavGrid = $window.FindName('BottomNavGrid')
         
         # Hide bottom navigation on home page
@@ -1010,7 +1010,7 @@ function Show-MainWindow {
             $progressIndicator2.Fill = $greyColor
         }
         
-        # Indicator 3 (Overview) - tab index 3
+        # Indicator 3 (Deployment Settings) - tab index 3
         if ($currentIndex -ge 3) {
             $progressIndicator3.Fill = $blueColor
         } else {
@@ -1130,8 +1130,6 @@ function Show-MainWindow {
     function GenerateOverview {
         # Load Features.json
         $featuresJson = LoadJsonFile -filePath $script:FeaturesFilePath -expectedVersion "1.0"
-        $overviewChangesPanel = $window.FindName('OverviewChangesPanel')
-        $overviewChangesPanel.Children.Clear()
         
         $changesList = @()
         
@@ -1143,7 +1141,7 @@ function Show-MainWindow {
             }
         }
         if ($selectedAppsCount -gt 0) {
-            $changesList += "Remove $selectedAppsCount selected application(s)"
+            $changesList += "Remove $selectedAppsCount application(s)"
         }
         
         # Update app removal scope section based on whether apps are selected
@@ -1194,20 +1192,19 @@ function Show-MainWindow {
             }
         }
         
+        return $changesList
+    }
+
+    function ShowChangesOverview {
+        $changesList = GenerateOverview
+
         if ($changesList.Count -eq 0) {
-            $textBlock = New-Object System.Windows.Controls.TextBlock
-            $textBlock.Text = "No changes selected"
-            $textBlock.Style = $window.Resources["OverviewNoChangesTextStyle"]
-            $overviewChangesPanel.Children.Add($textBlock) | Out-Null
+            Show-MessageBox -Message 'No changes have been selected.' -Title 'Selected Changes' -Button 'OK' -Icon 'Information'
+            return
         }
-        else {
-            foreach ($change in $changesList) {
-                $bullet = New-Object System.Windows.Controls.TextBlock
-                $bullet.Text = "- $change"
-                $bullet.Style = $window.Resources["OverviewChangeBulletStyle"]
-                $overviewChangesPanel.Children.Add($bullet) | Out-Null
-            }
-        }
+
+        $message = ($changesList | ForEach-Object { "- $_" }) -join "`n"
+        Show-MessageBox -Message $message -Title 'Selected Changes' -Button 'OK' -Icon 'None' -Width 600
     }
 
     $previousBtn.Add_Click({        
@@ -1249,14 +1246,20 @@ function Show-MainWindow {
             }
         }
 
-        # Navigate directly to the Overview tab
+        # Navigate directly to the Deployment Settings tab
         $tabControl.SelectedIndex = 3
         UpdateNavigationButtons
     })
 
-    # Handle Overview Apply Changes button - validates and immediately starts applying changes
-    $overviewApplyBtn = $window.FindName('OverviewApplyBtn')
-    $overviewApplyBtn.Add_Click({
+    # Handle Review Changes link button
+    $reviewChangesBtn = $window.FindName('ReviewChangesBtn')
+    $reviewChangesBtn.Add_Click({
+        ShowChangesOverview
+    })
+
+    # Handle Apply Changes button - validates and immediately starts applying changes
+    $deploymentApplyBtn = $window.FindName('DeploymentApplyBtn')
+    $deploymentApplyBtn.Add_Click({
         if (-not (ValidateOtherUsername)) {
             Show-MessageBox -Message "Please enter a valid username." -Title "Invalid Username" -Button 'OK' -Icon 'Warning' | Out-Null
             return
@@ -1416,15 +1419,6 @@ function Show-MainWindow {
         UpdateNavigationButtons
     })
 
-    # Add event handler for tab changes
-    $tabControl.Add_SelectionChanged({
-        # Regenerate overview when switching to Overview tab
-        if ($tabControl.SelectedIndex -eq ($tabControl.Items.Count - 1)) {
-            GenerateOverview
-        }
-        UpdateNavigationButtons
-    })
-
     # Handle Load Defaults button
     $loadDefaultsBtn = $window.FindName('LoadDefaultsBtn')
     $loadDefaultsBtn.Add_Click({
@@ -1508,12 +1502,6 @@ function Show-MainWindow {
                 }
             }
         } 
-
-        # Also uncheck RestorePointCheckBox
-        $restorePointCheckBox = $window.FindName('RestorePointCheckBox')
-        if ($restorePointCheckBox) {
-            $restorePointCheckBox.IsChecked = $false
-        }
     })
 
     # Show the window

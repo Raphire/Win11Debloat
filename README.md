@@ -88,7 +88,6 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 - Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads.
 - Disable tips, tricks, suggestions & ads across Windows.
 - Disable Windows location services & app location access.
-- Disable local Windows search history.
 - Disable 'Windows Spotlight' and tips & tricks on the lock screen.
 - Disable 'Windows Spotlight' desktop background option.
 - Disable ads, suggestions and the MSN news feed in Microsoft Edge.
@@ -125,12 +124,14 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 - Disable transparency effects
 - Disable animations and visual effects.
 
-#### Start Menu
+#### Start Menu & Search
 
 - Remove or replace all pinned apps from start for the current user, or for all existing & new users. (W11 only)
 - Disable the recommended section in the start menu. (W11 only)
-- Disable Bing web search & Copilot integration in Windows search.
 - Disable the Phone Link mobile devices integration in the start menu. (W11 only)
+- Disable Bing web search & Copilot integration in Windows search.
+- Disable Microsoft Store app suggestions in Windows search. (W11 only)
+- Disable local Windows search history.
 
 #### Taskbar
 

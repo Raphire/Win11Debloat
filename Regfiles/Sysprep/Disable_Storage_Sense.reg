@@ -1,0 +1,6 @@
+Windows Registry Editor Version 5.00
+
+; Disable Storage Sense
+[HKEY_USERS\Default\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy]
+"01"=dword:00000000
+

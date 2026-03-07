@@ -477,6 +477,19 @@
       "MaxVersion": null
     },
     {
+      "FeatureId": "DisableAISvcAutoStart",
+      "Label": "AI service from starting automatically",
+      "ToolTip": "This will set the WSAIFabricSvc service to manual startup, preventing the service from starting automatically with Windows.",
+      "Category": "AI",
+      "Action": "Prevent",
+      "RegistryKey": "Disable_AI_Service_Auto_Start.reg",
+      "ApplyText": "> Preventing AI service from starting automatically...",
+      "UndoAction": "Allow",
+      "RegistryUndoKey": "Enable_AI_Service_Auto_Start.reg",
+      "MinVersion": 22621,
+      "MaxVersion": null
+    },
+    {
       "FeatureId": "DisableDVR",
       "Label": "Xbox game/screen recording",
       "ToolTip": "This will disable the Xbox game/screen recording features included with the Game Bar app. This feature uses policies, which will lock down certain settings.",

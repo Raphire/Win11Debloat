@@ -38,6 +38,10 @@
             "Value": true
         },
         {
+            "Name": "DisableAISvcAutoStart",
+            "Value": true
+        },
+        {
             "Name": "DisableWidgets",
             "Value": true
         },

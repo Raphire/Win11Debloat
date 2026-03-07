@@ -26,6 +26,10 @@
             "Value": true
         },
         {
+            "Name": "DisableStoreSearchSuggestions",
+            "Value": true
+        },
+        {
             "Name": "DisableCopilot",
             "Value": true
         },

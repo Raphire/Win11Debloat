@@ -1419,6 +1419,15 @@ function Show-MainWindow {
         UpdateNavigationButtons
     })
 
+    # Add event handler for tab changes
+    $tabControl.Add_SelectionChanged({
+        # Regenerate overview when switching to Overview tab
+        if ($tabControl.SelectedIndex -eq ($tabControl.Items.Count - 2)) {
+            GenerateOverview
+        }
+        UpdateNavigationButtons
+    })
+
     # Handle Load Defaults button
     $loadDefaultsBtn = $window.FindName('LoadDefaultsBtn')
     $loadDefaultsBtn.Add_Click({

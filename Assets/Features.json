@@ -10,7 +10,7 @@
       "Icon": "&#xe770;"
     },
     {
-      "Name": "Start Menu",
+      "Name": "Start Menu & Search",
       "Icon": "&#xe8fc;"
     },
     {
@@ -166,10 +166,11 @@
       "GroupId": "ClearStart",
       "Label": "Remove pinned apps from the start menu",
       "ToolTip": "This setting allows you to quickly remove all pinned apps from the start menu.",
-      "Category": "Start Menu",
+      "Category": "Start Menu & Search",
+      "Priority": 1,
       "Values": [
         {
-          "Label": "Remove for the current user",
+          "Label": "Remove for the selected user",
           "FeatureIds": [
             "ClearStart"
           ]
@@ -398,19 +399,6 @@
       "MaxVersion": null
     },
     {
-      "FeatureId": "DisableSearchHistory",
-      "Label": "local Windows Search history",
-      "ToolTip": "This setting disables local search history in Windows Search. This does not affect web search history or the search history saved in Microsoft Edge.",
-      "Category": "Privacy & Suggested Content",
-      "Action": "Disable",
-      "RegistryKey": "Disable_Search_History.reg",
-      "ApplyText": "Disabling search history...",
-      "UndoAction": "Enable",
-      "RegistryUndoKey": "Enable_Search_History.reg",
-      "MinVersion": null,
-      "MaxVersion": null
-    },
-    {
       "FeatureId": "DisableLockscreenTips",
       "Label": "tips & tricks on the lock screen",
       "ToolTip": "This will turn off the tips, tricks and fun facts that appear on the lock screen.",
@@ -518,7 +506,7 @@
       "FeatureId": "ClearStart",
       "Action": "Clear Start Menu",
       "Label": "Remove all pinned apps from the start menu for this user only",
-      "Category": "Start Menu",
+      "Category": "Start Menu & Search",
       "RegistryKey": null,
       "ApplyText": null,
       "UndoAction": null,
@@ -530,7 +518,7 @@
       "FeatureId": "ClearStartAllUsers",
       "Action": "Clear Start Menu (All Users)",
       "Label": "Remove all pinned apps from the start menu for all existing and new users",
-      "Category": "Start Menu",
+      "Category": "Start Menu & Search",
       "RegistryKey": null,
       "ApplyText": null,
       "UndoAction": null,
@@ -566,7 +554,7 @@
       "FeatureId": "DisableStartRecommended",
       "Label": "recommended section in the start menu",
       "ToolTip": "This will hide the recommended section in the start menu, which shows recently added apps, recently opened files and app recommendations. This feature uses policies, which will lock down certain settings.",
-      "Category": "Start Menu",
+      "Category": "Start Menu & Search",
       "Action": "Hide",
       "RegistryKey": "Disable_Start_Recommended.reg",
       "ApplyText": "Disabling the start menu recommended section...",
@@ -576,10 +564,23 @@
       "MaxVersion": null
     },
     {
+      "FeatureId": "DisableStartPhoneLink",
+      "Label": "Phone Link integration in the start menu",
+      "ToolTip": "This will remove the Phone Link integration in the start menu when you have a mobile device linked to your PC.",
+      "Category": "Start Menu & Search",
+      "Action": "Disable",
+      "RegistryKey": "Disable_Phone_Link_In_Start.reg",
+      "ApplyText": "Disabling the Phone Link mobile devices integration in the start menu...",
+      "UndoAction": "Enable",
+      "RegistryUndoKey": "Enable_Phone_Link_In_Start.reg",
+      "MinVersion": 22621,
+      "MaxVersion": null
+    },
+    {
       "FeatureId": "DisableBing",
       "Label": "Bing web search & Copilot integration in search",
       "ToolTip": "This will turn off Bing web search results and Copilot integration in the Windows search experience. This feature uses policies, which will lock down certain settings.",
-      "Category": "Start Menu",
+      "Category": "Start Menu & Search",
       "Action": "Disable",
       "RegistryKey": "Disable_Bing_Cortana_In_Search.reg",
       "ApplyText": "Disabling Bing web search & Copilot integration in Windows search...",
@@ -589,10 +590,23 @@
       "MaxVersion": null
     },
     {
+       "FeatureId": "DisableStoreSearchSuggestions",
+      "Label": "Microsoft Store app suggestions in search",
+      "ToolTip": "This will disable the Microsoft Store app suggestions in Windows search.",
+      "Category": "Start Menu & Search",
+      "Action": "Disable",
+      "RegistryKey": null,
+      "ApplyText": null,
+      "UndoAction": null,
+      "RegistryUndoKey": null,
+      "MinVersion": 22621,
+      "MaxVersion": null
+    },
+    {
       "FeatureId": "DisableSearchHighlights",
-      "Label": "Search Highlights (dynamic/branded content in Windows search box)",
+      "Label": "Search Highlights in the taskbar search box",
       "ToolTip": "This will turn off Search Highlights, which shows dynamically curated branded content and trending topics in the Windows search box on the taskbar.",
-      "Category": "Privacy & Suggested Content",
+      "Category": "Start Menu & Search",
       "Action": "Disable",
       "RegistryKey": "Disable_Search_Highlights.reg",
       "ApplyText": "> Disabling Search Highlights in the Windows search box...",
@@ -602,16 +616,16 @@
       "MaxVersion": null
     },
     {
-      "FeatureId": "DisableStartPhoneLink",
-      "Label": "Phone Link integration in the start menu",
-      "ToolTip": "This will remove the Phone Link integration in the start menu when you have a mobile device linked to your PC.",
-      "Category": "Start Menu",
+      "FeatureId": "DisableSearchHistory",
+      "Label": "local Windows Search history",
+      "ToolTip": "This setting disables local search history in Windows Search. This does not affect web search history or the search history saved in Microsoft Edge.",
+      "Category": "Start Menu & Search",
       "Action": "Disable",
-      "RegistryKey": "Disable_Phone_Link_In_Start.reg",
-      "ApplyText": "Disabling the Phone Link mobile devices integration in the start menu...",
+      "RegistryKey": "Disable_Search_History.reg",
+      "ApplyText": "Disabling search history...",
       "UndoAction": "Enable",
-      "RegistryUndoKey": "Enable_Phone_Link_In_Start.reg",
-      "MinVersion": 22621,
+      "RegistryUndoKey": "Enable_Search_History.reg",
+      "MinVersion": null,
       "MaxVersion": null
     },
     {

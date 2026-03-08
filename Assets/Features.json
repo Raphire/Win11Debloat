@@ -167,7 +167,6 @@
       "Label": "Remove pinned apps from the start menu",
       "ToolTip": "This setting allows you to quickly remove all pinned apps from the start menu.",
       "Category": "Start Menu & Search",
-      "Priority": 1,
       "Values": [
         {
           "Label": "Remove for the selected user",

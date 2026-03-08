@@ -1,7 +1,7 @@
 # How to Contribute?
 
 We welcome contributions from the community. You can contribute to Win11Debloat by:
-- Reporting issues and bugs [here](https://github.com/Raphire/Win11Debloat/issues/new?template=bug_report.yml).
+- Reporting issues and bugs [here](https://github.com/Raphire/Win11Debloat/issues/new?template=bug_report.yml)
 - Submitting feature requests [here](https://github.com/Raphire/Win11Debloat/issues/new?template=feature_request.yml)
 - Testing Win11Debloat
 - Creating a pull request
@@ -59,16 +59,16 @@ Understanding the project structure is essential for contributing effectively:
 
 ```
 Win11Debloat/
-├── Win11Debloat.ps1        # Main PowerShell script
-├── Apps.json               # List of supported apps for removal
-├── DefaultSettings.json    # Default configuration preset
-├── LastUsedSettings.json   # Last used configuration (generated during use)
-├── Assets/
-│   └── Features.json       # All features with metadata
-├── Regfiles/               # Registry files for each feature
-├── Schemas/                # XAML Schemas for GUI elements
-└── Scripts/                # Additional PowerShell scripts and functions
-    └── Get.ps1             # Script used for the quick launch method to automatically download and run Win11debloat
+├── Win11Debloat.ps1             # Main PowerShell script
+├── Scripts/                     # Additional PowerShell scripts and functions
+│    └── Get.ps1                 # Script used for the quick launch method to automatically download and run Win11debloat
+├── Config/
+│   ├── Apps.json                # List of supported apps for removal
+│   ├── DefaultSettings.json     # Default configuration preset
+│   ├── Features.json            # All features with metadata
+│   └── LastUsedSettings.json    # Last used configuration (generated during use)
+├── Regfiles/                    # Registry files for each feature
+└── Schemas/                     # XAML Schemas for GUI elements
 ```
 
 ### Best Practices
@@ -115,7 +115,7 @@ To add a new app that can be removed via Win11Debloat:
    Get-AppxPackage | Select-Object Name, PackageFullName
    ```
 
-2. **Edit `Apps.json`**: Add a new entry to the `"Apps"` array:
+2. **Edit `Config/Apps.json`**: Add a new entry to the `"Apps"` array:
    ```json
    {
      "FriendlyName": "Display Name",
@@ -132,7 +132,7 @@ To add a new app that can be removed via Win11Debloat:
 
 ### Adding a New Feature
 
-Features are defined in `Assets/Features.json` and can modify Windows settings via registry files or PowerShell commands.
+Features are defined in `Config/Features.json` and can modify Windows settings via registry files or PowerShell commands.
 
 > [!NOTE]
 > For simple features that just include a registry change, no actual coding is required in the main script except for adding the corresponding command-line parameters. The GUI is automatically built using the information in the Features.json file.
@@ -167,7 +167,7 @@ If your feature requires more than just applying a registry file, add custom log
 
 #### 2. Add Feature to Features.json
 
-Add your feature to the `"Features"` array in `Assets/Features.json`:
+Add your feature to the `"Features"` array in `Config/Features.json`:
 
 ```json
 {
@@ -211,7 +211,7 @@ Add a corresponding parameter to both `Win11Debloat.ps1` AND `Scripts/Get.ps1`, 
 
 To add a new category for organizing features:
 
-- Add a new category entry to the `"Categories"` array in `Assets/Features.json`:
+- Add a new category entry to the `"Categories"` array in `Config/Features.json`:
    ```json
    {
      "Name": "Your Category Name",

@@ -103,10 +103,11 @@ param (
 
 # Define script-level variables & paths
 $script:Version = "2026.03.07"
-$script:DefaultSettingsFilePath = "$PSScriptRoot/DefaultSettings.json"
-$script:AppsListFilePath = "$PSScriptRoot/Apps.json"
-$script:SavedSettingsFilePath = "$PSScriptRoot/LastUsedSettings.json"
-$script:CustomAppsListFilePath = "$PSScriptRoot/CustomAppsList"
+$script:AppsListFilePath = "$PSScriptRoot/Config/Apps.json"
+$script:DefaultSettingsFilePath = "$PSScriptRoot/Config/DefaultSettings.json"
+$script:FeaturesFilePath = "$PSScriptRoot/Config/Features.json"
+$script:SavedSettingsFilePath = "$PSScriptRoot/Config/LastUsedSettings.json"
+$script:CustomAppsListFilePath = "$PSScriptRoot/Config/CustomAppsList"
 $script:DefaultLogPath = "$PSScriptRoot/Logs/Win11Debloat.log"
 $script:RegfilesPath = "$PSScriptRoot/Regfiles"
 $script:AssetsPath = "$PSScriptRoot/Assets"
@@ -116,7 +117,6 @@ $script:MessageBoxSchema = "$PSScriptRoot/Schemas/MessageBoxWindow.xaml"
 $script:AboutWindowSchema = "$PSScriptRoot/Schemas/AboutWindow.xaml"
 $script:ApplyChangesWindowSchema = "$PSScriptRoot/Schemas/ApplyChangesWindow.xaml"
 $script:SharedStylesSchema = "$PSScriptRoot/Schemas/SharedStyles.xaml"
-$script:FeaturesFilePath = "$script:AssetsPath/Features.json"
 
 $script:ControlParams = 'WhatIf', 'Confirm', 'Verbose', 'Debug', 'LogPath', 'Silent', 'Sysprep', 'User', 'NoRestartExplorer', 'RunDefaults', 'RunDefaultsLite', 'RunSavedSettings', 'RunAppsListGenerator', 'CLI', 'AppRemovalTarget'
 

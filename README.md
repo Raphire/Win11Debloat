@@ -4,9 +4,9 @@
 [![Join the Discussion](https://img.shields.io/badge/Join-the%20Discussion-2D9F2D?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Raphire/Win11Debloat/discussions)
 [![Static Badge](https://img.shields.io/badge/Documentation-_?style=for-the-badge&logo=bookstack&color=grey)](https://github.com/Raphire/Win11Debloat/wiki/)
 
- Win11Debloat is a lightweight, easy to use PowerShell script that allows you to quickly declutter and improve your Windows experience. It can remove pre-installed bloatware apps, disable telemetry, remove intrusive interface elements and much more. No need to painstakingly go through all the settings yourself or remove apps one by one. Win11Debloat makes the process quick and easy!
+ Win11Debloat is a lightweight, easy to use PowerShell script that allows you to quickly declutter and customize your Windows experience. It can remove pre-installed bloatware apps, disable telemetry, remove intrusive interface elements and much more. No need to painstakingly go through all the settings yourself or remove apps one by one. Win11Debloat makes the process quick and easy!
 
-The script also includes many features that system administrators and power users will enjoy. Such as support for Windows Audit mode, the option to make changes to other Windows users and the ability to access all of Win11Debloat's features right from the command-line. Please refer to our [wiki](https://github.com/Raphire/Win11Debloat/wiki/) for more details.
+The script also includes many features that system administrators and power users will enjoy. Such as a powerful command-line interface, support for Windows Audit mode and the option to make changes to other Windows users. Please refer to our [wiki](https://github.com/Raphire/Win11Debloat/wiki/) for more details.
 
 ![Win11Debloat Menu](/Assets/Images/menu.png)
 
@@ -184,7 +184,7 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 
 ## Contributing
 
-We welcome contributions to Win11Debloat! Whether you'd like to report issues, suggest features, or submit code changes, please see our [Contributing Guidelines](/.github/CONTRIBUTING.md) for detailed instructions on how to get started and best practices for contributing.
+We welcome contributions of all kinds! Please see our [Contributing Guidelines](/.github/CONTRIBUTING.md) for detailed instructions on how to get started and best practices for contributing.
 
 ## License
 

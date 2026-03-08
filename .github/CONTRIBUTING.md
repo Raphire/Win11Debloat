@@ -92,14 +92,6 @@ Win11Debloat/
 - Try to limit your indentation to a max of 4-5 levels, if possible.
 - Use [Segoe Fluent Icon Assets](https://learn.microsoft.com/en-us/windows/apps/design/iconography/segoe-fluent-icons-font) for icons.
 
-### Testing Registry Changes
-
-1. **Backup Registry**: Always create a system restore point
-2. **Test Manually**: Test the registry changes manually first
-3. **Verify Undo**: Test that the undo registry file properly reverts changes
-4. **Verify Sysprep**: Test that the Sysprep registry file properly applies changes for new users
-5. **Check Side Effects**: Ensure no unintended consequences
-
 ### Common Pitfalls
 
 Avoid these common mistakes when contributing:
@@ -342,7 +334,7 @@ UI Groups allow features to be grouped together in the GUI with a combobox (drop
    - Go to the original Win11Debloat repository
    - Click "New Pull Request"
    - Select your fork and branch
-   - Provide a clear description of your changes
+   - Provide a clear description of your changes, including references to the registry keys used
    - Reference any related issues
 
 4. **Respond to feedback**: Be prepared to make adjustments based on code review feedback.

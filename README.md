@@ -182,6 +182,10 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 - Option to [apply changes to a different user](https://github.com/Raphire/Win11Debloat/wiki/Advanced-Features#running-as-another-user), instead of the currently logged in user.
 - [Sysprep mode](https://github.com/Raphire/Win11Debloat/wiki/Advanced-Features#sysprep-mode) to apply changes to the Windows Default user profile. Which ensures, all new users will have the changes automatically applied to them.
 
+## Contributing
+
+We welcome contributions to Win11Debloat! Whether you'd like to report issues, suggest features, or submit code changes, please see our [Contributing Guidelines](/.github/CONTRIBUTING.md) for detailed instructions on how to get started and best practices for contributing.
+
 ## License
 
 Win11Debloat is licensed under the MIT license. See the LICENSE file for more information.

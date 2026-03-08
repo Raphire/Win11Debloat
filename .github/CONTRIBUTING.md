@@ -100,20 +100,20 @@ Avoid these common mistakes when contributing:
 
 2. **Missing Registry Files**: Always create an `Undo` registry file for reversibility, aswell as a `Sysprep` registry file for Sysprep mode.
 
-3. **Incorrect Registry Hives for Sysprep**: Sysprep registry files apply changes to all new users and must use `hkey_users\default` instead of `HKEY_CURRENT_USER`. Ensure you update **all** registry keys in the file.
+3. **Incorrect Registry Hives for Sysprep**: Sysprep registry files apply changes to Windows' default user, registry keys in the `HKEY_CURRENT_USER` hive must use `hkey_users\default` instead. Ensure you update **all** registry keys in the file.
 
-4. **Wrong Registry File Location**: 
+4. **Wrong Registry File Location**:
    - Main action files go in `Regfiles/`
    - Undo files go in `Regfiles/Undo/`
    - Sysprep files go in `Regfiles/Sysprep/`
-   
+
    Placing files in the wrong directory will cause the script to fail when trying to apply or undo changes.
 
 6. **Not Testing Undo Functionality**: Always test that your undo registry file properly reverts all changes. A feature that can't be undone will frustrate users.
 
 7. **Not Testing User/Sysprep Functionality**: Always test that your feature works when applied to another user or to the Windows default user with Sysprep. Sysprep changes can be tested by creating new users after running the script.
 
-7. **Missing Null Category**: Features without a `Category` field (set to `null`) won't appear in the GUI. This is intentional for command-line-only features, make sure this is what you want before submitting.
+7. **Missing Category**: Features without a `Category` field (set to `null`) won't appear in the GUI. This is intentional for command-line-only features, make sure this is what you want before submitting.
 
 8. **Hardcoded Paths**: When writing PowerShell logic, use `$PSScriptRoot` and script variables instead of hardcoded paths. This ensures the script works regardless of where it's installed.
 
@@ -334,7 +334,7 @@ UI Groups allow features to be grouped together in the GUI with a combobox (drop
    - Go to the original Win11Debloat repository
    - Click "New Pull Request"
    - Select your fork and branch
-   - Provide a clear description of your changes, including references to the registry keys used
+   - Provide a clear description of your changes, include references to the registry keys used
    - Reference any related issues
 
 4. **Respond to feedback**: Be prepared to make adjustments based on code review feedback.

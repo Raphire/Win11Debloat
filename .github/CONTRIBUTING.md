@@ -1,7 +1,7 @@
 # How to Contribute?
 
 We welcome contributions from the community. You can contribute to Win11Debloat by:
-- Reporting issues and bugs [here](https://github.com/Raphire/Win11Debloat/issues/new?template=bug_report.yml).
+- Reporting issues and bugs [here](https://github.com/Raphire/Win11Debloat/issues/new?template=bug_report.yml)
 - Submitting feature requests [here](https://github.com/Raphire/Win11Debloat/issues/new?template=feature_request.yml)
 - Testing Win11Debloat
 - Creating a pull request
@@ -73,15 +73,14 @@ Win11Debloat/
 
 ### Best Practices
 
-1. **Test Thoroughly**: Always test your changes on a Windows test environment before submitting.
+1. **Test Thoroughly**: Always test your changes on a Windows test environment before submitting. This includes undoing tweaks and running script as another user and in Sysprep mode.
 2. **Document Changes**: Update the `README.md` and other relevant documentation. Wiki documentation will be generated/updated based on the `Features.json` and `Apps.json` files.
 3. **Follow Existing Patterns**: Look at existing implementations for guidance.
 4. **Use Clear Naming**: Choose descriptive names for features, IDs, and registry files.
-5. **Provide All Registry Files**: Always create an `Undo` registry file for reversibility, aswell as a `Sysprep` registry file for Sysprep mode.
-6. **Minimal Changes**: Registry files should only modify what's necessary.
-7. **Comment Your Code**: Add comments explaining your reasoning for complex logic in PowerShell scripts.
-8. **Version Constraints**: Use `MinVersion` and `MaxVersion` if a feature only applies to specific Windows versions.
-9. **Limit pull requests to 1 feature**: Keep pull requests limited to just one feature, this makes it easier to review your changes.
+5. **Minimal Changes**: Registry files should only modify what's necessary.
+6. **Comment Your Code**: Add comments explaining your reasoning for complex logic in PowerShell scripts.
+7. **Version Constraints**: Use `MinVersion` and `MaxVersion` if a feature only applies to specific Windows versions.
+8. **Limit pull requests to 1 feature**: Keep pull requests limited to just one feature, this makes it easier to review your changes.
 
 ### Code Style
 
@@ -93,13 +92,30 @@ Win11Debloat/
 - Try to limit your indentation to a max of 4-5 levels, if possible.
 - Use [Segoe Fluent Icon Assets](https://learn.microsoft.com/en-us/windows/apps/design/iconography/segoe-fluent-icons-font) for icons.
 
-### Testing Registry Changes
+### Common Pitfalls
 
-1. **Backup Registry**: Always create a system restore point
-2. **Test Manually**: Test the registry changes manually first
-3. **Verify Undo**: Test that the undo registry file properly reverts changes
-4. **Verify Sysprep**: Test that the Sysprep registry file properly applies changes for new users
-5. **Check Side Effects**: Ensure no unintended consequences
+Avoid these common mistakes when contributing:
+
+1. **Forgetting Get.ps1**: When adding a new command-line parameter, contributors often remember to add it to `Win11Debloat.ps1` but forget to add the same parameter to `Scripts/Get.ps1`. Both files **must** have matching parameters.
+
+2. **Missing Registry Files**: Always create an `Undo` registry file for reversibility, aswell as a `Sysprep` registry file for Sysprep mode.
+
+3. **Incorrect Registry Hives for Sysprep**: Sysprep registry files apply changes to Windows' default user, registry keys in the `HKEY_CURRENT_USER` hive must use `hkey_users\default` instead. Ensure you update **all** registry keys in the file.
+
+4. **Wrong Registry File Location**:
+   - Main action files go in `Regfiles/`
+   - Undo files go in `Regfiles/Undo/`
+   - Sysprep files go in `Regfiles/Sysprep/`
+
+   Placing files in the wrong directory will cause the script to fail when trying to apply or undo changes.
+
+6. **Not Testing Undo Functionality**: Always test that your undo registry file properly reverts all changes. A feature that can't be undone will frustrate users.
+
+7. **Not Testing User/Sysprep Functionality**: Always test that your feature works when applied to another user or to the Windows default user with Sysprep. Sysprep changes can be tested by creating new users after running the script.
+
+7. **Missing Category**: Features without a `Category` field (set to `null`) won't appear in the GUI. This is intentional for command-line-only features, make sure this is what you want before submitting.
+
+8. **Hardcoded Paths**: When writing PowerShell logic, use `$PSScriptRoot` and script variables instead of hardcoded paths. This ensures the script works regardless of where it's installed.
 
 ## Implementing New Features
 
@@ -125,7 +141,7 @@ To add a new app that can be removed via Win11Debloat:
    }
    ```
 
-3. **Guidelines**:
+3. **Follow the Guidelines**:
 - Use clear, user-friendly names for `FriendlyName`
 - Set `SelectedByDefault` to `true` only for apps that are largely considered bloatware, otherwise set to `false`
 - Provide a concise description explaining what the app does
@@ -181,6 +197,7 @@ Add your feature to the `"Features"` array in `Assets/Features.json`:
   "ApplyText": "Disabling your feature...",
   "UndoAction": "Enable",
   "RegistryUndoKey": "Enable_YourFeature.reg",
+  "RequiresReboot": false,
   "MinVersion": null,
   "MaxVersion": null
 }
@@ -190,13 +207,14 @@ Add your feature to the `"Features"` array in `Assets/Features.json`:
 - `FeatureId`: Unique identifier (must match parameter name in Win11Debloat.ps1 and Get.ps1)
 - `Label`: Short description shown in the UI, written in a way to fit with the Action or UndoAction prefixed
 - `ToolTip`: Detailed explanation of what the feature does, used for tooltips in the GUI
-- `Category`: One of the predefined categories (see Categories array in Features.json)
+- `Category`: One of the predefined categories (see Categories array in Features.json), features without a category won't be loaded into the GUI.
 - `Priority`: Optional. The priority value (int) is used to sort features within a category. If this field is omitted the feature will be sorted based on the order in the Features.json file.
 - `Action`: Action word for the feature (e.g., "Disable", "Enable", "Hide", "Show")
 - `RegistryKey`: Filename of the registry file to apply (in Regfiles/ directory) or null if feature does not require registry changes
 - `ApplyText`: Message shown when applying the feature
 - `UndoAction`: Action word for reverting (e.g., "Enable", "Show")
 - `RegistryUndoKey`: Filename of the registry file to revert changes or null if feature does not require registry changes
+- `RequiresReboot`: Optional boolean. Set to `true` if the feature requires a system reboot to take effect
 - `MinVersion`: Minimum Windows build version (e.g., "22000") or null
 - `MaxVersion`: Maximum Windows version or null
 
@@ -205,6 +223,59 @@ Add your feature to the `"Features"` array in `Assets/Features.json`:
 Add a corresponding parameter to both `Win11Debloat.ps1` AND `Scripts/Get.ps1`, the parameter name should match the FeatureId you have defined in `Features.json`. In most cases this will be a switch parameter, example:
 ```powershell
 [switch]$YourFeatureId,
+```
+
+### Adding a Feature to the Default Preset
+
+> [!IMPORTANT]
+> The default preset is intentionally conservative. Features added to it should be thoroughly tested and widely beneficial. When in doubt, leave the feature out of the default preset.
+
+The default preset (`DefaultSettings.json`) defines which features are automatically applied when users run Win11Debloat in "Default Mode" or with the `-RunDefaults` parameter. This preset should include features that are widely considered to improve the Windows experience without breaking functionality.
+
+**When to add a feature to the default preset:**
+- The feature removes obvious bloatware or distractions
+- The feature enhances privacy without breaking core functionality
+- The feature is generally non-controversial and beneficial to most users
+- The change can be easily reverted if needed
+
+**When NOT to add a feature to the default preset:**
+- The feature significantly changes core Windows behavior
+- The feature might break applications or workflows for some users
+- The feature is highly opinionated or preference-based
+- The feature is experimental or not thoroughly tested
+
+To add your feature to the default preset, edit `DefaultSettings.json` and add a new entry to the `"Settings"` array:
+
+```json
+{
+  "Name": "YourFeatureId",
+  "Value": true
+}
+```
+
+**Field Descriptions**:
+- `Name`: Must exactly match the `FeatureId` from Features.json
+- `Value`: Set to `true` to enable the feature in default mode
+
+**Example:**
+```json
+{
+  "Version": "1.0",
+  "Settings": [
+    {
+      "Name": "CreateRestorePoint",
+      "Value": true
+    },
+    {
+      "Name": "DisableTelemetry",
+      "Value": true
+    },
+    {
+      "Name": "YourFeatureId",
+      "Value": true
+    }
+  ]
+}
 ```
 
 ### Adding a Category
@@ -263,7 +334,7 @@ UI Groups allow features to be grouped together in the GUI with a combobox (drop
    - Go to the original Win11Debloat repository
    - Click "New Pull Request"
    - Select your fork and branch
-   - Provide a clear description of your changes
+   - Provide a clear description of your changes, include references to the registry keys used
    - Reference any related issues
 
 4. **Respond to feedback**: Be prepared to make adjustments based on code review feedback.

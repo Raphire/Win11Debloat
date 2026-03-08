@@ -141,7 +141,7 @@ To add a new app that can be removed via Win11Debloat:
    }
    ```
 
-3. **Guidelines**:
+3. **Follow the Guidelines**:
 - Use clear, user-friendly names for `FriendlyName`
 - Set `SelectedByDefault` to `true` only for apps that are largely considered bloatware, otherwise set to `false`
 - Provide a concise description explaining what the app does

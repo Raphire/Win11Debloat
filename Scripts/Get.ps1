@@ -167,16 +167,14 @@ else {
     $windowStyle = "Normal"
 }
 
-# Use powershell 7 to launch the script if the current environment is powershell 7, otherwise use powershell 5.1
+# Remove Powershell 7 modules from path to prevent module loading issues in the script
 if ($PSVersionTable.PSVersion.Major -ge 7) {
-    $powershellExe = "pwsh.exe"
-}
-else {
-    $powershellExe = "powershell.exe"
+    $NewPSModulePath = $env:PSModulePath -split ';' | Where-Object -FilterScript { $_ -like '*WindowsPowerShell*' }
+    $env:PSModulePath = $NewPSModulePath -join ';'
 }
 
 # Run Win11Debloat script with the provided arguments
-$debloatProcess = Start-Process $powershellExe -WindowStyle $windowStyle -PassThru -ArgumentList "-executionpolicy bypass -File $env:TEMP\Win11Debloat\Win11Debloat.ps1 $arguments" -Verb RunAs
+$debloatProcess = Start-Process powershell.exe -WindowStyle $windowStyle -PassThru -ArgumentList "-executionpolicy bypass -File $env:TEMP\Win11Debloat\Win11Debloat.ps1 $arguments" -Verb RunAs
 
 # Wait for the process to finish before continuing
 if ($null -ne $debloatProcess) {

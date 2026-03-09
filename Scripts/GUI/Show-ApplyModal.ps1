@@ -87,6 +87,7 @@ function Show-ApplyModal {
     $script:ApplyStepNameEl.Text = "Preparing..."
     $script:ApplyStepCounterEl.Text = "Preparing..."
     $script:ApplyProgressBarEl.Value = 0
+    $script:ApplyModalInErrorState = $false
     
     # Set up progress callback for ExecuteAllChanges
     $script:ApplyProgressCallback = {
@@ -192,6 +193,23 @@ function Show-ApplyModal {
             $script:ApplyCompletionIconEl.Foreground = [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#c42b1c"))
             $script:ApplyCompletionTitleEl.Text = "Error"
             $script:ApplyCompletionMessageEl.Text = "An error occurred while applying changes: $($_.Exception.Message)"
+            
+            # Set error state to change Kofi button to report link
+            $script:ApplyModalInErrorState = $true
+
+            # Update Kofi button to be a report issue button
+            $applyKofiBtn.Content = $null
+            
+            $reportText = [System.Windows.Controls.TextBlock]::new()
+            $reportText.Text = 'Report a bug'
+            $reportText.VerticalAlignment = 'Center'
+            $reportText.FontSize = 14
+            $reportText.Margin = [System.Windows.Thickness]::new(0, 0, 0, 1)
+
+            $applyKofiBtn.Content = $reportText
+            
+            [System.Windows.Automation.AutomationProperties]::SetName($applyKofiBtn, 'Report a bug')
+            
             $applyWindow.Dispatcher.Invoke([System.Windows.Threading.DispatcherPriority]::Render, [action]{})
         }
         finally {
@@ -206,7 +224,11 @@ function Show-ApplyModal {
     })
 
     $applyKofiBtn.Add_Click({
-        Start-Process "https://ko-fi.com/raphire"
+        if ($script:ApplyModalInErrorState) {
+            Start-Process "https://github.com/Raphire/Win11Debloat/issues/new"
+        } else {
+            Start-Process "https://ko-fi.com/raphire"
+        }
     })
 
     $applyCancelBtn.Add_Click({

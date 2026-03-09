@@ -57,6 +57,7 @@ param (
     [switch]$HideSearchTb, [switch]$ShowSearchIconTb, [switch]$ShowSearchLabelTb, [switch]$ShowSearchBoxTb,
     [switch]$HideTaskview,
     [switch]$DisableStartRecommended,
+    [switch]$DisableStartAllApps,
     [switch]$DisableStartPhoneLink,
     [switch]$DisableCopilot,
     [switch]$DisableRecall,
@@ -164,6 +165,12 @@ if ($arguments.Count -eq 0) {
 }
 else {
     $windowStyle = "Normal"
+}
+
+# Remove Powershell 7 modules from path to prevent module loading issues in the script
+if ($PSVersionTable.PSVersion.Major -ge 7) {
+    $NewPSModulePath = $env:PSModulePath -split ';' | Where-Object -FilterScript { $_ -like '*WindowsPowerShell*' }
+    $env:PSModulePath = $NewPSModulePath -join ';'
 }
 
 # Run Win11Debloat script with the provided arguments

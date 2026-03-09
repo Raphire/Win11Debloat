@@ -129,8 +129,9 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 
 #### Start Menu & Search
 
-- Remove or replace all pinned apps from start for the current user, or for all existing & new users. (W11 only)
-- Disable the recommended section in the start menu. (W11 only)
+- Remove or replace all pinned apps from the start menu. (W11 only)
+- Hide the recommended section in the start menu. (W11 only)
+- Hide the 'All Apps' section in the start menu. (W11 only)
 - Disable the Phone Link mobile devices integration in the start menu. (W11 only)
 - Disable Bing web search & Copilot integration in Windows search.
 - Disable Microsoft Store app suggestions in Windows search. (W11 only)

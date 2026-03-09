@@ -101,6 +101,8 @@ param (
 
 
 
+Import-Module Microsoft.PowerShell.Security -SkipEditionCheck
+
 # Define script-level variables & paths
 $script:Version = "2026.03.07"
 $script:AppsListFilePath = "$PSScriptRoot/Config/Apps.json"

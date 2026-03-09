@@ -57,6 +57,7 @@ param (
     [switch]$HideSearchTb, [switch]$ShowSearchIconTb, [switch]$ShowSearchLabelTb, [switch]$ShowSearchBoxTb,
     [switch]$HideTaskview,
     [switch]$DisableStartRecommended,
+    [switch]$DisableStartAllApps,
     [switch]$DisableStartPhoneLink,
     [switch]$DisableCopilot,
     [switch]$DisableRecall,

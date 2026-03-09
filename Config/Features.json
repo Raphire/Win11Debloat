@@ -576,6 +576,19 @@
       "MaxVersion": null
     },
     {
+      "FeatureId": "DisableStartAllApps",
+      "Label": "'All Apps' section in the start menu",
+      "ToolTip": "This will hide the 'All Apps' section in the start menu, which shows all installed apps. WARNING: Hiding this section may make it harder to find installed apps on your system. This feature uses policies, which will lock down certain settings.",
+      "Category": "Start Menu & Search",
+      "Action": "Hide",
+      "RegistryKey": "Disable_Start_All_Apps.reg",
+      "ApplyText": "Disabling the 'All Apps' section in the start menu...",
+      "UndoAction": "Show",
+      "RegistryUndoKey": "Enable_Start_All_Apps.reg",
+      "MinVersion": 26200,
+      "MaxVersion": null
+    },
+    {
       "FeatureId": "DisableStartPhoneLink",
       "Label": "Phone Link integration in the start menu",
       "ToolTip": "This will remove the Phone Link integration in the start menu when you have a mobile device linked to your PC.",

@@ -201,14 +201,14 @@ function Show-ApplyModal {
             $applyKofiBtn.Content = $null
             
             $reportText = [System.Windows.Controls.TextBlock]::new()
-            $reportText.Text = 'Report the issue'
+            $reportText.Text = 'Report a bug'
             $reportText.VerticalAlignment = 'Center'
             $reportText.FontSize = 14
             $reportText.Margin = [System.Windows.Thickness]::new(0, 0, 0, 1)
 
             $applyKofiBtn.Content = $reportText
             
-            [System.Windows.Automation.AutomationProperties]::SetName($applyKofiBtn, 'Report the issue')
+            [System.Windows.Automation.AutomationProperties]::SetName($applyKofiBtn, 'Report a bug')
             
             $applyWindow.Dispatcher.Invoke([System.Windows.Threading.DispatcherPriority]::Render, [action]{})
         }

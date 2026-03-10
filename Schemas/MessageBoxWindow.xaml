@@ -3,7 +3,7 @@
         Title="MessageBox" 
         Width="440"
         SizeToContent="Height"
-        MaxHeight="500"
+        MaxHeight="501"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner"
         WindowStyle="None"

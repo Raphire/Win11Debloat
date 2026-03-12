@@ -77,7 +77,7 @@ Win11Debloat/
 2. **Document Changes**: Update the `README.md` and other relevant documentation. Wiki documentation will be generated/updated based on the `Features.json` and `Apps.json` files.
 3. **Follow Existing Patterns**: Look at existing implementations for guidance.
 4. **Use Clear Naming**: Choose descriptive names for features, IDs, and registry files.
-5. **Minimal Changes**: Registry files should only modify what's necessary.
+5. **Minimal Changes**: Registry files should only modify what's necessary. Avoid using policies where possible.
 6. **Comment Your Code**: Add comments explaining your reasoning for complex logic in PowerShell scripts.
 7. **Version Constraints**: Use `MinVersion` and `MaxVersion` if a feature only applies to specific Windows versions.
 8. **Limit pull requests to 1 feature**: Keep pull requests limited to just one feature, this makes it easier to review your changes.

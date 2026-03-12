@@ -9,8 +9,8 @@
 
     <Border Name="BubbleBorder"
             Grid.Row="0"
-            Background="{x:Static SystemColors.InfoBrush}"
-            BorderBrush="{x:Static SystemColors.ActiveBorderBrush}"
+            Background="{DynamicResource CardBgColor}"
+            BorderBrush="{DynamicResource ButtonBorderColor}"
             BorderThickness="1"
             CornerRadius="8"
             Padding="10,7,10,7">
@@ -18,14 +18,24 @@
                    Text="View the selected changes here"
                    TextWrapping="Wrap"
                    MaxWidth="260"
-                   Foreground="{x:Static SystemColors.InfoTextBrush}"/>
+                   Foreground="{DynamicResource FgColor}"/>
     </Border>
 
-    <Polygon Name="BubblePointer"
-             Grid.Row="1"
-             Points="0,0 12,0 6,7"
-             Fill="{x:Static SystemColors.InfoBrush}"
-             StrokeThickness="0"
-             HorizontalAlignment="Center"
-             Margin="0,-1,0,0"/>
+    <Grid Grid.Row="1"
+          HorizontalAlignment="Center"
+          Margin="0,-1,0,0"
+          Width="12"
+          Height="8">
+        <Polygon Name="BubblePointer"
+                 Points="0,0 12,0 6,7"
+                 Fill="{DynamicResource CardBgColor}"
+                 Stroke="{DynamicResource ButtonBorderColor}"
+                 StrokeThickness="1"
+                 Stretch="Fill"/>
+
+        <Rectangle VerticalAlignment="Top"
+                   Height="2"
+                   Margin="1,-1,1,0"
+                   Fill="{DynamicResource CardBgColor}"/>
+    </Grid>
 </Grid>

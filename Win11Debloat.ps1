@@ -267,6 +267,7 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 . "$PSScriptRoot/Scripts/GUI/Show-AppSelectionWindow.ps1"
 . "$PSScriptRoot/Scripts/GUI/Show-MainWindow.ps1"
 . "$PSScriptRoot/Scripts/GUI/Show-AboutDialog.ps1"
+. "$PSScriptRoot/Scripts/GUI/Show-Bubble.ps1"
 
 # Load File I/O functions
 . "$PSScriptRoot/Scripts/FileIO/LoadJsonFile.ps1"

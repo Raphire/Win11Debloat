@@ -648,7 +648,7 @@
     {
       "FriendlyName": "Microsoft Edge",
       "AppId": "Microsoft.Edge",
-      "Description": "Windows' default browser. WARNING: Removing this app also removes the only browser from Windows Sandbox and could affect other apps.",
+      "Description": "Windows' default browser, WARNING: Removing this app also removes the only browser from Windows Sandbox and could affect other apps",
       "SelectedByDefault": false,
       "Recommendation": "unsafe"
     },

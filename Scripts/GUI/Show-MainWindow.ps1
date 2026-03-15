@@ -678,9 +678,15 @@ function Show-MainWindow {
                         try { $lblBorderObj = $window.FindName("$comboName`_LabelBorder") } catch {}
                         if ($lblBorderObj) { $lblBorderObj.ToolTip = $tipBlock }
                     }
-                    $script:UiControlMappings[$comboName] = @{ Type='feature'; FeatureId = $feature.FeatureId; Action = $feature.Action }
+                    $script:UiControlMappings[$comboName] = @{ Type='feature'; FeatureId = $feature.FeatureId; Action = $feature.Action; Label = $feature.Label }
                 }
             }
+        }
+
+        # Build a feature-label lookup so GenerateOverview can resolve feature IDs without reloading JSON
+        $script:FeatureLabelLookup = @{}
+        foreach ($f in $featuresJson.Features) {
+            $script:FeatureLabelLookup[$f.FeatureId] = $f.Action + ' ' + $f.Label
         }
     }
 
@@ -1339,9 +1345,6 @@ function Show-MainWindow {
     }
 
     function GenerateOverview {
-        # Load Features.json
-        $featuresJson = LoadJsonFile -filePath $script:FeaturesFilePath -expectedVersion "1.0"
-        
         $changesList = @()
         
         # Collect selected apps
@@ -1391,13 +1394,14 @@ function Show-MainWindow {
                         # For combobox: SelectedIndex 0 = No Change, so subtract 1 to index into Values
                         $selectedValue = $mapping.Values[$control.SelectedIndex - 1]
                         foreach ($fid in $selectedValue.FeatureIds) {
-                            $feature = $featuresJson.Features | Where-Object { $_.FeatureId -eq $fid }
-                            if ($feature) { $changesList += ($feature.Action + ' ' + $feature.Label) }
+                            $label = $script:FeatureLabelLookup[$fid]
+                            if ($label) { $changesList += $label }
                         }
                     }
                     elseif ($mapping.Type -eq 'feature') {
-                        $feature = $featuresJson.Features | Where-Object { $_.FeatureId -eq $mapping.FeatureId }
-                        if ($feature) { $changesList += ($feature.Action + ' ' + $feature.Label) }
+                        $label = $script:FeatureLabelLookup[$mapping.FeatureId]
+                        if (-not $label) { $label = $mapping.Action + ' ' + $mapping.Label }
+                        $changesList += $label
                     }
                 }
             }

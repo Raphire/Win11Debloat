@@ -752,9 +752,9 @@ function Show-MainWindow {
             $dot.Style = $window.Resources['AppRecommendationDotStyle']
             $dot.Fill  = switch ($app.Recommendation) { 'safe' { $brushSafe } 'unsafe' { $brushUnsafe } default { $brushDefault } }
             $dot.ToolTip = switch ($app.Recommendation) {
-                'safe'   { 'Safe to remove' }
-                'unsafe' { 'Caution, removal is not recommended' }
-                default  { 'Optional' }
+                'safe'   { '[Recommended] Safe to remove for most users' }
+                'unsafe' { '[Not Recommended] Only remove if you know what you are doing' }
+                default  { "[Optional] Remove if you don't need this app" }
             }
             [System.Windows.Controls.Grid]::SetColumn($dot, 0)
 

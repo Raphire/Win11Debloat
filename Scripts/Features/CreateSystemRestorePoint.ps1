@@ -5,15 +5,19 @@ function CreateSystemRestorePoint {
     if ($SysRestore.RPSessionInterval -eq 0) {
         # In GUI mode, skip the prompt and just try to enable it
         if ($script:GuiWindow -or $Silent -or $( Read-Host -Prompt "System restore is disabled, would you like to enable it and create a restore point? (y/n)") -eq 'y') {
-            # Use Invoke-NonBlocking so the UI stays responsive during the Enable-ComputerRestore call
-            $enableResult = Invoke-NonBlocking -ScriptBlock {
-                try {
-                    Enable-ComputerRestore -Drive "$env:SystemDrive"
-                    return $null
+            try {
+                $enableResult = Invoke-NonBlocking -TimeoutSeconds 20 -ScriptBlock {
+                    try {
+                        Enable-ComputerRestore -Drive "$env:SystemDrive"
+                        return $null
+                    }
+                    catch {
+                        return "Error: Failed to enable System Restore: $_"
+                    }
                 }
-                catch {
-                    return "Error: Failed to enable System Restore: $_"
-                }
+            }
+            catch {
+                $enableResult = "Error: Failed to enable System Restore: $_"
             }
 
             if ($enableResult) {
@@ -28,27 +32,31 @@ function CreateSystemRestorePoint {
     }
 
     if (-not $failed) {
-        # Use Invoke-NonBlocking so the UI stays responsive during Get-ComputerRestorePoint / Checkpoint-Computer
-        $result = Invoke-NonBlocking -ScriptBlock {
-            try {
-                $recentRestorePoints = Get-ComputerRestorePoint | Where-Object { (Get-Date) - [System.Management.ManagementDateTimeConverter]::ToDateTime($_.CreationTime) -le (New-TimeSpan -Hours 24) }
-            }
-            catch {
-                return [PSCustomObject]@{ Success = $false; Message = "Error: Unable to retrieve existing restore points: $_" }
-            }
-
-            if ($recentRestorePoints.Count -eq 0) {
+        try {
+            $result = Invoke-NonBlocking -TimeoutSeconds 20 -ScriptBlock {
                 try {
-                    Checkpoint-Computer -Description "Restore point created by Win11Debloat" -RestorePointType "MODIFY_SETTINGS"
-                    return [PSCustomObject]@{ Success = $true; Message = "System restore point created successfully" }
+                    $recentRestorePoints = Get-ComputerRestorePoint | Where-Object { (Get-Date) - [System.Management.ManagementDateTimeConverter]::ToDateTime($_.CreationTime) -le (New-TimeSpan -Hours 24) }
                 }
                 catch {
-                    return [PSCustomObject]@{ Success = $false; Message = "Error: Unable to create restore point: $_" }
+                    return [PSCustomObject]@{ Success = $false; Message = "Error: Unable to retrieve existing restore points: $_" }
+                }
+
+                if ($recentRestorePoints.Count -eq 0) {
+                    try {
+                        Checkpoint-Computer -Description "Restore point created by Win11Debloat" -RestorePointType "MODIFY_SETTINGS"
+                        return [PSCustomObject]@{ Success = $true; Message = "System restore point created successfully" }
+                    }
+                    catch {
+                        return [PSCustomObject]@{ Success = $false; Message = "Error: Unable to create restore point: $_" }
+                    }
+                }
+                else {
+                    return [PSCustomObject]@{ Success = $true; Message = "A recent restore point already exists, no new restore point was created" }
                 }
             }
-            else {
-                return [PSCustomObject]@{ Success = $true; Message = "A recent restore point already exists, no new restore point was created" }
-            }
+        }
+        catch {
+            $result = [PSCustomObject]@{ Success = $false; Message = "Error: Failed to create system restore point: $_" }
         }
 
         if ($result -and $result.Success) {

@@ -283,7 +283,7 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 function DoEvents {
     if (-not $script:GuiWindow) { return }
     $frame = [System.Windows.Threading.DispatcherFrame]::new()
-    [System.Windows.Threading.Dispatcher]::CurrentDispatcher.BeginInvoke(
+    $null = [System.Windows.Threading.Dispatcher]::CurrentDispatcher.BeginInvoke(
         [System.Windows.Threading.DispatcherPriority]::Background,
         [System.Windows.Threading.DispatcherOperationCallback]{
             param($f)
@@ -292,7 +292,7 @@ function DoEvents {
         },
         $frame
     )
-    [System.Windows.Threading.Dispatcher]::PushFrame($frame)
+    $null = [System.Windows.Threading.Dispatcher]::PushFrame($frame)
 }
 
 
@@ -302,7 +302,8 @@ function DoEvents {
 function Invoke-NonBlocking {
     param(
         [scriptblock]$ScriptBlock,
-        [object[]]$ArgumentList = @()
+        [object[]]$ArgumentList = @(),
+        [int]$TimeoutSeconds = 0
     )
 
     if (-not $script:GuiWindow) {
@@ -318,7 +319,13 @@ function Invoke-NonBlocking {
 
         $handle = $ps.BeginInvoke()
 
+        $stopwatch = if ($TimeoutSeconds -gt 0) { [System.Diagnostics.Stopwatch]::StartNew() } else { $null }
+
         while (-not $handle.IsCompleted) {
+            if ($stopwatch -and $stopwatch.Elapsed.TotalSeconds -ge $TimeoutSeconds) {
+                $ps.Stop()
+                throw "Operation timed out after $TimeoutSeconds seconds"
+            }
             DoEvents
             Start-Sleep -Milliseconds 16
         }

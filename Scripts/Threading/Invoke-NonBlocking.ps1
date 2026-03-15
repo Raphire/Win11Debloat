@@ -4,7 +4,8 @@
 function Invoke-NonBlocking {
     param(
         [scriptblock]$ScriptBlock,
-        [object[]]$ArgumentList = @()
+        [object[]]$ArgumentList = @(),
+        [int]$TimeoutSeconds = 0
     )
 
     if (-not $script:GuiWindow) {
@@ -20,7 +21,13 @@ function Invoke-NonBlocking {
 
         $handle = $ps.BeginInvoke()
 
+        $stopwatch = if ($TimeoutSeconds -gt 0) { [System.Diagnostics.Stopwatch]::StartNew() } else { $null }
+
         while (-not $handle.IsCompleted) {
+            if ($stopwatch -and $stopwatch.Elapsed.TotalSeconds -ge $TimeoutSeconds) {
+                $ps.Stop()
+                throw "Operation timed out after $TimeoutSeconds seconds"
+            }
             DoEvents
             Start-Sleep -Milliseconds 16
         }

@@ -328,14 +328,20 @@ function Show-MainWindow {
     }
 
     # Applies a preset by checking/unchecking apps that match the given filter
+    # When -Exclusive is set, all apps are unchecked first so only matching apps end up selected
     function ApplyPresetToApps {
         param ( 
             [scriptblock]$MatchFilter,
-            [bool]$Check
+            [bool]$Check,
+            [switch]$Exclusive
         )
         foreach ($child in $appsPanel.Children) {
-            if ($child -is [System.Windows.Controls.CheckBox] -and (& $MatchFilter $child)) {
-                $child.IsChecked = $Check
+            if ($child -is [System.Windows.Controls.CheckBox]) {
+                if ($Exclusive) {
+                    $child.IsChecked = (& $MatchFilter $child)
+                } elseif (& $MatchFilter $child) {
+                    $child.IsChecked = $Check
+                }
             }
         }
         UpdatePresetStates
@@ -789,8 +795,7 @@ function Show-MainWindow {
         # If Default Mode was clicked while apps were still loading, apply defaults now
         if ($script:PendingDefaultMode) {
             $script:PendingDefaultMode = $false
-            ApplyPresetToApps -MatchFilter { param($c) $true } -Check $false
-            ApplyPresetToApps -MatchFilter { param($c) $c.SelectedByDefault -eq $true } -Check $true
+            ApplyPresetToApps -MatchFilter { param($c) $c.SelectedByDefault -eq $true } -Exclusive
         }
         
         UpdateAppSelectionStatus
@@ -1449,8 +1454,7 @@ function Show-MainWindow {
         if ($script:IsLoadingApps) {
             $script:PendingDefaultMode = $true
         } else {
-            ApplyPresetToApps -MatchFilter { param($c) $true } -Check $false
-            ApplyPresetToApps -MatchFilter { param($c) $c.SelectedByDefault -eq $true } -Check $true
+            ApplyPresetToApps -MatchFilter { param($c) $c.SelectedByDefault -eq $true } -Exclusive
         }
 
         # Navigate directly to the Deployment Settings tab

@@ -1234,7 +1234,7 @@ function Show-MainWindow {
                 $appRemovalScopeCombo.SelectedIndex = 0
             }
             1 { 
-                $userSelectionDescription.Text = "Changes will be applied to a different user profile on this system."
+                $userSelectionDescription.Text = "Changes will be applied to a different user profile on this system. Note: changes may not apply correctly if the target user is currently logged in."
                 $otherUserPanel.Visibility = 'Visible'
                 $usernameValidationMessage.Text = ""
                 # Hide "Current user only" option, show "Target user only" option

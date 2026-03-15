@@ -1208,6 +1208,7 @@ function Show-MainWindow {
     }
 
     $previousBtn.Add_Click({        
+        Hide-Bubble -Immediate
         if ($tabControl.SelectedIndex -gt 0) {
             $tabControl.SelectedIndex--
             UpdateNavigationButtons
@@ -1249,11 +1250,17 @@ function Show-MainWindow {
         # Navigate directly to the Deployment Settings tab
         $tabControl.SelectedIndex = 3
         UpdateNavigationButtons
+
+        # Show contextual hint bubble for the Review Changes link
+        $window.Dispatcher.BeginInvoke([System.Windows.Threading.DispatcherPriority]::Loaded, [action]{
+            Show-Bubble -TargetControl $reviewChangesBtn -Message 'View the selected changes here'
+        }) | Out-Null
     })
 
     # Handle Review Changes link button
     $reviewChangesBtn = $window.FindName('ReviewChangesBtn')
     $reviewChangesBtn.Add_Click({
+        Hide-Bubble
         ShowChangesOverview
     })
 
@@ -1264,6 +1271,8 @@ function Show-MainWindow {
             Show-MessageBox -Message "Please enter a valid username." -Title "Invalid Username" -Button 'OK' -Icon 'Warning' | Out-Null
             return
         }
+
+        Hide-Bubble -Immediate
 
         # App Removal - collect selected apps from integrated UI
         $selectedApps = @()

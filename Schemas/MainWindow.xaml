@@ -988,7 +988,7 @@
 
                             <!-- Review & Apply Section -->
                             <StackPanel Grid.Row="1" HorizontalAlignment="Stretch" Background="{DynamicResource BgColor}">
-                                <Button x:Name="ReviewChangesBtn" Background="Transparent" BorderThickness="0" Cursor="Hand" HorizontalAlignment="Center" Margin="0,4,0,8" AutomationProperties.Name="Review selected changes">
+                                <Button x:Name="ReviewChangesBtn" Background="Transparent" BorderThickness="0" Cursor="Hand" HorizontalAlignment="Center" Margin="0,4,0,10" AutomationProperties.Name="Review selected changes">
                                     <Button.Template>
                                         <ControlTemplate TargetType="Button">
                                             <TextBlock x:Name="LinkText" Text="Review selected changes" FontSize="14" Foreground="{DynamicResource ButtonBg}" FontWeight="SemiBold" HorizontalAlignment="Center"/>

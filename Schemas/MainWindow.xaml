@@ -11,6 +11,16 @@
         Background="Transparent"
         Foreground="{DynamicResource FgColor}">
     <Window.Resources>
+        <!-- Sort column header hover style -->
+        <Style x:Key="SortHeaderBtnStyle" TargetType="StackPanel">
+            <Setter Property="Opacity" Value="1.0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Opacity" Value="0.75"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
         <!-- ComboBox Style -->
         <Style TargetType="ComboBox">
             <Setter Property="Background" Value="{DynamicResource ComboBgColor}"/>
@@ -99,13 +109,16 @@
                                 PlacementTarget="{Binding ElementName=ToggleButton}"
                                 VerticalOffset="1"
                                 HorizontalOffset="0">
-                                <Grid x:Name="DropDown" MinWidth="{TemplateBinding ActualWidth}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                <Grid x:Name="DropDown" MinWidth="{TemplateBinding ActualWidth}" MaxHeight="{TemplateBinding MaxDropDownHeight}" Margin="12">
                                     <Border x:Name="DropDownBorder"
                                             Background="{DynamicResource ComboItemBgColor}"
                                             BorderBrush="{DynamicResource BorderColor}"
                                             BorderThickness="1"
                                             CornerRadius="4"
                                             Padding="5,4,5,1">
+                                        <Border.Effect>
+                                            <DropShadowEffect BlurRadius="12" Opacity="0.25" ShadowDepth="4"/>
+                                        </Border.Effect>
                                         <ScrollViewer Margin="0,2,0,0"
                                                     VerticalScrollBarVisibility="Auto"
                                                     HorizontalScrollBarVisibility="Disabled">
@@ -338,7 +351,10 @@
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <Border x:Name="CheckBoxBorder" Grid.Column="0" Width="18" Height="18" Background="{DynamicResource CheckBoxBgColor}" BorderBrush="{DynamicResource CheckBoxBorderColor}" BorderThickness="1" CornerRadius="4" Margin="0,0,8,0">
-                                    <TextBlock x:Name="CheckMark" Text="&#xE73E;" FontFamily="Segoe Fluent Icons" FontSize="12" Foreground="{DynamicResource ButtonBg}" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed"/>
+                                    <Grid>
+                                        <TextBlock x:Name="CheckMark" Text="&#xE73E;" FontFamily="Segoe Fluent Icons" FontSize="12" Foreground="{DynamicResource ButtonBg}" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed"/>
+                                        <TextBlock x:Name="IndeterminateMark" Text="&#xE738;" FontFamily="Segoe Fluent Icons" FontSize="11" Foreground="{DynamicResource ButtonBg}" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed" Margin="1,1,0,0" />
+                                    </Grid>
                                 </Border>
                                 <ContentPresenter Grid.Column="1" VerticalAlignment="Center" Margin="0,0,0,2"/>
                             </Grid>
@@ -352,6 +368,13 @@
                                 <Setter TargetName="CheckBoxBorder" Property="Background" Value="{DynamicResource ButtonBg}"/>
                                 <Setter TargetName="CheckBoxBorder" Property="BorderBrush" Value="{DynamicResource ButtonBg}"/>
                                 <Setter TargetName="CheckMark" Property="Foreground" Value="White"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="{x:Null}">
+                                <Setter TargetName="IndeterminateMark" Property="Visibility" Value="Visible"/>
+                                <Setter TargetName="CheckBoxBorder" Property="Background" Value="{DynamicResource ButtonBg}"/>
+                                <Setter TargetName="CheckBoxBorder" Property="BorderBrush" Value="{DynamicResource ButtonBg}"/>
+                                <Setter TargetName="CheckBoxBorder" Property="Opacity" Value="0.8"/>
+                                <Setter TargetName="IndeterminateMark" Property="Foreground" Value="White"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
                                 <Setter TargetName="CheckBoxBorder" Property="Background" Value="{DynamicResource ButtonDisabled}"/>
@@ -367,6 +390,15 @@
                                 </MultiTrigger.Conditions>
                                 <Setter TargetName="CheckBoxBorder" Property="Background" Value="{DynamicResource ButtonHover}"/>
                                 <Setter TargetName="CheckBoxBorder" Property="BorderBrush" Value="{DynamicResource ButtonHover}"/>
+                            </MultiTrigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsMouseOver" Value="True"/>
+                                    <Condition Property="IsChecked" Value="{x:Null}"/>
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="CheckBoxBorder" Property="Background" Value="{DynamicResource ButtonHover}"/>
+                                <Setter TargetName="CheckBoxBorder" Property="BorderBrush" Value="{DynamicResource ButtonHover}"/>
+                                <Setter TargetName="CheckBoxBorder" Property="Opacity" Value="0.8"/>
                             </MultiTrigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -407,10 +439,37 @@
             <Setter Property="Margin" Value="8,0,8,0"/>
         </Style>
 
-        <!-- Column widths for the apps table row grid -->
-        <GridLength x:Key="AppTableCol0Width">160</GridLength>
-        <GridLength x:Key="AppTableCol1Width">1*</GridLength>
-        <GridLength x:Key="AppTableCol2Width">286</GridLength>
+        <!-- Column widths for the app table rows and header (dot | name | description | id) -->
+        <GridLength x:Key="AppTableDotColWidth">16</GridLength>
+        <GridLength x:Key="AppTableNameColWidth">151</GridLength>
+        <GridLength x:Key="AppTableDescColWidth">1*</GridLength>
+        <GridLength x:Key="AppTableIdColWidth">261</GridLength>
+
+        <!-- Recommendation dot shape style for app table rows -->
+        <Style x:Key="AppRecommendationDotStyle" TargetType="Ellipse">
+            <Setter Property="Width" Value="9"/>
+            <Setter Property="Height" Value="9"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <!-- Container style for each dynamically-created app table row -->
+        <Style x:Key="AppTableRowStyle" TargetType="Grid">
+            <Setter Property="Margin" Value="0,1,0,0"/>
+        </Style>
+
+        <!-- Style for dynamically-created preset checkboxes in the Quick Select popup -->
+        <Style x:Key="PresetCheckBoxStyle" TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
+            <Setter Property="Margin" Value="8,4"/>
+        </Style>
+
+        <!-- Progress step indicator fill colors -->
+        <SolidColorBrush x:Key="ProgressActiveColor" Color="#0067c0"/>
+        <SolidColorBrush x:Key="ProgressInactiveColor" Color="#808080"/>
+
+        <!-- Validation feedback colors for username input -->
+        <SolidColorBrush x:Key="ValidationErrorColor" Color="#c42b1c"/>
+        <SolidColorBrush x:Key="ValidationSuccessColor" Color="#28a745"/>
 
         <!-- Title Bar Button Style -->
         <Style x:Key="TitleBarButton" TargetType="Button">
@@ -450,10 +509,10 @@
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{DynamicResource SecondaryButtonHover}"/>
+                    <Setter Property="Background" Value="{DynamicResource TitlebarButtonHover}"/>
                 </Trigger>
                 <Trigger Property="IsPressed" Value="True">
-                    <Setter Property="Background" Value="{DynamicResource SecondaryButtonPressed}"/>
+                    <Setter Property="Background" Value="{DynamicResource TitlebarButtonPressed}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -480,15 +539,22 @@
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="4"/>
             <Setter Property="HasDropShadow" Value="True"/>
+            <Setter Property="HorizontalOffset" Value="-12"/>
+            <Setter Property="VerticalOffset" Value="-12"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ContextMenu">
-                        <Border Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="4"
-                                Padding="{TemplateBinding Padding}">
-                            <StackPanel IsItemsHost="True"/>
+                        <Border Margin="12">
+                            <Border Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="4"
+                                    Padding="{TemplateBinding Padding}">
+                                <Border.Effect>
+                                    <DropShadowEffect BlurRadius="12" Opacity="0.25" ShadowDepth="4"/>
+                                </Border.Effect>
+                                <StackPanel IsItemsHost="True"/>
+                            </Border>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
@@ -710,9 +776,60 @@
                                     </Grid.ColumnDefinitions>
                                     
                                     <StackPanel Orientation="Horizontal" Grid.Column="0">
-                                        <Button x:Name="DefaultAppsBtn" Content="Select Default Apps" ToolTip="Select the default selection of apps" Style="{DynamicResource SecondaryButtonStyle}" Height="32" Padding="10,0" Margin="0,0,10,0" AutomationProperties.Name="Select Default Apps"/>
-                                        <Button x:Name="LoadLastUsedAppsBtn" Content="Select Last Used Selection" ToolTip="Select the apps that were selected the last time Win11Debloat was run" Style="{DynamicResource SecondaryButtonStyle}" Height="32" Padding="10,0" Margin="0,0,10,0" AutomationProperties.Name="Select Last Used Selection"/>
+                                        <ToggleButton x:Name="PresetsBtn" ToolTip="Select or clear app presets" Height="32" Padding="10,0" Margin="0,0,10,0" AutomationProperties.Name="App Presets">
+                                            <ToggleButton.Style>
+                                                <Style TargetType="ToggleButton">
+                                                    <Setter Property="Background" Value="{DynamicResource SecondaryButtonBg}"/>
+                                                    <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
+                                                    <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderColor}"/>
+                                                    <Setter Property="BorderThickness" Value="1"/>
+                                                    <Setter Property="FontSize" Value="14"/>
+                                                    <Setter Property="Cursor" Value="Hand"/>
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="ToggleButton">
+                                                                <Border x:Name="Border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="4" Padding="{TemplateBinding Padding}">
+                                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,1"/>
+                                                                </Border>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="Background" Value="{DynamicResource SecondaryButtonHover}"/>
+                                                        </Trigger>
+                                                        <Trigger Property="IsPressed" Value="True">
+                                                            <Setter Property="Background" Value="{DynamicResource SecondaryButtonPressed}"/>
+                                                        </Trigger>
+                                                        <Trigger Property="IsChecked" Value="True">
+                                                            <Setter Property="Background" Value="{DynamicResource SecondaryButtonHover}"/>
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ToggleButton.Style>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Quick Select" FontSize="13" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                                <TextBlock x:Name="PresetsArrow" Text="&#xE70D;" FontFamily="Segoe Fluent Icons" FontSize="10" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+                                                    <TextBlock.RenderTransform>
+                                                        <RotateTransform x:Name="PresetsArrowRotation" Angle="0"/>
+                                                    </TextBlock.RenderTransform>
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </ToggleButton>
                                         <Button x:Name="ClearAppSelectionBtn" Content="Clear Selection" ToolTip="Clear all selected apps" Style="{DynamicResource SecondaryButtonStyle}" Height="32"  Padding="10,0" Margin="0,0,10,0" AutomationProperties.Name="Clear Selection"/>
+                                        <Popup x:Name="PresetsPopup" PlacementTarget="{Binding ElementName=PresetsBtn}" Placement="Bottom" StaysOpen="True" AllowsTransparency="True" VerticalOffset="2">
+                                            <Border Background="{DynamicResource CardBgColor}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="6" Padding="4,6" Margin="12">
+                                                <Border.Effect>
+                                                    <DropShadowEffect BlurRadius="12" Opacity="0.25" ShadowDepth="4"/>
+                                                </Border.Effect>
+                                                <StackPanel x:Name="PresetsPanel" MinWidth="220">
+                                                    <CheckBox x:Name="PresetDefaultApps" Content="Default selection" IsThreeState="True" Foreground="{DynamicResource FgColor}" Margin="8,4" AutomationProperties.Name="Default selection"/>
+                                                    <CheckBox x:Name="PresetLastUsed" Content="Last used selection" IsThreeState="True" Foreground="{DynamicResource FgColor}" Margin="8,4" AutomationProperties.Name="Last used selection"/>
+                                                    <Separator Margin="4,6" Background="{DynamicResource BorderColor}"/>
+                                                    <StackPanel x:Name="JsonPresetsPanel"/>
+                                                </StackPanel>
+                                            </Border>
+                                        </Popup>
                                     </StackPanel>
                                     
                                     <CheckBox x:Name="OnlyInstalledAppsBox" Grid.Column="2" Content="Only show installed apps" IsChecked="False" Foreground="{DynamicResource FgColor}" VerticalAlignment="Center" AutomationProperties.Name="Only show installed apps"/>
@@ -754,15 +871,31 @@
                                 </Grid.RowDefinitions>
                                 <!-- Column Headers -->
                                 <Border Grid.Row="0" Background="{DynamicResource TableHeaderColor}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1,1,1,0" CornerRadius="4,4,0,0">
-                                    <Grid Margin="26,6,8,8">
+                                    <Grid Margin="42,6,23,8">
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="160"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="300"/>
+                                            <ColumnDefinition Width="{StaticResource AppTableDotColWidth}"/>
+                                            <ColumnDefinition Width="{StaticResource AppTableNameColWidth}"/>
+                                            <ColumnDefinition Width="{StaticResource AppTableDescColWidth}"/>
+                                            <ColumnDefinition Width="{StaticResource AppTableIdColWidth}"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="Name" FontWeight="SemiBold" FontSize="16" Foreground="{DynamicResource FgColor}" Margin="16,0,0,0"/>
-                                        <TextBlock Grid.Column="1" Text="Description" FontWeight="SemiBold" FontSize="16" Foreground="{DynamicResource FgColor}" Margin="24,0,0,0"/>
-                                        <TextBlock Grid.Column="2" Text="App ID" FontWeight="SemiBold" FontSize="16" Foreground="{DynamicResource FgColor}"/>
+                                        <StackPanel x:Name="HeaderNameBtn" Grid.Column="1" Orientation="Horizontal" Cursor="Hand" VerticalAlignment="Center" Style="{StaticResource SortHeaderBtnStyle}">
+                                            <TextBlock Text="Name" FontWeight="SemiBold" FontSize="16" Foreground="{DynamicResource FgColor}"/>
+                                            <TextBlock x:Name="SortArrowName" Text="&#xE70E;" FontFamily="Segoe Fluent Icons" FontSize="11" Foreground="{DynamicResource FgColor}" VerticalAlignment="Center" Margin="5,1,0,0" Opacity="0.3" RenderTransformOrigin="0.5,0.5">
+                                                <TextBlock.RenderTransform><RotateTransform Angle="0"/></TextBlock.RenderTransform>
+                                            </TextBlock>
+                                        </StackPanel>
+                                        <StackPanel x:Name="HeaderDescriptionBtn" Grid.Column="2" Orientation="Horizontal" Cursor="Hand" VerticalAlignment="Center" Margin="8,0,0,0" Style="{StaticResource SortHeaderBtnStyle}">
+                                            <TextBlock Text="Description" FontWeight="SemiBold" FontSize="16" Foreground="{DynamicResource FgColor}"/>
+                                            <TextBlock x:Name="SortArrowDescription" Text="&#xE70E;" FontFamily="Segoe Fluent Icons" FontSize="11" Foreground="{DynamicResource FgColor}" VerticalAlignment="Center" Margin="5,1,0,0" Opacity="0.3" RenderTransformOrigin="0.5,0.5">
+                                                <TextBlock.RenderTransform><RotateTransform Angle="0"/></TextBlock.RenderTransform>
+                                            </TextBlock>
+                                        </StackPanel>
+                                        <StackPanel x:Name="HeaderAppIdBtn" Grid.Column="3" Orientation="Horizontal" Cursor="Hand" VerticalAlignment="Center" Style="{StaticResource SortHeaderBtnStyle}">
+                                            <TextBlock Text="App ID" FontWeight="SemiBold" FontSize="16" Foreground="{DynamicResource FgColor}"/>
+                                            <TextBlock x:Name="SortArrowAppId" Text="&#xE70E;" FontFamily="Segoe Fluent Icons" FontSize="11" Foreground="{DynamicResource FgColor}" VerticalAlignment="Center" Margin="5,1,0,0" Opacity="0.3" RenderTransformOrigin="0.5,0.5">
+                                                <TextBlock.RenderTransform><RotateTransform Angle="0"/></TextBlock.RenderTransform>
+                                            </TextBlock>
+                                        </StackPanel>
                                     </Grid>
                                 </Border>
                                 <!-- Apps content -->
@@ -772,7 +905,26 @@
                                             <StackPanel x:Name="AppSelectionPanel" Margin="10,4,0,4"/>
                                         </ScrollViewer>
                                         <Border x:Name="LoadingAppsIndicator" CornerRadius="0,0,4,4" Background="{DynamicResource CardBgColor}" Opacity="0.8" Visibility="Collapsed">
-                                            <TextBlock Text="Loading apps..." FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource FgColor}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                <TextBlock Text="&#xF16A;" FontFamily="Segoe Fluent Icons" FontSize="28" Foreground="{DynamicResource FgColor}" HorizontalAlignment="Center" Margin="0,0,0,8" RenderTransformOrigin="0.5,0.5">
+                                                    <TextBlock.RenderTransform>
+                                                        <RotateTransform Angle="0"/>
+                                                    </TextBlock.RenderTransform>
+                                                    <TextBlock.Triggers>
+                                                        <EventTrigger RoutedEvent="Loaded">
+                                                            <BeginStoryboard>
+                                                                <Storyboard>
+                                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)"
+                                                                                     From="0" To="360"
+                                                                                     Duration="0:0:1.5"
+                                                                                     RepeatBehavior="Forever"/>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </EventTrigger>
+                                                    </TextBlock.Triggers>
+                                                </TextBlock>
+                                                <TextBlock Text="Loading apps..." FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource FgColor}" HorizontalAlignment="Center"/>
+                                            </StackPanel>
                                         </Border>
                                     </Grid>
                                 </Border>

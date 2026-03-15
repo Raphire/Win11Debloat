@@ -119,6 +119,7 @@ $script:AboutWindowSchema = "$PSScriptRoot/Schemas/AboutWindow.xaml"
 $script:ApplyChangesWindowSchema = "$PSScriptRoot/Schemas/ApplyChangesWindow.xaml"
 $script:SharedStylesSchema = "$PSScriptRoot/Schemas/SharedStyles.xaml"
 $script:BubbleHintSchema = "$PSScriptRoot/Schemas/BubbleHint.xaml"
+$script:LoadAppsDetailsScriptPath = "$PSScriptRoot/Scripts/FileIO/LoadAppsDetailsFromJson.ps1"
 
 $script:ControlParams = 'WhatIf', 'Confirm', 'Verbose', 'Debug', 'LogPath', 'Silent', 'Sysprep', 'User', 'NoRestartExplorer', 'RunDefaults', 'RunDefaultsLite', 'RunSavedSettings', 'RunAppsListGenerator', 'CLI', 'AppRemovalTarget'
 
@@ -218,15 +219,16 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 
 ##################################################################################################################
 #                                                                                                                #
-#                                          FUNCTION IMPORTS/DEFINITIONS                                          #
+#                                                FUNCTION IMPORTS                                                #
 #                                                                                                                #
 ##################################################################################################################
 
-# Load app removal functions
+# App removal functions
 . "$PSScriptRoot/Scripts/AppRemoval/ForceRemoveEdge.ps1"
 . "$PSScriptRoot/Scripts/AppRemoval/RemoveApps.ps1"
+. "$PSScriptRoot/Scripts/AppRemoval/GetInstalledAppsViaWinget.ps1"
 
-# Load CLI functions
+# CLI functions
 . "$PSScriptRoot/Scripts/CLI/AwaitKeyToExit.ps1"
 . "$PSScriptRoot/Scripts/CLI/ShowCLILastUsedSettings.ps1"  
 . "$PSScriptRoot/Scripts/CLI/ShowCLIDefaultModeAppRemovalOptions.ps1"
@@ -236,7 +238,8 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 . "$PSScriptRoot/Scripts/CLI/PrintPendingChanges.ps1"
 . "$PSScriptRoot/Scripts/CLI/PrintHeader.ps1"
 
-# Load Feature functions
+# Features functions
+. "$PSScriptRoot/Scripts/Features/ExecuteChanges.ps1"
 . "$PSScriptRoot/Scripts/Features/CreateSystemRestorePoint.ps1"
 . "$PSScriptRoot/Scripts/Features/DisableStoreSearchSuggestions.ps1"
 . "$PSScriptRoot/Scripts/Features/EnableWindowsFeature.ps1"
@@ -244,7 +247,17 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 . "$PSScriptRoot/Scripts/Features/ReplaceStartMenu.ps1"
 . "$PSScriptRoot/Scripts/Features/RestartExplorer.ps1"
 
-# Load GUI functions
+# File I/O functions
+. "$PSScriptRoot/Scripts/FileIO/LoadJsonFile.ps1"
+. "$PSScriptRoot/Scripts/FileIO/SaveSettings.ps1"
+. "$PSScriptRoot/Scripts/FileIO/LoadSettings.ps1"
+. "$PSScriptRoot/Scripts/FileIO/SaveCustomAppsListToFile.ps1"
+. "$PSScriptRoot/Scripts/FileIO/ValidateAppslist.ps1"
+. "$PSScriptRoot/Scripts/FileIO/LoadAppsFromFile.ps1"
+. "$PSScriptRoot/Scripts/FileIO/LoadAppsDetailsFromJson.ps1"
+. "$PSScriptRoot/Scripts/FileIO/LoadAppPresetsFromJson.ps1"
+
+# GUI functions
 . "$PSScriptRoot/Scripts/GUI/GetSystemUsesDarkMode.ps1"
 . "$PSScriptRoot/Scripts/GUI/SetWindowThemeResources.ps1"
 . "$PSScriptRoot/Scripts/GUI/AttachShiftClickBehavior.ps1"
@@ -256,467 +269,19 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 . "$PSScriptRoot/Scripts/GUI/Show-AboutDialog.ps1"
 . "$PSScriptRoot/Scripts/GUI/Show-Bubble.ps1"
 
-# Load File I/O functions
-. "$PSScriptRoot/Scripts/FileIO/LoadJsonFile.ps1"
-. "$PSScriptRoot/Scripts/FileIO/SaveSettings.ps1"
-. "$PSScriptRoot/Scripts/FileIO/LoadSettings.ps1"
-. "$PSScriptRoot/Scripts/FileIO/SaveCustomAppsListToFile.ps1"
-. "$PSScriptRoot/Scripts/FileIO/ValidateAppslist.ps1"
-. "$PSScriptRoot/Scripts/FileIO/LoadAppsFromFile.ps1"
-. "$PSScriptRoot/Scripts/FileIO/LoadAppsDetailsFromJson.ps1"
+# Helper functions
+. "$PSScriptRoot/Scripts/Helpers/AddParameter.ps1"
+. "$PSScriptRoot/Scripts/Helpers/CheckIfUserExists.ps1"
+. "$PSScriptRoot/Scripts/Helpers/CheckModernStandbySupport.ps1"
+. "$PSScriptRoot/Scripts/Helpers/GenerateAppsList.ps1"
+. "$PSScriptRoot/Scripts/Helpers/GetFriendlyTargetUserName.ps1"
+. "$PSScriptRoot/Scripts/Helpers/GetTargetUserForAppRemoval.ps1"
+. "$PSScriptRoot/Scripts/Helpers/GetUserDirectory.ps1"
+. "$PSScriptRoot/Scripts/Helpers/GetUserName.ps1"
 
-# Processes all pending WPF window messages (input, render, etc.) to keep the UI responsive
-# during long-running operations on the UI thread. Equivalent to Application.DoEvents().
-function DoEvents {
-    if (-not $script:GuiWindow) { return }
-    $frame = [System.Windows.Threading.DispatcherFrame]::new()
-    [System.Windows.Threading.Dispatcher]::CurrentDispatcher.BeginInvoke(
-        [System.Windows.Threading.DispatcherPriority]::Background,
-        [System.Windows.Threading.DispatcherOperationCallback]{
-            param($f)
-            $f.Continue = $false
-            return $null
-        },
-        $frame
-    )
-    [System.Windows.Threading.Dispatcher]::PushFrame($frame)
-}
-
-
-# Runs a scriptblock in a background PowerShell runspace while keeping the UI responsive.
-# In GUI mode, the work executes on a separate thread and the UI thread pumps messages (~60fps).
-# In CLI mode, the scriptblock runs directly in the current session.
-function Invoke-NonBlocking {
-    param(
-        [scriptblock]$ScriptBlock,
-        [object[]]$ArgumentList = @()
-    )
-
-    if (-not $script:GuiWindow) {
-        return (& $ScriptBlock @ArgumentList)
-    }
-
-    $ps = [powershell]::Create()
-    try {
-        $null = $ps.AddScript($ScriptBlock.ToString())
-        foreach ($arg in $ArgumentList) {
-            $null = $ps.AddArgument($arg)
-        }
-
-        $handle = $ps.BeginInvoke()
-
-        while (-not $handle.IsCompleted) {
-            DoEvents
-            Start-Sleep -Milliseconds 16
-        }
-
-        $result = $ps.EndInvoke($handle)
-
-        if ($result.Count -eq 0) { return $null }
-        if ($result.Count -eq 1) { return $result[0] }
-        return @($result)
-    }
-    finally {
-        $ps.Dispose()
-    }
-}
-
-
-# Add parameter to script and write to file
-function AddParameter {
-    param (
-        $parameterName,
-        $value = $true
-    )
-
-    # Add parameter or update its value if key already exists
-    if (-not $script:Params.ContainsKey($parameterName)) {
-        $script:Params.Add($parameterName, $value)
-    }
-    else {
-        $script:Params[$parameterName] = $value
-    }
-}
-
-
-# Run winget list and return installed apps (sync or async)
-function GetInstalledAppsViaWinget {
-    param (
-        [int]$TimeOut = 10,
-        [switch]$Async
-    )
-
-    if (-not $script:WingetInstalled) { return $null }
-
-    if ($Async) {
-        $wingetListJob = Start-Job { return winget list --accept-source-agreements --disable-interactivity }
-        return @{ Job = $wingetListJob; StartTime = Get-Date }
-    }
-    else {
-        $wingetListJob = Start-Job { return winget list --accept-source-agreements --disable-interactivity }
-        $jobDone = $wingetListJob | Wait-Job -TimeOut $TimeOut
-        if (-not $jobDone) {
-            Remove-Job -Job $wingetListJob -Force -ErrorAction SilentlyContinue
-            return $null
-        }
-        $result = Receive-Job -Job $wingetListJob
-        Remove-Job -Job $wingetListJob -ErrorAction SilentlyContinue
-        return $result
-    }
-}
-
-
-function GetUserName {
-    if ($script:Params.ContainsKey("User")) {
-        return $script:Params.Item("User")
-    }
-
-    return $env:USERNAME
-}
-
-
-
-# Returns the directory path of the specified user, exits script if user path can't be found
-function GetUserDirectory {
-    param (
-        $userName,
-        $fileName = "",
-        $exitIfPathNotFound = $true
-    )
-
-    try {
-        if (-not (CheckIfUserExists -userName $userName) -and $userName -ne "*") {
-            Write-Error "User $userName does not exist on this system"
-            AwaitKeyToExit
-        }
-
-        $userDirectoryExists = Test-Path "$env:SystemDrive\Users\$userName"
-        $userPath = "$env:SystemDrive\Users\$userName\$fileName"
-
-        if ((Test-Path $userPath) -or ($userDirectoryExists -and (-not $exitIfPathNotFound))) {
-            return $userPath
-        }
-
-        $userDirectoryExists = Test-Path ($env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), "\$userName")
-        $userPath = $env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), "\$userName\$fileName"
-
-        if ((Test-Path $userPath) -or ($userDirectoryExists -and (-not $exitIfPathNotFound))) {
-            return $userPath
-        }
-    }
-    catch {
-        Write-Error "Something went wrong when trying to find the user directory path for user $userName. Please ensure the user exists on this system"
-        AwaitKeyToExit
-    }
-
-    Write-Error "Unable to find user directory path for user $userName"
-    AwaitKeyToExit
-}
-
-
-function CheckIfUserExists {
-    param (
-        $userName
-    )
-
-    if ($userName -match '[<>:"|?*]') {
-        return $false
-    }
-
-    if ([string]::IsNullOrWhiteSpace($userName)) {
-        return $false
-    }
-
-    try {
-        $userExists = Test-Path "$env:SystemDrive\Users\$userName"
-
-        if ($userExists) {
-            return $true
-        }
-
-        $userExists = Test-Path ($env:USERPROFILE -Replace ('\\' + $env:USERNAME + '$'), "\$userName")
-
-        if ($userExists) {
-            return $true
-        }
-    }
-    catch {
-        Write-Error "Something went wrong when trying to find the user directory path for user $userName. Please ensure the user exists on this system"
-    }
-
-    return $false
-}
-
-
-# Target is determined from $script:Params["AppRemovalTarget"] or defaults to "AllUsers"
-# Target values: "AllUsers" (removes for all users + from image), "CurrentUser", or a specific username
-function GetTargetUserForAppRemoval {
-    if ($script:Params.ContainsKey("AppRemovalTarget")) {
-        return $script:Params["AppRemovalTarget"]
-    }
-    
-    return "AllUsers"
-}
-
-
-function GetFriendlyTargetUserName {
-    $target = GetTargetUserForAppRemoval
-
-    switch ($target) {
-        "AllUsers" { return "all users" }
-        "CurrentUser" { return "the current user" }
-        default { return "user $target" }
-    }
-}
-
-
-# Check if this machine supports S0 Modern Standby power state. Returns true if S0 Modern Standby is supported, false otherwise.
-function CheckModernStandbySupport {
-    $count = 0
-
-    try {
-        switch -Regex (powercfg /a) {
-            ':' {
-                $count += 1
-            }
-
-            '(.*S0.{1,}\))' {
-                if ($count -eq 1) {
-                    return $true
-                }
-            }
-        }
-    }
-    catch {
-        Write-Host "Error: Unable to check for S0 Modern Standby support, powercfg command failed" -ForegroundColor Red
-        Write-Host ""
-        Write-Host "Press any key to continue..."
-        $null = [System.Console]::ReadKey()
-        return $true
-    }
-
-    return $false
-}
-
-
-# Generates a list of apps to remove based on the Apps parameter
-function GenerateAppsList {
-    if (-not ($script:Params["Apps"] -and $script:Params["Apps"] -is [string])) {
-        return @()
-    }
-
-    $appMode = $script:Params["Apps"].toLower()
-
-    switch ($appMode) {
-        'default' {
-            $appsList = LoadAppsFromFile $script:AppsListFilePath
-            return $appsList
-        }
-        default {
-            $appsList = $script:Params["Apps"].Split(',') | ForEach-Object { $_.Trim() }
-            $validatedAppsList = ValidateAppslist $appsList
-            return $validatedAppsList
-        }
-    }
-}
-
-# Executes a single parameter/feature based on its key
-# Parameters:
-#   $paramKey - The parameter name to execute
-function ExecuteParameter {
-    param (
-        [string]$paramKey
-    )
-    
-    # Check if this feature has metadata in Features.json
-    $feature = $null
-    if ($script:Features.ContainsKey($paramKey)) {
-        $feature = $script:Features[$paramKey]
-    }
-    
-    # If feature has RegistryKey and ApplyText, use dynamic ImportRegistryFile
-    if ($feature -and $feature.RegistryKey -and $feature.ApplyText) {
-        ImportRegistryFile "> $($feature.ApplyText)" $feature.RegistryKey
-        
-        # Handle special cases that have additional logic after ImportRegistryFile
-        switch ($paramKey) {
-            'DisableBing' {
-                # Also remove the app package for Bing search
-                RemoveApps 'Microsoft.BingSearch'
-            }
-            'DisableCopilot' {
-                # Also remove the app package for Copilot
-                RemoveApps 'Microsoft.Copilot'
-            }
-            'DisableWidgets' {
-                # Also remove the app package for Widgets
-                RemoveApps 'Microsoft.StartExperiencesApp'
-            }
-        }
-        return
-    }
-    
-    # Handle features without RegistryKey or with special logic
-    switch ($paramKey) {
-        'RemoveApps' {
-            Write-Host "> Removing selected apps for $(GetFriendlyTargetUserName)..."
-            $appsList = GenerateAppsList
-
-            if ($appsList.Count -eq 0) {
-                Write-Host "No valid apps were selected for removal" -ForegroundColor Yellow
-                Write-Host ""
-                return
-            }
-
-            Write-Host "$($appsList.Count) apps selected for removal"
-            RemoveApps $appsList
-        }
-        'RemoveAppsCustom' {
-            Write-Host "> Removing selected apps..."
-            $appsList = LoadAppsFromFile $script:CustomAppsListFilePath
-
-            if ($appsList.Count -eq 0) {
-                Write-Host "No valid apps were selected for removal" -ForegroundColor Yellow
-                Write-Host ""
-                return
-            }
-
-            Write-Host "$($appsList.Count) apps selected for removal"
-            RemoveApps $appsList
-        }
-        'RemoveCommApps' {
-            $appsList = 'Microsoft.windowscommunicationsapps', 'Microsoft.People'
-            Write-Host "> Removing Mail, Calendar and People apps..."
-            RemoveApps $appsList
-            return
-        }
-        'RemoveW11Outlook' {
-            $appsList = 'Microsoft.OutlookForWindows'
-            Write-Host "> Removing new Outlook for Windows app..."
-            RemoveApps $appsList
-            return
-        }
-        'RemoveGamingApps' {
-            $appsList = 'Microsoft.GamingApp', 'Microsoft.XboxGameOverlay', 'Microsoft.XboxGamingOverlay'
-            Write-Host "> Removing gaming related apps..."
-            RemoveApps $appsList
-            return
-        }
-        'RemoveHPApps' {
-            $appsList = 'AD2F1837.HPAIExperienceCenter', 'AD2F1837.HPJumpStarts', 'AD2F1837.HPPCHardwareDiagnosticsWindows', 'AD2F1837.HPPowerManager', 'AD2F1837.HPPrivacySettings', 'AD2F1837.HPSupportAssistant', 'AD2F1837.HPSureShieldAI', 'AD2F1837.HPSystemInformation', 'AD2F1837.HPQuickDrop', 'AD2F1837.HPWorkWell', 'AD2F1837.myHP', 'AD2F1837.HPDesktopSupportUtilities', 'AD2F1837.HPQuickTouch', 'AD2F1837.HPEasyClean', 'AD2F1837.HPConnectedMusic', 'AD2F1837.HPFileViewer', 'AD2F1837.HPRegistration', 'AD2F1837.HPWelcome', 'AD2F1837.HPConnectedPhotopoweredbySnapfish', 'AD2F1837.HPPrinterControl'
-            Write-Host "> Removing HP apps..."
-            RemoveApps $appsList
-            return
-        }
-        "EnableWindowsSandbox" {
-            Write-Host "> Enabling Windows Sandbox..."
-            EnableWindowsFeature "Containers-DisposableClientVM"
-            Write-Host ""
-            return
-        }
-        "EnableWindowsSubsystemForLinux" {
-            Write-Host "> Enabling Windows Subsystem for Linux..."
-            EnableWindowsFeature "VirtualMachinePlatform"
-            EnableWindowsFeature "Microsoft-Windows-Subsystem-Linux"
-            Write-Host ""
-            return
-        }
-        'ClearStart' {
-            Write-Host "> Removing all pinned apps from the start menu for user $(GetUserName)..."
-            ReplaceStartMenu
-            Write-Host ""
-            return
-        }
-        'ReplaceStart' {
-            Write-Host "> Replacing the start menu for user $(GetUserName)..."
-            ReplaceStartMenu $script:Params.Item("ReplaceStart")
-            Write-Host ""
-            return
-        }
-        'ClearStartAllUsers' {
-            ReplaceStartMenuForAllUsers
-            return
-        }
-        'ReplaceStartAllUsers' {
-            ReplaceStartMenuForAllUsers $script:Params.Item("ReplaceStartAllUsers")
-            return
-        }
-        'DisableStoreSearchSuggestions' {
-            if ($script:Params.ContainsKey("Sysprep")) {
-                Write-Host "> Disabling Microsoft Store search suggestions in the start menu for all users..."
-                DisableStoreSearchSuggestionsForAllUsers
-                Write-Host ""
-                return
-            }
-
-            Write-Host "> Disabling Microsoft Store search suggestions for user $(GetUserName)..."
-            DisableStoreSearchSuggestions
-            Write-Host ""
-            return
-        }
-    }
-}
-
-
-# Executes all selected parameters/features
-# Parameters:
-function ExecuteAllChanges {    
-    # Build list of actionable parameters (skip control params and data-only params)
-    $actionableKeys = @()
-    foreach ($paramKey in $script:Params.Keys) {
-        if ($script:ControlParams -contains $paramKey) { continue }
-        if ($paramKey -eq 'Apps') { continue }
-        if ($paramKey -eq 'CreateRestorePoint') { continue }
-        $actionableKeys += $paramKey
-    }
-    
-    $totalSteps = $actionableKeys.Count
-    if ($script:Params.ContainsKey("CreateRestorePoint")) { $totalSteps++ }
-    $currentStep = 0
-    
-    # Create restore point if requested (CLI only - GUI handles this separately)
-    if ($script:Params.ContainsKey("CreateRestorePoint")) {
-        $currentStep++
-        if ($script:ApplyProgressCallback) {
-            & $script:ApplyProgressCallback $currentStep $totalSteps "Creating system restore point"
-        }
-        Write-Host "> Attempting to create a system restore point..."
-        CreateSystemRestorePoint
-        Write-Host ""
-    }
-    
-    # Execute all parameters
-    foreach ($paramKey in $actionableKeys) {
-        if ($script:CancelRequested) { 
-            return
-        }
-
-        $currentStep++
-        
-        # Get friendly name for the step
-        $stepName = $paramKey
-        if ($script:Features.ContainsKey($paramKey)) {
-            $feature = $script:Features[$paramKey]
-            if ($feature.ApplyText) {
-                # Prefer explicit ApplyText when provided
-                $stepName = $feature.ApplyText
-            } elseif ($feature.Label) {
-                # Fallback: construct a name from Action and Label, or just Label
-                if ($feature.Action) {
-                    $stepName = "$($feature.Action) $($feature.Label)"
-                } else {
-                    $stepName = $feature.Label
-                }
-            }
-        }
-        
-        if ($script:ApplyProgressCallback) {
-            & $script:ApplyProgressCallback $currentStep $totalSteps $stepName
-        }
-        
-        ExecuteParameter -paramKey $paramKey
-    }
-}
+# Threading functions
+. "$PSScriptRoot/Scripts/Threading/DoEvents.ps1"
+. "$PSScriptRoot/Scripts/Threading/Invoke-NonBlocking.ps1"
 
 
 

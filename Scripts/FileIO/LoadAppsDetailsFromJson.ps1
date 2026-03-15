@@ -39,6 +39,7 @@ function LoadAppsDetailsFromJson {
             IsChecked = $isChecked
             Description = $appData.Description
             SelectedByDefault = $appData.SelectedByDefault
+            Recommendation = $appData.Recommendation
         }
     }
 

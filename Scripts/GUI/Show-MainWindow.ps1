@@ -709,6 +709,11 @@ function Show-MainWindow {
             return
         }
 
+        $brushSafe    = [System.Windows.Media.BrushConverter]::new().ConvertFromString('#4CAF50')
+        $brushUnsafe  = [System.Windows.Media.BrushConverter]::new().ConvertFromString('#F44336')
+        $brushDefault = [System.Windows.Media.BrushConverter]::new().ConvertFromString('#FFC107')
+        $brushSafe.Freeze(); $brushUnsafe.Freeze(); $brushDefault.Freeze()
+
         # Create WPF controls; pump the Dispatcher every batch so the spinner keeps animating.
         $batchSize = 20
         for ($i = 0; $i -lt $appsToAdd.Count; $i++) {
@@ -733,8 +738,7 @@ function Show-MainWindow {
 
             $dot = New-Object System.Windows.Shapes.Ellipse
             $dot.Style = $window.Resources['AppRecommendationDotStyle']
-            $dotColor  = switch ($app.Recommendation) { 'safe' { '#4CAF50' } 'unsafe' { '#F44336' } default { '#FFC107' } }
-            $dot.Fill  = [System.Windows.Media.BrushConverter]::new().ConvertFromString($dotColor)
+            $dot.Fill  = switch ($app.Recommendation) { 'safe' { $brushSafe } 'unsafe' { $brushUnsafe } default { $brushDefault } }
             $dot.ToolTip = switch ($app.Recommendation) {
                 'safe'   { 'Safe to remove' }
                 'unsafe' { 'Caution, removal is not recommended' }

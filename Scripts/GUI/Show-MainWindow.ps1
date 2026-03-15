@@ -789,6 +789,7 @@ function Show-MainWindow {
         # If Default Mode was clicked while apps were still loading, apply defaults now
         if ($script:PendingDefaultMode) {
             $script:PendingDefaultMode = $false
+            ApplyPresetToApps -MatchFilter { param($c) $true } -Check $false
             ApplyPresetToApps -MatchFilter { param($c) $c.SelectedByDefault -eq $true } -Check $true
         }
         
@@ -1444,10 +1445,11 @@ function Show-MainWindow {
             ApplySettingsToUiControls -window $window -settingsJson $defaultsJson -uiControlMappings $script:UiControlMappings
         }
 
-        # Select default apps (defer if apps are still loading in the background)
+        # Deselect all apps, then select default apps (defer if apps are still loading in the background)
         if ($script:IsLoadingApps) {
             $script:PendingDefaultMode = $true
         } else {
+            ApplyPresetToApps -MatchFilter { param($c) $true } -Check $false
             ApplyPresetToApps -MatchFilter { param($c) $c.SelectedByDefault -eq $true } -Check $true
         }
 

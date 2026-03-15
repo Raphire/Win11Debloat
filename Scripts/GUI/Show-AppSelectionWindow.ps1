@@ -143,7 +143,7 @@ function Show-AppSelectionWindow {
 
     # Load apps after window is shown (allows UI to render first)
     $window.Add_ContentRendered({ 
-        $window.Dispatcher.Invoke([System.Windows.Threading.DispatcherPriority]::Background, [action]{ LoadApps })
+        $window.Dispatcher.Invoke([System.Windows.Threading.DispatcherPriority]::Background, [action]{ LoadApps }) | Out-Null
     })
 
     # Show the window and return dialog result

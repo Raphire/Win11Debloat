@@ -97,23 +97,23 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 #### AI Features
 
 - Disable & remove Microsoft Copilot.
-- Disable Windows Recall. (W11 only)
-- Disable Click to Do, AI text & image analysis tool. (W11 only)
-- Prevent AI service (WSAIFabricSvc) from starting automatically. (W11 only)
-- Disable AI Features in Edge. (W11 only)
-- Disable AI Features in Paint. (W11 only)
-- Disable AI Features in Notepad. (W11 only)
+- Disable Windows Recall.
+- Disable Click to Do, AI text & image analysis tool.
+- Prevent AI service (WSAIFabricSvc) from starting automatically.
+- Disable AI Features in Edge.
+- Disable AI Features in Paint.
+- Disable AI Features in Notepad.
 
 #### System
 
-- Disable the Drag Tray for sharing & moving files. (W11 only)
-- Restore the old Windows 10 style context menu. (W11 only)
+- Disable the Drag Tray for sharing & moving files.
+- Restore the old Windows 10 style context menu.
 - Turn off Enhance Pointer Precision, also known as mouse acceleration.
-- Disable the Sticky Keys keyboard shortcut. (W11 only)
+- Disable the Sticky Keys keyboard shortcut.
 - Disable Storage Sense automatic disk cleanup.
 - Disable fast start-up to ensure a full shutdown.
 - Disable BitLocker automatic device encryption.
-- Disable network connectivity during Modern Standby to reduce battery drain. (W11 only)
+- Disable network connectivity during Modern Standby to reduce battery drain.
 
 #### Windows Update
 
@@ -129,49 +129,49 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 
 #### Start Menu & Search
 
-- Remove or replace all pinned apps from the start menu. (W11 only)
-- Hide the recommended section in the start menu. (W11 only)
-- Hide the 'All Apps' section in the start menu. (W11 only)
-- Disable the Phone Link mobile devices integration in the start menu. (W11 only)
+- Remove or replace all pinned apps from the start menu.
+- Hide the recommended section in the start menu.
+- Hide the 'All Apps' section in the start menu.
+- Disable the Phone Link mobile devices integration in the start menu.
 - Disable Bing web search & Copilot integration in Windows search.
-- Disable Microsoft Store app suggestions in Windows search. (W11 only)
-- Disable Search Highlights (dynamic/branded content) in the taskbar search box. (W11 only)
+- Disable Microsoft Store app suggestions in Windows search.
+- Disable Search Highlights (dynamic/branded content) in the taskbar search box.
 - Disable local Windows search history.
 
 #### Taskbar
 
-- Align taskbar icons to the left. (W11 only)
-- Hide or change the search icon/box on the taskbar. (W11 only)
-- Hide the taskview button from the taskbar. (W11 only)
+- Align taskbar icons to the left.
+- Hide or change the search icon/box on the taskbar.
+- Hide the taskview button from the taskbar.
 - Disable widgets on the taskbar & lock screen.
-- Hide the chat (meet now) icon from the taskbar. (W10 only)
-- Enable the 'End Task' option in the taskbar right click menu. (W11 only)
+- Hide the chat (meet now) icon from the taskbar.
+- Enable the 'End Task' option in the taskbar right click menu.
 - Enable the 'Last Active Click' behavior in the taskbar app area. This allows you to repeatedly click on an application's icon in the taskbar to switch focus between the open windows of that application.
-- Choose how app icons are shown on the taskbar when using multiple monitors. (W11 only)
-- Choose combine mode for taskbar buttons and labels. (W11 only)
+- Choose how app icons are shown on the taskbar when using multiple monitors.
+- Choose combine mode for taskbar buttons and labels.
 
 #### File Explorer
 
 - Change the default location that File Explorer opens to.
 - Show file extensions for known file types.
 - Show hidden files, folders and drives.
-- Hide the Home or Gallery section from the File Explorer navigation pane. (W11 only)
+- Hide the Home or Gallery section from the File Explorer navigation pane.
 - Hide duplicate removable drive entries from the File Explorer navigation pane, so only the entry under 'This PC' remains.
-- Add all common folders (Desktop, Downloads, etc.) back to 'This PC' in File Explorer. (W11 only)
-- Hide the 3D objects, music or OneDrive folder from the File Explorer navigation pane. (W10 only)
-- Hide the 'Include in library', 'Give access to' and 'Share' options from the context menu. (W10 only)
+- Add all common folders (Desktop, Downloads, etc.) back to 'This PC' in File Explorer.
+- Hide the 3D objects, music or OneDrive folder from the File Explorer navigation pane.
+- Hide the 'Include in library', 'Give access to' and 'Share' options from the context menu.
 
 #### Multi-tasking
 
-- Disable window snapping. (W11 only)
-- Disable Snap Assist suggestions when snapping a window. (W11 only)
-- Disable Snap Layout suggestions when dragging windows to the top of screen and when hovering on the maximize button. (W11 only)
-- Change if tabs are shown when snapping or pressing Alt+Tab. (W11 only)
+- Disable window snapping.
+- Disable Snap Assist suggestions when snapping a window.
+- Disable Snap Layout suggestions when dragging windows to the top of screen and when hovering on the maximize button.
+- Change if tabs are shown when snapping or pressing Alt+Tab.
 
 #### Optional Windows Features
 
-- Enable Windows Sandbox, a lightweight desktop environment for safely running applications in isolation. (W11 only)
-- Enable Windows Subsystem for Linux which allows you to run a Linux environment directly on Windows. (W11 only)
+- Enable Windows Sandbox, a lightweight desktop environment for safely running applications in isolation.
+- Enable Windows Subsystem for Linux which allows you to run a Linux environment directly on Windows.
 
 #### Other
 

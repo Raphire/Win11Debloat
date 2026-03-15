@@ -5,30 +5,24 @@ function CreateSystemRestorePoint {
     if ($SysRestore.RPSessionInterval -eq 0) {
         # In GUI mode, skip the prompt and just try to enable it
         if ($script:GuiWindow -or $Silent -or $( Read-Host -Prompt "System restore is disabled, would you like to enable it and create a restore point? (y/n)") -eq 'y') {
-            $enableSystemRestoreJob = Start-Job {
-                try {
-                    Enable-ComputerRestore -Drive "$env:SystemDrive"
+            try {
+                $enableResult = Invoke-NonBlocking -TimeoutSeconds 20 -ScriptBlock {
+                    try {
+                        Enable-ComputerRestore -Drive "$env:SystemDrive"
+                        return $null
+                    }
+                    catch {
+                        return "Error: Failed to enable System Restore: $_"
+                    }
                 }
-                catch {
-                    return "Error: Failed to enable System Restore: $_"
-                }
-                return $null
+            }
+            catch {
+                $enableResult = "Error: Failed to enable System Restore: $_"
             }
 
-            $enableSystemRestoreJobDone = $enableSystemRestoreJob | Wait-Job -TimeOut 20
-
-            if (-not $enableSystemRestoreJobDone) {
-                Remove-Job -Job $enableSystemRestoreJob -Force -ErrorAction SilentlyContinue
-                Write-Host "Error: Failed to enable system restore and create restore point, operation timed out" -ForegroundColor Red
+            if ($enableResult) {
+                Write-Host $enableResult -ForegroundColor Red
                 $failed = $true
-            }
-            else {
-                $result = Receive-Job $enableSystemRestoreJob
-                Remove-Job -Job $enableSystemRestoreJob -ErrorAction SilentlyContinue
-                if ($result) {
-                    Write-Host $result -ForegroundColor Red
-                    $failed = $true
-                }
             }
         }
         else {
@@ -38,46 +32,43 @@ function CreateSystemRestorePoint {
     }
 
     if (-not $failed) {
-        $createRestorePointJob = Start-Job {
-            # Find existing restore points that are less than 24 hours old
-            try {
-                $recentRestorePoints = Get-ComputerRestorePoint | Where-Object { (Get-Date) - [System.Management.ManagementDateTimeConverter]::ToDateTime($_.CreationTime) -le (New-TimeSpan -Hours 24) }
-            }
-            catch {
-                return @{ Success = $false; Message = "Error: Unable to retrieve existing restore points: $_" }
-            }
-
-            if ($recentRestorePoints.Count -eq 0) {
+        try {
+            $result = Invoke-NonBlocking -TimeoutSeconds 20 -ScriptBlock {
                 try {
-                    Checkpoint-Computer -Description "Restore point created by Win11Debloat" -RestorePointType "MODIFY_SETTINGS"
-                    return @{ Success = $true; Message = "System restore point created successfully" }
+                    $recentRestorePoints = Get-ComputerRestorePoint | Where-Object { (Get-Date) - [System.Management.ManagementDateTimeConverter]::ToDateTime($_.CreationTime) -le (New-TimeSpan -Hours 24) }
                 }
                 catch {
-                    return @{ Success = $false; Message = "Error: Unable to create restore point: $_" }
+                    return [PSCustomObject]@{ Success = $false; Message = "Error: Unable to retrieve existing restore points: $_" }
+                }
+
+                if ($recentRestorePoints.Count -eq 0) {
+                    try {
+                        Checkpoint-Computer -Description "Restore point created by Win11Debloat" -RestorePointType "MODIFY_SETTINGS"
+                        return [PSCustomObject]@{ Success = $true; Message = "System restore point created successfully" }
+                    }
+                    catch {
+                        return [PSCustomObject]@{ Success = $false; Message = "Error: Unable to create restore point: $_" }
+                    }
+                }
+                else {
+                    return [PSCustomObject]@{ Success = $true; Message = "A recent restore point already exists, no new restore point was created" }
                 }
             }
-            else {
-                return @{ Success = $true; Message = "A recent restore point already exists, no new restore point was created" }
-            }
+        }
+        catch {
+            $result = [PSCustomObject]@{ Success = $false; Message = "Error: Failed to create system restore point: $_" }
         }
 
-        $createRestorePointJobDone = $createRestorePointJob | Wait-Job -TimeOut 20
-
-        if (-not $createRestorePointJobDone) {
-            Remove-Job -Job $createRestorePointJob -Force -ErrorAction SilentlyContinue
-            Write-Host "Error: Failed to create system restore point, operation timed out" -ForegroundColor Red
+        if ($result -and $result.Success) {
+            Write-Host $result.Message
+        }
+        elseif ($result) {
+            Write-Host $result.Message -ForegroundColor Red
             $failed = $true
         }
         else {
-            $result = Receive-Job $createRestorePointJob
-            Remove-Job -Job $createRestorePointJob -ErrorAction SilentlyContinue
-            if ($result.Success) {
-                Write-Host $result.Message
-            }
-            else {
-                Write-Host $result.Message -ForegroundColor Red
-                $failed = $true
-            }
+            Write-Host "Error: Failed to create system restore point" -ForegroundColor Red
+            $failed = $true
         }
     }
 

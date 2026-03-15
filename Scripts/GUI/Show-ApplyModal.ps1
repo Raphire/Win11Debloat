@@ -216,7 +216,7 @@ function Show-ApplyModal {
             $script:ApplyProgressCallback = $null
             $script:ApplySubStepCallback = $null
         }
-    })
+    }) | Out-Null
     
     # Button handlers
     $applyCloseBtn.Add_Click({

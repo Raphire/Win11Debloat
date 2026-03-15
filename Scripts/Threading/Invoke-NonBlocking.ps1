@@ -8,7 +8,8 @@ function Invoke-NonBlocking {
         [int]$TimeoutSeconds = 0
     )
 
-    if (-not $script:GuiWindow) {
+    # CLI mode without timeout: run directly in-process
+    if (-not $script:GuiWindow -and $TimeoutSeconds -eq 0) {
         return (& $ScriptBlock @ArgumentList)
     }
 
@@ -21,15 +22,25 @@ function Invoke-NonBlocking {
 
         $handle = $ps.BeginInvoke()
 
-        $stopwatch = if ($TimeoutSeconds -gt 0) { [System.Diagnostics.Stopwatch]::StartNew() } else { $null }
+        if ($script:GuiWindow) {
+            # GUI mode: pump UI messages while waiting
+            $stopwatch = if ($TimeoutSeconds -gt 0) { [System.Diagnostics.Stopwatch]::StartNew() } else { $null }
 
-        while (-not $handle.IsCompleted) {
-            if ($stopwatch -and $stopwatch.Elapsed.TotalSeconds -ge $TimeoutSeconds) {
+            while (-not $handle.IsCompleted) {
+                if ($stopwatch -and $stopwatch.Elapsed.TotalSeconds -ge $TimeoutSeconds) {
+                    $ps.Stop()
+                    throw "Operation timed out after $TimeoutSeconds seconds"
+                }
+                DoEvents
+                Start-Sleep -Milliseconds 16
+            }
+        }
+        else {
+            # CLI mode with timeout: block until completion or timeout
+            if (-not $handle.AsyncWaitHandle.WaitOne($TimeoutSeconds * 1000)) {
                 $ps.Stop()
                 throw "Operation timed out after $TimeoutSeconds seconds"
             }
-            DoEvents
-            Start-Sleep -Milliseconds 16
         }
 
         $result = $ps.EndInvoke($handle)

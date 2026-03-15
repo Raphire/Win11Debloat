@@ -1726,7 +1726,7 @@ function Show-MainWindow {
         }
     })
 
-    # Preload app data in the background to speed up loading when user navigates to App Removal tab
+    # Preload app data to speed up loading when user navigates to App Removal tab
     try {
         $script:PreloadedAppData = LoadAppsDetailsFromJson -OnlyInstalled:$false -InstalledList '' -InitialCheckedFromJson:$false
     }

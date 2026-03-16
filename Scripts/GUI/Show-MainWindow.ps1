@@ -292,6 +292,26 @@ function Show-MainWindow {
         }
     }
 
+    # Rebuilds $script:AppSearchMatches by scanning appsPanel children in their current order,
+    # collecting any that are still highlighted. Preserves the active match across reorderings.
+    function RebuildAppSearchIndex {
+        param($activeMatch = $null)
+        $newMatches = @()
+        $newActiveIndex = -1
+        $i = 0
+        foreach ($child in $appsPanel.Children) {
+            if ($child -is [System.Windows.Controls.CheckBox] -and $child.Background -ne [System.Windows.Media.Brushes]::Transparent) {
+                $newMatches += $child
+                if ($null -ne $activeMatch -and [System.Object]::ReferenceEquals($child, $activeMatch)) {
+                    $newActiveIndex = $i
+                }
+                $i++
+            }
+        }
+        $script:AppSearchMatches = $newMatches
+        $script:AppSearchMatchIndex = if ($newActiveIndex -ge 0) { $newActiveIndex } elseif ($newMatches.Count -gt 0) { 0 } else { -1 }
+    }
+
     function SortApps {
         $children = @($appsPanel.Children)
         $key = switch ($script:SortColumn) {
@@ -305,6 +325,14 @@ function Show-MainWindow {
             $appsPanel.Children.Add($checkbox) | Out-Null
         }
         UpdateSortArrows
+
+        # Rebuild search match list in new sorted order so keyboard navigation stays correct
+        if ($script:AppSearchMatches.Count -gt 0) {
+            $activeMatch = if ($script:AppSearchMatchIndex -ge 0 -and $script:AppSearchMatchIndex -lt $script:AppSearchMatches.Count) {
+                $script:AppSearchMatches[$script:AppSearchMatchIndex]
+            } else { $null }
+            RebuildAppSearchIndex -activeMatch $activeMatch
+        }
     }
 
     function SetSortColumn($column) {

@@ -919,6 +919,11 @@ function Show-MainWindow {
         }
     })
 
+    # Close the preset menu when the main window loses focus (e.g., user switches to another app).
+    $window.Add_Deactivated({
+        if ($presetsPopup.IsOpen) { $presetsPopup.IsOpen = $false }
+    })
+
     # Toggle popup on button click
     $presetsBtn.Add_Click({
         $presetsPopup.IsOpen = -not $presetsPopup.IsOpen

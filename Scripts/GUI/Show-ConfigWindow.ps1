@@ -23,9 +23,6 @@ function Show-ImportExportConfigWindow {
 
     # Load XAML from schema file
     $schemaPath = $script:ImportExportConfigSchema
-    if (-not $schemaPath) {
-        $schemaPath = $script:CategoryPickerSchema
-    }
 
     if (-not $schemaPath -or -not (Test-Path $schemaPath)) {
         Show-MessageBox -Message 'Import/Export window schema file could not be found.' -Title 'Error' -Button 'OK' -Icon 'Error' -Owner $Owner | Out-Null

@@ -1283,7 +1283,7 @@ function Show-MainWindow {
                 $appRemovalScopeCombo.SelectedIndex = 0
             }
             1 { 
-                $userSelectionDescription.Text = "Changes will be applied to a different user profile on this system. Note: changes may not apply correctly if the target user is currently logged in."
+                $userSelectionDescription.Text = "Changes will be applied to a different user profile on this system."
                 $otherUserPanel.Visibility = 'Visible'
                 $usernameValidationMessage.Text = ""
                 # Hide "Current user only" option, show "Target user only" option
@@ -1353,13 +1353,13 @@ function Show-MainWindow {
         $successBrush = $window.Resources['ValidationSuccessColor']
 
         if ($username.Length -eq 0) {
-            $usernameValidationMessage.Text = "[X] Please enter a username"
+            $usernameValidationMessage.Text = "Please enter a username"
             $usernameValidationMessage.Foreground = $errorBrush
             return $false
         }
         
         if ($username -eq $env:USERNAME) {
-            $usernameValidationMessage.Text = "[X] Cannot enter your own username, use 'Current User' option instead"
+            $usernameValidationMessage.Text = "Cannot enter your own username, use 'Current User' option instead"
             $usernameValidationMessage.Foreground = $errorBrush
             return $false
         }
@@ -1367,12 +1367,18 @@ function Show-MainWindow {
         $userExists = CheckIfUserExists -Username $username
 
         if ($userExists) {
-            $usernameValidationMessage.Text = "[OK] User found: $username"
+            if (TestIfUserIsLoggedIn -Username $username) {
+                $usernameValidationMessage.Text = "User '$username' is currently logged in. Please sign out that user first."
+                $usernameValidationMessage.Foreground = $errorBrush
+                return $false
+            }
+
+            $usernameValidationMessage.Text = "User found: $username"
             $usernameValidationMessage.Foreground = $successBrush
             return $true
         }
 
-        $usernameValidationMessage.Text = "[X] User not found, please enter a valid username"
+        $usernameValidationMessage.Text = "User not found, please enter a valid username"
         $usernameValidationMessage.Foreground = $errorBrush
         return $false
     }
@@ -1515,7 +1521,13 @@ function Show-MainWindow {
     $deploymentApplyBtn = $window.FindName('DeploymentApplyBtn')
     $deploymentApplyBtn.Add_Click({
         if (-not (ValidateOtherUsername)) {
-            Show-MessageBox -Message "Please enter a valid username." -Title "Invalid Username" -Button 'OK' -Icon 'Warning' | Out-Null
+            $validationMessage = if (-not [string]::IsNullOrWhiteSpace($usernameValidationMessage.Text)) {
+                $usernameValidationMessage.Text
+            }
+            else {
+                "Please enter a valid username."
+            }
+            Show-MessageBox -Message $validationMessage -Title "Invalid Username" -Button 'OK' -Icon 'Warning' | Out-Null
             return
         }
 

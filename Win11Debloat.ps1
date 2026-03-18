@@ -278,6 +278,7 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 . "$PSScriptRoot/Scripts/Helpers/GetTargetUserForAppRemoval.ps1"
 . "$PSScriptRoot/Scripts/Helpers/GetUserDirectory.ps1"
 . "$PSScriptRoot/Scripts/Helpers/GetUserName.ps1"
+. "$PSScriptRoot/Scripts/Helpers/TestIfUserIsLoggedIn.ps1"
 
 # Threading functions
 . "$PSScriptRoot/Scripts/Threading/DoEvents.ps1"

@@ -27,6 +27,8 @@ function Show-MainWindow {
     $menuReportBug = $window.FindName('MenuReportBug')
     $menuLogs = $window.FindName('MenuLogs')
     $menuAbout = $window.FindName('MenuAbout')
+    $importConfigBtn = $window.FindName('ImportConfigBtn')
+    $exportConfigBtn = $window.FindName('ExportConfigBtn')
 
     # Title bar event handlers
     $titleBar.Add_MouseLeftButtonDown({
@@ -65,6 +67,22 @@ function Show-MainWindow {
 
     $menuAbout.Add_Click({
         Show-AboutDialog -Owner $window
+    })
+
+    # --- Import/Export Configuration ---
+    $exportConfigBtn.Add_Click({
+        Export-Configuration -Owner $window -UsesDarkMode $usesDarkMode -AppsPanel $appsPanel -UiControlMappings $script:UiControlMappings -UserSelectionCombo $userSelectionCombo -OtherUsernameTextBox $otherUsernameTextBox
+    })
+
+    $importConfigBtn.Add_Click({
+        Import-Configuration -Owner $window -UsesDarkMode $usesDarkMode -AppsPanel $appsPanel -UiControlMappings $script:UiControlMappings -UserSelectionCombo $userSelectionCombo -OtherUsernameTextBox $otherUsernameTextBox -OnAppsImported { UpdateAppSelectionStatus; UpdatePresetStates } -OnImportCompleted {
+            $tabControl.SelectedIndex = 3
+            UpdateNavigationButtons
+
+            $window.Dispatcher.BeginInvoke([System.Windows.Threading.DispatcherPriority]::Loaded, [action]{
+                Show-Bubble -TargetControl $reviewChangesBtn -Message 'View the selected changes here'
+            }) | Out-Null
+        }
     })
 
     $closeBtn.Add_Click({
@@ -254,6 +272,11 @@ function Show-MainWindow {
     $script:PendingDefaultMode = $false
     # Holds apps data preloaded before ShowDialog() so the first load skips the background job
     $script:PreloadedAppData = $null
+
+    # Prevent app import until the apps list has finished initial population.
+    if ($importConfigBtn) {
+        $importConfigBtn.IsEnabled = $false
+    }
     
     # Set script-level variable for GUI window reference
     $script:GuiWindow = $window
@@ -746,6 +769,9 @@ function Show-MainWindow {
 
         if ($appsToAdd.Count -eq 0) {
             $window.FindName('DeploymentApplyBtn').IsEnabled = $true
+            if ($importConfigBtn) {
+                $importConfigBtn.IsEnabled = $true
+            }
             return
         }
 
@@ -836,6 +862,9 @@ function Show-MainWindow {
 
         # Re-enable Apply button now that the full, correctly-checked app list is ready
         $window.FindName('DeploymentApplyBtn').IsEnabled = $true
+        if ($importConfigBtn) {
+            $importConfigBtn.IsEnabled = $true
+        }
     }
 
     # Loads apps into the UI
@@ -843,6 +872,10 @@ function Show-MainWindow {
         # Prevent concurrent loads
         if ($script:IsLoadingApps) { return }
         $script:IsLoadingApps = $true
+
+        if ($importConfigBtn) {
+            $importConfigBtn.IsEnabled = $false
+        }
 
         # Show loading indicator and clear existing apps
         $loadingAppsIndicator.Visibility = 'Visible'

@@ -119,6 +119,7 @@ $script:AboutWindowSchema = "$PSScriptRoot/Schemas/AboutWindow.xaml"
 $script:ApplyChangesWindowSchema = "$PSScriptRoot/Schemas/ApplyChangesWindow.xaml"
 $script:SharedStylesSchema = "$PSScriptRoot/Schemas/SharedStyles.xaml"
 $script:BubbleHintSchema = "$PSScriptRoot/Schemas/BubbleHint.xaml"
+$script:ImportExportConfigSchema = "$PSScriptRoot/Schemas/ImportExportConfigWindow.xaml"
 $script:LoadAppsDetailsScriptPath = "$PSScriptRoot/Scripts/FileIO/LoadAppsDetailsFromJson.ps1"
 
 $script:ControlParams = 'WhatIf', 'Confirm', 'Verbose', 'Debug', 'LogPath', 'Silent', 'Sysprep', 'User', 'NoRestartExplorer', 'RunDefaults', 'RunDefaultsLite', 'RunSavedSettings', 'RunAppsListGenerator', 'CLI', 'AppRemovalTarget'
@@ -249,6 +250,7 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 
 # File I/O functions
 . "$PSScriptRoot/Scripts/FileIO/LoadJsonFile.ps1"
+. "$PSScriptRoot/Scripts/FileIO/SaveToFile.ps1"
 . "$PSScriptRoot/Scripts/FileIO/SaveSettings.ps1"
 . "$PSScriptRoot/Scripts/FileIO/LoadSettings.ps1"
 . "$PSScriptRoot/Scripts/FileIO/SaveCustomAppsListToFile.ps1"
@@ -263,6 +265,7 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 . "$PSScriptRoot/Scripts/GUI/AttachShiftClickBehavior.ps1"
 . "$PSScriptRoot/Scripts/GUI/ApplySettingsToUiControls.ps1"
 . "$PSScriptRoot/Scripts/GUI/Show-MessageBox.ps1"
+. "$PSScriptRoot/Scripts/GUI/Show-ConfigWindow.ps1"
 . "$PSScriptRoot/Scripts/GUI/Show-ApplyModal.ps1"
 . "$PSScriptRoot/Scripts/GUI/Show-AppSelectionWindow.ps1"
 . "$PSScriptRoot/Scripts/GUI/Show-MainWindow.ps1"

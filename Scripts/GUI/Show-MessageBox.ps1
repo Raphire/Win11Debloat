@@ -152,14 +152,17 @@ function Show-MessageBox {
     })
     
     # Show dialog and return result from Tag
-    $msgWindow.ShowDialog() | Out-Null
-    
-    # Hide overlay after dialog closes (only if this dialog was the one that showed it)
-    if ($overlay -and -not $overlayWasAlreadyVisible) {
-        try {
-            $ownerWindow.Dispatcher.Invoke([action]{ $overlay.Visibility = 'Collapsed' })
+    try {
+        $msgWindow.ShowDialog() | Out-Null
+    }
+    finally {
+        # Hide overlay after dialog closes (only if this dialog was the one that showed it)
+        if ($overlay -and -not $overlayWasAlreadyVisible) {
+            try {
+                $ownerWindow.Dispatcher.Invoke([action]{ $overlay.Visibility = 'Collapsed' })
+            }
+            catch { }
         }
-        catch { }
     }
     
     return $msgWindow.Tag

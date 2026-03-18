@@ -3,12 +3,16 @@ function ShowCLILastUsedSettings {
     PrintHeader 'Custom Mode'
 
     try {
-        # Load settings from LastUsedSettings.json and add to params
         LoadSettings -filePath $script:SavedSettingsFilePath -expectedVersion "1.0"
     }
     catch {
         Write-Error "Failed to load settings from LastUsedSettings.json file: $_"
         AwaitKeyToExit
+    }
+
+    if ($Silent) {
+        # Skip change summary and confirmation prompt
+        return
     }
 
     PrintPendingChanges

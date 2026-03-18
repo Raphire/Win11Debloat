@@ -17,7 +17,6 @@ function ShowCLIDefaultModeOptions {
 
     PrintHeader 'Default Mode'
 
-    # Add default settings based on user input
     try {
         # Select app removal options based on user input
         switch ($RemoveAppsInput) {
@@ -35,7 +34,6 @@ function ShowCLIDefaultModeOptions {
             }
         }
 
-        # Load settings from DefaultSettings.json and add to params
         LoadSettings -filePath $script:DefaultSettingsFilePath -expectedVersion "1.0"
     }
     catch {
@@ -45,8 +43,8 @@ function ShowCLIDefaultModeOptions {
 
     SaveSettings
 
-    # Skip change summary if Silent parameter was passed
     if ($Silent) {
+        # Skip change summary and confirmation prompt
         return
     }
 

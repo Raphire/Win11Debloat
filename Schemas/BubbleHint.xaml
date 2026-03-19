@@ -7,23 +7,33 @@
         <RowDefinition Height="Auto"/>
     </Grid.RowDefinitions>
 
-    <Border Name="BubbleBorder"
-            Grid.Row="0"
-            Background="{DynamicResource CardBgColor}"
-            BorderBrush="{DynamicResource ButtonBorderColor}"
-            BorderThickness="1"
-            CornerRadius="8"
-            Padding="10,7,10,7">
+    <Grid Grid.Row="0"
+        Margin="10,10,10,8">
+      <Border Name="BubbleBorder"
+          Background="{DynamicResource CardBgColor}"
+          BorderBrush="{DynamicResource ButtonBorderColor}"
+          BorderThickness="1"
+          CornerRadius="8"
+          Padding="10,7,10,7">
+        <Border.Effect>
+          <DropShadowEffect BlurRadius="9"
+                    Opacity="0.16"
+                    ShadowDepth="2"
+                    Direction="270"
+                    Color="Black"/>
+        </Border.Effect>
         <TextBlock Name="BubbleText"
-                   Text="View the selected changes here"
-                   TextWrapping="Wrap"
-                   MaxWidth="260"
-                   Foreground="{DynamicResource FgColor}"/>
-    </Border>
+               Text="View the selected changes here"
+               TextWrapping="Wrap"
+               MaxWidth="260"
+               Foreground="{DynamicResource FgColor}"/>
+      </Border>
+    </Grid>
 
     <Grid Grid.Row="1"
           HorizontalAlignment="Center"
-          Margin="0,-1,0,0"
+        Margin="0,-9,0,0"
+        Panel.ZIndex="1"
           Width="12"
           Height="8">
         <Polygon Name="BubblePointer"

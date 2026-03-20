@@ -16,24 +16,36 @@ function LoadAppsDetailsFromJson {
     }
 
     foreach ($appData in $jsonContent.Apps) {
-        $appId = $appData.AppId.Trim()
-        if ($appId.length -eq 0) { continue }
+        # Handle AppId as array (could be single or multiple IDs)
+        $appIdArray = if ($appData.AppId -is [array]) { $appData.AppId } else { @($appData.AppId) }
+        $appIdArray = $appIdArray | ForEach-Object { $_.Trim() } | Where-Object { $_.length -gt 0 }
+        if ($appIdArray.Count -eq 0) { continue }
 
         if ($OnlyInstalled) {
-            if (-not ($InstalledList -like ("*$appId*")) -and -not (Get-AppxPackage -Name $appId)) {
-                continue
+            $isInstalled = $false
+            foreach ($appId in $appIdArray) {
+                if (($InstalledList -like ("*$appId*")) -or (Get-AppxPackage -Name $appId)) {
+                    $isInstalled = $true
+                    break
+                }
+                if (($appId -eq "Microsoft.Edge") -and ($InstalledList -like "* Microsoft.Edge *")) {
+                    $isInstalled = $true
+                    break
+                }
             }
-            if (($appId -eq "Microsoft.Edge") -and -not ($InstalledList -like "* Microsoft.Edge *")) {
-                continue
-            }
+            if (-not $isInstalled) { continue }
         }
 
-        $friendlyName = if ($appData.FriendlyName) { $appData.FriendlyName } else { $appId }
-        $displayName = if ($appData.FriendlyName) { "$($appData.FriendlyName) ($appId)" } else { $appId }
+        # Use first AppId for fallback names, join all for display
+        $primaryAppId = $appIdArray[0]
+        $appIdDisplay = $appIdArray -join ', '
+        $friendlyName = if ($appData.FriendlyName) { $appData.FriendlyName } else { $primaryAppId }
+        $displayName = if ($appData.FriendlyName) { "$($appData.FriendlyName) ($appIdDisplay)" } else { $appIdDisplay }
         $isChecked = if ($InitialCheckedFromJson) { $appData.SelectedByDefault } else { $false }
 
         $apps += [PSCustomObject]@{
-            AppId = $appId
+            AppId = $appIdArray
+            AppIdDisplay = $appIdDisplay
             FriendlyName = $friendlyName
             DisplayName = $displayName
             IsChecked = $isChecked

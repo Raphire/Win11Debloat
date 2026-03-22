@@ -173,7 +173,7 @@ else {
 # Check if script has all required files/directories.
 $optionalPathVariables = @('SavedSettingsFilePath', 'CustomAppsListFilePath', 'DefaultLogPath')
 $requiredPathVariables = @(Get-Variable -Scope Script | Where-Object {
-    $_.Name -match '(FilePath|Schema|ScriptPath)$' -and ($optionalPathVariables -notcontains $_.Name)
+    $_.Name -match '(FilePath|Schema|ScriptPath|RegfilesPath|AssetsPath)$' -and ($optionalPathVariables -notcontains $_.Name)
 } | Select-Object -ExpandProperty Name)
 
 $missingRequiredPaths = @()

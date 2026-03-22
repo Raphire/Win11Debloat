@@ -336,11 +336,12 @@ foreach ($Param in $script:ControlParams) {
 
 # Guard: Undo mode requires at least one actionable, non-control parameter.
 if ($script:Params.ContainsKey('Undo')) {
+    $loadsSettingsFromPreset = $RunDefaults -or $RunDefaultsLite -or $RunSavedSettings
     $undoTargets = @($script:Params.Keys | Where-Object {
         ($script:ControlParams -notcontains $_) -and $_ -ne 'Apps' -and $_ -ne 'CreateRestorePoint'
     })
 
-    if ($undoTargets.Count -eq 0) {
+    if ($undoTargets.Count -eq 0 -and -not $loadsSettingsFromPreset) {
         Write-Error "The -Undo parameter requires at least one setting/feature parameter to revert."
         AwaitKeyToExit
     }

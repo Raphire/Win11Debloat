@@ -2,7 +2,13 @@
 function PrintPendingChanges {
     $skippedParams = @()
     $undoChanges = $script:Params.ContainsKey('Undo')
-    Write-Output "Win11Debloat will make the following changes:"
+
+    if ($undoChanges) {
+        Write-Output "Win11Debloat will make the following changes to revert the selected settings to Windows defaults:"
+    }
+    else {
+        Write-Output "Win11Debloat will make the following changes:"
+    }
 
     if ($script:Params['CreateRestorePoint']) {
         Write-Output "- $($script:Features['CreateRestorePoint'].Label)"

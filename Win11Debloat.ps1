@@ -4,6 +4,7 @@
 param (
     [switch]$CLI,
     [switch]$Silent,
+    [switch]$Undo,
     [switch]$Sysprep,
     [string]$LogPath,
     [string]$User,
@@ -117,11 +118,12 @@ $script:MainWindowSchema = "$PSScriptRoot/Schemas/MainWindow.xaml"
 $script:MessageBoxSchema = "$PSScriptRoot/Schemas/MessageBoxWindow.xaml"
 $script:AboutWindowSchema = "$PSScriptRoot/Schemas/AboutWindow.xaml"
 $script:ApplyChangesWindowSchema = "$PSScriptRoot/Schemas/ApplyChangesWindow.xaml"
+$script:RevertSettingsWindowSchema = "$PSScriptRoot/Schemas/RevertSettingsWindow.xaml"
 $script:SharedStylesSchema = "$PSScriptRoot/Schemas/SharedStyles.xaml"
 $script:BubbleHintSchema = "$PSScriptRoot/Schemas/BubbleHint.xaml"
 $script:LoadAppsDetailsScriptPath = "$PSScriptRoot/Scripts/FileIO/LoadAppsDetailsFromJson.ps1"
 
-$script:ControlParams = 'WhatIf', 'Confirm', 'Verbose', 'Debug', 'LogPath', 'Silent', 'Sysprep', 'User', 'NoRestartExplorer', 'RunDefaults', 'RunDefaultsLite', 'RunSavedSettings', 'RunAppsListGenerator', 'CLI', 'AppRemovalTarget'
+$script:ControlParams = 'WhatIf', 'Confirm', 'Verbose', 'Debug', 'LogPath', 'Silent', 'Undo', 'Sysprep', 'User', 'NoRestartExplorer', 'RunDefaults', 'RunDefaultsLite', 'RunSavedSettings', 'RunAppsListGenerator', 'CLI', 'AppRemovalTarget'
 
 # Script-level variables for GUI elements
 $script:GuiWindow = $null
@@ -168,9 +170,23 @@ else {
     Start-Transcript -Path $script:DefaultLogPath -Append -IncludeInvocationHeader -Force | Out-Null
 }
 
-# Check if script has all required files
-if (-not ((Test-Path $script:DefaultSettingsFilePath) -and (Test-Path $script:AppsListFilePath) -and (Test-Path $script:RegfilesPath) -and (Test-Path $script:AssetsPath) -and (Test-Path $script:AppSelectionSchema) -and (Test-Path $script:ApplyChangesWindowSchema) -and (Test-Path $script:SharedStylesSchema) -and (Test-Path $script:BubbleHintSchema) -and (Test-Path $script:FeaturesFilePath))) {
-    Write-Error "Win11Debloat is unable to find required files, please ensure all script files are present"
+# Check if script has all required files/directories.
+$optionalPathVariables = @('SavedSettingsFilePath', 'CustomAppsListFilePath', 'DefaultLogPath')
+$requiredPathVariables = @(Get-Variable -Scope Script | Where-Object {
+    $_.Name -match '(FilePath|Schema|ScriptPath)$' -and ($optionalPathVariables -notcontains $_.Name)
+} | Select-Object -ExpandProperty Name)
+
+$missingRequiredPaths = @()
+foreach ($variableName in $requiredPathVariables) {
+    $pathValue = Get-Variable -Name $variableName -Scope Script -ValueOnly
+
+    if ([String]::IsNullOrWhiteSpace($pathValue) -or -not (Test-Path $pathValue)) {
+        $missingRequiredPaths += "$variableName => $pathValue"
+    }
+}
+
+if ($missingRequiredPaths.Count -gt 0) {
+    Write-Error "Win11Debloat is unable to find required files, please ensure all script files are present. Missing: $($missingRequiredPaths -join '; ')"
     Write-Output ""
     Write-Output "Press any key to exit..."
     $null = [System.Console]::ReadKey()
@@ -264,6 +280,7 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 . "$PSScriptRoot/Scripts/GUI/ApplySettingsToUiControls.ps1"
 . "$PSScriptRoot/Scripts/GUI/Show-MessageBox.ps1"
 . "$PSScriptRoot/Scripts/GUI/Show-ApplyModal.ps1"
+. "$PSScriptRoot/Scripts/GUI/Show-RevertSettingsModal.ps1"
 . "$PSScriptRoot/Scripts/GUI/Show-AppSelectionWindow.ps1"
 . "$PSScriptRoot/Scripts/GUI/Show-MainWindow.ps1"
 . "$PSScriptRoot/Scripts/GUI/Show-AboutDialog.ps1"
@@ -276,6 +293,7 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 . "$PSScriptRoot/Scripts/Helpers/GenerateAppsList.ps1"
 . "$PSScriptRoot/Scripts/Helpers/GetFriendlyTargetUserName.ps1"
 . "$PSScriptRoot/Scripts/Helpers/GetTargetUserForAppRemoval.ps1"
+. "$PSScriptRoot/Scripts/Helpers/GetUndoFeatureForParam.ps1"
 . "$PSScriptRoot/Scripts/Helpers/GetUserDirectory.ps1"
 . "$PSScriptRoot/Scripts/Helpers/GetUserName.ps1"
 . "$PSScriptRoot/Scripts/Helpers/TestIfUserIsLoggedIn.ps1"
@@ -313,6 +331,18 @@ $controlParamsCount = 0
 foreach ($Param in $script:ControlParams) {
     if ($script:Params.ContainsKey($Param)) {
         $controlParamsCount++
+    }
+}
+
+# Guard: Undo mode requires at least one actionable, non-control parameter.
+if ($script:Params.ContainsKey('Undo')) {
+    $undoTargets = @($script:Params.Keys | Where-Object {
+        ($script:ControlParams -notcontains $_) -and $_ -ne 'Apps' -and $_ -ne 'CreateRestorePoint'
+    })
+
+    if ($undoTargets.Count -eq 0) {
+        Write-Error "The -Undo parameter requires at least one setting/feature parameter to revert."
+        AwaitKeyToExit
     }
 }
 
@@ -396,7 +426,7 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
                 Exit
             }
             catch {
-                Write-Warning "Unable to load WPF GUI (not supported in this environment), falling back to CLI mode"
+                Write-Warning "Something went wrong while loading the graphical interface, falling back to CLI mode: $_"
                 if (-not $Silent) {
                     Write-Host ""
                     Write-Host "Press any key to continue..."

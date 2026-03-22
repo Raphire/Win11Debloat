@@ -179,7 +179,7 @@ function Show-ApplyModal {
                         $applyRebootPanel.Visibility = 'Visible'
                     }
                     else {
-                        $script:ApplyCompletionMessageEl.Text = "Your clean system is ready. Thanks for using Win11Debloat!"
+                        $script:ApplyCompletionMessageEl.Text = "Your system is ready. Thanks for using Win11Debloat!"
                     }
                 }
             }

@@ -1,0 +1,160 @@
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Revert Changes"
+        Width="620"
+        Height="620"
+        MinWidth="560"
+        MinHeight="420"
+        ResizeMode="CanResize"
+        WindowStartupLocation="CenterOwner"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        Topmost="True"
+        ShowInTaskbar="False">
+
+    <Window.Resources>
+        <Style x:Key="RevertItemBorderStyle" TargetType="Border">
+            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+            <Setter Property="Padding" Value="4,6,4,6"/>
+        </Style>
+
+        <Style x:Key="RevertItemRowStyle" TargetType="StackPanel">
+            <Setter Property="Orientation" Value="Vertical"/>
+        </Style>
+
+        <Style x:Key="RevertItemUndoTextStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
+            <Setter Property="Opacity" Value="0.75"/>
+            <Setter Property="Margin" Value="30,-4,0,3"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+
+        <Style x:Key="RevertEmptyTextStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
+            <Setter Property="Opacity" Value="0.85"/>
+            <Setter Property="Margin" Value="6,0,6,0"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+    </Window.Resources>
+
+    <Border BorderBrush="{DynamicResource BorderColor}"
+            BorderThickness="1"
+            CornerRadius="8"
+            Background="{DynamicResource CardBgColor}"
+            Margin="25">
+        <Border.Effect>
+            <DropShadowEffect Color="Black"
+                              Opacity="0.15"
+                              BlurRadius="20"
+                              ShadowDepth="0"
+                              Direction="0"/>
+        </Border.Effect>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" x:Name="TitleBar" Height="40" Background="Transparent">
+                <TextBlock x:Name="TitleText" 
+                           Text="Revert Changes" 
+                           Foreground="{DynamicResource FgColor}"
+                           FontSize="16"
+                           FontWeight="SemiBold"
+                           VerticalAlignment="Center" 
+                           Margin="16,0,0,0"/>
+            </Grid>
+
+            <StackPanel Grid.Row="1" Margin="20,12,1,12">
+                    <TextBlock x:Name="MessageText"
+                               Grid.Column="1"
+                               Text="Select which previously applied tweaks should be reverted to Windows defaults."
+                               TextWrapping="Wrap"
+                               FontSize="14"
+                               LineHeight="20"
+                               Foreground="{DynamicResource FgColor}"
+                               VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <Grid Grid.Row="2" Margin="20,0,20,10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <DockPanel Grid.Row="0" Margin="0,0,0,8">
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                        <Button x:Name="RevertSelectAllBtn"
+                                Content="Select All"
+                                Height="30"
+                                Padding="12,0"
+                                Style="{DynamicResource SecondaryButtonStyle}"
+                                Margin="0,0,8,0"
+                                AutomationProperties.Name="Select All"/>
+                        <Button x:Name="RevertClearBtn"
+                                Content="Clear"
+                                Height="30"
+                                Padding="12,0"
+                                Style="{DynamicResource SecondaryButtonStyle}"
+                                AutomationProperties.Name="Clear"/>
+                    </StackPanel>
+                    <TextBlock x:Name="RevertSelectionCount"
+                               Text="0 settings selected"
+                               Foreground="{DynamicResource FgColor}"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Right"
+                               DockPanel.Dock="Right"
+                               Margin="0,0,6,0"/>
+                </DockPanel>
+
+                <Border Grid.Row="1"
+                        BorderThickness="1"
+                        BorderBrush="{DynamicResource BorderColor}"
+                        CornerRadius="6"
+                        Background="{DynamicResource BgColor}">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="8" Margin="0,1,1,1">
+                        <StackPanel x:Name="RevertItemsPanel"/>
+                    </ScrollViewer>
+                </Border>
+
+                <CheckBox x:Name="RevertRestartExplorerCheckBox"
+                            Grid.Row="2"
+                            Content="Restart the Windows Explorer process to apply all changes immediately"
+                            IsChecked="False"
+                            Margin="2,10,0,0"
+                            AutomationProperties.Name="Restart the Windows Explorer process to apply all changes immediately"/>
+            </Grid>
+
+            <!-- Button Panel -->
+            <Border Grid.Row="3" 
+                    Background="{DynamicResource BgColor}"
+                    BorderBrush="{DynamicResource BorderColor}"
+                    BorderThickness="0,1,0,0"
+                    Padding="16,12"
+                    CornerRadius="0,0,8,8">
+                <StackPanel x:Name="ButtonPanel"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Right">
+                    <Button x:Name="RevertApplyBtn" 
+                            Content="Revert Selected Settings"
+                            Height="32" MinWidth="200" Margin="4,0"
+                            Style="{DynamicResource PrimaryButtonStyle}"
+                            IsEnabled="False"
+                            AutomationProperties.Name="Revert Selected Settings"/>
+                    <Button x:Name="RevertCancelBtn"
+                            Content="Cancel"
+                            Height="32" MinWidth="80" Margin="4,0"
+                            Style="{DynamicResource SecondaryButtonStyle}"
+                            AutomationProperties.Name="Cancel"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

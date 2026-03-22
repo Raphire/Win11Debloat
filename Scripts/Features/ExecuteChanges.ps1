@@ -11,6 +11,34 @@ function ExecuteParameter {
     if ($script:Features.ContainsKey($paramKey)) {
         $feature = $script:Features[$paramKey]
     }
+
+    $undoChanges = $script:Params.ContainsKey('Undo')
+    $undoFeature = if ($undoChanges) { GetUndoFeatureForParam -paramKey $paramKey } else { $null }
+
+    # In global undo mode, skip any parameter that does not define undo metadata.
+    if ($undoChanges -and -not $undoFeature) {
+        return
+    }
+
+    # If this feature was requested in undo mode, use undo metadata from Features.json.
+    if ($undoChanges -and $undoFeature) {
+        $undoRegFile = $undoFeature.RegistryUndoKey
+        $usesOfflineHive = $script:Params.ContainsKey("Sysprep") -or $script:Params.ContainsKey("User")
+        $undoFolderPath = if ($usesOfflineHive) {
+            Join-Path $script:RegfilesPath (Join-Path 'Sysprep' (Join-Path 'Undo' $undoRegFile))
+        }
+        else {
+            Join-Path $script:RegfilesPath (Join-Path 'Undo' $undoRegFile)
+        }
+
+        # Prefer dedicated Undo subfolder files when present, with fallback to legacy root location.
+        if (Test-Path $undoFolderPath) {
+            $undoRegFile = Join-Path 'Undo' $undoRegFile
+        }
+
+        ImportRegistryFile "> $($undoFeature.UndoAction) $($undoFeature.Label)" $undoRegFile
+        return
+    }
     
     # If feature has RegistryKey and ApplyText, use dynamic ImportRegistryFile
     if ($feature -and $feature.RegistryKey -and $feature.ApplyText) {
@@ -139,12 +167,40 @@ function ExecuteParameter {
 # Executes all selected parameters/features
 function ExecuteAllChanges {    
     # Build list of actionable parameters (skip control params and data-only params)
+    $undoChanges = $script:Params.ContainsKey('Undo')
     $actionableKeys = @()
+    $paramsToRemove = @()
     foreach ($paramKey in $script:Params.Keys) {
         if ($script:ControlParams -contains $paramKey) { continue }
         if ($paramKey -eq 'Apps') { continue }
         if ($paramKey -eq 'CreateRestorePoint') { continue }
+
+        if ($undoChanges) {
+            $undoFeature = GetUndoFeatureForParam -paramKey $paramKey
+            if (-not $undoFeature) {
+                $paramsToRemove += $paramKey
+                continue
+            }
+        }
+
         $actionableKeys += $paramKey
+    }
+
+    if ($undoChanges -and $paramsToRemove.Count -gt 0) {
+        foreach ($paramKey in ($paramsToRemove | Sort-Object -Unique)) {
+            if ($script:Params.ContainsKey($paramKey)) {
+                $null = $script:Params.Remove($paramKey)
+            }
+        }
+    }
+
+    # If no undo-capable changes remain, disable explorer restart for this run.
+    if ($undoChanges -and $actionableKeys.Count -eq 0) {
+        if (-not $script:Params.ContainsKey('NoRestartExplorer')) {
+            $script:Params['NoRestartExplorer'] = $true
+        }
+        Write-Warning "None of the selected changes can be undone automatically."
+        Write-Host ""
     }
     
     $totalSteps = $actionableKeys.Count
@@ -174,7 +230,10 @@ function ExecuteAllChanges {
         $stepName = $paramKey
         if ($script:Features.ContainsKey($paramKey)) {
             $feature = $script:Features[$paramKey]
-            if ($feature.ApplyText) {
+            if ($undoChanges -and $feature.UndoAction) {
+                $stepName = "$($feature.UndoAction) $($feature.Label)"
+            }
+            elseif ($feature.ApplyText) {
                 # Prefer explicit ApplyText when provided
                 $stepName = $feature.ApplyText
             } elseif ($feature.Label) {

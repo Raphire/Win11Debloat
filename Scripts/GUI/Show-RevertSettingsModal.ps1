@@ -179,10 +179,6 @@ function Show-RevertSettingsModal {
     })
 
     $cancelHandler = {
-        $revertWindow.Tag = [PSCustomObject]@{
-            SelectedFeatureIds = @()
-            RestartExplorer = ($restartExplorerCheckbox -and $restartExplorerCheckbox.IsChecked -eq $true)
-        }
         $revertWindow.Close()
     }
 

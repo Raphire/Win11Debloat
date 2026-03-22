@@ -199,8 +199,6 @@ function Show-RevertSettingsModal {
         $revertWindow.Close()
     })
 
-    & $updateState
-
     $revertWindow.ShowDialog() | Out-Null
 
     if ($overlay -and -not $overlayWasAlreadyVisible) {

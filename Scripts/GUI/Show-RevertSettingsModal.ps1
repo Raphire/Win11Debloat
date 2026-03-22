@@ -220,6 +220,6 @@ function Show-RevertSettingsModal {
 
     return [PSCustomObject]@{
         SelectedFeatureIds = @()
-        RestartExplorer = $true
+        RestartExplorer = $false
     }
 }

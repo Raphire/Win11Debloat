@@ -13,6 +13,7 @@ param (
     [switch]$RunDefaults,
     [switch]$RunDefaultsLite,
     [switch]$RunSavedSettings,
+    [string]$Config,
     [string]$Apps,
     [string]$AppRemovalTarget,
     [switch]$RemoveApps,
@@ -122,7 +123,7 @@ $script:BubbleHintSchema = "$PSScriptRoot/Schemas/BubbleHint.xaml"
 $script:ImportExportConfigSchema = "$PSScriptRoot/Schemas/ImportExportConfigWindow.xaml"
 $script:LoadAppsDetailsScriptPath = "$PSScriptRoot/Scripts/FileIO/LoadAppsDetailsFromJson.ps1"
 
-$script:ControlParams = 'WhatIf', 'Confirm', 'Verbose', 'Debug', 'LogPath', 'Silent', 'Sysprep', 'User', 'NoRestartExplorer', 'RunDefaults', 'RunDefaultsLite', 'RunSavedSettings', 'RunAppsListGenerator', 'CLI', 'AppRemovalTarget'
+$script:ControlParams = 'WhatIf', 'Confirm', 'Verbose', 'Debug', 'LogPath', 'Silent', 'Sysprep', 'User', 'NoRestartExplorer', 'RunDefaults', 'RunDefaultsLite', 'RunSavedSettings', 'Config', 'RunAppsListGenerator', 'CLI', 'AppRemovalTarget'
 
 # Script-level variables for GUI elements
 $script:GuiWindow = $null
@@ -278,6 +279,7 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 . "$PSScriptRoot/Scripts/Helpers/CheckModernStandbySupport.ps1"
 . "$PSScriptRoot/Scripts/Helpers/GenerateAppsList.ps1"
 . "$PSScriptRoot/Scripts/Helpers/GetFriendlyTargetUserName.ps1"
+. "$PSScriptRoot/Scripts/Helpers/ImportConfigToParams.ps1"
 . "$PSScriptRoot/Scripts/Helpers/GetTargetUserForAppRemoval.ps1"
 . "$PSScriptRoot/Scripts/Helpers/GetUserDirectory.ps1"
 . "$PSScriptRoot/Scripts/Helpers/GetUserName.ps1"
@@ -374,7 +376,7 @@ if ($RunAppsListGenerator) {
 }
 
 # Change script execution based on provided parameters or user input
-if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSavedSettings -or ($controlParamsCount -eq $script:Params.Count)) {
+if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSavedSettings -or $Config -or ($controlParamsCount -eq $script:Params.Count)) {
     if ($RunDefaults -or $RunDefaultsLite) {
         ShowCLIDefaultModeOptions
     }
@@ -386,6 +388,21 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
         }
 
         ShowCLILastUsedSettings
+    }
+    elseif ($Config) {
+        try {
+            $resolvedConfigPath = ImportConfigToParams -ConfigPath $Config -CurrentBuild $WinVersion -ExpectedVersion '1.0'
+        }
+        catch {
+            Write-Error "$_"
+            AwaitKeyToExit
+        }
+
+        if (-not $Silent) {
+            PrintHeader 'Custom Mode'
+            PrintPendingChanges
+            PrintHeader 'Custom Mode'
+        }
     }
     else {
         if ($CLI) {

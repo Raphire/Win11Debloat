@@ -23,7 +23,7 @@ function ImportConfigToParams {
     }
 
     $configJson = LoadJsonFile -filePath $resolvedConfigPath -expectedVersion $ExpectedVersion
-    if (-not $configJson) {
+    if ($null -eq $configJson) {
         throw "Failed to read config file: $resolvedConfigPath"
     }
 

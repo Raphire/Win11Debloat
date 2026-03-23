@@ -43,7 +43,7 @@
             </Grid>
 
             <!-- Content -->
-            <StackPanel Grid.Row="1" x:Name="ContentPanel" Margin="20,12,20,20">
+            <StackPanel Grid.Row="1" x:Name="ContentPanel" Margin="20,12,20,9">
                 <TextBlock x:Name="PromptText"
                            TextWrapping="Wrap"
                            FontSize="14"

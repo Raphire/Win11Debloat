@@ -241,7 +241,7 @@ function Show-MainWindow {
             $check = ($this.IsChecked -eq $true)
             if ($this.IsChecked -eq $null) { $this.IsChecked = $false; $check = $false }
             $presetIds = $this.PresetAppIds
-            ApplyPresetToApps -MatchFilter { param($c) $presetIds -contains $c.Tag }.GetNewClosure() -Check $check
+            ApplyPresetToApps -MatchFilter { param($c) (@($c.AppIds) | Where-Object { $presetIds -contains $_ }).Count -gt 0 }.GetNewClosure() -Check $check
         })
     }
     
@@ -317,7 +317,7 @@ function Show-MainWindow {
         $key = switch ($script:SortColumn) {
             'Name'        { { $_.AppName } }
             'Description' { { $_.AppDescription } }
-            'AppId'       { { $_.Tag } }
+            'AppId'       { { $_.AppIdDisplay } }
         }
         $sorted = $children | Sort-Object $key -Descending:(-not $script:SortAscending)
         $appsPanel.Children.Clear()
@@ -379,14 +379,6 @@ function Show-MainWindow {
     function UpdatePresetStates {
         $script:UpdatingPresets = $true
         try {
-            # Build a set of currently checked app tags for fast lookup
-            $checkedTags = @{}
-            foreach ($child in $appsPanel.Children) {
-                if ($child -is [System.Windows.Controls.CheckBox] -and $child.IsChecked) {
-                    $checkedTags[$child.Tag] = $true
-                }
-            }
-
             # Helper: count matching and checked apps, set checkbox state
             function SetPresetState($checkbox, [scriptblock]$MatchFilter) {
                 $total = 0; $checked = 0
@@ -394,7 +386,7 @@ function Show-MainWindow {
                     if ($child -is [System.Windows.Controls.CheckBox]) {
                         if (& $MatchFilter $child) {
                             $total++
-                            if ($checkedTags.ContainsKey($child.Tag)) { $checked++ }
+                            if ($child.IsChecked) { $checked++ }
                         }
                     }
                 }
@@ -416,12 +408,12 @@ function Show-MainWindow {
             SetPresetState $presetDefaultApps { param($c) $c.SelectedByDefault -eq $true }
             foreach ($jsonCb in $script:JsonPresetCheckboxes) {
                 $localIds = $jsonCb.PresetAppIds
-                SetPresetState $jsonCb { param($c) $localIds -contains $c.Tag }.GetNewClosure()
+                SetPresetState $jsonCb { param($c) (@($c.AppIds) | Where-Object { $localIds -contains $_ }).Count -gt 0 }.GetNewClosure()
             }
 
             # Last used preset: only update if it's visible (has saved apps)
             if ($presetLastUsed.Visibility -ne 'Collapsed' -and $script:SavedAppIds) {
-                SetPresetState $presetLastUsed { param($c) $script:SavedAppIds -contains $c.Tag }
+                SetPresetState $presetLastUsed { param($c) (@($c.AppIds) | Where-Object { $script:SavedAppIds -contains $_ }).Count -gt 0 }
             }
         }
         finally {
@@ -760,9 +752,9 @@ function Show-MainWindow {
             $app = $appsToAdd[$i]
 
             $checkbox = New-Object System.Windows.Controls.CheckBox
-            $automationName = if ($app.FriendlyName) { $app.FriendlyName } elseif ($app.AppId) { $app.AppId } else { $null }
+            $automationName = if ($app.FriendlyName) { $app.FriendlyName } elseif ($app.AppIdDisplay) { $app.AppIdDisplay } else { $null }
             if ($automationName) { $checkbox.SetValue([System.Windows.Automation.AutomationProperties]::NameProperty, $automationName) }
-            $checkbox.Tag       = $app.AppId
+            $checkbox.Tag       = $app.AppIdDisplay
             $checkbox.IsChecked = $app.IsChecked
             $checkbox.Style     = $window.Resources['AppsPanelCheckBoxStyle']
 
@@ -798,9 +790,9 @@ function Show-MainWindow {
             [System.Windows.Controls.Grid]::SetColumn($tbDesc, 2)
 
             $tbId = New-Object System.Windows.Controls.TextBlock
-            $tbId.Text    = $app.AppId
-            $tbId.Style   = $window.Resources['AppIdTextStyle']
-            $tbId.ToolTip = $app.AppId
+            $tbId.Text = $app.AppIdDisplay
+            $tbId.Style = $window.Resources["AppIdTextStyle"]
+            $tbId.ToolTip = $app.AppIdDisplay
             [System.Windows.Controls.Grid]::SetColumn($tbId, 3)
 
             $row.Children.Add($dot)    | Out-Null
@@ -812,6 +804,8 @@ function Show-MainWindow {
             Add-Member -InputObject $checkbox -MemberType NoteProperty -Name 'AppName'          -Value $app.FriendlyName
             Add-Member -InputObject $checkbox -MemberType NoteProperty -Name 'AppDescription'   -Value $app.Description
             Add-Member -InputObject $checkbox -MemberType NoteProperty -Name 'SelectedByDefault' -Value $app.SelectedByDefault
+            Add-Member -InputObject $checkbox -MemberType NoteProperty -Name 'AppIds' -Value @($app.AppId)
+            Add-Member -InputObject $checkbox -MemberType NoteProperty -Name 'AppIdDisplay' -Value $app.AppIdDisplay
 
             $checkbox.Add_Checked({ UpdateAppSelectionStatus })
             $checkbox.Add_Unchecked({ UpdateAppSelectionStatus })
@@ -1537,9 +1531,10 @@ function Show-MainWindow {
         $selectedApps = @()
         foreach ($child in $appsPanel.Children) {
             if ($child -is [System.Windows.Controls.CheckBox] -and $child.IsChecked) {
-                $selectedApps += $child.Tag
+                $selectedApps += @($child.AppIds)
             }
         }
+        $selectedApps = @($selectedApps | Where-Object { $_ } | Select-Object -Unique)
         
         if ($selectedApps.Count -gt 0) {
             # Check if Microsoft Store is selected
@@ -1760,7 +1755,7 @@ function Show-MainWindow {
             if ($script:UpdatingPresets) { return }
             $check = ($this.IsChecked -eq $true)
             if ($this.IsChecked -eq $null) { $this.IsChecked = $false; $check = $false }
-            ApplyPresetToApps -MatchFilter { param($c) $script:SavedAppIds -contains $c.Tag } -Check $check
+            ApplyPresetToApps -MatchFilter { param($c) (@($c.AppIds) | Where-Object { $script:SavedAppIds -contains $_ }).Count -gt 0 } -Check $check
         })
     }
     else {

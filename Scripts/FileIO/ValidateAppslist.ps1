@@ -4,7 +4,7 @@ function ValidateAppslist {
         $appsList
     )
 
-    $supportedAppsList = (LoadAppsDetailsFromJson | ForEach-Object { $_.AppId })
+    $supportedAppsList = @(LoadAppsDetailsFromJson | ForEach-Object { @($_.AppId) }) | ForEach-Object { $_.Trim() } | Where-Object { $_.Length -gt 0 }
     $validatedAppsList = @()
 
     # Validate provided appsList against supportedAppsList

@@ -1403,13 +1403,13 @@ function Show-MainWindow {
             if ($userSelectionCombo.SelectedIndex -ne 2) {
                 $appRemovalScopeCombo.IsEnabled = $true
             }
-            $appRemovalScopeSection.Opacity = 1.0
+            $appRemovalScopeSection.Visibility = 'Visible'
             UpdateAppRemovalScopeDescription
         }
         else {
             # Disable app removal scope selection when no apps selected
             $appRemovalScopeCombo.IsEnabled = $false
-            $appRemovalScopeSection.Opacity = 0.5
+            $appRemovalScopeSection.Visibility = 'Collapsed'
             $appRemovalScopeDescription.Text = "No apps selected for removal."
         }
         

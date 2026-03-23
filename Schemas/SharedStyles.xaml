@@ -151,6 +151,138 @@
         <Setter Property="TextAlignment" Value="Center"/>
     </Style>
 
+    <!-- Base CheckBox style used across windows -->
+    <Style TargetType="CheckBox">
+        <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Padding" Value="4,2"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="CheckBox">
+                    <Border Background="{TemplateBinding Background}" BorderThickness="0" CornerRadius="4" Padding="{TemplateBinding Padding}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border x:Name="CheckBoxBorder" Grid.Column="0" Width="18" Height="18" Background="{DynamicResource CheckBoxBgColor}" BorderBrush="{DynamicResource CheckBoxBorderColor}" BorderThickness="1" CornerRadius="4" Margin="0,0,8,0">
+                                <Grid>
+                                    <TextBlock x:Name="CheckMark" Text="&#xE73E;" FontFamily="Segoe Fluent Icons" FontSize="12" Foreground="{DynamicResource ButtonBg}" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0">
+                                        <TextBlock.Clip>
+                                            <RectangleGeometry x:Name="CheckMarkClip" Rect="0,0,0,16"/>
+                                        </TextBlock.Clip>
+                                    </TextBlock>
+                                    <TextBlock x:Name="IndeterminateMark" Text="&#xE738;" FontFamily="Segoe Fluent Icons" FontSize="11" Foreground="{DynamicResource ButtonBg}" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0" Margin="1,1,0,0">
+                                        <TextBlock.Clip>
+                                            <RectangleGeometry x:Name="IndeterminateMarkClip" Rect="0,0,0,16"/>
+                                        </TextBlock.Clip>
+                                    </TextBlock>
+                                </Grid>
+                            </Border>
+                            <ContentPresenter Grid.Column="1" VerticalAlignment="Center" Margin="0,0,0,2"/>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="CheckBoxBorder" Property="Background" Value="{DynamicResource CheckBoxHoverColor}"/>
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="CheckBoxBorder" Property="Background" Value="{DynamicResource ButtonBg}"/>
+                            <Setter TargetName="CheckBoxBorder" Property="BorderBrush" Value="{DynamicResource ButtonBg}"/>
+                            <Setter TargetName="CheckMark" Property="Foreground" Value="White"/>
+                            <Setter TargetName="CheckMark" Property="Opacity" Value="1"/>
+                            <Setter TargetName="IndeterminateMark" Property="Opacity" Value="0"/>
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="CheckMark" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.25" FillBehavior="HoldEnd"/>
+                                        <RectAnimation Storyboard.TargetName="CheckMarkClip" Storyboard.TargetProperty="Rect" From="0,0,0,16" To="0,0,16,16" Duration="0:0:0.25" FillBehavior="HoldEnd"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <RectAnimation Storyboard.TargetName="CheckMarkClip" Storyboard.TargetProperty="Rect" From="0,0,16,16" To="16,0,0,16" Duration="0:0:0.15" FillBehavior="HoldEnd"/>
+                                        <DoubleAnimation Storyboard.TargetName="CheckMark" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.15" FillBehavior="HoldEnd"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="{x:Null}">
+                            <Setter TargetName="CheckBoxBorder" Property="Background" Value="{DynamicResource ButtonBg}"/>
+                            <Setter TargetName="CheckBoxBorder" Property="BorderBrush" Value="{DynamicResource ButtonBg}"/>
+                            <Setter TargetName="CheckBoxBorder" Property="Opacity" Value="0.8"/>
+                            <Setter TargetName="IndeterminateMark" Property="Foreground" Value="White"/>
+                            <Setter TargetName="IndeterminateMark" Property="Opacity" Value="1"/>
+                            <Setter TargetName="CheckMark" Property="Opacity" Value="0"/>
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="IndeterminateMark" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.25" FillBehavior="HoldEnd"/>
+                                        <RectAnimation Storyboard.TargetName="IndeterminateMarkClip" Storyboard.TargetProperty="Rect" From="0,0,0,16" To="0,0,16,16" Duration="0:0:0.25" FillBehavior="HoldEnd"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <RectAnimation Storyboard.TargetName="IndeterminateMarkClip" Storyboard.TargetProperty="Rect" From="0,0,16,16" To="16,0,0,16" Duration="0:0:0.15" FillBehavior="HoldEnd"/>
+                                        <DoubleAnimation Storyboard.TargetName="IndeterminateMark" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.15" FillBehavior="HoldEnd"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="False">
+                            <Setter TargetName="CheckMark" Property="Opacity" Value="0"/>
+                            <Setter TargetName="IndeterminateMark" Property="Opacity" Value="0"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="CheckBoxBorder" Property="Background" Value="{DynamicResource ButtonDisabled}"/>
+                            <Setter TargetName="CheckBoxBorder" Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+                            <Setter Property="Opacity" Value="0.4"/>
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="True"/>
+                                <Condition Property="IsChecked" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="CheckBoxBorder" Property="Background" Value="{DynamicResource ButtonHover}"/>
+                            <Setter TargetName="CheckBoxBorder" Property="BorderBrush" Value="{DynamicResource ButtonHover}"/>
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="True"/>
+                                <Condition Property="IsChecked" Value="{x:Null}"/>
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="CheckBoxBorder" Property="Background" Value="{DynamicResource ButtonHover}"/>
+                            <Setter TargetName="CheckBoxBorder" Property="BorderBrush" Value="{DynamicResource ButtonHover}"/>
+                            <Setter TargetName="CheckBoxBorder" Property="Opacity" Value="0.8"/>
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Shared checkbox style used for feature toggles across windows -->
+    <Style x:Key="FeatureCheckboxStyle" TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
+        <Setter Property="Margin" Value="-4,-2,-4,10"/>
+        <Setter Property="Padding" Value="4,2"/>
+    </Style>
+
+    <!-- Shared CheckBox style for app list items -->
+    <Style x:Key="AppsPanelCheckBoxStyle" TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
+        <Setter Property="Margin" Value="2,3,2,3"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+    </Style>
+
+    <!-- Shared CheckBox style for preset picker entries -->
+    <Style x:Key="PresetCheckBoxStyle" TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
+        <Setter Property="Margin" Value="8,4"/>
+    </Style>
+
     <!-- ScrollBar Style -->
     <Style TargetType="{x:Type ScrollBar}">
         <Setter Property="Background" Value="Transparent"/>

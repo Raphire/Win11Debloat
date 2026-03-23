@@ -55,19 +55,9 @@ function Show-RevertSettingsModal {
     $applyBtn = $revertWindow.FindName('RevertApplyBtn')
     $cancelBtn = $revertWindow.FindName('RevertCancelBtn')
     $restartExplorerCheckbox = $revertWindow.FindName('RevertRestartExplorerCheckBox')
-
+    $featureCheckboxStyle = $revertWindow.FindResource('FeatureCheckboxStyle')
+    $restartExplorerCheckbox.Style = $featureCheckboxStyle
     $entryCheckboxes = @()
-    $featureCheckboxStyle = $null
-    if ($ownerWindow) {
-        try {
-            $featureCheckboxStyle = $ownerWindow.FindResource('FeatureCheckboxStyle')
-        }
-        catch { }
-    }
-
-    if ($restartExplorerCheckbox -and $featureCheckboxStyle) {
-        $restartExplorerCheckbox.Style = $featureCheckboxStyle
-    }
 
     foreach ($setting in $LastUsedSettings.Settings) {
         if ($setting.Value -ne $true) { continue }
@@ -95,7 +85,7 @@ function Show-RevertSettingsModal {
             'No revert action available'
         }
 
-        $canUndo = ($undoFeature -ne $null)
+        $canUndo = ($null -ne $undoFeature)
 
         $itemBorder = New-Object System.Windows.Controls.Border
         $itemBorder.Style = $revertWindow.FindResource('RevertItemBorderStyle')
@@ -106,13 +96,7 @@ function Show-RevertSettingsModal {
         $checkbox = New-Object System.Windows.Controls.CheckBox
         $checkbox.Content = $label
         $checkbox.Tag = $setting.Name
-        if ($featureCheckboxStyle) {
-            $checkbox.Style = $featureCheckboxStyle
-        }
-        else {
-            $checkbox.Foreground = $revertWindow.FindResource('FgColor')
-        }
-        $checkbox.Margin = [System.Windows.Thickness]::new(0, 0, 0, 3)
+        $checkbox.Style = $featureCheckboxStyle
         $checkbox.IsEnabled = $canUndo
 
         $undoText = New-Object System.Windows.Controls.TextBlock

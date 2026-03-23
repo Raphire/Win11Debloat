@@ -27,7 +27,7 @@
         <Style x:Key="RevertItemUndoTextStyle" TargetType="TextBlock">
             <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
             <Setter Property="Opacity" Value="0.75"/>
-            <Setter Property="Margin" Value="30,-4,0,3"/>
+            <Setter Property="Margin" Value="26,-8,0,3"/>
             <Setter Property="FontSize" Value="12"/>
             <Setter Property="TextWrapping" Value="Wrap"/>
         </Style>

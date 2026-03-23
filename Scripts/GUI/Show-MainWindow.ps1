@@ -1505,17 +1505,6 @@ function Show-MainWindow {
                 return
             }
 
-            # Keep runtime/control parameters and clear actionable selections before adding selected revert targets.
-            $actionableKeys = @()
-            foreach ($k in $script:Params.Keys) {
-                if ($script:ControlParams -notcontains $k) {
-                    $actionableKeys += $k
-                }
-            }
-            foreach ($k in $actionableKeys) {
-                $script:Params.Remove($k)
-            }
-
             AddParameter 'Undo'
 
             foreach ($featureId in $selectedFeatureIds) {
@@ -1527,10 +1516,8 @@ function Show-MainWindow {
                 }
             }
 
-            # Use the existing apply modal to execute and present progress/completion.
             Show-ApplyModal -Owner $window -RestartExplorer $shouldRestartExplorer
 
-            # Close the main window after the apply dialog closes
             $window.Close()
         })
     }

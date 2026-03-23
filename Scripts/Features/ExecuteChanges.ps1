@@ -6,32 +6,26 @@ function ExecuteParameter {
         [string]$paramKey
     )
     
-    # Check if this feature has metadata in Features.json
+    # Check if this feature exists in Features.json
     $feature = $null
     if ($script:Features.ContainsKey($paramKey)) {
         $feature = $script:Features[$paramKey]
     }
 
+    # Check if undo is requested and if this feature supports undo
     $undoChanges = $script:Params.ContainsKey('Undo')
-    $undoFeature = if ($undoChanges) { GetUndoFeatureForParam -paramKey $paramKey } else { $null }
 
-    # In global undo mode, skip any parameter that does not define undo metadata.
-    if ($undoChanges -and -not $undoFeature) {
-        return
-    }
+    if ($undoChanges) {
+        $undoFeature = GetUndoFeatureForParam -paramKey $paramKey
 
-    # If this feature was requested in undo mode, use undo metadata from Features.json.
-    if ($undoChanges -and $undoFeature) {
+        if ($null -eq $undoFeature) {
+            # This parameter doesn't support undo, so skip it
+            return
+        }
+
         $undoRegFile = $undoFeature.RegistryUndoKey
-        $usesOfflineHive = $script:Params.ContainsKey("Sysprep") -or $script:Params.ContainsKey("User")
-        $undoFolderPath = if ($usesOfflineHive) {
-            Join-Path $script:RegfilesPath (Join-Path 'Sysprep' (Join-Path 'Undo' $undoRegFile))
-        }
-        else {
-            Join-Path $script:RegfilesPath (Join-Path 'Undo' $undoRegFile)
-        }
+        $undoFolderPath = Join-Path $script:RegfilesPath (Join-Path 'Undo' $undoRegFile)
 
-        # Prefer dedicated Undo subfolder files when present, with fallback to legacy root location.
         if (Test-Path $undoFolderPath) {
             $undoRegFile = Join-Path 'Undo' $undoRegFile
         }
@@ -40,7 +34,7 @@ function ExecuteParameter {
         return
     }
     
-    # If feature has RegistryKey and ApplyText, use dynamic ImportRegistryFile
+    # If feature has RegistryKey and ApplyText, dynamically import the registry file for this feature
     if ($feature -and $feature.RegistryKey -and $feature.ApplyText) {
         ImportRegistryFile "> $($feature.ApplyText)" $feature.RegistryKey
         
@@ -194,13 +188,8 @@ function ExecuteAllChanges {
         }
     }
 
-    # If no undo-capable changes remain, disable explorer restart for this run.
     if ($undoChanges -and $actionableKeys.Count -eq 0) {
-        if (-not $script:Params.ContainsKey('NoRestartExplorer')) {
-            $script:Params['NoRestartExplorer'] = $true
-        }
-        Write-Warning "None of the selected changes can be undone automatically."
-        Write-Host ""
+        throw "Undo was requested but none of the selected parameters support undo. No changes were reverted."
     }
     
     $totalSteps = $actionableKeys.Count

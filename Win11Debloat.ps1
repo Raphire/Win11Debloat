@@ -334,8 +334,16 @@ foreach ($Param in $script:ControlParams) {
     }
 }
 
-# Guard: Undo mode requires at least one actionable, non-control parameter.
+# Guard: Undo mode requires at least one actionable and cannot be combined with deployment-targeted parameters
 if ($script:Params.ContainsKey('Undo')) {
+    $deploymentTargetParams = @('Sysprep', 'User', 'AppRemovalTarget')
+    $selectedDeploymentParams = @($deploymentTargetParams | Where-Object { $script:Params.ContainsKey($_) })
+
+    if ($selectedDeploymentParams.Count -gt 0) {
+        Write-Error "The -Undo parameter cannot be combined with deployment target parameters: -$($selectedDeploymentParams -join ', -')."
+        AwaitKeyToExit
+    }
+
     $loadsSettingsFromPreset = $RunDefaults -or $RunDefaultsLite -or $RunSavedSettings
     $undoTargets = @($script:Params.Keys | Where-Object {
         ($script:ControlParams -notcontains $_) -and $_ -ne 'Apps' -and $_ -ne 'CreateRestorePoint'

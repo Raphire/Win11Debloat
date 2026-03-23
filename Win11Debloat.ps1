@@ -468,9 +468,17 @@ if (($controlParamsCount -eq $script:Params.Keys.Count) -or ($script:Params.Keys
     AwaitKeyToExit
 }
 
-# Execute all selected/provided parameters using the consolidated function
-# (This also handles restore point creation if requested)
-ExecuteAllChanges
+try {
+    # Execute all selected/provided parameters using the consolidated function
+    # (This also handles restore point creation if requested)
+    ExecuteAllChanges
+}
+catch {
+    Write-Error "An error occurred while applying changes: $_"
+
+    AwaitKeyToExit
+}
+
 
 RestartExplorer
 

@@ -361,9 +361,18 @@ function Import-Configuration {
     if (-not $categories) { return }
 
     if ($categories -contains 'Applications' -and $config.Apps) {
-        $appIds = @($config.Apps | ForEach-Object { if ($_ -is [string]) { $_ } })
+        $appIds = @(
+            $config.Apps | 
+            Where-Object { $_ -is [string] } | 
+            ForEach-Object { $_.Trim() } |
+            Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
+        )
+
         Apply-ImportedApplications -AppsPanel $AppsPanel -AppIds $appIds
-        if ($OnAppsImported) { & $OnAppsImported }
+        
+        if ($OnAppsImported) { 
+            & $OnAppsImported
+        }
     }
     if ($categories -contains 'System Tweaks' -and $config.Tweaks) {
         Apply-ImportedTweakSettings -Owner $Owner -UiControlMappings $UiControlMappings -TweakSettings @($config.Tweaks)

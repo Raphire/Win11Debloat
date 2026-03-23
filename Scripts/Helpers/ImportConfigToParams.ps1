@@ -30,7 +30,13 @@ function ImportConfigToParams {
     $importedItems = 0
 
     if ($configJson.Apps) {
-        $appIds = @($configJson.Apps | Where-Object { $_ -is [string] -and -not [string]::IsNullOrWhiteSpace($_) } | ForEach-Object { $_.Trim() })
+        $appIds = @(
+            $configJson.Apps | 
+            Where-Object { $_ -is [string] } | 
+            ForEach-Object { $_.Trim() } |
+            Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
+        )
+        
         if ($appIds.Count -gt 0) {
             AddParameter 'RemoveApps'
             AddParameter 'Apps' ($appIds -join ',')

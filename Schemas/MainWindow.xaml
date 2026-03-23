@@ -667,7 +667,7 @@
                             </StackPanel>
 
                             <!-- Revert link -->
-                            <Button x:Name="HomeRevertLinkBtn" HorizontalAlignment="Center" Margin="0,7,0,0" Style="{DynamicResource ActionLinkButtonStyle}" AutomationProperties.Name="Revert previous changes">
+                            <Button x:Name="HomeRevertLinkBtn" HorizontalAlignment="Center" Margin="0,11,0,0" Style="{DynamicResource ActionLinkButtonStyle}" AutomationProperties.Name="Revert previous changes">
                                 <TextBlock Text="Revert previous changes" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
                             </Button>
                         </StackPanel>

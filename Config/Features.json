@@ -215,6 +215,38 @@
       ]
     },
     {
+      "GroupId": "DriveLetterPosition",
+      "Label": "Drive letter position",
+      "ToolTip": "This setting allows you to choose where drive letters are shown in File Explorer.",
+      "Category": "File Explorer",
+      "Values": [
+        {
+          "Label": "Show drive letters after drive label (Default)",
+          "FeatureIds": [
+            "ShowDriveLettersLast"
+          ]
+        },
+        {
+          "Label": "Show drive letters before drive label",
+          "FeatureIds": [
+            "ShowDriveLettersFirst"
+          ]
+        },
+        {
+          "Label": "Show network drive letters before drive label",
+          "FeatureIds": [
+            "ShowNetworkDriveLettersFirst"
+          ]
+        },
+        {
+          "Label": "Hide all drive letters",
+          "FeatureIds": [
+            "HideDriveLetters"
+          ]
+        }
+      ]
+    },
+    {
       "GroupId": "ShowTabsInAltTab",
       "Label": "Show tabs from apps when snapping or pressing Alt+Tab",
       "ToolTip": "This setting allows you to choose whether to show tabs from apps (such as Edge browser tabs) when snapping windows or pressing Alt+Tab.",
@@ -1488,6 +1520,58 @@
       "RegistryUndoKey": null,
       "RequiresReboot": true,
       "MinVersion": 22000,
+      "MaxVersion": null
+    },
+    {
+      "FeatureId": "ShowDriveLettersFirst",
+      "Label": "show drive letters before drive label",
+      "ToolTip": "This setting will show drive letters before the drive label in File Explorer.",
+      "Category": "File Explorer",
+      "Action": "Show first",
+      "RegistryKey": "Show_Drive_Letters_First.reg",
+      "ApplyText": "Showing drive letters before drive label...",
+      "UndoAction": "Show last",
+      "RegistryUndoKey": "Show_Drive_Letters_Last.reg",
+      "MinVersion": null,
+      "MaxVersion": null
+    },
+    {
+      "FeatureId": "ShowDriveLettersLast",
+      "Label": "show drive letters after drive label",
+      "ToolTip": "This setting will show drive letters after the drive label in File Explorer (Default Windows behavior).",
+      "Category": "File Explorer",
+      "Action": "Show last",
+      "RegistryKey": "Show_Drive_Letters_Last.reg",
+      "ApplyText": "Showing drive letters after drive label...",
+      "UndoAction": "Show first",
+      "RegistryUndoKey": "Show_Drive_Letters_First.reg",
+      "MinVersion": null,
+      "MaxVersion": null
+    },
+    {
+      "FeatureId": "ShowNetworkDriveLettersFirst",
+      "Label": "show network drive letters before drive label",
+      "ToolTip": "This setting will show only network drive letters before the drive label in File Explorer.",
+      "Category": "File Explorer",
+      "Action": "Show network first",
+      "RegistryKey": "Show_Network_Drive_Letters_First.reg",
+      "ApplyText": "Showing network drive letters before drive label...",
+      "UndoAction": "Show last",
+      "RegistryUndoKey": "Show_Drive_Letters_Last.reg",
+      "MinVersion": null,
+      "MaxVersion": null
+    },
+    {
+      "FeatureId": "HideDriveLetters",
+      "Label": "hide all drive letters",
+      "ToolTip": "This setting will hide all drive letters from the File Explorer navigation pane and 'This PC'.",
+      "Category": "File Explorer",
+      "Action": "Hide",
+      "RegistryKey": "Hide_Drive_Letters.reg",
+      "ApplyText": "Hiding all drive letters...",
+      "UndoAction": "Show last",
+      "RegistryUndoKey": "Show_Drive_Letters_Last.reg",
+      "MinVersion": null,
       "MaxVersion": null
     }
   ]

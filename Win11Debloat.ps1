@@ -97,7 +97,11 @@ param (
     [switch]$HideMusic,
     [switch]$HideIncludeInLibrary,
     [switch]$HideGiveAccessTo,
-    [switch]$HideShare
+    [switch]$HideShare,
+    [switch]$ShowDriveLettersFirst,
+    [switch]$ShowDriveLettersLast,
+    [switch]$ShowNetworkDriveLettersFirst,
+    [switch]$HideDriveLetters
 )
 
 

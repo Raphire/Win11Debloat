@@ -1,4 +1,4 @@
 Windows Registry Editor Version 5.00
 
-[HKEY_USERS\Default\Software\Microsoft\Windows\CurrentVersion\Explorer]
+[hkey_users\default\Software\Microsoft\Windows\CurrentVersion\Explorer]
 "ShowDriveLettersFirst"=dword:00000002

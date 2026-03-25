@@ -95,7 +95,11 @@ param (
     [switch]$HideMusic,
     [switch]$HideIncludeInLibrary,
     [switch]$HideGiveAccessTo,
-    [switch]$HideShare
+    [switch]$HideShare,
+    [switch]$ShowDriveLettersFirst,
+    [switch]$ShowDriveLettersLast,
+    [switch]$ShowNetworkDriveLettersFirst,
+    [switch]$HideDriveLetters
 )
 
 # Show error if current powershell environment does not have LanguageMode set to FullLanguage 

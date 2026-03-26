@@ -1531,7 +1531,7 @@
       "RegistryKey": "Show_Drive_Letters_First.reg",
       "ApplyText": "Showing drive letters before drive label...",
       "UndoAction": "Show last",
-      "RegistryUndoKey": "Undo/Show_Drive_Letters_First.reg",
+      "RegistryUndoKey": "Undo/Show_Drive_Letters_Last.reg",
       "MinVersion": null,
       "MaxVersion": null
     },
@@ -1557,7 +1557,7 @@
       "RegistryKey": "Show_Network_Drive_Letters_First.reg",
       "ApplyText": "Showing network drive letters before drive label...",
       "UndoAction": "Show last",
-      "RegistryUndoKey": "Undo/Show_Network_Drive_Letters_First.reg",
+      "RegistryUndoKey": "Undo/Show_Drive_Letters_Last.reg",
       "MinVersion": null,
       "MaxVersion": null
     },
@@ -1570,7 +1570,7 @@
       "RegistryKey": "Hide_Drive_Letters.reg",
       "ApplyText": "Hiding all drive letters...",
       "UndoAction": "Show last",
-      "RegistryUndoKey": "Undo/Hide_Drive_Letters.reg",
+      "RegistryUndoKey": "Undo/Show_Drive_Letters_Last.reg",
       "MinVersion": null,
       "MaxVersion": null
     }

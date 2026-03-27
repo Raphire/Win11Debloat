@@ -1,0 +1,77 @@
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Select Settings to Import/Export"
+        Width="440"
+        SizeToContent="Height"
+        MaxHeight="501"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        Topmost="False"
+        ShowInTaskbar="False">
+
+    <Border BorderBrush="{DynamicResource BorderColor}"
+            BorderThickness="1"
+            CornerRadius="8"
+            Background="{DynamicResource CardBgColor}"
+            Margin="25">
+        <Border.Effect>
+            <DropShadowEffect Color="Black"
+                              Opacity="0.15"
+                              BlurRadius="20"
+                              ShadowDepth="0"
+                              Direction="0"/>
+        </Border.Effect>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Title Bar -->
+            <Grid Grid.Row="0" x:Name="TitleBar" Height="40" Background="Transparent">
+                <TextBlock x:Name="TitleText"
+                           Foreground="{DynamicResource FgColor}"
+                           FontSize="16"
+                           FontWeight="SemiBold"
+                           VerticalAlignment="Center"
+                           Margin="16,0,0,0"/>
+            </Grid>
+
+            <!-- Content -->
+            <StackPanel Grid.Row="1" x:Name="ContentPanel" Margin="20,12,20,9">
+                <TextBlock x:Name="PromptText"
+                           TextWrapping="Wrap"
+                           FontSize="14"
+                           LineHeight="20"
+                           Foreground="{DynamicResource FgColor}"
+                           Margin="0,0,0,14"/>
+                <!-- Checkboxes are added dynamically at runtime -->
+                <StackPanel x:Name="CheckboxPanel"/>
+            </StackPanel>
+
+            <!-- Button Footer -->
+            <Border Grid.Row="2"
+                    Background="{DynamicResource BgColor}"
+                    BorderBrush="{DynamicResource BorderColor}"
+                    BorderThickness="0,1,0,0"
+                    Padding="16,12"
+                    CornerRadius="0,0,8,8">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button x:Name="OkButton"
+                            Content="OK"
+                            Height="32" MinWidth="80" Margin="4,0"
+                            Style="{DynamicResource PrimaryButtonStyle}"/>
+                    <Button x:Name="CancelButton"
+                            Content="Cancel"
+                            Height="32" MinWidth="80" Margin="4,0"
+                            Style="{DynamicResource SecondaryButtonStyle}"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

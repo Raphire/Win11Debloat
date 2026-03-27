@@ -16,10 +16,12 @@ function LoadAppsFromFile {
             # JSON file format
             $jsonContent = Get-Content -Path $appsFilePath -Raw | ConvertFrom-Json
             Foreach ($appData in $jsonContent.Apps) {
-                $appId = $appData.AppId.Trim()
+                # Handle AppId as array (could be single or multiple IDs)
+                $appIdArray = if ($appData.AppId -is [array]) { $appData.AppId } else { @($appData.AppId) }
+                $appIdArray = $appIdArray | ForEach-Object { $_.Trim() } | Where-Object { $_.length -gt 0 }
                 $selectedByDefault = $appData.SelectedByDefault
-                if ($selectedByDefault -and $appId.length -gt 0) {
-                    $appsList += $appId
+                if ($selectedByDefault -and $appIdArray.Count -gt 0) {
+                    $appsList += $appIdArray
                 }
             }
         }

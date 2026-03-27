@@ -75,7 +75,8 @@ function Show-AppSelectionWindow {
             $checkbox = New-Object System.Windows.Controls.CheckBox
             $checkbox.Content = $_.DisplayName
             $checkbox.SetValue([System.Windows.Automation.AutomationProperties]::NameProperty, $_.DisplayName)
-            $checkbox.Tag = $_.AppId
+            $checkbox.Tag = $_.AppIdDisplay
+            Add-Member -InputObject $checkbox -MemberType NoteProperty -Name 'AppIds' -Value @($_.AppId)
             $checkbox.IsChecked = $_.IsChecked
             $checkbox.ToolTip = $_.Description
             $checkbox.Style = $window.Resources["AppsPanelCheckBoxStyle"]
@@ -118,9 +119,10 @@ function Show-AppSelectionWindow {
         $selectedApps = @()
         foreach ($child in $appsPanel.Children) {
             if ($child -is [System.Windows.Controls.CheckBox] -and $child.IsChecked) {
-                $selectedApps += $child.Tag
+                $selectedApps += @($child.AppIds)
             }
         }
+        $selectedApps = @($selectedApps | Where-Object { $_ } | Select-Object -Unique)
 
         # Close form without saving if no apps were selected
         if ($selectedApps.Count -eq 0) {

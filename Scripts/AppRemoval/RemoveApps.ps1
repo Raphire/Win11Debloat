@@ -9,6 +9,9 @@ function RemoveApps {
 
     $appIndex = 0
     $appCount = @($appsList).Count
+    $edgeIds = @('Microsoft.Edge', 'XPFFTQ037JWMHS')
+    $edgeUninstallSucceeded = $false
+    $edgeScheduledTaskAdded = $false
 
     Foreach ($app in $appsList) {
         if ($script:CancelRequested) {
@@ -25,20 +28,27 @@ function RemoveApps {
         Write-Host "Attempting to remove $app..."
 
         # Use WinGet only to remove OneDrive and Edge
-        if (($app -eq "Microsoft.OneDrive") -or ($app -eq "Microsoft.Edge")) {
+        if (($app -eq "Microsoft.OneDrive") -or ($edgeIds -contains $app)) {
             if ($script:WingetInstalled -eq $false) {
                 Write-Host "WinGet is either not installed or is outdated, $app could not be removed" -ForegroundColor Red
                 continue
             }
 
-            $appName = $app -replace '\.', '_'
+            $isEdgeId = $edgeIds -contains $app
+            $appName = if ($isEdgeId) { 'Microsoft_Edge' } else { $app -replace '\.', '_' }
 
             # Uninstall app via WinGet, or create a scheduled task to uninstall it later
             if ($script:Params.ContainsKey("User")) {
-                ImportRegistryFile "Adding scheduled task to uninstall $app for user $(GetUserName)..." "Uninstall_$($appName).reg"
+                if (-not ($isEdgeId -and $edgeScheduledTaskAdded)) {
+                    ImportRegistryFile "Adding scheduled task to uninstall $app for user $(GetUserName)..." "Uninstall_$($appName).reg"
+                    if ($isEdgeId) { $edgeScheduledTaskAdded = $true }
+                }
             }
             elseif ($script:Params.ContainsKey("Sysprep")) {
-                ImportRegistryFile "Adding scheduled task to uninstall $app after for new users..." "Uninstall_$($appName).reg"
+                if (-not ($isEdgeId -and $edgeScheduledTaskAdded)) {
+                    ImportRegistryFile "Adding scheduled task to uninstall $app after for new users..." "Uninstall_$($appName).reg"
+                    if ($isEdgeId) { $edgeScheduledTaskAdded = $true }
+                }
             }
             else {
                 # Uninstall app via WinGet
@@ -47,20 +57,34 @@ function RemoveApps {
                     winget uninstall --accept-source-agreements --disable-interactivity --id $appId
                 } -ArgumentList $app
 
-                If (($app -eq "Microsoft.Edge") -and (Select-String -InputObject $wingetOutput -Pattern "Uninstall failed with exit code")) {
-                    Write-Host "Unable to uninstall Microsoft Edge via WinGet" -ForegroundColor Red
+                $wingetFailed = Select-String -InputObject $wingetOutput -Pattern "Uninstall failed with exit code|No installed package found matching input criteria|No package found matching input criteria" -SimpleMatch:$false
+                if ($isEdgeId) {
+                    if (-not $wingetFailed) {
+                        $edgeUninstallSucceeded = $true
+                    }
 
-                    if ($script:GuiWindow) {
-                        $result = Show-MessageBox -Message 'Unable to uninstall Microsoft Edge via WinGet. Would you like to forcefully uninstall it? NOT RECOMMENDED!' -Title 'Force Uninstall Microsoft Edge?' -Button 'YesNo' -Icon 'Warning'
+                    # Prompt immediately after the final selected Edge ID attempt (if all attempts failed)
+                    $hasRemainingEdgeIds = $false
+                    if ($appIndex -lt $appCount) {
+                        $remainingApps = @($appsList)[($appIndex)..($appCount - 1)]
+                        $hasRemainingEdgeIds = @($remainingApps | Where-Object { $edgeIds -contains $_ }).Count -gt 0
+                    }
 
-                        if ($result -eq 'Yes') {
+                    if (-not $hasRemainingEdgeIds -and -not $edgeUninstallSucceeded) {
+                        Write-Host "Unable to uninstall Microsoft Edge via WinGet" -ForegroundColor Red
+
+                        if ($script:GuiWindow) {
+                            $result = Show-MessageBox -Message 'Unable to uninstall Microsoft Edge via WinGet. Would you like to forcefully uninstall it? NOT RECOMMENDED!' -Title 'Force Uninstall Microsoft Edge?' -Button 'YesNo' -Icon 'Warning'
+
+                            if ($result -eq 'Yes') {
+                                Write-Host ""
+                                ForceRemoveEdge
+                            }
+                        }
+                        elseif ($( Read-Host -Prompt "Would you like to forcefully uninstall Microsoft Edge? NOT RECOMMENDED! (y/n)" ) -eq 'y') {
                             Write-Host ""
                             ForceRemoveEdge
                         }
-                    }
-                    elseif ($( Read-Host -Prompt "Would you like to forcefully uninstall Microsoft Edge? NOT RECOMMENDED! (y/n)" ) -eq 'y') {
-                        Write-Host ""
-                        ForceRemoveEdge
                     }
                 }
             }

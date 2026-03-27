@@ -242,13 +242,16 @@ function Show-ApplyModal {
     })
     
     # Show dialog
-    $applyWindow.ShowDialog() | Out-Null
-    
-    # Hide overlay after dialog closes
-    if ($overlay) {
-        try {
-            $ownerWindow.Dispatcher.Invoke([action]{ $overlay.Visibility = 'Collapsed' })
+    try {
+        $applyWindow.ShowDialog() | Out-Null
+    }
+    finally {
+        # Hide overlay after dialog closes
+        if ($overlay) {
+            try {
+                $ownerWindow.Dispatcher.Invoke([action]{ $overlay.Visibility = 'Collapsed' })
+            }
+            catch { }
         }
-        catch { }
     }
 }

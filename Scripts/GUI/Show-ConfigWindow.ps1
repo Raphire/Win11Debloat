@@ -44,14 +44,6 @@ function Show-ImportExportConfigWindow {
     $dlg.Owner = $Owner
     SetWindowThemeResources -window $dlg -usesDarkMode $UsesDarkMode
 
-    # Copy the CheckBox default style from the main window so checkboxes get the themed template
-    try {
-        $mainCheckBoxStyle = $Owner.FindResource([type][System.Windows.Controls.CheckBox])
-        if ($mainCheckBoxStyle) {
-            $dlg.Resources.Add([type][System.Windows.Controls.CheckBox], $mainCheckBoxStyle)
-        }
-    } catch { }
-
     # Populate named elements
     $dlg.Title = $Title
     $dlg.FindName('TitleText').Text = $Title
@@ -70,6 +62,7 @@ function Show-ImportExportConfigWindow {
         $cb.Margin = [System.Windows.Thickness]::new(0,0,0,8)
         $cb.FontSize = 14
         $cb.Foreground = $dlg.FindResource('FgColor')
+        $cb.Style = $window.Resources["AppsPanelCheckBoxStyle"]
         if ($DisabledCategories -contains $cat) {
             $cb.IsChecked = $false
             $cb.IsEnabled = $false

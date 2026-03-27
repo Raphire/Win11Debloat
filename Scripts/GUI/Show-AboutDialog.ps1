@@ -40,7 +40,7 @@ function Show-AboutDialog {
         }
         catch { }
     }
-    
+
     # Apply theme resources
     SetWindowThemeResources -window $aboutWindow -usesDarkMode $usesDarkMode
     
@@ -83,13 +83,16 @@ function Show-AboutDialog {
     })
     
     # Show dialog
-    $aboutWindow.ShowDialog() | Out-Null
-    
-    # Hide overlay after dialog closes
-    if ($overlay) {
-        try {
-            $ownerWindow.Dispatcher.Invoke([action]{ $overlay.Visibility = 'Collapsed' })
+    try {
+        $aboutWindow.ShowDialog() | Out-Null
+    }
+    finally {
+        # Hide overlay after dialog closes
+        if ($overlay) {
+            try {
+                $ownerWindow.Dispatcher.Invoke([action]{ $overlay.Visibility = 'Collapsed' })
+            }
+            catch { }
         }
-        catch { }
     }
 }

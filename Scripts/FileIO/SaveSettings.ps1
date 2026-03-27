@@ -16,10 +16,7 @@ function SaveSettings {
         }
     }
 
-    try {
-        $settings | ConvertTo-Json -Depth 10 | Set-Content $script:SavedSettingsFilePath
-    }
-    catch {
+    if (-not (SaveToFile -Config $settings -FilePath $script:SavedSettingsFilePath)) {
         Write-Output ""
         Write-Host "Error: Failed to save settings to LastUsedSettings.json file" -ForegroundColor Red
     }

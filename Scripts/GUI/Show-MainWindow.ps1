@@ -30,10 +30,38 @@ function Show-MainWindow {
     $importConfigBtn = $window.FindName('ImportConfigBtn')
     $exportConfigBtn = $window.FindName('ExportConfigBtn')
 
+    # Manual drag state
+    $script:IsDragging = $false
+    $script:DragStartMouse = $null
+    $script:DragStartWindow = $null
+    $script:DragRelX = 0.0
+
     # Title bar event handlers
     $titleBar.Add_MouseLeftButtonDown({
         if ($_.OriginalSource -is [System.Windows.Controls.Grid] -or $_.OriginalSource -is [System.Windows.Controls.Border] -or $_.OriginalSource -is [System.Windows.Controls.TextBlock]) {
-            $window.DragMove()
+            $script:DragRelX = [Math]::Min(1.0, [Math]::Max(0.0, $_.GetPosition($titleBar).X / $titleBar.ActualWidth))
+            $script:DragStartMouse = [System.Windows.Forms.Cursor]::Position
+            $script:DragStartWindow = [System.Windows.Point]::new($window.Left, $window.Top)
+            $script:IsDragging = $true
+            $titleBar.CaptureMouse() | Out-Null
+        }
+    })
+
+    $titleBar.Add_MouseMove({
+        if ($script:IsDragging -and $_.LeftButton -eq [System.Windows.Input.MouseButtonState]::Pressed) {
+            $cur = [System.Windows.Forms.Cursor]::Position
+            $dx = $cur.X - $script:DragStartMouse.X
+            $dy = $cur.Y - $script:DragStartMouse.Y
+
+            $window.Left = $script:DragStartWindow.X + $dx
+            $window.Top  = $script:DragStartWindow.Y + $dy
+        }
+    })
+
+    $titleBar.Add_MouseLeftButtonUp({
+        if ($script:IsDragging) {
+            $script:IsDragging = $false
+            $titleBar.ReleaseMouseCapture()
         }
     })
     

@@ -187,6 +187,7 @@
       "Label": "Open File Explorer to",
       "ToolTip": "This setting allows you to choose the default location that File Explorer opens to.",
       "Category": "File Explorer",
+      "Priority": 1,
       "Values": [
         {
           "Label": "Home",
@@ -210,6 +211,39 @@
           "Label": "OneDrive",
           "FeatureIds": [
             "ExplorerToOneDrive"
+          ]
+        }
+      ]
+    },
+    {
+      "GroupId": "DriveLetterPosition",
+      "Label": "Drive letter position",
+      "ToolTip": "This setting allows you to choose where drive letters are shown in File Explorer.",
+      "Category": "File Explorer",
+      "Priority": 20,
+      "Values": [
+        {
+          "Label": "Show drive letters after drive label (Default)",
+          "FeatureIds": [
+            "ShowDriveLettersLast"
+          ]
+        },
+        {
+          "Label": "Show drive letters before drive label",
+          "FeatureIds": [
+            "ShowDriveLettersFirst"
+          ]
+        },
+        {
+          "Label": "Show network drive letters before drive label",
+          "FeatureIds": [
+            "ShowNetworkDriveLettersFirst"
+          ]
+        },
+        {
+          "Label": "Hide all drive letters",
+          "FeatureIds": [
+            "HideDriveLetters"
           ]
         }
       ]
@@ -1220,6 +1254,7 @@
       "Label": "file extensions for known file types",
       "ToolTip": "This will show file extensions for known file types. By default, Windows hides file extensions for known file types which can lead to confusion and security risks.",
       "Category": "File Explorer",
+      "Priority": 2,
       "Action": "Show",
       "RegistryKey": "Show_Extensions_For_Known_File_Types.reg",
       "ApplyText": "Enabling file extensions for known file types...",
@@ -1233,6 +1268,7 @@
       "Label": "hidden files, folders and drives",
       "ToolTip": "By default, Windows hides certain files, folders and drives to prevent accidental modification or deletion. Turn this on to show all files in File Explorer.",
       "Category": "File Explorer",
+      "Priority": 3,
       "Action": "Show",
       "RegistryKey": "Show_Hidden_Folders.reg",
       "ApplyText": "Unhiding hidden files, folders and drives...",
@@ -1246,6 +1282,7 @@
       "Label": "'Home' from navigation pane",
       "ToolTip": "Hides the 'Home' section from the File Explorer navigation pane.",
       "Category": "File Explorer",
+      "Priority": 4,
       "Action": "Hide",
       "RegistryKey": "Hide_Home_from_Explorer.reg",
       "ApplyText": "Hiding the home section from the File Explorer navigation pane...",
@@ -1259,6 +1296,7 @@
       "Label": "'Gallery' from navigation pane",
       "ToolTip": "Hides the 'Gallery' section from the File Explorer navigation pane.",
       "Category": "File Explorer",
+      "Priority": 5,
       "Action": "Hide",
       "RegistryKey": "Hide_Gallery_from_Explorer.reg",
       "ApplyText": "Hiding the gallery section from the File Explorer navigation pane...",
@@ -1272,6 +1310,7 @@
       "Label": "duplicate removable drive entries",
       "ToolTip": "By default, Windows shows removable drives both under 'This PC' and in the navigation pane with its own entry. Enable this setting to only show removable drives under 'This PC'.",
       "Category": "File Explorer",
+      "Priority": 6,
       "Action": "Hide",
       "RegistryKey": "Hide_duplicate_removable_drives_from_navigation_pane_of_File_Explorer.reg",
       "ApplyText": "Hiding duplicate removable drive entries from the File Explorer navigation pane...",
@@ -1285,6 +1324,7 @@
       "Label": "common folders back to 'This PC' page",
       "ToolTip": "This setting will add common folders like Desktop, Documents, Downloads, Music, Pictures and Videos back to the 'This PC' page in File Explorer.",
       "Category": "File Explorer",
+      "Priority": 7,
       "Action": "Add",
       "RegistryKey": "Add_All_Folders_Under_This_PC.reg",
       "ApplyText": "Adding all common folders (Desktop, Downloads, etc.) back to 'This PC' in File Explorer...",
@@ -1376,6 +1416,7 @@
       "Label": "'Include in library' option in the context menu",
       "ToolTip": "Hides the 'Include in library' option from the File Explorer context menu.",
       "Category": "File Explorer",
+      "Priority": 8,
       "Action": "Hide",
       "RegistryKey": "Disable_Include_in_library_from_context_menu.reg",
       "ApplyText": "Hiding 'Include in library' in the context menu...",
@@ -1389,6 +1430,7 @@
       "Label": "'Give access to' option in the context menu",
       "ToolTip": "Hides the 'Give access to' option from the File Explorer context menu.",
       "Category": "File Explorer",
+      "Priority": 9,
       "Action": "Hide",
       "RegistryKey": "Disable_Give_access_to_context_menu.reg",
       "ApplyText": "Hiding 'Give access to' in the context menu...",
@@ -1402,6 +1444,7 @@
       "Label": "'Share' option in the context menu",
       "ToolTip": "Hides the 'Share' option from the File Explorer context menu.",
       "Category": "File Explorer",
+      "Priority": 10,
       "Action": "Hide",
       "RegistryKey": "Disable_Share_from_context_menu.reg",
       "ApplyText": "Hiding 'Share' in the context menu...",
@@ -1415,6 +1458,7 @@
       "Label": "'OneDrive' folder from navigation pane",
       "ToolTip": "Hides the 'OneDrive' folder from the File Explorer navigation pane.",
       "Category": "File Explorer",
+      "Priority": 11,
       "Action": "Hide",
       "RegistryKey": "Hide_Onedrive_Folder.reg",
       "ApplyText": "Hiding the OneDrive folder from the File Explorer navigation pane...",
@@ -1428,6 +1472,7 @@
       "Label": "'3D objects' folder under 'This PC'",
       "ToolTip": "Hides the '3D objects' folder from the File Explorer navigation pane.",
       "Category": "File Explorer",
+      "Priority": 12,
       "Action": "Hide",
       "RegistryKey": "Hide_3D_Objects_Folder.reg",
       "ApplyText": "Hiding the 3D objects folder from the File Explorer navigation pane...",
@@ -1441,6 +1486,7 @@
       "Label": "'Music' folder under 'This PC'",
       "ToolTip": "Hides the 'Music' folder from the File Explorer navigation pane.",
       "Category": "File Explorer",
+      "Priority": 13,
       "Action": "Hide",
       "RegistryKey": "Hide_Music_Folder.reg",
       "ApplyText": "Hiding the music folder from the File Explorer navigation pane...",
@@ -1488,6 +1534,58 @@
       "RegistryUndoKey": null,
       "RequiresReboot": true,
       "MinVersion": 22000,
+      "MaxVersion": null
+    },
+    {
+      "FeatureId": "ShowDriveLettersFirst",
+      "Label": "show drive letters before drive label",
+      "ToolTip": "This setting will show drive letters before the drive label in File Explorer.",
+      "Category": "File Explorer",
+      "Action": "Show first",
+      "RegistryKey": "Show_Drive_Letters_First.reg",
+      "ApplyText": "Showing drive letters before drive label...",
+      "UndoAction": "Show last",
+      "RegistryUndoKey": "Undo/Show_Drive_Letters_Last.reg",
+      "MinVersion": null,
+      "MaxVersion": null
+    },
+    {
+      "FeatureId": "ShowDriveLettersLast",
+      "Label": "show drive letters after drive label",
+      "ToolTip": "This setting will show drive letters after the drive label in File Explorer (Default Windows behavior).",
+      "Category": "File Explorer",
+      "Action": "Show last",
+      "RegistryKey": "Show_Drive_Letters_Last.reg",
+      "ApplyText": "Showing drive letters after drive label...",
+      "UndoAction": null,
+      "RegistryUndoKey": null,
+      "MinVersion": null,
+      "MaxVersion": null
+    },
+    {
+      "FeatureId": "ShowNetworkDriveLettersFirst",
+      "Label": "show network drive letters before drive label",
+      "ToolTip": "This setting will show only network drive letters before the drive label in File Explorer.",
+      "Category": "File Explorer",
+      "Action": "Show network first",
+      "RegistryKey": "Show_Network_Drive_Letters_First.reg",
+      "ApplyText": "Showing network drive letters before drive label...",
+      "UndoAction": "Show last",
+      "RegistryUndoKey": "Undo/Show_Drive_Letters_Last.reg",
+      "MinVersion": null,
+      "MaxVersion": null
+    },
+    {
+      "FeatureId": "HideDriveLetters",
+      "Label": "hide all drive letters",
+      "ToolTip": "This setting will hide all drive letters from the File Explorer navigation pane and 'This PC'.",
+      "Category": "File Explorer",
+      "Action": "Hide",
+      "RegistryKey": "Hide_Drive_Letters.reg",
+      "ApplyText": "Hiding all drive letters...",
+      "UndoAction": "Show last",
+      "RegistryUndoKey": "Undo/Show_Drive_Letters_Last.reg",
+      "MinVersion": null,
       "MaxVersion": null
     }
   ]

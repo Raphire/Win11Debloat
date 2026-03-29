@@ -1458,13 +1458,13 @@ function Show-MainWindow {
             if ($userSelectionCombo.SelectedIndex -ne 2) {
                 $appRemovalScopeCombo.IsEnabled = $true
             }
-            $appRemovalScopeSection.Opacity = 1.0
+            $appRemovalScopeSection.Visibility = 'Visible'
             UpdateAppRemovalScopeDescription
         }
         else {
             # Disable app removal scope selection when no apps selected
             $appRemovalScopeCombo.IsEnabled = $false
-            $appRemovalScopeSection.Opacity = 0.5
+            $appRemovalScopeSection.Visibility = 'Collapsed'
             $appRemovalScopeDescription.Text = "No apps selected for removal."
         }
         
@@ -1538,6 +1538,44 @@ function Show-MainWindow {
         $tabControl.SelectedIndex = 1
         UpdateNavigationButtons
     })
+
+    # Handle Home Revert link button
+    $homeRevertLinkBtn = $window.FindName('HomeRevertLinkBtn')
+    if ($homeRevertLinkBtn) {
+        if (-not (Test-Path $script:SavedSettingsFilePath)) {
+            $homeRevertLinkBtn.Visibility = 'Collapsed'
+        }
+
+        $homeRevertLinkBtn.Add_Click({
+            $savedSettings = LoadJsonFile -filePath $script:SavedSettingsFilePath -expectedVersion "1.0" -optionalFile
+            if (-not $savedSettings -or -not $savedSettings.Settings) {
+                return
+            }
+
+            $revertSelection = Show-RevertSettingsModal -Owner $window -LastUsedSettings $savedSettings
+            $selectedFeatureIds = @($revertSelection.SelectedFeatureIds)
+            $shouldRestartExplorer = ($revertSelection.RestartExplorer -eq $true)
+
+            if (-not $selectedFeatureIds -or $selectedFeatureIds.Count -eq 0) {
+                return
+            }
+
+            AddParameter 'Undo'
+
+            foreach ($featureId in $selectedFeatureIds) {
+                if ($script:Features.ContainsKey($featureId)) {
+                    $feature = $script:Features[$featureId]
+                    if ($feature.RegistryUndoKey -and $feature.UndoAction) {
+                        AddParameter $featureId
+                    }
+                }
+            }
+
+            Show-ApplyModal -Owner $window -RestartExplorer $shouldRestartExplorer
+
+            $window.Close()
+        })
+    }
 
     # Handle Home Default Mode button - apply defaults and navigate directly to overview
     $homeDefaultModeBtn = $window.FindName('HomeDefaultModeBtn')

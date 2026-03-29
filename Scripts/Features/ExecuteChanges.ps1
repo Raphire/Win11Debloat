@@ -6,13 +6,35 @@ function ExecuteParameter {
         [string]$paramKey
     )
     
-    # Check if this feature has metadata in Features.json
+    # Check if this feature exists in Features.json
     $feature = $null
     if ($script:Features.ContainsKey($paramKey)) {
         $feature = $script:Features[$paramKey]
     }
+
+    # Check if undo is requested and if this feature supports undo
+    $undoChanges = $script:Params.ContainsKey('Undo')
+
+    if ($undoChanges) {
+        $undoFeature = GetUndoFeatureForParam -paramKey $paramKey
+
+        if ($null -eq $undoFeature) {
+            # This parameter doesn't support undo, so skip it
+            return
+        }
+
+        $undoRegFile = $undoFeature.RegistryUndoKey
+        $undoFolderPath = Join-Path $script:RegfilesPath (Join-Path 'Undo' $undoRegFile)
+
+        if (Test-Path $undoFolderPath) {
+            $undoRegFile = Join-Path 'Undo' $undoRegFile
+        }
+
+        ImportRegistryFile "> $($undoFeature.UndoAction) $($undoFeature.Label)" $undoRegFile
+        return
+    }
     
-    # If feature has RegistryKey and ApplyText, use dynamic ImportRegistryFile
+    # If feature has RegistryKey and ApplyText, dynamically import the registry file for this feature
     if ($feature -and $feature.RegistryKey -and $feature.ApplyText) {
         ImportRegistryFile "> $($feature.ApplyText)" $feature.RegistryKey
         
@@ -139,12 +161,35 @@ function ExecuteParameter {
 # Executes all selected parameters/features
 function ExecuteAllChanges {    
     # Build list of actionable parameters (skip control params and data-only params)
+    $undoChanges = $script:Params.ContainsKey('Undo')
     $actionableKeys = @()
+    $paramsToRemove = @()
     foreach ($paramKey in $script:Params.Keys) {
         if ($script:ControlParams -contains $paramKey) { continue }
         if ($paramKey -eq 'Apps') { continue }
         if ($paramKey -eq 'CreateRestorePoint') { continue }
+
+        if ($undoChanges) {
+            $undoFeature = GetUndoFeatureForParam -paramKey $paramKey
+            if (-not $undoFeature) {
+                $paramsToRemove += $paramKey
+                continue
+            }
+        }
+
         $actionableKeys += $paramKey
+    }
+
+    if ($undoChanges -and $paramsToRemove.Count -gt 0) {
+        foreach ($paramKey in ($paramsToRemove | Sort-Object -Unique)) {
+            if ($script:Params.ContainsKey($paramKey)) {
+                $null = $script:Params.Remove($paramKey)
+            }
+        }
+    }
+
+    if ($undoChanges -and $actionableKeys.Count -eq 0) {
+        throw "Undo was requested but none of the selected parameters support undo. No changes were reverted."
     }
     
     $totalSteps = $actionableKeys.Count
@@ -174,7 +219,10 @@ function ExecuteAllChanges {
         $stepName = $paramKey
         if ($script:Features.ContainsKey($paramKey)) {
             $feature = $script:Features[$paramKey]
-            if ($feature.ApplyText) {
+            if ($undoChanges -and $feature.UndoAction) {
+                $stepName = "$($feature.UndoAction) $($feature.Label)"
+            }
+            elseif ($feature.ApplyText) {
                 # Prefer explicit ApplyText when provided
                 $stepName = $feature.ApplyText
             } elseif ($feature.Label) {

@@ -1,6 +1,7 @@
 param (
     [switch]$CLI,
     [switch]$Silent,
+    [switch]$Undo,
     [switch]$Verbose,
     [switch]$Sysprep,
     [string]$LogPath,

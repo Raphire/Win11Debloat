@@ -1,15 +1,22 @@
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
         Title="Win11Debloat" 
         MinWidth="1130" MinHeight="600"
-        MaxWidth="1400"
         ResizeMode="CanResize" 
         SnapsToDevicePixels="True"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
-        AllowsTransparency="True"
-        Background="Transparent"
+        AllowsTransparency="False"
+        Background="{DynamicResource BgColor}"
         Foreground="{DynamicResource FgColor}">
+    <shell:WindowChrome.WindowChrome>
+        <shell:WindowChrome ResizeBorderThickness="5"
+                            CaptionHeight="32"
+                            CornerRadius="8"
+                            GlassFrameThickness="0"
+                            UseAeroCaptionButtons="False"/>
+    </shell:WindowChrome.WindowChrome>
     <Window.Resources>
         <!-- Sort column header hover style -->
         <Style x:Key="SortHeaderBtnStyle" TargetType="StackPanel">
@@ -601,18 +608,11 @@
         </Style>
     </Window.Resources>
 
-    <Border BorderBrush="{DynamicResource BorderColor}" 
+    <Border x:Name="MainBorder" BorderBrush="{DynamicResource BorderColor}" 
             BorderThickness="1" 
             CornerRadius="8" 
             Background="{DynamicResource BgColor}"
-            Margin="25">
-        <Border.Effect>
-            <DropShadowEffect Color="Black" 
-                            Opacity="0.15" 
-                            BlurRadius="20" 
-                            ShadowDepth="0" 
-                            Direction="0"/>
-        </Border.Effect>
+            Margin="0">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="32"/>
@@ -621,18 +621,18 @@
             </Grid.RowDefinitions>
 
             <!-- Resize Borders -->
-            <Rectangle x:Name="ResizeLeft" Width="5" HorizontalAlignment="Left" Fill="Transparent" Cursor="SizeWE" Grid.Row="0" Grid.RowSpan="3" Panel.ZIndex="100"/>
-            <Rectangle x:Name="ResizeRight" Width="5" HorizontalAlignment="Right" Fill="Transparent" Cursor="SizeWE" Grid.Row="0" Grid.RowSpan="3" Panel.ZIndex="100"/>
-            <Rectangle x:Name="ResizeTop" Height="5" VerticalAlignment="Top" Fill="Transparent" Cursor="SizeNS" Grid.Row="0" Panel.ZIndex="100"/>
-            <Rectangle x:Name="ResizeBottom" Height="5" VerticalAlignment="Bottom" Fill="Transparent" Cursor="SizeNS" Grid.Row="2" Panel.ZIndex="100"/>
-            <Rectangle x:Name="ResizeTopLeft" Width="8" Height="8" HorizontalAlignment="Left" VerticalAlignment="Top" Fill="Transparent" Cursor="SizeNWSE" Grid.Row="0" Panel.ZIndex="101"/>
-            <Rectangle x:Name="ResizeTopRight" Width="8" Height="8" HorizontalAlignment="Right" VerticalAlignment="Top" Fill="Transparent" Cursor="SizeNESW" Grid.Row="0" Panel.ZIndex="101"/>
-            <Rectangle x:Name="ResizeBottomLeft" Width="8" Height="8" HorizontalAlignment="Left" VerticalAlignment="Bottom" Fill="Transparent" Cursor="SizeNESW" Grid.Row="2" Panel.ZIndex="101"/>
-            <Rectangle x:Name="ResizeBottomRight" Width="8" Height="8" HorizontalAlignment="Right" VerticalAlignment="Bottom" Fill="Transparent" Cursor="SizeNWSE" Grid.Row="2" Panel.ZIndex="101"/>
+            <Rectangle x:Name="ResizeLeft" Width="5" HorizontalAlignment="Left" Fill="Transparent" Cursor="SizeWE" Grid.Row="0" Grid.RowSpan="3" Panel.ZIndex="100" Visibility="Collapsed" IsHitTestVisible="False"/>
+            <Rectangle x:Name="ResizeRight" Width="5" HorizontalAlignment="Right" Fill="Transparent" Cursor="SizeWE" Grid.Row="0" Grid.RowSpan="3" Panel.ZIndex="100" Visibility="Collapsed" IsHitTestVisible="False"/>
+            <Rectangle x:Name="ResizeTop" Height="5" VerticalAlignment="Top" Fill="Transparent" Cursor="SizeNS" Grid.Row="0" Panel.ZIndex="100" Visibility="Collapsed" IsHitTestVisible="False"/>
+            <Rectangle x:Name="ResizeBottom" Height="5" VerticalAlignment="Bottom" Fill="Transparent" Cursor="SizeNS" Grid.Row="2" Panel.ZIndex="100" Visibility="Collapsed" IsHitTestVisible="False"/>
+            <Rectangle x:Name="ResizeTopLeft" Width="8" Height="8" HorizontalAlignment="Left" VerticalAlignment="Top" Fill="Transparent" Cursor="SizeNWSE" Grid.Row="0" Panel.ZIndex="101" Visibility="Collapsed" IsHitTestVisible="False"/>
+            <Rectangle x:Name="ResizeTopRight" Width="8" Height="8" HorizontalAlignment="Right" VerticalAlignment="Top" Fill="Transparent" Cursor="SizeNESW" Grid.Row="0" Panel.ZIndex="101" Visibility="Collapsed" IsHitTestVisible="False"/>
+            <Rectangle x:Name="ResizeBottomLeft" Width="8" Height="8" HorizontalAlignment="Left" VerticalAlignment="Bottom" Fill="Transparent" Cursor="SizeNESW" Grid.Row="2" Panel.ZIndex="101" Visibility="Collapsed" IsHitTestVisible="False"/>
+            <Rectangle x:Name="ResizeBottomRight" Width="8" Height="8" HorizontalAlignment="Right" VerticalAlignment="Bottom" Fill="Transparent" Cursor="SizeNWSE" Grid.Row="2" Panel.ZIndex="101" Visibility="Collapsed" IsHitTestVisible="False"/>
 
             <!-- Custom Title Bar -->
             <Grid Grid.Row="0" x:Name="TitleBar">
-                <Border Background="{DynamicResource BgColor}" CornerRadius="8,8,0,0">
+                <Border x:Name="TitleBarBackground" Background="{DynamicResource BgColor}" CornerRadius="8,8,0,0">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -645,8 +645,8 @@
                                    Margin="12,0,0,0"
                                    FontSize="12"/>
                         <StackPanel Grid.Column="1" Orientation="Horizontal">
-                            <Button x:Name="KofiBtn" Content="&#xEB52;" FontFamily="Segoe Fluent Icons" FontSize="15" Style="{StaticResource TitlebarButton}" ToolTip="Support the creator" AutomationProperties.Name="Support the creator"/>
-                            <Button x:Name="MenuBtn" Content="&#xE700;" FontFamily="Segoe Fluent Icons" FontSize="15" Style="{StaticResource TitlebarButton}" ToolTip="Options" AutomationProperties.Name="Options">
+                            <Button x:Name="KofiBtn" shell:WindowChrome.IsHitTestVisibleInChrome="True" Content="&#xEB52;" FontFamily="Segoe Fluent Icons" FontSize="15" Style="{StaticResource TitlebarButton}" ToolTip="Support the creator" AutomationProperties.Name="Support the creator"/>
+                            <Button x:Name="MenuBtn" shell:WindowChrome.IsHitTestVisibleInChrome="True" Content="&#xE700;" FontFamily="Segoe Fluent Icons" FontSize="15" Style="{StaticResource TitlebarButton}" ToolTip="Options" AutomationProperties.Name="Options">
                                 <Button.ContextMenu>
                                     <ContextMenu x:Name="MainMenu">
                                         <ContextMenu.Resources>
@@ -695,7 +695,7 @@
                                     </ContextMenu>
                                 </Button.ContextMenu>
                             </Button>
-                            <Button x:Name="CloseBtn" Content="&#xE8BB;" Style="{StaticResource CloseButton}" ToolTip="Close" AutomationProperties.Name="Close"/>
+                            <Button x:Name="CloseBtn" shell:WindowChrome.IsHitTestVisibleInChrome="True" Content="&#xE8BB;" Style="{StaticResource CloseButton}" ToolTip="Close" AutomationProperties.Name="Close"/>
                         </StackPanel>
                     </Grid>
                 </Border>

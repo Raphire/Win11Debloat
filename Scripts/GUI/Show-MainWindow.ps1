@@ -19,7 +19,8 @@ function Show-MainWindow {
     SetWindowThemeResources -window $window -usesDarkMode $usesDarkMode
 
     # Get named elements
-    $titleBar = $window.FindName('TitleBar')
+    $mainBorder = $window.FindName('MainBorder')
+    $titleBarBackground = $window.FindName('TitleBarBackground')
     $kofiBtn = $window.FindName('KofiBtn')
     $menuBtn = $window.FindName('MenuBtn')
     $closeBtn = $window.FindName('CloseBtn')
@@ -30,38 +31,86 @@ function Show-MainWindow {
     $importConfigBtn = $window.FindName('ImportConfigBtn')
     $exportConfigBtn = $window.FindName('ExportConfigBtn')
 
-    # Manual drag state
-    $script:IsDragging = $false
-    $script:DragStartMouse = $null
-    $script:DragStartWindow = $null
-    $script:DragRelX = 0.0
+    $windowStateNormal = [System.Windows.WindowState]::Normal
+    $windowStateMaximized = [System.Windows.WindowState]::Maximized
+    $normalWindowShadow = $mainBorder.Effect
+    $windowResizeBorder = [System.Windows.SystemParameters]::WindowResizeBorderThickness
+    $maximizedChromeInset = [System.Windows.Thickness]::new($windowResizeBorder.Left, $windowResizeBorder.Top, $windowResizeBorder.Right, 0)
+    $initialNormalMaxWidth = 1400.0
 
-    # Title bar event handlers
-    $titleBar.Add_MouseLeftButtonDown({
-        if ($_.OriginalSource -is [System.Windows.Controls.Grid] -or $_.OriginalSource -is [System.Windows.Controls.Border] -or $_.OriginalSource -is [System.Windows.Controls.TextBlock]) {
-            $script:DragRelX = [Math]::Min(1.0, [Math]::Max(0.0, $_.GetPosition($titleBar).X / $titleBar.ActualWidth))
-            $script:DragStartMouse = [System.Windows.Forms.Cursor]::Position
-            $script:DragStartWindow = [System.Windows.Point]::new($window.Left, $window.Top)
-            $script:IsDragging = $true
-            $titleBar.CaptureMouse() | Out-Null
+    $convertScreenPixelsToDip = {
+        param(
+            [double]$width,
+            [double]$height
+        )
+
+        $source = [System.Windows.PresentationSource]::FromVisual($window)
+        if ($null -eq $source -or $null -eq $source.CompositionTarget) {
+            return [System.Windows.Size]::new($width, $height)
         }
+
+        $topLeft = $source.CompositionTarget.TransformFromDevice.Transform([System.Windows.Point]::new(0, 0))
+        $bottomRight = $source.CompositionTarget.TransformFromDevice.Transform([System.Windows.Point]::new($width, $height))
+        return [System.Windows.Size]::new($bottomRight.X - $topLeft.X, $bottomRight.Y - $topLeft.Y)
+    }
+
+    $getWindowScreen = {
+        $hwnd = (New-Object System.Windows.Interop.WindowInteropHelper($window)).Handle
+        if ($hwnd -eq [IntPtr]::Zero) {
+            return $null
+        }
+
+        return [System.Windows.Forms.Screen]::FromHandle($hwnd)
+    }
+
+    $updateWindowChrome = {
+        if ($window.WindowState -eq $windowStateMaximized) {
+            $mainBorder.Margin = $maximizedChromeInset
+            $mainBorder.BorderThickness = [System.Windows.Thickness]::new(1)
+            $mainBorder.CornerRadius = [System.Windows.CornerRadius]::new(0)
+            $mainBorder.Effect = $null
+            $titleBarBackground.CornerRadius = [System.Windows.CornerRadius]::new(0)
+        }
+        else {
+            $mainBorder.Margin = [System.Windows.Thickness]::new(0)
+            $mainBorder.BorderThickness = [System.Windows.Thickness]::new(1)
+            $mainBorder.CornerRadius = [System.Windows.CornerRadius]::new(8)
+            $mainBorder.Effect = $normalWindowShadow
+            $titleBarBackground.CornerRadius = [System.Windows.CornerRadius]::new(8, 8, 0, 0)
+        }
+    }
+
+    $updateMaximizedBounds = {
+        & $updateWindowChrome
+    }
+
+    $applyInitialWindowSize = {
+        if ($window.WindowState -ne $windowStateNormal) {
+            return
+        }
+
+        $screen = & $getWindowScreen
+        if ($null -eq $screen) {
+            return
+        }
+
+        $workingAreaDip = & $convertScreenPixelsToDip $screen.WorkingArea.Width $screen.WorkingArea.Height
+        $window.Width = [Math]::Min($initialNormalMaxWidth, $workingAreaDip.Width)
+        $window.Left = $screen.WorkingArea.Left + (($workingAreaDip.Width - $window.Width) / 2)
+    }
+
+    $window.Add_SourceInitialized({
+        & $applyInitialWindowSize
+        & $updateMaximizedBounds
     })
 
-    $titleBar.Add_MouseMove({
-        if ($script:IsDragging -and $_.LeftButton -eq [System.Windows.Input.MouseButtonState]::Pressed) {
-            $cur = [System.Windows.Forms.Cursor]::Position
-            $dx = $cur.X - $script:DragStartMouse.X
-            $dy = $cur.Y - $script:DragStartMouse.Y
-
-            $window.Left = $script:DragStartWindow.X + $dx
-            $window.Top  = $script:DragStartWindow.Y + $dy
-        }
+    $window.Add_StateChanged({
+        & $updateMaximizedBounds
     })
 
-    $titleBar.Add_MouseLeftButtonUp({
-        if ($script:IsDragging) {
-            $script:IsDragging = $false
-            $titleBar.ReleaseMouseCapture()
+    $window.Add_LocationChanged({
+        if ($window.WindowState -eq $windowStateMaximized) {
+            & $updateMaximizedBounds
         }
     })
     
@@ -122,135 +171,6 @@ function Show-MainWindow {
         $script:CancelRequested = $true
     })
 
-    # Implement window resize functionality
-    $resizeLeft = $window.FindName('ResizeLeft')
-    $resizeRight = $window.FindName('ResizeRight')
-    $resizeTop = $window.FindName('ResizeTop')
-    $resizeBottom = $window.FindName('ResizeBottom')
-    $resizeTopLeft = $window.FindName('ResizeTopLeft')
-    $resizeTopRight = $window.FindName('ResizeTopRight')
-    $resizeBottomLeft = $window.FindName('ResizeBottomLeft')
-    $resizeBottomRight = $window.FindName('ResizeBottomRight')
-
-    $script:resizing = $false
-    $script:resizeEdges = $null
-    $script:resizeStart = $null
-    $script:windowStart = $null
-    $script:resizeElement = $null
-
-    $resizeHandler = {
-        param($sender, $e)
-        
-        $script:resizing = $true
-        $script:resizeElement = $sender
-        $script:resizeStart = [System.Windows.Forms.Cursor]::Position
-        $script:windowStart = @{
-            Left = $window.Left
-            Top = $window.Top
-            Width = $window.ActualWidth
-            Height = $window.ActualHeight
-        }
-        
-        # Parse direction tag into edge flags for cleaner resize logic
-        $direction = $sender.Tag
-        $script:resizeEdges = @{
-            Left = $direction -match 'Left'
-            Right = $direction -match 'Right'
-            Top = $direction -match 'Top'
-            Bottom = $direction -match 'Bottom'
-        }
-        
-        $sender.CaptureMouse()
-        $e.Handled = $true
-    }
-
-    $moveHandler = {
-        param($sender, $e)
-        if (-not $script:resizing) { return }
-        
-        $current = [System.Windows.Forms.Cursor]::Position
-        $deltaX = $current.X - $script:resizeStart.X
-        $deltaY = $current.Y - $script:resizeStart.Y
-
-        # Handle horizontal resize
-        if ($script:resizeEdges.Left) {
-            $newWidth = [Math]::Max($window.MinWidth, $script:windowStart.Width - $deltaX)
-            if ($newWidth -ne $window.Width) {
-                $window.Left = $script:windowStart.Left + ($script:windowStart.Width - $newWidth)
-                $window.Width = $newWidth
-            }
-        }
-        elseif ($script:resizeEdges.Right) {
-            $window.Width = [Math]::Max($window.MinWidth, $script:windowStart.Width + $deltaX)
-        }
-
-        # Handle vertical resize
-        if ($script:resizeEdges.Top) {
-            $newHeight = [Math]::Max($window.MinHeight, $script:windowStart.Height - $deltaY)
-            if ($newHeight -ne $window.Height) {
-                $window.Top = $script:windowStart.Top + ($script:windowStart.Height - $newHeight)
-                $window.Height = $newHeight
-            }
-        }
-        elseif ($script:resizeEdges.Bottom) {
-            $window.Height = [Math]::Max($window.MinHeight, $script:windowStart.Height + $deltaY)
-        }
-        
-        $e.Handled = $true
-    }
-
-    $releaseHandler = {
-        param($sender, $e)
-        if ($script:resizing -and $script:resizeElement) {
-            $script:resizing = $false
-            $script:resizeEdges = $null
-            $script:resizeElement.ReleaseMouseCapture()
-            $script:resizeElement = $null
-            $e.Handled = $true
-        }
-    }
-
-    # Set tags and add event handlers for resize borders
-    $resizeLeft.Tag = 'Left'
-    $resizeLeft.Add_PreviewMouseLeftButtonDown($resizeHandler)
-    $resizeLeft.Add_MouseMove($moveHandler)
-    $resizeLeft.Add_MouseLeftButtonUp($releaseHandler)
-    
-    $resizeRight.Tag = 'Right'
-    $resizeRight.Add_PreviewMouseLeftButtonDown($resizeHandler)
-    $resizeRight.Add_MouseMove($moveHandler)
-    $resizeRight.Add_MouseLeftButtonUp($releaseHandler)
-    
-    $resizeTop.Tag = 'Top'
-    $resizeTop.Add_PreviewMouseLeftButtonDown($resizeHandler)
-    $resizeTop.Add_MouseMove($moveHandler)
-    $resizeTop.Add_MouseLeftButtonUp($releaseHandler)
-    
-    $resizeBottom.Tag = 'Bottom'
-    $resizeBottom.Add_PreviewMouseLeftButtonDown($resizeHandler)
-    $resizeBottom.Add_MouseMove($moveHandler)
-    $resizeBottom.Add_MouseLeftButtonUp($releaseHandler)
-    
-    $resizeTopLeft.Tag = 'TopLeft'
-    $resizeTopLeft.Add_PreviewMouseLeftButtonDown($resizeHandler)
-    $resizeTopLeft.Add_MouseMove($moveHandler)
-    $resizeTopLeft.Add_MouseLeftButtonUp($releaseHandler)
-    
-    $resizeTopRight.Tag = 'TopRight'
-    $resizeTopRight.Add_PreviewMouseLeftButtonDown($resizeHandler)
-    $resizeTopRight.Add_MouseMove($moveHandler)
-    $resizeTopRight.Add_MouseLeftButtonUp($releaseHandler)
-    
-    $resizeBottomLeft.Tag = 'BottomLeft'
-    $resizeBottomLeft.Add_PreviewMouseLeftButtonDown($resizeHandler)
-    $resizeBottomLeft.Add_MouseMove($moveHandler)
-    $resizeBottomLeft.Add_MouseLeftButtonUp($releaseHandler)
-    
-    $resizeBottomRight.Tag = 'BottomRight'
-    $resizeBottomRight.Add_PreviewMouseLeftButtonDown($resizeHandler)
-    $resizeBottomRight.Add_MouseMove($moveHandler)
-    $resizeBottomRight.Add_MouseLeftButtonUp($releaseHandler)
-
     # Integrated App Selection UI
     $appsPanel = $window.FindName('AppSelectionPanel')
     $onlyInstalledAppsBox = $window.FindName('OnlyInstalledAppsBox')
@@ -270,6 +190,32 @@ function Show-MainWindow {
     $presetsArrow = $window.FindName('PresetsArrow')
     $clearAppSelectionBtn = $window.FindName('ClearAppSelectionBtn')
 
+    function NormalizeCheckboxState {
+        param([System.Windows.Controls.CheckBox]$checkBox)
+
+        $isChecked = ($checkBox.IsChecked -eq $true)
+        if ($null -eq $checkBox.IsChecked) {
+            $checkBox.IsChecked = $false
+            return $false
+        }
+
+        return $isChecked
+    }
+
+    function AnimatePresetsArrow {
+        param([double]$angle)
+
+        $animation = New-Object System.Windows.Media.Animation.DoubleAnimation
+        $animation.To = $angle
+        $animation.Duration = [System.Windows.Duration]::new([System.TimeSpan]::FromMilliseconds(200))
+
+        $ease = New-Object System.Windows.Media.Animation.CubicEase
+        $ease.EasingMode = 'EaseOut'
+        $animation.EasingFunction = $ease
+
+        $presetsArrow.RenderTransform.BeginAnimation([System.Windows.Media.RotateTransform]::AngleProperty, $animation)
+    }
+
     # Load JSON-defined presets and build dynamic preset checkboxes
     $script:JsonPresetCheckboxes = @()
     foreach ($preset in (LoadAppPresetsFromJson)) {
@@ -284,8 +230,7 @@ function Show-MainWindow {
 
         $checkbox.Add_Click({
             if ($script:UpdatingPresets) { return }
-            $check = ($this.IsChecked -eq $true)
-            if ($this.IsChecked -eq $null) { $this.IsChecked = $false; $check = $false }
+            $check = NormalizeCheckboxState -checkBox $this
             $presetIds = $this.PresetAppIds
             ApplyPresetToApps -MatchFilter { param($c) (@($c.AppIds) | Where-Object { $presetIds -contains $_ }).Count -gt 0 }.GetNewClosure() -Check $check
         })
@@ -618,8 +563,8 @@ function Show-MainWindow {
             $helpBtn.Tag = (GetWikiUrlForCategory -category $categoryName)
             $helpBtn.Style = $window.Resources['CategoryHelpLinkButtonStyle']
             $helpBtn.Add_Click({
-                param($sender, $e)
-                if ($sender.Tag) { Start-Process $sender.Tag }
+                param($button, $e)
+                if ($button.Tag) { Start-Process $button.Tag }
             })
             $headerRow.Children.Add($helpBtn) | Out-Null
 
@@ -946,29 +891,19 @@ function Show-MainWindow {
     # Animate arrow when popup opens/closes, and lazily update preset states
     $presetsPopup.Add_Opened({
         UpdatePresetStates
-        $animation = New-Object System.Windows.Media.Animation.DoubleAnimation
-        $animation.To = 180
-        $animation.Duration = [System.Windows.Duration]::new([System.TimeSpan]::FromMilliseconds(200))
-        $animation.EasingFunction = New-Object System.Windows.Media.Animation.CubicEase
-        $animation.EasingFunction.EasingMode = 'EaseOut'
-        $presetsArrow.RenderTransform.BeginAnimation([System.Windows.Media.RotateTransform]::AngleProperty, $animation)
+        AnimatePresetsArrow -angle 180
     })
     $presetsPopup.Add_Closed({
-        $animation = New-Object System.Windows.Media.Animation.DoubleAnimation
-        $animation.To = 0
-        $animation.Duration = [System.Windows.Duration]::new([System.TimeSpan]::FromMilliseconds(200))
-        $animation.EasingFunction = New-Object System.Windows.Media.Animation.CubicEase
-        $animation.EasingFunction.EasingMode = 'EaseOut'
-        $presetsArrow.RenderTransform.BeginAnimation([System.Windows.Media.RotateTransform]::AngleProperty, $animation)
+        AnimatePresetsArrow -angle 0
         $presetsBtn.IsChecked = $false
     })
 
     # Close popup when clicking anywhere outside the popup or the presets button.
     $window.Add_PreviewMouseDown({
         if (-not $presetsPopup.IsOpen) { return }
-        if ($presetsPopup.Child -ne $null -and $presetsPopup.Child.IsMouseOver) { return }
+        if ($null -ne $presetsPopup.Child -and $presetsPopup.Child.IsMouseOver) { return }
         $src = $_.OriginalSource -as [System.Windows.DependencyObject]
-        if ($src -ne $null) {
+        if ($null -ne $src) {
             $inBtn = $presetsBtn.IsAncestorOf($src) -or [System.Object]::ReferenceEquals($presetsBtn, $src)
             if (-not $inBtn) { $presetsPopup.IsOpen = $false }
         }
@@ -988,8 +923,7 @@ function Show-MainWindow {
     # Preset: Default selection
     $presetDefaultApps.Add_Click({
         if ($script:UpdatingPresets) { return }
-        $check = ($this.IsChecked -eq $true)
-        if ($this.IsChecked -eq $null) { $this.IsChecked = $false; $check = $false }
+        $check = NormalizeCheckboxState -checkBox $this
         ApplyPresetToApps -MatchFilter { param($c) $c.SelectedByDefault -eq $true } -Check $check
     })
 
@@ -1106,7 +1040,7 @@ function Show-MainWindow {
     })
     
     $appSearchBox.Add_KeyDown({
-        param($sender, $e)
+        param($sourceControl, $e)
         if ($e.Key -eq [System.Windows.Input.Key]::Enter -and $script:AppSearchMatches.Count -gt 0) {
             # Reset background of current active match
             $script:AppSearchMatches[$script:AppSearchMatchIndex].Background = $window.Resources["SearchHighlightColor"]
@@ -1229,7 +1163,7 @@ function Show-MainWindow {
 
     # Add Ctrl+F keyboard shortcut to focus search box on current tab
     $window.Add_KeyDown({
-        param($sender, $e)
+        param($sourceControl, $e)
         
         # Check if Ctrl+F was pressed
         if ($e.Key -eq [System.Windows.Input.Key]::F -and 
@@ -1814,8 +1748,7 @@ function Show-MainWindow {
 
         $presetLastUsed.Add_Click({
             if ($script:UpdatingPresets) { return }
-            $check = ($this.IsChecked -eq $true)
-            if ($this.IsChecked -eq $null) { $this.IsChecked = $false; $check = $false }
+            $check = NormalizeCheckboxState -checkBox $this
             ApplyPresetToApps -MatchFilter { param($c) (@($c.AppIds) | Where-Object { $script:SavedAppIds -contains $_ }).Count -gt 0 } -Check $check
         })
     }
@@ -1850,5 +1783,12 @@ function Show-MainWindow {
     }
 
     # Show the window
-    return $window.ShowDialog()
+    $frame = [System.Windows.Threading.DispatcherFrame]::new()
+    $window.Add_Closed({
+        $frame.Continue = $false
+    })
+
+    $window.Show() | Out-Null
+    [System.Windows.Threading.Dispatcher]::PushFrame($frame)
+    return $null
 }

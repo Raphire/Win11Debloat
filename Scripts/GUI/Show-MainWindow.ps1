@@ -446,7 +446,7 @@ function Show-MainWindow {
 
     # Dynamically builds Tweaks UI from Features.json
     function BuildDynamicTweaks {
-        $featuresJson = LoadJsonFile -filePath $script:FeaturesFilePath -expectedVersion "1.0"
+        $featuresJson = LoadJsonFile -filePath $script:FeaturesFilePath -expectedVersion $script:FeaturesConfigVersion
 
         if (-not $featuresJson) {
             Show-MessageBox -Message "Unable to load Features.json file!" -Title "Error" -Button 'OK' -Icon 'Error' | Out-Null
@@ -709,7 +709,7 @@ function Show-MainWindow {
                     if ($feature.FeatureId -match '^Disable') { $opt = 'Disable' } elseif ($feature.FeatureId -match '^Enable') { $opt = 'Enable' }
                     $items = @('No Change', $opt)
                     $comboName = ("Feature_{0}_Combo" -f $feature.FeatureId) -replace '[^a-zA-Z0-9_]',''
-                    $combo = CreateLabeledCombo -parent $panel -labelText ($feature.Action + ' ' + $feature.Label) -comboName $comboName -items $items
+                    $combo = CreateLabeledCombo -parent $panel -labelText $feature.Action -comboName $comboName -items $items
                     # attach tooltip from Features.json if present
                     if ($feature.ToolTip) {
                         $tipBlock = New-Object System.Windows.Controls.TextBlock
@@ -721,7 +721,7 @@ function Show-MainWindow {
                         try { $lblBorderObj = $window.FindName("$comboName`_LabelBorder") } catch {}
                         if ($lblBorderObj) { $lblBorderObj.ToolTip = $tipBlock }
                     }
-                    $script:UiControlMappings[$comboName] = @{ Type='feature'; FeatureId = $feature.FeatureId; Action = $feature.Action; Label = $feature.Label }
+                    $script:UiControlMappings[$comboName] = @{ Type='feature'; FeatureId = $feature.FeatureId; Action = $feature.Action }
                 }
             }
         }
@@ -729,7 +729,7 @@ function Show-MainWindow {
         # Build a feature-label lookup so GenerateOverview can resolve feature IDs without reloading JSON
         $script:FeatureLabelLookup = @{}
         foreach ($f in $featuresJson.Features) {
-            $script:FeatureLabelLookup[$f.FeatureId] = $f.Action + ' ' + $f.Label
+            $script:FeatureLabelLookup[$f.FeatureId] = $f.Action
         }
     }
 
@@ -1466,8 +1466,7 @@ function Show-MainWindow {
                     }
                     elseif ($mapping.Type -eq 'feature') {
                         $label = $script:FeatureLabelLookup[$mapping.FeatureId]
-                        if (-not $label) { $label = $mapping.Action + ' ' + $mapping.Label }
-                        $changesList += $label
+                        if ($label) { $changesList += $label }
                     }
                 }
             }

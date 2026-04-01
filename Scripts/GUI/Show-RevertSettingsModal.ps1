@@ -70,17 +70,12 @@ function Show-RevertSettingsModal {
         $undoFeature = GetUndoFeatureForParam -paramKey $setting.Name
 
         $label = $setting.Name
-        if ($feature -and $feature.Label) {
-            if ($feature.Action) {
-                $label = "$($feature.Action) $($feature.Label)"
-            }
-            else {
-                $label = $feature.Label
-            }
+        if ($feature -and $feature.Action) {
+            $label = $feature.Action
         }
 
-        $undoLabel = if ($undoFeature -and $undoFeature.Label) {
-            "$($undoFeature.UndoAction) $($undoFeature.Label)"
+        $undoLabel = if ($undoFeature -and $undoFeature.UndoAction) {
+            $undoFeature.UndoAction
         } else {
             'No revert action available'
         }

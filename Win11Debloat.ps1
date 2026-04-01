@@ -106,6 +106,7 @@ param (
 
 # Define script-level variables & paths
 $script:Version = "2026.03.15"
+$script:FeaturesConfigVersion = "2.0"
 $script:AppsListFilePath = "$PSScriptRoot/Config/Apps.json"
 $script:DefaultSettingsFilePath = "$PSScriptRoot/Config/DefaultSettings.json"
 $script:FeaturesFilePath = "$PSScriptRoot/Config/Features.json"
@@ -199,6 +200,15 @@ if ($missingRequiredPaths.Count -gt 0) {
 $script:Features = @{}
 try {
     $featuresData = Get-Content -Path $script:FeaturesFilePath -Raw | ConvertFrom-Json
+
+    if (-not $featuresData.Version -or $featuresData.Version -ne $script:FeaturesConfigVersion) {
+        Write-Error "Features.json version mismatch (expected $($script:FeaturesConfigVersion), found $($featuresData.Version))"
+        Write-Output ""
+        Write-Output "Press any key to exit..."
+        $null = [System.Console]::ReadKey()
+        Exit
+    }
+
     foreach ($feature in $featuresData.Features) {
         $script:Features[$feature.FeatureId] = $feature
     }

@@ -11,7 +11,7 @@ function PrintPendingChanges {
     }
 
     if ($script:Params['CreateRestorePoint']) {
-        Write-Output "- $($script:Features['CreateRestorePoint'].Label)"
+        Write-Output "- $($script:Features['CreateRestorePoint'].Action)"
     }
     foreach ($parameterName in $script:Params.Keys) {
         if ($script:ControlParams -contains $parameterName) {
@@ -65,18 +65,17 @@ function PrintPendingChanges {
             }
             default {
                 if ($script:Features -and $script:Features.ContainsKey($parameterName)) {
-                    $action = if ($undoChanges -and $script:Features[$parameterName].UndoAction) {
+                    $message = if ($undoChanges -and $script:Features[$parameterName].UndoAction) {
                         $script:Features[$parameterName].UndoAction
                     }
                     else {
                         $script:Features[$parameterName].Action
                     }
-                    $message = $script:Features[$parameterName].Label
-                    if ($action) {
-                        Write-Output "- $action $message"
+                    if ($message) {
+                        Write-Output "- $message"
                     }
                     else {
-                        Write-Output "- $message"
+                        Write-Output "- $parameterName"
                     }
                 }
                 else {
@@ -94,9 +93,7 @@ function PrintPendingChanges {
 
         $uniqueSkipped = $skippedParams | Sort-Object -Unique
         foreach ($skippedParam in $uniqueSkipped) {
-            $action = $script:Features[$skippedParam].Action
-            $message = $script:Features[$skippedParam].Label
-            Write-Output "- $action $message"
+            Write-Output "- $($script:Features[$skippedParam].Action)"
         }
     }
 

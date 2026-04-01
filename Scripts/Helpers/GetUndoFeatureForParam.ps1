@@ -9,7 +9,7 @@ function GetUndoFeatureForParam {
     }
 
     $feature = $script:Features[$paramKey]
-    if (-not ($feature.RegistryUndoKey -and $feature.UndoAction)) {
+    if (-not ($feature.RegistryUndoKey -and ($feature.UndoText -or $feature.UndoAction))) {
         return $null
     }
 

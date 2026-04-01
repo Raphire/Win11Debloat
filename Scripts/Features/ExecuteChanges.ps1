@@ -30,7 +30,7 @@ function ExecuteParameter {
             $undoRegFile = Join-Path 'Undo' $undoRegFile
         }
 
-        ImportRegistryFile "> $($undoFeature.UndoAction) $($undoFeature.Label)" $undoRegFile
+        ImportRegistryFile "> $($undoFeature.UndoText)" $undoRegFile
         return
     }
     
@@ -219,19 +219,13 @@ function ExecuteAllChanges {
         $stepName = $paramKey
         if ($script:Features.ContainsKey($paramKey)) {
             $feature = $script:Features[$paramKey]
-            if ($undoChanges -and $feature.UndoAction) {
-                $stepName = "$($feature.UndoAction) $($feature.Label)"
+            if ($undoChanges -and $feature.UndoText) {
+                $stepName = $feature.UndoText
             }
             elseif ($feature.ApplyText) {
-                # Prefer explicit ApplyText when provided
                 $stepName = $feature.ApplyText
-            } elseif ($feature.Label) {
-                # Fallback: construct a name from Action and Label, or just Label
-                if ($feature.Action) {
-                    $stepName = "$($feature.Action) $($feature.Label)"
-                } else {
-                    $stepName = $feature.Label
-                }
+            } elseif ($feature.Action) {
+                $stepName = $feature.Action
             }
         }
         

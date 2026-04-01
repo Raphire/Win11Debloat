@@ -361,6 +361,9 @@ if ((Test-Path $script:SavedSettingsFilePath) -and ([String]::IsNullOrWhiteSpace
     Remove-Item -Path $script:SavedSettingsFilePath -recurse
 }
 
+# Default to CLI mode for deployment-targeted parameters.
+$launchInCLI = $CLI -or $script:Params.ContainsKey("User") -or $script:Params.ContainsKey("Sysprep") -or $script:Params.ContainsKey("AppRemovalTarget")
+
 # Only run the app selection form if the 'RunAppsListGenerator' parameter was passed to the script
 if ($RunAppsListGenerator) {
     PrintHeader "Custom Apps List Generator"
@@ -409,7 +412,7 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
         }
     }
     else {
-        if ($CLI) {
+        if ($launchInCLI) {
             $Mode = ShowCLIMenuOptions 
         }
         else {

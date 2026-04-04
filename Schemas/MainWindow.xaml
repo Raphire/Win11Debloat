@@ -343,89 +343,6 @@
             </Style.Triggers>
         </Style>
 
-        <!-- CheckBox Style -->
-        <Style TargetType="CheckBox">
-            <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Padding" Value="4,2"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="CheckBox">
-                        <Border Background="{TemplateBinding Background}" BorderThickness="0" CornerRadius="4" Padding="{TemplateBinding Padding}">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <Border x:Name="CheckBoxBorder" Grid.Column="0" Width="18" Height="18" Background="{DynamicResource CheckBoxBgColor}" BorderBrush="{DynamicResource CheckBoxBorderColor}" BorderThickness="1" CornerRadius="4" Margin="0,0,8,0">
-                                    <Grid>
-                                        <TextBlock x:Name="CheckMark" Text="&#xE73E;" FontFamily="Segoe Fluent Icons" FontSize="12" Foreground="{DynamicResource ButtonBg}" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed"/>
-                                        <TextBlock x:Name="IndeterminateMark" Text="&#xE738;" FontFamily="Segoe Fluent Icons" FontSize="11" Foreground="{DynamicResource ButtonBg}" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed" Margin="1,1,0,0" />
-                                    </Grid>
-                                </Border>
-                                <ContentPresenter Grid.Column="1" VerticalAlignment="Center" Margin="0,0,0,2"/>
-                            </Grid>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="CheckBoxBorder" Property="Background" Value="{DynamicResource CheckBoxHoverColor}"/>
-                            </Trigger>
-                            <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="CheckMark" Property="Visibility" Value="Visible"/>
-                                <Setter TargetName="CheckBoxBorder" Property="Background" Value="{DynamicResource ButtonBg}"/>
-                                <Setter TargetName="CheckBoxBorder" Property="BorderBrush" Value="{DynamicResource ButtonBg}"/>
-                                <Setter TargetName="CheckMark" Property="Foreground" Value="White"/>
-                            </Trigger>
-                            <Trigger Property="IsChecked" Value="{x:Null}">
-                                <Setter TargetName="IndeterminateMark" Property="Visibility" Value="Visible"/>
-                                <Setter TargetName="CheckBoxBorder" Property="Background" Value="{DynamicResource ButtonBg}"/>
-                                <Setter TargetName="CheckBoxBorder" Property="BorderBrush" Value="{DynamicResource ButtonBg}"/>
-                                <Setter TargetName="CheckBoxBorder" Property="Opacity" Value="0.8"/>
-                                <Setter TargetName="IndeterminateMark" Property="Foreground" Value="White"/>
-                            </Trigger>
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter TargetName="CheckBoxBorder" Property="Background" Value="{DynamicResource ButtonDisabled}"/>
-                                <Setter TargetName="CheckBoxBorder" Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
-                                <Setter Property="Foreground" Value="{DynamicResource ButtonTextDisabled}"/>
-                                <Setter Property="Opacity" Value="0.6"/>
-                                <Setter TargetName="CheckMark" Property="Foreground" Value="{DynamicResource ButtonTextDisabled}"/>
-                            </Trigger>
-                            <MultiTrigger>
-                                <MultiTrigger.Conditions>
-                                    <Condition Property="IsMouseOver" Value="True"/>
-                                    <Condition Property="IsChecked" Value="True"/>
-                                </MultiTrigger.Conditions>
-                                <Setter TargetName="CheckBoxBorder" Property="Background" Value="{DynamicResource ButtonHover}"/>
-                                <Setter TargetName="CheckBoxBorder" Property="BorderBrush" Value="{DynamicResource ButtonHover}"/>
-                            </MultiTrigger>
-                            <MultiTrigger>
-                                <MultiTrigger.Conditions>
-                                    <Condition Property="IsMouseOver" Value="True"/>
-                                    <Condition Property="IsChecked" Value="{x:Null}"/>
-                                </MultiTrigger.Conditions>
-                                <Setter TargetName="CheckBoxBorder" Property="Background" Value="{DynamicResource ButtonHover}"/>
-                                <Setter TargetName="CheckBoxBorder" Property="BorderBrush" Value="{DynamicResource ButtonHover}"/>
-                                <Setter TargetName="CheckBoxBorder" Property="Opacity" Value="0.8"/>
-                            </MultiTrigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <!-- CheckBox style for feature toggles -->
-        <Style x:Key="FeatureCheckboxStyle" TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
-            <Setter Property="Margin" Value="-4,-2,-4,10"/>
-            <Setter Property="Padding" Value="4,2"/>
-        </Style>
-
-        <!-- CheckBox style for apps panels -->
-        <Style x:Key="AppsPanelCheckBoxStyle" TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
-            <Setter Property="Margin" Value="2,3,2,3"/>
-            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-        </Style>
-
         <!-- TextBlock style for App ID column in apps table -->
         <Style x:Key="AppIdTextStyle" TargetType="TextBlock">
             <Setter Property="Foreground" Value="{DynamicResource AppIdColor}"/>
@@ -463,11 +380,6 @@
         <!-- Container style for each dynamically-created app table row -->
         <Style x:Key="AppTableRowStyle" TargetType="Grid">
             <Setter Property="Margin" Value="0,1,0,0"/>
-        </Style>
-
-        <!-- Style for dynamically-created preset checkboxes in the Quick Select popup -->
-        <Style x:Key="PresetCheckBoxStyle" TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
-            <Setter Property="Margin" Value="8,4"/>
         </Style>
 
         <!-- Progress step indicator fill colors -->
@@ -1129,12 +1041,12 @@
 
                                                 <!-- Restore Point Option -->
                                                 <StackPanel>
-                                                    <CheckBox x:Name="RestorePointCheckBox" Style="{StaticResource FeatureCheckboxStyle}" IsChecked="True" Content="Create a system restore point (Recommended)" AutomationProperties.Name="Create a system restore point (Recommended)"/>
+                                                    <CheckBox x:Name="RestorePointCheckBox" Style="{DynamicResource FeatureCheckboxStyle}" IsChecked="True" Content="Create a system restore point (Recommended)" AutomationProperties.Name="Create a system restore point (Recommended)"/>
                                                 </StackPanel>
                                                 
                                                 <!-- Restart Explorer Option -->
                                                 <StackPanel>
-                                                    <CheckBox x:Name="RestartExplorerCheckBox" Style="{StaticResource FeatureCheckboxStyle}" Content="Restart the Windows Explorer process to apply all changes immediately" AutomationProperties.Name="Restart the Windows Explorer process to apply all changes immediately"/>
+                                                    <CheckBox x:Name="RestartExplorerCheckBox" Style="{DynamicResource FeatureCheckboxStyle}" Content="Restart the Windows Explorer process to apply all changes immediately" AutomationProperties.Name="Restart the Windows Explorer process to apply all changes immediately"/>
                                                 </StackPanel>
                                             </StackPanel>
                                         </Border>

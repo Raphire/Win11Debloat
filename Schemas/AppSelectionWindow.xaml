@@ -9,55 +9,6 @@
         Background="Transparent"
         Foreground="{DynamicResource FgColor}">
     <Window.Resources>
-        <!-- CheckBox Style -->
-        <Style TargetType="CheckBox">
-            <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Padding" Value="4,2"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="CheckBox">
-                        <Border Background="{TemplateBinding Background}" BorderThickness="0" CornerRadius="4" Padding="{TemplateBinding Padding}">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <Border x:Name="CheckBoxBorder" Grid.Column="0" Width="18" Height="18" Background="{DynamicResource CheckBoxBgColor}" BorderBrush="{DynamicResource CheckBoxBorderColor}" BorderThickness="1" CornerRadius="4" Margin="0,0,8,0">
-                                    <TextBlock x:Name="CheckMark" Text="&#xE73E;" FontFamily="Segoe MDL2 Assets" FontSize="12" Foreground="{DynamicResource ButtonBg}" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed"/>
-                                </Border>
-                                <ContentPresenter Grid.Column="1" VerticalAlignment="Center" Margin="0,0,0,1"/>
-                            </Grid>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="CheckBoxBorder" Property="Background" Value="{DynamicResource CheckBoxHoverColor}"/>
-                            </Trigger>
-                            <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="CheckMark" Property="Visibility" Value="Visible"/>
-                                <Setter TargetName="CheckBoxBorder" Property="Background" Value="{DynamicResource ButtonBg}"/>
-                                <Setter TargetName="CheckBoxBorder" Property="BorderBrush" Value="{DynamicResource ButtonBg}"/>
-                                <Setter TargetName="CheckMark" Property="Foreground" Value="White"/>
-                            </Trigger>
-                            <MultiTrigger>
-                                <MultiTrigger.Conditions>
-                                    <Condition Property="IsMouseOver" Value="True"/>
-                                    <Condition Property="IsChecked" Value="True"/>
-                                </MultiTrigger.Conditions>
-                                <Setter TargetName="CheckBoxBorder" Property="Background" Value="{DynamicResource ButtonHover}"/>
-                                <Setter TargetName="CheckBoxBorder" Property="BorderBrush" Value="{DynamicResource ButtonHover}"/>
-                            </MultiTrigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <!-- CheckBox style for apps panels -->
-        <Style x:Key="AppsPanelCheckBoxStyle" TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
-            <Setter Property="Margin" Value="2,3,2,3"/>
-        </Style>
-        
         <!-- Title Bar Button Style -->
         <Style x:Key="TitleBarButton" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>

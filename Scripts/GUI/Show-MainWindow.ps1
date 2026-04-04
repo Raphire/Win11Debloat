@@ -25,7 +25,6 @@ function Show-MainWindow {
                     mmi.ptMaxSize.x     = wa.Width;
                     mmi.ptMaxSize.y     = wa.Height;
                     System.Runtime.InteropServices.Marshal.StructureToPtr(mmi, lParam, true);
-                    handled = true;
                 }
                 return System.IntPtr.Zero;
             }

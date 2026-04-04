@@ -529,18 +529,17 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="32"/>
                 <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <!-- Resize Borders -->
-            <Rectangle x:Name="ResizeLeft" Width="5" HorizontalAlignment="Left" Fill="Transparent" Cursor="SizeWE" Grid.Row="0" Grid.RowSpan="3" Panel.ZIndex="100" Visibility="Collapsed" IsHitTestVisible="False"/>
-            <Rectangle x:Name="ResizeRight" Width="5" HorizontalAlignment="Right" Fill="Transparent" Cursor="SizeWE" Grid.Row="0" Grid.RowSpan="3" Panel.ZIndex="100" Visibility="Collapsed" IsHitTestVisible="False"/>
+            <Rectangle x:Name="ResizeLeft" Width="5" HorizontalAlignment="Left" Fill="Transparent" Cursor="SizeWE" Grid.Row="0" Grid.RowSpan="2" Panel.ZIndex="100" Visibility="Collapsed" IsHitTestVisible="False"/>
+            <Rectangle x:Name="ResizeRight" Width="5" HorizontalAlignment="Right" Fill="Transparent" Cursor="SizeWE" Grid.Row="0" Grid.RowSpan="2" Panel.ZIndex="100" Visibility="Collapsed" IsHitTestVisible="False"/>
             <Rectangle x:Name="ResizeTop" Height="5" VerticalAlignment="Top" Fill="Transparent" Cursor="SizeNS" Grid.Row="0" Panel.ZIndex="100" Visibility="Collapsed" IsHitTestVisible="False"/>
-            <Rectangle x:Name="ResizeBottom" Height="5" VerticalAlignment="Bottom" Fill="Transparent" Cursor="SizeNS" Grid.Row="2" Panel.ZIndex="100" Visibility="Collapsed" IsHitTestVisible="False"/>
+            <Rectangle x:Name="ResizeBottom" Height="5" VerticalAlignment="Bottom" Fill="Transparent" Cursor="SizeNS" Grid.Row="1" Panel.ZIndex="100" Visibility="Collapsed" IsHitTestVisible="False"/>
             <Rectangle x:Name="ResizeTopLeft" Width="8" Height="8" HorizontalAlignment="Left" VerticalAlignment="Top" Fill="Transparent" Cursor="SizeNWSE" Grid.Row="0" Panel.ZIndex="101" Visibility="Collapsed" IsHitTestVisible="False"/>
             <Rectangle x:Name="ResizeTopRight" Width="8" Height="8" HorizontalAlignment="Right" VerticalAlignment="Top" Fill="Transparent" Cursor="SizeNESW" Grid.Row="0" Panel.ZIndex="101" Visibility="Collapsed" IsHitTestVisible="False"/>
-            <Rectangle x:Name="ResizeBottomLeft" Width="8" Height="8" HorizontalAlignment="Left" VerticalAlignment="Bottom" Fill="Transparent" Cursor="SizeNESW" Grid.Row="2" Panel.ZIndex="101" Visibility="Collapsed" IsHitTestVisible="False"/>
-            <Rectangle x:Name="ResizeBottomRight" Width="8" Height="8" HorizontalAlignment="Right" VerticalAlignment="Bottom" Fill="Transparent" Cursor="SizeNWSE" Grid.Row="2" Panel.ZIndex="101" Visibility="Collapsed" IsHitTestVisible="False"/>
+            <Rectangle x:Name="ResizeBottomLeft" Width="8" Height="8" HorizontalAlignment="Left" VerticalAlignment="Bottom" Fill="Transparent" Cursor="SizeNESW" Grid.Row="1" Panel.ZIndex="101" Visibility="Collapsed" IsHitTestVisible="False"/>
+            <Rectangle x:Name="ResizeBottomRight" Width="8" Height="8" HorizontalAlignment="Right" VerticalAlignment="Bottom" Fill="Transparent" Cursor="SizeNWSE" Grid.Row="1" Panel.ZIndex="101" Visibility="Collapsed" IsHitTestVisible="False"/>
 
             <!-- Custom Title Bar -->
             <Grid Grid.Row="0" x:Name="TitleBar">
@@ -614,7 +613,13 @@
             </Grid>
 
             <!-- Main Content with Tabs -->
-            <TabControl Grid.Row="1" Background="Transparent" BorderThickness="0" Margin="0" Padding="0" Name="MainTabControl">
+            <Grid Grid.Row="1" x:Name="ContentGrid">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TabControl Grid.Row="0" Background="Transparent" BorderThickness="0" Margin="0" Padding="0" Name="MainTabControl">
                 <TabControl.Resources>
                     <Style TargetType="TabItem">
                         <Setter Property="Template">
@@ -1100,10 +1105,10 @@
                         </Grid>
                     </DockPanel>
                 </TabItem>
-            </TabControl>
+                </TabControl>
 
-            <!-- Bottom Navigation Buttons -->
-            <Grid Grid.Row="2" Height="56" x:Name="BottomNavGrid">
+                <!-- Bottom Navigation Buttons -->
+                <Grid Grid.Row="1" Height="56" x:Name="BottomNavGrid">
                 <Grid Margin="20,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
@@ -1133,11 +1138,12 @@
                     <Ellipse x:Name="ProgressIndicator2" Width="10" Height="10" Margin="4,0" Fill="#808080" ToolTip="System Tweaks"/>
                     <Ellipse x:Name="ProgressIndicator3" Width="10" Height="10" Margin="4,0" Fill="#808080" ToolTip="Deployment Settings"/>
                 </StackPanel>
+                </Grid>
             </Grid>
-            
+
             <!-- Modal Overlay for MessageBoxes -->
             <Rectangle x:Name="ModalOverlay" 
-                       Grid.RowSpan="3" 
+                       Grid.RowSpan="2"
                        Fill="#80000000" 
                        Visibility="Collapsed" 
                        Panel.ZIndex="1000"

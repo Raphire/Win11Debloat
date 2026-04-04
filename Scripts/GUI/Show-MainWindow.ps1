@@ -1,6 +1,37 @@
 function Show-MainWindow {
     Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase,System.Windows.Forms | Out-Null
 
+    # Helper to constrain the maximized window to the monitor working area (respects taskbar).
+    # Required for WindowStyle=None windows — without this the window extends behind the taskbar.
+    if (-not ([System.Management.Automation.PSTypeName]'Win11Debloat.MaximizedWindowHelper').Type) {
+        Add-Type -Namespace Win11Debloat -Name MaximizedWindowHelper `
+            -ReferencedAssemblies 'PresentationFramework','System.Windows.Forms','System.Drawing' `
+            -MemberDefinition @'
+            [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
+            private struct MINMAXINFO {
+                public POINT ptReserved, ptMaxSize, ptMaxPosition, ptMinTrackSize, ptMaxTrackSize;
+            }
+            [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
+            private struct POINT { public int x, y; }
+
+            public static System.IntPtr WmGetMinMaxInfoHook(
+                System.IntPtr hwnd, int msg, System.IntPtr wParam, System.IntPtr lParam, ref bool handled) {
+                if (msg == 0x0024) { // WM_GETMINMAXINFO
+                    var wa = System.Windows.Forms.Screen.FromHandle(hwnd).WorkingArea;
+                    var mmi = (MINMAXINFO)System.Runtime.InteropServices.Marshal.PtrToStructure(
+                        lParam, typeof(MINMAXINFO));
+                    mmi.ptMaxPosition.x = wa.Left;
+                    mmi.ptMaxPosition.y = wa.Top;
+                    mmi.ptMaxSize.x     = wa.Width;
+                    mmi.ptMaxSize.y     = wa.Height;
+                    System.Runtime.InteropServices.Marshal.StructureToPtr(mmi, lParam, true);
+                    handled = true;
+                }
+                return System.IntPtr.Zero;
+            }
+'@
+    }
+
     # Get current Windows build version
     $WinVersion = Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' CurrentBuild
 
@@ -34,8 +65,6 @@ function Show-MainWindow {
     $windowStateNormal = [System.Windows.WindowState]::Normal
     $windowStateMaximized = [System.Windows.WindowState]::Maximized
     $normalWindowShadow = $mainBorder.Effect
-    $windowResizeBorder = [System.Windows.SystemParameters]::WindowResizeBorderThickness
-    $maximizedChromeInset = [System.Windows.Thickness]::new($windowResizeBorder.Left, $windowResizeBorder.Top, $windowResizeBorder.Right, 0)
     $initialNormalMaxWidth = 1400.0
 
     $convertScreenPixelsToDip = {
@@ -64,12 +93,15 @@ function Show-MainWindow {
     }
 
     $updateWindowChrome = {
+        $chrome = [System.Windows.Shell.WindowChrome]::GetWindowChrome($window)
         if ($window.WindowState -eq $windowStateMaximized) {
-            $mainBorder.Margin = $maximizedChromeInset
-            $mainBorder.BorderThickness = [System.Windows.Thickness]::new(1)
+            $mainBorder.Margin = [System.Windows.Thickness]::new(0)
+            $mainBorder.BorderThickness = [System.Windows.Thickness]::new(0)
             $mainBorder.CornerRadius = [System.Windows.CornerRadius]::new(0)
             $mainBorder.Effect = $null
             $titleBarBackground.CornerRadius = [System.Windows.CornerRadius]::new(0)
+            # Zero out resize borders when maximized so the entire title bar row is draggable
+            if ($chrome) { $chrome.ResizeBorderThickness = [System.Windows.Thickness]::new(0) }
         }
         else {
             $mainBorder.Margin = [System.Windows.Thickness]::new(0)
@@ -77,11 +109,8 @@ function Show-MainWindow {
             $mainBorder.CornerRadius = [System.Windows.CornerRadius]::new(8)
             $mainBorder.Effect = $normalWindowShadow
             $titleBarBackground.CornerRadius = [System.Windows.CornerRadius]::new(8, 8, 0, 0)
+            if ($chrome) { $chrome.ResizeBorderThickness = [System.Windows.Thickness]::new(5) }
         }
-    }
-
-    $updateMaximizedBounds = {
-        & $updateWindowChrome
     }
 
     $applyInitialWindowSize = {
@@ -101,16 +130,40 @@ function Show-MainWindow {
 
     $window.Add_SourceInitialized({
         & $applyInitialWindowSize
-        & $updateMaximizedBounds
+        & $updateWindowChrome
+
+        # Register WM_GETMINMAXINFO hook so maximizing respects the working area (taskbar)
+        $hwndHelper = New-Object System.Windows.Interop.WindowInteropHelper($window)
+        $hwndSource = [System.Windows.Interop.HwndSource]::FromHwnd($hwndHelper.Handle)
+        $hookMethod = [Win11Debloat.MaximizedWindowHelper].GetMethod('WmGetMinMaxInfoHook')
+        $hook = [System.Delegate]::CreateDelegate([System.Windows.Interop.HwndSourceHook], $hookMethod)
+        $hwndSource.AddHook($hook)
     })
 
+    $contentGrid = $window.FindName('ContentGrid')
+    $maxContentWidth = 1600.0
+
+    $updateContentMargin = {
+        $w = $window.ActualWidth
+        if ($w -gt $maxContentWidth) {
+            $gutter = [Math]::Floor(($w - $maxContentWidth) / 2)
+            $contentGrid.Margin = [System.Windows.Thickness]::new($gutter, 0, $gutter, 0)
+        } else {
+            $contentGrid.Margin = [System.Windows.Thickness]::new(0)
+        }
+    }
+
+    $window.Add_SizeChanged({ & $updateContentMargin })
+
     $window.Add_StateChanged({
-        & $updateMaximizedBounds
+        & $updateWindowChrome
     })
 
     $window.Add_LocationChanged({
-        if ($window.WindowState -eq $windowStateMaximized) {
-            & $updateMaximizedBounds
+        # Nudge the popup offset to force WPF to recalculate its screen position
+        if ($script:BubblePopup -and $script:BubblePopup.IsOpen) {
+            $script:BubblePopup.HorizontalOffset += 1
+            $script:BubblePopup.HorizontalOffset -= 1
         }
     })
     

@@ -30,10 +30,6 @@
             "Value": true
         },
         {
-            "Name": "DisableSearchHighlights",
-            "Value": true
-        },
-        {
             "Name": "DisableCopilot",
             "Value": true
         },

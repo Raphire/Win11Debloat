@@ -143,8 +143,16 @@ if ($ExecutionContext.SessionState.LanguageMode -ne "FullLanguage") {
     Exit
 }
 
-# Display ASCII art launch logo in CLI
 Clear-Host
+
+# Ensure required Windows command paths are present in PATH for this session.
+$system32Path = "$env:SystemRoot\System32"
+if ($env:PATH -notmatch "(?i)(^|;)$([regex]::Escape($system32Path))(?=;|$)") {
+    $env:PATH = "$env:SystemRoot\System32;$env:SystemRoot;" + $env:PATH
+    Write-Warning "System32 path was missing from PATH environment variable, it has been added for this session."
+}
+
+# Display ASCII art launch logo in CLI
 Write-Host ""
 Write-Host ""
 Write-Host "                   " -NoNewline; Write-Host "      ^" -ForegroundColor Blue
@@ -159,8 +167,8 @@ Write-Host "                   " -NoNewline; Write-Host "  |       |" -Foregroun
 Write-Host "                   " -NoNewline; Write-Host " /|       |\" -ForegroundColor Blue
 Write-Host "                   " -NoNewline; Write-Host "/ |       | \" -ForegroundColor Blue
 Write-Host "                   " -NoNewline; Write-Host "  |  " -ForegroundColor DarkGray -NoNewline; Write-Host "'''" -ForegroundColor Red -NoNewline; Write-Host "  |" -ForegroundColor DarkGray -NoNewline; Write-Host "    *" -ForegroundColor Yellow
-Write-Host "                   " -NoNewline; Write-Host "   (" -ForegroundColor Yellow -NoNewline; Write-Host "'''" -ForegroundColor Red -NoNewline; Write-Host ") " -ForegroundColor Yellow -NoNewline; Write-Host "   *  *" -ForegroundColor DarkYellow
-Write-Host "                   " -NoNewline; Write-Host "   ( " -ForegroundColor DarkYellow -NoNewline; Write-Host "'" -ForegroundColor Red -NoNewline; Write-Host " )   " -ForegroundColor DarkYellow -NoNewline; Write-Host "*" -ForegroundColor Yellow
+Write-Host "                   " -NoNewline; Write-Host "    (" -ForegroundColor Yellow -NoNewline; Write-Host "'''" -ForegroundColor Red -NoNewline; Write-Host ") " -ForegroundColor Yellow -NoNewline; Write-Host "   *  *" -ForegroundColor DarkYellow
+Write-Host "                   " -NoNewline; Write-Host "    ( " -ForegroundColor DarkYellow -NoNewline; Write-Host "'" -ForegroundColor Red -NoNewline; Write-Host " )   " -ForegroundColor DarkYellow -NoNewline; Write-Host "*" -ForegroundColor Yellow
 Write-Host ""
 Write-Host "             Win11Debloat is launching..." -ForegroundColor White
 Write-Host "               Leave this window open" -ForegroundColor DarkGray

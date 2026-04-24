@@ -51,9 +51,11 @@ function Show-MainWindow {
                         mmi.ptMaxSize.y     = monitorInfo.rcWork.Bottom - monitorInfo.rcWork.Top;
                     }
                     else {
-                        var wa = System.Windows.Forms.Screen.FromHandle(hwnd).WorkingArea;
-                        mmi.ptMaxPosition.x = 0;
-                        mmi.ptMaxPosition.y = 0;
+                        var screen = System.Windows.Forms.Screen.FromHandle(hwnd);
+                        var wa = screen.WorkingArea;
+                        var bounds = screen.Bounds;
+                        mmi.ptMaxPosition.x = wa.Left - bounds.Left;
+                        mmi.ptMaxPosition.y = wa.Top - bounds.Top;
                         mmi.ptMaxSize.x     = wa.Width;
                         mmi.ptMaxSize.y     = wa.Height;
                     }

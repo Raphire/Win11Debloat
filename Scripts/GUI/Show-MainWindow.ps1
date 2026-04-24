@@ -1990,25 +1990,34 @@ function Show-MainWindow {
             $PresetMap = @{}
         }
 
-        foreach ($target in $PresetMap.Values) {
-            $control = $target.Control
-            if (-not $control) { continue }
+        $wasUpdatingTweakPresets = [bool]$script:UpdatingTweakPresets
+        $script:UpdatingTweakPresets = $true
+        try {
+            foreach ($target in $PresetMap.Values) {
+                $control = $target.Control
+                if (-not $control) { continue }
 
-            if ($target.ControlType -eq 'CheckBox') {
-                $control.IsChecked = $Check
-            }
-            elseif ($target.ControlType -eq 'ComboBox') {
-                $desiredIndex = [int]$target.DesiredValue
-                if ($Check) {
-                    $control.SelectedIndex = $desiredIndex
+                if ($target.ControlType -eq 'CheckBox') {
+                    $control.IsChecked = $Check
                 }
-                elseif ($control.SelectedIndex -eq $desiredIndex) {
-                    $control.SelectedIndex = 0
+                elseif ($target.ControlType -eq 'ComboBox') {
+                    $desiredIndex = [int]$target.DesiredValue
+                    if ($Check) {
+                        $control.SelectedIndex = $desiredIndex
+                    }
+                    elseif ($control.SelectedIndex -eq $desiredIndex) {
+                        $control.SelectedIndex = 0
+                    }
                 }
             }
         }
+        finally {
+            $script:UpdatingTweakPresets = $wasUpdatingTweakPresets
+        }
 
-        UpdateTweakPresetStates
+        if (-not $wasUpdatingTweakPresets) {
+            UpdateTweakPresetStates
+        }
     }
 
     function SetTweakPresetState {

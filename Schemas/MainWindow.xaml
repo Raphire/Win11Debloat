@@ -769,8 +769,8 @@
                                                     <DropShadowEffect BlurRadius="12" Opacity="0.25" ShadowDepth="4"/>
                                                 </Border.Effect>
                                                 <StackPanel x:Name="PresetsPanel" MinWidth="220">
-                                                    <CheckBox x:Name="PresetDefaultApps" Content="Default selection" IsThreeState="True" ToolTip="Select the apps that are safe to remove for most users" Foreground="{DynamicResource FgColor}" Margin="8,4" AutomationProperties.Name="Default selection"/>
-                                                    <CheckBox x:Name="PresetLastUsed" Content="Last used selection" IsThreeState="True" ToolTip="Select the apps that were removed the last time Win11Debloat was run" Foreground="{DynamicResource FgColor}" Margin="8,4" AutomationProperties.Name="Last used selection"/>
+                                                    <CheckBox x:Name="PresetDefaultApps" Content="Default apps" IsThreeState="True" ToolTip="Select the apps that are safe to remove for most users" Foreground="{DynamicResource FgColor}" Margin="8,4" AutomationProperties.Name="Default selection"/>
+                                                    <CheckBox x:Name="PresetLastUsed" Content="Last used apps" IsThreeState="True" ToolTip="Select the apps that were removed the last time Win11Debloat was run" Foreground="{DynamicResource FgColor}" Margin="8,4" AutomationProperties.Name="Last used selection"/>
                                                     <Separator Margin="4,6" Background="{DynamicResource BorderColor}"/>
                                                     <StackPanel x:Name="JsonPresetsPanel"/>
                                                 </StackPanel>

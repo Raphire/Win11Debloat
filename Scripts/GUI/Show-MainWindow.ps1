@@ -287,21 +287,75 @@ function Show-MainWindow {
     $jsonPresetsPanel = $window.FindName('JsonPresetsPanel')
     $presetsArrow = $window.FindName('PresetsArrow')
     $clearAppSelectionBtn = $window.FindName('ClearAppSelectionBtn')
+    $tweaksPresetsBtn = $window.FindName('TweaksPresetsBtn')
+    $tweaksPresetsPopup = $window.FindName('TweaksPresetsPopup')
+    $presetDefaultTweaksBtn = $window.FindName('PresetDefaultTweaksBtn')
+    $presetLastUsedTweaksBtn = $window.FindName('PresetLastUsedTweaksBtn')
+    $presetPrivacyTweaksBtn = $window.FindName('PresetPrivacyTweaksBtn')
+    $presetAITweaksBtn = $window.FindName('PresetAITweaksBtn')
+    $tweaksPresetsArrow = $window.FindName('TweaksPresetsArrow')
+
+    function AttachTriStateClickBehavior {
+        param([System.Windows.Controls.CheckBox]$checkBox)
+
+        if (-not $checkBox -or -not $checkBox.IsThreeState) { return }
+
+        if (-not $checkBox.PSObject.Properties['WasIndeterminateBeforeClick']) {
+            Add-Member -InputObject $checkBox -MemberType NoteProperty -Name 'WasIndeterminateBeforeClick' -Value $false
+        }
+
+        $checkBox.Add_PreviewMouseLeftButtonDown({
+            $this.WasIndeterminateBeforeClick = ($this.IsChecked -eq [System.Nullable[bool]]$null)
+        })
+    }
 
     function NormalizeCheckboxState {
         param([System.Windows.Controls.CheckBox]$checkBox)
 
-        $isChecked = ($checkBox.IsChecked -eq $true)
-        if ($null -eq $checkBox.IsChecked) {
-            $checkBox.IsChecked = $false
-            return $false
+        if ($checkBox.PSObject.Properties['WasIndeterminateBeforeClick'] -and $checkBox.WasIndeterminateBeforeClick) {
+            # WPF toggles null -> false before Click handlers fire; restore desired mixed -> checked behavior.
+            $checkBox.WasIndeterminateBeforeClick = $false
+            $checkBox.IsChecked = $true
+            return $true
         }
 
-        return $isChecked
+        return ($checkBox.IsChecked -eq $true)
     }
 
-    function AnimatePresetsArrow {
-        param([double]$angle)
+    function SetTriStatePresetCheckBoxState {
+        param(
+            [System.Windows.Controls.CheckBox]$CheckBox,
+            [int]$Total,
+            [int]$Selected
+        )
+
+        if (-not $CheckBox) { return }
+
+        if ($Total -eq 0) {
+            $CheckBox.IsEnabled = $false
+            $CheckBox.IsChecked = $false
+            return
+        }
+
+        $CheckBox.IsEnabled = $true
+        if ($Selected -eq 0) {
+            $CheckBox.IsChecked = $false
+        }
+        elseif ($Selected -eq $Total) {
+            $CheckBox.IsChecked = $true
+        }
+        else {
+            $CheckBox.IsChecked = [System.Nullable[bool]]$null
+        }
+    }
+
+    function AnimateDropdownArrow {
+        param(
+            [System.Windows.Controls.TextBlock]$arrow,
+            [double]$angle
+        )
+
+        if (-not $arrow) { return }
 
         $animation = New-Object System.Windows.Media.Animation.DoubleAnimation
         $animation.To = $angle
@@ -311,7 +365,7 @@ function Show-MainWindow {
         $ease.EasingMode = 'EaseOut'
         $animation.EasingFunction = $ease
 
-        $presetsArrow.RenderTransform.BeginAnimation([System.Windows.Media.RotateTransform]::AngleProperty, $animation)
+        $arrow.RenderTransform.BeginAnimation([System.Windows.Media.RotateTransform]::AngleProperty, $animation)
     }
 
     # Load JSON-defined presets and build dynamic preset checkboxes
@@ -321,15 +375,17 @@ function Show-MainWindow {
         $checkbox.Content = $preset.Name
         $checkbox.IsThreeState = $true
         $checkbox.Style = $window.Resources['PresetCheckBoxStyle']
+        $checkbox.ToolTip = "Select $($preset.Name)"
         $checkbox.SetValue([System.Windows.Automation.AutomationProperties]::NameProperty, $preset.Name)
+        AttachTriStateClickBehavior -checkBox $checkbox
         Add-Member -InputObject $checkbox -MemberType NoteProperty -Name 'PresetAppIds' -Value $preset.AppIds
         $jsonPresetsPanel.Children.Add($checkbox) | Out-Null
         $script:JsonPresetCheckboxes += $checkbox
 
         $checkbox.Add_Click({
             if ($script:UpdatingPresets) { return }
-            $check = NormalizeCheckboxState -checkBox $this
             $presetIds = $this.PresetAppIds
+            $check = NormalizeCheckboxState -checkBox $this
             ApplyPresetToApps -MatchFilter { param($c) (@($c.AppIds) | Where-Object { $presetIds -contains $_ }).Count -gt 0 }.GetNewClosure() -Check $check
         })
     }
@@ -354,6 +410,7 @@ function Show-MainWindow {
 
     # Guard flag to prevent preset handlers from firing when we update their state programmatically
     $script:UpdatingPresets = $false
+    $script:UpdatingTweakPresets = $false
 
     # Sort state for the app table
     $script:SortColumn = 'Name'
@@ -484,19 +541,7 @@ function Show-MainWindow {
                         }
                     }
                 }
-                if ($total -eq 0) {
-                    $checkbox.IsChecked = $false
-                    $checkbox.IsEnabled = $false
-                } else {
-                    $checkbox.IsEnabled = $true
-                    if ($checked -eq 0) {
-                        $checkbox.IsChecked = $false
-                    } elseif ($checked -eq $total) {
-                        $checkbox.IsChecked = $true
-                    } else {
-                        $checkbox.IsChecked = [System.Nullable[bool]]$null
-                    }
-                }
+                SetTriStatePresetCheckBoxState -CheckBox $checkbox -Total $total -Selected $checked
             }
 
             SetPresetState $presetDefaultApps { param($c) $c.SelectedByDefault -eq $true }
@@ -772,7 +817,7 @@ function Show-MainWindow {
                         try { $lblBorderObj = $window.FindName("$comboName`_LabelBorder") } catch {}
                         if ($lblBorderObj) { $lblBorderObj.ToolTip = $tipBlock }
                     }
-                    $script:UiControlMappings[$comboName] = @{ Type='group'; Values = $group.Values; Label = $group.Label }
+                    $script:UiControlMappings[$comboName] = @{ Type='group'; Values = $group.Values; Label = $group.Label; Category = $categoryName }
                 }
                 elseif ($item.Type -eq 'feature') {
                     $feature = $item.Data
@@ -792,7 +837,7 @@ function Show-MainWindow {
                         try { $lblBorderObj = $window.FindName("$comboName`_LabelBorder") } catch {}
                         if ($lblBorderObj) { $lblBorderObj.ToolTip = $tipBlock }
                     }
-                    $script:UiControlMappings[$comboName] = @{ Type='feature'; FeatureId = $feature.FeatureId; Action = $feature.Action; Label = $feature.Label }
+                    $script:UiControlMappings[$comboName] = @{ Type='feature'; FeatureId = $feature.FeatureId; Action = $feature.Action; Label = $feature.Label; Category = $categoryName }
                 }
             }
         }
@@ -989,27 +1034,45 @@ function Show-MainWindow {
     # Animate arrow when popup opens/closes, and lazily update preset states
     $presetsPopup.Add_Opened({
         UpdatePresetStates
-        AnimatePresetsArrow -angle 180
+        AnimateDropdownArrow -arrow $presetsArrow -angle 180
     })
     $presetsPopup.Add_Closed({
-        AnimatePresetsArrow -angle 0
+        AnimateDropdownArrow -arrow $presetsArrow -angle 0
         $presetsBtn.IsChecked = $false
+    })
+
+    $tweaksPresetsPopup.Add_Opened({
+        UpdateTweakPresetStates
+        AnimateDropdownArrow -arrow $tweaksPresetsArrow -angle 180
+    })
+    $tweaksPresetsPopup.Add_Closed({
+        AnimateDropdownArrow -arrow $tweaksPresetsArrow -angle 0
+        $tweaksPresetsBtn.IsChecked = $false
     })
 
     # Close popup when clicking anywhere outside the popup or the presets button.
     $window.Add_PreviewMouseDown({
-        if (-not $presetsPopup.IsOpen) { return }
-        if ($null -ne $presetsPopup.Child -and $presetsPopup.Child.IsMouseOver) { return }
+        $isAppPopupOpen = $presetsPopup.IsOpen
+        $isTweaksPopupOpen = $tweaksPresetsPopup.IsOpen
+        if (-not $isAppPopupOpen -and -not $isTweaksPopupOpen) { return }
+
+        if ($isAppPopupOpen -and $null -ne $presetsPopup.Child -and $presetsPopup.Child.IsMouseOver) { return }
+        if ($isTweaksPopupOpen -and $null -ne $tweaksPresetsPopup.Child -and $tweaksPresetsPopup.Child.IsMouseOver) { return }
+
         $src = $_.OriginalSource -as [System.Windows.DependencyObject]
         if ($null -ne $src) {
-            $inBtn = $presetsBtn.IsAncestorOf($src) -or [System.Object]::ReferenceEquals($presetsBtn, $src)
-            if (-not $inBtn) { $presetsPopup.IsOpen = $false }
+            $inAppBtn = $presetsBtn.IsAncestorOf($src) -or [System.Object]::ReferenceEquals($presetsBtn, $src)
+            $inTweaksBtn = $tweaksPresetsBtn.IsAncestorOf($src) -or [System.Object]::ReferenceEquals($tweaksPresetsBtn, $src)
+
+            if ($isAppPopupOpen -and -not $inAppBtn) { $presetsPopup.IsOpen = $false }
+            if ($isTweaksPopupOpen -and -not $inTweaksBtn) { $tweaksPresetsPopup.IsOpen = $false }
         }
     })
 
     # Close the preset menu when the main window loses focus (e.g., user switches to another app).
     $window.Add_Deactivated({
         if ($presetsPopup.IsOpen) { $presetsPopup.IsOpen = $false }
+        if ($tweaksPresetsPopup.IsOpen) { $tweaksPresetsPopup.IsOpen = $false }
     })
 
     # Toggle popup on button click
@@ -1017,6 +1080,22 @@ function Show-MainWindow {
         $presetsPopup.IsOpen = -not $presetsPopup.IsOpen
         $presetsBtn.IsChecked = $presetsPopup.IsOpen
     })
+
+    $tweaksPresetsBtn.Add_Click({
+        $tweaksPresetsPopup.IsOpen = -not $tweaksPresetsPopup.IsOpen
+        $tweaksPresetsBtn.IsChecked = $tweaksPresetsPopup.IsOpen
+    })
+
+    foreach ($presetCheckBox in @(
+        $presetDefaultApps,
+        $presetLastUsed,
+        $presetDefaultTweaksBtn,
+        $presetLastUsedTweaksBtn,
+        $presetPrivacyTweaksBtn,
+        $presetAITweaksBtn
+    )) {
+        AttachTriStateClickBehavior -checkBox $presetCheckBox
+    }
 
     # Preset: Default selection
     $presetDefaultApps.Add_Click({
@@ -1751,6 +1830,9 @@ function Show-MainWindow {
     # Initialize UI elements on window load
     $window.Add_Loaded({
         BuildDynamicTweaks
+        RefreshTweakPresetSources -defaultSettingsJson $defaultsJson -lastUsedSettingsJson $lastUsedSettingsJson
+        RegisterTweakPresetControlStateHandlers
+        UpdateTweakPresetStates
 
         LoadAppsIntoMainUI
 
@@ -1793,57 +1875,267 @@ function Show-MainWindow {
         UpdateNavigationButtons
     })
 
-    # Handle Load Defaults button
-    $loadDefaultsBtn = $window.FindName('LoadDefaultsBtn')
-    $loadDefaultsBtn.Add_Click({
-        $defaultsJson = LoadJsonFile -filePath $script:DefaultSettingsFilePath -expectedVersion "1.0"
+    function BuildTweakPresetControlMap {
+        param($settingsJson)
 
-        if (-not $defaultsJson) {
-            Show-MessageBox -Message "Failed to load default settings file" -Title "Error" -Button 'OK' -Icon 'Error'
-            return
+        $presetMap = @{}
+        if (-not $settingsJson -or -not $settingsJson.Settings -or -not $script:UiControlMappings) {
+            return $presetMap
         }
-        
-        ApplySettingsToUiControls -window $window -settingsJson $defaultsJson -uiControlMappings $script:UiControlMappings
-    })
 
-    # Handle Load Last Used settings and Load Last Used apps
-    $loadLastUsedBtn = $window.FindName('LoadLastUsedBtn')
+        # FeatureId -> control metadata, similar to ApplySettingsToUiControls lookup.
+        $featureIdIndex = @{}
+        foreach ($controlName in $script:UiControlMappings.Keys) {
+            $control = $window.FindName($controlName)
+            if (-not $control -or $control.Visibility -ne 'Visible') { continue }
+
+            $mapping = $script:UiControlMappings[$controlName]
+            if ($mapping.Type -eq 'group') {
+                $i = 1
+                foreach ($val in $mapping.Values) {
+                    foreach ($fid in $val.FeatureIds) {
+                        $featureIdIndex[$fid] = @{ ControlName = $controlName; Control = $control; MappingType = 'group'; Index = $i }
+                    }
+                    $i++
+                }
+            }
+            elseif ($mapping.Type -eq 'feature') {
+                $featureIdIndex[$mapping.FeatureId] = @{ ControlName = $controlName; Control = $control; MappingType = 'feature' }
+            }
+        }
+
+        foreach ($setting in $settingsJson.Settings) {
+            if ($setting.Value -ne $true) { continue }
+            if ($setting.Name -eq 'CreateRestorePoint') { continue }
+
+            $entry = $featureIdIndex[$setting.Name]
+            if (-not $entry) { continue }
+            if ($presetMap.ContainsKey($entry.ControlName)) { continue }
+
+            $controlType = if ($entry.Control -is [System.Windows.Controls.CheckBox]) { 'CheckBox' } else { 'ComboBox' }
+            $desiredValue = switch ($entry.MappingType) {
+                'group'   { $entry.Index }
+                default   { if ($controlType -eq 'CheckBox') { $true } else { 1 } }
+            }
+
+            $presetMap[$entry.ControlName] = @{ Control = $entry.Control; ControlType = $controlType; DesiredValue = $desiredValue }
+        }
+
+        return $presetMap
+    }
+
+    function BuildCategoryTweakPresetMap {
+        param([string]$Category)
+
+        $presetMap = @{}
+        if (-not $script:UiControlMappings) { return $presetMap }
+
+        foreach ($controlName in $script:UiControlMappings.Keys) {
+            $mapping = $script:UiControlMappings[$controlName]
+            if ($mapping.Category -ne $Category) { continue }
+
+            $control = $window.FindName($controlName)
+            if (-not $control -or $control.Visibility -ne 'Visible') { continue }
+
+            $controlType = if ($control -is [System.Windows.Controls.CheckBox]) { 'CheckBox' } else { 'ComboBox' }
+            $desiredValue = if ($controlType -eq 'CheckBox') { $true } else { 1 }
+            $presetMap[$controlName] = @{ Control = $control; ControlType = $controlType; DesiredValue = $desiredValue }
+        }
+
+        return $presetMap
+    }
+
+    function GetSavedAppIdsFromSettingsJson {
+        param($settingsJson)
+
+        if (-not $settingsJson -or -not $settingsJson.Settings) {
+            return $null
+        }
+
+        $appsValue = $null
+        foreach ($setting in $settingsJson.Settings) {
+            if ($setting.Name -eq 'Apps' -and $setting.Value) {
+                $appsValue = $setting.Value
+                break
+            }
+        }
+
+        if (-not $appsValue) {
+            return $null
+        }
+
+        $savedAppIds = @()
+        if ($appsValue -is [string]) {
+            $savedAppIds = $appsValue.Split(',')
+        }
+        elseif ($appsValue -is [array]) {
+            $savedAppIds = $appsValue
+        }
+
+        $savedAppIds = $savedAppIds | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne '' }
+        if ($savedAppIds.Count -eq 0) {
+            return $null
+        }
+
+        return $savedAppIds
+    }
+
+    function ApplyTweakPresetMap {
+        param(
+            [hashtable]$PresetMap,
+            [bool]$Check
+        )
+
+        if (-not $PresetMap) {
+            $PresetMap = @{}
+        }
+
+        foreach ($target in $PresetMap.Values) {
+            $control = $target.Control
+            if (-not $control) { continue }
+
+            if ($target.ControlType -eq 'CheckBox') {
+                $control.IsChecked = $Check
+            }
+            elseif ($target.ControlType -eq 'ComboBox') {
+                $desiredIndex = [int]$target.DesiredValue
+                if ($Check) {
+                    $control.SelectedIndex = $desiredIndex
+                }
+                elseif ($control.SelectedIndex -eq $desiredIndex) {
+                    $control.SelectedIndex = 0
+                }
+            }
+        }
+
+        UpdateTweakPresetStates
+    }
+
+    function SetTweakPresetState {
+        param(
+            [System.Windows.Controls.CheckBox]$PresetCheckBox,
+            [hashtable]$PresetMap
+        )
+
+        if (-not $PresetCheckBox) { return }
+        if (-not $PresetMap) {
+            $PresetMap = @{}
+        }
+
+        $total = $PresetMap.Count
+        $selected = 0
+
+        foreach ($target in $PresetMap.Values) {
+            $control = $target.Control
+            if (-not $control) { continue }
+
+            if ($target.ControlType -eq 'CheckBox' -and $control.IsChecked -eq $true) {
+                $selected++
+            }
+            elseif ($target.ControlType -eq 'ComboBox' -and $control.SelectedIndex -eq [int]$target.DesiredValue) {
+                $selected++
+            }
+        }
+
+        SetTriStatePresetCheckBoxState -CheckBox $PresetCheckBox -Total $total -Selected $selected
+    }
+
+    function UpdateTweakPresetStates {
+        $script:UpdatingTweakPresets = $true
+        try {
+            SetTweakPresetState -PresetCheckBox $presetDefaultTweaksBtn -PresetMap $script:DefaultTweakPresetMap
+            if ($presetLastUsedTweaksBtn -and $presetLastUsedTweaksBtn.Visibility -ne 'Collapsed') {
+                SetTweakPresetState -PresetCheckBox $presetLastUsedTweaksBtn -PresetMap $script:LastUsedTweakPresetMap
+            }
+            SetTweakPresetState -PresetCheckBox $presetPrivacyTweaksBtn -PresetMap $script:PrivacyTweakPresetMap
+            SetTweakPresetState -PresetCheckBox $presetAITweaksBtn -PresetMap $script:AITweakPresetMap
+        }
+        finally {
+            $script:UpdatingTweakPresets = $false
+        }
+    }
+
+    function RegisterTweakPresetControlStateHandlers {
+        if (-not $script:UiControlMappings) { return }
+
+        foreach ($controlName in $script:UiControlMappings.Keys) {
+            $control = $window.FindName($controlName)
+            if (-not $control) { continue }
+
+            if ($control -is [System.Windows.Controls.CheckBox]) {
+                $control.Add_Checked({ if (-not $script:UpdatingTweakPresets) { UpdateTweakPresetStates } })
+                $control.Add_Unchecked({ if (-not $script:UpdatingTweakPresets) { UpdateTweakPresetStates } })
+            }
+            elseif ($control -is [System.Windows.Controls.ComboBox]) {
+                $control.Add_SelectionChanged({ if (-not $script:UpdatingTweakPresets) { UpdateTweakPresetStates } })
+            }
+        }
+    }
+
+    function RefreshTweakPresetSources {
+        param(
+            $defaultSettingsJson,
+            $lastUsedSettingsJson
+        )
+
+        $script:DefaultTweakPresetMap = BuildTweakPresetControlMap -settingsJson $defaultSettingsJson
+        $script:LastUsedTweakPresetMap = BuildTweakPresetControlMap -settingsJson $lastUsedSettingsJson
+        $script:PrivacyTweakPresetMap = BuildCategoryTweakPresetMap -Category 'Privacy & Suggested Content'
+        $script:AITweakPresetMap = BuildCategoryTweakPresetMap -Category 'AI'
+
+        if ($presetLastUsedTweaksBtn) {
+            $presetLastUsedTweaksBtn.Visibility = if ($script:LastUsedTweakPresetMap.Count -gt 0) { 'Visible' } else { 'Collapsed' }
+        }
+    }
 
     $lastUsedSettingsJson = LoadJsonFile -filePath $script:SavedSettingsFilePath -expectedVersion "1.0" -optionalFile
 
-    $hasSettings = $false
-    $appsSetting = $null
-    if ($lastUsedSettingsJson -and $lastUsedSettingsJson.Settings) {
-        foreach ($s in $lastUsedSettingsJson.Settings) {
-            # Only count as hasSettings if a setting other than RemoveApps/Apps is present and true
-            if ($s.Value -eq $true -and $s.Name -ne 'RemoveApps' -and $s.Name -ne 'Apps') { $hasSettings = $true }
-            if ($s.Name -eq 'Apps' -and $s.Value) { $appsSetting = $s.Value }
-        }
-    }
+    $defaultsJson = LoadJsonFile -filePath $script:DefaultSettingsFilePath -expectedVersion "1.0"
+    $script:DefaultTweakPresetMap = @{}
+    $script:LastUsedTweakPresetMap = @{}
+    $script:PrivacyTweakPresetMap = @{}
+    $script:AITweakPresetMap = @{}
+    $script:SavedAppIds = GetSavedAppIdsFromSettingsJson -settingsJson $lastUsedSettingsJson
 
-    # Show option to load last used settings if they exist
-    if ($hasSettings) {
-        $loadLastUsedBtn.Add_Click({
-            try {
-                ApplySettingsToUiControls -window $window -settingsJson $lastUsedSettingsJson -uiControlMappings $script:UiControlMappings
-            }
-            catch {
-                Show-MessageBox -Message "Failed to load last used settings: $_" -Title "Error" -Button 'OK' -Icon 'Error'
-            }
+    if ($presetDefaultTweaksBtn) {
+        $presetDefaultTweaksBtn.Add_Click({
+            if ($script:UpdatingTweakPresets) { return }
+            $check = NormalizeCheckboxState -checkBox $this
+            ApplyTweakPresetMap -PresetMap $script:DefaultTweakPresetMap -Check $check
         })
     }
-    else {
-        $loadLastUsedBtn.Visibility = 'Collapsed'
+
+    if ($presetLastUsedTweaksBtn) {
+        $presetLastUsedTweaksBtn.Add_Click({
+            if ($script:UpdatingTweakPresets) { return }
+            $check = NormalizeCheckboxState -checkBox $this
+            ApplyTweakPresetMap -PresetMap $script:LastUsedTweakPresetMap -Check $check
+        })
+    }
+
+    if ($presetPrivacyTweaksBtn) {
+        $presetPrivacyTweaksBtn.Add_Click({
+            if ($script:UpdatingTweakPresets) { return }
+            $check = NormalizeCheckboxState -checkBox $this
+            ApplyTweakPresetMap -PresetMap $script:PrivacyTweakPresetMap -Check $check
+        })
+    }
+
+    if ($presetAITweaksBtn) {
+        $presetAITweaksBtn.Add_Click({
+            if ($script:UpdatingTweakPresets) { return }
+            $check = NormalizeCheckboxState -checkBox $this
+            ApplyTweakPresetMap -PresetMap $script:AITweakPresetMap -Check $check
+        })
+    }
+
+    # Hide Last used tweak preset by default; it is shown after dynamic controls are built and mappings are resolved.
+    if ($presetLastUsedTweaksBtn) {
+        $presetLastUsedTweaksBtn.Visibility = 'Collapsed'
     }
 
     # Preset: Last used selection (wired to PresetLastUsed checkbox)
-    if ($appsSetting -and $appsSetting.ToString().Trim().Length -gt 0) {
-        # Parse and store saved app IDs for UpdatePresetStates
-        $script:SavedAppIds = @()
-        if ($appsSetting -is [string]) { $script:SavedAppIds = $appsSetting.Split(',') }
-        elseif ($appsSetting -is [array]) { $script:SavedAppIds = $appsSetting }
-        $script:SavedAppIds = $script:SavedAppIds | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne '' }
-
+    if ($script:SavedAppIds) {
         $presetLastUsed.Add_Click({
             if ($script:UpdatingPresets) { return }
             $check = NormalizeCheckboxState -checkBox $this
@@ -1870,6 +2162,7 @@ function Show-MainWindow {
                 }
             }
         }
+        UpdateTweakPresetStates
     })
 
     # Preload app data to speed up loading when user navigates to App Removal tab

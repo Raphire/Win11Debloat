@@ -748,6 +748,7 @@
                                                 </Style>
                                             </ToggleButton.Style>
                                             <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="&#xE735;" FontFamily="Segoe Fluent Icons" FontSize="14" VerticalAlignment="Center" Margin="0,0,6,0"/>
                                                 <TextBlock Text="Quick Select" FontSize="13" VerticalAlignment="Center" Margin="0,0,6,0"/>
                                                 <TextBlock x:Name="PresetsArrow" Text="&#xE70D;" FontFamily="Segoe Fluent Icons" FontSize="10" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
                                                     <TextBlock.RenderTransform>
@@ -756,15 +757,20 @@
                                                 </TextBlock>
                                             </StackPanel>
                                         </ToggleButton>
-                                        <Button x:Name="ClearAppSelectionBtn" Content="Clear Selection" ToolTip="Clear all selected apps" Style="{DynamicResource SecondaryButtonStyle}" Height="32"  Padding="10,0" Margin="0,0,10,0" AutomationProperties.Name="Clear Selection"/>
+                                        <Button x:Name="ClearAppSelectionBtn" ToolTip="Clear all selected apps" Style="{DynamicResource SecondaryButtonStyle}" Height="32"  Padding="10,0" Margin="0,0,10,0" AutomationProperties.Name="Clear Selection">
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                <TextBlock Text="&#xE711;" FontFamily="Segoe Fluent Icons" FontSize="14" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                                <TextBlock Text="Clear Selection" FontSize="13" VerticalAlignment="Center" Margin="0,0,0,1"/>
+                                            </StackPanel>
+                                        </Button>
                                         <Popup x:Name="PresetsPopup" PlacementTarget="{Binding ElementName=PresetsBtn}" Placement="Bottom" StaysOpen="True" AllowsTransparency="True" VerticalOffset="2">
                                             <Border Background="{DynamicResource CardBgColor}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="6" Padding="4,6" Margin="12">
                                                 <Border.Effect>
                                                     <DropShadowEffect BlurRadius="12" Opacity="0.25" ShadowDepth="4"/>
                                                 </Border.Effect>
                                                 <StackPanel x:Name="PresetsPanel" MinWidth="220">
-                                                    <CheckBox x:Name="PresetDefaultApps" Content="Default selection" IsThreeState="True" Foreground="{DynamicResource FgColor}" Margin="8,4" AutomationProperties.Name="Default selection"/>
-                                                    <CheckBox x:Name="PresetLastUsed" Content="Last used selection" IsThreeState="True" Foreground="{DynamicResource FgColor}" Margin="8,4" AutomationProperties.Name="Last used selection"/>
+                                                    <CheckBox x:Name="PresetDefaultApps" Content="Default selection" IsThreeState="True" ToolTip="Select the apps that are safe to remove for most users" Foreground="{DynamicResource FgColor}" Margin="8,4" AutomationProperties.Name="Default selection"/>
+                                                    <CheckBox x:Name="PresetLastUsed" Content="Last used selection" IsThreeState="True" ToolTip="Select the apps that were removed the last time Win11Debloat was run" Foreground="{DynamicResource FgColor}" Margin="8,4" AutomationProperties.Name="Last used selection"/>
                                                     <Separator Margin="4,6" Background="{DynamicResource BorderColor}"/>
                                                     <StackPanel x:Name="JsonPresetsPanel"/>
                                                 </StackPanel>
@@ -895,9 +901,67 @@
                                     </Grid.ColumnDefinitions>
                                     
                                     <StackPanel Grid.Column="0" Orientation="Horizontal">
-                                        <Button x:Name="LoadDefaultsBtn" Content="Select Default Settings" ToolTip="Select the settings that are recommended for most people" Style="{DynamicResource SecondaryButtonStyle}" Padding="10,0" Height="32" Margin="0,0,10,0" AutomationProperties.Name="Select Default Settings"/>
-                                        <Button x:Name="LoadLastUsedBtn" Content="Select Last Used Settings" ToolTip="Select the settings that were used the last time Win11Debloat was run" Style="{DynamicResource SecondaryButtonStyle}" Padding="10,0" Height="32" Margin="0,0,10,0" AutomationProperties.Name="Select Last Used Settings"/>
-                                        <Button x:Name="ClearAllTweaksBtn" Content="Clear Selection" ToolTip="Clear all selected tweaks" Style="{DynamicResource SecondaryButtonStyle}" Padding="10,0" Height="32" Margin="0,0,10,0" AutomationProperties.Name="Clear Selection"/>
+                                        <ToggleButton x:Name="TweaksPresetsBtn" ToolTip="Select tweak presets" Height="32" Padding="10,0" Margin="0,0,10,0" AutomationProperties.Name="Tweak Presets">
+                                            <ToggleButton.Style>
+                                                <Style TargetType="ToggleButton">
+                                                    <Setter Property="Background" Value="{DynamicResource SecondaryButtonBg}"/>
+                                                    <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
+                                                    <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderColor}"/>
+                                                    <Setter Property="BorderThickness" Value="1"/>
+                                                    <Setter Property="FontSize" Value="14"/>
+                                                    <Setter Property="Cursor" Value="Hand"/>
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="ToggleButton">
+                                                                <Border x:Name="Border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="4" Padding="{TemplateBinding Padding}">
+                                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,1"/>
+                                                                </Border>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="Background" Value="{DynamicResource SecondaryButtonHover}"/>
+                                                        </Trigger>
+                                                        <Trigger Property="IsPressed" Value="True">
+                                                            <Setter Property="Background" Value="{DynamicResource SecondaryButtonPressed}"/>
+                                                        </Trigger>
+                                                        <Trigger Property="IsChecked" Value="True">
+                                                            <Setter Property="Background" Value="{DynamicResource SecondaryButtonHover}"/>
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ToggleButton.Style>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="&#xE735;" FontFamily="Segoe Fluent Icons" FontSize="14" VerticalAlignment="Center" Margin="0,1,6,0"/>
+                                                <TextBlock Text="Quick Select" FontSize="13" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                                <TextBlock x:Name="TweaksPresetsArrow" Text="&#xE70D;" FontFamily="Segoe Fluent Icons" FontSize="10" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+                                                    <TextBlock.RenderTransform>
+                                                        <RotateTransform Angle="0"/>
+                                                    </TextBlock.RenderTransform>
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </ToggleButton>
+                                        <Button x:Name="ClearAllTweaksBtn" ToolTip="Clear all selected tweaks" Style="{DynamicResource SecondaryButtonStyle}" Padding="10,0" Height="32" Margin="0,0,10,0" AutomationProperties.Name="Clear Selection">
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                <TextBlock Text="&#xE711;" FontFamily="Segoe Fluent Icons" FontSize="14" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                                <TextBlock Text="Clear Selection" FontSize="13" VerticalAlignment="Center" Margin="0,0,0,1"/>
+                                            </StackPanel>
+                                        </Button>
+                                        <Popup x:Name="TweaksPresetsPopup" PlacementTarget="{Binding ElementName=TweaksPresetsBtn}" Placement="Bottom" StaysOpen="True" AllowsTransparency="True" VerticalOffset="2">
+                                            <Border Background="{DynamicResource CardBgColor}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="6" Padding="4,6" Margin="12">
+                                                <Border.Effect>
+                                                    <DropShadowEffect BlurRadius="12" Opacity="0.25" ShadowDepth="4"/>
+                                                </Border.Effect>
+                                                <StackPanel MinWidth="220">
+                                                    <CheckBox x:Name="PresetDefaultTweaksBtn" Content="Default settings" IsThreeState="True" ToolTip="Select the settings that are recommended for most people" Foreground="{DynamicResource FgColor}" Style="{DynamicResource PresetCheckBoxStyle}" AutomationProperties.Name="Default settings"/>
+                                                    <CheckBox x:Name="PresetLastUsedTweaksBtn" Content="Last used settings" IsThreeState="True" ToolTip="Select the settings that were used the last time Win11Debloat was run" Foreground="{DynamicResource FgColor}" Style="{DynamicResource PresetCheckBoxStyle}" AutomationProperties.Name="Last used settings"/>
+                                                    <Separator Margin="4,6" Background="{DynamicResource BorderColor}"/>
+                                                    <CheckBox x:Name="PresetPrivacyTweaksBtn" Content="Privacy &amp; Suggested Content" IsThreeState="True" ToolTip="Select all Privacy &amp; Suggested Content tweaks" Foreground="{DynamicResource FgColor}" Style="{DynamicResource PresetCheckBoxStyle}" AutomationProperties.Name="All Privacy and Suggested Content"/>
+                                                    <CheckBox x:Name="PresetAITweaksBtn" Content="AI features" IsThreeState="True" ToolTip="Select all AI feature tweaks" Foreground="{DynamicResource FgColor}" Style="{DynamicResource PresetCheckBoxStyle}" AutomationProperties.Name="All AI features"/>
+                                                </StackPanel>
+                                            </Border>
+                                        </Popup>
                                     </StackPanel>
 
                                     <Border x:Name="TweakSearchBorder" Grid.Column="2">

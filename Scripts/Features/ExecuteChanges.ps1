@@ -27,8 +27,8 @@ function ExecuteParameter {
                 RemoveApps 'Microsoft.Copilot'
             }
             'DisableWidgets' {
-                # Also remove the app package for Widgets
-                RemoveApps 'Microsoft.StartExperiencesApp'
+                # Also remove the app packages for Widgets
+                RemoveApps 'Microsoft.StartExperiencesApp','MicrosoftWindows.Client.WebExperience','Microsoft.WidgetsPlatformRuntime'
             }
         }
         return

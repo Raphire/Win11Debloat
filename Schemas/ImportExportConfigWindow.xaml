@@ -43,16 +43,18 @@
             </Grid>
 
             <!-- Content -->
-            <StackPanel Grid.Row="1" x:Name="ContentPanel" Margin="20,12,20,9">
-                <TextBlock x:Name="PromptText"
-                           TextWrapping="Wrap"
-                           FontSize="14"
-                           LineHeight="20"
-                           Foreground="{DynamicResource FgColor}"
-                           Margin="0,0,0,14"/>
-                <!-- Checkboxes are added dynamically at runtime -->
-                <StackPanel x:Name="CheckboxPanel"/>
-            </StackPanel>
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="0,0,8,0">
+                <StackPanel x:Name="ContentPanel" Margin="20,12,20,9">
+                    <TextBlock x:Name="PromptText"
+                               TextWrapping="Wrap"
+                               FontSize="14"
+                               LineHeight="20"
+                               Foreground="{DynamicResource FgColor}"
+                               Margin="0,0,0,14"/>
+                    <!-- Checkboxes are added dynamically at runtime -->
+                    <StackPanel x:Name="CheckboxPanel"/>
+                </StackPanel>
+            </ScrollViewer>
 
             <!-- Button Footer -->
             <Border Grid.Row="2"

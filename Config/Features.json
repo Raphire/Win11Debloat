@@ -1545,7 +1545,7 @@
       "UndoAction": "Show all drive letters after drive label",
       "UndoText": "Showing drive letters after drive label...",
       "RegistryKey": "Show_Drive_Letters_First.reg",
-      "RegistryUndoKey": "Undo/Show_Drive_Letters_Last.reg",
+      "RegistryUndoKey": "Show_Drive_Letters_Last.reg",
       "MinVersion": null,
       "MaxVersion": null
     },
@@ -1571,7 +1571,7 @@
       "UndoAction": "Show all drive letters after drive label",
       "UndoText": "Showing drive letters after drive label...",
       "RegistryKey": "Show_Network_Drive_Letters_First.reg",
-      "RegistryUndoKey": "Undo/Show_Drive_Letters_Last.reg",
+      "RegistryUndoKey": "Show_Drive_Letters_Last.reg",
       "MinVersion": null,
       "MaxVersion": null
     },
@@ -1584,7 +1584,7 @@
       "UndoAction": "Show all drive letters after drive label",
       "UndoText": "Showing drive letters after drive label...",
       "RegistryKey": "Hide_Drive_Letters.reg",
-      "RegistryUndoKey": "Undo/Show_Drive_Letters_Last.reg",
+      "RegistryUndoKey": "Show_Drive_Letters_Last.reg",
       "MinVersion": null,
       "MaxVersion": null
     }

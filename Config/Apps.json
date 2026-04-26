@@ -842,6 +842,20 @@
       "Recommendation": "optional"
     },
     {
+      "FriendlyName": "Windows Web Experience Pack",
+      "AppId": "MicrosoftWindows.Client.WebExperience",
+      "Description": "Helps deliver and update certain features, like Widgets, through the Microsoft Store",
+      "SelectedByDefault": false,
+      "Recommendation": "optional"
+    },
+    {
+      "FriendlyName": "Widgets Platform Runtime",
+      "AppId": "Microsoft.WidgetsPlatformRuntime",
+      "Description": "Runtime required for Windows Widgets to function",
+      "SelectedByDefault": false,
+      "Recommendation": "optional"
+    },
+    {
       "FriendlyName": "HP AI Experience Center",
       "AppId": "AD2F1837.HPAIExperienceCenter",
       "Description": "HP OEM software, AI-enhanced features and support",

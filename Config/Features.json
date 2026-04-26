@@ -187,6 +187,7 @@
       "Label": "Open File Explorer to",
       "ToolTip": "This setting allows you to choose the default location that File Explorer opens to.",
       "Category": "File Explorer",
+      "Priority": 1,
       "Values": [
         {
           "Label": "Home",
@@ -210,6 +211,39 @@
           "Label": "OneDrive",
           "FeatureIds": [
             "ExplorerToOneDrive"
+          ]
+        }
+      ]
+    },
+    {
+      "GroupId": "DriveLetterPosition",
+      "Label": "Drive letter position",
+      "ToolTip": "This setting allows you to choose where drive letters are shown in File Explorer.",
+      "Category": "File Explorer",
+      "Priority": 20,
+      "Values": [
+        {
+          "Label": "Show drive letters after drive label (Default)",
+          "FeatureIds": [
+            "ShowDriveLettersLast"
+          ]
+        },
+        {
+          "Label": "Show drive letters before drive label",
+          "FeatureIds": [
+            "ShowDriveLettersFirst"
+          ]
+        },
+        {
+          "Label": "Show network drive letters before drive label",
+          "FeatureIds": [
+            "ShowNetworkDriveLettersFirst"
+          ]
+        },
+        {
+          "Label": "Hide all drive letters",
+          "FeatureIds": [
+            "HideDriveLetters"
           ]
         }
       ]
@@ -1007,7 +1041,7 @@
     },
     {
       "FeatureId": "DisableBitlockerAutoEncryption",
-      "ToolTip": "For devices that support it, Windows 11 automatically enables BitLocker device encryption. Disabling this will turn off automatic encryption of the device, but you can still manually enable BitLocker encryption if desired.",
+      "ToolTip": "For devices that support it, Windows 11 automatically enables BitLocker device encryption. Disabling this will turn off automatic encryption of the device, but you can still manually enable BitLocker encryption if desired. Drives that are already encrypted with BitLocker will remain encrypted when this setting is applied.",
       "Category": "System",
       "Action": "Disable BitLocker automatic device encryption",
       "ApplyText": "Disabling BitLocker automatic device encryption...",
@@ -1219,6 +1253,7 @@
       "FeatureId": "ShowKnownFileExt",
       "ToolTip": "This will show file extensions for known file types. By default, Windows hides file extensions for known file types which can lead to confusion and security risks.",
       "Category": "File Explorer",
+      "Priority": 2,
       "Action": "Show file extensions for known file types",
       "ApplyText": "Showing file extensions for known file types...",
       "UndoAction": "Hide file extensions for known file types",
@@ -1232,6 +1267,7 @@
       "FeatureId": "ShowHiddenFolders",
       "ToolTip": "By default, Windows hides certain files, folders and drives to prevent accidental modification or deletion. Turn this on to show all files in File Explorer.",
       "Category": "File Explorer",
+      "Priority": 3,
       "Action": "Show hidden files, folders and drives",
       "ApplyText": "Showing hidden files, folders and drives...",
       "UndoAction": "Hide hidden files, folders and drives",
@@ -1242,9 +1278,24 @@
       "MaxVersion": null
     },
     {
+      "FeatureId": "HideDupliDrive",
+      "ToolTip": "By default, Windows shows removable drives both under 'This PC' and in the navigation pane with its own entry. Enable this setting to only show removable drives under 'This PC'.",
+      "Category": "File Explorer",
+      "Priority": 4,
+      "Action": "Hide duplicate removable drive entries",
+      "ApplyText": "Hiding duplicate removable drive entries from the File Explorer navigation pane...",
+      "UndoAction": "Show duplicate removable drive entries",
+      "UndoText": "Showing duplicate removable drive entries...",
+      "RegistryKey": "Hide_duplicate_removable_drives_from_navigation_pane_of_File_Explorer.reg",
+      "RegistryUndoKey": "Show_duplicate_removable_drives_in_navigation_pane_of_File_Explorer.reg",
+      "MinVersion": null,
+      "MaxVersion": null
+    },
+    {
       "FeatureId": "HideHome",
       "ToolTip": "Hides the 'Home' section from the File Explorer navigation pane.",
       "Category": "File Explorer",
+      "Priority": 5,
       "Action": "Hide 'Home' from navigation pane",
       "ApplyText": "Hiding 'Home' from the File Explorer navigation pane...",
       "UndoAction": "Show 'Home' from navigation pane",
@@ -1258,38 +1309,13 @@
       "FeatureId": "HideGallery",
       "ToolTip": "Hides the 'Gallery' section from the File Explorer navigation pane.",
       "Category": "File Explorer",
+      "Priority": 6,
       "Action": "Hide 'Gallery' from navigation pane",
       "ApplyText": "Hiding 'Gallery' from the File Explorer navigation pane...",
       "UndoAction": "Show 'Gallery' from navigation pane",
       "UndoText": "Showing 'Gallery' from the File Explorer navigation pane...",
       "RegistryKey": "Hide_Gallery_from_Explorer.reg",
       "RegistryUndoKey": "Show_Gallery_in_Explorer.reg",
-      "MinVersion": 22000,
-      "MaxVersion": null
-    },
-    {
-      "FeatureId": "HideDupliDrive",
-      "ToolTip": "By default, Windows shows removable drives both under 'This PC' and in the navigation pane with its own entry. Enable this setting to only show removable drives under 'This PC'.",
-      "Category": "File Explorer",
-      "Action": "Hide duplicate removable drive entries",
-      "ApplyText": "Hiding duplicate removable drive entries from the File Explorer navigation pane...",
-      "UndoAction": "Show duplicate removable drive entries",
-      "UndoText": "Showing duplicate removable drive entries...",
-      "RegistryKey": "Hide_duplicate_removable_drives_from_navigation_pane_of_File_Explorer.reg",
-      "RegistryUndoKey": "Show_duplicate_removable_drives_in_navigation_pane_of_File_Explorer.reg",
-      "MinVersion": null,
-      "MaxVersion": null
-    },
-    {
-      "FeatureId": "AddFoldersToThisPC",
-      "ToolTip": "This setting will add common folders like Desktop, Documents, Downloads, Music, Pictures and Videos back to the 'This PC' page in File Explorer.",
-      "Category": "File Explorer",
-      "Action": "Add common folders back to 'This PC' page",
-      "ApplyText": "Adding all common folders (Desktop, Downloads, etc.) back to 'This PC' in File Explorer...",
-      "UndoAction": "Remove common folders from 'This PC' page",
-      "UndoText": "Removing common folders from 'This PC' page...",
-      "RegistryKey": "Add_All_Folders_Under_This_PC.reg",
-      "RegistryUndoKey": "Remove_All_Folders_Under_This_PC.reg",
       "MinVersion": 22000,
       "MaxVersion": null
     },
@@ -1372,48 +1398,10 @@
       "MaxVersion": null
     },
     {
-      "FeatureId": "HideIncludeInLibrary",
-      "ToolTip": "Hides the 'Include in library' option from the File Explorer context menu.",
-      "Category": "File Explorer",
-      "Action": "Hide 'Include in library' option in the context menu",
-      "ApplyText": "Hiding 'Include in library' in the context menu...",
-      "UndoAction": "Show 'Include in library' option in the context menu",
-      "UndoText": "Showing 'Include in library' option in the context menu...",
-      "RegistryKey": "Disable_Include_in_library_from_context_menu.reg",
-      "RegistryUndoKey": "Enable_Include_in_library_in_context_menu.reg",
-      "MinVersion": null,
-      "MaxVersion": 21999
-    },
-    {
-      "FeatureId": "HideGiveAccessTo",
-      "ToolTip": "Hides the 'Give access to' option from the File Explorer context menu.",
-      "Category": "File Explorer",
-      "Action": "Hide 'Give access to' option in the context menu",
-      "ApplyText": "Hiding 'Give access to' in the context menu...",
-      "UndoAction": "Show 'Give access to' option in the context menu",
-      "UndoText": "Showing 'Give access to' option in the context menu...",
-      "RegistryKey": "Disable_Give_access_to_context_menu.reg",
-      "RegistryUndoKey": "Enable_Give_access_to_context_menu.reg",
-      "MinVersion": null,
-      "MaxVersion": 21999
-    },
-    {
-      "FeatureId": "HideShare",
-      "ToolTip": "Hides the 'Share' option from the File Explorer context menu.",
-      "Category": "File Explorer",
-      "Action": "Hide 'Share' option in the context menu",
-      "ApplyText": "Hiding 'Share' in the context menu...",
-      "UndoAction": "Show 'Share' option in the context menu",
-      "UndoText": "Showing 'Share' option in the context menu...",
-      "RegistryKey": "Disable_Share_from_context_menu.reg",
-      "RegistryUndoKey": "Enable_Share_in_context_menu.reg",
-      "MinVersion": null,
-      "MaxVersion": 21999
-    },
-    {
       "FeatureId": "HideOnedrive",
       "ToolTip": "Hides the 'OneDrive' folder from the File Explorer navigation pane.",
       "Category": "File Explorer",
+      "Priority": 7,
       "Action": "Hide 'OneDrive' folder from navigation pane",
       "ApplyText": "Hiding the 'OneDrive' folder from the File Explorer navigation pane...",
       "UndoAction": "Show 'OneDrive' folder from navigation pane",
@@ -1421,12 +1409,13 @@
       "RegistryKey": "Hide_Onedrive_Folder.reg",
       "RegistryUndoKey": "Show_Onedrive_Folder.reg",
       "MinVersion": null,
-      "MaxVersion": 21999
+      "MaxVersion": null
     },
     {
       "FeatureId": "Hide3dObjects",
       "ToolTip": "Hides the '3D objects' folder from the File Explorer navigation pane.",
       "Category": "File Explorer",
+      "Priority": 8,
       "Action": "Hide '3D objects' folder from navigation pane",
       "ApplyText": "Hiding the '3D objects' folder from the File Explorer navigation pane...",
       "UndoAction": "Show '3D objects' folder in the File Explorer navigation pane",
@@ -1440,12 +1429,69 @@
       "FeatureId": "HideMusic",
       "ToolTip": "Hides the 'Music' folder from the File Explorer navigation pane.",
       "Category": "File Explorer",
+      "Priority": 9,
       "Action": "Hide 'Music' folder from navigation pane",
       "ApplyText": "Hiding the 'Music' folder from the File Explorer navigation pane...",
       "UndoAction": "Show 'Music' folder in the File Explorer navigation pane",
       "UndoText": "Showing the 'Music' folder in the File Explorer navigation pane...",
       "RegistryKey": "Hide_Music_Folder.reg",
       "RegistryUndoKey": "Show_Music_Folder.reg",
+      "MinVersion": null,
+      "MaxVersion": 21999
+    },
+    {
+      "FeatureId": "AddFoldersToThisPC",
+      "ToolTip": "This setting will add common folders like Desktop, Documents, Downloads, Music, Pictures and Videos back to the 'This PC' page in File Explorer.",
+      "Category": "File Explorer",
+      "Priority": 10,
+      "Action": "Add common folders back to 'This PC' page",
+      "ApplyText": "Adding all common folders (Desktop, Downloads, etc.) back to 'This PC' in File Explorer...",
+      "UndoAction": "Remove common folders from 'This PC' page",
+      "UndoText": "Removing common folders from 'This PC' page...",
+      "RegistryKey": "Add_All_Folders_Under_This_PC.reg",
+      "RegistryUndoKey": "Remove_All_Folders_Under_This_PC.reg",
+      "MinVersion": 22000,
+      "MaxVersion": null
+    },
+    {
+      "FeatureId": "HideIncludeInLibrary",
+      "ToolTip": "Hides the 'Include in library' option from the File Explorer context menu.",
+      "Category": "File Explorer",
+      "Priority": 11,
+      "Action": "Hide 'Include in library' option in the context menu",
+      "ApplyText": "Hiding 'Include in library' in the context menu...",
+      "UndoAction": "Show 'Include in library' option in the context menu",
+      "UndoText": "Showing 'Include in library' option in the context menu...",
+      "RegistryKey": "Disable_Include_in_library_from_context_menu.reg",
+      "RegistryUndoKey": "Enable_Include_in_library_in_context_menu.reg",
+      "MinVersion": null,
+      "MaxVersion": 21999
+    },
+    {
+      "FeatureId": "HideGiveAccessTo",
+      "ToolTip": "Hides the 'Give access to' option from the File Explorer context menu.",
+      "Category": "File Explorer",
+      "Priority": 12,
+      "Action": "Hide 'Give access to' option in the context menu",
+      "ApplyText": "Hiding 'Give access to' in the context menu...",
+      "UndoAction": "Show 'Give access to' option in the context menu",
+      "UndoText": "Showing 'Give access to' option in the context menu...",
+      "RegistryKey": "Disable_Give_access_to_context_menu.reg",
+      "RegistryUndoKey": "Enable_Give_access_to_context_menu.reg",
+      "MinVersion": null,
+      "MaxVersion": 21999
+    },
+    {
+      "FeatureId": "HideShare",
+      "ToolTip": "Hides the 'Share' option from the File Explorer context menu.",
+      "Category": "File Explorer",
+      "Priority": 13,
+      "Action": "Hide 'Share' option in the context menu",
+      "ApplyText": "Hiding 'Share' in the context menu...",
+      "UndoAction": "Show 'Share' option in the context menu",
+      "UndoText": "Showing 'Share' option in the context menu...",
+      "RegistryKey": "Disable_Share_from_context_menu.reg",
+      "RegistryUndoKey": "Enable_Share_in_context_menu.reg",
       "MinVersion": null,
       "MaxVersion": 21999
     },
@@ -1488,6 +1534,58 @@
       "RegistryUndoKey": null,
       "RequiresReboot": true,
       "MinVersion": 22000,
+      "MaxVersion": null
+    },
+    {
+      "FeatureId": "ShowDriveLettersFirst",
+      "ToolTip": "This setting will show drive letters before the drive label in File Explorer.",
+      "Category": "File Explorer",
+      "Action": "Show all drive letters before drive label",
+      "ApplyText": "Showing drive letters before drive label...",
+      "UndoAction": "Show all drive letters after drive label",
+      "UndoText": "Showing drive letters after drive label...",
+      "RegistryKey": "Show_Drive_Letters_First.reg",
+      "RegistryUndoKey": "Undo/Show_Drive_Letters_Last.reg",
+      "MinVersion": null,
+      "MaxVersion": null
+    },
+    {
+      "FeatureId": "ShowDriveLettersLast",
+      "ToolTip": "This setting will show drive letters after the drive label in File Explorer (Default Windows behavior).",
+      "Category": "File Explorer",
+      "Action": "Show all drive letters after drive label",
+      "ApplyText": "Showing drive letters after drive label...",
+      "UndoAction": null,
+      "UndoText": null,
+      "RegistryKey": "Show_Drive_Letters_Last.reg",
+      "RegistryUndoKey": null,
+      "MinVersion": null,
+      "MaxVersion": null
+    },
+    {
+      "FeatureId": "ShowNetworkDriveLettersFirst",
+      "ToolTip": "This setting will show only network drive letters before the drive label in File Explorer.",
+      "Category": "File Explorer",
+      "Action": "Show network drive letters before drive label",
+      "ApplyText": "Showing network drive letters before drive label...",
+      "UndoAction": "Show all drive letters after drive label",
+      "UndoText": "Showing drive letters after drive label...",
+      "RegistryKey": "Show_Network_Drive_Letters_First.reg",
+      "RegistryUndoKey": "Undo/Show_Drive_Letters_Last.reg",
+      "MinVersion": null,
+      "MaxVersion": null
+    },
+    {
+      "FeatureId": "HideDriveLetters",
+      "ToolTip": "This setting will hide all drive letters from the File Explorer navigation pane and 'This PC'.",
+      "Category": "File Explorer",
+      "Action": "Hide all drive letters",
+      "ApplyText": "Hiding all drive letters...",
+      "UndoAction": "Show all drive letters after drive label",
+      "UndoText": "Showing drive letters after drive label...",
+      "RegistryKey": "Hide_Drive_Letters.reg",
+      "RegistryUndoKey": "Undo/Show_Drive_Letters_Last.reg",
+      "MinVersion": null,
       "MaxVersion": null
     }
   ]

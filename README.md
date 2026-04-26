@@ -160,6 +160,7 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 - Add all common folders (Desktop, Downloads, etc.) back to 'This PC' in File Explorer.
 - Hide the 3D objects, music or OneDrive folder from the File Explorer navigation pane.
 - Hide the 'Include in library', 'Give access to' and 'Share' options from the context menu.
+- Change drive letter position or visibility in File Explorer.
 
 #### Multi-tasking
 

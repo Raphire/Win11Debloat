@@ -5,7 +5,8 @@ function Show-ImportExportConfigWindow {
         [string]$Title,
         [string]$Prompt,
         [string[]]$Categories = @('Applications', 'System Tweaks', 'Deployment Settings'),
-        [string[]]$DisabledCategories = @()
+        [string[]]$DisabledCategories = @(),
+        [hashtable]$CategoryDetails = @()
     )
 
     # Show overlay on owner window
@@ -56,11 +57,18 @@ function Show-ImportExportConfigWindow {
     $checkboxPanel = $dlg.FindName('CheckboxPanel')
     $checkboxes = @{}
     foreach ($cat in $Categories) {
+        # Create a container for the checkbox and details
+        $container = New-Object System.Windows.Controls.StackPanel
+        $container.Orientation = [System.Windows.Controls.Orientation]::Vertical
+        $container.Margin = [System.Windows.Thickness]::new(0,0,0,12)
+
+        # Create checkbox
         $cb = New-Object System.Windows.Controls.CheckBox
         $cb.Content = $cat
         $cb.IsChecked = $true
-        $cb.Margin = [System.Windows.Thickness]::new(0,0,0,8)
+        $cb.Margin = [System.Windows.Thickness]::new(0,0,0,4)
         $cb.FontSize = 14
+        $cb.FontWeight = [System.Windows.FontWeights]::Medium
         $cb.Foreground = $dlg.FindResource('FgColor')
         $cb.Style = $window.Resources["AppsPanelCheckBoxStyle"]
         if ($DisabledCategories -contains $cat) {
@@ -69,7 +77,22 @@ function Show-ImportExportConfigWindow {
             $cb.Opacity = 0.65
             $cb.ToolTip = 'No selected settings available in this category.'
         }
-        $checkboxPanel.Children.Add($cb) | Out-Null
+        
+        $container.Children.Add($cb) | Out-Null
+        
+        # Add details if available
+        if ($CategoryDetails -and $CategoryDetails[$cat]) {
+            $detailsText = New-Object System.Windows.Controls.TextBlock
+            $detailsText.Text = $CategoryDetails[$cat]
+            $detailsText.FontSize = 12
+            $detailsText.Foreground = $dlg.FindResource('FgColor')
+            $detailsText.Margin = [System.Windows.Thickness]::new(30,0,0,0)
+            $detailsText.Opacity = 0.75
+            $detailsText.TextWrapping = [System.Windows.TextWrapping]::Wrap
+            $container.Children.Add($detailsText) | Out-Null
+        }
+        
+        $checkboxPanel.Children.Add($container) | Out-Null
         $checkboxes[$cat] = $cb
     }
 
@@ -202,6 +225,72 @@ function Get-AvailableImportExportCategories {
     return $availableCategories
 }
 
+function Get-DeploymentCategoryDetailString {
+    param (
+        [array]$DeploymentSettings
+    )
+
+    $lookup = @{}
+    foreach ($setting in @($DeploymentSettings)) {
+        if ($setting -and $setting.Name) {
+            $lookup[$setting.Name] = $setting.Value
+        }
+    }
+
+    $line1 = @()
+
+    if ($lookup.ContainsKey('UserSelectionIndex')) {
+        switch ([int]$lookup['UserSelectionIndex']) {
+            0 { $line1 += 'User: Current User' }
+            1 { $line1 += "User: $(if ($lookup['OtherUsername']) { $lookup['OtherUsername'] } else { 'Other User' })" }
+            2 { $line1 += 'User: Sysprep' }
+        }
+    }
+
+    if ($lookup.ContainsKey('AppRemovalScopeIndex')) {
+        switch ([int]$lookup['AppRemovalScopeIndex']) {
+            0 { $line1 += 'App Removal: All Users' }
+            1 { $line1 += 'App Removal: Current User' }
+            2 { $line1 += "App Removal: $(if ($lookup['OtherUsername']) { $lookup['OtherUsername'] } else { 'Other User' })" }
+        }
+    }
+
+    $options = @()
+    if ($lookup.ContainsKey('CreateRestorePoint') -and [bool]$lookup['CreateRestorePoint']) { $options += 'Restore Point' }
+    if ($lookup.ContainsKey('RestartExplorer')    -and [bool]$lookup['RestartExplorer'])    { $options += 'Restart Explorer' }
+
+    $lines = @()
+    if ($line1.Count -gt 0)   { $lines += $line1 -join ', ' }
+    if ($options.Count -gt 0) { $lines += "Options: $($options -join ', ')" }
+
+    if ($lines.Count -gt 0) { return $lines -join "`n" }
+    return 'Default deployment settings'
+}
+
+function Build-CategoryDetails {
+    param (
+        [int]$AppCount = 0,
+        [int]$TweakCount = 0,
+        [array]$DeploymentSettings
+    )
+
+    $details = @{}
+
+    if ($AppCount -gt 0) {
+        $details['Applications'] = "$AppCount app$(if ($AppCount -ne 1) { 's' })"
+    }
+
+    if ($TweakCount -gt 0) {
+        $details['System Tweaks'] = "$TweakCount tweak$(if ($TweakCount -ne 1) { 's' })"
+    }
+
+    if ($DeploymentSettings) {
+        $details['Deployment Settings'] = Get-DeploymentCategoryDetailString -DeploymentSettings $DeploymentSettings
+    }
+
+    return $details
+}
+
 function Apply-ImportedApplications {
     param (
         [System.Windows.Controls.Panel]$AppsPanel,
@@ -280,7 +369,10 @@ function Export-Configuration {
     if ($selectedApps.Count -eq 0) { $disabledCategories += 'Applications' }
     if ($tweakSettings.Count -eq 0) { $disabledCategories += 'System Tweaks' }
 
-    $categories = Show-ImportExportConfigWindow -Owner $Owner -UsesDarkMode $UsesDarkMode -Title 'Export Configuration' -Prompt 'Select which settings to include in the export:' -DisabledCategories $disabledCategories
+    $deploymentSettings = Get-DeploymentSettings -Owner $Owner -UserSelectionCombo $UserSelectionCombo -OtherUsernameTextBox $OtherUsernameTextBox
+    $categoryDetails = Build-CategoryDetails -AppCount $selectedApps.Count -TweakCount $tweakSettings.Count -DeploymentSettings $deploymentSettings
+
+    $categories = Show-ImportExportConfigWindow -Owner $Owner -UsesDarkMode $UsesDarkMode -Title 'Export Configuration' -Prompt 'Select which settings to include in the export:' -DisabledCategories $disabledCategories -CategoryDetails $categoryDetails
     if (-not $categories) { return }
 
     $config = @{ Version = '1.0' }
@@ -292,7 +384,7 @@ function Export-Configuration {
         $config['Tweaks'] = @($tweakSettings)
     }
     if ($categories -contains 'Deployment Settings') {
-        $config['Deployment'] = @(Get-DeploymentSettings -Owner $Owner -UserSelectionCombo $UserSelectionCombo -OtherUsernameTextBox $OtherUsernameTextBox)
+        $config['Deployment'] = @($deploymentSettings)
     }
 
     # Show native save-file dialog
@@ -350,7 +442,11 @@ function Import-Configuration {
         return
     }
 
-    $categories = Show-ImportExportConfigWindow -Owner $Owner -UsesDarkMode $UsesDarkMode -Title 'Import Configuration' -Prompt 'Select which settings to import:' -Categories $availableCategories
+    $appCount = @($config.Apps | Where-Object { $_ -is [string] -and -not [string]::IsNullOrWhiteSpace($_) }).Count
+    $tweakCount = @($config.Tweaks | Where-Object { $_ -and $_.Name -and $_.Value -eq $true }).Count
+    $categoryDetails = Build-CategoryDetails -AppCount $appCount -TweakCount $tweakCount -DeploymentSettings @($config.Deployment)
+
+    $categories = Show-ImportExportConfigWindow -Owner $Owner -UsesDarkMode $UsesDarkMode -Title 'Import Configuration' -Prompt 'Select which settings to import:' -Categories $availableCategories -CategoryDetails $categoryDetails
     if (-not $categories) { return }
 
     if ($categories -contains 'Applications' -and $config.Apps) {

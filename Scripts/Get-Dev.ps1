@@ -1,7 +1,6 @@
 param (
     [switch]$CLI,
     [switch]$Silent,
-    [switch]$Undo,
     [switch]$Verbose,
     [switch]$Sysprep,
     [string]$LogPath,
@@ -115,18 +114,17 @@ if ($ExecutionContext.SessionState.LanguageMode -ne "FullLanguage") {
 
 Clear-Host
 Write-Output "-------------------------------------------------------------------------------------------"
-Write-Output " Win11Debloat Script - Get"
+Write-Output " Win11Debloat Script - Get Dev"
 Write-Output "-------------------------------------------------------------------------------------------"
 
-Write-Output "> Downloading Win11Debloat..."
+Write-Output "> Downloading Win11Debloat for development..."
 
-# Download latest version of Win11Debloat from GitHub as zip archive
+# Download latest version of Win11Debloat from GitHub master branch as zip archive
 try {
-    $LatestReleaseUri = (Invoke-RestMethod https://api.github.com/repos/Raphire/Win11Debloat/releases/latest).zipball_url
-    Invoke-RestMethod $LatestReleaseUri -OutFile "$env:TEMP/win11debloat.zip"
+    Invoke-RestMethod "https://github.com/Raphire/Win11Debloat/archive/refs/heads/master.zip" -OutFile "$env:TEMP/win11debloat.zip"
 }
 catch {
-    Write-Host "Error: Unable to fetch latest release from GitHub. Please check your internet connection and try again." -ForegroundColor Red
+    Write-Host "Error: Unable to fetch master branch from GitHub. Please check your internet connection and try again." -ForegroundColor Red
     Write-Output ""
     Write-Output "Press enter to exit..."
     Read-Host | Out-Null
@@ -168,7 +166,7 @@ Expand-Archive "$env:TEMP/win11debloat.zip" "$env:TEMP/Win11Debloat"
 Remove-Item "$env:TEMP/win11debloat.zip"
 
 # Move files
-Get-ChildItem -Path "$env:TEMP/Win11Debloat/Raphire-Win11Debloat-*" -Recurse | Move-Item -Destination "$env:TEMP/Win11Debloat"
+Get-ChildItem -Path "$env:TEMP/Win11Debloat/*Win11Debloat-*" -Recurse | Move-Item -Destination "$env:TEMP/Win11Debloat"
 
 # Add existing config files back to Config folder
 if (Test-Path "$backupDir") {
@@ -186,7 +184,7 @@ $arguments = $($PSBoundParameters.GetEnumerator() | ForEach-Object {
         "-$($_.Key)"
     } 
     else {
-         "-$($_.Key) ""$($_.Value)"""
+        "-$($_.Key) ""$($_.Value)"""
     }
 })
 

@@ -1,5 +1,3 @@
-#Requires -RunAsAdministrator
-
 [CmdletBinding(SupportsShouldProcess)]
 param (
     [switch]$CLI,
@@ -99,13 +97,52 @@ param (
     [switch]$HideMusic,
     [switch]$HideIncludeInLibrary,
     [switch]$HideGiveAccessTo,
-    [switch]$HideShare
+    [switch]$HideShare,
+    [switch]$ShowDriveLettersFirst,
+    [switch]$ShowDriveLettersLast,
+    [switch]$ShowNetworkDriveLettersFirst,
+    [switch]$HideDriveLetters
 )
 
+# Check if script is running as administrator
+$isAdmin = ([Security.Principal.WindowsPrincipal] `
+    [Security.Principal.WindowsIdentity]::GetCurrent()
+).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 
+# If script is not running as administrator ask user if they want to allow it
+if (-not $isAdmin) {
+    Write-Host "Win11Debloat must be run as Administrator." -ForegroundColor Red
+
+    $choice = Read-Host "Restart as Administrator? (y/n)"
+
+    if ($choice -match '^[Yy]$') {
+        $elevatedArgs = @("-NoProfile", "-ExecutionPolicy", "Bypass", "-File", $PSCommandPath)
+
+        foreach ($paramName in $PSBoundParameters.Keys) {
+            $paramValue = $PSBoundParameters[$paramName]
+
+            if ($paramValue -is [System.Management.Automation.SwitchParameter]) {
+                if ($paramValue.IsPresent) {
+                    $elevatedArgs += "-$paramName"
+                }
+            }
+            else {
+                $elevatedArgs += "-$paramName"
+                $elevatedArgs += "$paramValue"
+            }
+        }
+
+        if ($MyInvocation.UnboundArguments.Count -gt 0) {
+            $elevatedArgs += $MyInvocation.UnboundArguments
+        }
+
+        Start-Process powershell -ArgumentList $elevatedArgs -Verb RunAs
+    }
+    exit
+}
 
 # Define script-level variables & paths
-$script:Version = "2026.03.15"
+$script:Version = "2026.04.05"
 $script:FeaturesConfigVersion = "2.0"
 $script:AppsListFilePath = "$PSScriptRoot/Config/Apps.json"
 $script:DefaultSettingsFilePath = "$PSScriptRoot/Config/DefaultSettings.json"
@@ -142,8 +179,16 @@ if ($ExecutionContext.SessionState.LanguageMode -ne "FullLanguage") {
     Exit
 }
 
-# Display ASCII art launch logo in CLI
 Clear-Host
+
+# Ensure required Windows command paths are present in PATH for this session.
+$system32Path = "$env:SystemRoot\System32"
+if ($env:PATH -notmatch "(?i)(^|;)$([regex]::Escape($system32Path))(?=;|$)") {
+    $env:PATH = "$env:SystemRoot\System32;$env:SystemRoot;" + $env:PATH
+    Write-Warning "System32 path was missing from PATH environment variable, it has been added for this session."
+}
+
+# Display ASCII art launch logo in CLI
 Write-Host ""
 Write-Host ""
 Write-Host "                   " -NoNewline; Write-Host "      ^" -ForegroundColor Blue
@@ -158,8 +203,8 @@ Write-Host "                   " -NoNewline; Write-Host "  |       |" -Foregroun
 Write-Host "                   " -NoNewline; Write-Host " /|       |\" -ForegroundColor Blue
 Write-Host "                   " -NoNewline; Write-Host "/ |       | \" -ForegroundColor Blue
 Write-Host "                   " -NoNewline; Write-Host "  |  " -ForegroundColor DarkGray -NoNewline; Write-Host "'''" -ForegroundColor Red -NoNewline; Write-Host "  |" -ForegroundColor DarkGray -NoNewline; Write-Host "    *" -ForegroundColor Yellow
-Write-Host "                   " -NoNewline; Write-Host "   (" -ForegroundColor Yellow -NoNewline; Write-Host "'''" -ForegroundColor Red -NoNewline; Write-Host ") " -ForegroundColor Yellow -NoNewline; Write-Host "   *  *" -ForegroundColor DarkYellow
-Write-Host "                   " -NoNewline; Write-Host "   ( " -ForegroundColor DarkYellow -NoNewline; Write-Host "'" -ForegroundColor Red -NoNewline; Write-Host " )   " -ForegroundColor DarkYellow -NoNewline; Write-Host "*" -ForegroundColor Yellow
+Write-Host "                   " -NoNewline; Write-Host "    (" -ForegroundColor Yellow -NoNewline; Write-Host "'''" -ForegroundColor Red -NoNewline; Write-Host ") " -ForegroundColor Yellow -NoNewline; Write-Host "   *  *" -ForegroundColor DarkYellow
+Write-Host "                   " -NoNewline; Write-Host "    ( " -ForegroundColor DarkYellow -NoNewline; Write-Host "'" -ForegroundColor Red -NoNewline; Write-Host " )   " -ForegroundColor DarkYellow -NoNewline; Write-Host "*" -ForegroundColor Yellow
 Write-Host ""
 Write-Host "             Win11Debloat is launching..." -ForegroundColor White
 Write-Host "               Leave this window open" -ForegroundColor DarkGray

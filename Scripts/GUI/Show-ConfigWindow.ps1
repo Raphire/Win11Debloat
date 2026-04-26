@@ -274,45 +274,21 @@ function Get-DeploymentCategoryDetailString {
     return 'Default deployment settings'
 }
 
-function Get-ImportCategoryDetails {
+function Build-CategoryDetails {
     param (
-        $Config
-    )
-
-    $details = @{}
-
-    if ($Config.Apps) {
-        $count = @($Config.Apps | Where-Object { $_ -is [string] -and -not [string]::IsNullOrWhiteSpace($_) }).Count
-        $details['Applications'] = "$count app$(if ($count -ne 1) { 's' })"
-    }
-
-    if ($Config.Tweaks) {
-        $count = @($Config.Tweaks | Where-Object { $_ -and $_.Name -and $_.Value -eq $true }).Count
-        $details['System Tweaks'] = "$count tweak$(if ($count -ne 1) { 's' })"
-    }
-
-    if ($Config.Deployment) {
-        $details['Deployment Settings'] = Get-DeploymentCategoryDetailString -DeploymentSettings @($Config.Deployment)
-    }
-
-    return $details
-}
-
-function Get-ExportCategoryDetails {
-    param (
-        [string[]]$SelectedApps,
-        [array]$TweakSettings,
+        [int]$AppCount = 0,
+        [int]$TweakCount = 0,
         [array]$DeploymentSettings
     )
 
     $details = @{}
 
-    if ($SelectedApps.Count -gt 0) {
-        $details['Applications'] = "$($SelectedApps.Count) app$(if ($SelectedApps.Count -ne 1) { 's' })"
+    if ($AppCount -gt 0) {
+        $details['Applications'] = "$AppCount app$(if ($AppCount -ne 1) { 's' })"
     }
 
-    if ($TweakSettings.Count -gt 0) {
-        $details['System Tweaks'] = "$($TweakSettings.Count) tweak$(if ($TweakSettings.Count -ne 1) { 's' })"
+    if ($TweakCount -gt 0) {
+        $details['System Tweaks'] = "$TweakCount tweak$(if ($TweakCount -ne 1) { 's' })"
     }
 
     if ($DeploymentSettings) {
@@ -401,7 +377,7 @@ function Export-Configuration {
     if ($tweakSettings.Count -eq 0) { $disabledCategories += 'System Tweaks' }
 
     $deploymentSettings = Get-DeploymentSettings -Owner $Owner -UserSelectionCombo $UserSelectionCombo -OtherUsernameTextBox $OtherUsernameTextBox
-    $categoryDetails = Get-ExportCategoryDetails -SelectedApps $selectedApps -TweakSettings $tweakSettings -DeploymentSettings $deploymentSettings
+    $categoryDetails = Build-CategoryDetails -AppCount $selectedApps.Count -TweakCount $tweakSettings.Count -DeploymentSettings $deploymentSettings
 
     $categories = Show-ImportExportConfigWindow -Owner $Owner -UsesDarkMode $UsesDarkMode -Title 'Export Configuration' -Prompt 'Select which settings to include in the export:' -DisabledCategories $disabledCategories -CategoryDetails $categoryDetails
     if (-not $categories) { return }
@@ -473,7 +449,9 @@ function Import-Configuration {
         return
     }
 
-    $categoryDetails = Get-ImportCategoryDetails -Config $config
+    $appCount = @($config.Apps | Where-Object { $_ -is [string] -and -not [string]::IsNullOrWhiteSpace($_) }).Count
+    $tweakCount = @($config.Tweaks | Where-Object { $_ -and $_.Name -and $_.Value -eq $true }).Count
+    $categoryDetails = Build-CategoryDetails -AppCount $appCount -TweakCount $tweakCount -DeploymentSettings @($config.Deployment)
 
     $categories = Show-ImportExportConfigWindow -Owner $Owner -UsesDarkMode $UsesDarkMode -Title 'Import Configuration' -Prompt 'Select which settings to import:' -Categories $availableCategories -CategoryDetails $categoryDetails
     if (-not $categories) { return }

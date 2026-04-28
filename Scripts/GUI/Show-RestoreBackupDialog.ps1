@@ -176,7 +176,8 @@ function Show-RestoreBackupDialog {
             $window.Tag = New-RestoreDialogState -Result 'Preview' -SelectedFile $openDialog.FileName -Backup $selectedBackup
             $restoreBtn.Visibility = 'Visible'
             $restoreBtn.IsDefault = $true
-            $selectFileBtn.Content = 'Select different file'
+            $selectFileBtn.IsDefault = $false
+            $selectFileBtn.Visibility = 'Collapsed'
         }
     })
 

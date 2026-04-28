@@ -183,7 +183,7 @@
 
                             <TextBlock x:Name="NonRevertibleWikiLink"
                                        Grid.Row="2"
-                                       Margin="0,10,0,0"
+                                       Margin="0,12,0,0"
                                        Text="Visit our wiki for instructions on how to revert the remaining changes."
                                        FontSize="12"
                                        FontWeight="SemiBold"

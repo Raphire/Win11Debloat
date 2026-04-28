@@ -64,6 +64,7 @@ function Show-RestoreBackupDialog {
     $nonRevertibleSeparator = $window.FindName('NonRevertibleSeparator')
     $nonRevertiblePanel = $window.FindName('NonRevertiblePanel')
     $nonRevertibleFeaturesItemsControl = $window.FindName('NonRevertibleFeaturesItemsControl')
+    $nonRevertibleWikiLink = $window.FindName('NonRevertibleWikiLink')
 
     if (-not $cancelBtn -or -not $selectFileBtn -or -not $restoreBtn) {
         throw 'Restore dialog failed to initialize action buttons.'
@@ -77,6 +78,15 @@ function Show-RestoreBackupDialog {
     if ($introInfoPanel) { $introInfoPanel.Visibility = 'Visible' }
     if ($overviewPanel) { $overviewPanel.Visibility = 'Collapsed' }
     $restoreBtn.Visibility = 'Collapsed'
+
+    if ($nonRevertibleWikiLink) {
+        $nonRevertibleWikiLink.Add_MouseLeftButtonUp({
+            try {
+                Start-Process 'https://github.com/Raphire/Win11Debloat/wiki/Reverting-Changes' | Out-Null
+            }
+            catch { }
+        })
+    }
 
     $cancelBtn.Add_Click({
         $window.Tag = New-RestoreDialogState
@@ -102,6 +112,7 @@ function Show-RestoreBackupDialog {
         $openDialog.InitialDirectory = $script:RegistryBackupsPath
 
         if ($openDialog.ShowDialog($window) -eq $true) {
+            Write-Host "Backup file selected: $($openDialog.FileName)"
             try {
                 $selectedBackup = Load-RegistryBackupFromFile -FilePath $openDialog.FileName
             }
@@ -127,8 +138,10 @@ function Show-RestoreBackupDialog {
             $featureLists = Get-RestoreBackupFeatureLists -SelectedFeatureIds $selectedFeatureIds -Features $script:Features
             $revertibleFeaturesList = @($featureLists.Revertible)
             $nonRevertibleFeaturesList = @($featureLists.NonRevertible)
+            Write-Host "Backup overview prepared. Revertible=$($revertibleFeaturesList.Count), NonRevertible=$($nonRevertibleFeaturesList.Count)"
 
             if ($revertibleFeaturesList.Count -eq 0) {
+                Write-Warning 'Backup rejected: no revertible changes available.'
                 Show-MessageBox -Owner $window -Message 'The selected backup does not contain any changes that can be automatically reverted.' -Title 'Invalid Backup' -Button 'OK' -Icon 'Error' | Out-Null
                 return
             }

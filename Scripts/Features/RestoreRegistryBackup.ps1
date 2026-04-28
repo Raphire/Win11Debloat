@@ -5,17 +5,24 @@ function Load-RegistryBackupFromFile {
     )
 
     if (-not (Test-Path -LiteralPath $FilePath)) {
+        Write-Warning "Backup file not found: $FilePath"
         throw "Backup file was not found: $FilePath"
     }
+
+    Write-Host "Loading backup file: $FilePath"
 
     try {
         $rawBackup = Get-Content -LiteralPath $FilePath -Raw -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop
     }
     catch {
+        Write-Error "Failed parsing backup JSON from '$FilePath': $($_.Exception.Message)"
         throw "Failed to read backup file '$FilePath'. The file is not valid JSON."
     }
 
-    return Normalize-RegistryBackup -Backup $rawBackup
+    $normalizedBackup = Normalize-RegistryBackup -Backup $rawBackup
+    Write-Host "Backup loaded and validated. Target='$($normalizedBackup.Target)', SelectedFeatures=$(@($normalizedBackup.SelectedFeatures).Count), RootKeys=$(@($normalizedBackup.RegistryKeys).Count)"
+
+    return $normalizedBackup
 }
 
 function Normalize-RegistryBackup {
@@ -64,6 +71,7 @@ function Normalize-RegistryBackup {
     }
 
     if ($errors.Count -gt 0) {
+        Write-Error "Backup validation failed: $($errors -join ' ')"
         throw ("Backup validation failed: {0}" -f ($errors -join ' '))
     }
 
@@ -88,15 +96,21 @@ function Restore-RegistryBackupState {
     $restoreAction = {
         param($normalizedBackup)
 
+        Write-Host "Applying registry restore from $(@($normalizedBackup.RegistryKeys).Count) root snapshot(s)."
         foreach ($rootSnapshot in @($normalizedBackup.RegistryKeys)) {
             Restore-RegistryKeySnapshot -Snapshot $rootSnapshot
         }
     }
 
+    Write-Host "Starting restore for target '$($Backup.Target)'."
+
     if ($Backup.Target -eq 'DefaultUserProfile' -or $Backup.Target -like 'User:*') {
+        Write-Host "Restore requires loading target user hive."
         Invoke-WithLoadedRestoreHive -Target $Backup.Target -ScriptBlock $restoreAction -ArgumentObject $Backup
+        Write-Host "Restore completed for target '$($Backup.Target)'."
         return
     }
 
     & $restoreAction $Backup
+    Write-Host "Restore completed for target '$($Backup.Target)'."
 }

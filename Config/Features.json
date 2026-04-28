@@ -285,7 +285,7 @@
     "Features":  [
                      {
                          "FeatureId":  "RemoveApps",
-                         "Label":  "Remove Apps Remove the apps specified in the \u0027Apps\u0027 parameter",
+                         "Label":  "Remove the apps specified with the \u0027Apps\u0027 parameter",
                          "Category":  null,
                          "RegistryKey":  null,
                          "ApplyText":  null,
@@ -296,7 +296,7 @@
                      },
                      {
                          "FeatureId":  "Apps",
-                         "Label":  "Apps The selection of apps to remove, specified as a comma separated list. Use \u0027Default\u0027 (or omit) to use the default apps list",
+                         "Label":  "The selection of apps to remove, specified as a comma separated list. Use \u0027Default\u0027 (or omit) to use the default apps list",
                          "Category":  null,
                          "RegistryKey":  null,
                          "ApplyText":  null,
@@ -307,7 +307,7 @@
                      },
                      {
                          "FeatureId":  "RemoveAppsCustom",
-                         "Label":  "Remove Custom Apps Remove custom selection of apps",
+                         "Label":  "Remove custom selection of apps",
                          "Category":  null,
                          "RegistryKey":  null,
                          "ApplyText":  null,
@@ -318,7 +318,7 @@
                      },
                      {
                          "FeatureId":  "RemoveCommApps",
-                         "Label":  "Remove Mail, Calendar \u0026 People Remove the Mail, Calendar, and People apps",
+                         "Label":  "Remove the Mail, Calendar, and People apps",
                          "Category":  null,
                          "RegistryKey":  null,
                          "ApplyText":  null,
@@ -329,7 +329,7 @@
                      },
                      {
                          "FeatureId":  "RemoveW11Outlook",
-                         "Label":  "Remove Outlook for Windows Remove the new Outlook for Windows app",
+                         "Label":  "Remove the new Outlook for Windows app",
                          "Category":  null,
                          "RegistryKey":  null,
                          "ApplyText":  null,
@@ -340,7 +340,7 @@
                      },
                      {
                          "FeatureId":  "RemoveGamingApps",
-                         "Label":  "Remove Gaming Apps Remove the Xbox App and Xbox Gamebar",
+                         "Label":  "Remove the Xbox App and Xbox Gamebar",
                          "Category":  null,
                          "RegistryKey":  null,
                          "ApplyText":  null,
@@ -351,7 +351,7 @@
                      },
                      {
                          "FeatureId":  "RemoveHPApps",
-                         "Label":  "Remove HP Apps Remove HP OEM applications",
+                         "Label":  "Remove HP OEM applications",
                          "Category":  null,
                          "RegistryKey":  null,
                          "ApplyText":  null,
@@ -362,7 +362,7 @@
                      },
                      {
                          "FeatureId":  "CreateRestorePoint",
-                         "Label":  "Create Restore Point Create a system restore point",
+                         "Label":  "Create a system restore point",
                          "Category":  null,
                          "RegistryKey":  null,
                          "ApplyText":  null,
@@ -529,7 +529,7 @@
                      },
                      {
                          "FeatureId":  "ClearStart",
-                         "Label":  "Clear Start Menu Remove all pinned apps from the start menu for this user only",
+                         "Label":  "Remove all pinned apps from the start menu for this user only",
                          "Category":  "Start Menu \u0026 Search",
                          "RegistryKey":  null,
                          "ApplyText":  null,
@@ -540,7 +540,7 @@
                      },
                      {
                          "FeatureId":  "ClearStartAllUsers",
-                         "Label":  "Clear Start Menu (All Users) Remove all pinned apps from the start menu for all existing and new users",
+                         "Label":  "Remove all pinned apps from the start menu for all existing and new users",
                          "Category":  "Start Menu \u0026 Search",
                          "RegistryKey":  null,
                          "ApplyText":  null,
@@ -551,7 +551,7 @@
                      },
                      {
                          "FeatureId":  "ReplaceStart",
-                         "Label":  "Replace Start Menu Replace the start menu layout for this user only with the provided template file",
+                         "Label":  "Replace the start menu layout for this user only with the provided template file",
                          "Category":  null,
                          "RegistryKey":  null,
                          "ApplyText":  null,
@@ -562,7 +562,7 @@
                      },
                      {
                          "FeatureId":  "ReplaceStartAllUsers",
-                         "Label":  "Replace Start Menu (All Users) Replace the start menu layout for all existing and new users with the provided template file",
+                         "Label":  "Replace the start menu layout for all existing and new users with the provided template file",
                          "Category":  null,
                          "RegistryKey":  null,
                          "ApplyText":  null,

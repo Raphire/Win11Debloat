@@ -29,3 +29,16 @@ function Get-RegistryRootKey {
         default { return $null }
     }
 }
+
+function Get-RegistryFilePathForFeature {
+    param(
+        [Parameter(Mandatory)]
+        $Feature
+    )
+
+    if ($script:Params.ContainsKey('Sysprep') -or $script:Params.ContainsKey('User')) {
+        return Join-Path (Join-Path $script:RegfilesPath 'Sysprep') $Feature.RegistryKey
+    }
+
+    return Join-Path $script:RegfilesPath $Feature.RegistryKey
+}

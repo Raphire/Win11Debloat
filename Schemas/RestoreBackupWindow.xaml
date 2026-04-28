@@ -63,6 +63,8 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
                         <Grid Grid.Row="0" Margin="0,0,0,16">
@@ -134,6 +136,44 @@
                                         <TextBlock Text="{Binding DisplayText}"
                                                    FontSize="12"
                                                    Foreground="{DynamicResource FgColor}"
+                                                   TextWrapping="Wrap"
+                                                   Margin="0,0,0,6"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Grid>
+
+                        <Border x:Name="NonRevertibleSeparator" Grid.Row="3"
+                                Height="1"
+                                Background="{DynamicResource BorderColor}"
+                                Margin="0,12,0,12"
+                                Visibility="Collapsed"/>
+
+                        <Grid x:Name="NonRevertiblePanel" Grid.Row="4" Visibility="Collapsed">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0"
+                                       Text="The following changes cannot be automatically reverted:"
+                                       FontSize="13"
+                                       Foreground="{DynamicResource FgColor}"
+                                       FontWeight="SemiBold"
+                                       Margin="0,0,0,8"/>
+
+                            <ItemsControl x:Name="NonRevertibleFeaturesItemsControl" Grid.Row="1">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Vertical" IsItemsHost="True"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding DisplayText}"
+                                                   FontSize="12"
+                                                   Foreground="{DynamicResource FgColor}"
+                                                   Opacity="0.85"
                                                    TextWrapping="Wrap"
                                                    Margin="0,0,0,6"/>
                                     </DataTemplate>

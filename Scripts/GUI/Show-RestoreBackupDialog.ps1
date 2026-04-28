@@ -61,23 +61,16 @@ function Show-RestoreBackupDialog {
     $backupCreatedText = $window.FindName('BackupCreatedText')
     $backupTargetText = $window.FindName('BackupTargetText')
     $featuresItemsControl = $window.FindName('FeaturesItemsControl')
+    $nonRevertibleSeparator = $window.FindName('NonRevertibleSeparator')
+    $nonRevertiblePanel = $window.FindName('NonRevertiblePanel')
+    $nonRevertibleFeaturesItemsControl = $window.FindName('NonRevertibleFeaturesItemsControl')
 
     if (-not $cancelBtn -or -not $selectFileBtn -or -not $restoreBtn) {
         throw 'Restore dialog failed to initialize action buttons.'
     }
 
-    $newDialogState = {
-        param(
-            [string]$Result = 'Cancel',
-            [string]$SelectedFile = $null,
-            $Backup = $null
-        )
-
-        return @{ Result = $Result; SelectedFile = $SelectedFile; Backup = $Backup }
-    }
-
     $titleBar.Add_MouseLeftButtonDown({ $window.DragMove() })
-    $window.Tag = & $newDialogState
+    $window.Tag = New-RestoreDialogState
     $cancelBtn.IsCancel = $true
     $selectFileBtn.IsDefault = $true
 
@@ -86,7 +79,7 @@ function Show-RestoreBackupDialog {
     $restoreBtn.Visibility = 'Collapsed'
 
     $cancelBtn.Add_Click({
-        $window.Tag = & $newDialogState
+        $window.Tag = New-RestoreDialogState
         $window.DialogResult = $false
         $window.Close()
     })
@@ -130,33 +123,44 @@ function Show-RestoreBackupDialog {
                 }
             }
 
-            $featuresList = @(
-                foreach ($feature in @($selectedBackup.SelectedFeatures)) {
-                    $labelText = [string]$feature.Label
-                    if ([string]::IsNullOrWhiteSpace($labelText)) {
-                        $labelText = [string]$feature.Name
-                    }
-                    if ([string]::IsNullOrWhiteSpace($labelText)) {
-                        $labelText = 'Unknown feature'
-                    }
+            $selectedFeatureIds = Get-SelectedFeatureIdsFromBackup -SelectedBackup $selectedBackup
+            $featureLists = Get-RestoreBackupFeatureLists -SelectedFeatureIds $selectedFeatureIds -Features $script:Features
+            $revertibleFeaturesList = @($featureLists.Revertible)
+            $nonRevertibleFeaturesList = @($featureLists.NonRevertible)
 
-                    [PSCustomObject]@{
-                        DisplayText = "- $labelText"
-                    }
-                }
-            )
-            if ($featuresList.Count -eq 0) {
-                $featuresList = @([PSCustomObject]@{ DisplayText = '- (Metadata unavailable) This backup contains registry snapshots but no SelectedFeatures list.' })
+            if ($revertibleFeaturesList.Count -eq 0) {
+                Show-MessageBox -Owner $window -Message 'The selected backup does not contain any changes that can be automatically reverted.' -Title 'Invalid Backup' -Button 'OK' -Icon 'Error' | Out-Null
+                return
             }
 
             $backupFileText.Text = Split-Path $openDialog.FileName -Leaf
             $backupCreatedText.Text = $createdText
             $backupTargetText.Text = [string]$selectedBackup.Target
-            $featuresItemsControl.ItemsSource = $featuresList
+            $featuresItemsControl.ItemsSource = $revertibleFeaturesList
+            if ($nonRevertibleFeaturesItemsControl) {
+                $nonRevertibleFeaturesItemsControl.ItemsSource = $nonRevertibleFeaturesList
+            }
+            $hasNonRevertibleItems = ($nonRevertibleFeaturesList.Count -gt 0)
+            if ($nonRevertiblePanel) {
+                if ($hasNonRevertibleItems) {
+                    $nonRevertiblePanel.Visibility = 'Visible'
+                }
+                else {
+                    $nonRevertiblePanel.Visibility = 'Collapsed'
+                }
+            }
+            if ($nonRevertibleSeparator) {
+                if ($hasNonRevertibleItems) {
+                    $nonRevertibleSeparator.Visibility = 'Visible'
+                }
+                else {
+                    $nonRevertibleSeparator.Visibility = 'Collapsed'
+                }
+            }
             if ($introInfoPanel) { $introInfoPanel.Visibility = 'Collapsed' }
             if ($overviewPanel) { $overviewPanel.Visibility = 'Visible' }
 
-            $window.Tag = & $newDialogState -Result 'Preview' -SelectedFile $openDialog.FileName -Backup $selectedBackup
+            $window.Tag = New-RestoreDialogState -Result 'Preview' -SelectedFile $openDialog.FileName -Backup $selectedBackup
             $restoreBtn.Visibility = 'Visible'
             $restoreBtn.IsDefault = $true
             $selectFileBtn.Content = 'Select different file'
@@ -166,7 +170,7 @@ function Show-RestoreBackupDialog {
     $window.Add_KeyDown({
         param($source, $e)
         if ($e.Key -eq 'Escape') {
-            $window.Tag = & $newDialogState
+            $window.Tag = New-RestoreDialogState
             $window.DialogResult = $false
             $window.Close()
         }
@@ -174,6 +178,10 @@ function Show-RestoreBackupDialog {
 
     try {
         $null = $window.ShowDialog()
+    }
+    catch {
+        $innerMessage = if ($_.Exception.InnerException) { $_.Exception.InnerException.Message } else { 'None' }
+        throw "Failed to show restore backup dialog. Error: $($_.Exception.Message) Inner: $innerMessage"
     }
     finally {
         if ($overlay -and -not $overlayWasAlreadyVisible) {

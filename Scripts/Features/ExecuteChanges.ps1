@@ -147,14 +147,23 @@ function ExecuteAllChanges {
         $actionableKeys += $paramKey
     }
 
-    $selectedRegistryFeatures = Get-SelectedRegistryBackedFeatures -ActionableKeys $actionableKeys
+    $hasRegistryBackedFeature = $false
+    foreach ($paramKey in $actionableKeys) {
+        if (-not $script:Features.ContainsKey($paramKey)) { continue }
+
+        $feature = $script:Features[$paramKey]
+        if ($feature -and -not [string]::IsNullOrWhiteSpace([string]$feature.RegistryKey)) {
+            $hasRegistryBackedFeature = $true
+            break
+        }
+    }
     
     $totalSteps = $actionableKeys.Count
-    if ($selectedRegistryFeatures.Count -gt 0) { $totalSteps++ }
+    if ($hasRegistryBackedFeature) { $totalSteps++ }
     if ($script:Params.ContainsKey("CreateRestorePoint")) { $totalSteps++ }
     $currentStep = 0
 
-    if ($selectedRegistryFeatures.Count -gt 0) {
+    if ($hasRegistryBackedFeature) {
         $currentStep++
         if ($script:ApplyProgressCallback) {
             & $script:ApplyProgressCallback $currentStep $totalSteps "Creating registry backup"

@@ -263,6 +263,17 @@ function Restore-RegistryValueSnapshot {
         $RegistryKey.SetValue($valueName, $normalizedData, $valueKind)
     }
     catch {
+        $retryBytes = Convert-BackupDataToByteArray -Data $Snapshot.Data
+        if ($null -ne $retryBytes) {
+            try {
+                $RegistryKey.SetValue($valueName, $retryBytes, [Microsoft.Win32.RegistryValueKind]::Binary)
+                return
+            }
+            catch {
+                # Fall through to original error message for context.
+            }
+        }
+
         throw "Failed setting registry value '$valueName' in '$($RegistryKey.Name)': $($_.Exception.Message)"
     }
 }
@@ -295,15 +306,56 @@ function Convert-RegistryValueDataFromBackup {
         ([Microsoft.Win32.RegistryValueKind]::QWord) { return [uint64]$Data }
         ([Microsoft.Win32.RegistryValueKind]::MultiString) { return @($Data | ForEach-Object { [string]$_ }) }
         ([Microsoft.Win32.RegistryValueKind]::Binary) {
-            $bytes = New-Object byte[] @($Data).Count
-            for ($i = 0; $i -lt @($Data).Count; $i++) {
-                $bytes[$i] = [byte]$Data[$i]
+            $bytes = Convert-BackupDataToByteArray -Data $Data
+            if ($null -eq $bytes) {
+                return (New-Object byte[] 0)
             }
             return $bytes
         }
         ([Microsoft.Win32.RegistryValueKind]::None) { return $null }
         default { return (if ($null -ne $Data) { [string]$Data } else { '' }) }
     }
+}
+
+function Convert-BackupDataToByteArray {
+    param(
+        $Data
+    )
+
+    if ($null -eq $Data) {
+        return $null
+    }
+
+    if ($Data -is [byte[]]) {
+        return $Data
+    }
+
+    $items = @($Data)
+    if ($items.Count -eq 0) {
+        return (New-Object byte[] 0)
+    }
+
+    foreach ($item in $items) {
+        if ($item -isnot [ValueType] -and $item -isnot [string]) {
+            return $null
+        }
+
+        $parsed = 0
+        if (-not [int]::TryParse([string]$item, [ref]$parsed)) {
+            return $null
+        }
+
+        if ($parsed -lt 0 -or $parsed -gt 255) {
+            return $null
+        }
+    }
+
+    $bytes = New-Object byte[] $items.Count
+    for ($i = 0; $i -lt $items.Count; $i++) {
+        $bytes[$i] = [byte][int]$items[$i]
+    }
+
+    return $bytes
 }
 
 function Remove-RegistrySubKeyTreeIfExists {

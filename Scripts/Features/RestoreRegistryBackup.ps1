@@ -47,8 +47,34 @@ function Normalize-RegistryBackup {
         $errors.Add("Unsupported BackupType '$($Backup.BackupType)'.")
     }
 
+    $normalizedTarget = ''
     if (-not $Backup.PSObject.Properties['Target'] -or [string]::IsNullOrWhiteSpace([string]$Backup.Target)) {
         $errors.Add('Missing property: Target')
+    }
+    else {
+        $normalizedTarget = [string]$Backup.Target
+
+        if ($normalizedTarget -eq 'DefaultUserProfile') {
+            # Valid target format.
+        }
+        elseif ($normalizedTarget -like 'User:*') {
+            $targetUserName = $normalizedTarget.Substring(5)
+            if ([string]::IsNullOrWhiteSpace($targetUserName)) {
+                $errors.Add("Invalid Target '$normalizedTarget'. Expected User:<name>.")
+            }
+            elseif (-not (CheckIfUserExists -userName $targetUserName)) {
+                $errors.Add("Target user '$targetUserName' does not exist on this system.")
+            }
+        }
+        elseif ($normalizedTarget -like 'CurrentUser:*') {
+            $targetCurrentUserName = $normalizedTarget.Substring(12)
+            if ([string]::IsNullOrWhiteSpace($targetCurrentUserName)) {
+                $errors.Add("Invalid Target '$normalizedTarget'. Expected CurrentUser:<name>.")
+            }
+        }
+        else {
+            $errors.Add("Unsupported Target '$normalizedTarget'.")
+        }
     }
 
     $registryKeys = @()
@@ -81,7 +107,7 @@ function Normalize-RegistryBackup {
         CreatedAt = [string]$Backup.CreatedAt
         CreatedBy = [string]$Backup.CreatedBy
         ComputerName = [string]$Backup.ComputerName
-        Target = [string]$Backup.Target
+        Target = $normalizedTarget
         SelectedFeatures = @($selectedFeatures)
         RegistryKeys = @($normalizedKeys)
     }

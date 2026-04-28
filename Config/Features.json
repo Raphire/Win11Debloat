@@ -434,7 +434,7 @@
                      {
                          "FeatureId":  "DisableDesktopSpotlight",
                          "Label":  "Disable Windows Spotlight for desktop",
-                         "ToolTip":  "This will turn off the \u0027Windows Spotlight\u0027 feature for the desktop background, which shows different background images and occasionally tips and fun facts on the desktop.",
+                         "ToolTip":  "This will turn off the \u0027Windows Spotlight\u0027 feature for the desktop background, which shows different background images and occasionally tips and fun facts on the desktop. This feature uses policies, which will lock down certain settings.",
                          "Category":  "Privacy \u0026 Suggested Content",
                          "RegistryKey":  "Disable_Desktop_Spotlight.reg",
                          "ApplyText":  "Disabling the \u0027Windows Spotlight\u0027 desktop background option...",
@@ -862,7 +862,7 @@
                      },
                      {
                          "FeatureId":  "TaskbarAlignLeft",
-                         "Label":  "Left taskbar alignment",
+                         "Label":  "Align taskbar to the left",
                          "ToolTip":  "By default, Windows 11 has the taskbar buttons centered. Enabling this setting will move the taskbar buttons to the left, similar to previous versions of Windows.",
                          "Category":  "Taskbar",
                          "Priority":  1,
@@ -871,7 +871,7 @@
                          "RegistryUndoKey":  "Align_Taskbar_Center.reg",
                          "MinVersion":  22000,
                          "MaxVersion":  null,
-                         "UndoLabel":  "Center taskbar alignment"
+                         "UndoLabel":  "Align taskbar to the center"
                      },
                      {
                          "FeatureId":  "HideSearchTb",

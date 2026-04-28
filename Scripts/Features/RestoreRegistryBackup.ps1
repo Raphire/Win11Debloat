@@ -313,7 +313,13 @@ function Convert-RegistryValueDataFromBackup {
             return $bytes
         }
         ([Microsoft.Win32.RegistryValueKind]::None) { return $null }
-        default { return (if ($null -ne $Data) { [string]$Data } else { '' }) }
+        default {
+            if ($null -ne $Data) {
+                return [string]$Data
+            }
+
+            return ''
+        }
     }
 }
 

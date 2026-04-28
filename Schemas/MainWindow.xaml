@@ -582,6 +582,11 @@
                                                 <TextBlock Text="&#xe74e;" FontFamily="Segoe Fluent Icons" FontSize="16" Foreground="{DynamicResource FgColor}"/>
                                             </MenuItem.Icon>
                                         </MenuItem>
+                                        <MenuItem x:Name="RestoreBackupBtn" Header="Restore backup" AutomationProperties.Name="Restore registry backup">
+                                            <MenuItem.Icon>
+                                                <TextBlock Text="&#xe81c;" FontFamily="Segoe Fluent Icons" FontSize="16" Foreground="{DynamicResource FgColor}"/>
+                                            </MenuItem.Icon>
+                                        </MenuItem>
                                         <Separator />
                                         <MenuItem x:Name="MenuDocumentation" Header="Documentation" AutomationProperties.Name="Documentation">
                                             <MenuItem.Icon>

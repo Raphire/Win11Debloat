@@ -96,6 +96,7 @@ function Show-MainWindow {
     $menuAbout = $window.FindName('MenuAbout')
     $importConfigBtn = $window.FindName('ImportConfigBtn')
     $exportConfigBtn = $window.FindName('ExportConfigBtn')
+    $restoreBackupBtn = $window.FindName('RestoreBackupBtn')
 
     $windowStateNormal = [System.Windows.WindowState]::Normal
     $windowStateMaximized = [System.Windows.WindowState]::Maximized
@@ -231,7 +232,7 @@ function Show-MainWindow {
     })
 
     $menuLogs.Add_Click({
-        $logsFolder = Join-Path $PSScriptRoot "../../Logs"
+        $logsFolder = Join-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) 'Logs'
         if (Test-Path $logsFolder) {
             Start-Process "explorer.exe" -ArgumentList $logsFolder
         }
@@ -244,21 +245,44 @@ function Show-MainWindow {
         Show-AboutDialog -Owner $window
     })
 
-    # --- Import/Export Configuration ---
     $exportConfigBtn.Add_Click({
-        Export-Configuration -Owner $window -UsesDarkMode $usesDarkMode -AppsPanel $appsPanel -UiControlMappings $script:UiControlMappings -UserSelectionCombo $userSelectionCombo -OtherUsernameTextBox $otherUsernameTextBox
+        try {
+            Export-Configuration -Owner $window -UsesDarkMode $usesDarkMode -AppsPanel $appsPanel -UiControlMappings $script:UiControlMappings -UserSelectionCombo $userSelectionCombo -OtherUsernameTextBox $otherUsernameTextBox
+        }
+        catch {
+            Write-Warning "Export configuration failed: $($_.Exception.Message)"
+            Show-MessageBox -Owner $window -Message "Unable to open export configuration dialog: $($_.Exception.Message)" -Title 'Export Configuration Failed' -Button 'OK' -Icon 'Error' | Out-Null
+        }
     })
 
     $importConfigBtn.Add_Click({
-        Import-Configuration -Owner $window -UsesDarkMode $usesDarkMode -AppsPanel $appsPanel -UiControlMappings $script:UiControlMappings -UserSelectionCombo $userSelectionCombo -OtherUsernameTextBox $otherUsernameTextBox -OnAppsImported { UpdateAppSelectionStatus; UpdatePresetStates } -OnImportCompleted {
-            $tabControl.SelectedIndex = 3
-            UpdateNavigationButtons
+        try {
+            Import-Configuration -Owner $window -UsesDarkMode $usesDarkMode -AppsPanel $appsPanel -UiControlMappings $script:UiControlMappings -UserSelectionCombo $userSelectionCombo -OtherUsernameTextBox $otherUsernameTextBox -OnAppsImported { UpdateAppSelectionStatus; UpdatePresetStates } -OnImportCompleted {
+                $tabControl.SelectedIndex = 3
+                UpdateNavigationButtons
 
-            $window.Dispatcher.BeginInvoke([System.Windows.Threading.DispatcherPriority]::Loaded, [action]{
-                Show-Bubble -TargetControl $reviewChangesBtn -Message 'View the selected changes here'
-            }) | Out-Null
+                $window.Dispatcher.BeginInvoke([System.Windows.Threading.DispatcherPriority]::Loaded, [action]{
+                    Show-Bubble -TargetControl $reviewChangesBtn -Message 'View the selected changes here'
+                }) | Out-Null
+            }
+        }
+        catch {
+            Write-Warning "Import configuration failed: $($_.Exception.Message)"
+            Show-MessageBox -Owner $window -Message "Unable to open import configuration dialog: $($_.Exception.Message)" -Title 'Import Configuration Failed' -Button 'OK' -Icon 'Error' | Out-Null
         }
     })
+
+    if ($restoreBackupBtn) {
+        $restoreBackupBtn.Add_Click({
+            try {
+                Show-RestoreBackupWindow -Owner $window
+            }
+            catch {
+                Write-Warning "Restore backup action failed: $($_.Exception.Message)"
+                Show-MessageBox -Owner $window -Message "Unable to open restore backup dialog: $($_.Exception.Message)" -Title 'Restore Backup Failed' -Button 'OK' -Icon 'Error' | Out-Null
+            }
+        })
+    }
 
     $closeBtn.Add_Click({
         $window.Close()
@@ -346,6 +370,20 @@ function Show-MainWindow {
         }
         else {
             $CheckBox.IsChecked = [System.Nullable[bool]]$null
+        }
+    }
+
+    function ClearTweakSelections {
+        if (-not $script:UiControlMappings) { return }
+
+        foreach ($controlName in $script:UiControlMappings.Keys) {
+            $control = $window.FindName($controlName)
+            if ($control -is [System.Windows.Controls.CheckBox]) {
+                $control.IsChecked = $false
+            }
+            elseif ($control -is [System.Windows.Controls.ComboBox]) {
+                $control.SelectedIndex = 0
+            }
         }
     }
 
@@ -838,7 +876,7 @@ function Show-MainWindow {
                     if ($feature.FeatureId -match '^Disable') { $opt = 'Disable' } elseif ($feature.FeatureId -match '^Enable') { $opt = 'Enable' }
                     $items = @('No Change', $opt)
                     $comboName = ("Feature_{0}_Combo" -f $feature.FeatureId) -replace '[^a-zA-Z0-9_]',''
-                    $combo = CreateLabeledCombo -parent $panel -labelText ($feature.Action + ' ' + $feature.Label) -comboName $comboName -items $items
+                    $combo = CreateLabeledCombo -parent $panel -labelText $feature.Label -comboName $comboName -items $items
                     # attach tooltip from Features.json if present
                     if ($feature.ToolTip) {
                         $tipBlock = New-Object System.Windows.Controls.TextBlock
@@ -850,7 +888,7 @@ function Show-MainWindow {
                         try { $lblBorderObj = $window.FindName("$comboName`_LabelBorder") } catch {}
                         if ($lblBorderObj) { $lblBorderObj.ToolTip = $tipBlock }
                     }
-                    $script:UiControlMappings[$comboName] = @{ Type='feature'; FeatureId = $feature.FeatureId; Action = $feature.Action; Label = $feature.Label; Category = $categoryName }
+                    $script:UiControlMappings[$comboName] = @{ Type='feature'; FeatureId = $feature.FeatureId; Label = $feature.Label; Category = $categoryName }
                 }
             }
         }
@@ -858,7 +896,7 @@ function Show-MainWindow {
         # Build a feature-label lookup so GenerateOverview can resolve feature IDs without reloading JSON
         $script:FeatureLabelLookup = @{}
         foreach ($f in $featuresJson.Features) {
-            $script:FeatureLabelLookup[$f.FeatureId] = $f.Action + ' ' + $f.Label
+            $script:FeatureLabelLookup[$f.FeatureId] = $f.Label
         }
     }
 
@@ -1604,7 +1642,7 @@ function Show-MainWindow {
                     }
                     elseif ($mapping.Type -eq 'feature') {
                         $label = $script:FeatureLabelLookup[$mapping.FeatureId]
-                        if (-not $label) { $label = $mapping.Action + ' ' + $mapping.Label }
+                        if (-not $label) { $label = $mapping.Label }
                         $changesList += $label
                     }
                 }
@@ -2158,18 +2196,7 @@ function Show-MainWindow {
     # Clear All Tweaks button
     $clearAllTweaksBtn = $window.FindName('ClearAllTweaksBtn')
     $clearAllTweaksBtn.Add_Click({
-        # Reset all ComboBoxes to index 0 (No Change) and uncheck all CheckBoxes
-        if ($script:UiControlMappings) {
-            foreach ($comboName in $script:UiControlMappings.Keys) {
-                $control = $window.FindName($comboName)
-                if ($control -is [System.Windows.Controls.CheckBox]) {
-                    $control.IsChecked = $false
-                }
-                elseif ($control -is [System.Windows.Controls.ComboBox]) {
-                    $control.SelectedIndex = 0
-                }
-            }
-        }
+        ClearTweakSelections
         UpdateTweakPresetStates
     })
 

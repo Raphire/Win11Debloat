@@ -10,7 +10,7 @@ function RestartExplorer {
     foreach ($paramKey in $script:Params.Keys) {
         if ($script:Features.ContainsKey($paramKey) -and $script:Features[$paramKey].RequiresReboot -eq $true) {
             $feature = $script:Features[$paramKey]
-            Write-Host "Warning: '$($feature.Action) $($feature.Label)' requires a reboot to take full effect" -ForegroundColor Yellow
+            Write-Host "Warning: '$($feature.Label)' requires a reboot to take full effect" -ForegroundColor Yellow
         }
     }
 

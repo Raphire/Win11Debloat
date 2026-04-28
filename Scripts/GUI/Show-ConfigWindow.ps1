@@ -6,7 +6,8 @@ function Show-ImportExportConfigWindow {
         [string]$Prompt,
         [string[]]$Categories = @('Applications', 'System Tweaks', 'Deployment Settings'),
         [string[]]$DisabledCategories = @(),
-        [hashtable]$CategoryDetails = @()
+        [hashtable]$CategoryDetails = @(),
+        [string]$ActionLabel = 'OK'
     )
 
     # Show overlay on owner window
@@ -105,6 +106,7 @@ function Show-ImportExportConfigWindow {
 
     $okBtn = $dlg.FindName('OkButton')
     $cancelBtn = $dlg.FindName('CancelButton')
+    $okBtn.Content = $ActionLabel
     $okBtn.Add_Click({ $dlg.Tag = 'OK'; $dlg.Close() })
     $cancelBtn.Add_Click({ $dlg.Tag = 'Cancel'; $dlg.Close() })
 
@@ -379,7 +381,7 @@ function Export-Configuration {
     $deploymentSettings = Get-DeploymentSettings -Owner $Owner -UserSelectionCombo $UserSelectionCombo -OtherUsernameTextBox $OtherUsernameTextBox
     $categoryDetails = Build-CategoryDetails -AppCount $selectedApps.Count -TweakCount $tweakSettings.Count -DeploymentSettings $deploymentSettings
 
-    $categories = Show-ImportExportConfigWindow -Owner $Owner -UsesDarkMode $UsesDarkMode -Title 'Export Configuration' -Prompt 'Select which settings to include in the export:' -DisabledCategories $disabledCategories -CategoryDetails $categoryDetails
+    $categories = Show-ImportExportConfigWindow -Owner $Owner -UsesDarkMode $UsesDarkMode -Title 'Export Configuration' -Prompt 'Select which settings to include in the export:' -DisabledCategories $disabledCategories -CategoryDetails $categoryDetails -ActionLabel 'Export Settings'
     if (-not $categories) { return }
 
     $config = @{ Version = '1.0' }
@@ -453,7 +455,7 @@ function Import-Configuration {
     $tweakCount = @($config.Tweaks | Where-Object { $_ -and $_.Name -and $_.Value -eq $true }).Count
     $categoryDetails = Build-CategoryDetails -AppCount $appCount -TweakCount $tweakCount -DeploymentSettings @($config.Deployment)
 
-    $categories = Show-ImportExportConfigWindow -Owner $Owner -UsesDarkMode $UsesDarkMode -Title 'Import Configuration' -Prompt 'Select which settings to import:' -Categories $availableCategories -CategoryDetails $categoryDetails
+    $categories = Show-ImportExportConfigWindow -Owner $Owner -UsesDarkMode $UsesDarkMode -Title 'Import Configuration' -Prompt 'Select which settings to import:' -Categories $availableCategories -CategoryDetails $categoryDetails -ActionLabel 'Import Settings'
     if (-not $categories) { return }
 
     if ($categories -contains 'Applications' -and $config.Apps) {

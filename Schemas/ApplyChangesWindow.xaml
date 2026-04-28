@@ -11,18 +11,7 @@
         Topmost="False"
         ShowInTaskbar="False">
 
-    <Border BorderBrush="{DynamicResource BorderColor}" 
-            BorderThickness="1" 
-            CornerRadius="8"
-            Background="{DynamicResource CardBgColor}"
-            Margin="25">
-        <Border.Effect>
-            <DropShadowEffect Color="Black" 
-                            Opacity="0.15" 
-                            BlurRadius="20" 
-                            ShadowDepth="0" 
-                            Direction="0"/>
-        </Border.Effect>
+    <Border Style="{DynamicResource ModalCardBorderStyle}">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -100,11 +89,7 @@
                                 MaxWidth="430"/>
                 </StackPanel>
                 
-                <Border Background="{DynamicResource BgColor}"
-                        BorderBrush="{DynamicResource BorderColor}"
-                        BorderThickness="0,1,0,0"
-                        Padding="16,12"
-                        CornerRadius="0,0,8,8">
+                <Border Style="{DynamicResource ModalFooterBorderStyle}">
                     <StackPanel>
                     
                     <!-- Progress bar -->
@@ -172,29 +157,22 @@
                 </Border>
 
                 <!-- Button Panel -->
-                <Border Background="{DynamicResource BgColor}"
-                        BorderBrush="{DynamicResource BorderColor}"
-                        BorderThickness="0,1,0,0"
-                        Padding="16,12"
-                        CornerRadius="0,0,8,8">
-                    <StackPanel x:Name="ButtonPanel"
-                                Orientation="Horizontal"
-                                HorizontalAlignment="Center">
-                        <Button x:Name="ApplyKofiBtn" Width="210" Height="32" 
-                                Style="{DynamicResource SecondaryButtonStyle}" 
-                                Margin="0,0,12,0"
+                <Border Style="{DynamicResource ModalFooterBorderStyle}">
+                    <UniformGrid x:Name="ButtonPanel" Rows="1">
+                        <Button x:Name="ApplyKofiBtn"
+                                Style="{DynamicResource ModalSecondaryStretchedButtonStyle}"
                                 AutomationProperties.Name="Support the creator">
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                 <TextBlock Text="&#xEB52;" FontFamily="Segoe Fluent Icons" FontSize="14" VerticalAlignment="Center" Margin="0,0,8,-1"/>
                                 <TextBlock Text="Support the creator" VerticalAlignment="Center" FontSize="14" Margin="0,0,0,1"/>
                             </StackPanel>
                         </Button>
-                        <Button x:Name="ApplyCloseBtn" Width="100" Height="32" 
-                                Style="{DynamicResource PrimaryButtonStyle}"
+                        <Button x:Name="ApplyCloseBtn"
+                                Style="{DynamicResource ModalPrimaryStretchedButtonStyle}"
                                 AutomationProperties.Name="Close">
                             <TextBlock Text="Close" VerticalAlignment="Center" FontSize="14" Margin="0,0,0,1"/>
                         </Button>
-                    </StackPanel>
+                    </UniformGrid>
                 </Border>
             </StackPanel>
         </StackPanel>

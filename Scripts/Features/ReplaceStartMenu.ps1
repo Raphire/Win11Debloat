@@ -2,7 +2,7 @@
 # Credit: https://lazyadmin.nl/win-11/customize-windows-11-start-menu-layout/
 function ReplaceStartMenuForAllUsers {
     param (
-        $startMenuTemplate = "$script:AssetsPath/Start/start2.bin"
+        $startMenuTemplate = "$script:AssetsPath\Start\start2.bin"
     )
 
     Write-Host "> Removing all pinned apps from the start menu for all users..."
@@ -43,7 +43,7 @@ function ReplaceStartMenuForAllUsers {
 # Credit: https://lazyadmin.nl/win-11/customize-windows-11-start-menu-layout/
 function ReplaceStartMenu {
     param (
-        $startMenuTemplate = "$script:AssetsPath/Start/start2.bin",
+        $startMenuTemplate = "$script:AssetsPath\Start\start2.bin",
         $startMenuBinFile = "$env:LOCALAPPDATA\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState\start2.bin"
     )
 

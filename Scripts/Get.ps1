@@ -117,12 +117,16 @@ Write-Output "------------------------------------------------------------------
 Write-Output " Win11Debloat Script - Get"
 Write-Output "-------------------------------------------------------------------------------------------"
 
+$tempRootPath = $env:TEMP
+$tempWorkPath = Join-Path $tempRootPath 'Win11Debloat'
+$tempArchivePath = Join-Path $tempRootPath 'win11debloat.zip'
+
 Write-Output "> Downloading Win11Debloat..."
 
 # Download latest version of Win11Debloat from GitHub as zip archive
 try {
     $LatestReleaseUri = (Invoke-RestMethod https://api.github.com/repos/Raphire/Win11Debloat/releases/latest).zipball_url
-    Invoke-RestMethod $LatestReleaseUri -OutFile "$env:TEMP/win11debloat.zip"
+    Invoke-RestMethod $LatestReleaseUri -OutFile $tempArchivePath
 }
 catch {
     Write-Host "Error: Unable to fetch latest release from GitHub. Please check your internet connection and try again." -ForegroundColor Red
@@ -136,12 +140,12 @@ Write-Output ""
 Write-Output "> Cleaning up old Win11Debloat folder..."
 
 # Remove old script folder if it exists, but keep config and log files
-if (Test-Path "$env:TEMP/Win11Debloat") {
-    Get-ChildItem -Path "$env:TEMP/Win11Debloat" -Exclude CustomAppsList,LastUsedSettings.json,Win11Debloat.log,Config,Logs | Remove-Item -Recurse -Force
+if (Test-Path $tempWorkPath) {
+    Get-ChildItem -Path $tempWorkPath -Exclude CustomAppsList,LastUsedSettings.json,Win11Debloat.log,Config,Logs,Backups | Remove-Item -Recurse -Force
 }
 
-$configDir = "$env:TEMP/Win11Debloat/Config"
-$backupDir = "$env:TEMP/Win11Debloat/ConfigOld"
+$configDir = Join-Path $tempWorkPath 'Config'
+$backupDir = Join-Path $tempWorkPath 'ConfigOld'
 
 # Temporarily move existing config files if they exist to prevent them from being overwritten by the new script files, will be moved back after the new script is unpacked
 if (Test-Path "$configDir") {
@@ -161,13 +165,13 @@ Write-Output ""
 Write-Output "> Unpacking..."
 
 # Unzip archive to Win11Debloat folder
-Expand-Archive "$env:TEMP/win11debloat.zip" "$env:TEMP/Win11Debloat"
+Expand-Archive $tempArchivePath $tempWorkPath
 
 # Remove archive
-Remove-Item "$env:TEMP/win11debloat.zip"
+Remove-Item $tempArchivePath
 
 # Move files
-Get-ChildItem -Path "$env:TEMP/Win11Debloat/Raphire-Win11Debloat-*" -Recurse | Move-Item -Destination "$env:TEMP/Win11Debloat"
+Get-ChildItem -Path (Join-Path $tempWorkPath 'Raphire-Win11Debloat-*') -Recurse | Move-Item -Destination $tempWorkPath
 
 # Add existing config files back to Config folder
 if (Test-Path "$backupDir") {
@@ -207,7 +211,8 @@ if ($PSVersionTable.PSVersion.Major -ge 7) {
 }
 
 # Run Win11Debloat script with the provided arguments
-$debloatProcess = Start-Process powershell.exe -WindowStyle $windowStyle -PassThru -ArgumentList "-executionpolicy bypass -File $env:TEMP\Win11Debloat\Win11Debloat.ps1 $arguments" -Verb RunAs
+$debloatScriptPath = Join-Path $tempWorkPath 'Win11Debloat.ps1'
+$debloatProcess = Start-Process powershell.exe -WindowStyle $windowStyle -PassThru -ArgumentList "-executionpolicy bypass -File `"$debloatScriptPath`" $arguments" -Verb RunAs
 
 # Wait for the process to finish before continuing
 if ($null -ne $debloatProcess) {
@@ -215,12 +220,12 @@ if ($null -ne $debloatProcess) {
 }
 
 # Remove all remaining script files, except for CustomAppsList and LastUsedSettings.json files
-if (Test-Path "$env:TEMP/Win11Debloat") {
+if (Test-Path $tempWorkPath) {
     Write-Output ""
     Write-Output "> Cleaning up..."
 
     # Cleanup, remove Win11Debloat directory
-    Get-ChildItem -Path "$env:TEMP/Win11Debloat" -Exclude CustomAppsList,LastUsedSettings.json,Win11Debloat.log,Win11Debloat-Run.log,Config,Logs | Remove-Item -Recurse -Force
+    Get-ChildItem -Path $tempWorkPath -Exclude CustomAppsList,LastUsedSettings.json,Win11Debloat.log,Win11Debloat-Run.log,Config,Logs,Backups | Remove-Item -Recurse -Force
 }
 
 Write-Output ""

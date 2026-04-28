@@ -11,18 +11,7 @@
         Topmost="False"
         ShowInTaskbar="False">
 
-    <Border BorderBrush="{DynamicResource BorderColor}" 
-            BorderThickness="1" 
-            CornerRadius="8"
-            Background="{DynamicResource CardBgColor}"
-            Margin="25">
-        <Border.Effect>
-            <DropShadowEffect Color="Black" 
-                            Opacity="0.15" 
-                            BlurRadius="20" 
-                            ShadowDepth="0" 
-                            Direction="0"/>
-        </Border.Effect>
+    <Border Style="{DynamicResource ModalCardBorderStyle}">
         
         <Grid Margin="0">
             <Grid.RowDefinitions>
@@ -32,13 +21,9 @@
             </Grid.RowDefinitions>
 
             <!-- Title Bar -->
-            <Grid Grid.Row="0" x:Name="TitleBar" Height="48" Background="Transparent">
+            <Grid Grid.Row="0" x:Name="TitleBar" Style="{DynamicResource ModalTitleBarStyle}">
                 <TextBlock Text="About Win11Debloat" 
-                           Foreground="{DynamicResource FgColor}"
-                           FontSize="18"
-                           FontWeight="SemiBold"
-                           VerticalAlignment="Center" 
-                           Margin="20,0,0,0"/>
+                           Style="{DynamicResource ModalTitleTextStyle}"/>
             </Grid>
 
             <!-- Message Content -->
@@ -50,7 +35,7 @@
                 </Grid.RowDefinitions>
 
                 <!-- Message Text -->
-                <Grid Grid.Row="0" Margin="24,12,24,20">
+                <Grid Grid.Row="0" Margin="20,4,20,20">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
@@ -62,43 +47,31 @@
                     </Grid.RowDefinitions>
                     
                     <!-- Version -->
-                    <TextBlock Grid.Row="0" Grid.Column="0"
-                            Text="Version:" 
-                            FontSize="14"
-                            Foreground="{DynamicResource FgColor}"
-                            FontWeight="SemiBold"
-                            Margin="0,0,16,8"/>
+                        <TextBlock Grid.Row="0" Grid.Column="0"
+                            Text="Version:"
+                            Style="{DynamicResource ModalInfoLabelTextStyle}"/>
                     <TextBlock x:Name="VersionText"
                             Grid.Row="0" Grid.Column="1"
-                            Text="0.0.0" 
-                            FontSize="14"
-                            Foreground="{DynamicResource FgColor}"
-                            Margin="0,0,0,8"/>
+                            Text="0.0.0"
+                            Style="{DynamicResource ModalInfoValueTextStyle}"/>
                     
                     <!-- Author -->
-                    <TextBlock Grid.Row="1" Grid.Column="0"
-                            Text="Author:" 
-                            FontSize="14"
-                            Foreground="{DynamicResource FgColor}"
-                            FontWeight="SemiBold"
-                            Margin="0,0,16,8"/>
+                        <TextBlock Grid.Row="1" Grid.Column="0"
+                            Text="Author:"
+                            Style="{DynamicResource ModalInfoLabelTextStyle}"/>
                     <TextBlock Grid.Row="1" Grid.Column="1"
-                            Text="Raphire" 
-                            FontSize="14"
-                            Foreground="{DynamicResource FgColor}"
-                            Margin="0,0,0,8"/>
+                            Text="Raphire"
+                            Style="{DynamicResource ModalInfoValueTextStyle}"/>
                     
                     <!-- Project Link -->
-                    <TextBlock Grid.Row="2" Grid.Column="0"
-                            Text="Project:" 
-                            FontSize="14"
-                            Foreground="{DynamicResource FgColor}"
-                            FontWeight="SemiBold"
+                        <TextBlock Grid.Row="2" Grid.Column="0"
+                            Text="Project:"
+                            Style="{DynamicResource ModalInfoLabelTextStyle}"
                             Margin="0,0,16,0"/>
                     <TextBlock x:Name="ProjectLink"
                             Grid.Row="2" Grid.Column="1"
                             Text="https://github.com/Raphire/Win11Debloat" 
-                            FontSize="14"
+                            FontSize="13"
                             Style="{DynamicResource HyperlinkStyle}"
                             Margin="0,0,0,0"/>
                 </Grid>
@@ -107,10 +80,10 @@
                 <Border Grid.Row="1" 
                         Height="1" 
                         Background="{DynamicResource BorderColor}"
-                        Margin="10,0"/>
+                        Margin="20,0"/>
 
                 <!-- Content -->
-                <StackPanel Grid.Row="2" Margin="24,20">
+                <StackPanel Grid.Row="2" Margin="20,18,20,20">
                     <!-- Donation Message -->
                     <TextBlock Text="Win11Debloat is a passion project that I maintain in my free time. If you've found this tool useful, please consider making a small donation to support its development. I really appreciate it!"
                             FontSize="14"
@@ -150,19 +123,11 @@
             </Grid>
 
             <!-- Button Panel -->
-            <Border Grid.Row="2" 
-                    Background="{DynamicResource BgColor}"
-                    BorderBrush="{DynamicResource BorderColor}"
-                    BorderThickness="0,1,0,0"
-                    Padding="16,12"
-                    CornerRadius="0,0,8,8">
-                <StackPanel x:Name="ButtonPanel"
-                            Orientation="Horizontal"
-                            HorizontalAlignment="Right">
+            <Border Grid.Row="2" Style="{DynamicResource ModalFooterBorderStyle}">
+                <StackPanel x:Name="ButtonPanel" Style="{DynamicResource ModalFooterButtonsRightStyle}">
                     <Button x:Name="CloseButton" 
                             Content="Close" 
-                            Height="32" MinWidth="80" Margin="4,0"
-                            Style="{DynamicResource SecondaryButtonStyle}"/>
+                            Style="{DynamicResource ModalSecondaryActionButtonStyle}"/>
                 </StackPanel>
             </Border>
         </Grid>

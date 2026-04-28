@@ -162,7 +162,7 @@ function Show-ApplyModal {
                     foreach ($paramKey in $script:Params.Keys) {
                         if ($script:Features.ContainsKey($paramKey) -and $script:Features[$paramKey].RequiresReboot -eq $true) {
                             $feature = $script:Features[$paramKey]
-                            $rebootFeatures += "$($feature.Action) $($feature.Label)"
+                            $rebootFeatures += "$($feature.Label)"
                         }
                     }
 

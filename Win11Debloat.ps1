@@ -142,23 +142,30 @@ if (-not $isAdmin) {
 
 # Define script-level variables & paths
 $script:Version = "2026.04.26"
-$script:AppsListFilePath = "$PSScriptRoot/Config/Apps.json"
-$script:DefaultSettingsFilePath = "$PSScriptRoot/Config/DefaultSettings.json"
-$script:FeaturesFilePath = "$PSScriptRoot/Config/Features.json"
-$script:SavedSettingsFilePath = "$PSScriptRoot/Config/LastUsedSettings.json"
-$script:CustomAppsListFilePath = "$PSScriptRoot/Config/CustomAppsList"
-$script:DefaultLogPath = "$PSScriptRoot/Logs/Win11Debloat.log"
-$script:RegfilesPath = "$PSScriptRoot/Regfiles"
-$script:AssetsPath = "$PSScriptRoot/Assets"
-$script:AppSelectionSchema = "$PSScriptRoot/Schemas/AppSelectionWindow.xaml"
-$script:MainWindowSchema = "$PSScriptRoot/Schemas/MainWindow.xaml"
-$script:MessageBoxSchema = "$PSScriptRoot/Schemas/MessageBoxWindow.xaml"
-$script:AboutWindowSchema = "$PSScriptRoot/Schemas/AboutWindow.xaml"
-$script:ApplyChangesWindowSchema = "$PSScriptRoot/Schemas/ApplyChangesWindow.xaml"
-$script:SharedStylesSchema = "$PSScriptRoot/Schemas/SharedStyles.xaml"
-$script:BubbleHintSchema = "$PSScriptRoot/Schemas/BubbleHint.xaml"
-$script:ImportExportConfigSchema = "$PSScriptRoot/Schemas/ImportExportConfigWindow.xaml"
-$script:LoadAppsDetailsScriptPath = "$PSScriptRoot/Scripts/FileIO/LoadAppsDetailsFromJson.ps1"
+$configPath = Join-Path $PSScriptRoot 'Config'
+$logsPath = Join-Path $PSScriptRoot 'Logs'
+$schemasPath = Join-Path $PSScriptRoot 'Schemas'
+$scriptsPath = Join-Path $PSScriptRoot 'Scripts'
+
+$script:AppsListFilePath = Join-Path $configPath 'Apps.json'
+$script:DefaultSettingsFilePath = Join-Path $configPath 'DefaultSettings.json'
+$script:FeaturesFilePath = Join-Path $configPath 'Features.json'
+$script:SavedSettingsFilePath = Join-Path $configPath 'LastUsedSettings.json'
+$script:CustomAppsListFilePath = Join-Path $configPath 'CustomAppsList'
+$script:DefaultLogPath = Join-Path $logsPath 'Win11Debloat.log'
+$script:RegfilesPath = Join-Path $PSScriptRoot 'Regfiles'
+$script:RegistryBackupsPath = Join-Path $PSScriptRoot 'Backups'
+$script:AssetsPath = Join-Path $PSScriptRoot 'Assets'
+$script:AppSelectionSchema = Join-Path $schemasPath 'AppSelectionWindow.xaml'
+$script:MainWindowSchema = Join-Path $schemasPath 'MainWindow.xaml'
+$script:MessageBoxSchema = Join-Path $schemasPath 'MessageBoxWindow.xaml'
+$script:AboutWindowSchema = Join-Path $schemasPath 'AboutWindow.xaml'
+$script:ApplyChangesWindowSchema = Join-Path $schemasPath 'ApplyChangesWindow.xaml'
+$script:SharedStylesSchema = Join-Path $schemasPath 'SharedStyles.xaml'
+$script:BubbleHintSchema = Join-Path $schemasPath 'BubbleHint.xaml'
+$script:ImportExportConfigSchema = Join-Path $schemasPath 'ImportExportConfigWindow.xaml'
+$script:RestoreBackupWindowSchema = Join-Path $schemasPath 'RestoreBackupWindow.xaml'
+$script:LoadAppsDetailsScriptPath = Join-Path (Join-Path $scriptsPath 'FileIO') 'LoadAppsDetailsFromJson.ps1'
 
 $script:ControlParams = 'WhatIf', 'Confirm', 'Verbose', 'Debug', 'LogPath', 'Silent', 'Sysprep', 'User', 'NoRestartExplorer', 'RunDefaults', 'RunDefaultsLite', 'RunSavedSettings', 'Config', 'RunAppsListGenerator', 'CLI', 'AppRemovalTarget'
 
@@ -209,14 +216,14 @@ Write-Host ""
 
 # Log script output to 'Win11Debloat.log' at the specified path
 if ($LogPath -and (Test-Path $LogPath)) {
-    Start-Transcript -Path "$LogPath/Win11Debloat.log" -Append -IncludeInvocationHeader -Force | Out-Null
+    Start-Transcript -Path (Join-Path $LogPath 'Win11Debloat.log') -Append -IncludeInvocationHeader -Force | Out-Null
 }
 else {
     Start-Transcript -Path $script:DefaultLogPath -Append -IncludeInvocationHeader -Force | Out-Null
 }
 
 # Check if script has all required files
-if (-not ((Test-Path $script:DefaultSettingsFilePath) -and (Test-Path $script:AppsListFilePath) -and (Test-Path $script:RegfilesPath) -and (Test-Path $script:AssetsPath) -and (Test-Path $script:AppSelectionSchema) -and (Test-Path $script:ApplyChangesWindowSchema) -and (Test-Path $script:SharedStylesSchema) -and (Test-Path $script:BubbleHintSchema) -and (Test-Path $script:FeaturesFilePath))) {
+if (-not ((Test-Path $script:DefaultSettingsFilePath) -and (Test-Path $script:AppsListFilePath) -and (Test-Path $script:RegfilesPath) -and (Test-Path $script:AssetsPath) -and (Test-Path $script:AppSelectionSchema) -and (Test-Path $script:ApplyChangesWindowSchema) -and (Test-Path $script:SharedStylesSchema) -and (Test-Path $script:BubbleHintSchema) -and (Test-Path $script:RestoreBackupWindowSchema) -and (Test-Path $script:FeaturesFilePath))) {
     Write-Error "Win11Debloat is unable to find required files, please ensure all script files are present"
     Write-Output ""
     Write-Output "Press any key to exit..."
@@ -288,6 +295,8 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 # Features functions
 . "$PSScriptRoot/Scripts/Features/ExecuteChanges.ps1"
 . "$PSScriptRoot/Scripts/Features/CreateSystemRestorePoint.ps1"
+. "$PSScriptRoot/Scripts/Features/BackupRegistryState.ps1"
+. "$PSScriptRoot/Scripts/Features/RestoreRegistryBackup.ps1"
 . "$PSScriptRoot/Scripts/Features/DisableStoreSearchSuggestions.ps1"
 . "$PSScriptRoot/Scripts/Features/EnableWindowsFeature.ps1"
 . "$PSScriptRoot/Scripts/Features/ImportRegistryFile.ps1"
@@ -314,6 +323,8 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 . "$PSScriptRoot/Scripts/GUI/Show-ConfigWindow.ps1"
 . "$PSScriptRoot/Scripts/GUI/Show-ApplyModal.ps1"
 . "$PSScriptRoot/Scripts/GUI/Show-AppSelectionWindow.ps1"
+. "$PSScriptRoot/Scripts/GUI/Show-RestoreBackupWindow.ps1"
+. "$PSScriptRoot/Scripts/GUI/Show-RestoreBackupDialog.ps1"
 . "$PSScriptRoot/Scripts/GUI/Show-MainWindow.ps1"
 . "$PSScriptRoot/Scripts/GUI/Show-AboutDialog.ps1"
 . "$PSScriptRoot/Scripts/GUI/Show-Bubble.ps1"
@@ -326,8 +337,10 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 . "$PSScriptRoot/Scripts/Helpers/GetFriendlyTargetUserName.ps1"
 . "$PSScriptRoot/Scripts/Helpers/ImportConfigToParams.ps1"
 . "$PSScriptRoot/Scripts/Helpers/GetTargetUserForAppRemoval.ps1"
+. "$PSScriptRoot/Scripts/Helpers/Get-RegFileOperations.ps1"
 . "$PSScriptRoot/Scripts/Helpers/GetUserDirectory.ps1"
 . "$PSScriptRoot/Scripts/Helpers/GetUserName.ps1"
+. "$PSScriptRoot/Scripts/Helpers/RegistryPathHelpers.ps1"
 . "$PSScriptRoot/Scripts/Helpers/TestIfUserIsLoggedIn.ps1"
 
 # Threading functions

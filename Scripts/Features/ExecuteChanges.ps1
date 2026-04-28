@@ -146,10 +146,23 @@ function ExecuteAllChanges {
         if ($paramKey -eq 'CreateRestorePoint') { continue }
         $actionableKeys += $paramKey
     }
+
+    $selectedRegistryFeatures = Get-SelectedRegistryBackedFeatures -ActionableKeys $actionableKeys
     
     $totalSteps = $actionableKeys.Count
+    if ($selectedRegistryFeatures.Count -gt 0) { $totalSteps++ }
     if ($script:Params.ContainsKey("CreateRestorePoint")) { $totalSteps++ }
     $currentStep = 0
+
+    if ($selectedRegistryFeatures.Count -gt 0) {
+        $currentStep++
+        if ($script:ApplyProgressCallback) {
+            & $script:ApplyProgressCallback $currentStep $totalSteps "Creating registry backup"
+        }
+
+        Write-Host "> Creating registry backup..."
+        New-RegistrySettingsBackup -ActionableKeys $actionableKeys | Out-Null
+    }
     
     # Create restore point if requested (CLI only - GUI handles this separately)
     if ($script:Params.ContainsKey("CreateRestorePoint")) {
@@ -178,12 +191,8 @@ function ExecuteAllChanges {
                 # Prefer explicit ApplyText when provided
                 $stepName = $feature.ApplyText
             } elseif ($feature.Label) {
-                # Fallback: construct a name from Action and Label, or just Label
-                if ($feature.Action) {
-                    $stepName = "$($feature.Action) $($feature.Label)"
-                } else {
-                    $stepName = $feature.Label
-                }
+                # Fallback: use label from Features.json
+                $stepName = $feature.Label
             }
         }
         

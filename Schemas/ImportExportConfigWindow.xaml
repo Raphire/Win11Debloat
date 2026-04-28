@@ -12,18 +12,7 @@
         Topmost="False"
         ShowInTaskbar="False">
 
-    <Border BorderBrush="{DynamicResource BorderColor}"
-            BorderThickness="1"
-            CornerRadius="8"
-            Background="{DynamicResource CardBgColor}"
-            Margin="25">
-        <Border.Effect>
-            <DropShadowEffect Color="Black"
-                              Opacity="0.15"
-                              BlurRadius="20"
-                              ShadowDepth="0"
-                              Direction="0"/>
-        </Border.Effect>
+    <Border Style="{DynamicResource ModalCardBorderStyle}">
 
         <Grid>
             <Grid.RowDefinitions>
@@ -33,18 +22,14 @@
             </Grid.RowDefinitions>
 
             <!-- Title Bar -->
-            <Grid Grid.Row="0" x:Name="TitleBar" Height="40" Background="Transparent">
+            <Grid Grid.Row="0" x:Name="TitleBar" Style="{DynamicResource ModalTitleBarStyle}">
                 <TextBlock x:Name="TitleText"
-                           Foreground="{DynamicResource FgColor}"
-                           FontSize="16"
-                           FontWeight="SemiBold"
-                           VerticalAlignment="Center"
-                           Margin="16,0,0,0"/>
+                           Style="{DynamicResource ModalTitleTextStyle}"/>
             </Grid>
 
             <!-- Content -->
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="0,0,8,0">
-                <StackPanel x:Name="ContentPanel" Margin="20,12,20,9">
+                <StackPanel x:Name="ContentPanel" Margin="20,4,20,8">
                     <TextBlock x:Name="PromptText"
                                TextWrapping="Wrap"
                                FontSize="14"
@@ -57,22 +42,15 @@
             </ScrollViewer>
 
             <!-- Button Footer -->
-            <Border Grid.Row="2"
-                    Background="{DynamicResource BgColor}"
-                    BorderBrush="{DynamicResource BorderColor}"
-                    BorderThickness="0,1,0,0"
-                    Padding="16,12"
-                    CornerRadius="0,0,8,8">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <Border Grid.Row="2" Style="{DynamicResource ModalFooterBorderStyle}">
+                <UniformGrid Rows="1">
                     <Button x:Name="OkButton"
                             Content="OK"
-                            Height="32" MinWidth="80" Margin="4,0"
-                            Style="{DynamicResource PrimaryButtonStyle}"/>
+                            Style="{DynamicResource ModalPrimaryStretchedButtonStyle}"/>
                     <Button x:Name="CancelButton"
                             Content="Cancel"
-                            Height="32" MinWidth="80" Margin="4,0"
-                            Style="{DynamicResource SecondaryButtonStyle}"/>
-                </StackPanel>
+                            Style="{DynamicResource ModalSecondaryStretchedButtonStyle}"/>
+                </UniformGrid>
             </Border>
         </Grid>
     </Border>

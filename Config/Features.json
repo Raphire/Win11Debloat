@@ -875,7 +875,7 @@
                      },
                      {
                          "FeatureId":  "HideSearchTb",
-                         "Label":  "Hide Search Hide search icon from the taskbar",
+                         "Label":  "Hide search icon from the taskbar",
                          "Category":  "Taskbar",
                          "RegistryKey":  "Hide_Search_Taskbar.reg",
                          "ApplyText":  "Hiding the search icon from the taskbar...",
@@ -886,7 +886,7 @@
                      },
                      {
                          "FeatureId":  "ShowSearchIconTb",
-                         "Label":  "Show Search Icon Show search icon on the taskbar",
+                         "Label":  "Show search icon on the taskbar",
                          "Category":  "Taskbar",
                          "RegistryKey":  "Show_Search_Icon.reg",
                          "ApplyText":  "Changing taskbar search to icon only...",
@@ -897,7 +897,7 @@
                      },
                      {
                          "FeatureId":  "ShowSearchLabelTb",
-                         "Label":  "Show Search Label Show search icon with label on the taskbar",
+                         "Label":  "Show search icon with label on the taskbar",
                          "Category":  "Taskbar",
                          "RegistryKey":  "Show_Search_Icon_And_Label.reg",
                          "ApplyText":  "Changing taskbar search to icon with label...",
@@ -908,7 +908,7 @@
                      },
                      {
                          "FeatureId":  "ShowSearchBoxTb",
-                         "Label":  "Show Search Box Show search box on the taskbar",
+                         "Label":  "Show search box on the taskbar",
                          "Category":  "Taskbar",
                          "RegistryKey":  "Show_Search_Box.reg",
                          "ApplyText":  "Changing taskbar search to search box...",

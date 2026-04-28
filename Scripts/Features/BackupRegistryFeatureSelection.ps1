@@ -1,14 +1,12 @@
-function Get-FeatureIdOrFallback {
+function Get-FeatureId {
     param(
         [Parameter(Mandatory)]
-        $Feature,
-        [Parameter(Mandatory)]
-        [string]$FallbackFeatureId
+        $Feature
     )
 
     $featureId = [string]$Feature.FeatureId
     if ([string]::IsNullOrWhiteSpace($featureId)) {
-        return $FallbackFeatureId
+        throw 'Selected feature is missing required FeatureId.'
     }
 
     return $featureId

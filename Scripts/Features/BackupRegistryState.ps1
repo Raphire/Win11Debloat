@@ -43,7 +43,7 @@ function Get-SelectedFeatures {
         $feature = $script:Features[$paramKey]
         if (-not $feature) { continue }
 
-        $featureId = Get-FeatureIdOrFallback -Feature $feature -FallbackFeatureId ([string]$paramKey)
+        $featureId = Get-FeatureId -Feature $feature
 
         if ($selectedFeatureIds.Add($featureId)) {
             $selectedFeatures.Add($feature)
@@ -64,10 +64,7 @@ function Get-RegistryBackupPayload {
     $selectedFeatureIds = New-Object System.Collections.Generic.List[string]
     $seenSelectedFeatureIds = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
     foreach ($feature in $SelectedFeatures) {
-        $featureId = Get-FeatureIdOrFallback -Feature $feature -FallbackFeatureId ''
-        if ([string]::IsNullOrWhiteSpace($featureId)) {
-            throw 'Selected feature is missing FeatureId and cannot be included in registry backup metadata.'
-        }
+        $featureId = Get-FeatureId -Feature $feature
 
         if ($seenSelectedFeatureIds.Add($featureId)) {
             $selectedFeatureIds.Add($featureId)

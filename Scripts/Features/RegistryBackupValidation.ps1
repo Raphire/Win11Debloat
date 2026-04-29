@@ -93,8 +93,10 @@ function Normalize-RegistryKeySnapshot {
 function Test-RegistryBackupMatchesSelectedFeatures {
     param(
         [Parameter(Mandatory)]
+        [AllowEmptyCollection()]
         [string[]]$SelectedFeatureIds,
         [Parameter(Mandatory)]
+        [AllowEmptyCollection()]
         [object[]]$RegistryKeys
     )
 
@@ -128,8 +130,10 @@ function Test-RegistryBackupMatchesSelectedFeatures {
 function Get-SelectedRegistryFeaturesForBackupValidation {
     param(
         [Parameter(Mandatory)]
+        [AllowEmptyCollection()]
         [string[]]$SelectedFeatureIds,
         [Parameter(Mandatory)]
+        [AllowEmptyCollection()]
         [System.Collections.Generic.List[string]]$Errors
     )
 
@@ -152,6 +156,7 @@ function Get-SelectedRegistryFeaturesForBackupValidation {
 function New-RegistryBackupAllowListPlanMap {
     param(
         [Parameter(Mandatory)]
+        [AllowEmptyCollection()]
         [object[]]$CapturePlans
     )
 
@@ -176,6 +181,7 @@ function New-RegistryBackupAllowListPlanMap {
 
 function ConvertTo-RegistryValueNameSet {
     param(
+        [AllowEmptyCollection()]
         [string[]]$ValueNames
     )
 

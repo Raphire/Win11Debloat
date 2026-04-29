@@ -5,17 +5,13 @@ function Load-RegistryBackupFromFile {
     )
 
     if (-not (Test-Path -LiteralPath $FilePath)) {
-        Write-Warning "Backup file not found: $FilePath"
         throw "Backup file was not found: $FilePath"
     }
-
-    Write-Host "Loading backup file: $FilePath"
 
     try {
         $rawBackup = Get-Content -LiteralPath $FilePath -Raw -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop
     }
     catch {
-        Write-Error "Failed parsing backup JSON from '$FilePath': $($_.Exception.Message)"
         throw "Failed to read backup file '$FilePath'. The file is not valid JSON."
     }
 

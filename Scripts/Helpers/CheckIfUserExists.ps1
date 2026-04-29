@@ -9,12 +9,20 @@ function CheckIfUserExists {
 
     $candidateUserName = $userName.Trim()
 
-    if ($candidateUserName.IndexOfAny([System.IO.Path]::GetInvalidFileNameChars()) -ge 0) {
+    $pathProbeName = $candidateUserName
+    if ($pathProbeName.Contains('\\')) {
+        $pathProbeName = ($pathProbeName -split '\\')[-1]
+    }
+    if ($pathProbeName.Contains('@')) {
+        $pathProbeName = ($pathProbeName -split '@')[0]
+    }
+
+    if ($pathProbeName.IndexOfAny([System.IO.Path]::GetInvalidFileNameChars()) -ge 0) {
         return $false
     }
 
     # PowerShell treats [] as wildcard chars in non-literal paths; disallow them explicitly.
-    if ($candidateUserName -match '[\[\]]') {
+    if ($pathProbeName -match '[\[\]]') {
         return $false
     }
 

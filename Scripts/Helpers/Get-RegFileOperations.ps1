@@ -5,7 +5,24 @@ function Get-RegFileOperations {
     )
 
     $content = Get-Content -Path $regFilePath -Raw -ErrorAction Stop
-    $lines = $content -split "`r?`n"
+    $rawLines = $content -split "`r?`n"
+    
+    # Join continuation lines (lines ending with \)
+    $lines = @()
+    $i = 0
+    while ($i -lt $rawLines.Count) {
+        $line = $rawLines[$i]
+        
+        # Join lines that end with backslash to the next line(s)
+        while ($line.EndsWith("\") -and $i + 1 -lt $rawLines.Count) {
+            $line = $line.Substring(0, $line.Length - 1) + $rawLines[$i + 1]
+            $i++
+        }
+        
+        $lines += $line
+        $i++
+    }
+    
     $operations = @()
     $currentKeyPath = $null
     $isDeletedKey = $false

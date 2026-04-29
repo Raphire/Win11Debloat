@@ -104,7 +104,7 @@ function Test-RegistryBackupMatchesSelectedFeatures {
 
     if (-not $script:Features -or $script:Features.Count -eq 0) {
         $errors.Add('Unable to validate registry backup allowlist because feature definitions are not loaded.')
-        return @($errors)
+        return $errors.ToArray()
     }
 
     $selectedRegistryFeatures = @(Get-SelectedRegistryFeaturesForBackupValidation -SelectedFeatureIds @($SelectedFeatureIds) -Errors $errors)
@@ -124,7 +124,7 @@ function Test-RegistryBackupMatchesSelectedFeatures {
         Test-RegistrySnapshotAgainstAllowList -Snapshot $rootSnapshot -PlanMap $planMap -Errors $errors
     }
 
-    return @($errors)
+    return $errors.ToArray()
 }
 
 function Get-SelectedRegistryFeaturesForBackupValidation {
@@ -220,7 +220,7 @@ function Test-RegistrySnapshotAgainstAllowList {
     }
 
     foreach ($valueSnapshot in @($Snapshot.Values)) {
-        $valueName = if ($null -ne $valueSnapshot.Name) { [string]$valueSnapshot.Name } else { '' }
+        $valueName = Get-NormalizedRegistryValueName -ValueName $valueSnapshot.Name
         $valueExists = [bool]$valueSnapshot.Exists
 
         if (-not (Test-RegistryValueAllowedByPlan -PlanMatch $planMatch -ValueName $valueName)) {
@@ -249,8 +249,12 @@ function Test-RegistryValueAllowedByPlan {
         [Parameter(Mandatory)]
         $PlanMatch,
         [Parameter(Mandatory)]
+        [AllowNull()]
+        [AllowEmptyString()]
         [string]$ValueName
     )
+
+    $ValueName = Get-NormalizedRegistryValueName -ValueName $ValueName
 
     if ($PlanMatch.CaptureAllValues -or $PlanMatch.IsDescendant) {
         return $true
@@ -264,14 +268,32 @@ function Get-RegistryValueReferenceForError {
         [Parameter(Mandatory)]
         [string]$SnapshotPath,
         [Parameter(Mandatory)]
+        [AllowNull()]
+        [AllowEmptyString()]
         [string]$ValueName
     )
+
+    $ValueName = Get-NormalizedRegistryValueName -ValueName $ValueName
 
     if ([string]::IsNullOrWhiteSpace($ValueName)) {
         return "$SnapshotPath\\(Default)"
     }
 
     return "$SnapshotPath\\$ValueName"
+}
+
+function Get-NormalizedRegistryValueName {
+    param(
+        [AllowNull()]
+        [AllowEmptyString()]
+        [object]$ValueName
+    )
+
+    if ($null -eq $ValueName) {
+        return ''
+    }
+
+    return [string]$ValueName
 }
 
 function Find-RegistryAllowListPlanMatch {

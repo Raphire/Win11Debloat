@@ -465,7 +465,7 @@ function Import-Configuration {
 
     if ($availableCategories.Count -eq 0) {
         Write-Warning "Configuration file '$($openDialog.FileName)' contains no importable data."
-        Show-MessageBox -Message "The selected configuration file contains no importable data." -Title 'Invalid Config' -Button 'OK' -Icon 'Error' | Out-Null
+        Show-MessageBox -Message "The selected file contains no importable data." -Title 'Invalid Config' -Button 'OK' -Icon 'Error' | Out-Null
         return
     }
 

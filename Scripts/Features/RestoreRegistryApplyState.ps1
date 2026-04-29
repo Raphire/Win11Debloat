@@ -143,7 +143,7 @@ function Convert-RegistryValueKindFromBackup {
     }
 
     try {
-        return [Microsoft.Win32.RegistryValueKind]::Parse([Microsoft.Win32.RegistryValueKind], $KindName, $true)
+        return [System.Enum]::Parse([Microsoft.Win32.RegistryValueKind], $KindName, $true)
     }
     catch {
         throw "Unsupported registry value kind in backup: $KindName"

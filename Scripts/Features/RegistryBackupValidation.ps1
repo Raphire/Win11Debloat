@@ -133,6 +133,7 @@ function Get-SelectedRegistryFeaturesForBackupValidation {
         [AllowEmptyCollection()]
         [string[]]$SelectedFeatureIds,
         [Parameter(Mandatory)]
+        [AllowEmptyCollection()]
         $Errors
     )
 
@@ -203,6 +204,7 @@ function Test-RegistrySnapshotAgainstAllowList {
         [Parameter(Mandatory)]
         [hashtable]$PlanMap,
         [Parameter(Mandatory)]
+        [AllowEmptyCollection()]
         [System.Collections.Generic.List[string]]$Errors
     )
 

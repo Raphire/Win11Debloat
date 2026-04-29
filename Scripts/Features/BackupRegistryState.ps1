@@ -15,7 +15,7 @@ function New-RegistrySettingsBackup {
         New-Item -ItemType Directory -Path $backupDirectory -Force | Out-Null
     }
 
-    $backupFileName = 'RegistryBackup_{0}.json' -f $timestamp.ToString('yyyyMMdd_HHmmss_fff')
+    $backupFileName = 'RegistryBackup_{0}.json' -f $timestamp.ToString('yyyyMMdd_HHmm')
     $backupFilePath = Join-Path $backupDirectory $backupFileName
 
     $backupConfig = Get-RegistryBackupPayload -SelectedFeatures $selectedFeatures -CreatedAt $timestamp

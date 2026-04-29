@@ -127,7 +127,7 @@ function Show-RestoreBackupDialog {
             }
             else {
                 try {
-                    [DateTime]::Parse($selectedBackup.CreatedAt).ToString('g')
+                    [DateTime]::Parse($selectedBackup.CreatedAt).ToString('yyyy-MM-dd HH:mm')
                 }
                 catch {
                     $selectedBackup.CreatedAt

@@ -451,13 +451,13 @@ function Import-Configuration {
     $config = LoadJsonFile -filePath $openDialog.FileName -expectedVersion '1.0'
     if (-not $config) {
         Write-Error "Failed to read configuration file '$($openDialog.FileName)'"
-        Show-MessageBox -Message "Failed to read configuration file" -Title 'Error' -Button 'OK' -Icon 'Error' | Out-Null
+        Show-MessageBox -Message "Failed to read configuration file" -Title 'Invalid Config' -Button 'OK' -Icon 'Error' | Out-Null
         return
     }
 
     if (-not $config.Version) {
         Write-Error "Invalid configuration file format: '$($openDialog.FileName)'"
-        Show-MessageBox -Message "Invalid configuration file format." -Title 'Error' -Button 'OK' -Icon 'Error' | Out-Null
+        Show-MessageBox -Message "Invalid configuration file format." -Title 'Invalid Config' -Button 'OK' -Icon 'Error' | Out-Null
         return
     }
 
@@ -465,7 +465,7 @@ function Import-Configuration {
 
     if ($availableCategories.Count -eq 0) {
         Write-Warning "Configuration file '$($openDialog.FileName)' contains no importable data."
-        Show-MessageBox -Message "The selected configuration file contains no importable data." -Title 'Import Configuration' -Button 'OK' -Icon 'Error' | Out-Null
+        Show-MessageBox -Message "The selected configuration file contains no importable data." -Title 'Invalid Config' -Button 'OK' -Icon 'Error' | Out-Null
         return
     }
 

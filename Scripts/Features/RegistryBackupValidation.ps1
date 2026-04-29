@@ -12,8 +12,8 @@ function Get-NormalizedSelectedFeatureIdsFromBackup {
     if (-not $Backup.PSObject.Properties['SelectedFeatures']) {
         $errors.Add('Missing property: SelectedFeatures')
         return [PSCustomObject]@{
-            SelectedFeatures = @($selectedFeatures)
-            Errors = @($errors)
+            SelectedFeatures = $selectedFeatures.ToArray()
+            Errors = $errors.ToArray()
         }
     }
 
@@ -38,8 +38,8 @@ function Get-NormalizedSelectedFeatureIdsFromBackup {
     }
 
     return [PSCustomObject]@{
-        SelectedFeatures = @($selectedFeatures)
-        Errors = @($errors)
+        SelectedFeatures = $selectedFeatures.ToArray()
+        Errors = $errors.ToArray()
     }
 }
 
@@ -153,7 +153,7 @@ function Get-SelectedRegistryFeaturesForBackupValidation {
         }
     }
 
-    return @($selectedRegistryFeatures)
+    return $selectedRegistryFeatures.ToArray()
 }
 
 function New-RegistryBackupAllowListPlanMap {

@@ -188,12 +188,12 @@ function Convert-BackupDataToByteArray {
     }
 
     if ($Data -is [byte[]]) {
-        return $Data
+        return ,$Data
     }
 
     $items = @($Data)
     if ($items.Count -eq 0) {
-        return (New-Object byte[] 0)
+        return ,(New-Object byte[] 0)
     }
 
     foreach ($item in $items) {
@@ -216,7 +216,7 @@ function Convert-BackupDataToByteArray {
         $bytes[$i] = [byte][int]$items[$i]
     }
 
-    return $bytes
+    return ,$bytes
 }
 
 function Remove-RegistrySubKeyTreeIfExists {

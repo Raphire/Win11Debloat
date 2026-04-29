@@ -71,7 +71,7 @@ function ImportRegistryFile {
                 reg unload "HKU\Default" | Out-Null
                 $unloadExitCode = $LASTEXITCODE
                 if ($unloadExitCode -ne 0 -and -not $result.Error) {
-                    $result.Error = "Failed to unload temporary hive HKU\\Default (exit code: $unloadExitCode)"
+                    $result.Error = "Failed to unload registry hive HKU\Default (exit code: $unloadExitCode)"
                     $result.ExitCode = $unloadExitCode
                 }
             }

@@ -34,6 +34,10 @@ function Invoke-WithLoadedRestoreHive {
     finally {
         $global:LASTEXITCODE = 0
         reg unload 'HKU\Default' | Out-Null
+        $unloadExitCode = $LASTEXITCODE
+        if ($unloadExitCode -ne 0) {
+            throw "Failed to unload registry hive 'HKU\Default' (exit code: $unloadExitCode)"
+        }
     }
 }
 

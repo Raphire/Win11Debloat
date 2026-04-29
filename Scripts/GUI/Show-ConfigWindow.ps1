@@ -381,8 +381,11 @@ function Export-Configuration {
     $deploymentSettings = Get-DeploymentSettings -Owner $Owner -UserSelectionCombo $UserSelectionCombo -OtherUsernameTextBox $OtherUsernameTextBox
     $categoryDetails = Build-CategoryDetails -AppCount $selectedApps.Count -TweakCount $tweakSettings.Count -DeploymentSettings $deploymentSettings
 
-    $categories = Show-ImportExportConfigWindow -Owner $Owner -UsesDarkMode $UsesDarkMode -Title 'Export Configuration' -Prompt 'Select which settings to include in the export:' -DisabledCategories $disabledCategories -CategoryDetails $categoryDetails -ActionLabel 'Export Settings'
-    if (-not $categories) { return }
+    $categories = Show-ImportExportConfigWindow -Owner $Owner -UsesDarkMode $UsesDarkMode -Title 'Export Configuration' -Prompt 'Select the settings you wish to include in your export.' -DisabledCategories $disabledCategories -CategoryDetails $categoryDetails -ActionLabel 'Export Settings'
+    if (-not $categories) {
+        Write-Host 'Export canceled.'
+        return
+    }
 
     $config = @{ Version = '1.0' }
 
@@ -403,12 +406,19 @@ function Export-Configuration {
     $saveDialog.DefaultExt = '.json'
     $saveDialog.FileName = "Win11Debloat-Config-$(Get-Date -Format 'yyyyMMdd').json"
 
-    if ($saveDialog.ShowDialog($Owner) -ne $true) { return }
+    if ($saveDialog.ShowDialog($Owner) -ne $true) {
+        Write-Host 'Export save dialog canceled.'
+        return
+    }
+
+    Write-Host "Exporting configuration to '$($saveDialog.FileName)'... (Categories: $($categories -join ', '))"
 
     if (SaveToFile -Config $config -FilePath $saveDialog.FileName) {
+        Write-Host "Configuration exported successfully: $($saveDialog.FileName)"
         Show-MessageBox -Message "Configuration exported successfully." -Title 'Export Configuration' -Button 'OK' -Icon 'Information' | Out-Null
     }
     else {
+        Write-Error "Failed to export configuration to '$($saveDialog.FileName)'"
         Show-MessageBox -Message "Failed to export configuration" -Title 'Error' -Button 'OK' -Icon 'Error' | Out-Null
     }
 }
@@ -431,15 +441,22 @@ function Import-Configuration {
     $openDialog.Filter = 'JSON files (*.json)|*.json|All files (*.*)|*.*'
     $openDialog.DefaultExt = '.json'
 
-    if ($openDialog.ShowDialog($Owner) -ne $true) { return }
+    if ($openDialog.ShowDialog($Owner) -ne $true) {
+        Write-Host 'Import file dialog canceled.'
+        return
+    }
+
+    Write-Host "Importing configuration from '$($openDialog.FileName)'..."
 
     $config = LoadJsonFile -filePath $openDialog.FileName -expectedVersion '1.0'
     if (-not $config) {
+        Write-Error "Failed to read configuration file '$($openDialog.FileName)'"
         Show-MessageBox -Message "Failed to read configuration file" -Title 'Error' -Button 'OK' -Icon 'Error' | Out-Null
         return
     }
 
     if (-not $config.Version) {
+        Write-Error "Invalid configuration file format: '$($openDialog.FileName)'"
         Show-MessageBox -Message "Invalid configuration file format." -Title 'Error' -Button 'OK' -Icon 'Error' | Out-Null
         return
     }
@@ -447,16 +464,22 @@ function Import-Configuration {
     $availableCategories = Get-AvailableImportExportCategories -Config $config
 
     if ($availableCategories.Count -eq 0) {
-        Show-MessageBox -Message "The configuration file contains no importable data." -Title 'Import Configuration' -Button 'OK' -Icon 'Information' | Out-Null
+        Write-Warning "Configuration file '$($openDialog.FileName)' contains no importable data."
+        Show-MessageBox -Message "The selected configuration file contains no importable data." -Title 'Import Configuration' -Button 'OK' -Icon 'Error' | Out-Null
         return
     }
+
+    Write-Host "Available categories in config: $($availableCategories -join ', ')"
 
     $appCount = @($config.Apps | Where-Object { $_ -is [string] -and -not [string]::IsNullOrWhiteSpace($_) }).Count
     $tweakCount = @($config.Tweaks | Where-Object { $_ -and $_.Name -and $_.Value -eq $true }).Count
     $categoryDetails = Build-CategoryDetails -AppCount $appCount -TweakCount $tweakCount -DeploymentSettings @($config.Deployment)
 
-    $categories = Show-ImportExportConfigWindow -Owner $Owner -UsesDarkMode $UsesDarkMode -Title 'Import Configuration' -Prompt 'Select which settings to import:' -Categories $availableCategories -CategoryDetails $categoryDetails -ActionLabel 'Import Settings'
-    if (-not $categories) { return }
+    $categories = Show-ImportExportConfigWindow -Owner $Owner -UsesDarkMode $UsesDarkMode -Title 'Import Configuration' -Prompt 'Select the settings you wish to import. You can review and modify them before they are applied.' -Categories $availableCategories -CategoryDetails $categoryDetails -ActionLabel 'Import Settings'
+    if (-not $categories) {
+        Write-Host 'Import canceled.'
+        return
+    }
 
     if ($categories -contains 'Applications' -and $config.Apps) {
         $appIds = @(
@@ -466,6 +489,7 @@ function Import-Configuration {
             Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
         )
 
+        Write-Host "Importing $($appIds.Count) app selection(s)."
         Apply-ImportedApplications -AppsPanel $AppsPanel -AppIds $appIds
         
         if ($OnAppsImported) { 
@@ -473,12 +497,16 @@ function Import-Configuration {
         }
     }
     if ($categories -contains 'System Tweaks' -and $config.Tweaks) {
+        $tweakCount = @($config.Tweaks).Count
+        Write-Host "Importing $tweakCount tweak(s)."
         Apply-ImportedTweakSettings -Owner $Owner -UiControlMappings $UiControlMappings -TweakSettings @($config.Tweaks)
     }
     if ($categories -contains 'Deployment Settings' -and $config.Deployment) {
+        Write-Host 'Importing deployment settings.'
         Apply-ImportedDeploymentSettings -Owner $Owner -UserSelectionCombo $UserSelectionCombo -OtherUsernameTextBox $OtherUsernameTextBox -DeploymentSettings @($config.Deployment)
     }
 
+    Write-Host 'Configuration imported successfully.'
     Show-MessageBox -Message "Configuration imported successfully." -Title 'Import Configuration' -Button 'OK' -Icon 'Information' | Out-Null
 
     if ($OnImportCompleted) {

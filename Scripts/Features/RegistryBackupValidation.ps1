@@ -89,3 +89,261 @@ function Normalize-RegistryKeySnapshot {
         SubKeys = @($subKeys)
     }
 }
+
+function Test-RegistryBackupMatchesSelectedFeatures {
+    param(
+        [Parameter(Mandatory)]
+        [string[]]$SelectedFeatureIds,
+        [Parameter(Mandatory)]
+        [object[]]$RegistryKeys
+    )
+
+    $errors = New-Object System.Collections.Generic.List[string]
+
+    if (-not $script:Features -or $script:Features.Count -eq 0) {
+        $errors.Add('Unable to validate registry backup allowlist because feature definitions are not loaded.')
+        return @($errors)
+    }
+
+    $selectedRegistryFeatures = @(Get-SelectedRegistryFeaturesForBackupValidation -SelectedFeatureIds @($SelectedFeatureIds) -Errors $errors)
+
+    $capturePlans = @()
+    if ($errors.Count -eq 0 -and $selectedRegistryFeatures.Count -gt 0) {
+        $capturePlans = @(Get-RegistryBackupCapturePlans -SelectedRegistryFeatures @($selectedRegistryFeatures))
+    }
+
+    $planMap = New-RegistryBackupAllowListPlanMap -CapturePlans @($capturePlans)
+
+    if ($planMap.Count -eq 0 -and @($RegistryKeys).Count -gt 0) {
+        $errors.Add('Backup contains registry snapshots but no allowed registry paths were derived from SelectedFeatures.')
+    }
+
+    foreach ($rootSnapshot in @($RegistryKeys)) {
+        Test-RegistrySnapshotAgainstAllowList -Snapshot $rootSnapshot -PlanMap $planMap -Errors $errors
+    }
+
+    return @($errors)
+}
+
+function Get-SelectedRegistryFeaturesForBackupValidation {
+    param(
+        [Parameter(Mandatory)]
+        [string[]]$SelectedFeatureIds,
+        [Parameter(Mandatory)]
+        [System.Collections.Generic.List[string]]$Errors
+    )
+
+    $selectedRegistryFeatures = New-Object System.Collections.Generic.List[object]
+    foreach ($featureId in @($SelectedFeatureIds)) {
+        if (-not $script:Features.ContainsKey($featureId)) {
+            $Errors.Add("Selected feature '$featureId' was not found in the current feature catalog.")
+            continue
+        }
+
+        $feature = $script:Features[$featureId]
+        if ($feature -and -not [string]::IsNullOrWhiteSpace([string]$feature.RegistryKey)) {
+            $selectedRegistryFeatures.Add($feature)
+        }
+    }
+
+    return @($selectedRegistryFeatures)
+}
+
+function New-RegistryBackupAllowListPlanMap {
+    param(
+        [Parameter(Mandatory)]
+        [object[]]$CapturePlans
+    )
+
+    $planMap = @{}
+    foreach ($plan in @($CapturePlans)) {
+        $normalizedPath = Get-NormalizedRegistryPathKey -Path $plan.Path
+        if ([string]::IsNullOrWhiteSpace($normalizedPath)) {
+            continue
+        }
+
+        $planMap[$normalizedPath] = [PSCustomObject]@{
+            Path = $plan.Path
+            NormalizedPath = $normalizedPath
+            IncludeSubKeys = [bool]$plan.IncludeSubKeys
+            CaptureAllValues = [bool]$plan.CaptureAllValues
+            ValueNames = ConvertTo-RegistryValueNameSet -ValueNames @($plan.ValueNames)
+        }
+    }
+
+    return $planMap
+}
+
+function ConvertTo-RegistryValueNameSet {
+    param(
+        [string[]]$ValueNames
+    )
+
+    $valueNameSet = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
+    foreach ($valueName in @($ValueNames)) {
+        $null = $valueNameSet.Add([string]$valueName)
+    }
+
+    return $valueNameSet
+}
+
+function Test-RegistrySnapshotAgainstAllowList {
+    param(
+        [Parameter(Mandatory)]
+        $Snapshot,
+        [Parameter(Mandatory)]
+        [hashtable]$PlanMap,
+        [Parameter(Mandatory)]
+        [System.Collections.Generic.List[string]]$Errors
+    )
+
+    $snapshotPath = [string]$Snapshot.Path
+    $normalizedPath = Get-NormalizedRegistryPathKey -Path $snapshotPath
+    if ([string]::IsNullOrWhiteSpace($normalizedPath)) {
+        $Errors.Add("Backup contains unsupported registry path '$snapshotPath'.")
+        return
+    }
+
+    $planMatch = Find-RegistryAllowListPlanMatch -NormalizedPath $normalizedPath -PlanMap $PlanMap
+    if ($null -eq $planMatch) {
+        $Errors.Add("Backup contains unexpected registry path '$snapshotPath' that is not allowed by SelectedFeatures.")
+        return
+    }
+
+    foreach ($valueSnapshot in @($Snapshot.Values)) {
+        $valueName = if ($null -ne $valueSnapshot.Name) { [string]$valueSnapshot.Name } else { '' }
+        $valueExists = [bool]$valueSnapshot.Exists
+
+        if (-not (Test-RegistryValueAllowedByPlan -PlanMatch $planMatch -ValueName $valueName)) {
+            $Errors.Add("Backup contains unexpected value '$valueName' under '$snapshotPath'.")
+        }
+
+        $kindName = if ($valueSnapshot.PSObject.Properties['Kind']) { [string]$valueSnapshot.Kind } else { '' }
+        $valueReference = Get-RegistryValueReferenceForError -SnapshotPath $snapshotPath -ValueName $valueName
+        if ($valueExists) {
+            if (-not (Test-RegistryValueKindNameSupported -KindName $kindName)) {
+                $Errors.Add("Backup contains unsupported registry value kind '$kindName' for '$valueReference'.")
+            }
+        }
+        elseif (-not [string]::IsNullOrWhiteSpace($kindName)) {
+            $Errors.Add("Backup value '$valueReference' must not define Kind when Exists is false.")
+        }
+    }
+
+    foreach ($subKeySnapshot in @($Snapshot.SubKeys)) {
+        Test-RegistrySnapshotAgainstAllowList -Snapshot $subKeySnapshot -PlanMap $PlanMap -Errors $Errors
+    }
+}
+
+function Test-RegistryValueAllowedByPlan {
+    param(
+        [Parameter(Mandatory)]
+        $PlanMatch,
+        [Parameter(Mandatory)]
+        [string]$ValueName
+    )
+
+    if ($PlanMatch.CaptureAllValues -or $PlanMatch.IsDescendant) {
+        return $true
+    }
+
+    return $PlanMatch.ValueNames.Contains($ValueName)
+}
+
+function Get-RegistryValueReferenceForError {
+    param(
+        [Parameter(Mandatory)]
+        [string]$SnapshotPath,
+        [Parameter(Mandatory)]
+        [string]$ValueName
+    )
+
+    if ([string]::IsNullOrWhiteSpace($ValueName)) {
+        return "$SnapshotPath\\(Default)"
+    }
+
+    return "$SnapshotPath\\$ValueName"
+}
+
+function Find-RegistryAllowListPlanMatch {
+    param(
+        [Parameter(Mandatory)]
+        [string]$NormalizedPath,
+        [Parameter(Mandatory)]
+        [hashtable]$PlanMap
+    )
+
+    if ($PlanMap.ContainsKey($NormalizedPath)) {
+        $plan = $PlanMap[$NormalizedPath]
+        return [PSCustomObject]@{
+            IsDescendant = $false
+            CaptureAllValues = [bool]$plan.CaptureAllValues
+            ValueNames = $plan.ValueNames
+        }
+    }
+
+    foreach ($plan in @($PlanMap.Values)) {
+        if (-not [bool]$plan.IncludeSubKeys) {
+            continue
+        }
+
+        $subKeyPrefix = "$($plan.NormalizedPath)\\"
+        if ($NormalizedPath.StartsWith($subKeyPrefix, [System.StringComparison]::OrdinalIgnoreCase)) {
+            return [PSCustomObject]@{
+                IsDescendant = $true
+                CaptureAllValues = $true
+                ValueNames = $plan.ValueNames
+            }
+        }
+    }
+
+    return $null
+}
+
+function Get-NormalizedRegistryPathKey {
+    param(
+        [Parameter(Mandatory)]
+        [string]$Path
+    )
+
+    $parts = Split-RegistryPath -path $Path
+    if (-not $parts) {
+        return $null
+    }
+
+    $hiveName = [string]$parts.Hive
+    if ([string]::IsNullOrWhiteSpace($hiveName)) {
+        return $null
+    }
+
+    $normalizedHive = $hiveName.ToUpperInvariant()
+    $subKey = [string]$parts.SubKey
+    if ([string]::IsNullOrWhiteSpace($subKey)) {
+        return $normalizedHive
+    }
+
+    $normalizedSubKey = ($subKey -replace '/', '\\').Trim('\')
+    if ([string]::IsNullOrWhiteSpace($normalizedSubKey)) {
+        return $normalizedHive
+    }
+
+    return "$normalizedHive\\$normalizedSubKey"
+}
+
+function Test-RegistryValueKindNameSupported {
+    param(
+        [string]$KindName
+    )
+
+    if ([string]::IsNullOrWhiteSpace($KindName)) {
+        return $false
+    }
+
+    try {
+        $kind = [System.Enum]::Parse([Microsoft.Win32.RegistryValueKind], $KindName, $true)
+        return $kind -ne [Microsoft.Win32.RegistryValueKind]::Unknown
+    }
+    catch {
+        return $false
+    }
+}

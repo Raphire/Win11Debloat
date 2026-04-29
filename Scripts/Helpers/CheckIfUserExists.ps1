@@ -19,27 +19,14 @@ function CheckIfUserExists {
     }
 
     try {
-        # Try to find users directory via 2 methods to account for any custom user profile locations
-        $rootPaths = @(
-            (Join-Path $env:SystemDrive 'Users')
-            (Split-Path -Path $env:USERPROFILE -Parent)
-        ) | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Select-Object -Unique
+        $profilePath = ResolveUserProfilePath -UserName $candidateUserName
 
-        $profileDirectoryExists = $false
-        foreach ($rootPath in $rootPaths) {
-            if (-not (Test-Path -LiteralPath $rootPath -PathType Container)) {
-                continue
-            }
-
-            $candidateUserPath = Join-Path $rootPath $candidateUserName
-            if (Test-Path -LiteralPath $candidateUserPath -PathType Container) {
-                $profileDirectoryExists = $true
-                break
-            }
+        if (-not $profilePath) {
+            return $false
         }
 
-        if (-not $profileDirectoryExists) {
-            return $false
+        if ($candidateUserName -ieq 'Default') {
+            return $true
         }
 
         $accountExists = $false

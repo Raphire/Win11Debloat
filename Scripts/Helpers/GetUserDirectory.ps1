@@ -12,6 +12,43 @@ function GetUserDirectory {
             AwaitKeyToExit
         }
 
+        if ($userName -eq "*") {
+            $rootPaths = @(
+                (Join-Path $env:SystemDrive 'Users')
+                (Split-Path -Path $env:USERPROFILE -Parent)
+            ) | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Select-Object -Unique
+
+            foreach ($rootPath in $rootPaths) {
+                if (-not (Test-Path -LiteralPath $rootPath -PathType Container)) {
+                    continue
+                }
+
+                $wildcardPath = if ([string]::IsNullOrWhiteSpace($fileName)) {
+                    Join-Path $rootPath '*'
+                }
+                else {
+                    Join-Path (Join-Path $rootPath '*') $fileName
+                }
+
+                return $wildcardPath
+            }
+        }
+
+        $resolvedUserDirectory = ResolveUserProfilePath -UserName $userName
+        if ($resolvedUserDirectory) {
+            $userPath = if ([string]::IsNullOrWhiteSpace($fileName)) {
+                $resolvedUserDirectory
+            }
+            else {
+                Join-Path $resolvedUserDirectory $fileName
+            }
+
+            if ((Test-Path -LiteralPath $userPath) -or ((Test-Path -LiteralPath $resolvedUserDirectory -PathType Container) -and (-not $exitIfPathNotFound))) {
+                return $userPath
+            }
+        }
+
+        # Legacy fallback path probing.
         $userDirectoryExists = Test-Path "$env:SystemDrive\Users\$userName"
         $userPath = "$env:SystemDrive\Users\$userName\$fileName"
 

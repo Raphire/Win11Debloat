@@ -320,6 +320,7 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 
 # Helper functions
 . "$PSScriptRoot/Scripts/Helpers/AddParameter.ps1"
+. "$PSScriptRoot/Scripts/Helpers/ResolveUserProfilePath.ps1"
 . "$PSScriptRoot/Scripts/Helpers/CheckIfUserExists.ps1"
 . "$PSScriptRoot/Scripts/Helpers/CheckModernStandbySupport.ps1"
 . "$PSScriptRoot/Scripts/Helpers/GenerateAppsList.ps1"

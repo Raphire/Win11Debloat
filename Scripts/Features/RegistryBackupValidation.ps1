@@ -133,9 +133,12 @@ function Get-SelectedRegistryFeaturesForBackupValidation {
         [AllowEmptyCollection()]
         [string[]]$SelectedFeatureIds,
         [Parameter(Mandatory)]
-        [AllowEmptyCollection()]
-        [System.Collections.Generic.List[string]]$Errors
+        $Errors
     )
+
+    if ($null -eq $Errors -or -not ($Errors -is [System.Collections.IList])) {
+        throw 'Get-SelectedRegistryFeaturesForBackupValidation requires Errors to be a mutable list collection.'
+    }
 
     $selectedRegistryFeatures = New-Object System.Collections.Generic.List[object]
     foreach ($featureId in @($SelectedFeatureIds)) {

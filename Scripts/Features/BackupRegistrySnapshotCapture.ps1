@@ -99,7 +99,7 @@ function Invoke-WithLoadedBackupHive {
     }
 
     $global:LASTEXITCODE = 0
-    reg load 'HKU\Default' $hiveDatPath | Out-Null
+    reg load 'HKU\Default' "$hiveDatPath" | Out-Null
     $loadExitCode = $LASTEXITCODE
     if ($loadExitCode -ne 0) {
         throw "Failed to load user hive for registry backup at '$hiveDatPath' (exit code: $loadExitCode)"

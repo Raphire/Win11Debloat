@@ -22,7 +22,7 @@ function Invoke-WithLoadedRestoreHive {
     }
 
     $global:LASTEXITCODE = 0
-    reg load 'HKU\Default' $hiveDatPath | Out-Null
+    reg load 'HKU\Default' "$hiveDatPath" | Out-Null
     $loadExitCode = $LASTEXITCODE
     if ($loadExitCode -ne 0) {
         throw "Failed to load target user hive '$hiveDatPath' (exit code: $loadExitCode)."

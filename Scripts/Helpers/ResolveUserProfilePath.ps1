@@ -9,32 +9,50 @@ function ResolveUserSid {
         return $null
     }
 
-    try {
-        $escapedUserName = $candidateUserName.Replace("'", "''")
-        $matchingAccounts = @(Get-CimInstance -ClassName Win32_UserAccount -Filter "Name='$escapedUserName'" -ErrorAction Stop)
-        if ($matchingAccounts.Count -gt 0) {
-            $localAccount = $matchingAccounts | Where-Object { $_.LocalAccount -eq $true } | Select-Object -First 1
-            if ($localAccount) {
-                return $localAccount.SID
-            }
+    $nameCandidates = @($candidateUserName)
+    if ($candidateUserName.Contains('\')) {
+        $nameCandidates += ($candidateUserName -split '\\')[-1]
+    }
+    if ($candidateUserName.Contains('@')) {
+        $nameCandidates += ($candidateUserName -split '@')[0]
+    }
+    $nameCandidates = $nameCandidates | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Select-Object -Unique
 
-            return $matchingAccounts[0].SID
+    if (Get-Command -Name Get-LocalUser -ErrorAction SilentlyContinue) {
+        try {
+            $localUsers = @(Get-LocalUser)
+            foreach ($candidate in $nameCandidates) {
+                $matchingLocalUser = $localUsers | Where-Object {
+                    ($_.Name -and $_.Name.Equals($candidate, [System.StringComparison]::OrdinalIgnoreCase)) -or
+                    ($_.FullName -and $_.FullName.Equals($candidate, [System.StringComparison]::OrdinalIgnoreCase))
+                } | Select-Object -First 1
+
+                if ($matchingLocalUser -and $matchingLocalUser.SID) {
+                    return $matchingLocalUser.SID.Value
+                }
+            }
+        }
+        catch {
+            # Fallback handled below.
+        }
+    }
+
+    try {
+        $matchingAccounts = @(Get-CimInstance -ClassName Win32_UserAccount -Filter "LocalAccount=True" -ErrorAction Stop)
+        foreach ($candidate in $nameCandidates) {
+            $matchingAccount = $matchingAccounts | Where-Object {
+                ($_.Name -and $_.Name.Equals($candidate, [System.StringComparison]::OrdinalIgnoreCase)) -or
+                ($_.FullName -and $_.FullName.Equals($candidate, [System.StringComparison]::OrdinalIgnoreCase)) -or
+                ($_.Caption -and $_.Caption.Equals("$env:COMPUTERNAME\$candidate", [System.StringComparison]::OrdinalIgnoreCase))
+            } | Select-Object -First 1
+
+            if ($matchingAccount -and $matchingAccount.SID) {
+                return $matchingAccount.SID
+            }
         }
     }
     catch {
         # Fallback handled below.
-    }
-
-    if (Get-Command -Name Get-LocalUser -ErrorAction SilentlyContinue) {
-        try {
-            $localUser = Get-LocalUser -Name $candidateUserName -ErrorAction Stop
-            if ($localUser -and $localUser.SID) {
-                return $localUser.SID.Value
-            }
-        }
-        catch {
-            # No local account match.
-        }
     }
 
     return $null

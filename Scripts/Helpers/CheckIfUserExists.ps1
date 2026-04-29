@@ -29,27 +29,8 @@ function CheckIfUserExists {
             return $true
         }
 
-        $accountExists = $false
-
-        try {
-            $escapedUserName = $candidateUserName.Replace("'", "''")
-            $matchingAccounts = @(Get-CimInstance -ClassName Win32_UserAccount -Filter "Name='$escapedUserName'" -ErrorAction Stop)
-            $accountExists = ($matchingAccounts.Count -gt 0)
-        }
-        catch {
-            # Fall back to local account lookup if CIM is unavailable.
-            if (Get-Command -Name Get-LocalUser -ErrorAction SilentlyContinue) {
-                try {
-                    $null = Get-LocalUser -Name $candidateUserName -ErrorAction Stop
-                    $accountExists = $true
-                }
-                catch {
-                    $accountExists = $false
-                }
-            }
-        }
-
-        return $accountExists
+        $resolvedSid = ResolveUserSid -UserName $candidateUserName
+        return -not [string]::IsNullOrWhiteSpace($resolvedSid)
 
     }
     catch {

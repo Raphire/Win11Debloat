@@ -1032,7 +1032,7 @@
                      },
                      {
                          "FeatureId":  "CombineTaskbarAlways",
-                         "Label":  "Combine Taskbar Always Always combine taskbar buttons and hide labels for the main display",
+                         "Label":  "Always combine taskbar buttons and hide labels for the main display",
                          "Category":  "Taskbar",
                          "RegistryKey":  "Combine_Taskbar_Always.reg",
                          "ApplyText":  "Setting the taskbar on the main display to always combine buttons and hide labels...",
@@ -1043,7 +1043,7 @@
                      },
                      {
                          "FeatureId":  "CombineMMTaskbarAlways",
-                         "Label":  "Combine Multi-Monitor Taskbar Always Always combine taskbar buttons and hide labels for secondary displays",
+                         "Label":  "Always combine taskbar buttons and hide labels for secondary displays",
                          "Category":  "Taskbar",
                          "RegistryKey":  "Combine_MMTaskbar_Always.reg",
                          "ApplyText":  "Setting the taskbar on secondary displays to always combine buttons and hide labels...",
@@ -1054,51 +1054,51 @@
                      },
                      {
                          "FeatureId":  "CombineTaskbarWhenFull",
-                         "Label":  "Combine Taskbar When Full Combine taskbar buttons and hide labels when taskbar is full for the main display",
+                         "Label":  "Combine taskbar buttons and hide labels when taskbar is full for the main display",
                          "Category":  "Taskbar",
                          "RegistryKey":  "Combine_Taskbar_When_Full.reg",
                          "ApplyText":  "Setting the taskbar on the main display to only combine buttons and hide labels when the taskbar is full...",
                          "RegistryUndoKey":  "Combine_Taskbar_Always.reg",
                          "MinVersion":  22000,
                          "MaxVersion":  null,
-                         "UndoLabel":  "Combine Taskbar Always Combine taskbar buttons and hide labels when taskbar is full for the main display"
+                         "UndoLabel":  "Always combine taskbar buttons and hide labels for the main display"
                      },
                      {
                          "FeatureId":  "CombineMMTaskbarWhenFull",
-                         "Label":  "Combine Multi-Monitor Taskbar When Full Combine taskbar buttons and hide labels when taskbar is full for secondary displays",
+                         "Label":  "Combine taskbar buttons and hide labels when taskbar is full for secondary displays",
                          "Category":  "Taskbar",
                          "RegistryKey":  "Combine_MMTaskbar_When_Full.reg",
                          "ApplyText":  "Setting the taskbar on secondary displays to only combine buttons and hide labels when the taskbar is full...",
                          "RegistryUndoKey":  "Combine_MMTaskbar_Always.reg",
                          "MinVersion":  22000,
                          "MaxVersion":  null,
-                         "UndoLabel":  "Combine Multi-Monitor Taskbar Always Combine taskbar buttons and hide labels when taskbar is full for secondary displays"
+                         "UndoLabel":  "Always combine taskbar buttons and hide labels for secondary displays"
                      },
                      {
                          "FeatureId":  "CombineTaskbarNever",
-                         "Label":  "Never Combine Taskbar Never combine taskbar buttons and show labels for the main display",
+                         "Label":  "Never combine taskbar buttons and show labels for the main display",
                          "Category":  "Taskbar",
                          "RegistryKey":  "Combine_Taskbar_Never.reg",
                          "ApplyText":  "Setting the taskbar on the main display to never combine buttons or hide labels...",
                          "RegistryUndoKey":  "Combine_Taskbar_Always.reg",
                          "MinVersion":  22000,
                          "MaxVersion":  null,
-                         "UndoLabel":  "Combine Taskbar Always Never combine taskbar buttons and show labels for the main display"
+                         "UndoLabel":  "Always combine taskbar buttons and hide labels for the main display"
                      },
                      {
                          "FeatureId":  "CombineMMTaskbarNever",
-                         "Label":  "Never Combine Multi-Monitor Taskbar Never combine taskbar buttons and show labels for secondary displays",
+                         "Label":  "Never combine taskbar buttons and show labels for secondary displays",
                          "Category":  "Taskbar",
                          "RegistryKey":  "Combine_MMTaskbar_Never.reg",
                          "ApplyText":  "Setting the taskbar on secondary displays to never combine buttons or hide labels...",
                          "RegistryUndoKey":  "Combine_MMTaskbar_Always.reg",
                          "MinVersion":  22000,
                          "MaxVersion":  null,
-                         "UndoLabel":  "Combine Multi-Monitor Taskbar Always Never combine taskbar buttons and show labels for secondary displays"
+                         "UndoLabel":  "Always combine taskbar buttons and hide labels for secondary displays"
                      },
                      {
                          "FeatureId":  "MMTaskbarModeAll",
-                         "Label":  "Show All Taskbar Icons Show app icons on all taskbars",
+                         "Label":  "Show app icons on all taskbars",
                          "Category":  "Taskbar",
                          "RegistryKey":  "MMTaskbarMode_All.reg",
                          "ApplyText":  "Setting the taskbar to show app icons on all taskbars...",
@@ -1109,29 +1109,29 @@
                      },
                      {
                          "FeatureId":  "MMTaskbarModeMainActive",
-                         "Label":  "Show Taskbar Icons Main + Active Show app icons on main taskbar and on taskbar where the windows is open",
+                         "Label":  "Show app icons on main taskbar and on taskbar where the windows is open",
                          "Category":  "Taskbar",
                          "RegistryKey":  "MMTaskbarMode_Main_Active.reg",
                          "ApplyText":  "Setting the taskbar to show app icons on main taskbar and on taskbar where the windows is open...",
                          "RegistryUndoKey":  "MMTaskbarMode_All.reg",
                          "MinVersion":  22000,
                          "MaxVersion":  null,
-                         "UndoLabel":  "Show All Taskbar Icons Show app icons on main taskbar and on taskbar where the windows is open"
+                         "UndoLabel":  "Show app icons on all taskbars"
                      },
                      {
                          "FeatureId":  "MMTaskbarModeActive",
-                         "Label":  "Show Taskbar Icons Active Only Show app icons only on taskbar where the window is open",
+                         "Label":  "Show app icons only on taskbar where the window is open",
                          "Category":  "Taskbar",
                          "RegistryKey":  "MMTaskbarMode_Active.reg",
                          "ApplyText":  "Setting the taskbar to only show app icons on the taskbar where the window is open...",
                          "RegistryUndoKey":  "MMTaskbarMode_All.reg",
                          "MinVersion":  22000,
                          "MaxVersion":  null,
-                         "UndoLabel":  "Show All Taskbar Icons Show app icons only on taskbar where the window is open"
+                         "UndoLabel":  "Show app icons on all taskbars"
                      },
                      {
                          "FeatureId":  "ExplorerToHome",
-                         "Label":  "Explorer to Home Change the default location that File Explorer opens to \u0027Home\u0027",
+                         "Label":  "Change the default location that File Explorer opens to \u0027Home\u0027",
                          "Category":  "File Explorer",
                          "RegistryKey":  "Launch_File_Explorer_To_Home.reg",
                          "ApplyText":  "Changing the default location that File Explorer opens to, to \u0027Home\u0027...",
@@ -1142,36 +1142,36 @@
                      },
                      {
                          "FeatureId":  "ExplorerToThisPC",
-                         "Label":  "Explorer to This PC Change the default location that File Explorer opens to \u0027This PC\u0027",
+                         "Label":  "Change the default location that File Explorer opens to \u0027This PC\u0027",
                          "Category":  "File Explorer",
                          "RegistryKey":  "Launch_File_Explorer_To_This_PC.reg",
                          "ApplyText":  "Changing the default location that File Explorer opens to, to \u0027This PC\u0027...",
                          "RegistryUndoKey":  "Launch_File_Explorer_To_Home.reg",
                          "MinVersion":  null,
                          "MaxVersion":  null,
-                         "UndoLabel":  "Explorer to Home Change the default location that File Explorer opens to \u0027This PC\u0027"
+                         "UndoLabel":  "Change the default location that File Explorer opens to \u0027This PC\u0027"
                      },
                      {
                          "FeatureId":  "ExplorerToDownloads",
-                         "Label":  "Explorer to Downloads Change the default location that File Explorer opens to \u0027Downloads\u0027",
+                         "Label":  "Change the default location that File Explorer opens to \u0027Downloads\u0027",
                          "Category":  "File Explorer",
                          "RegistryKey":  "Launch_File_Explorer_To_Downloads.reg",
                          "ApplyText":  "Changing the default location that File Explorer opens to, to \u0027Downloads\u0027...",
                          "RegistryUndoKey":  "Launch_File_Explorer_To_Home.reg",
                          "MinVersion":  null,
                          "MaxVersion":  null,
-                         "UndoLabel":  "Explorer to Home Change the default location that File Explorer opens to \u0027Downloads\u0027"
+                         "UndoLabel":  "Change the default location that File Explorer opens to \u0027Downloads\u0027"
                      },
                      {
                          "FeatureId":  "ExplorerToOneDrive",
-                         "Label":  "Explorer to OneDrive Change the default location that File Explorer opens to \u0027OneDrive\u0027",
+                         "Label":  "Change the default location that File Explorer opens to \u0027OneDrive\u0027",
                          "Category":  "File Explorer",
                          "RegistryKey":  "Launch_File_Explorer_To_OneDrive.reg",
                          "ApplyText":  "Changing the default location that File Explorer opens to, to \u0027OneDrive\u0027...",
                          "RegistryUndoKey":  "Launch_File_Explorer_To_Home.reg",
                          "MinVersion":  null,
                          "MaxVersion":  null,
-                         "UndoLabel":  "Explorer to Home Change the default location that File Explorer opens to \u0027OneDrive\u0027"
+                         "UndoLabel":  "Change the default location that File Explorer opens to \u0027OneDrive\u0027"
                      },
                      {
                          "FeatureId":  "ShowKnownFileExt",

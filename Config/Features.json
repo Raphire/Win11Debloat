@@ -1215,7 +1215,7 @@
     },
     {
       "FeatureId": "ForceRemoveEdge",
-      "Label": "Force Remove Edge Forcefully uninstall Microsoft Edge. NOT RECOMMENDED!",
+      "Label": "Forcefully uninstall Microsoft Edge. NOT RECOMMENDED!",
       "Category": null,
       "RegistryKey": null,
       "ApplyText": null,

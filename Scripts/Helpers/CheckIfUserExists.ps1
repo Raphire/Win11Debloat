@@ -9,14 +9,8 @@ function CheckIfUserExists {
 
     $lookupName = $userName.Trim()
 
-    # Strip DOMAIN\ prefix or @domain suffix to get the local username for character validation.
-    $localUserName = $lookupName
-    if ($localUserName.Contains('\')) {
-        $localUserName = ($localUserName -split '\\')[-1]
-    }
-    if ($localUserName.Contains('@')) {
-        $localUserName = ($localUserName -split '@')[0]
-    }
+    # Validate special characters against the local username segment (user in DOMAIN\user or user@domain).
+    $localUserName = GetLocalUserNameSegment -UserName $lookupName
 
     if ($localUserName.IndexOfAny([System.IO.Path]::GetInvalidFileNameChars()) -ge 0) {
         return $false
@@ -28,9 +22,8 @@ function CheckIfUserExists {
     }
 
     try {
-        $profilePath = ResolveUserProfilePath -UserName $lookupName
-
-        if (-not $profilePath) {
+        $userContext = ResolveUserProfileContext -UserName $lookupName
+        if (-not $userContext -or [string]::IsNullOrWhiteSpace($userContext.ProfilePath)) {
             return $false
         }
 
@@ -38,8 +31,7 @@ function CheckIfUserExists {
             return $true
         }
 
-        $resolvedSid = ResolveUserSid -UserName $lookupName
-        return -not [string]::IsNullOrWhiteSpace($resolvedSid)
+        return -not [string]::IsNullOrWhiteSpace($userContext.UserSid)
 
     }
     catch {

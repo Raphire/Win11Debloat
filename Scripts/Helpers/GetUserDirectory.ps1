@@ -7,11 +7,6 @@ function GetUserDirectory {
     )
 
     try {
-        if (-not (CheckIfUserExists -userName $userName) -and $userName -ne "*") {
-            Write-Error "User $userName does not exist on this system"
-            AwaitKeyToExit
-        }
-
         if ($userName -eq "*") {
             $rootPaths = @(
                 (Join-Path $env:SystemDrive 'Users')
@@ -34,7 +29,8 @@ function GetUserDirectory {
             }
         }
 
-        $resolvedUserDirectory = ResolveUserProfilePath -UserName $userName
+        $userContext = ResolveUserProfileContext -UserName $userName
+        $resolvedUserDirectory = if ($userContext) { $userContext.ProfilePath } else { $null }
         if ($resolvedUserDirectory) {
             $userPath = if ([string]::IsNullOrWhiteSpace($fileName)) {
                 $resolvedUserDirectory

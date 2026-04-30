@@ -13,6 +13,207 @@ function NormalizeUserLookupValue {
     return $normalized
 }
 
+if (-not $script:ResolvedUserSidCache) {
+    $script:ResolvedUserSidCache = @{}
+}
+
+function GetUserLookupCacheKey {
+    param(
+        [string]$Value
+    )
+
+    $normalizedValue = NormalizeUserLookupValue -Value $Value
+    if ([string]::IsNullOrWhiteSpace($normalizedValue)) {
+        return ''
+    }
+
+    return $normalizedValue.ToLowerInvariant()
+}
+
+function EscapeWqlString {
+    param(
+        [string]$Value
+    )
+
+    if ($null -eq $Value) {
+        return ''
+    }
+
+    return $Value -replace "'", "''"
+}
+
+function GetLocalUserNameSegment {
+    param(
+        [string]$UserName
+    )
+
+    $normalizedName = NormalizeUserLookupValue -Value $UserName
+    if ([string]::IsNullOrWhiteSpace($normalizedName)) {
+        return ''
+    }
+
+    if ($normalizedName.Contains('\')) {
+        return NormalizeUserLookupValue -Value (($normalizedName -split '\\')[-1])
+    }
+
+    if ($normalizedName.Contains('@')) {
+        return NormalizeUserLookupValue -Value (($normalizedName -split '@')[0])
+    }
+
+    return $normalizedName
+}
+
+function SetResolvedUserSidCache {
+    param(
+        [string[]]$Candidates,
+        [string]$Sid
+    )
+
+    if ([string]::IsNullOrWhiteSpace($Sid)) {
+        return
+    }
+
+    foreach ($candidate in @($Candidates)) {
+        $cacheKey = GetUserLookupCacheKey -Value $candidate
+        if ($cacheKey) {
+            $script:ResolvedUserSidCache[$cacheKey] = $Sid
+        }
+    }
+}
+
+function GetCachedResolvedUserSid {
+    param(
+        [string[]]$Candidates
+    )
+
+    foreach ($candidate in @($Candidates)) {
+        $cacheKey = GetUserLookupCacheKey -Value $candidate
+        if ($cacheKey -and $script:ResolvedUserSidCache.ContainsKey($cacheKey)) {
+            return $script:ResolvedUserSidCache[$cacheKey]
+        }
+    }
+
+    return $null
+}
+
+function TryResolveSidByNtAccount {
+    param(
+        [string]$UserName
+    )
+
+    if ([string]::IsNullOrWhiteSpace($UserName)) {
+        return $null
+    }
+
+    try {
+        $ntAccount = [System.Security.Principal.NTAccount]::new($UserName)
+        $sid = $ntAccount.Translate([System.Security.Principal.SecurityIdentifier])
+        if ($sid) {
+            return $sid.Value
+        }
+    }
+    catch {
+        # Fallback handled by caller.
+    }
+
+    return $null
+}
+
+function TryResolveSidByLocalLookup {
+    param(
+        [string[]]$Candidates
+    )
+
+    $lookupCandidates = @($Candidates) | ForEach-Object { NormalizeUserLookupValue -Value $_ } | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Select-Object -Unique
+    if ($lookupCandidates.Count -eq 0) {
+        return $null
+    }
+
+    if (Get-Command -Name Get-LocalUser -ErrorAction SilentlyContinue) {
+        foreach ($candidate in $lookupCandidates) {
+            try {
+                $matchingLocalUser = Get-LocalUser -Name $candidate -ErrorAction Stop | Select-Object -First 1
+                if ($matchingLocalUser -and $matchingLocalUser.SID) {
+                    return $matchingLocalUser.SID.Value
+                }
+            }
+            catch {
+                # Continue to next lookup strategy.
+            }
+        }
+    }
+
+    foreach ($candidate in $lookupCandidates) {
+        try {
+            $escapedCandidate = EscapeWqlString -Value $candidate
+            $escapedComputerName = EscapeWqlString -Value $env:COMPUTERNAME
+            $filter = "LocalAccount=True AND (Name='$escapedCandidate' OR FullName='$escapedCandidate' OR Caption='$escapedComputerName\$escapedCandidate')"
+            $matchingAccount = Get-CimInstance -ClassName Win32_UserAccount -Filter $filter -ErrorAction Stop | Select-Object -First 1
+
+            if ($matchingAccount -and $matchingAccount.SID) {
+                return $matchingAccount.SID
+            }
+        }
+        catch {
+            # Continue to next lookup strategy.
+        }
+    }
+
+    return $null
+}
+
+function TryResolveSidFromProfileList {
+    param(
+        [string[]]$Candidates
+    )
+
+    $lookupCandidates = @($Candidates) | ForEach-Object { NormalizeUserLookupValue -Value $_ } | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Select-Object -Unique
+    if ($lookupCandidates.Count -eq 0) {
+        return $null
+    }
+
+    try {
+        $profileListPath = 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList'
+        foreach ($sidKey in @(Get-ChildItem -LiteralPath $profileListPath -ErrorAction Stop)) {
+            try {
+                $imagePath = Get-ItemPropertyValue -LiteralPath $sidKey.PSPath -Name 'ProfileImagePath' -ErrorAction Stop
+                if ([string]::IsNullOrWhiteSpace($imagePath)) { continue }
+
+                $expandedPath = [System.Environment]::ExpandEnvironmentVariables($imagePath)
+                $leafName = NormalizeUserLookupValue -Value (Split-Path -Leaf $expandedPath)
+
+                foreach ($candidate in $lookupCandidates) {
+                    if ($leafName -ieq $candidate) {
+                        return $sidKey.PSChildName
+                    }
+                }
+            }
+            catch {
+                continue
+            }
+        }
+    }
+    catch {
+        # Fallback handled by caller.
+    }
+
+    return $null
+}
+
+function NewResolvedUserContext {
+    param(
+        [string]$UserName,
+        [string]$UserSid,
+        [string]$ProfilePath
+    )
+
+    return [PSCustomObject]@{
+        UserName = $UserName
+        UserSid = $UserSid
+        ProfilePath = $ProfilePath
+    }
+}
+
 function ResolveUserSid {
     param(
         [Parameter(Mandatory)]
@@ -24,90 +225,87 @@ function ResolveUserSid {
         return $null
     }
 
-    $nameCandidates = @($candidateUserName)
-    if ($candidateUserName.Contains('\')) {
-        $nameCandidates += (NormalizeUserLookupValue -Value (($candidateUserName -split '\\')[-1]))
-    }
-    if ($candidateUserName.Contains('@')) {
-        $nameCandidates += (NormalizeUserLookupValue -Value (($candidateUserName -split '@')[0]))
-    }
-    $nameCandidates = $nameCandidates | ForEach-Object { NormalizeUserLookupValue -Value $_ } | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Select-Object -Unique
-
-    if (Get-Command -Name Get-LocalUser -ErrorAction SilentlyContinue) {
-        try {
-            $localUsers = @(Get-LocalUser)
-            foreach ($candidate in $nameCandidates) {
-                $matchingLocalUser = $localUsers | Where-Object {
-                    ((NormalizeUserLookupValue -Value $_.Name) -eq $candidate) -or
-                    ((NormalizeUserLookupValue -Value $_.FullName) -eq $candidate)
-                } | Select-Object -First 1
-
-                if ($matchingLocalUser -and $matchingLocalUser.SID) {
-                    return $matchingLocalUser.SID.Value
-                }
-            }
-        }
-        catch {
-            # Fallback handled below.
-        }
+    $hasQualifiedIdentity = $candidateUserName.Contains('\') -or $candidateUserName.Contains('@')
+    $localNameSegment = GetLocalUserNameSegment -UserName $candidateUserName
+    $leafNameCandidates = @()
+    if ($hasQualifiedIdentity -and -not [string]::IsNullOrWhiteSpace($localNameSegment) -and $localNameSegment -ine $candidateUserName) {
+        $leafNameCandidates = @($localNameSegment)
     }
 
-    try {
-        $matchingAccounts = @(Get-CimInstance -ClassName Win32_UserAccount -Filter "LocalAccount=True" -ErrorAction Stop)
-        foreach ($candidate in $nameCandidates) {
-            $matchingAccount = $matchingAccounts | Where-Object {
-                ((NormalizeUserLookupValue -Value $_.Name) -eq $candidate) -or
-                ((NormalizeUserLookupValue -Value $_.FullName) -eq $candidate) -or
-                ((NormalizeUserLookupValue -Value $_.Caption) -eq (NormalizeUserLookupValue -Value "$env:COMPUTERNAME\$candidate"))
-            } | Select-Object -First 1
-
-            if ($matchingAccount -and $matchingAccount.SID) {
-                return $matchingAccount.SID
-            }
-        }
+    $cacheCandidates = if ($hasQualifiedIdentity) {
+        @($candidateUserName)
     }
-    catch {
-        # Fallback handled below.
+    else {
+        @($candidateUserName) + $leafNameCandidates | Select-Object -Unique
     }
 
-    # NTAccount translation: resolves domain and AAD accounts via LSASS.
-    try {
-        $ntAccount = [System.Security.Principal.NTAccount]::new($candidateUserName)
-        $sid = $ntAccount.Translate([System.Security.Principal.SecurityIdentifier])
-        if ($sid) {
-            return $sid.Value
+    $localLookupCandidates = if ($hasQualifiedIdentity) {
+        @()
+    }
+    else {
+        @($candidateUserName) + $leafNameCandidates | Select-Object -Unique
+    }
+
+    $profileHeuristicCandidates = if ($leafNameCandidates.Count -gt 0) {
+        $leafNameCandidates
+    }
+    else {
+        @($candidateUserName)
+    }
+
+    $cachedSid = GetCachedResolvedUserSid -Candidates $cacheCandidates
+    if ($cachedSid) {
+        return $cachedSid
+    }
+
+    # Resolve fully-qualified identities first to avoid accidentally matching a local leaf account.
+    if ($hasQualifiedIdentity) {
+        $resolvedSid = TryResolveSidByNtAccount -UserName $candidateUserName
+        if ($resolvedSid) {
+            SetResolvedUserSidCache -Candidates $cacheCandidates -Sid $resolvedSid
+            return $resolvedSid
         }
     }
-    catch {
-        # NTAccount translation failed (e.g. offline / unknown account); try ProfileList scan.
+
+    $resolvedSid = TryResolveSidByLocalLookup -Candidates $localLookupCandidates
+    if ($resolvedSid) {
+        SetResolvedUserSidCache -Candidates $cacheCandidates -Sid $resolvedSid
+        return $resolvedSid
     }
 
-    # ProfileList scan by profile-folder leaf name: handles cached domain accounts when offline.
-    try {
-        $profileListPath = 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList'
-        foreach ($sidKey in @(Get-ChildItem -LiteralPath $profileListPath -ErrorAction Stop)) {
-            try {
-                $imagePath = Get-ItemPropertyValue -LiteralPath $sidKey.PSPath -Name 'ProfileImagePath' -ErrorAction Stop
-                if ([string]::IsNullOrWhiteSpace($imagePath)) { continue }
-                $imagePath = [System.Environment]::ExpandEnvironmentVariables($imagePath)
-                $leafName = NormalizeUserLookupValue -Value (Split-Path -Leaf $imagePath)
-                foreach ($candidate in $nameCandidates) {
-                    if ($leafName -ieq (NormalizeUserLookupValue -Value $candidate)) {
-                        return $sidKey.PSChildName
-                    }
-                }
-            }
-            catch { continue }
+    # Last-ditch NTAccount translation for non-qualified names.
+    if (-not $hasQualifiedIdentity) {
+        $resolvedSid = TryResolveSidByNtAccount -UserName $candidateUserName
+        if ($resolvedSid) {
+            SetResolvedUserSidCache -Candidates $cacheCandidates -Sid $resolvedSid
+            return $resolvedSid
         }
     }
-    catch {
-        # ProfileList scan failed.
+
+    $resolvedSid = TryResolveSidFromProfileList -Candidates $profileHeuristicCandidates
+    if ($resolvedSid) {
+        SetResolvedUserSidCache -Candidates $cacheCandidates -Sid $resolvedSid
+        return $resolvedSid
     }
 
     return $null
 }
 
 function ResolveUserProfilePath {
+    param(
+        [Parameter(Mandatory)]
+        [string]$UserName
+    )
+
+    $userContext = ResolveUserProfileContext -UserName $UserName
+    if ($userContext) {
+        return $userContext.ProfilePath
+    }
+
+    return $null
+}
+
+function ResolveUserProfileContext {
     param(
         [Parameter(Mandatory)]
         [string]$UserName
@@ -131,7 +329,7 @@ function ResolveUserProfilePath {
 
             $defaultProfilePath = Join-Path $rootPath 'Default'
             if (Test-Path -LiteralPath $defaultProfilePath -PathType Container) {
-                return $defaultProfilePath
+                return (NewResolvedUserContext -UserName $candidateUserName -UserSid $null -ProfilePath $defaultProfilePath)
             }
         }
 
@@ -148,7 +346,7 @@ function ResolveUserProfilePath {
                 if (-not [string]::IsNullOrWhiteSpace($registryImagePath)) {
                     $expandedPath = [System.Environment]::ExpandEnvironmentVariables($registryImagePath)
                     if (Test-Path -LiteralPath $expandedPath -PathType Container) {
-                        return $expandedPath
+                        return (NewResolvedUserContext -UserName $candidateUserName -UserSid $userSid -ProfilePath $expandedPath)
                     }
                 }
             }
@@ -161,7 +359,7 @@ function ResolveUserProfilePath {
             $matchingProfiles = @(Get-CimInstance -ClassName Win32_UserProfile -Filter "SID='$userSid'" -ErrorAction Stop)
             $resolvedProfile = $matchingProfiles | Where-Object { -not [string]::IsNullOrWhiteSpace($_.LocalPath) } | Select-Object -First 1
             if ($resolvedProfile -and (Test-Path -LiteralPath $resolvedProfile.LocalPath -PathType Container)) {
-                return $resolvedProfile.LocalPath
+                return (NewResolvedUserContext -UserName $candidateUserName -UserSid $userSid -ProfilePath $resolvedProfile.LocalPath)
             }
         }
         catch {
@@ -176,7 +374,7 @@ function ResolveUserProfilePath {
 
         $candidateUserPath = Join-Path $rootPath $candidateUserName
         if (Test-Path -LiteralPath $candidateUserPath -PathType Container) {
-            return $candidateUserPath
+            return (NewResolvedUserContext -UserName $candidateUserName -UserSid $userSid -ProfilePath $candidateUserPath)
         }
     }
 

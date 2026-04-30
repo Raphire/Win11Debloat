@@ -129,15 +129,15 @@ function Restore-RegistryBackupState {
         }
     }
 
-    Write-Host "Starting restore for target '$($Backup.Target)'."
+    Write-Host "Starting restore for user '$($Backup.Target)'."
 
     if ($Backup.Target -eq 'DefaultUserProfile' -or $Backup.Target -like 'User:*') {
         Write-Host "Restore requires loading target user hive."
         Invoke-WithLoadedRestoreHive -Target $Backup.Target -ScriptBlock $restoreAction -ArgumentObject $Backup
-        Write-Host "Restore completed for target '$($Backup.Target)'."
+        Write-Host "Restore completed for user '$($Backup.Target)'."
         return
     }
 
     & $restoreAction $Backup
-    Write-Host "Restore completed for target '$($Backup.Target)'."
+    Write-Host "Restore completed for user '$($Backup.Target)'."
 }

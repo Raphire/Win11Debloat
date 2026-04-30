@@ -12,31 +12,95 @@
         Topmost="False"
         ShowInTaskbar="False">
 
-    <Border Style="{DynamicResource ModalCardBorderStyle}">
+    <Window.Resources>
+        <Style x:Key="RestoreOptionTileStyle" TargetType="Button">
+            <Setter Property="Background" Value="{DynamicResource SecondaryButtonBg}"/>
+            <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderColor}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="12,10"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="8"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,0,1"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="{DynamicResource SecondaryButtonDisabled}"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource SecondaryButtonTextDisabled}"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource SecondaryButtonHover}"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderColor}"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource SecondaryButtonPressed}"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderColor}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
 
+    <Border Style="{DynamicResource ModalCardBorderStyle}">
         <Grid Margin="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0" x:Name="TitleBar" Style="{DynamicResource ModalTitleBarStyle}">
-                <TextBlock Margin="20,0,0,0"
-                           Style="{DynamicResource ModalTitleTextStyle}"
-                           Text="Restore registry backup"/>
+                <TextBlock x:Name="TitleText"
+                           Text="Restore Backup"
+                           Style="{DynamicResource ModalTitleTextStyle}"/>
             </Grid>
 
-            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0">
-                <Grid Margin="20,4,20,8">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
+            <Button x:Name="CloseBtn" Grid.Row="0"
+                    HorizontalAlignment="Right" VerticalAlignment="Top"
+                    Width="36" Height="32"
+                    BorderThickness="0"
+                    Cursor="Hand"
+                    ToolTip="Close"
+                    AutomationProperties.Name="Close">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" BorderThickness="0" CornerRadius="0,8,0,0">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource CloseHover}"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <TextBlock Text="&#xE8BB;" FontFamily="Segoe Fluent Icons" FontSize="10"/>
+            </Button>
 
-                    <Grid x:Name="IntroInfoPanel" Grid.Row="0">
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0">
+                <Grid Margin="20,4,20,18">
+
+                    <Grid x:Name="SelectTypePanel" Visibility="Visible">
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
@@ -46,172 +110,250 @@
                                    FontSize="14"
                                    LineHeight="20"
                                    Foreground="{DynamicResource FgColor}"
-                                   Text="This will revert any registry changes made by Win11Debloat to their previous state. You can review the changes after selecting a backup file. Apps will need to be reinstalled manually."/>
+                                   Text="Choose what changes you want to restore."/>
 
-                        <TextBlock Grid.Row="1"
-                                   Margin="0,12,0,12"
-                                   TextWrapping="Wrap"
-                                   FontSize="13"
-                                   LineHeight="18"
-                                   Foreground="{DynamicResource FgColor}"
-                                   Opacity="0.75"
-                                   Text="Only use backup files generated by Win11Debloat."/>
+                        <Button x:Name="ChooseRegistryBtn"
+                                Grid.Row="1"
+                                Margin="0,14,0,0"
+                                Style="{StaticResource RestoreOptionTileStyle}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0"
+                                           Text="&#xEF58;"
+                                           FontFamily="Segoe Fluent Icons"
+                                           FontSize="24"
+                                           VerticalAlignment="Center"
+                                           Margin="14,0,14,0"/>
+                                <StackPanel Grid.Column="1"
+                                            VerticalAlignment="Center"
+                                            Margin="0,0,12,0">
+                                    <TextBlock Text="Restore Registry Backup"
+                                               FontSize="16"
+                                               FontWeight="SemiBold"/>
+                                    <TextBlock Text="Restore all registry changes from a backup"
+                                               FontSize="12"
+                                               Opacity="0.75"
+                                               TextWrapping="Wrap"
+                                               Margin="0,2,0,0"/>
+                                </StackPanel>
+                            </Grid>
+                        </Button>
+
+                        <Button x:Name="ChooseStartMenuBtn"
+                                Grid.Row="2"
+                                Margin="0,10,0,0"
+                                Style="{StaticResource RestoreOptionTileStyle}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0"
+                                           Text="&#xE8FC;"
+                                           FontFamily="Segoe Fluent Icons"
+                                           FontSize="24"
+                                           VerticalAlignment="Center"
+                                           Margin="14,0,14,0"/>
+                                <StackPanel Grid.Column="1"
+                                            VerticalAlignment="Center"
+                                            Margin="0,0,12,0">
+                                    <TextBlock Text="Restore Start Menu Pinned Apps Backup"
+                                               FontSize="16"
+                                               FontWeight="SemiBold"/>
+                                    <TextBlock Text="Restore the Start Menu pinned apps layout from a backup"
+                                               FontSize="12"
+                                               Opacity="0.75"
+                                               TextWrapping="Wrap"
+                                               Margin="0,2,0,0"/>
+                                </StackPanel>
+                            </Grid>
+                        </Button>
                     </Grid>
 
-                    <Grid x:Name="OverviewPanel" Grid.Row="2" Margin="0" Visibility="Collapsed">
+                    <Grid x:Name="RegistryPanel" Visibility="Collapsed">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid x:Name="IntroInfoPanel" Grid.Row="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0"
+                                       TextWrapping="Wrap"
+                                       FontSize="14"
+                                       LineHeight="20"
+                                       Foreground="{DynamicResource FgColor}"
+                                       Text="This will revert any registry changes made by Win11Debloat to their previous state. You can review the changes after selecting a backup file. Apps will need to be reinstalled manually."/>
+
+                            <TextBlock Grid.Row="1"
+                                       Margin="0,12,0,2"
+                                       TextWrapping="Wrap"
+                                       FontSize="13"
+                                       Foreground="{DynamicResource FgColor}"
+                                       Opacity="0.75"
+                                       Text="Warning: Only use backup files generated by Win11Debloat."/>
+                        </Grid>
+
+                        <Grid x:Name="OverviewPanel" Grid.Row="1" Margin="0" Visibility="Collapsed">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="0" Margin="0,0,0,16">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="File:" Style="{DynamicResource ModalInfoLabelTextStyle}"/>
+                                <TextBlock x:Name="BackupFileText" Grid.Row="0" Grid.Column="1" Text="" Style="{DynamicResource ModalInfoValueTextStyle}" TextWrapping="Wrap" Margin="0,0,0,8"/>
+
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Created:" Style="{DynamicResource ModalInfoLabelTextStyle}"/>
+                                <TextBlock x:Name="BackupCreatedText" Grid.Row="1" Grid.Column="1" Text="" Style="{DynamicResource ModalInfoValueTextStyle}"/>
+
+                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Target:" Style="{DynamicResource ModalInfoLabelTextStyle}" Margin="0,0,16,0"/>
+                                <TextBlock x:Name="BackupTargetText" Grid.Row="2" Grid.Column="1" Text="" Style="{DynamicResource ModalInfoValueTextStyle}" Margin="0"/>
+                            </Grid>
+
+                            <Border Grid.Row="1" Height="1" Background="{DynamicResource BorderColor}" Margin="0,0,0,12"/>
+
+                            <Grid Grid.Row="2">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Row="0"
+                                           Text="The following changes will be reverted:"
+                                           FontSize="13"
+                                           Foreground="{DynamicResource FgColor}"
+                                           FontWeight="SemiBold"
+                                           Margin="0,0,0,8"/>
+
+                                <ItemsControl x:Name="FeaturesItemsControl" Grid.Row="1">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Vertical" IsItemsHost="True"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding DisplayText}" FontSize="12" Foreground="{DynamicResource FgColor}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Grid>
+
+                            <Border x:Name="NonRevertibleSeparator" Grid.Row="3" Height="1" Background="{DynamicResource BorderColor}" Margin="0,12,0,12" Visibility="Collapsed"/>
+
+                            <Grid x:Name="NonRevertiblePanel" Grid.Row="4" Visibility="Collapsed">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Row="0"
+                                           Text="The following changes won't be reverted:"
+                                           FontSize="13"
+                                           Foreground="{DynamicResource FgColor}"
+                                           FontWeight="SemiBold"
+                                           Margin="0,0,0,8"/>
+
+                                <ItemsControl x:Name="NonRevertibleFeaturesItemsControl" Grid.Row="1">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Vertical" IsItemsHost="True"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding DisplayText}" FontSize="12" Foreground="{DynamicResource FgColor}" Opacity="0.85" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <TextBlock x:Name="NonRevertibleWikiLink"
+                                        Grid.Row="2"
+                                        Margin="0,8,0,0"
+                                        Text="Visit the wiki for more information"
+                                        FontSize="13"
+                                        FontWeight="SemiBold"
+                                        Style="{DynamicResource HyperlinkStyle}"
+                                        TextWrapping="Wrap"/>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+
+                    <Grid x:Name="StartMenuPanel" Visibility="Collapsed">
+                        <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
-                        <Grid Grid.Row="0" Margin="0,0,0,16">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0"
+                                   TextWrapping="Wrap"
+                                   FontSize="14"
+                                   LineHeight="20"
+                                   Margin="0,0,0,12"
+                                   Foreground="{DynamicResource FgColor}"
+                                   Text="Select for which user(s) you want to restore the Start Menu pinned apps layout."/>
 
-                            <TextBlock Grid.Row="0" Grid.Column="0"
-                                       Text="File:"
-                                       Style="{DynamicResource ModalInfoLabelTextStyle}"/>
-                            <TextBlock x:Name="BackupFileText"
-                                       Grid.Row="0" Grid.Column="1"
-                                       Text=""
-                                       Style="{DynamicResource ModalInfoValueTextStyle}"
-                                       TextWrapping="Wrap"
-                                       Margin="0,0,0,8"/>
-
-                            <TextBlock Grid.Row="1" Grid.Column="0"
-                                       Text="Created:"
-                                       Style="{DynamicResource ModalInfoLabelTextStyle}"/>
-                            <TextBlock x:Name="BackupCreatedText"
-                                       Grid.Row="1" Grid.Column="1"
-                                       Text=""
-                                       Style="{DynamicResource ModalInfoValueTextStyle}"/>
-
-                            <TextBlock Grid.Row="2" Grid.Column="0"
-                                       Text="Target:"
-                                       Style="{DynamicResource ModalInfoLabelTextStyle}"
-                                       Margin="0,0,16,0"/>
-                            <TextBlock x:Name="BackupTargetText"
-                                       Grid.Row="2" Grid.Column="1"
-                                       Text=""
-                                       Style="{DynamicResource ModalInfoValueTextStyle}"
-                                       Margin="0"/>
-                        </Grid>
-
-                        <Border Grid.Row="1"
-                                Height="1"
-                                Background="{DynamicResource BorderColor}"
-                                Margin="0,0,0,12"/>
-
-                        <Grid Grid.Row="2">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-
-                            <TextBlock Grid.Row="0"
-                                       Text="The following changes will be reverted:"
-                                       FontSize="13"
-                                       Foreground="{DynamicResource FgColor}"
-                                       FontWeight="SemiBold"
-                                       Margin="0,0,0,8"/>
-
-                            <ItemsControl x:Name="FeaturesItemsControl" Grid.Row="1">
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <StackPanel Orientation="Vertical" IsItemsHost="True"/>
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding DisplayText}"
-                                                   FontSize="12"
-                                                   Foreground="{DynamicResource FgColor}"
-                                                   TextWrapping="Wrap"
-                                                   Margin="0,0,0,6"/>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </Grid>
-
-                        <Border x:Name="NonRevertibleSeparator" Grid.Row="3"
-                                Height="1"
-                                Background="{DynamicResource BorderColor}"
-                                Margin="0,12,0,12"
-                                Visibility="Collapsed"/>
-
-                        <Grid x:Name="NonRevertiblePanel" Grid.Row="4" Visibility="Collapsed">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-
-                            <TextBlock Grid.Row="0"
-                                       Text="The following changes cannot be automatically reverted:"
-                                       FontSize="13"
-                                       Foreground="{DynamicResource FgColor}"
-                                       FontWeight="SemiBold"
-                                       Margin="0,0,0,8"/>
-
-                            <ItemsControl x:Name="NonRevertibleFeaturesItemsControl" Grid.Row="1">
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <StackPanel Orientation="Vertical" IsItemsHost="True"/>
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding DisplayText}"
-                                                   FontSize="12"
-                                                   Foreground="{DynamicResource FgColor}"
-                                                   Opacity="0.85"
-                                                   TextWrapping="Wrap"
-                                                   Margin="0,0,0,6"/>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-
-                            <TextBlock x:Name="NonRevertibleWikiLink"
-                                       Grid.Row="2"
-                                       Margin="0,10,0,4"
-                                       Text="Visit the wiki for instructions on how to revert the remaining changes."
-                                       FontSize="12"
-                                       FontWeight="SemiBold"
-                                       Style="{DynamicResource HyperlinkStyle}"
-                                       TextWrapping="Wrap"/>
-                        </Grid>
+                        <ComboBox x:Name="StartMenuScopeCombo"
+                                    Grid.Row="1"
+                                    SelectedIndex="0"
+                                    Margin="0,0,0,2"
+                                    MinWidth="408"
+                                    HorizontalAlignment="Left">
+                            <ComboBoxItem Content="Current user" Tag="CurrentUser"/>
+                            <ComboBoxItem Content="All users" Tag="AllUsers"/>
+                        </ComboBox>
                     </Grid>
                 </Grid>
             </ScrollViewer>
 
-                <Border Grid.Row="2" Style="{DynamicResource ModalFooterBorderStyle}">
+            <TextBlock x:Name="WizardStatusText"
+                       Grid.Row="2"
+                       Margin="20,0,20,8"
+                       FontSize="12"
+                       Foreground="{DynamicResource CloseHover}"
+                       Visibility="Collapsed"
+                       TextWrapping="Wrap"/>
+
+            <Border Grid.Row="3" Style="{DynamicResource ModalFooterBorderStyle}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Button x:Name="SelectFileBtn"
+
+                    <Button x:Name="PrimaryActionBtn"
                             Grid.Column="0"
-                            Content="Select backup file"
-                            Style="{DynamicResource ModalPrimaryStretchedButtonStyle}"/>
-                    <Button x:Name="RestoreBtn"
-                            Grid.Column="0"
-                            Content="Restore from backup"
+                            Content="Next"
                             Visibility="Collapsed"
                             Style="{DynamicResource ModalPrimaryStretchedButtonStyle}"/>
-                    <Button x:Name="CancelBtn"
+
+                    <Button x:Name="BackBtn"
                             Grid.Column="1"
-                            Content="Cancel"
+                            Content="Back"
+                            Visibility="Collapsed"
                             Style="{DynamicResource ModalSecondaryStretchedButtonStyle}"/>
                 </Grid>
             </Border>

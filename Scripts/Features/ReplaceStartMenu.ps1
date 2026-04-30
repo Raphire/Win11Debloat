@@ -49,7 +49,7 @@ function ReplaceStartMenu {
 
     # Change path to correct user if a user was specified
     if ($script:Params.ContainsKey("User")) {
-        $startMenuBinFile = GetUserDirectory -userName "$(GetUserName)" -fileName "AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState\start2.bin" -exitIfPathNotFound $false
+        $startMenuBinFile = GetStartMenuBinPathForUser -UserName (GetUserName)
     }
 
     # Check if template bin file exists
@@ -63,7 +63,7 @@ function ReplaceStartMenu {
         return
     }
 
-    $userName = [regex]::Match($startMenuBinFile, '(?:Users\\)([^\\]+)(?:\\AppData)').Groups[1].Value
+    $userName = GetStartMenuUserNameFromPath -StartMenuBinFile $startMenuBinFile
 
     $backupBinFile = $startMenuBinFile + ".bak"
 
@@ -80,4 +80,112 @@ function ReplaceStartMenu {
     Copy-Item -Path $startMenuTemplate -Destination $startMenuBinFile -Force
 
     Write-Host "Replaced start menu for user $userName"
+}
+
+function GetStartMenuBinPathForUser {
+    param(
+        [string]$UserName
+    )
+
+    if ([string]::IsNullOrWhiteSpace($UserName)) {
+        return "$env:LOCALAPPDATA\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState\start2.bin"
+    }
+
+    return (GetUserDirectory -userName $UserName -fileName "AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState\start2.bin" -exitIfPathNotFound $false)
+}
+
+function GetStartMenuUserNameFromPath {
+    param(
+        [string]$StartMenuBinFile
+    )
+
+    $resolvedUserName = [regex]::Match($StartMenuBinFile, '(?:Users\\)([^\\]+)(?:\\AppData)').Groups[1].Value
+    if ([string]::IsNullOrWhiteSpace($resolvedUserName)) {
+        return 'unknown'
+    }
+
+    return $resolvedUserName
+}
+
+
+
+function RestoreStartMenuFromBackup {
+    param(
+        [Parameter(Mandatory)]
+        [string]$StartMenuBinFile
+    )
+
+    $userName = GetStartMenuUserNameFromPath -StartMenuBinFile $StartMenuBinFile
+    $backupBinFile = $StartMenuBinFile + '.bak'
+    $currentBinBackup = $StartMenuBinFile + '.restore.bak'
+
+    if (-not (Test-Path -LiteralPath $backupBinFile)) {
+        return [PSCustomObject]@{
+            UserName = $userName
+            Result = $false
+            Message = "No start menu backup file found for user $userName."
+        }
+    }
+
+    try {
+        if (Test-Path -LiteralPath $StartMenuBinFile) {
+            Move-Item -Path $StartMenuBinFile -Destination $currentBinBackup -Force
+        }
+
+        Copy-Item -Path $backupBinFile -Destination $StartMenuBinFile -Force
+        return [PSCustomObject]@{
+            UserName = $userName
+            Result = $true
+            Message = "Restored start menu for user $userName."
+        }
+    }
+    catch {
+        return [PSCustomObject]@{
+            UserName = $userName
+            Result = $false
+            Message = "Failed to restore start menu for user $userName. $($_.Exception.Message)"
+        }
+    }
+}
+
+function RevertClearStart {
+    $targetUserName = GetUserName
+    $startMenuBinFile = GetStartMenuBinPathForUser -UserName $targetUserName
+
+    Write-Host "Restoring start menu for user $targetUserName from backup..."
+
+    return RestoreStartMenuFromBackup -StartMenuBinFile $startMenuBinFile
+}
+
+function RevertClearStartForAllUsers {
+    $userPathString = GetUserDirectory -userName "*" -fileName "AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState"
+    $usersStartMenuPaths = Get-ChildItem -Path $userPathString
+    $results = @()
+
+    Write-Host "Restoring start menu for all users from backup..."
+
+    foreach ($startMenuPath in $usersStartMenuPaths) {
+        $startMenuBinFile = Join-Path $startMenuPath.FullName 'start2.bin'
+        $results += RestoreStartMenuFromBackup -StartMenuBinFile $startMenuBinFile
+    }
+
+    $defaultStartMenuPath = GetUserDirectory -userName "Default" -fileName "AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState" -exitIfPathNotFound $false
+
+    if (Test-Path $defaultStartMenuPath) {
+        $defaultStartMenuBinFile = Join-Path $defaultStartMenuPath 'start2.bin'
+        $results += RestoreStartMenuFromBackup -StartMenuBinFile $defaultStartMenuBinFile
+    }
+    else {
+        Write-Host "No LocalState folder found for the default user profile, skipping restore for default profile." -ForegroundColor Yellow
+    }
+
+    if ($results.Count -eq 0) {
+        $results += [PSCustomObject]@{
+            UserName = 'unknown'
+            Result = $false
+            Message = 'No user start menu locations were found.'
+        }
+    }
+
+    return $results
 }

@@ -6,47 +6,64 @@ function Show-RestoreBackupWindow {
 
     try {
         Write-Host 'Opening restore backup dialog.'
+
         $dialogResult = Show-RestoreBackupDialog -Owner $Owner
-        if ($dialogResult.Result -ne 'Restore' -or -not $dialogResult.Backup) {
-            Write-Host 'Restore canceled by user or no backup selected.'
+        if (-not $dialogResult -or $dialogResult.Result -eq 'Cancel') {
+            Write-Host 'Restore canceled by user.'
             return
         }
 
-        $backup = $dialogResult.Backup
-        $backupTarget = [string]$backup.Target
-
-        if ($backupTarget -like 'CurrentUser:*') {
-            $targetCurrentUserName = $backupTarget.Substring(12)
-            $activeUserName = [string](GetUserName)
-
-            if (-not [string]::Equals($targetCurrentUserName, $activeUserName, [System.StringComparison]::OrdinalIgnoreCase)) {
-                Write-Warning "Backup target '$backupTarget' does not match active account '$activeUserName'."
-                $confirmationResult = Show-MessageBox -Owner $Owner -Message "This backup was created for user '$targetCurrentUserName', but you are signed in as '$activeUserName'. Do you want to continue restoring anyway?" -Title 'Confirm Restore Target' -Button 'YesNo' -Icon 'Warning'
-                if ($confirmationResult -ne 'Yes') {
-                    Write-Host 'Restore canceled by user after CurrentUser target mismatch prompt.'
+        try {
+            if ($dialogResult.Result -eq 'RestoreRegistry') {
+                $backup = $dialogResult.Backup
+                if (-not $backup) {
+                    Write-Warning 'Registry backup restore requested without a selected backup.'
                     return
+                }
+
+                Write-Host "User confirmed registry restore for $($backup.Target).', RootKeys=$(@($backup.RegistryKeys).Count)"
+                Restore-RegistryBackupState -Backup $backup
+                Show-MessageBox -Title 'Backup Restored' -Message 'Registry backup restored successfully.' -Icon Success
+            }
+            elseif ($dialogResult.Result -eq 'RestoreStartMenu') {
+                $scope = $dialogResult.StartMenuScope
+                $result = if ($scope -eq 'AllUsers') {
+                    RevertClearStartForAllUsers
+                }
+                else {
+                    RevertClearStart
+                }
+
+                $resultEntries = @($result)
+                $successCount = @($resultEntries | Where-Object { $_.Result -eq $true }).Count
+                $failedEntries = @($resultEntries | Where-Object { $_.Result -ne $true })
+
+                if ($successCount -gt 0) {
+                    if ($failedEntries.Count -gt 0) {
+                        $failureSummary = ($failedEntries | ForEach-Object { $_.Message }) -join [Environment]::NewLine
+                        Show-MessageBox -Title 'Backup Partially Restored' -Message "The Start Menu pinned apps layout was successfully restored for $successCount user(s).`n`nSome users could not be restored:`n$failureSummary" -Icon Warning
+                    }
+                    else {
+                        if ($scope -eq 'AllUsers') {
+                            Show-MessageBox -Title 'Backup Restored' -Message "The Start Menu pinned apps layout was successfully restored for all users." -Icon Success
+                        }
+                        else {
+                            Show-MessageBox -Title 'Backup Restored' -Message "The Start Menu pinned apps layout was successfully restored for the current user." -Icon Success
+                        }
+                    }
+                }
+                else {
+                    $errorSummary = ($resultEntries | ForEach-Object { $_.Message }) -join [Environment]::NewLine
+                    Show-MessageBox -Title 'Error' -Message "Failed to restore the Start Menu pinned apps layout.`n`n$errorSummary" -Icon Error
                 }
             }
         }
-
-        try {
-            Write-Host "User confirmed restore. Target='$($backup.Target)', RootKeys=$(@($backup.RegistryKeys).Count)"
-            Restore-RegistryBackupState -Backup $backup
-            Write-Host 'Registry backup restore completed successfully.'
-            Show-MessageBox -Owner $Owner -Message 'Registry backup was restored successfully.' -Title 'Restore Completed' -Button 'OK' -Icon 'Information' | Out-Null
-        }
         catch {
-            Write-Error "Registry backup restore failed: $($_.Exception.Message)"
-            Show-MessageBox -Owner $Owner -Message "Failed to restore registry backup: $($_.Exception.Message)" -Title 'Restore Failed' -Button 'OK' -Icon 'Error' | Out-Null
+            Write-Error "Restore operation failed: $($_.Exception.Message)"
+            Show-MessageBox -Title 'Error' -Message "Restore failed: $($_.Exception.Message)" -Icon Error
         }
     }
     catch {
         Write-Warning "Restore backup dialog failed: $($_.Exception.Message)"
-        try {
-            Show-MessageBox -Owner $Owner -Message "Unable to open restore backup dialog: $($_.Exception.Message)" -Title 'Restore Backup' -Button 'OK' -Icon 'Error' | Out-Null
-        }
-        catch {
-            # Last-resort: avoid rethrowing from UI error handling.
-        }
     }
 }

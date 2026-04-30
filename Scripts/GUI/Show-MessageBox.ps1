@@ -12,7 +12,7 @@ function Show-MessageBox {
         [string]$Button = 'OK',
         
         [Parameter(Mandatory=$false)]
-        [ValidateSet('None', 'Information', 'Warning', 'Error', 'Question')]
+        [ValidateSet('None', 'Information', 'Success', 'Warning', 'Error', 'Question')]
         [string]$Icon = 'None',
         
         [Parameter(Mandatory=$false)]
@@ -88,6 +88,11 @@ function Show-MessageBox {
         'Information' { 
             $iconText.Text = [char]0xE946
             $iconText.Foreground = $msgWindow.FindResource('InformationIconColor')
+            $iconText.Visibility = 'Visible'
+        }
+        'Success' {
+            $iconText.Text = [char]0xE73E
+            $iconText.Foreground = $msgWindow.FindResource('SuccessIconColor')
             $iconText.Visibility = 'Visible'
         }
         'Warning' { 

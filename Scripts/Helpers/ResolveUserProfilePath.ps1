@@ -70,6 +70,40 @@ function ResolveUserSid {
         # Fallback handled below.
     }
 
+    # NTAccount translation: resolves domain and AAD accounts via LSASS.
+    try {
+        $ntAccount = [System.Security.Principal.NTAccount]::new($candidateUserName)
+        $sid = $ntAccount.Translate([System.Security.Principal.SecurityIdentifier])
+        if ($sid) {
+            return $sid.Value
+        }
+    }
+    catch {
+        # NTAccount translation failed (e.g. offline / unknown account); try ProfileList scan.
+    }
+
+    # ProfileList scan by profile-folder leaf name: handles cached domain accounts when offline.
+    try {
+        $profileListPath = 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList'
+        foreach ($sidKey in @(Get-ChildItem -LiteralPath $profileListPath -ErrorAction Stop)) {
+            try {
+                $imagePath = Get-ItemPropertyValue -LiteralPath $sidKey.PSPath -Name 'ProfileImagePath' -ErrorAction Stop
+                if ([string]::IsNullOrWhiteSpace($imagePath)) { continue }
+                $imagePath = [System.Environment]::ExpandEnvironmentVariables($imagePath)
+                $leafName = NormalizeUserLookupValue -Value (Split-Path -Leaf $imagePath)
+                foreach ($candidate in $nameCandidates) {
+                    if ($leafName -ieq (NormalizeUserLookupValue -Value $candidate)) {
+                        return $sidKey.PSChildName
+                    }
+                }
+            }
+            catch { continue }
+        }
+    }
+    catch {
+        # ProfileList scan failed.
+    }
+
     return $null
 }
 

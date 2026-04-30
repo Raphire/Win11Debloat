@@ -19,7 +19,7 @@ function New-RegistrySettingsBackup {
     $backupFilePath = Join-Path $backupDirectory $backupFileName
 
     $backupConfig = Get-RegistryBackupPayload -SelectedFeatures $selectedFeatures -CreatedAt $timestamp
-    if (-not (SaveToFile -Config $backupConfig -FilePath $backupFilePath)) {
+    if (-not (SaveToFile -Config $backupConfig -FilePath $backupFilePath -MaxDepth 25)) {
         throw "Failed to save registry backup to '$backupFilePath'"
     }
 

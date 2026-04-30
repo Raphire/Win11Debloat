@@ -6,11 +6,14 @@ function SaveToFile {
         [hashtable]$Config,
 
         [Parameter(Mandatory=$true)]
-        [string]$FilePath
+        [string]$FilePath,
+
+        [Parameter(Mandatory=$false)]
+        [int]$MaxDepth = 10
     )
 
     try {
-        $Config | ConvertTo-Json -Depth 10 | Set-Content -Path $FilePath -Encoding UTF8
+        $Config | ConvertTo-Json -Depth $MaxDepth | Set-Content -Path $FilePath -Encoding UTF8
         return $true
     }
     catch {

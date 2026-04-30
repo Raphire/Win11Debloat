@@ -173,10 +173,23 @@ function RevertClearStartForAllUsers {
 
     if (Test-Path $defaultStartMenuPath) {
         $defaultStartMenuBinFile = Join-Path $defaultStartMenuPath 'start2.bin'
-        $results += RestoreStartMenuFromBackup -StartMenuBinFile $defaultStartMenuBinFile
-    }
-    else {
-        Write-Host "No LocalState folder found for the default user profile, skipping restore for default profile." -ForegroundColor Yellow
+        if (Test-Path -LiteralPath $defaultStartMenuBinFile) {
+            try {
+                Remove-Item -LiteralPath $defaultStartMenuBinFile -Force
+                $results += [PSCustomObject]@{
+                    UserName = 'Default'
+                    Result   = $true
+                    Message  = 'Removed start2.bin for the default user profile.'
+                }
+            }
+            catch {
+                $results += [PSCustomObject]@{
+                    UserName = 'Default'
+                    Result   = $false
+                    Message  = "Failed to remove start2.bin for the default user profile. $($_.Exception.Message)"
+                }
+            }
+        }
     }
 
     if ($results.Count -eq 0) {

@@ -160,7 +160,7 @@
                                 <StackPanel Grid.Column="1"
                                             VerticalAlignment="Center"
                                             Margin="0,0,12,0">
-                                    <TextBlock Text="Restore Start Menu Pinned Apps Backup"
+                                    <TextBlock Text="Restore Start Menu Backup"
                                                FontSize="16"
                                                FontWeight="SemiBold"/>
                                     <TextBlock Text="Restore the Start Menu pinned apps layout from a backup"

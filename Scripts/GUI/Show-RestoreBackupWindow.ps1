@@ -41,20 +41,20 @@ function Show-RestoreBackupWindow {
                 if ($successCount -gt 0) {
                     if ($failedEntries.Count -gt 0) {
                         $failureSummary = ($failedEntries | ForEach-Object { $_.Message }) -join [Environment]::NewLine
-                        Show-MessageBox -Title 'Backup Partially Restored' -Message "The Start Menu pinned apps layout was successfully restored for $successCount user(s).`n`nSome users could not be restored:`n$failureSummary" -Icon Warning
+                        Show-MessageBox -Title 'Backup Partially Restored' -Message "The Start Menu backup was successfully restored for $successCount user(s).`n`nSome users could not be restored:`n$failureSummary" -Icon Warning
                     }
                     else {
                         if ($scope -eq 'AllUsers') {
-                            Show-MessageBox -Title 'Backup Restored' -Message "The Start Menu pinned apps layout was successfully restored for all users." -Icon Success
+                            Show-MessageBox -Title 'Backup Restored' -Message "The Start Menu backup was successfully restored for all users. The restored pinned apps layout will apply the next time users sign in." -Icon Success
                         }
                         else {
-                            Show-MessageBox -Title 'Backup Restored' -Message "The Start Menu pinned apps layout was successfully restored for the current user." -Icon Success
+                            Show-MessageBox -Title 'Backup Restored' -Message "The Start Menu backup was successfully restored for the current user. The restored pinned apps layout will apply the next time you sign in." -Icon Success
                         }
                     }
                 }
                 else {
                     $errorSummary = ($resultEntries | ForEach-Object { $_.Message }) -join [Environment]::NewLine
-                    Show-MessageBox -Title 'Error' -Message "Failed to restore the Start Menu pinned apps layout.`n`n$errorSummary" -Icon Error
+                    Show-MessageBox -Title 'Error' -Message "Failed to restore the Start Menu backup.`n`n$errorSummary" -Icon Error
                 }
             }
         }

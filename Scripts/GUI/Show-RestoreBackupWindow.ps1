@@ -21,7 +21,7 @@ function Show-RestoreBackupWindow {
                     return
                 }
 
-                Write-Host "User confirmed registry restore for $($backup.Target).', RootKeys=$(@($backup.RegistryKeys).Count)"
+                Write-Host "User confirmed registry restore for $($backup.Target)."
                 Restore-RegistryBackupState -Backup $backup
                 Show-MessageBox -Title 'Backup Restored' -Message 'Registry backup restored successfully.' -Icon Success
             }

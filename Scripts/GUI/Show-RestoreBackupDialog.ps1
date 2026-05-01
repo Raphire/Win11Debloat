@@ -82,8 +82,7 @@ function Show-RestoreBackupDialog {
     $window.Tag = New-RestoreDialogState
     $chooseRegistryBtn.IsDefault = $true
 
-    $script:wizardStep = 'SelectType'
-    $script:selectedRegistryBackup = $null
+    $state = @{ WizardStep = 'SelectType'; SelectedRegistryBackup = $null }
 
     if ($overviewPanel) { $overviewPanel.Visibility = 'Collapsed' }
     if ($wizardStatusText) { $wizardStatusText.Visibility = 'Collapsed'; $wizardStatusText.Text = '' }
@@ -91,7 +90,7 @@ function Show-RestoreBackupDialog {
     $setWizardStep = {
         param([string]$step)
 
-        $script:wizardStep = $step
+        $state.WizardStep = $step
 
         if ($wizardStatusText) {
             $wizardStatusText.Visibility = 'Collapsed'
@@ -158,7 +157,7 @@ function Show-RestoreBackupDialog {
     $chooseStartMenuBtn.Add_Click({ & $setWizardStep 'StartMenu' })
 
     $backBtn.Add_Click({
-        if ($script:wizardStep -eq 'SelectType') {
+        if ($state.WizardStep -eq 'SelectType') {
             $window.Tag = New-RestoreDialogState
             $window.DialogResult = $false
             $window.Close()
@@ -169,8 +168,8 @@ function Show-RestoreBackupDialog {
     })
 
     $primaryActionBtn.Add_Click({
-        if ($script:wizardStep -eq 'Registry') {
-            if (-not $script:selectedRegistryBackup) {
+        if ($state.WizardStep -eq 'Registry') {
+            if (-not $state.SelectedRegistryBackup) {
                 $openDialog = New-Object Microsoft.Win32.OpenFileDialog
                 $openDialog.Title = 'Select registry backup file'
                 $openDialog.Filter = 'Registry backup (*.json)|*.json|All files (*.*)|*.*'
@@ -238,21 +237,21 @@ function Show-RestoreBackupDialog {
                 if ($introInfoPanel) { $introInfoPanel.Visibility = 'Collapsed' }
                 if ($overviewPanel) { $overviewPanel.Visibility = 'Visible' }
 
-                $script:selectedRegistryBackup = $selectedBackup
+                $state.SelectedRegistryBackup = $selectedBackup
                 $primaryActionBtn.Content = 'Restore from backup'
                 return
             }
 
             $window.Tag = @{
                 Result = 'RestoreRegistry'
-                Backup = $script:selectedRegistryBackup
+                Backup = $state.SelectedRegistryBackup
             }
             $window.DialogResult = $true
             $window.Close()
             return
         }
 
-        if ($script:wizardStep -eq 'StartMenu') {
+        if ($state.WizardStep -eq 'StartMenu') {
             $scope = 'CurrentUser'
             if ($startMenuScopeCombo -and $startMenuScopeCombo.SelectedItem) {
                 $selectedComboItem = $startMenuScopeCombo.SelectedItem

@@ -45,10 +45,10 @@ function Show-RestoreBackupWindow {
                     }
                     else {
                         if ($scope -eq 'AllUsers') {
-                            Show-MessageBox -Title 'Backup Restored' -Message "The Start Menu backup was successfully restored for all users. The restored pinned apps layout will apply the next time users sign in." -Icon Success
+                             Show-MessageBox -Title 'Backup Restored' -Message "The Start Menu backup was successfully restored for all users. The changes will apply the next time users sign in." -Icon Success
                         }
                         else {
-                            Show-MessageBox -Title 'Backup Restored' -Message "The Start Menu backup was successfully restored for the current user. The restored pinned apps layout will apply the next time you sign in." -Icon Success
+                            Show-MessageBox -Title 'Backup Restored' -Message "The Start Menu backup was successfully restored for the current user. The changes will apply the next time you sign in." -Icon Success
                         }
                     }
                 }

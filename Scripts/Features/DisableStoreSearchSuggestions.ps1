@@ -2,7 +2,7 @@
 function DisableStoreSearchSuggestionsForAllUsers {
     # Get path to Store app database for all users
     $userPathString = GetUserDirectory -userName "*" -fileName "AppData\Local\Packages"
-    $usersStoreDbPaths = get-childitem -path $userPathString
+    $usersStoreDbPaths = Get-ChildItem -Path $userPathString -ErrorAction SilentlyContinue
 
     # Go through all users and disable start search suggestions
     ForEach ($storeDbPath in $usersStoreDbPaths) {

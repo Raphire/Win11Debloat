@@ -28,10 +28,10 @@ function Show-RestoreBackupWindow {
             elseif ($dialogResult.Result -eq 'RestoreStartMenu') {
                 $scope = $dialogResult.StartMenuScope
                 $result = if ($scope -eq 'AllUsers') {
-                    RevertClearStartForAllUsers
+                    RestoreStartMenuForAllUsers
                 }
                 else {
-                    RevertClearStart
+                    RestoreStartMenu
                 }
 
                 $resultEntries = @($result)

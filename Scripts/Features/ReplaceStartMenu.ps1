@@ -16,7 +16,7 @@ function ReplaceStartMenuForAllUsers {
 
     # Get path to start menu file for all users
     $userPathString = GetUserDirectory -userName "*" -fileName "AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState"
-    $usersStartMenuPaths = get-childitem -path $userPathString
+    $usersStartMenuPaths = Get-ChildItem -Path $userPathString -ErrorAction SilentlyContinue
 
     # Go through all users and replace the start menu file
     ForEach ($startMenuPath in $usersStartMenuPaths) {
@@ -148,7 +148,7 @@ function RestoreStartMenuFromBackup {
     }
 }
 
-function RevertClearStart {
+function RestoreStartMenu {
     $targetUserName = GetUserName
     $startMenuBinFile = GetStartMenuBinPathForUser -UserName $targetUserName
 
@@ -157,9 +157,9 @@ function RevertClearStart {
     return RestoreStartMenuFromBackup -StartMenuBinFile $startMenuBinFile
 }
 
-function RevertClearStartForAllUsers {
+function RestoreStartMenuForAllUsers {
     $userPathString = GetUserDirectory -userName "*" -fileName "AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState"
-    $usersStartMenuPaths = Get-ChildItem -Path $userPathString
+    $usersStartMenuPaths = Get-ChildItem -Path $userPathString -ErrorAction SilentlyContinue
     $results = @()
 
     Write-Host "Restoring start menu for all users from backup..."

@@ -112,11 +112,18 @@ function GetStartMenuUserNameFromPath {
 function RestoreStartMenuFromBackup {
     param(
         [Parameter(Mandatory)]
-        [string]$StartMenuBinFile
+        [string]$StartMenuBinFile,
+        [Parameter(Mandatory = $false)]
+        [string]$BackupFilePath
     )
 
     $userName = GetStartMenuUserNameFromPath -StartMenuBinFile $StartMenuBinFile
-    $backupBinFile = $StartMenuBinFile + '.bak'
+    $backupBinFile = if ([string]::IsNullOrWhiteSpace($BackupFilePath)) {
+        $StartMenuBinFile + '.bak'
+    }
+    else {
+        $BackupFilePath
+    }
     $currentBinBackup = $StartMenuBinFile + '.restore.bak'
 
     if (-not (Test-Path -LiteralPath $backupBinFile)) {
@@ -149,15 +156,25 @@ function RestoreStartMenuFromBackup {
 }
 
 function RestoreStartMenu {
+    param(
+        [Parameter(Mandatory = $false)]
+        [string]$BackupFilePath
+    )
+
     $targetUserName = GetUserName
     $startMenuBinFile = GetStartMenuBinPathForUser -UserName $targetUserName
 
     Write-Host "Restoring start menu for user $targetUserName from backup..."
 
-    return RestoreStartMenuFromBackup -StartMenuBinFile $startMenuBinFile
+    return RestoreStartMenuFromBackup -StartMenuBinFile $startMenuBinFile -BackupFilePath $BackupFilePath
 }
 
 function RestoreStartMenuForAllUsers {
+    param(
+        [Parameter(Mandatory = $false)]
+        [string]$BackupFilePath
+    )
+
     $userPathString = GetUserDirectory -userName "*" -fileName "AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState"
     $usersStartMenuPaths = Get-ChildItem -Path $userPathString -ErrorAction SilentlyContinue
     $results = @()
@@ -166,7 +183,7 @@ function RestoreStartMenuForAllUsers {
 
     foreach ($startMenuPath in $usersStartMenuPaths) {
         $startMenuBinFile = Join-Path $startMenuPath.FullName 'start2.bin'
-        $results += RestoreStartMenuFromBackup -StartMenuBinFile $startMenuBinFile
+        $results += RestoreStartMenuFromBackup -StartMenuBinFile $startMenuBinFile -BackupFilePath $BackupFilePath
     }
 
     $defaultStartMenuPath = GetUserDirectory -userName "Default" -fileName "AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState" -exitIfPathNotFound $false

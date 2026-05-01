@@ -325,6 +325,14 @@
                             <ComboBoxItem Content="Current user" Tag="CurrentUser"/>
                             <ComboBoxItem Content="All users" Tag="AllUsers"/>
                         </ComboBox>
+
+                        <CheckBox x:Name="StartMenuManualBackupCheck"
+                                   Grid.Row="2"
+                                   Content="Choose backup file manually"
+                                   FontSize="12"
+                                   Margin="0,8,0,0"
+                                   Foreground="{DynamicResource FgColor}"
+                                   Opacity="0.85"/>
                     </Grid>
                 </Grid>
             </ScrollViewer>

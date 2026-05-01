@@ -62,6 +62,7 @@ function Show-RestoreBackupDialog {
     $registryPanel = $window.FindName('RegistryPanel')
     $startMenuPanel = $window.FindName('StartMenuPanel')
     $startMenuScopeCombo = $window.FindName('StartMenuScopeCombo')
+    $startMenuManualBackupCheck = $window.FindName('StartMenuManualBackupCheck')
     $wizardStatusText = $window.FindName('WizardStatusText')
     $introInfoPanel = $window.FindName('IntroInfoPanel')
     $overviewPanel = $window.FindName('OverviewPanel')
@@ -86,6 +87,19 @@ function Show-RestoreBackupDialog {
 
     if ($overviewPanel) { $overviewPanel.Visibility = 'Collapsed' }
     if ($wizardStatusText) { $wizardStatusText.Visibility = 'Collapsed'; $wizardStatusText.Text = '' }
+
+    $updateStartMenuPrimaryActionText = {
+        if ($state.WizardStep -ne 'StartMenu' -or -not $primaryActionBtn) {
+            return
+        }
+
+        $primaryActionBtn.Content = if ($startMenuManualBackupCheck -and $startMenuManualBackupCheck.IsChecked -eq $true) {
+            'Select backup file'
+        }
+        else {
+            'Restore backup'
+        }
+    }
 
     $setWizardStep = {
         param([string]$step)
@@ -131,11 +145,16 @@ function Show-RestoreBackupDialog {
                 $backBtn.Visibility = 'Visible'
                 $backBtn.Content = 'Back'
                 $primaryActionBtn.Visibility = 'Visible'
-                $primaryActionBtn.Content = 'Restore backup'
                 $primaryActionBtn.IsDefault = $true
                 $chooseRegistryBtn.IsDefault = $false
+                & $updateStartMenuPrimaryActionText
             }
         }
+    }
+
+    if ($startMenuManualBackupCheck) {
+        $startMenuManualBackupCheck.Add_Checked({ & $updateStartMenuPrimaryActionText })
+        $startMenuManualBackupCheck.Add_Unchecked({ & $updateStartMenuPrimaryActionText })
     }
 
     if ($nonRevertibleWikiLink) {
@@ -259,9 +278,16 @@ function Show-RestoreBackupDialog {
                     $scope = 'AllUsers'
                 }
             }
+
+            $useManualBackupFile = $false
+            if ($startMenuManualBackupCheck -and $startMenuManualBackupCheck.IsChecked -eq $true) {
+                $useManualBackupFile = $true
+            }
+
             $window.Tag = @{
                 Result = 'RestoreStartMenu'
                 StartMenuScope = $scope
+                UseManualBackupFile = $useManualBackupFile
             }
             $window.DialogResult = $true
             $window.Close()

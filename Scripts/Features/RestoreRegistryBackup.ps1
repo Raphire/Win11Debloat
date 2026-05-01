@@ -64,8 +64,8 @@ function Normalize-RegistryBackup {
         }
         elseif ($normalizedTarget -like 'CurrentUser:*') {
             $targetCurrentUserName = $normalizedTarget.Substring(12)
-            if ([string]::IsNullOrWhiteSpace($targetCurrentUserName)) {
-                $errors.Add("Invalid Target '$normalizedTarget'. Expected CurrentUser:<name>.")
+            if ([string]::IsNullOrWhiteSpace($targetCurrentUserName) -or ($targetCurrentUserName -ne $env:USERNAME)) {
+                 $errors.Add("Backup was made for '$targetCurrentUserName', this does not match current user '$env:USERNAME'.")
             }
         }
         else {
@@ -99,7 +99,7 @@ function Normalize-RegistryBackup {
 
     if ($errors.Count -gt 0) {
         Write-Error "Backup validation failed: $($errors -join ' ')"
-        throw ("Backup validation failed: {0}" -f ($errors -join ' '))
+        throw ("Validation failed: {0}" -f ($errors -join ' '))
     }
 
     return [PSCustomObject]@{

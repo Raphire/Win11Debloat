@@ -205,10 +205,7 @@ function Show-RestoreBackupDialog {
                 }
                 catch {
                     Write-Error "Failed to load registry backup from file '$($openDialog.FileName)': $($_.Exception.Message)"
-                    if ($wizardStatusText) {
-                        $wizardStatusText.Text = 'The selected file is not a valid registry backup.'
-                        $wizardStatusText.Visibility = 'Visible'
-                    }
+                    Show-MessageBox -Title 'Error' -Message "Failed to load registry backup from file.`n$($_.Exception.Message)" -Icon Error
                     return
                 }
 

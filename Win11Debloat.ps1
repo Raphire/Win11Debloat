@@ -32,6 +32,7 @@ param (
     [switch]$DisableModernStandbyNetworking,
     [switch]$DisableStorageSense,
     [switch]$DisableUpdateASAP,
+	[switch]$Disablewuaserv,
     [switch]$PreventUpdateAutoReboot,
     [switch]$DisableDeliveryOptimization,
     [switch]$DisableBing,
@@ -274,7 +275,7 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 . "$PSScriptRoot/Scripts/AppRemoval/ForceRemoveEdge.ps1"
 . "$PSScriptRoot/Scripts/AppRemoval/RemoveApps.ps1"
 . "$PSScriptRoot/Scripts/AppRemoval/GetInstalledAppsViaWinget.ps1"
-
+. "$PSScriptRoot/Scripts/Features/Disablewuaserv.ps1"
 # CLI functions
 . "$PSScriptRoot/Scripts/CLI/AwaitKeyToExit.ps1"
 . "$PSScriptRoot/Scripts/CLI/ShowCLILastUsedSettings.ps1"  

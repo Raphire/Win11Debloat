@@ -337,14 +337,6 @@
                 </Grid>
             </ScrollViewer>
 
-            <TextBlock x:Name="WizardStatusText"
-                       Grid.Row="2"
-                       Margin="20,0,20,8"
-                       FontSize="12"
-                       Foreground="{DynamicResource CloseHover}"
-                       Visibility="Collapsed"
-                       TextWrapping="Wrap"/>
-
             <Border Grid.Row="3" Style="{DynamicResource ModalFooterBorderStyle}">
                 <Grid>
                     <Grid.ColumnDefinitions>

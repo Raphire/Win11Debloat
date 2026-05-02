@@ -63,7 +63,6 @@ function Show-RestoreBackupDialog {
     $startMenuPanel = $window.FindName('StartMenuPanel')
     $startMenuScopeCombo = $window.FindName('StartMenuScopeCombo')
     $startMenuManualBackupCheck = $window.FindName('StartMenuManualBackupCheck')
-    $wizardStatusText = $window.FindName('WizardStatusText')
     $introInfoPanel = $window.FindName('IntroInfoPanel')
     $overviewPanel = $window.FindName('OverviewPanel')
     $backupFileText = $window.FindName('BackupFileText')
@@ -86,7 +85,6 @@ function Show-RestoreBackupDialog {
     $state = @{ WizardStep = 'SelectType'; SelectedRegistryBackup = $null }
 
     if ($overviewPanel) { $overviewPanel.Visibility = 'Collapsed' }
-    if ($wizardStatusText) { $wizardStatusText.Visibility = 'Collapsed'; $wizardStatusText.Text = '' }
 
     $updateStartMenuPrimaryActionText = {
         if ($state.WizardStep -ne 'StartMenu' -or -not $primaryActionBtn) {
@@ -105,11 +103,6 @@ function Show-RestoreBackupDialog {
         param([string]$step)
 
         $state.WizardStep = $step
-
-        if ($wizardStatusText) {
-            $wizardStatusText.Visibility = 'Collapsed'
-            $wizardStatusText.Text = ''
-        }
 
         switch ($step) {
             'SelectType' {
@@ -183,6 +176,10 @@ function Show-RestoreBackupDialog {
             return
         }
 
+        if ($state.WizardStep -eq 'Registry') {
+            $state.SelectedRegistryBackup = $null
+        }
+
         & $setWizardStep 'SelectType'
     })
 
@@ -228,10 +225,7 @@ function Show-RestoreBackupDialog {
                 Write-Host "Backup overview prepared. Revertible=$($revertibleFeaturesList.Count), NonRevertible=$($nonRevertibleFeaturesList.Count)"
 
                 if ($revertibleFeaturesList.Count -eq 0) {
-                    if ($wizardStatusText) {
-                        $wizardStatusText.Text = 'The selected backup does not contain any changes that can be automatically reverted.'
-                        $wizardStatusText.Visibility = 'Visible'
-                    }
+                    Show-MessageBox -Title 'Invalid Backup' -Message 'The selected backup does not contain any changes that can be restored.' -Icon Warning -Owner $window
                     return
                 }
 

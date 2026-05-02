@@ -1546,8 +1546,6 @@ function Show-MainWindow {
                 # Show "Current user only" option, hide "Target user only" option
                 $appRemovalScopeCurrentUser.Visibility = 'Visible'
                 $appRemovalScopeTargetUser.Visibility = 'Collapsed'
-                # Enable app removal scope selection for current user
-                $appRemovalScopeCombo.IsEnabled = $true
                 $appRemovalScopeCombo.SelectedIndex = 0
             }
             1 { 
@@ -1557,8 +1555,6 @@ function Show-MainWindow {
                 # Hide "Current user only" option, show "Target user only" option
                 $appRemovalScopeCurrentUser.Visibility = 'Collapsed'
                 $appRemovalScopeTargetUser.Visibility = 'Visible'
-                # Enable app removal scope selection for other user
-                $appRemovalScopeCombo.IsEnabled = $true
                 $appRemovalScopeCombo.SelectedIndex = 0
             }
             2 { 
@@ -1569,10 +1565,12 @@ function Show-MainWindow {
                 $appRemovalScopeCurrentUser.Visibility = 'Collapsed'
                 $appRemovalScopeTargetUser.Visibility = 'Collapsed'
                 # Lock app removal scope to "All users" when applying to sysprep
-                $appRemovalScopeCombo.IsEnabled = $false
                 $appRemovalScopeCombo.SelectedIndex = 0
             }
         }
+
+        # Keep enabled/disabled state in sync with both app selection and user mode.
+        UpdateAppSelectionStatus
     })
 
     # Helper function to update app removal scope description

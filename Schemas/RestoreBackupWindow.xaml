@@ -222,13 +222,13 @@
                                 </Grid.RowDefinitions>
 
                                 <TextBlock Grid.Row="0" Grid.Column="0" Text="File:" Style="{DynamicResource ModalInfoLabelTextStyle}"/>
-                                <TextBlock x:Name="BackupFileText" Grid.Row="0" Grid.Column="1" Text="" Style="{DynamicResource ModalInfoValueTextStyle}" TextWrapping="Wrap" Margin="0,0,0,8"/>
+                                <TextBlock x:Name="BackupFileText" Grid.Row="0" Grid.Column="1" Text="Not selected" Style="{DynamicResource ModalInfoValueTextStyle}" TextWrapping="Wrap" Margin="0,0,0,8"/>
 
                                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Created:" Style="{DynamicResource ModalInfoLabelTextStyle}"/>
-                                <TextBlock x:Name="BackupCreatedText" Grid.Row="1" Grid.Column="1" Text="" Style="{DynamicResource ModalInfoValueTextStyle}"/>
+                                <TextBlock x:Name="BackupCreatedText" Grid.Row="1" Grid.Column="1" Text="N/A" Style="{DynamicResource ModalInfoValueTextStyle}"/>
 
                                 <TextBlock Grid.Row="2" Grid.Column="0" Text="Target:" Style="{DynamicResource ModalInfoLabelTextStyle}" Margin="0,0,16,0"/>
-                                <TextBlock x:Name="BackupTargetText" Grid.Row="2" Grid.Column="1" Text="" Style="{DynamicResource ModalInfoValueTextStyle}" Margin="0"/>
+                                <TextBlock x:Name="BackupTargetText" Grid.Row="2" Grid.Column="1" Text="N/A" Style="{DynamicResource ModalInfoValueTextStyle}" Margin="0"/>
                             </Grid>
 
                             <Border Grid.Row="1" Height="1" Background="{DynamicResource BorderColor}" Margin="0,0,0,12"/>
@@ -330,7 +330,7 @@
                                    Grid.Row="2"
                                    Content="Choose backup file manually"
                                    FontSize="12"
-                                   Margin="0,8,0,0"
+                                   Margin="0,10,0,0"
                                    Foreground="{DynamicResource FgColor}"
                                    Opacity="0.85"/>
                     </Grid>

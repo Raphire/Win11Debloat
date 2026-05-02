@@ -84,8 +84,6 @@ function Show-RestoreBackupDialog {
 
     $state = @{ WizardStep = 'SelectType'; SelectedRegistryBackup = $null }
 
-    if ($overviewPanel) { $overviewPanel.Visibility = 'Collapsed' }
-
     $updateStartMenuPrimaryActionText = {
         if ($state.WizardStep -ne 'StartMenu' -or -not $primaryActionBtn) {
             return

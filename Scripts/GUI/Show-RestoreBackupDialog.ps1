@@ -200,7 +200,7 @@ function Show-RestoreBackupDialog {
                 }
                 catch {
                     Write-Error "Failed to load registry backup from file '$($openDialog.FileName)': $($_.Exception.Message)"
-                    Show-MessageBox -Title 'Error' -Message "Failed to load registry backup from file: $($_.Exception.Message)" -Icon Error
+                    Show-MessageBox -Title 'Error' -Message "Failed to load registry backup from file. $($_.Exception.Message)" -Icon Error
                     return
                 }
 
@@ -229,7 +229,7 @@ function Show-RestoreBackupDialog {
 
                 $backupFileText.Text = Split-Path $openDialog.FileName -Leaf
                 $backupCreatedText.Text = $createdText
-                $backupTargetText.Text = [string]$selectedBackup.Target
+                $backupTargetText.Text = GetFriendlyRegistryBackupTarget -Target ([string]$selectedBackup.Target)
                 $featuresItemsControl.ItemsSource = $revertibleFeaturesList
                 if ($nonRevertibleFeaturesItemsControl) {
                     $nonRevertibleFeaturesItemsControl.ItemsSource = $nonRevertibleFeaturesList

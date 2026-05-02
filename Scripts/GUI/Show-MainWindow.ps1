@@ -1613,38 +1613,16 @@ function Show-MainWindow {
             return $true
         }
 
-        $username = $otherUsernameTextBox.Text.Trim()
-
         $errorBrush   = $window.Resources['ValidationErrorColor']
         $successBrush = $window.Resources['ValidationSuccessColor']
+        $validationResult = Test-TargetUserName -UserName $otherUsernameTextBox.Text
 
-        if ($username.Length -eq 0) {
-            $usernameValidationMessage.Text = "Please enter a username"
-            $usernameValidationMessage.Foreground = $errorBrush
-            return $false
-        }
-        
-        if ($username -eq $env:USERNAME) {
-            $usernameValidationMessage.Text = "Cannot enter your own username, use 'Current User' option instead"
-            $usernameValidationMessage.Foreground = $errorBrush
-            return $false
-        }
-        
-        $userExists = CheckIfUserExists -Username $username
-
-        if ($userExists) {
-            if (TestIfUserIsLoggedIn -Username $username) {
-                $usernameValidationMessage.Text = "User '$username' is currently logged in. Please sign out that user first."
-                $usernameValidationMessage.Foreground = $errorBrush
-                return $false
-            }
-
-            $usernameValidationMessage.Text = "User found: $username"
+        $usernameValidationMessage.Text = $validationResult.Message
+        if ($validationResult.IsValid) {
             $usernameValidationMessage.Foreground = $successBrush
             return $true
         }
 
-        $usernameValidationMessage.Text = "User not found, please enter a valid username"
         $usernameValidationMessage.Foreground = $errorBrush
         return $false
     }

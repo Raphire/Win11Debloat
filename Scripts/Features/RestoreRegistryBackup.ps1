@@ -55,11 +55,9 @@ function Normalize-RegistryBackup {
         }
         elseif ($normalizedTarget -like 'User:*') {
             $targetUserName = $normalizedTarget.Substring(5)
-            if ([string]::IsNullOrWhiteSpace($targetUserName)) {
-                $errors.Add("Invalid Target '$normalizedTarget'. Expected User:<name>.")
-            }
-            elseif (-not (CheckIfUserExists -userName $targetUserName)) {
-                $errors.Add("Target user '$targetUserName' does not exist on this system.")
+            $targetValidation = Test-TargetUserName -UserName $targetUserName
+            if (-not $targetValidation.IsValid) {
+                $errors.Add("Invalid user '$normalizedTarget'")
             }
         }
         elseif ($normalizedTarget -like 'CurrentUser:*') {
@@ -99,7 +97,12 @@ function Normalize-RegistryBackup {
 
     if ($errors.Count -gt 0) {
         Write-Error "Backup validation failed: $($errors -join ' ')"
-        throw ("validation failed with $($errors.Count) error(s).")
+        if ($errors.Count -eq 1) {
+            throw ("Validation failed: $($errors[0])")
+        }
+        else {
+            throw ("Validation failed with $($errors.Count) error(s).")
+        }
     }
 
     return [PSCustomObject]@{
@@ -120,6 +123,8 @@ function Restore-RegistryBackupState {
         $Backup
     )
 
+    $friendlyTarget = GetFriendlyRegistryBackupTarget -Target ([string]$Backup.Target)
+
     $restoreAction = {
         param($normalizedBackup)
 
@@ -129,15 +134,15 @@ function Restore-RegistryBackupState {
         }
     }
 
-    Write-Host "Starting restore for user '$($Backup.Target)'."
+    Write-Host "Starting restore for $friendlyTarget."
 
     if ($Backup.Target -eq 'DefaultUserProfile' -or $Backup.Target -like 'User:*') {
         Write-Host "Restore requires loading target user hive."
         Invoke-WithLoadedRestoreHive -Target $Backup.Target -ScriptBlock $restoreAction -ArgumentObject $Backup
-        Write-Host "Restore completed for user '$($Backup.Target)'."
+        Write-Host "Restore completed for $friendlyTarget."
         return
     }
 
     & $restoreAction $Backup
-    Write-Host "Restore completed for user '$($Backup.Target)'."
+    Write-Host "Restore completed for $friendlyTarget."
 }

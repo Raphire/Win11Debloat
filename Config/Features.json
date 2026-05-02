@@ -1359,6 +1359,21 @@
       "MinVersion": null,
       "MaxVersion": null
     },
+
+    {
+      "FeatureId": "Disablewuaserv",
+      "Label": "Disable Windows Update Service",
+      "ToolTip": "This will attempt to disable the updating service on a loop. When paired with other options like preventing idle detection, it can permanently stop updates.",
+      "Category": "Windows Update",
+      "Action": "",
+      "RegistryKey": null,
+      "ApplyText": "Disabling wuaserv.",
+      "UndoAction": "Get",
+      "RegistryUndoKey": null,
+      "MinVersion": null,
+      "MaxVersion": null
+    },
+
     {
       "FeatureId": "PreventUpdateAutoReboot",
       "Label": "automatic restarts after updates while signed in",

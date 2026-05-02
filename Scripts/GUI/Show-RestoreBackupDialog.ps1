@@ -185,7 +185,7 @@ function Show-RestoreBackupDialog {
         if ($state.WizardStep -eq 'Registry') {
             if (-not $state.SelectedRegistryBackup) {
                 $openDialog = New-Object Microsoft.Win32.OpenFileDialog
-                $openDialog.Title = 'Select registry backup file'
+                $openDialog.Title = 'Select Registry Backup File'
                 $openDialog.Filter = 'Registry backup (*.json)|*.json|All files (*.*)|*.*'
                 $openDialog.DefaultExt = '.json'
                 $openDialog.InitialDirectory = $script:RegistryBackupsPath

@@ -437,7 +437,7 @@ function Import-Configuration {
 
     # Show native open-file dialog
     $openDialog = New-Object Microsoft.Win32.OpenFileDialog
-    $openDialog.Title = 'Import Configuration'
+    $openDialog.Title = 'Select Configuration File'
     $openDialog.Filter = 'JSON files (*.json)|*.json|All files (*.*)|*.*'
     $openDialog.DefaultExt = '.json'
 

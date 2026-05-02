@@ -32,7 +32,7 @@ function Show-RestoreBackupWindow {
 
                 if ($useManualBackupFile) {
                     $openDialog = New-Object Microsoft.Win32.OpenFileDialog
-                    $openDialog.Title = 'Select Start Menu backup file'
+                    $openDialog.Title = 'Select Start Menu Backup File'
                     $openDialog.Filter = 'Start Menu backup (*.bak)|*.bak'
                     $openDialog.InitialDirectory = "$env:LOCALAPPDATA\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState"
                     $openDialog.DefaultExt = '.bak'

@@ -44,34 +44,34 @@
             </Grid>
 
             <!-- Message Content -->
-            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" MaxHeight="500" Padding="0" Margin="20,12,1,20">
-                <Grid Margin="0,0,20,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+            <Grid Grid.Row="1" Margin="20,12,1,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-                    <!-- Icon -->
-                    <TextBlock x:Name="IconText"
-                               Grid.Column="0"
-                               FontFamily="Segoe Fluent Icons"
-                               FontSize="24"
-                               Foreground="{DynamicResource FgColor}"
-                               VerticalAlignment="Center"
-                               Margin="4,2,14,0"
-                               Visibility="Collapsed"/>
+                <!-- Icon -->
+                <TextBlock x:Name="IconText"
+                           Grid.Column="0"
+                           FontFamily="Segoe Fluent Icons"
+                           FontSize="24"
+                           Foreground="{DynamicResource FgColor}"
+                           VerticalAlignment="Center"
+                           Margin="4,0,14,0"
+                           Visibility="Collapsed"/>
 
-                    <!-- Message Text -->
+                <!-- Message Text -->
+                <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" MaxHeight="300" Padding="0">
                     <TextBlock x:Name="MessageText"
-                               Grid.Column="1"
                                Text="Message content goes here"
                                TextWrapping="Wrap"
                                FontSize="14"
                                LineHeight="20"
                                Foreground="{DynamicResource FgColor}"
-                               VerticalAlignment="Center"/>
-                </Grid>
-            </ScrollViewer>
+                               VerticalAlignment="Center"
+                               Margin="0,0,20,0"/>
+                </ScrollViewer>
+            </Grid>
 
             <!-- Button Panel -->
             <Border Grid.Row="2" 

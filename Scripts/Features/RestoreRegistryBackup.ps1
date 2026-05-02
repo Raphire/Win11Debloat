@@ -99,7 +99,7 @@ function Normalize-RegistryBackup {
 
     if ($errors.Count -gt 0) {
         Write-Error "Backup validation failed: $($errors -join ' ')"
-        throw ("Validation failed: {0}" -f ($errors -join ' '))
+        throw ("validation failed with $($errors.Count) error(s).")
     }
 
     return [PSCustomObject]@{

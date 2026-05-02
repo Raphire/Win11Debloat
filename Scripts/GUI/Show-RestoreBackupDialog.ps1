@@ -200,7 +200,7 @@ function Show-RestoreBackupDialog {
                 }
                 catch {
                     Write-Error "Failed to load registry backup from file '$($openDialog.FileName)': $($_.Exception.Message)"
-                    Show-MessageBox -Title 'Error' -Message "Failed to load registry backup from file.`n$($_.Exception.Message)" -Icon Error
+                    Show-MessageBox -Title 'Error' -Message "Failed to load registry backup from file: $($_.Exception.Message)" -Icon Error
                     return
                 }
 

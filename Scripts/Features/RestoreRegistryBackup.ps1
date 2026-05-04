@@ -101,7 +101,7 @@ function Normalize-RegistryBackup {
             throw ("Validation failed: $($errors[0])")
         }
         else {
-            throw ("Validation failed with $($errors.Count) error(s).")
+            throw ("Validation failed with $($errors.Count) errors.")
         }
     }
 

@@ -27,7 +27,7 @@ Download & run the script automatically via PowerShell.
 2. Copy and paste the command below into PowerShell:
 
 ```PowerShell
-& ([scriptblock]::Create((irm "https://debloat.raphi.re/")))
+iex (irm "https://debloat.raphi.re/")
 ```
 
 3. Wait for the script to automatically download Win11Debloat.

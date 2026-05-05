@@ -13,6 +13,14 @@ function GetFriendlyRegistryBackupTarget {
         return 'Default user profile'
     }
 
+    if ($Target -eq 'CurrentUser') {
+        return 'Current user'
+    }
+
+    if ($Target -eq 'AllUsers') {
+        return 'All users'
+    }
+
     if ($Target -like 'CurrentUser:*') {
         $userName = $Target.Substring(12)
         if ([string]::IsNullOrWhiteSpace($userName)) {

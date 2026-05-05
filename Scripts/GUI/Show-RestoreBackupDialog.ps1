@@ -58,13 +58,14 @@ function Show-RestoreBackupDialog {
     $primaryActionBtn = $window.FindName('PrimaryActionBtn')
     $chooseRegistryBtn = $window.FindName('ChooseRegistryBtn')
     $chooseStartMenuBtn = $window.FindName('ChooseStartMenuBtn')
-    $selectTypePanel = $window.FindName('SelectTypePanel')
-    $registryPanel = $window.FindName('RegistryPanel')
-    $startMenuPanel = $window.FindName('StartMenuPanel')
+    $restoreModeTabs = $window.FindName('RestoreModeTabs')
+    $startMenuIntroPanel = $window.FindName('StartMenuIntroPanel')
     $startMenuScopeCombo = $window.FindName('StartMenuScopeCombo')
-    $startMenuManualBackupCheck = $window.FindName('StartMenuManualBackupCheck')
+    $startMenuAutoBackupCheck = $window.FindName('StartMenuAutoBackupCheck')
     $introInfoPanel = $window.FindName('IntroInfoPanel')
     $overviewPanel = $window.FindName('OverviewPanel')
+    $overviewFeaturesSection = $window.FindName('OverviewFeaturesSection')
+    $overviewSummaryText = $window.FindName('OverviewSummaryText')
     $backupFileText = $window.FindName('BackupFileText')
     $backupCreatedText = $window.FindName('BackupCreatedText')
     $backupTargetText = $window.FindName('BackupTargetText')
@@ -74,27 +75,241 @@ function Show-RestoreBackupDialog {
     $nonRevertibleFeaturesItemsControl = $window.FindName('NonRevertibleFeaturesItemsControl')
     $nonRevertibleWikiLink = $window.FindName('NonRevertibleWikiLink')
 
-    if (-not $closeBtn -or -not $backBtn -or -not $primaryActionBtn -or -not $chooseRegistryBtn -or -not $chooseStartMenuBtn) {
-        throw 'Restore dialog failed to initialize action buttons.'
-    }
-
     $titleBar.Add_MouseLeftButtonDown({ $window.DragMove() })
     $window.Tag = New-RestoreDialogState
     $chooseRegistryBtn.IsDefault = $true
 
-    $state = @{ WizardStep = 'SelectType'; SelectedRegistryBackup = $null }
+    $state = @{ WizardStep = 'SelectType'; SelectedRegistryBackup = $null; SelectedStartMenuBackupFilePath = $null }
 
-    $updateStartMenuPrimaryActionText = {
-        if ($state.WizardStep -ne 'StartMenu' -or -not $primaryActionBtn) {
+    $getStartMenuScopeInfo = {
+        $isAllUsersScope = ($startMenuScopeCombo.SelectedItem.Tag -eq 'AllUsers')
+        $scopeValue = if ($isAllUsersScope) { 'AllUsers' } else { 'CurrentUser' }
+        $summaryScopeText = if ($isAllUsersScope) { 'all users' } else { 'the current user' }
+
+        return [PSCustomObject]@{
+            Scope = $scopeValue
+            Target = $scopeValue
+            SummaryText = $summaryScopeText
+        }
+    }
+
+    $showStartMenuIntroState = {
+        $backupFileText.Text = 'Not selected'
+        $backupCreatedText.Text = 'N/A'
+        $overviewSummaryText.Visibility = 'Collapsed'
+        $overviewPanel.Visibility = 'Collapsed'
+        $startMenuIntroPanel.Visibility = 'Visible'
+        $restoreModeTabs.SelectedIndex = 2
+    }
+
+    $showStartMenuOverviewState = {
+        param([string]$BackupFilePath)
+
+        $scopeInfo = & $getStartMenuScopeInfo
+        $backupTargetText.Text = GetFriendlyRegistryBackupTarget -Target $scopeInfo.Target
+        $overviewSummaryText.Text = "This will restore the Start Menu pinned apps layout for $($scopeInfo.SummaryText)."
+        $backupFileText.Text = Split-Path -Path $BackupFilePath -Leaf
+
+        $createdText = 'Unknown'
+        try {
+            $createdText = (Get-Item -LiteralPath $BackupFilePath -ErrorAction Stop).LastWriteTime.ToString('yyyy-MM-dd HH:mm')
+        }
+        catch { }
+        $backupCreatedText.Text = $createdText
+
+        $overviewFeaturesSection.Visibility = 'Collapsed'
+        $overviewSummaryText.Visibility = 'Visible'
+        $nonRevertibleSeparator.Visibility = 'Collapsed'
+        $nonRevertiblePanel.Visibility = 'Collapsed'
+        $introInfoPanel.Visibility = 'Collapsed'
+        $overviewPanel.Visibility = 'Visible'
+        $restoreModeTabs.SelectedIndex = 1
+    }
+
+    $updateStartMenuOverviewPanel = {
+        if ($state.WizardStep -ne 'StartMenu') {
             return
         }
 
-        $primaryActionBtn.Content = if ($startMenuManualBackupCheck -and $startMenuManualBackupCheck.IsChecked -eq $true) {
-            'Select backup file'
+        if ([string]::IsNullOrWhiteSpace($state.SelectedStartMenuBackupFilePath)) {
+            & $showStartMenuIntroState
+            return
+        }
+
+        & $showStartMenuOverviewState $state.SelectedStartMenuBackupFilePath
+    }
+
+    $updateStartMenuPrimaryActionText = {
+        if ($state.WizardStep -ne 'StartMenu') {
+            return
+        }
+
+        $isAutoBackupEnabled = ($startMenuAutoBackupCheck.IsChecked -eq $true)
+        $hasSelectedManualFile = -not [string]::IsNullOrWhiteSpace($state.SelectedStartMenuBackupFilePath)
+        if ($isAutoBackupEnabled -or $hasSelectedManualFile) {
+            $primaryActionBtn.Content = 'Restore backup'
         }
         else {
-            'Restore backup'
+            $primaryActionBtn.Content = 'Select backup file'
         }
+    }
+
+    $refreshStartMenuUi = {
+        & $updateStartMenuOverviewPanel
+        & $updateStartMenuPrimaryActionText
+    }
+
+    $enterSelectTypeStep = {
+        $titleText.Text = 'Restore Backup'
+        $restoreModeTabs.SelectedIndex = 0
+        $backBtn.Visibility = 'Visible'
+        $backBtn.Content = 'Cancel'
+        $primaryActionBtn.Visibility = 'Collapsed'
+        $chooseRegistryBtn.IsDefault = $true
+        $primaryActionBtn.IsDefault = $false
+    }
+
+    $enterRegistryStep = {
+        $titleText.Text = 'Restore Registry Backup'
+        $restoreModeTabs.SelectedIndex = 1
+        $introInfoPanel.Visibility = 'Visible'
+        $overviewPanel.Visibility = 'Collapsed'
+        $overviewFeaturesSection.Visibility = 'Visible'
+        $overviewSummaryText.Visibility = 'Collapsed'
+        $backBtn.Visibility = 'Visible'
+        $backBtn.Content = 'Back'
+        $primaryActionBtn.Visibility = 'Visible'
+        $primaryActionBtn.Content = 'Select backup file'
+        $primaryActionBtn.IsDefault = $true
+        $chooseRegistryBtn.IsDefault = $false
+    }
+
+    $enterStartMenuStep = {
+        $titleText.Text = 'Restore Start Menu Backup'
+        $restoreModeTabs.SelectedIndex = 2
+        $backBtn.Visibility = 'Visible'
+        $backBtn.Content = 'Back'
+        $primaryActionBtn.Visibility = 'Visible'
+        $primaryActionBtn.IsDefault = $true
+        $chooseRegistryBtn.IsDefault = $false
+        & $refreshStartMenuUi
+    }
+
+    $showRegistryOverview = {
+        param(
+            [Parameter(Mandatory = $true)]
+            $SelectedBackup,
+            [Parameter(Mandatory = $true)]
+            [string]$SelectedBackupFilePath
+        )
+
+        $createdText = if ([string]::IsNullOrWhiteSpace($SelectedBackup.CreatedAt)) {
+            'Unknown'
+        }
+        else {
+            try {
+                [DateTime]::Parse($SelectedBackup.CreatedAt).ToString('yyyy-MM-dd HH:mm')
+            }
+            catch {
+                $SelectedBackup.CreatedAt
+            }
+        }
+
+        $selectedFeatureIds = Get-SelectedFeatureIdsFromBackup -SelectedBackup $SelectedBackup
+        $featureLists = Get-RestoreBackupFeatureLists -SelectedFeatureIds $selectedFeatureIds -Features $script:Features
+        $revertibleFeaturesList = @($featureLists.Revertible)
+        $nonRevertibleFeaturesList = @($featureLists.NonRevertible)
+        Write-Host "Backup overview prepared. Revertible=$($revertibleFeaturesList.Count), NonRevertible=$($nonRevertibleFeaturesList.Count)"
+
+        if ($revertibleFeaturesList.Count -eq 0) {
+            Show-MessageBox -Title 'Invalid Backup' -Message 'The selected backup does not contain any changes that can be restored.' -Icon Warning -Owner $window
+            return $false
+        }
+
+        $backupFileText.Text = Split-Path $SelectedBackupFilePath -Leaf
+        $backupCreatedText.Text = $createdText
+        $backupTargetText.Text = GetFriendlyRegistryBackupTarget -Target ([string]$SelectedBackup.Target)
+        $featuresItemsControl.ItemsSource = $revertibleFeaturesList
+        $overviewFeaturesSection.Visibility = 'Visible'
+        $overviewSummaryText.Visibility = 'Collapsed'
+        $nonRevertibleFeaturesItemsControl.ItemsSource = $nonRevertibleFeaturesList
+
+        $hasNonRevertibleItems = ($nonRevertibleFeaturesList.Count -gt 0)
+        if ($hasNonRevertibleItems) { $nonRevertiblePanel.Visibility = 'Visible' } else { $nonRevertiblePanel.Visibility = 'Collapsed' }
+        if ($hasNonRevertibleItems) { $nonRevertibleSeparator.Visibility = 'Visible' } else { $nonRevertibleSeparator.Visibility = 'Collapsed' }
+        $introInfoPanel.Visibility = 'Collapsed'
+        $overviewPanel.Visibility = 'Visible'
+
+        return $true
+    }
+
+    $handleRegistryPrimaryAction = {
+        if ($state.SelectedRegistryBackup) {
+            $window.Tag = @{
+                Result = 'RestoreRegistry'
+                Backup = $state.SelectedRegistryBackup
+            }
+            $window.DialogResult = $true
+            $window.Close()
+            return
+        }
+
+        $openDialog = New-Object Microsoft.Win32.OpenFileDialog
+        $openDialog.Title = 'Select Registry Backup File'
+        $openDialog.Filter = 'Registry backup (*.json)|*.json|All files (*.*)|*.*'
+        $openDialog.DefaultExt = '.json'
+        $openDialog.InitialDirectory = $script:RegistryBackupsPath
+
+        if ($openDialog.ShowDialog($window) -ne $true) {
+            return
+        }
+
+        Write-Host "Backup file selected: $($openDialog.FileName)"
+        try {
+            $selectedBackup = Load-RegistryBackupFromFile -FilePath $openDialog.FileName
+        }
+        catch {
+            Show-MessageBox -Title 'Error' -Message "Failed to load registry backup from file. $($_.Exception.Message)" -Icon Error
+            return
+        }
+
+        if (-not (& $showRegistryOverview -SelectedBackup $selectedBackup -SelectedBackupFilePath $openDialog.FileName)) {
+            return
+        }
+
+        $state.SelectedRegistryBackup = $selectedBackup
+        $primaryActionBtn.Content = 'Restore from backup'
+    }
+
+    $handleStartMenuPrimaryAction = {
+        $scope = (& $getStartMenuScopeInfo).Scope
+        $useManualBackupFile = -not ($startMenuAutoBackupCheck.IsChecked -eq $true)
+
+        if ($useManualBackupFile -and [string]::IsNullOrWhiteSpace($state.SelectedStartMenuBackupFilePath)) {
+            $openDialog = New-Object Microsoft.Win32.OpenFileDialog
+            $openDialog.Title = 'Select Start Menu Backup File'
+            $openDialog.Filter = 'Start Menu backup (*.bak)|*.bak'
+            $openDialog.InitialDirectory = "$env:LOCALAPPDATA\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState"
+            $openDialog.DefaultExt = '.bak'
+
+            if ($openDialog.ShowDialog($window) -ne $true) {
+                return
+            }
+
+            $state.SelectedStartMenuBackupFilePath = $openDialog.FileName
+            Write-Host "Selected Start Menu backup file: $($state.SelectedStartMenuBackupFilePath)"
+            & $refreshStartMenuUi
+            return
+        }
+
+        $window.Tag = @{
+            Result = 'RestoreStartMenu'
+            StartMenuScope = $scope
+            UseManualBackupFile = $useManualBackupFile
+            BackupFilePath = $state.SelectedStartMenuBackupFilePath
+        }
+        $window.DialogResult = $true
+        $window.Close()
     }
 
     $setWizardStep = {
@@ -103,59 +318,30 @@ function Show-RestoreBackupDialog {
         $state.WizardStep = $step
 
         switch ($step) {
-            'SelectType' {
-                if ($titleText) { $titleText.Text = 'Restore Backup' }
-                if ($selectTypePanel) { $selectTypePanel.Visibility = 'Visible' }
-                if ($registryPanel) { $registryPanel.Visibility = 'Collapsed' }
-                if ($startMenuPanel) { $startMenuPanel.Visibility = 'Collapsed' }
-                $backBtn.Visibility = 'Visible'
-                $backBtn.Content = 'Cancel'
-                $primaryActionBtn.Visibility = 'Collapsed'
-                $chooseRegistryBtn.IsDefault = $true
-                $primaryActionBtn.IsDefault = $false
-            }
-            'Registry' {
-                if ($titleText) { $titleText.Text = 'Restore Registry Backup' }
-                if ($selectTypePanel) { $selectTypePanel.Visibility = 'Collapsed' }
-                if ($registryPanel) { $registryPanel.Visibility = 'Visible' }
-                if ($startMenuPanel) { $startMenuPanel.Visibility = 'Collapsed' }
-                if ($introInfoPanel) { $introInfoPanel.Visibility = 'Visible' }
-                if ($overviewPanel) { $overviewPanel.Visibility = 'Collapsed' }
-                $backBtn.Visibility = 'Visible'
-                $backBtn.Content = 'Back'
-                $primaryActionBtn.Visibility = 'Visible'
-                $primaryActionBtn.Content = 'Select backup file'
-                $primaryActionBtn.IsDefault = $true
-                $chooseRegistryBtn.IsDefault = $false
-            }
-            'StartMenu' {
-                if ($titleText) { $titleText.Text = 'Restore Start Menu Backup' }
-                if ($selectTypePanel) { $selectTypePanel.Visibility = 'Collapsed' }
-                if ($registryPanel) { $registryPanel.Visibility = 'Collapsed' }
-                if ($startMenuPanel) { $startMenuPanel.Visibility = 'Visible' }
-                $backBtn.Visibility = 'Visible'
-                $backBtn.Content = 'Back'
-                $primaryActionBtn.Visibility = 'Visible'
-                $primaryActionBtn.IsDefault = $true
-                $chooseRegistryBtn.IsDefault = $false
-                & $updateStartMenuPrimaryActionText
-            }
+            'SelectType' { & $enterSelectTypeStep }
+            'Registry' { & $enterRegistryStep }
+            'StartMenu' { & $enterStartMenuStep }
         }
     }
 
-    if ($startMenuManualBackupCheck) {
-        $startMenuManualBackupCheck.Add_Checked({ & $updateStartMenuPrimaryActionText })
-        $startMenuManualBackupCheck.Add_Unchecked({ & $updateStartMenuPrimaryActionText })
-    }
+    $startMenuAutoBackupCheck.Add_Checked({
+        $state.SelectedStartMenuBackupFilePath = $null
+        & $refreshStartMenuUi
+    })
+    $startMenuAutoBackupCheck.Add_Unchecked({
+        & $refreshStartMenuUi
+    })
 
-    if ($nonRevertibleWikiLink) {
-        $nonRevertibleWikiLink.Add_MouseLeftButtonUp({
-            try {
-                Start-Process 'https://github.com/Raphire/Win11Debloat/wiki/Reverting-Changes' | Out-Null
-            }
-            catch { }
-        })
-    }
+    $startMenuScopeCombo.Add_SelectionChanged({
+        & $refreshStartMenuUi
+    })
+
+    $nonRevertibleWikiLink.Add_MouseLeftButtonUp({
+        try {
+            Start-Process 'https://github.com/Raphire/Win11Debloat/wiki/Reverting-Changes' | Out-Null
+        }
+        catch { }
+    })
 
     $closeBtn.Add_Click({
         $window.Tag = New-RestoreDialogState
@@ -178,107 +364,18 @@ function Show-RestoreBackupDialog {
             $state.SelectedRegistryBackup = $null
         }
 
+        if ($state.WizardStep -eq 'StartMenu') {
+            $state.SelectedStartMenuBackupFilePath = $null
+            $startMenuAutoBackupCheck.IsChecked = $true
+        }
+
         & $setWizardStep 'SelectType'
     })
 
     $primaryActionBtn.Add_Click({
-        if ($state.WizardStep -eq 'Registry') {
-            if (-not $state.SelectedRegistryBackup) {
-                $openDialog = New-Object Microsoft.Win32.OpenFileDialog
-                $openDialog.Title = 'Select Registry Backup File'
-                $openDialog.Filter = 'Registry backup (*.json)|*.json|All files (*.*)|*.*'
-                $openDialog.DefaultExt = '.json'
-                $openDialog.InitialDirectory = $script:RegistryBackupsPath
-
-                if ($openDialog.ShowDialog($window) -ne $true) {
-                    return
-                }
-
-                Write-Host "Backup file selected: $($openDialog.FileName)"
-                try {
-                    $selectedBackup = Load-RegistryBackupFromFile -FilePath $openDialog.FileName
-                }
-                catch {
-                    Show-MessageBox -Title 'Error' -Message "Failed to load registry backup from file. $($_.Exception.Message)" -Icon Error
-                    return
-                }
-
-                $createdText = if ([string]::IsNullOrWhiteSpace($selectedBackup.CreatedAt)) {
-                    'Unknown'
-                }
-                else {
-                    try {
-                        [DateTime]::Parse($selectedBackup.CreatedAt).ToString('yyyy-MM-dd HH:mm')
-                    }
-                    catch {
-                        $selectedBackup.CreatedAt
-                    }
-                }
-
-                $selectedFeatureIds = Get-SelectedFeatureIdsFromBackup -SelectedBackup $selectedBackup
-                $featureLists = Get-RestoreBackupFeatureLists -SelectedFeatureIds $selectedFeatureIds -Features $script:Features
-                $revertibleFeaturesList = @($featureLists.Revertible)
-                $nonRevertibleFeaturesList = @($featureLists.NonRevertible)
-                Write-Host "Backup overview prepared. Revertible=$($revertibleFeaturesList.Count), NonRevertible=$($nonRevertibleFeaturesList.Count)"
-
-                if ($revertibleFeaturesList.Count -eq 0) {
-                    Show-MessageBox -Title 'Invalid Backup' -Message 'The selected backup does not contain any changes that can be restored.' -Icon Warning -Owner $window
-                    return
-                }
-
-                $backupFileText.Text = Split-Path $openDialog.FileName -Leaf
-                $backupCreatedText.Text = $createdText
-                $backupTargetText.Text = GetFriendlyRegistryBackupTarget -Target ([string]$selectedBackup.Target)
-                $featuresItemsControl.ItemsSource = $revertibleFeaturesList
-                if ($nonRevertibleFeaturesItemsControl) {
-                    $nonRevertibleFeaturesItemsControl.ItemsSource = $nonRevertibleFeaturesList
-                }
-
-                $hasNonRevertibleItems = ($nonRevertibleFeaturesList.Count -gt 0)
-                if ($nonRevertiblePanel) {
-                    if ($hasNonRevertibleItems) { $nonRevertiblePanel.Visibility = 'Visible' } else { $nonRevertiblePanel.Visibility = 'Collapsed' }
-                }
-                if ($nonRevertibleSeparator) {
-                    if ($hasNonRevertibleItems) { $nonRevertibleSeparator.Visibility = 'Visible' } else { $nonRevertibleSeparator.Visibility = 'Collapsed' }
-                }
-                if ($introInfoPanel) { $introInfoPanel.Visibility = 'Collapsed' }
-                if ($overviewPanel) { $overviewPanel.Visibility = 'Visible' }
-
-                $state.SelectedRegistryBackup = $selectedBackup
-                $primaryActionBtn.Content = 'Restore from backup'
-                return
-            }
-
-            $window.Tag = @{
-                Result = 'RestoreRegistry'
-                Backup = $state.SelectedRegistryBackup
-            }
-            $window.DialogResult = $true
-            $window.Close()
-            return
-        }
-
-        if ($state.WizardStep -eq 'StartMenu') {
-            $scope = 'CurrentUser'
-            if ($startMenuScopeCombo -and $startMenuScopeCombo.SelectedItem) {
-                $selectedComboItem = $startMenuScopeCombo.SelectedItem
-                if ($selectedComboItem.Tag -eq 'AllUsers') {
-                    $scope = 'AllUsers'
-                }
-            }
-
-            $useManualBackupFile = $false
-            if ($startMenuManualBackupCheck -and $startMenuManualBackupCheck.IsChecked -eq $true) {
-                $useManualBackupFile = $true
-            }
-
-            $window.Tag = @{
-                Result = 'RestoreStartMenu'
-                StartMenuScope = $scope
-                UseManualBackupFile = $useManualBackupFile
-            }
-            $window.DialogResult = $true
-            $window.Close()
+        switch ($state.WizardStep) {
+            'Registry' { & $handleRegistryPrimaryAction }
+            'StartMenu' { & $handleStartMenuPrimaryAction }
         }
     })
 

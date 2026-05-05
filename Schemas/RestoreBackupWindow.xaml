@@ -98,7 +98,19 @@
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0">
                 <Grid Margin="20,4,20,18">
 
-                    <Grid x:Name="SelectTypePanel" Visibility="Visible">
+                    <TabControl x:Name="RestoreModeTabs"
+                                SelectedIndex="0"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Padding="0">
+                    <TabControl.ItemContainerStyle>
+                        <Style TargetType="TabItem">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Setter Property="Height" Value="0"/>
+                        </Style>
+                    </TabControl.ItemContainerStyle>
+                    <TabItem x:Name="SelectTypeTab" Header="SelectType">
+                    <Grid x:Name="SelectTypePanel">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
@@ -172,8 +184,10 @@
                             </Grid>
                         </Button>
                     </Grid>
+                    </TabItem>
 
-                    <Grid x:Name="RegistryPanel" Visibility="Collapsed">
+                    <TabItem x:Name="RegistryTab" Header="Registry">
+                    <Grid x:Name="RegistryPanel">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
@@ -233,7 +247,7 @@
 
                             <Border Grid.Row="1" Height="1" Background="{DynamicResource BorderColor}" Margin="0,0,0,12"/>
 
-                            <Grid Grid.Row="2">
+                            <Grid x:Name="OverviewFeaturesSection" Grid.Row="2">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="*"/>
@@ -259,6 +273,14 @@
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
                             </Grid>
+
+                            <TextBlock x:Name="OverviewSummaryText"
+                                       Grid.Row="2"
+                                       FontSize="13"
+                                       Foreground="{DynamicResource FgColor}"
+                                       TextWrapping="Wrap"
+                                       Visibility="Collapsed"
+                                       Text="This will restore the Start Menu pinned apps layout for the current user."/>
 
                             <Border x:Name="NonRevertibleSeparator" Grid.Row="3" Height="1" Background="{DynamicResource BorderColor}" Margin="0,12,0,12" Visibility="Collapsed"/>
 
@@ -300,40 +322,52 @@
                             </Grid>
                         </Grid>
                     </Grid>
+                    </TabItem>
 
-                    <Grid x:Name="StartMenuPanel" Visibility="Collapsed">
+                    <TabItem x:Name="StartMenuTab" Header="StartMenu">
+                    <Grid x:Name="StartMenuPanel">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
-                        <TextBlock Grid.Row="0"
-                                   TextWrapping="Wrap"
-                                   FontSize="14"
-                                   LineHeight="20"
-                                   Margin="0,0,0,12"
-                                   Foreground="{DynamicResource FgColor}"
-                                   Text="Select for which user(s) you want to restore the Start Menu pinned apps layout."/>
+                        <Grid x:Name="StartMenuIntroPanel" Grid.Row="0" Visibility="Visible">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
 
-                        <ComboBox x:Name="StartMenuScopeCombo"
-                                    Grid.Row="1"
-                                    SelectedIndex="0"
-                                    Margin="0,0,0,2"
-                                    MinWidth="408"
-                                    HorizontalAlignment="Left">
-                            <ComboBoxItem Content="Current user" Tag="CurrentUser"/>
-                            <ComboBoxItem Content="All users" Tag="AllUsers"/>
-                        </ComboBox>
+                            <TextBlock Grid.Row="0"
+                                       TextWrapping="Wrap"
+                                       FontSize="14"
+                                       LineHeight="20"
+                                       Margin="0,0,0,12"
+                                       Foreground="{DynamicResource FgColor}"
+                                       Text="Select for which user(s) you want to restore the Start Menu pinned apps layout."/>
 
-                        <CheckBox x:Name="StartMenuManualBackupCheck"
-                                   Grid.Row="2"
-                                   Content="Choose backup file manually"
-                                   FontSize="12"
-                                   Margin="0,10,0,0"
-                                   Foreground="{DynamicResource FgColor}"
-                                   Opacity="0.85"/>
+                            <ComboBox x:Name="StartMenuScopeCombo"
+                                        Grid.Row="1"
+                                        SelectedIndex="0"
+                                        Margin="0,0,0,2"
+                                        MinWidth="408"
+                                        HorizontalAlignment="Left">
+                                <ComboBoxItem Content="Current user" Tag="CurrentUser"/>
+                                <ComboBoxItem Content="All users" Tag="AllUsers"/>
+                            </ComboBox>
+
+                            <CheckBox x:Name="StartMenuAutoBackupCheck"
+                                       Grid.Row="2"
+                                       Content="Automatically find Start Menu backup"
+                                       IsChecked="True"
+                                       FontSize="12"
+                                       Margin="0,10,0,0"
+                                       Foreground="{DynamicResource FgColor}"
+                                       Opacity="0.85"/>
+                        </Grid>
+
                     </Grid>
+                    </TabItem>
+                    </TabControl>
                 </Grid>
             </ScrollViewer>
 

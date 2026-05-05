@@ -29,28 +29,16 @@ function Show-RestoreBackupWindow {
                 $scope = $dialogResult.StartMenuScope
                 $useManualBackupFile = ($dialogResult.UseManualBackupFile -eq $true)
                 $backupFilePath = $null
+                if ($dialogResult -is [hashtable] -and $dialogResult.ContainsKey('BackupFilePath')) {
+                    $backupFilePath = $dialogResult['BackupFilePath']
+                }
+                elseif ($dialogResult.PSObject.Properties.Match('BackupFilePath').Count -gt 0) {
+                    $backupFilePath = $dialogResult.BackupFilePath
+                }
 
-                if ($useManualBackupFile) {
-                    $openDialog = New-Object Microsoft.Win32.OpenFileDialog
-                    $openDialog.Title = 'Select Start Menu Backup File'
-                    $openDialog.Filter = 'Start Menu backup (*.bak)|*.bak'
-                    $openDialog.InitialDirectory = "$env:LOCALAPPDATA\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState"
-                    $openDialog.DefaultExt = '.bak'
-
-                    $dialogSelection = if ($Owner) {
-                        $openDialog.ShowDialog($Owner)
-                    }
-                    else {
-                        $openDialog.ShowDialog()
-                    }
-
-                    if ($dialogSelection -ne $true) {
-                        Write-Host 'Start Menu restore canceled: no backup file selected.'
-                        return
-                    }
-
-                    $backupFilePath = $openDialog.FileName
-                    Write-Host "Selected Start Menu backup file: $backupFilePath"
+                if ($useManualBackupFile -and [string]::IsNullOrWhiteSpace($backupFilePath)) {
+                    Write-Host 'Start Menu restore canceled: no backup file selected.'
+                    return
                 }
 
                 $result = if ($scope -eq 'AllUsers') {

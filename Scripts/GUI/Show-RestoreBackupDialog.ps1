@@ -222,8 +222,7 @@ function Show-RestoreBackupDialog {
         Write-Host "Backup overview prepared. Revertible=$($revertibleFeaturesList.Count), NonRevertible=$($nonRevertibleFeaturesList.Count)"
 
         if ($revertibleFeaturesList.Count -eq 0) {
-            Show-MessageBox -Title 'Invalid Backup' -Message 'The selected backup does not contain any changes that can be restored.' -Icon Warning -Owner $window
-            return $false
+            throw 'The selected backup does not contain any changes that can be restored.'
         }
 
         $backupFileText.Text = Split-Path $SelectedBackupFilePath -Leaf
@@ -265,13 +264,7 @@ function Show-RestoreBackupDialog {
         }
 
         Write-Host "Backup file selected: $($openDialog.FileName)"
-        try {
-            $selectedBackup = Load-RegistryBackupFromFile -FilePath $openDialog.FileName
-        }
-        catch {
-            Show-MessageBox -Title 'Error' -Message "Failed to load registry backup from file. $($_.Exception.Message)" -Icon Error
-            return
-        }
+        $selectedBackup = Load-RegistryBackupFromFile -FilePath $openDialog.FileName
 
         if (-not (& $showRegistryOverview -SelectedBackup $selectedBackup -SelectedBackupFilePath $openDialog.FileName)) {
             return

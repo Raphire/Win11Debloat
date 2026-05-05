@@ -13,71 +13,76 @@ function Show-RestoreBackupWindow {
             return
         }
 
-        try {
-            if ($dialogResult.Result -eq 'RestoreRegistry') {
-                $backup = $dialogResult.Backup
-                if (-not $backup) {
-                    Write-Warning 'Registry backup restore requested without a selected backup.'
-                    return
-                }
+        $successMessage = $null
+        $warningMessage = $null
 
-                Write-Host "User confirmed registry restore for $($backup.Target)."
-                Restore-RegistryBackupState -Backup $backup
-                Show-MessageBox -Title 'Backup Restored' -Message 'Registry backup restored successfully.' -Icon Success
+        if ($dialogResult.Result -eq 'RestoreRegistry') {
+            $backup = $dialogResult.Backup
+            if (-not $backup) {
+                throw 'Registry backup restore requested without a selected backup.'
             }
-            elseif ($dialogResult.Result -eq 'RestoreStartMenu') {
-                $scope = $dialogResult.StartMenuScope
-                $useManualBackupFile = ($dialogResult.UseManualBackupFile -eq $true)
-                $backupFilePath = $null
-                if ($dialogResult -is [hashtable] -and $dialogResult.ContainsKey('BackupFilePath')) {
-                    $backupFilePath = $dialogResult['BackupFilePath']
-                }
-                elseif ($dialogResult.PSObject.Properties.Match('BackupFilePath').Count -gt 0) {
-                    $backupFilePath = $dialogResult.BackupFilePath
-                }
 
-                if ($useManualBackupFile -and [string]::IsNullOrWhiteSpace($backupFilePath)) {
-                    Write-Host 'Start Menu restore canceled: no backup file selected.'
-                    return
-                }
+            Write-Host "User confirmed registry restore for $($backup.Target)."
+            Restore-RegistryBackupState -Backup $backup
+            $successMessage = 'Registry backup restored successfully.'
+        }
+        elseif ($dialogResult.Result -eq 'RestoreStartMenu') {
+            $scope = $dialogResult.StartMenuScope
+            $useManualBackupFile = ($dialogResult.UseManualBackupFile -eq $true)
+            $backupFilePath = $null
+            if ($dialogResult -is [hashtable] -and $dialogResult.ContainsKey('BackupFilePath')) {
+                $backupFilePath = $dialogResult['BackupFilePath']
+            }
+            elseif ($dialogResult.PSObject.Properties.Match('BackupFilePath').Count -gt 0) {
+                $backupFilePath = $dialogResult.BackupFilePath
+            }
 
-                $result = if ($scope -eq 'AllUsers') {
-                    RestoreStartMenuForAllUsers -BackupFilePath $backupFilePath
+            if ($useManualBackupFile -and [string]::IsNullOrWhiteSpace($backupFilePath)) {
+                throw 'Start Menu restore canceled: no backup file selected.'
+            }
+
+            $result = if ($scope -eq 'AllUsers') {
+                RestoreStartMenuForAllUsers -BackupFilePath $backupFilePath
+            }
+            else {
+                RestoreStartMenu -BackupFilePath $backupFilePath
+            }
+
+            $resultEntries = @($result)
+            $successCount = @($resultEntries | Where-Object { $_.Result -eq $true }).Count
+            $failedEntries = @($resultEntries | Where-Object { $_.Result -ne $true })
+
+            if ($successCount -eq 0) {
+                $errorSummary = ($resultEntries | ForEach-Object { $_.Message }) -join [Environment]::NewLine
+                throw "Failed to restore the Start Menu backup.`n$errorSummary"
+            }
+
+            if ($failedEntries.Count -gt 0) {
+                $failureSummary = ($failedEntries | ForEach-Object { $_.Message }) -join [Environment]::NewLine
+                $warningMessage = "The Start Menu backup was successfully restored for $successCount user(s).`nSome users could not be restored:`n$failureSummary"
+            }
+            else {
+                if ($scope -eq 'AllUsers') {
+                    $successMessage = "The Start Menu backup was successfully restored for all users. The changes will apply the next time users sign in."
                 }
                 else {
-                    RestoreStartMenu -BackupFilePath $backupFilePath
-                }
-
-                $resultEntries = @($result)
-                $successCount = @($resultEntries | Where-Object { $_.Result -eq $true }).Count
-                $failedEntries = @($resultEntries | Where-Object { $_.Result -ne $true })
-
-                if ($successCount -gt 0) {
-                    if ($failedEntries.Count -gt 0) {
-                        $failureSummary = ($failedEntries | ForEach-Object { $_.Message }) -join [Environment]::NewLine
-                        Show-MessageBox -Title 'Backup Partially Restored' -Message "The Start Menu backup was successfully restored for $successCount user(s).`n`nSome users could not be restored:`n$failureSummary" -Icon Warning
-                    }
-                    else {
-                        if ($scope -eq 'AllUsers') {
-                             Show-MessageBox -Title 'Backup Restored' -Message "The Start Menu backup was successfully restored for all users. The changes will apply the next time users sign in." -Icon Success
-                        }
-                        else {
-                            Show-MessageBox -Title 'Backup Restored' -Message "The Start Menu backup was successfully restored for the current user. The changes will apply the next time you sign in." -Icon Success
-                        }
-                    }
-                }
-                else {
-                    $errorSummary = ($resultEntries | ForEach-Object { $_.Message }) -join [Environment]::NewLine
-                    Show-MessageBox -Title 'Error' -Message "Failed to restore the Start Menu backup.`n`n$errorSummary" -Icon Error
+                    $successMessage = "The Start Menu backup was successfully restored for the current user. The changes will apply the next time you sign in."
                 }
             }
         }
-        catch {
-            Write-Error "Restore operation failed: $($_.Exception.Message)"
-            Show-MessageBox -Title 'Error' -Message "Restore failed: $($_.Exception.Message)" -Icon Error
+
+        if ($warningMessage) {
+            Write-Host "$warningMessage"
+            Show-MessageBox -Title 'Backup Restored' -Message $warningMessage -Icon Warning
+        }
+        elseif ($successMessage) {
+            Write-Host "$successMessage"
+            Show-MessageBox -Title 'Backup Restored' -Message $successMessage -Icon Success
         }
     }
     catch {
-        Write-Warning "Restore backup dialog failed: $($_.Exception.Message)"
+        $errorMessage = if ($_.Exception.Message) { $_.Exception.Message } else { 'An unexpected error occurred.' }
+        Write-Error "Restore operation failed: $errorMessage"
+        Show-MessageBox -Title 'Error' -Message "Restore failed: $errorMessage" -Icon Error
     }
 }

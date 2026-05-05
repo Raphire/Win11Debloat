@@ -15,10 +15,7 @@ function Load-RegistryBackupFromFile {
         throw "Failed to read backup file '$FilePath'. The file is not valid JSON."
     }
 
-    $normalizedBackup = Normalize-RegistryBackup -Backup $rawBackup
-    Write-Host "Backup loaded and validated. Target='$($normalizedBackup.Target)', SelectedFeatures=$(@($normalizedBackup.SelectedFeatures).Count), RootKeys=$(@($normalizedBackup.RegistryKeys).Count)"
-
-    return $normalizedBackup
+    return Normalize-RegistryBackup -Backup $rawBackup
 }
 
 function Normalize-RegistryBackup {

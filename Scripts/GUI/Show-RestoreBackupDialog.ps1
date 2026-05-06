@@ -107,7 +107,7 @@ function Show-RestoreBackupDialog {
 
         $scopeInfo = & $getStartMenuScopeInfo
         $backupTargetText.Text = GetFriendlyRegistryBackupTarget -Target $scopeInfo.Target
-        $overviewSummaryText.Text = "This will restore the Start Menu pinned apps layout for $($scopeInfo.SummaryText)."
+        $overviewSummaryText.Text = "This will replace the current Start Menu pinned apps layout for $($scopeInfo.SummaryText) with the selected backup."
         $backupFileText.Text = Split-Path -Path $BackupFilePath -Leaf
 
         $createdText = 'Unknown'

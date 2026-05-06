@@ -15,7 +15,7 @@ function New-RegistrySettingsBackup {
         New-Item -ItemType Directory -Path $backupDirectory -Force | Out-Null
     }
 
-    $backupFileName = 'Win11Debloat-RegistryBackup-{0}.json' -f $timestamp.ToString('yyyyMMdd_HHmm')
+    $backupFileName = 'Win11Debloat-RegistryBackup-{0}.json' -f $timestamp.ToString('yyyyMMdd_HHmmss')
     $backupFilePath = Join-Path $backupDirectory $backupFileName
 
     $backupConfig = Get-RegistryBackupPayload -SelectedFeatures $selectedFeatures -CreatedAt $timestamp

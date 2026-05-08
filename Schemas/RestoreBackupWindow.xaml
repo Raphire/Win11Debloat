@@ -204,7 +204,7 @@
                                        FontSize="14"
                                        LineHeight="20"
                                        Foreground="{DynamicResource FgColor}"
-                                       Text="This will revert any system registry changes made by Win11Debloat to their previous state. You can review the changes after selecting a backup file. Apps will need to be reinstalled manually."/>
+                                       Text="This will restore any system registry changes made by Win11Debloat to their previous state. You can review the changes after selecting a backup file. Apps will need to be reinstalled manually."/>
 
                             <TextBlock Grid.Row="1"
                                        Margin="0,12,0,2"

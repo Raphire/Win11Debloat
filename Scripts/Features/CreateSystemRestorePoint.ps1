@@ -6,7 +6,8 @@ function CreateSystemRestorePoint {
         # In GUI mode, skip the prompt and just try to enable it
         if ($script:GuiWindow -or $Silent -or $( Read-Host -Prompt "System restore is disabled, would you like to enable it and create a restore point? (y/n)") -eq 'y') {
             try {
-                $enableResult = Invoke-NonBlocking -TimeoutSeconds 20 -ScriptBlock {
+                # Changed it from 20 seconds to 90 for slow computers, and maybe 120 is great
+                $enableResult = Invoke-NonBlocking -TimeoutSeconds 90 -ScriptBlock {
                     try {
                         Enable-ComputerRestore -Drive "$env:SystemDrive"
                         return $null
@@ -33,7 +34,8 @@ function CreateSystemRestorePoint {
 
     if (-not $failed) {
         try {
-            $result = Invoke-NonBlocking -TimeoutSeconds 20 -ScriptBlock {
+            # Changed it from 20 seconds to 90 for slow computers, and maybe 120 is great
+            $result = Invoke-NonBlocking -TimeoutSeconds 90 -ScriptBlock {
                 try {
                     $recentRestorePoints = Get-ComputerRestorePoint | Where-Object { (Get-Date) - [System.Management.ManagementDateTimeConverter]::ToDateTime($_.CreationTime) -le (New-TimeSpan -Hours 24) }
                 }

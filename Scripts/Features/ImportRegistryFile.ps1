@@ -127,7 +127,7 @@ function ImportRegistryFile {
         # Fallback only helps when the import step failed. If load/unload failed,
         # retrying fallback will hit the same hive-state problem and adds noisy errors.
         if ($usesOfflineHive -and ($regResult.FailureStage -eq 'load' -or $regResult.FailureStage -eq 'unload')) {
-            $errorMessage = "Failed importing registry file '$path'. Offline hive $($regResult.FailureStage) failed: $details. Skipping PowerShell fallback because it requires loading the same hive state."
+            $errorMessage = "Failed importing registry file '$path'. Offline hive $($regResult.FailureStage) failed: $details"
             Write-Host $errorMessage -ForegroundColor Red
             Write-Host ""
             throw $errorMessage

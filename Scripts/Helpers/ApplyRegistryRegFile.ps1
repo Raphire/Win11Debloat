@@ -40,6 +40,9 @@ function Convert-RegOperationToValueKind {
             }
             return @{ Name = $valueName; Kind = [Microsoft.Win32.RegistryValueKind]::ExpandString; Value = $expandStringValue }
         }
+        'Hex7' {
+            return @{ Name = $valueName; Kind = [Microsoft.Win32.RegistryValueKind]::MultiString; Value = [string[]]$Operation.ValueData }
+        }
         { $valueType -in @('Hex3', 'Hex4', 'Hex5') } {
             return @{ Name = $valueName; Kind = [Microsoft.Win32.RegistryValueKind]::Binary; Value = [byte[]]$Operation.ValueData }
         }

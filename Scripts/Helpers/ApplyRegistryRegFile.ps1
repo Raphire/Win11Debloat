@@ -135,8 +135,10 @@ function Invoke-RegistryOperationsFromRegFile {
     )
 
     $accessDeniedCount = 0
+    $operations = @(Get-RegFileOperations -regFilePath $RegFilePath)
+    $totalOperations = $operations.Count
 
-    foreach ($operation in @(Get-RegFileOperations -regFilePath $RegFilePath)) {
+    foreach ($operation in $operations) {
         try {
             $keyInfo = Get-RegistryKeyForOperation -RegistryPath $operation.KeyPath -CreateIfMissing:($operation.OperationType -eq 'SetValue') -OpenKey:($operation.OperationType -ne 'DeleteKey')
 
@@ -193,6 +195,10 @@ function Invoke-RegistryOperationsFromRegFile {
         }
     }
 
+    if ($totalOperations -gt 0 -and $accessDeniedCount -eq $totalOperations) {
+        throw "Registry fallback import could not apply any operations in '$RegFilePath' because all $accessDeniedCount operation(s) were blocked by access restrictions."
+    }
+
     if ($accessDeniedCount -gt 0) {
         Write-Warning "Registry fallback import completed with $accessDeniedCount access-restricted operation(s) skipped in '$RegFilePath'."
     }
@@ -213,7 +219,7 @@ function Invoke-RegistryImportViaPowerShell {
     }
 
     if ($UseOfflineHive) {
-        if (Get-Command -Name Invoke-WithLoadedBackupHive -ErrorAction SilentlyContinue) {
+        if ((Get-Command -Name Invoke-WithLoadedBackupHive -ErrorAction SilentlyContinue) -and -not $HiveAlreadyLoaded.IsPresent) {
             return Invoke-WithLoadedBackupHive -ScriptBlock $applyScript -ArgumentObject $RegFilePath
         }
 
@@ -221,7 +227,7 @@ function Invoke-RegistryImportViaPowerShell {
             throw "Offline hive path was not provided for fallback import of '$RegFilePath'"
         }
 
-        if (-not $HiveAlreadyLoaded) {
+        if (-not $HiveAlreadyLoaded.IsPresent) {
             $global:LASTEXITCODE = 0
             reg load "HKU\Default" $OfflineHiveDatPath | Out-Null
             $loadExitCode = $LASTEXITCODE

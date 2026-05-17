@@ -74,6 +74,9 @@ function Remove-RegistrySubKeyTreeIfExists {
     try {
         $RootKey.DeleteSubKeyTree($SubKeyPath, $false)
     }
+    catch [System.UnauthorizedAccessException], [System.Security.SecurityException] {
+        throw
+    }
     catch {
         # Best-effort cleanup only; missing keys are fine.
     }
@@ -117,50 +120,83 @@ function Invoke-RegistryOperationsFromRegFile {
         [string]$RegFilePath
     )
 
-    foreach ($operation in @(Get-RegFileOperations -regFilePath $RegFilePath)) {
-        $keyInfo = Get-RegistryKeyForOperation -RegistryPath $operation.KeyPath -CreateIfMissing:($operation.OperationType -eq 'SetValue')
+    $accessDeniedFailures = New-Object 'System.Collections.Generic.List[object]'
 
-        switch ($operation.OperationType) {
-            'DeleteKey' {
-                if ($null -ne $keyInfo.Key) {
-                    try {
-                        if ($null -ne $keyInfo.SubKeyPath) {
-                            Remove-RegistrySubKeyTreeIfExists -RootKey $keyInfo.RootKey -SubKeyPath $keyInfo.SubKeyPath
+    foreach ($operation in @(Get-RegFileOperations -regFilePath $RegFilePath)) {
+        try {
+            $keyInfo = Get-RegistryKeyForOperation -RegistryPath $operation.KeyPath -CreateIfMissing:($operation.OperationType -eq 'SetValue')
+
+            switch ($operation.OperationType) {
+                'DeleteKey' {
+                    if ($null -ne $keyInfo.Key) {
+                        try {
+                            if ($null -ne $keyInfo.SubKeyPath) {
+                                Remove-RegistrySubKeyTreeIfExists -RootKey $keyInfo.RootKey -SubKeyPath $keyInfo.SubKeyPath
+                            }
+                        }
+                        finally {
+                            $keyInfo.Key.Close()
                         }
                     }
-                    finally {
-                        $keyInfo.Key.Close()
+                }
+                'DeleteValue' {
+                    if ($null -ne $keyInfo.Key) {
+                        try {
+                            $valueName = if ([string]::IsNullOrEmpty([string]$operation.ValueName)) { '' } else { [string]$operation.ValueName }
+                            $keyInfo.Key.DeleteValue($valueName, $false)
+                        }
+                        finally {
+                            $keyInfo.Key.Close()
+                        }
                     }
                 }
-            }
-            'DeleteValue' {
-                if ($null -ne $keyInfo.Key) {
-                    try {
-                        $valueName = if ([string]::IsNullOrEmpty([string]$operation.ValueName)) { '' } else { [string]$operation.ValueName }
-                        $keyInfo.Key.DeleteValue($valueName, $false)
+                'SetValue' {
+                    if ($null -eq $keyInfo.Key) {
+                        throw "Unable to open or create registry key '$($operation.KeyPath)'"
                     }
-                    finally {
-                        $keyInfo.Key.Close()
-                    }
-                }
-            }
-            'SetValue' {
-                if ($null -eq $keyInfo.Key) {
-                    throw "Unable to open or create registry key '$($operation.KeyPath)'"
-                }
 
-                try {
-                    $setArgs = Convert-RegOperationToValueKind -Operation $operation
-                    $keyInfo.Key.SetValue($setArgs.Name, $setArgs.Value, $setArgs.Kind)
+                    try {
+                        $setArgs = Convert-RegOperationToValueKind -Operation $operation
+                        $keyInfo.Key.SetValue($setArgs.Name, $setArgs.Value, $setArgs.Kind)
+                    }
+                    finally {
+                        $keyInfo.Key.Close()
+                    }
                 }
-                finally {
-                    $keyInfo.Key.Close()
+                default {
+                    throw "Unsupported reg operation type '$($operation.OperationType)' in '$RegFilePath'"
                 }
-            }
-            default {
-                throw "Unsupported reg operation type '$($operation.OperationType)' in '$RegFilePath'"
             }
         }
+        catch [System.UnauthorizedAccessException], [System.Security.SecurityException] {
+            $valueDisplay = if ($operation.OperationType -eq 'SetValue' -or $operation.OperationType -eq 'DeleteValue') {
+                if ([string]::IsNullOrEmpty([string]$operation.ValueName)) { '(Default)' } else { [string]$operation.ValueName }
+            }
+            else {
+                ''
+            }
+
+            $failure = [PSCustomObject]@{
+                OperationType = [string]$operation.OperationType
+                KeyPath = [string]$operation.KeyPath
+                ValueName = $valueDisplay
+                Error = $_.Exception.Message
+            }
+            $accessDeniedFailures.Add($failure)
+
+            if ([string]::IsNullOrEmpty($valueDisplay)) {
+                Write-Warning ("Skipping operation '{0}' on key '{1}' due to access restrictions: {2}" -f $failure.OperationType, $failure.KeyPath, $failure.Error)
+            }
+            else {
+                Write-Warning ("Skipping operation '{0}' on key '{1}' value '{2}' due to access restrictions: {3}" -f $failure.OperationType, $failure.KeyPath, $failure.ValueName, $failure.Error)
+            }
+
+            continue
+        }
+    }
+
+    if ($accessDeniedFailures.Count -gt 0) {
+        Write-Warning ("Registry fallback import completed with $($accessDeniedFailures.Count) access-restricted operation(s) skipped in '$RegFilePath'.")
     }
 }
 

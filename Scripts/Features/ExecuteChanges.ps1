@@ -166,7 +166,7 @@ function ExecuteAllChanges {
     if ($hasRegistryBackedFeature) {
         $currentStep++
         if ($script:ApplyProgressCallback) {
-            & $script:ApplyProgressCallback $currentStep $totalSteps "Creating registry backup"
+            & $script:ApplyProgressCallback $currentStep $totalSteps "Creating registry backup..."
         }
 
         Write-Host "> Creating registry backup..."
@@ -182,9 +182,9 @@ function ExecuteAllChanges {
     if ($script:Params.ContainsKey("CreateRestorePoint")) {
         $currentStep++
         if ($script:ApplyProgressCallback) {
-            & $script:ApplyProgressCallback $currentStep $totalSteps "Creating system restore point"
+            & $script:ApplyProgressCallback $currentStep $totalSteps "Creating system restore point, this may take a moment..."
         }
-        Write-Host "> Attempting to create a system restore point..."
+        Write-Host "> Creating a system restore point..."
         CreateSystemRestorePoint
         Write-Host ""
     }

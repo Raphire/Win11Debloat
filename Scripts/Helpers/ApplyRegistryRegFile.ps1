@@ -21,18 +21,30 @@ function Convert-RegOperationToValueKind {
         'String' {
             return @{ Name = $valueName; Kind = [Microsoft.Win32.RegistryValueKind]::String; Value = [string]$Operation.ValueData }
         }
-        'Hex2' {
-            return @{ Name = $valueName; Kind = [Microsoft.Win32.RegistryValueKind]::ExpandString; Value = [string]$Operation.ValueData }
-        }
-        'Hex1' {
-            $stringValue = ([System.Text.Encoding]::Unicode.GetString([byte[]]$Operation.ValueData)).TrimEnd([char]0)
-            return @{ Name = $valueName; Kind = [Microsoft.Win32.RegistryValueKind]::String; Value = $stringValue }
-        }
-        'Hex7' {
-            return @{ Name = $valueName; Kind = [Microsoft.Win32.RegistryValueKind]::MultiString; Value = [string[]]@($Operation.ValueData | ForEach-Object { [string]$_ }) }
-        }
         'Binary' {
             return @{ Name = $valueName; Kind = [Microsoft.Win32.RegistryValueKind]::Binary; Value = [byte[]]$Operation.ValueData }
+        }
+        'Hex0' {
+            return @{ Name = $valueName; Kind = [Microsoft.Win32.RegistryValueKind]::None; Value = [byte[]]$Operation.ValueData }
+        }
+        'Hex3' {
+            return @{ Name = $valueName; Kind = [Microsoft.Win32.RegistryValueKind]::Binary; Value = [byte[]]$Operation.ValueData }
+        }
+        'HexB' {
+            $qwordBytes = [byte[]]$Operation.ValueData
+            if ($qwordBytes.Count -gt 8) {
+                throw "Unsupported hex value type '$valueType' with invalid byte count '$($qwordBytes.Count)' while applying reg operation for '$($Operation.KeyPath)'."
+            }
+
+            if ($qwordBytes.Count -lt 8) {
+                $paddedBytes = New-Object byte[] 8
+                [Array]::Copy($qwordBytes, $paddedBytes, $qwordBytes.Count)
+                $qwordBytes = $paddedBytes
+            }
+
+            $unsigned = [BitConverter]::ToUInt64($qwordBytes, 0)
+            $signed = [BitConverter]::ToInt64([BitConverter]::GetBytes($unsigned), 0)
+            return @{ Name = $valueName; Kind = [Microsoft.Win32.RegistryValueKind]::QWord; Value = $signed }
         }
         default {
             if ($valueType -like 'Hex*') {

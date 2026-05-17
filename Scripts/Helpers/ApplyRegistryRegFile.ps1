@@ -151,6 +151,9 @@ function Invoke-RegistryDeleteValueOperation {
     )
 
     if ($null -eq $KeyInfo.Key) {
+        $valueName = Get-NormalizedRegistryValueName -ValueName $Operation.ValueName
+        $displayValueName = if ([string]::IsNullOrEmpty($valueName)) { '(Default)' } else { $valueName }
+        Write-Verbose "Unable to find or open key '$($Operation.KeyPath)' and value '$displayValueName'"
         return
     }
 

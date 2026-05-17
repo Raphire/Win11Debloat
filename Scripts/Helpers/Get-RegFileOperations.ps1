@@ -170,5 +170,23 @@ function Convert-RegistryByteArrayToMultiString {
         [byte[]]$byteData
     )
 
-    return @(([System.Text.Encoding]::Unicode.GetString($byteData)).TrimEnd([char]0) -split "`0" | Where-Object { $_ -ne '' })
+    $decoded = [System.Text.Encoding]::Unicode.GetString($byteData)
+    $values = New-Object 'System.Collections.Generic.List[string]'
+    $current = New-Object System.Text.StringBuilder
+
+    foreach ($character in $decoded.ToCharArray()) {
+        if ($character -eq [char]0) {
+            $values.Add($current.ToString())
+            $null = $current.Clear()
+            continue
+        }
+
+        $null = $current.Append($character)
+    }
+
+    if ($values.Count -gt 0 -and $values[$values.Count - 1] -eq '') {
+        $values.RemoveAt($values.Count - 1)
+    }
+
+    return @($values.ToArray())
 }

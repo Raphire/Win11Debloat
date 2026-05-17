@@ -374,6 +374,20 @@
       "MinVersion": null,
       "MaxVersion": null
     },
+
+    {
+      "FeatureId": "DisableWiFi",
+      "Label": "Disable Wi-Fi Service (prevent location leaking when disabled).",
+      "ToolTip": "Even with location services disabled and going through extensive effort, it is all in vain if you leave Wi-Fi and Wi-Fi discovery enabled. Wi-Fi trilateration via discoverable SSIDs nearby can leak your location.",
+      "Category": "Privacy & Suggested Content",
+      "RegistryKey": null,
+      "ApplyText": "Disabling the Wi-Fi service and monitoring it (keeping it disabled)...",
+      "UndoAction": "Enable", 
+      "RegistryUndoKey": null,
+      "MinVersion": null,
+      "MaxVersion": null
+    },
+    
     {
       "FeatureId": "DisableSuggestions",
       "Label": "Disable tips, tricks & suggested content throughout Windows",

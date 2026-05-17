@@ -1,3 +1,153 @@
+function Convert-RegOperationKeyToProviderPath {
+    param(
+        [Parameter(Mandatory)]
+        [string]$RegistryPath
+    )
+
+    $parts = Split-RegistryPath -path $RegistryPath
+    if (-not $parts) {
+        throw "Unsupported registry path: $RegistryPath"
+    }
+
+    $driveRoot = switch ($parts.Hive.ToUpperInvariant()) {
+        'HKEY_LOCAL_MACHINE' { 'HKLM:' }
+        'HKEY_CURRENT_USER' { 'HKCU:' }
+        'HKEY_CLASSES_ROOT' { 'HKCR:' }
+        'HKEY_USERS' { 'HKU:' }
+        'HKEY_CURRENT_CONFIG' { 'HKCC:' }
+        default { throw "Unsupported registry hive '$($parts.Hive)' in path '$RegistryPath'" }
+    }
+
+    if ([string]::IsNullOrWhiteSpace($parts.SubKey)) {
+        return $driveRoot
+    }
+
+    return "$driveRoot\\$($parts.SubKey)"
+}
+
+function Convert-RegOperationToSetItemPropertyArguments {
+    param(
+        [Parameter(Mandatory)]
+        $Operation
+    )
+
+    $valueName = if ([string]::IsNullOrEmpty([string]$Operation.ValueName)) { '(default)' } else { [string]$Operation.ValueName }
+    $valueType = [string]$Operation.ValueType
+
+    switch ($valueType) {
+        'DWord' {
+            $unsigned = [uint32]$Operation.ValueData
+            $value = [BitConverter]::ToInt32([BitConverter]::GetBytes($unsigned), 0)
+            return @{ Name = $valueName; Type = 'DWord'; Value = $value }
+        }
+        'QWord' {
+            $unsigned = [uint64]$Operation.ValueData
+            $value = [BitConverter]::ToInt64([BitConverter]::GetBytes($unsigned), 0)
+            return @{ Name = $valueName; Type = 'QWord'; Value = $value }
+        }
+        'String' {
+            return @{ Name = $valueName; Type = 'String'; Value = [string]$Operation.ValueData }
+        }
+        'Hex2' {
+            return @{ Name = $valueName; Type = 'ExpandString'; Value = [string]$Operation.ValueData }
+        }
+        'Hex7' {
+            return @{ Name = $valueName; Type = 'MultiString'; Value = @($Operation.ValueData) }
+        }
+        'Binary' {
+            return @{ Name = $valueName; Type = 'Binary'; Value = [byte[]]$Operation.ValueData }
+        }
+        default {
+            if ($valueType -like 'Hex*') {
+                return @{ Name = $valueName; Type = 'Binary'; Value = [byte[]]$Operation.ValueData }
+            }
+
+            throw "Unsupported value type '$valueType' while applying reg operation for '$($Operation.KeyPath)'"
+        }
+    }
+}
+
+function Invoke-RegistryOperationsFromRegFile {
+    param(
+        [Parameter(Mandatory)]
+        [string]$RegFilePath
+    )
+
+    foreach ($operation in @(Get-RegFileOperations -regFilePath $RegFilePath)) {
+        $providerPath = Convert-RegOperationKeyToProviderPath -RegistryPath $operation.KeyPath
+
+        switch ($operation.OperationType) {
+            'DeleteKey' {
+                if (Test-Path -LiteralPath $providerPath) {
+                    Remove-Item -LiteralPath $providerPath -Recurse -Force -ErrorAction Stop
+                }
+            }
+            'DeleteValue' {
+                if (-not (Test-Path -LiteralPath $providerPath)) {
+                    New-Item -Path $providerPath -Force -ErrorAction Stop | Out-Null
+                }
+                $valueName = if ([string]::IsNullOrEmpty([string]$operation.ValueName)) { '(default)' } else { [string]$operation.ValueName }
+                Remove-ItemProperty -Path $providerPath -Name $valueName -ErrorAction SilentlyContinue
+            }
+            'SetValue' {
+                if (-not (Test-Path -LiteralPath $providerPath)) {
+                    New-Item -Path $providerPath -Force -ErrorAction Stop | Out-Null
+                }
+                $setArgs = Convert-RegOperationToSetItemPropertyArguments -Operation $operation
+                Set-ItemProperty -Path $providerPath -Name $setArgs.Name -Value $setArgs.Value -Type $setArgs.Type -Force -ErrorAction Stop
+            }
+            default {
+                throw "Unsupported reg operation type '$($operation.OperationType)' in '$RegFilePath'"
+            }
+        }
+    }
+}
+
+function Invoke-RegistryImportViaPowerShell {
+    param(
+        [Parameter(Mandatory)]
+        [string]$RegFilePath,
+        [switch]$UseOfflineHive,
+        [string]$OfflineHiveDatPath
+    )
+
+    $applyScript = {
+        param($targetRegFilePath)
+        Invoke-RegistryOperationsFromRegFile -RegFilePath $targetRegFilePath
+    }
+
+    if ($UseOfflineHive) {
+        if (Get-Command -Name Invoke-WithLoadedBackupHive -ErrorAction SilentlyContinue) {
+            return Invoke-WithLoadedBackupHive -ScriptBlock $applyScript -ArgumentObject $RegFilePath
+        }
+
+        if ([string]::IsNullOrWhiteSpace($OfflineHiveDatPath)) {
+            throw "Offline hive path was not provided for fallback import of '$RegFilePath'"
+        }
+
+        $global:LASTEXITCODE = 0
+        reg load "HKU\Default" $OfflineHiveDatPath | Out-Null
+        $loadExitCode = $LASTEXITCODE
+        if ($loadExitCode -ne 0) {
+            throw "Failed to load user hive at '$OfflineHiveDatPath' for fallback import (exit code: $loadExitCode)"
+        }
+
+        try {
+            return & $applyScript $RegFilePath
+        }
+        finally {
+            $global:LASTEXITCODE = 0
+            reg unload "HKU\Default" | Out-Null
+            $unloadExitCode = $LASTEXITCODE
+            if ($unloadExitCode -ne 0) {
+                Write-Warning "Fallback import completed, but unloading HKU\\Default failed (exit code: $unloadExitCode)."
+            }
+        }
+    }
+
+    return & $applyScript $RegFilePath
+}
+
 # Import & execute regfile
 function ImportRegistryFile {
     param (
@@ -8,6 +158,7 @@ function ImportRegistryFile {
     Write-Host $message
 
     $usesOfflineHive = $script:Params.ContainsKey("Sysprep") -or $script:Params.ContainsKey("User")
+    $hiveDatPath = $null
     $regFilePath = if ($usesOfflineHive) {
         "$script:RegfilesPath\Sysprep\$path"
     }
@@ -107,10 +258,20 @@ function ImportRegistryFile {
 
     if (-not $hasSuccess) {
         $details = if ($regResult.Error) { $regResult.Error } else { "Exit code: $($regResult.ExitCode)" }
-        $errorMessage = "Failed importing registry file '$path'. $details"
-        Write-Host $errorMessage -ForegroundColor Red
-        Write-Host ""
-        throw $errorMessage
+        Write-Warning "reg import failed for '$path'. Falling back to PowerShell registry writer. Details: $details"
+
+        try {
+            Invoke-RegistryImportViaPowerShell -RegFilePath $regFilePath -UseOfflineHive:$usesOfflineHive -OfflineHiveDatPath $hiveDatPath
+            Write-Host "Fallback import succeeded for '$path'." -ForegroundColor Yellow
+            Write-Host ""
+            return
+        }
+        catch {
+            $errorMessage = "Failed importing registry file '$path'. reg import error: $details. PowerShell fallback error: $($_.Exception.Message)"
+            Write-Host $errorMessage -ForegroundColor Red
+            Write-Host ""
+            throw $errorMessage
+        }
     }
 
     Write-Host ""

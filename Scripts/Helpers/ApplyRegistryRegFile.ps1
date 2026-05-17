@@ -27,7 +27,20 @@ function Convert-RegOperationToValueKind {
         'Hex0' {
             return @{ Name = $valueName; Kind = [Microsoft.Win32.RegistryValueKind]::None; Value = [byte[]]$Operation.ValueData }
         }
-        'Hex3' {
+        'Hex1' {
+            $stringValue = ([System.Text.Encoding]::Unicode.GetString([byte[]]$Operation.ValueData)).TrimEnd([char]0)
+            return @{ Name = $valueName; Kind = [Microsoft.Win32.RegistryValueKind]::String; Value = $stringValue }
+        }
+        'Hex2' {
+            $expandStringValue = if ($Operation.ValueData -is [byte[]]) {
+                ([System.Text.Encoding]::Unicode.GetString([byte[]]$Operation.ValueData)).TrimEnd([char]0)
+            }
+            else {
+                [string]$Operation.ValueData
+            }
+            return @{ Name = $valueName; Kind = [Microsoft.Win32.RegistryValueKind]::ExpandString; Value = $expandStringValue }
+        }
+        { $valueType -in @('Hex3', 'Hex4', 'Hex5') } {
             return @{ Name = $valueName; Kind = [Microsoft.Win32.RegistryValueKind]::Binary; Value = [byte[]]$Operation.ValueData }
         }
         'HexB' {
@@ -118,7 +131,7 @@ function Invoke-RegistryOperationsFromRegFile {
         [string]$RegFilePath
     )
 
-    $accessDeniedFailures = New-Object 'System.Collections.Generic.List[object]'
+    $accessDeniedCount = 0
 
     foreach ($operation in @(Get-RegFileOperations -regFilePath $RegFilePath)) {
         try {
@@ -143,7 +156,7 @@ function Invoke-RegistryOperationsFromRegFile {
                 }
                 'SetValue' {
                     if ($null -eq $keyInfo.Key) {
-                        throw "Unable to open or create registry key '$($operation.KeyPath)'"
+                        throw [System.UnauthorizedAccessException]::new("Unable to open or create registry key '$($operation.KeyPath)'")
                     }
 
                     try {
@@ -160,34 +173,25 @@ function Invoke-RegistryOperationsFromRegFile {
             }
         }
         catch [System.UnauthorizedAccessException], [System.Security.SecurityException] {
-            $valueDisplay = if ($operation.OperationType -eq 'SetValue' -or $operation.OperationType -eq 'DeleteValue') {
-                if ([string]::IsNullOrEmpty([string]$operation.ValueName)) { '(Default)' } else { [string]$operation.ValueName }
+            $accessDeniedCount++
+            $keyPath = [string]$operation.KeyPath
+            $opType = [string]$operation.OperationType
+            $valueName = [string]$operation.ValueName
+
+            if ($opType -eq 'SetValue' -or $opType -eq 'DeleteValue') {
+                $display = if ([string]::IsNullOrEmpty($valueName)) { '(Default)' } else { $valueName }
+                Write-Warning "Skipping operation '$opType' on key '$keyPath' value '$display' due to access restrictions: $($_.Exception.Message)"
             }
             else {
-                ''
-            }
-
-            $failure = [PSCustomObject]@{
-                OperationType = [string]$operation.OperationType
-                KeyPath = [string]$operation.KeyPath
-                ValueName = $valueDisplay
-                Error = $_.Exception.Message
-            }
-            $accessDeniedFailures.Add($failure)
-
-            if ([string]::IsNullOrEmpty($valueDisplay)) {
-                Write-Warning ("Skipping operation '{0}' on key '{1}' due to access restrictions: {2}" -f $failure.OperationType, $failure.KeyPath, $failure.Error)
-            }
-            else {
-                Write-Warning ("Skipping operation '{0}' on key '{1}' value '{2}' due to access restrictions: {3}" -f $failure.OperationType, $failure.KeyPath, $failure.ValueName, $failure.Error)
+                Write-Warning "Skipping operation '$opType' on key '$keyPath' due to access restrictions: $($_.Exception.Message)"
             }
 
             continue
         }
     }
 
-    if ($accessDeniedFailures.Count -gt 0) {
-        Write-Warning ("Registry fallback import completed with $($accessDeniedFailures.Count) access-restricted operation(s) skipped in '$RegFilePath'.")
+    if ($accessDeniedCount -gt 0) {
+        Write-Warning "Registry fallback import completed with $accessDeniedCount access-restricted operation(s) skipped in '$RegFilePath'."
     }
 }
 
@@ -196,7 +200,8 @@ function Invoke-RegistryImportViaPowerShell {
         [Parameter(Mandatory)]
         [string]$RegFilePath,
         [switch]$UseOfflineHive,
-        [string]$OfflineHiveDatPath
+        [string]$OfflineHiveDatPath,
+        [switch]$HiveAlreadyLoaded
     )
 
     $applyScript = {
@@ -213,11 +218,13 @@ function Invoke-RegistryImportViaPowerShell {
             throw "Offline hive path was not provided for fallback import of '$RegFilePath'"
         }
 
-        $global:LASTEXITCODE = 0
-        reg load "HKU\Default" $OfflineHiveDatPath | Out-Null
-        $loadExitCode = $LASTEXITCODE
-        if ($loadExitCode -ne 0) {
-            throw "Failed to load user hive at '$OfflineHiveDatPath' for fallback import (exit code: $loadExitCode)"
+        if (-not $HiveAlreadyLoaded) {
+            $global:LASTEXITCODE = 0
+            reg load "HKU\Default" $OfflineHiveDatPath | Out-Null
+            $loadExitCode = $LASTEXITCODE
+            if ($loadExitCode -ne 0) {
+                throw "Failed to load user hive at '$OfflineHiveDatPath' for fallback import (exit code: $loadExitCode)"
+            }
         }
 
         try {

@@ -22,7 +22,7 @@ function Convert-RegOperationKeyToProviderPath {
         return $driveRoot
     }
 
-    return "$driveRoot\\$($parts.SubKey)"
+    return "$driveRoot\$($parts.SubKey)"
 }
 
 function Convert-RegOperationToSetItemPropertyArguments {
@@ -51,6 +51,10 @@ function Convert-RegOperationToSetItemPropertyArguments {
         'Hex2' {
             return @{ Name = $valueName; Type = 'ExpandString'; Value = [string]$Operation.ValueData }
         }
+        'Hex1' {
+            $stringValue = ([System.Text.Encoding]::Unicode.GetString([byte[]]$Operation.ValueData)).TrimEnd([char]0)
+            return @{ Name = $valueName; Type = 'String'; Value = $stringValue }
+        }
         'Hex7' {
             return @{ Name = $valueName; Type = 'MultiString'; Value = @($Operation.ValueData) }
         }
@@ -59,7 +63,7 @@ function Convert-RegOperationToSetItemPropertyArguments {
         }
         default {
             if ($valueType -like 'Hex*') {
-                return @{ Name = $valueName; Type = 'Binary'; Value = [byte[]]$Operation.ValueData }
+                throw "Unsupported hex value type '$valueType' while applying reg operation for '$($Operation.KeyPath)'."
             }
 
             throw "Unsupported value type '$valueType' while applying reg operation for '$($Operation.KeyPath)'"
@@ -83,11 +87,10 @@ function Invoke-RegistryOperationsFromRegFile {
                 }
             }
             'DeleteValue' {
-                if (-not (Test-Path -LiteralPath $providerPath)) {
-                    New-Item -Path $providerPath -Force -ErrorAction Stop | Out-Null
+                if (Test-Path -LiteralPath $providerPath) {
+                    $valueName = if ([string]::IsNullOrEmpty([string]$operation.ValueName)) { '(default)' } else { [string]$operation.ValueName }
+                    Remove-ItemProperty -Path $providerPath -Name $valueName -ErrorAction SilentlyContinue
                 }
-                $valueName = if ([string]::IsNullOrEmpty([string]$operation.ValueName)) { '(default)' } else { [string]$operation.ValueName }
-                Remove-ItemProperty -Path $providerPath -Name $valueName -ErrorAction SilentlyContinue
             }
             'SetValue' {
                 if (-not (Test-Path -LiteralPath $providerPath)) {
@@ -140,7 +143,7 @@ function Invoke-RegistryImportViaPowerShell {
             reg unload "HKU\Default" | Out-Null
             $unloadExitCode = $LASTEXITCODE
             if ($unloadExitCode -ne 0) {
-                Write-Warning "Fallback import completed, but unloading HKU\\Default failed (exit code: $unloadExitCode)."
+                Write-Warning "Fallback import completed, but unloading HKU\Default failed (exit code: $unloadExitCode)."
             }
         }
     }
@@ -190,6 +193,7 @@ function ImportRegistryFile {
                 Output = @()
                 ExitCode = 0
                 Error = $null
+                FailureStage = $null
             }
 
             try {
@@ -198,6 +202,7 @@ function ImportRegistryFile {
                 $loadExitCode = $LASTEXITCODE
 
                 if ($loadExitCode -ne 0) {
+                    $result.FailureStage = 'load'
                     throw "Failed to load user hive at '$hivePath' (exit code: $loadExitCode)"
                 }
 
@@ -210,10 +215,14 @@ function ImportRegistryFile {
                 $result.ExitCode = $importExitCode
 
                 if ($importExitCode -ne 0) {
+                    $result.FailureStage = 'import'
                     throw "Registry import failed with exit code $importExitCode for '$targetRegFilePath'"
                 }
             }
             catch {
+                if (-not $result.FailureStage) {
+                    $result.FailureStage = 'unknown'
+                }
                 $result.Error = $_.Exception.Message
                 $result.ExitCode = if ($LASTEXITCODE -ne 0) { $LASTEXITCODE } else { 1 }
             }
@@ -222,6 +231,7 @@ function ImportRegistryFile {
                 reg unload "HKU\Default" | Out-Null
                 $unloadExitCode = $LASTEXITCODE
                 if ($unloadExitCode -ne 0 -and -not $result.Error) {
+                    $result.FailureStage = 'unload'
                     $result.Error = "Failed to unload registry hive HKU\Default (exit code: $unloadExitCode)"
                     $result.ExitCode = $unloadExitCode
                 }
@@ -258,10 +268,53 @@ function ImportRegistryFile {
 
     if (-not $hasSuccess) {
         $details = if ($regResult.Error) { $regResult.Error } else { "Exit code: $($regResult.ExitCode)" }
+
+        # Fallback only helps when the import step failed. If load/unload failed,
+        # retrying fallback will hit the same hive-state problem and adds noisy errors.
+        if ($usesOfflineHive -and ($regResult.FailureStage -eq 'load' -or $regResult.FailureStage -eq 'unload')) {
+            $errorMessage = "Failed importing registry file '$path'. Offline hive $($regResult.FailureStage) failed: $details. Skipping PowerShell fallback because it requires loading the same hive state."
+            Write-Host $errorMessage -ForegroundColor Red
+            Write-Host ""
+            throw $errorMessage
+        }
+
         Write-Warning "reg import failed for '$path'. Falling back to PowerShell registry writer. Details: $details"
 
         try {
-            Invoke-RegistryImportViaPowerShell -RegFilePath $regFilePath -UseOfflineHive:$usesOfflineHive -OfflineHiveDatPath $hiveDatPath
+            if ($script:GuiWindow) {
+                $repoRootPath = Split-Path -Path $script:RegfilesPath -Parent
+                $registryPathHelpersScript = Join-Path $repoRootPath 'Scripts\Helpers\RegistryPathHelpers.ps1'
+                $regFileOperationsScript = Join-Path $repoRootPath 'Scripts\Helpers\Get-RegFileOperations.ps1'
+                $importRegistryScript = Join-Path $repoRootPath 'Scripts\Features\ImportRegistryFile.ps1'
+
+                Invoke-NonBlocking -ScriptBlock {
+                    param(
+                        $registryPathHelpersScriptPath,
+                        $regFileOperationsScriptPath,
+                        $importRegistryScriptPath,
+                        $targetRegFilePath,
+                        $useOfflineHive,
+                        $offlineHiveDatPath
+                    )
+
+                    . $registryPathHelpersScriptPath
+                    . $regFileOperationsScriptPath
+                    . $importRegistryScriptPath
+
+                    Invoke-RegistryImportViaPowerShell -RegFilePath $targetRegFilePath -UseOfflineHive:$useOfflineHive -OfflineHiveDatPath $offlineHiveDatPath
+                } -ArgumentList @(
+                    $registryPathHelpersScript,
+                    $regFileOperationsScript,
+                    $importRegistryScript,
+                    $regFilePath,
+                    $usesOfflineHive,
+                    $hiveDatPath
+                )
+            }
+            else {
+                Invoke-RegistryImportViaPowerShell -RegFilePath $regFilePath -UseOfflineHive:$usesOfflineHive -OfflineHiveDatPath $hiveDatPath
+            }
+
             Write-Host "Fallback import succeeded for '$path'." -ForegroundColor Yellow
             Write-Host ""
             return

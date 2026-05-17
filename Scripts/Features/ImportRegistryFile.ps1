@@ -143,6 +143,20 @@ function ImportRegistryFile {
             return
         }
         catch {
+            if ($usesOfflineHive -and [bool]$regResult.HiveLeftLoaded) {
+                # Safety net: if fallback failed before unloading the preloaded hive,
+                # attempt cleanup here to avoid leaving HKU\Default mounted.
+                $global:LASTEXITCODE = 0
+                reg query "HKU\Default" | Out-Null
+                if ($LASTEXITCODE -eq 0) {
+                    $global:LASTEXITCODE = 0
+                    reg unload "HKU\Default" | Out-Null
+                    if ($LASTEXITCODE -ne 0) {
+                        Write-Warning "Fallback cleanup failed: unable to unload HKU\Default after fallback error (exit code: $LASTEXITCODE)."
+                    }
+                }
+            }
+
             $errorMessage = "Failed importing registry file '$path'. reg import error: $details. PowerShell fallback error: $($_.Exception.Message)"
             Write-Host $errorMessage -ForegroundColor Red
             Write-Host ""

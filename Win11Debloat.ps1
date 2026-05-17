@@ -36,6 +36,7 @@ param (
     [switch]$DisableDeliveryOptimization,
     [switch]$DisableBing,
     [switch]$DisableStoreSearchSuggestions,
+    [switch]$DisableWiFi,
     [switch]$DisableSearchHighlights,
     [switch]$DisableDesktopSpotlight,
     [switch]$DisableLockscreenTips,
@@ -306,6 +307,7 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 . "$PSScriptRoot/Scripts/Features/ImportRegistryFile.ps1"
 . "$PSScriptRoot/Scripts/Features/ReplaceStartMenu.ps1"
 . "$PSScriptRoot/Scripts/Features/RestartExplorer.ps1"
+. "$PSScriptRoot/Scripts/Features/DisableWiFi.ps1"
 
 # File I/O functions
 . "$PSScriptRoot/Scripts/FileIO/LoadJsonFile.ps1"

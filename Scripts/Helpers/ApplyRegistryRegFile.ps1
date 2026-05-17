@@ -64,13 +64,6 @@ function Remove-RegistrySubKeyTreeIfExists {
         [string]$SubKeyPath
     )
 
-    $existingKey = $RootKey.OpenSubKey($SubKeyPath, $true)
-    if ($null -eq $existingKey) {
-        return
-    }
-
-    $existingKey.Close()
-
     try {
         $RootKey.DeleteSubKeyTree($SubKeyPath, $false)
     }
@@ -86,7 +79,8 @@ function Get-RegistryKeyForOperation {
     param(
         [Parameter(Mandatory)]
         [string]$RegistryPath,
-        [switch]$CreateIfMissing
+        [switch]$CreateIfMissing,
+        [bool]$OpenKey = $true
     )
 
     $parts = Split-RegistryPath -path $RegistryPath
@@ -102,6 +96,10 @@ function Get-RegistryKeyForOperation {
     $subKeyPath = $parts.SubKey
     if ([string]::IsNullOrWhiteSpace($subKeyPath)) {
         return [PSCustomObject]@{ RootKey = $rootKey; SubKeyPath = $null; Key = $rootKey }
+    }
+
+    if (-not $OpenKey) {
+        return [PSCustomObject]@{ RootKey = $rootKey; SubKeyPath = $subKeyPath; Key = $null }
     }
 
     $key = if ($CreateIfMissing) {
@@ -124,19 +122,12 @@ function Invoke-RegistryOperationsFromRegFile {
 
     foreach ($operation in @(Get-RegFileOperations -regFilePath $RegFilePath)) {
         try {
-            $keyInfo = Get-RegistryKeyForOperation -RegistryPath $operation.KeyPath -CreateIfMissing:($operation.OperationType -eq 'SetValue')
+            $keyInfo = Get-RegistryKeyForOperation -RegistryPath $operation.KeyPath -CreateIfMissing:($operation.OperationType -eq 'SetValue') -OpenKey:($operation.OperationType -ne 'DeleteKey')
 
             switch ($operation.OperationType) {
                 'DeleteKey' {
-                    if ($null -ne $keyInfo.Key) {
-                        try {
-                            if ($null -ne $keyInfo.SubKeyPath) {
-                                Remove-RegistrySubKeyTreeIfExists -RootKey $keyInfo.RootKey -SubKeyPath $keyInfo.SubKeyPath
-                            }
-                        }
-                        finally {
-                            $keyInfo.Key.Close()
-                        }
+                    if ($null -ne $keyInfo.SubKeyPath) {
+                        Remove-RegistrySubKeyTreeIfExists -RootKey $keyInfo.RootKey -SubKeyPath $keyInfo.SubKeyPath
                     }
                 }
                 'DeleteValue' {

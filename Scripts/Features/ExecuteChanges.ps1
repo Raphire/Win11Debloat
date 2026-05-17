@@ -119,6 +119,12 @@ function ExecuteParameter {
             ReplaceStartMenuForAllUsers $script:Params.Item("ReplaceStartAllUsers")
             return
         }
+
+        'DisableWiFi' {
+            DisableWiFi $script:Params.Item("DisableWiFi")
+            return
+        }
+
         'DisableStoreSearchSuggestions' {
             if ($script:Params.ContainsKey("Sysprep")) {
                 Write-Host "> Disabling Microsoft Store search suggestions in the start menu for all users..."

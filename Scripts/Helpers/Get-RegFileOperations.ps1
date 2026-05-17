@@ -113,11 +113,14 @@ function Convert-RegValueData {
     }
 
     if ($valueData -match '^hex(?:\((?<kind>[0-9a-fA-F]+)\))?:(?<bytes>[0-9a-fA-F,\s]+)$') {
+        if ($matches.kind -eq '7') {
+            throw "Unsupported registry value type hex(7) (REG_MULTI_SZ) encountered."
+        }
+
         $bytes = Convert-HexStringToByteArray -hexValue $matches.bytes
         $valueType = if ($matches.kind) { "Hex$($matches.kind)" } else { 'Binary' }
         $value = switch ($matches.kind) {
             '2' { Convert-RegistryByteArrayToString -byteData $bytes }
-            '7' { Convert-RegistryByteArrayToMultiString -byteData $bytes }
             default { $bytes }
         }
 
@@ -162,31 +165,4 @@ function Convert-RegistryByteArrayToString {
     )
 
     return ([System.Text.Encoding]::Unicode.GetString($byteData)).TrimEnd([char]0)
-}
-
-function Convert-RegistryByteArrayToMultiString {
-    param(
-        [Parameter(Mandatory)]
-        [byte[]]$byteData
-    )
-
-    $decoded = [System.Text.Encoding]::Unicode.GetString($byteData)
-    $values = New-Object 'System.Collections.Generic.List[string]'
-    $current = New-Object System.Text.StringBuilder
-
-    foreach ($character in $decoded.ToCharArray()) {
-        if ($character -eq [char]0) {
-            $values.Add($current.ToString())
-            $null = $current.Clear()
-            continue
-        }
-
-        $null = $current.Append($character)
-    }
-
-    if ($values.Count -gt 0 -and $values[$values.Count - 1] -eq '') {
-        $values.RemoveAt($values.Count - 1)
-    }
-
-    return @($values.ToArray())
 }

@@ -281,39 +281,7 @@ function ImportRegistryFile {
         Write-Warning "reg import failed for '$path'. Falling back to PowerShell registry writer. Details: $details"
 
         try {
-            if ($script:GuiWindow) {
-                $repoRootPath = Split-Path -Path $script:RegfilesPath -Parent
-                $registryPathHelpersScript = Join-Path $repoRootPath 'Scripts\Helpers\RegistryPathHelpers.ps1'
-                $regFileOperationsScript = Join-Path $repoRootPath 'Scripts\Helpers\Get-RegFileOperations.ps1'
-                $importRegistryScript = Join-Path $repoRootPath 'Scripts\Features\ImportRegistryFile.ps1'
-
-                Invoke-NonBlocking -ScriptBlock {
-                    param(
-                        $registryPathHelpersScriptPath,
-                        $regFileOperationsScriptPath,
-                        $importRegistryScriptPath,
-                        $targetRegFilePath,
-                        $useOfflineHive,
-                        $offlineHiveDatPath
-                    )
-
-                    . $registryPathHelpersScriptPath
-                    . $regFileOperationsScriptPath
-                    . $importRegistryScriptPath
-
-                    Invoke-RegistryImportViaPowerShell -RegFilePath $targetRegFilePath -UseOfflineHive:$useOfflineHive -OfflineHiveDatPath $offlineHiveDatPath
-                } -ArgumentList @(
-                    $registryPathHelpersScript,
-                    $regFileOperationsScript,
-                    $importRegistryScript,
-                    $regFilePath,
-                    $usesOfflineHive,
-                    $hiveDatPath
-                )
-            }
-            else {
-                Invoke-RegistryImportViaPowerShell -RegFilePath $regFilePath -UseOfflineHive:$usesOfflineHive -OfflineHiveDatPath $hiveDatPath
-            }
+            Invoke-RegistryImportViaPowerShell -RegFilePath $regFilePath -UseOfflineHive:$usesOfflineHive -OfflineHiveDatPath $hiveDatPath
 
             Write-Host "Fallback import succeeded for '$path'." -ForegroundColor Yellow
             Write-Host ""

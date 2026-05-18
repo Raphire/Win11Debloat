@@ -24,8 +24,6 @@ function ImportRegistryFile {
     }
 
     $regResult = $null
-    $operationErrorMessage = $null
-    $cleanupErrorMessage = $null
     $offlineHiveLoaded = $false
 
     try {
@@ -94,20 +92,17 @@ function ImportRegistryFile {
 
         if (-not $hasSuccess) {
             $details = if ($regResult.Error) { $regResult.Error } else { "Exit code: $($regResult.ExitCode)" }
-
             Write-Warning "reg import failed for '$path'. Falling back to PowerShell registry writer. Details: $details"
-
-            try {
-                Invoke-RegistryOperationsFromRegFile -RegFilePath $regFilePath
-                Write-Host "Fallback import succeeded for '$path'." -ForegroundColor Yellow
-            }
-            catch {
-                throw "Failed importing registry file '$path'. reg import error: $details. PowerShell fallback error: $($_.Exception.Message)"
-            }
+            Invoke-RegistryOperationsFromRegFile -RegFilePath $regFilePath
+            Write-Host "Fallback import succeeded for '$path'." -ForegroundColor Yellow
         }
+
+        Write-Host ""
     }
     catch {
-        $operationErrorMessage = $_.Exception.Message
+        Write-Host $_.Exception.Message -ForegroundColor Red
+        Write-Host ""
+        throw
     }
     finally {
         if ($offlineHiveLoaded) {
@@ -116,29 +111,8 @@ function ImportRegistryFile {
             $unloadExitCode = $LASTEXITCODE
 
             if ($unloadExitCode -ne 0) {
-                $cleanupErrorMessage = "Failed to unload registry hive HKU\Default after importing '$path' (exit code: $unloadExitCode)"
+                throw "Failed to unload registry hive HKU\Default after importing '$path' (exit code: $unloadExitCode)"
             }
         }
     }
-
-    if ($cleanupErrorMessage) {
-        $errorMessage = if ($operationErrorMessage) {
-            "$operationErrorMessage Cleanup error: $cleanupErrorMessage"
-        }
-        else {
-            $cleanupErrorMessage
-        }
-
-        Write-Host $errorMessage -ForegroundColor Red
-        Write-Host ""
-        throw $errorMessage
-    }
-
-    if ($operationErrorMessage) {
-        Write-Host $operationErrorMessage -ForegroundColor Red
-        Write-Host ""
-        throw $operationErrorMessage
-    }
-
-    Write-Host ""
 }

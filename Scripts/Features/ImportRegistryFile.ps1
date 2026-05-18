@@ -111,7 +111,7 @@ function ImportRegistryFile {
             $unloadExitCode = $LASTEXITCODE
 
             if ($unloadExitCode -ne 0) {
-                throw "Failed to unload registry hive HKU\Default after importing '$path' (exit code: $unloadExitCode)"
+                Write-Warning "Failed to unload registry hive HKU\Default after importing '$path' (exit code: $unloadExitCode)"
             }
         }
     }

@@ -8,7 +8,6 @@ function ImportRegistryFile {
     Write-Host $message
 
     $usesOfflineHive = $script:Params.ContainsKey("Sysprep") -or $script:Params.ContainsKey("User")
-    $hiveDatPath = $null
     $regFileDirectory = if ($usesOfflineHive) {
         Join-Path $script:RegfilesPath "Sysprep"
     }

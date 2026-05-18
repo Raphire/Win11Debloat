@@ -9,12 +9,14 @@ function ImportRegistryFile {
 
     $usesOfflineHive = $script:Params.ContainsKey("Sysprep") -or $script:Params.ContainsKey("User")
     $hiveDatPath = $null
-    $regFilePath = if ($usesOfflineHive) {
-        "$script:RegfilesPath\Sysprep\$path"
+    $loadedHivePath = $null
+    $regFileDirectory = if ($usesOfflineHive) {
+        Join-Path $script:RegfilesPath "Sysprep"
     }
     else {
-        "$script:RegfilesPath\$path"
+        $script:RegfilesPath
     }
+    $regFilePath = Join-Path $regFileDirectory $path
 
     if (-not (Test-Path $regFilePath)) {
         $errorMessage = "Unable to find registry file: $path ($regFilePath)"
@@ -23,37 +25,40 @@ function ImportRegistryFile {
         throw $errorMessage
     }
 
-    if ($usesOfflineHive) {
-        # Sysprep targets Default user, User targets the specified user
-        $hiveDatPath = if ($script:Params.ContainsKey("Sysprep")) {
-            GetUserDirectory -userName "Default" -fileName "NTUSER.DAT"
-        } else {
-            GetUserDirectory -userName $script:Params.Item("User") -fileName "NTUSER.DAT"
+    $regResult = $null
+    $operationErrorMessage = $null
+    $cleanupErrorMessage = $null
+    $offlineHiveLoaded = $false
+
+    try {
+        if ($usesOfflineHive) {
+            # Sysprep targets Default user, User targets the specified user
+            $targetUserName = if ($script:Params.ContainsKey("Sysprep")) { "Default" } else { $script:Params.Item("User") }
+            $hiveDatPath = GetUserDirectory -userName $targetUserName -fileName "NTUSER.DAT"
+            $loadedHivePath = 'HKEY_USERS\Default'
+
+            $global:LASTEXITCODE = 0
+            reg load "HKU\Default" $hiveDatPath | Out-Null
+            $loadExitCode = $LASTEXITCODE
+
+            if ($loadExitCode -ne 0) {
+                throw "Failed importing registry file '$path'. Offline hive load failed: Failed to load user hive at '$hiveDatPath' (exit code: $loadExitCode)"
+            }
+
+            $offlineHiveLoaded = $true
         }
 
         $regResult = Invoke-NonBlocking -ScriptBlock {
-            param($hivePath, $targetRegFilePath)
+            param($targetRegFilePath)
             $result = @{
                 Output = @()
                 ExitCode = 0
                 Error = $null
                 FailureStage = $null
-                HiveLeftLoaded = $false
             }
-            $hiveLoaded = $false
 
             try {
                 $global:LASTEXITCODE = 0
-                reg load "HKU\Default" $hivePath | Out-Null
-                $loadExitCode = $LASTEXITCODE
-
-                if ($loadExitCode -ne 0) {
-                    $result.FailureStage = 'load'
-                    throw "Failed to load user hive at '$hivePath' (exit code: $loadExitCode)"
-                }
-
-                $hiveLoaded = $true
-
                 $output = reg import $targetRegFilePath 2>&1
                 $importExitCode = $LASTEXITCODE
 
@@ -74,94 +79,73 @@ function ImportRegistryFile {
                 $result.Error = $_.Exception.Message
                 $result.ExitCode = if ($LASTEXITCODE -ne 0) { $LASTEXITCODE } else { 1 }
             }
-            finally {
-                # When import failed the hive stays mounted so the PowerShell
-                # fallback can reuse it immediately without a load/unload race.
-                if ($hiveLoaded -and $result.FailureStage -eq 'import') {
-                    $result.HiveLeftLoaded = $true
-                }
-                elseif ($hiveLoaded) {
-                    $global:LASTEXITCODE = 0
-                    reg unload "HKU\Default" | Out-Null
-                    $unloadExitCode = $LASTEXITCODE
-                    if ($unloadExitCode -ne 0 -and -not $result.Error) {
-                        $result.FailureStage = 'unload'
-                        $result.Error = "Failed to unload registry hive HKU\Default (exit code: $unloadExitCode)"
-                        $result.ExitCode = $unloadExitCode
-                    }
-                }
-            }
 
             return $result
-        } -ArgumentList @($hiveDatPath, $regFilePath)
-    }
-    else {
-        $regResult = Invoke-NonBlocking -ScriptBlock {
-            param($targetRegFilePath)
-            $global:LASTEXITCODE = 0
-            $output = reg import $targetRegFilePath 2>&1
-            return @{ Output = @($output); ExitCode = $LASTEXITCODE; Error = $null }
         } -ArgumentList $regFilePath
-    }
 
-    $regOutput = @($regResult.Output)
-    $hasSuccess = ($regResult.ExitCode -eq 0) -and -not $regResult.Error
-    
-    if ($regOutput) {
-        foreach ($line in $regOutput) {
-            $lineText = if ($line -is [System.Management.Automation.ErrorRecord]) { $line.Exception.Message } else { $line.ToString() }
-            if ($lineText -and $lineText.Length -gt 0) {
-                if ($hasSuccess) {
-                    Write-Host $lineText
-                }
-                else {
-                    Write-Host $lineText -ForegroundColor Red
-                }
-            }
-        }
-    }
+        $regOutput = @($regResult.Output)
+        $hasSuccess = ($regResult.ExitCode -eq 0) -and -not $regResult.Error
 
-    if (-not $hasSuccess) {
-        $details = if ($regResult.Error) { $regResult.Error } else { "Exit code: $($regResult.ExitCode)" }
-
-        # Fallback only helps when the import step failed. If load/unload failed,
-        # retrying fallback will hit the same hive-state problem and adds noisy errors.
-        if ($usesOfflineHive -and ($regResult.FailureStage -eq 'load' -or $regResult.FailureStage -eq 'unload')) {
-            $errorMessage = "Failed importing registry file '$path'. Offline hive $($regResult.FailureStage) failed: $details"
-            Write-Host $errorMessage -ForegroundColor Red
-            Write-Host ""
-            throw $errorMessage
-        }
-
-        Write-Warning "reg import failed for '$path'. Falling back to PowerShell registry writer. Details: $details"
-
-        try {
-            Invoke-RegistryImportViaPowerShell -RegFilePath $regFilePath -UseOfflineHive:$usesOfflineHive -OfflineHiveDatPath $hiveDatPath -HiveAlreadyLoaded:([bool]$regResult.HiveLeftLoaded)
-
-            Write-Host "Fallback import succeeded for '$path'." -ForegroundColor Yellow
-            Write-Host ""
-            return
-        }
-        catch {
-            if ($usesOfflineHive -and [bool]$regResult.HiveLeftLoaded) {
-                # Safety net: if fallback failed before unloading the preloaded hive,
-                # attempt cleanup here to avoid leaving HKU\Default mounted.
-                $global:LASTEXITCODE = 0
-                reg query "HKU\Default" | Out-Null
-                if ($LASTEXITCODE -eq 0) {
-                    $global:LASTEXITCODE = 0
-                    reg unload "HKU\Default" | Out-Null
-                    if ($LASTEXITCODE -ne 0) {
-                        Write-Warning "Fallback cleanup failed: unable to unload HKU\Default after fallback error (exit code: $LASTEXITCODE)."
+        if ($regOutput) {
+            foreach ($line in $regOutput) {
+                $lineText = if ($line -is [System.Management.Automation.ErrorRecord]) { $line.Exception.Message } else { $line.ToString() }
+                if ($lineText -and $lineText.Length -gt 0) {
+                    if ($hasSuccess) {
+                        Write-Host $lineText
+                    }
+                    else {
+                        Write-Host $lineText -ForegroundColor Red
                     }
                 }
             }
-
-            $errorMessage = "Failed importing registry file '$path'. reg import error: $details. PowerShell fallback error: $($_.Exception.Message)"
-            Write-Host $errorMessage -ForegroundColor Red
-            Write-Host ""
-            throw $errorMessage
         }
+
+        if (-not $hasSuccess) {
+            $details = if ($regResult.Error) { $regResult.Error } else { "Exit code: $($regResult.ExitCode)" }
+
+            Write-Warning "reg import failed for '$path'. Falling back to PowerShell registry writer. Details: $details"
+
+            try {
+                Invoke-RegistryOperationsFromRegFile -RegFilePath $regFilePath
+                Write-Host "Fallback import succeeded for '$path'." -ForegroundColor Yellow
+            }
+            catch {
+                throw "Failed importing registry file '$path'. reg import error: $details. PowerShell fallback error: $($_.Exception.Message)"
+            }
+        }
+    }
+    catch {
+        $operationErrorMessage = $_.Exception.Message
+    }
+    finally {
+        if ($offlineHiveLoaded) {
+            $global:LASTEXITCODE = 0
+            reg unload "HKU\Default" | Out-Null
+            $unloadExitCode = $LASTEXITCODE
+
+            if ($unloadExitCode -ne 0) {
+                $cleanupErrorMessage = "Failed to unload registry hive HKU\Default after importing '$path' (exit code: $unloadExitCode)"
+            }
+        }
+    }
+
+    if ($cleanupErrorMessage) {
+        $errorMessage = if ($operationErrorMessage) {
+            "$operationErrorMessage Cleanup error: $cleanupErrorMessage"
+        }
+        else {
+            $cleanupErrorMessage
+        }
+
+        Write-Host $errorMessage -ForegroundColor Red
+        Write-Host ""
+        throw $errorMessage
+    }
+
+    if ($operationErrorMessage) {
+        Write-Host $operationErrorMessage -ForegroundColor Red
+        Write-Host ""
+        throw $operationErrorMessage
     }
 
     Write-Host ""

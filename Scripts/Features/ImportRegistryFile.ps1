@@ -9,7 +9,6 @@ function ImportRegistryFile {
 
     $usesOfflineHive = $script:Params.ContainsKey("Sysprep") -or $script:Params.ContainsKey("User")
     $hiveDatPath = $null
-    $loadedHivePath = $null
     $regFileDirectory = if ($usesOfflineHive) {
         Join-Path $script:RegfilesPath "Sysprep"
     }
@@ -35,7 +34,6 @@ function ImportRegistryFile {
             # Sysprep targets Default user, User targets the specified user
             $targetUserName = if ($script:Params.ContainsKey("Sysprep")) { "Default" } else { $script:Params.Item("User") }
             $hiveDatPath = GetUserDirectory -userName $targetUserName -fileName "NTUSER.DAT"
-            $loadedHivePath = 'HKEY_USERS\Default'
 
             $global:LASTEXITCODE = 0
             reg load "HKU\Default" $hiveDatPath | Out-Null
@@ -54,7 +52,6 @@ function ImportRegistryFile {
                 Output = @()
                 ExitCode = 0
                 Error = $null
-                FailureStage = $null
             }
 
             try {
@@ -68,14 +65,10 @@ function ImportRegistryFile {
                 $result.ExitCode = $importExitCode
 
                 if ($importExitCode -ne 0) {
-                    $result.FailureStage = 'import'
                     throw "Registry import failed with exit code $importExitCode for '$targetRegFilePath'"
                 }
             }
             catch {
-                if (-not $result.FailureStage) {
-                    $result.FailureStage = 'unknown'
-                }
                 $result.Error = $_.Exception.Message
                 $result.ExitCode = if ($LASTEXITCODE -ne 0) { $LASTEXITCODE } else { 1 }
             }

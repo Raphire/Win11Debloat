@@ -856,12 +856,12 @@
     {
       "FeatureId": "DisableWidgets",
       "Label": "Disable widgets on the taskbar & lock screen",
-      "ToolTip": "This will disable the widgets features in Windows, including the widgets button on the taskbar and the widgets that can appear on the lock screen. This feature uses policies, which will lock down certain settings.",
+      "ToolTip": "This will disable the widgets features in Windows, including the widgets button on the taskbar and the widgets that can appear on the lock screen.",
       "Category": "Taskbar",
       "Priority": 4,
-      "RegistryKey": "Disable_Widgets_Service.reg",
-      "ApplyText": "Disabling widgets on the taskbar & lock screen...",
-      "RegistryUndoKey": "Enable_Widgets_Service.reg",
+      "RegistryKey": null,
+      "ApplyText": null,
+      "RegistryUndoKey": null,
       "MinVersion": null,
       "MaxVersion": null
     },

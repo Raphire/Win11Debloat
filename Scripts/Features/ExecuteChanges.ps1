@@ -26,10 +26,6 @@ function ExecuteParameter {
                 # Also remove the app package for Copilot
                 RemoveApps 'Microsoft.Copilot'
             }
-            'DisableWidgets' {
-                # Also remove the app packages for Widgets
-                RemoveApps 'Microsoft.StartExperiencesApp','MicrosoftWindows.Client.WebExperience','Microsoft.WidgetsPlatformRuntime'
-            }
         }
         return
     }
@@ -85,6 +81,13 @@ function ExecuteParameter {
             Write-Host "> Removing HP apps..."
             RemoveApps $appsList
             return
+        }
+        'DisableWidgets' {
+            Write-Host "> Disabling widgets on the taskbar & lock screen..."
+            # Stop widgets related processes before removing the app packages to prevent potential issues
+            Get-Process *Widget* | Stop-Process
+            
+            RemoveApps 'Microsoft.StartExperiencesApp','MicrosoftWindows.Client.WebExperience','Microsoft.WidgetsPlatformRuntime'
         }
         "EnableWindowsSandbox" {
             Write-Host "> Enabling Windows Sandbox..."

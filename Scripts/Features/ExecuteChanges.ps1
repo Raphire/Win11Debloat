@@ -138,6 +138,8 @@ function ExecuteParameter {
 
 # Executes all selected parameters/features
 function ExecuteAllChanges {    
+    $script:RegistryImportFailures = 0
+
     # Build list of actionable parameters (skip control params and data-only params)
     $actionableKeys = @()
     foreach ($paramKey in $script:Params.Keys) {
@@ -215,5 +217,10 @@ function ExecuteAllChanges {
         }
         
         ExecuteParameter -paramKey $paramKey
+    }
+
+    if ($script:RegistryImportFailures -gt 0) {
+        Write-Host ""
+        Write-Host "$($script:RegistryImportFailures) registry import change(s) failed. See output above for details." -ForegroundColor Yellow
     }
 }

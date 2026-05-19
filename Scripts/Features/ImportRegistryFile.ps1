@@ -18,6 +18,7 @@ function ImportRegistryFile {
 
     if (-not (Test-Path $regFilePath)) {
         $errorMessage = "Unable to find registry file: $path ($regFilePath)"
+        $script:RegistryImportFailures++
         Write-Host "Error: $errorMessage" -ForegroundColor Red
         Write-Host ""
         throw $errorMessage
@@ -100,9 +101,9 @@ function ImportRegistryFile {
         Write-Host ""
     }
     catch {
+        $script:RegistryImportFailures++
         Write-Host $_.Exception.Message -ForegroundColor Red
         Write-Host ""
-        throw
     }
     finally {
         if ($offlineHiveLoaded) {

@@ -26,10 +26,6 @@ function ExecuteParameter {
                 # Also remove the app package for Copilot
                 RemoveApps 'Microsoft.Copilot'
             }
-            'DisableWidgets' {
-                # Also remove the app packages for Widgets
-                RemoveApps 'Microsoft.StartExperiencesApp','MicrosoftWindows.Client.WebExperience','Microsoft.WidgetsPlatformRuntime'
-            }
         }
         return
     }
@@ -86,6 +82,13 @@ function ExecuteParameter {
             RemoveApps $appsList
             return
         }
+        'DisableWidgets' {
+            Write-Host "> Disabling widgets on the taskbar & lock screen..."
+            # Stop widgets related processes before removing the app packages to prevent potential issues
+            Get-Process *Widget* | Stop-Process
+            
+            RemoveApps 'Microsoft.StartExperiencesApp','MicrosoftWindows.Client.WebExperience','Microsoft.WidgetsPlatformRuntime'
+        }
         "EnableWindowsSandbox" {
             Write-Host "> Enabling Windows Sandbox..."
             EnableWindowsFeature "Containers-DisposableClientVM"
@@ -138,6 +141,8 @@ function ExecuteParameter {
 
 # Executes all selected parameters/features
 function ExecuteAllChanges {    
+    $script:RegistryImportFailures = 0
+
     # Build list of actionable parameters (skip control params and data-only params)
     $actionableKeys = @()
     foreach ($paramKey in $script:Params.Keys) {
@@ -215,5 +220,10 @@ function ExecuteAllChanges {
         }
         
         ExecuteParameter -paramKey $paramKey
+    }
+
+    if ($script:RegistryImportFailures -gt 0) {
+        Write-Host ""
+        Write-Host "$($script:RegistryImportFailures) registry import change(s) failed. See output above for details." -ForegroundColor Yellow
     }
 }

@@ -349,6 +349,7 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 . "$PSScriptRoot/Scripts/Helpers/GetUserDirectory.ps1"
 . "$PSScriptRoot/Scripts/Helpers/GetUserName.ps1"
 . "$PSScriptRoot/Scripts/Helpers/RegistryPathHelpers.ps1"
+. "$PSScriptRoot/Scripts/Helpers/ApplyRegistryRegFile.ps1"
 . "$PSScriptRoot/Scripts/Helpers/TestIfUserIsLoggedIn.ps1"
 
 # Threading functions
@@ -401,7 +402,7 @@ else {
 }
 
 if ($script:Params.ContainsKey("Sysprep")) {
-    $defaultUserPath = GetUserDirectory -userName "Default"
+    GetUserDirectory -userName "Default" | Out-Null
 
     # Exit script if run in Sysprep mode on Windows 10
     if ($WinVersion -lt 22000) {
@@ -412,10 +413,10 @@ if ($script:Params.ContainsKey("Sysprep")) {
 
 # Ensure that target user exists, if User or AppRemovalTarget parameter was provided
 if ($script:Params.ContainsKey("User")) {
-    $userPath = GetUserDirectory -userName $script:Params.Item("User")
+    GetUserDirectory -userName $script:Params.Item("User") | Out-Null
 }
 if ($script:Params.ContainsKey("AppRemovalTarget")) {
-    $userPath = GetUserDirectory -userName $script:Params.Item("AppRemovalTarget")
+    GetUserDirectory -userName $script:Params.Item("AppRemovalTarget") | Out-Null
 }
 
 # Remove LastUsedSettings.json file if it exists and is empty

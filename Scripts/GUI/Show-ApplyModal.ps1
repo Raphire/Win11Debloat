@@ -123,6 +123,8 @@ function Show-ApplyModal {
     $applyWindow.Dispatcher.BeginInvoke([System.Windows.Threading.DispatcherPriority]::Background, [action]{
         try {
             ExecuteAllChanges
+
+            $registryImportFailureCount = [int]$script:RegistryImportFailures
             
             # Restart explorer if requested
             if ($RestartExplorer -and -not $script:CancelRequested) {
@@ -139,7 +141,7 @@ function Show-ApplyModal {
             Write-Host ""
             if ($script:CancelRequested) {
                 Write-Host "Script execution was cancelled by the user. Some changes may not have been applied."
-            } else {
+            } elseif ($registryImportFailureCount -eq 0) {
                 Write-Host "All changes have been applied successfully!"
             }
             
@@ -153,6 +155,11 @@ function Show-ApplyModal {
                 $script:ApplyCompletionIconEl.Foreground = [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#e8912d"))
                 $script:ApplyCompletionTitleEl.Text = "Cancelled"
                 $script:ApplyCompletionMessageEl.Text = "Script execution was cancelled by the user."
+            } elseif ($registryImportFailureCount -gt 0) {
+                $script:ApplyCompletionIconEl.Text = [char]0xE7BA
+                $script:ApplyCompletionIconEl.Foreground = [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#e8912d"))
+                $script:ApplyCompletionTitleEl.Text = "Changes Applied with Errors"
+                $script:ApplyCompletionMessageEl.Text = "$registryImportFailureCount registry change(s) failed. See console for details."
             } else {
                 $script:ApplyCompletionTitleEl.Text = "Changes Applied"
 

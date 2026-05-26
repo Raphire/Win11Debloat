@@ -109,7 +109,7 @@ Avoid these common mistakes when contributing:
 
    Placing files in the wrong directory will cause the script to fail when trying to apply or undo changes.
 
-6. **Not Testing Undo Functionality**: Always test that your undo registry file properly reverts all changes. A feature that can't be undone will frustrate users.
+6. **Not Testing Undo Functionality**: Always test that your undo registry file properly reverts all changes.
 
 7. **Not Testing User/Sysprep Functionality**: Always test that your feature works when applied to another user or to the Windows default user with Sysprep. Sysprep changes can be tested by creating new users after running the script.
 

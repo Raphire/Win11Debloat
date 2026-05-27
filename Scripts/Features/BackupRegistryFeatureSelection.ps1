@@ -14,8 +14,7 @@ function Get-FeatureId {
 
 function Get-RegistryBackedFeatures {
     param(
-        [Parameter(Mandatory)]
-        [object[]]$Features
+        [object[]]$Features = @()
     )
 
     return @($Features | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_.RegistryKey) })

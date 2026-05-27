@@ -33,12 +33,49 @@ function Get-NormalizedSelectedFeatureIdsFromBackup {
         $errors.Add('SelectedFeatures must contain non-empty string feature IDs.')
     }
 
-    if ($selectedFeatures.Count -eq 0) {
-        $errors.Add('SelectedFeatures must contain at least one feature ID.')
+    return [PSCustomObject]@{
+        SelectedFeatures = $selectedFeatures.ToArray()
+        Errors = $errors.ToArray()
+    }
+}
+
+function Get-NormalizedSelectedUndoFeatureIdsFromBackup {
+    param(
+        [Parameter(Mandatory)]
+        $Backup
+    )
+
+    $selectedUndoFeatures = New-Object System.Collections.Generic.List[string]
+    $selectedUndoFeatureIds = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
+    $errors = New-Object System.Collections.Generic.List[string]
+
+    # SelectedUndoFeatures is optional - only process if present
+    if (-not $Backup.PSObject.Properties['SelectedUndoFeatures']) {
+        return [PSCustomObject]@{
+            SelectedUndoFeatures = $selectedUndoFeatures.ToArray()
+            Errors = $errors.ToArray()
+        }
+    }
+
+    $hasInvalidSelectedUndoFeatureId = $false
+    foreach ($featureId in @($Backup.SelectedUndoFeatures)) {
+        if ($featureId -isnot [string] -or [string]::IsNullOrWhiteSpace([string]$featureId)) {
+            $hasInvalidSelectedUndoFeatureId = $true
+            continue
+        }
+
+        $normalizedFeatureId = [string]$featureId
+        if ($selectedUndoFeatureIds.Add($normalizedFeatureId)) {
+            $selectedUndoFeatures.Add($normalizedFeatureId)
+        }
+    }
+
+    if ($hasInvalidSelectedUndoFeatureId) {
+        $errors.Add('SelectedUndoFeatures must contain non-empty string feature IDs.')
     }
 
     return [PSCustomObject]@{
-        SelectedFeatures = $selectedFeatures.ToArray()
+        SelectedUndoFeatures = $selectedUndoFeatures.ToArray()
         Errors = $errors.ToArray()
     }
 }

@@ -293,6 +293,7 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 . "$PSScriptRoot/Scripts/CLI/PrintHeader.ps1"
 
 # Features functions
+. "$PSScriptRoot/Scripts/Features/GetCurrentTweakState.ps1"
 . "$PSScriptRoot/Scripts/Features/ExecuteChanges.ps1"
 . "$PSScriptRoot/Scripts/Features/CreateSystemRestorePoint.ps1"
 . "$PSScriptRoot/Scripts/Features/BackupRegistryFeatureSelection.ps1"

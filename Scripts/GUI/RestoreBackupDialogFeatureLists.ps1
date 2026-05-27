@@ -82,13 +82,21 @@ function Test-RestoreDialogFeatureVisibleInOverview {
 function Get-SelectedFeatureIdsFromBackup {
     param($SelectedBackup)
 
-    return @(
-        foreach ($featureId in @($SelectedBackup.SelectedFeatures)) {
-            if (-not [string]::IsNullOrWhiteSpace([string]$featureId)) {
-                [string]$featureId
-            }
+    $featureIds = New-Object System.Collections.Generic.List[string]
+    $seenIds = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
+
+    foreach ($featureId in @($SelectedBackup.SelectedFeatures) + @($SelectedBackup.SelectedUndoFeatures)) {
+        if ([string]::IsNullOrWhiteSpace([string]$featureId)) {
+            continue
         }
-    )
+
+        $normalizedId = [string]$featureId
+        if ($seenIds.Add($normalizedId)) {
+            $featureIds.Add($normalizedId)
+        }
+    }
+
+    return @($featureIds.ToArray())
 }
 
 function Get-RestoreBackupFeatureLists {

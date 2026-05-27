@@ -87,7 +87,17 @@ function Normalize-RegistryBackup {
         $errors.Add([string]$selectedFeatureParseError)
     }
 
-    $allowListValidationErrors = @(Test-RegistryBackupMatchesSelectedFeatures -SelectedFeatureIds @($selectedFeatures) -Target $normalizedTarget -RegistryKeys @($normalizedKeys))
+    $selectedUndoFeatureParseResult = Get-NormalizedSelectedUndoFeatureIdsFromBackup -Backup $Backup
+    $selectedUndoFeatures = @($selectedUndoFeatureParseResult.SelectedUndoFeatures)
+    foreach ($selectedUndoFeatureParseError in @($selectedUndoFeatureParseResult.Errors)) {
+        $errors.Add([string]$selectedUndoFeatureParseError)
+    }
+
+    $allSelectedFeatures = @($selectedFeatures) + @($selectedUndoFeatures)
+    if ($allSelectedFeatures.Count -eq 0) {
+        $errors.Add('Backup must contain at least one feature ID in SelectedFeatures or SelectedUndoFeatures.')
+    }
+    $allowListValidationErrors = @(Test-RegistryBackupMatchesSelectedFeatures -SelectedFeatureIds @($allSelectedFeatures) -Target $normalizedTarget -RegistryKeys @($normalizedKeys))
     foreach ($allowListValidationError in $allowListValidationErrors) {
         $errors.Add([string]$allowListValidationError)
     }
@@ -110,6 +120,7 @@ function Normalize-RegistryBackup {
         ComputerName = [string]$Backup.ComputerName
         Target = $normalizedTarget
         SelectedFeatures = @($selectedFeatures)
+            SelectedUndoFeatures = @($selectedUndoFeatures)
         RegistryKeys = @($normalizedKeys)
     }
 }

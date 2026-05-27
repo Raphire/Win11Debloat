@@ -1,3 +1,58 @@
+# List of undo actions to execute after forward changes.
+# Each entry is a PSCustomObject with FeatureId and UndoRegFile (filename, without folder prefix).
+$script:UndoRegistryKeys = @()
+
+# List of undo actions for features that do not use registry undo files.
+# Each entry is a PSCustomObject with FeatureId.
+$script:UndoFeatureActions = @()
+
+# Resolves the path of an undo reg file relative to $script:RegfilesPath.
+# Checks the Undo/ subfolder first, then falls back to the root Regfiles/ folder.
+function Resolve-UndoRegFilePath {
+    param ([string]$FileName)
+    $undoSubPath = Join-Path 'Undo' $FileName
+    if (Test-Path (Join-Path $script:RegfilesPath $undoSubPath)) {
+        return $undoSubPath
+    }
+    return $FileName
+}
+
+function Invoke-UndoFeatureAction {
+    param(
+        [Parameter(Mandatory)]
+        [string]$FeatureId
+    )
+
+    switch ($FeatureId) {
+        'DisableStoreSearchSuggestions' {
+            if ($script:Params.ContainsKey('Sysprep')) {
+                Write-Host "> Re-enabling Microsoft Store search suggestions in the start menu for all users..."
+                EnableStoreSearchSuggestionsForAllUsers
+                Write-Host ""
+                return
+            }
+
+            Write-Host "> Re-enabling Microsoft Store search suggestions for user $(GetUserName)..."
+            EnableStoreSearchSuggestions
+            Write-Host ""
+            return
+        }
+        'EnableWindowsSandbox' {
+            Write-Host "> Disabling Windows Sandbox..."
+            DisableWindowsFeature 'Containers-DisposableClientVM'
+            Write-Host ""
+            return
+        }
+        'EnableWindowsSubsystemForLinux' {
+            Write-Host "> Disabling Windows Subsystem for Linux..."
+            DisableWindowsFeature 'Microsoft-Windows-Subsystem-Linux'
+            DisableWindowsFeature 'VirtualMachinePlatform'
+            Write-Host ""
+            return
+        }
+    }
+}
+
 # Executes a single parameter/feature based on its key
 # Parameters:
 #   $paramKey - The parameter name to execute
@@ -162,8 +217,12 @@ function ExecuteAllChanges {
             break
         }
     }
+    # Undo operations that write registry values also require a backup
+    if (-not $hasRegistryBackedFeature -and $script:UndoRegistryKeys.Count -gt 0) {
+        $hasRegistryBackedFeature = $true
+    }
     
-    $totalSteps = $actionableKeys.Count
+    $totalSteps = $actionableKeys.Count + $script:UndoRegistryKeys.Count + $script:UndoFeatureActions.Count
     if ($hasRegistryBackedFeature) { $totalSteps++ }
     if ($script:Params.ContainsKey("CreateRestorePoint")) { $totalSteps++ }
     $currentStep = 0
@@ -176,7 +235,10 @@ function ExecuteAllChanges {
 
         Write-Host "> Creating registry backup..."
         try {
-            New-RegistrySettingsBackup -ActionableKeys $actionableKeys | Out-Null
+            $undoSyntheticFeatures = @($script:UndoRegistryKeys | ForEach-Object {
+                [PSCustomObject]@{ FeatureId = $_.FeatureId; RegistryKey = (Resolve-UndoRegFilePath $_.UndoRegFile) }
+            })
+            New-RegistrySettingsBackup -ActionableKeys $actionableKeys -ExtraFeatures $undoSyntheticFeatures | Out-Null
         }
         catch {
             throw "Registry backup failed before applying changes. $($_.Exception.Message)"
@@ -221,6 +283,38 @@ function ExecuteAllChanges {
         
         ExecuteParameter -paramKey $paramKey
     }
+
+    # Execute all undo operations
+    foreach ($undoAction in $script:UndoRegistryKeys) {
+        if ($script:CancelRequested) { return }
+
+        $undoLabel = if ($script:FeatureLabelLookup) { $script:FeatureLabelLookup[$undoAction.FeatureId] } else { $null }
+        if (-not $undoLabel) { $undoLabel = $undoAction.FeatureId }
+
+        $currentStep++
+        if ($script:ApplyProgressCallback) {
+            & $script:ApplyProgressCallback $currentStep $totalSteps "Undoing: $undoLabel"
+        }
+
+        ImportRegistryFile "> Undoing: $undoLabel" (Resolve-UndoRegFilePath $undoAction.UndoRegFile)
+    }
+
+    foreach ($undoAction in $script:UndoFeatureActions) {
+        if ($script:CancelRequested) { return }
+
+        $undoLabel = if ($script:FeatureLabelLookup) { $script:FeatureLabelLookup[$undoAction.FeatureId] } else { $null }
+        if (-not $undoLabel) { $undoLabel = $undoAction.FeatureId }
+
+        $currentStep++
+        if ($script:ApplyProgressCallback) {
+            & $script:ApplyProgressCallback $currentStep $totalSteps "Undoing: $undoLabel"
+        }
+
+        Invoke-UndoFeatureAction -FeatureId $undoAction.FeatureId
+    }
+
+    $script:UndoRegistryKeys = @()
+    $script:UndoFeatureActions = @()
 
     if ($script:RegistryImportFailures -gt 0) {
         Write-Host ""

@@ -732,6 +732,8 @@
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="10"/>
+                                        <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
                                     
                                     <StackPanel Grid.Column="0" Orientation="Horizontal">
@@ -798,7 +800,9 @@
                                         </Popup>
                                     </StackPanel>
 
-                                    <Border x:Name="TweakSearchBorder" Grid.Column="2">
+                                    <CheckBox x:Name="ShowCurrentlyAppliedTweaksCheckBox" Grid.Column="2" Content="Check applied tweaks" IsChecked="True" Foreground="{DynamicResource FgColor}" VerticalAlignment="Center" AutomationProperties.Name="Check applied tweaks" ToolTip="Check all tweaks currently active on this system. Unchecking clears all selections."/>
+
+                                    <Border x:Name="TweakSearchBorder" Grid.Column="4">
                                         <Border.Style>
                                             <Style TargetType="Border" BasedOn="{StaticResource SearchBoxBorderStyle}">
                                                 <Style.Triggers>

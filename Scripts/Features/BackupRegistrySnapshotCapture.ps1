@@ -1,7 +1,6 @@
 function Get-RegistryBackupCapturePlans {
     param(
-        [Parameter(Mandatory)]
-        [object[]]$SelectedRegistryFeatures,
+        [object[]]$SelectedRegistryFeatures = @(),
         [switch]$UseSysprepRegFiles
     )
 
@@ -59,8 +58,7 @@ function Get-RegistryBackupCapturePlans {
 
 function Get-RegistrySnapshotsForBackup {
     param(
-        [Parameter(Mandatory)]
-        [object[]]$CapturePlans
+        [object[]]$CapturePlans = @()
     )
 
     if ($CapturePlans.Count -eq 0) {

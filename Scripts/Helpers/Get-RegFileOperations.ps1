@@ -129,10 +129,13 @@ function Convert-RegValueData {
     }
 
     if ($valueData -match '^"(?<value>.*)"$') {
+        $stringValue = $matches.value
+        # Unescape registry string escape sequences
+        $stringValue = $stringValue -replace '\\\\', '\' -replace '\"', '"'
         return [PSCustomObject]@{
             OperationType = 'SetValue'
             ValueType = 'String'
-            ValueData = $matches.value
+            ValueData = $stringValue
         }
     }
 

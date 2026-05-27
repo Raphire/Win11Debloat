@@ -7,10 +7,15 @@ function Show-RestoreBackupWindow {
     try {
         Write-Host 'Opening restore backup dialog.'
 
+        $restoreResult = [PSCustomObject]@{
+            RestoredRegistry = $false
+            RestoredStartMenu = $false
+        }
+
         $dialogResult = Show-RestoreBackupDialog -Owner $Owner
         if (-not $dialogResult -or $dialogResult.Result -eq 'Cancel') {
             Write-Host 'Restore canceled by user.'
-            return
+            return $restoreResult
         }
 
         $successMessage = $null
@@ -24,6 +29,7 @@ function Show-RestoreBackupWindow {
 
             Write-Host "User confirmed registry restore for $($backup.Target)."
             Restore-RegistryBackupState -Backup $backup
+            $restoreResult.RestoredRegistry = $true
             $successMessage = 'Registry backup restored successfully. Some changes may require a sign out or restart to take effect.'
         }
         elseif ($dialogResult.Result -eq 'RestoreStartMenu') {
@@ -69,6 +75,8 @@ function Show-RestoreBackupWindow {
                     $successMessage = "The Start Menu backup was successfully restored for the current user. The changes will apply the next time you sign in."
                 }
             }
+
+            $restoreResult.RestoredStartMenu = $true
         }
 
         if ($warningMessage) {
@@ -79,10 +87,16 @@ function Show-RestoreBackupWindow {
             Write-Host "$successMessage"
             Show-MessageBox -Title 'Backup Restored' -Message $successMessage -Icon Success
         }
+
+        return $restoreResult
     }
     catch {
         $errorMessage = if ($_.Exception.Message) { $_.Exception.Message } else { 'An unexpected error occurred.' }
         Write-Error "Restore operation failed: $errorMessage"
         Show-MessageBox -Title 'Error' -Message "Restore failed: $errorMessage" -Icon Error
+        return [PSCustomObject]@{
+            RestoredRegistry = $false
+            RestoredStartMenu = $false
+        }
     }
 }

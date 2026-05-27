@@ -70,6 +70,9 @@ function Show-RestoreBackupDialog {
     $backupCreatedText = $window.FindName('BackupCreatedText')
     $backupTargetText = $window.FindName('BackupTargetText')
     $featuresItemsControl = $window.FindName('FeaturesItemsControl')
+    $reappliedSeparator = $window.FindName('ReappliedSeparator')
+    $reappliedPanel = $window.FindName('ReappliedPanel')
+    $reappliedFeaturesItemsControl = $window.FindName('ReappliedFeaturesItemsControl')
     $nonRevertibleSeparator = $window.FindName('NonRevertibleSeparator')
     $nonRevertiblePanel = $window.FindName('NonRevertiblePanel')
     $nonRevertibleFeaturesItemsControl = $window.FindName('NonRevertibleFeaturesItemsControl')
@@ -119,6 +122,8 @@ function Show-RestoreBackupDialog {
 
         $overviewFeaturesSection.Visibility = 'Collapsed'
         $overviewSummaryText.Visibility = 'Visible'
+        $reappliedSeparator.Visibility = 'Collapsed'
+        $reappliedPanel.Visibility = 'Collapsed'
         $nonRevertibleSeparator.Visibility = 'Collapsed'
         $nonRevertiblePanel.Visibility = 'Collapsed'
         $introInfoPanel.Visibility = 'Collapsed'
@@ -215,13 +220,33 @@ function Show-RestoreBackupDialog {
             }
         }
 
-        $selectedFeatureIds = Get-SelectedFeatureIdsFromBackup -SelectedBackup $SelectedBackup
-        $featureLists = Get-RestoreBackupFeatureLists -SelectedFeatureIds $selectedFeatureIds -Features $script:Features
-        $revertibleFeaturesList = @($featureLists.Revertible)
-        $nonRevertibleFeaturesList = @($featureLists.NonRevertible)
-        Write-Host "Backup overview prepared. Revertible=$($revertibleFeaturesList.Count), NonRevertible=$($nonRevertibleFeaturesList.Count)"
+        $selectedForwardFeatureIds = @(Get-SelectedForwardFeatureIdsFromBackup -SelectedBackup $SelectedBackup)
+        $selectedUndoFeatureIds = @(Get-SelectedUndoFeatureIdsFromBackup -SelectedBackup $SelectedBackup)
 
-        if ($revertibleFeaturesList.Count -eq 0) {
+        $seenForwardFeatureIds = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
+        foreach ($featureId in $selectedForwardFeatureIds) {
+            [void]$seenForwardFeatureIds.Add([string]$featureId)
+        }
+
+        $filteredUndoFeatureIds = New-Object System.Collections.Generic.List[string]
+        foreach ($featureId in $selectedUndoFeatureIds) {
+            if ($seenForwardFeatureIds.Contains([string]$featureId)) {
+                continue
+            }
+
+            $filteredUndoFeatureIds.Add([string]$featureId)
+        }
+
+        $forwardFeatureLists = Get-RestoreBackupFeatureLists -SelectedFeatureIds $selectedForwardFeatureIds -Features $script:Features
+        $undoFeatureLists = Get-RestoreBackupFeatureLists -SelectedFeatureIds @($filteredUndoFeatureIds.ToArray()) -Features $script:Features
+        $combinedFeatureLists = Get-RestoreBackupFeatureLists -SelectedFeatureIds (Get-SelectedFeatureIdsFromBackup -SelectedBackup $SelectedBackup) -Features $script:Features
+
+        $revertibleFeaturesList = @($forwardFeatureLists.Revertible)
+        $reappliedFeaturesList = @($undoFeatureLists.Revertible)
+        $nonRevertibleFeaturesList = @($combinedFeatureLists.NonRevertible)
+        Write-Host "Backup overview prepared. Reverted=$($revertibleFeaturesList.Count), ReApplied=$($reappliedFeaturesList.Count), NonRevertible=$($nonRevertibleFeaturesList.Count)"
+
+        if ($revertibleFeaturesList.Count -eq 0 -and $reappliedFeaturesList.Count -eq 0) {
             throw 'The selected backup does not contain any changes that can be restored.'
         }
 
@@ -229,13 +254,16 @@ function Show-RestoreBackupDialog {
         $backupCreatedText.Text = $createdText
         $backupTargetText.Text = GetFriendlyRegistryBackupTarget -Target ([string]$SelectedBackup.Target)
         $featuresItemsControl.ItemsSource = $revertibleFeaturesList
-        $overviewFeaturesSection.Visibility = 'Visible'
+        $overviewFeaturesSection.Visibility = if ($revertibleFeaturesList.Count -gt 0) { 'Visible' } else { 'Collapsed' }
+        $reappliedFeaturesItemsControl.ItemsSource = $reappliedFeaturesList
+        if ($reappliedFeaturesList.Count -gt 0) { $reappliedPanel.Visibility = 'Visible' } else { $reappliedPanel.Visibility = 'Collapsed' }
+        if ($revertibleFeaturesList.Count -gt 0 -and $reappliedFeaturesList.Count -gt 0) { $reappliedSeparator.Visibility = 'Visible' } else { $reappliedSeparator.Visibility = 'Collapsed' }
         $overviewSummaryText.Visibility = 'Collapsed'
         $nonRevertibleFeaturesItemsControl.ItemsSource = $nonRevertibleFeaturesList
 
         $hasNonRevertibleItems = ($nonRevertibleFeaturesList.Count -gt 0)
         if ($hasNonRevertibleItems) { $nonRevertiblePanel.Visibility = 'Visible' } else { $nonRevertiblePanel.Visibility = 'Collapsed' }
-        if ($hasNonRevertibleItems) { $nonRevertibleSeparator.Visibility = 'Visible' } else { $nonRevertibleSeparator.Visibility = 'Collapsed' }
+        if ($hasNonRevertibleItems -and ($revertibleFeaturesList.Count -gt 0 -or $reappliedFeaturesList.Count -gt 0)) { $nonRevertibleSeparator.Visibility = 'Visible' } else { $nonRevertibleSeparator.Visibility = 'Collapsed' }
         $introInfoPanel.Visibility = 'Collapsed'
         $overviewPanel.Visibility = 'Visible'
 

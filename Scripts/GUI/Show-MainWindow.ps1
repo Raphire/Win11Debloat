@@ -278,7 +278,15 @@ function Show-MainWindow {
     if ($restoreBackupBtn) {
         $restoreBackupBtn.Add_Click({
             try {
-                Show-RestoreBackupWindow -Owner $window
+                $restoreResult = Show-RestoreBackupWindow -Owner $window
+                if ($restoreResult -and $restoreResult.RestoredRegistry -eq $true) {
+                    RefreshCurrentTweakSystemState -ApplyToUi:$false
+
+                    if ($ShowCurrentlyAppliedTweaksCheckBox -and $ShowCurrentlyAppliedTweaksCheckBox.IsChecked -eq $true) {
+                        ResetTweaksToSystemState -loadSystemState $true
+                        UpdateTweakPresetStates
+                    }
+                }
             }
             catch {
                 Write-Warning "Restore backup action failed: $($_.Exception.Message)"
@@ -905,10 +913,9 @@ function Show-MainWindow {
         }
     }
 
-    # Reads current registry state and sets each tweak control to reflect whether that tweak is
-    # currently applied. Also stores the initial state on each control as a NoteProperty so the
-    # apply handler can detect which controls actually changed.
-    function LoadCurrentTweakStateIntoUI {
+    function RefreshCurrentTweakSystemState {
+        param([bool]$ApplyToUi)
+
         if (-not $script:UiControlMappings) { return }
         if (-not $script:Features) { return }
 
@@ -930,9 +937,12 @@ function Show-MainWindow {
             if ($control -is [System.Windows.Controls.CheckBox] -and $mapping.Type -eq 'feature') {
                 $applied = $false
                 try { $applied = [bool](Test-FeatureApplied -FeatureId $mapping.FeatureId) } catch {}
-                $control.IsChecked = $applied
-                Add-Member -InputObject $control -MemberType NoteProperty -Name 'InitialState' -Value $applied -Force
                 Add-Member -InputObject $control -MemberType NoteProperty -Name 'SystemState'  -Value $applied -Force
+
+                if ($ApplyToUi) {
+                    $control.IsChecked = $applied
+                    Add-Member -InputObject $control -MemberType NoteProperty -Name 'InitialState' -Value $applied -Force
+                }
             }
             elseif ($control -is [System.Windows.Controls.ComboBox] -and $mapping.Type -eq 'group') {
                 $groupId = $null
@@ -941,11 +951,21 @@ function Show-MainWindow {
                 if ($groupId -and $groupMap.ContainsKey($groupId)) {
                     try { $activeIndex = Get-CurrentGroupActiveIndex -Group $groupMap[$groupId] } catch {}
                 }
-                $control.SelectedIndex = $activeIndex
-                Add-Member -InputObject $control -MemberType NoteProperty -Name 'InitialIndex' -Value $activeIndex -Force
                 Add-Member -InputObject $control -MemberType NoteProperty -Name 'SystemIndex'  -Value $activeIndex -Force
+
+                if ($ApplyToUi) {
+                    $control.SelectedIndex = $activeIndex
+                    Add-Member -InputObject $control -MemberType NoteProperty -Name 'InitialIndex' -Value $activeIndex -Force
+                }
             }
         }
+    }
+
+    # Reads current registry state and sets each tweak control to reflect whether that tweak is
+    # currently applied. Also stores the initial state on each control as a NoteProperty so the
+    # apply handler can detect which controls actually changed.
+    function LoadCurrentTweakStateIntoUI {
+        RefreshCurrentTweakSystemState -ApplyToUi:$true
     }
 
     # Helper function to load apps and populate the app list panel

@@ -1716,8 +1716,112 @@ function Show-MainWindow {
         return $false
     }
 
+    function Get-FeatureLabel {
+        param(
+            [string]$FeatureId,
+            $FallbackLabel = $null
+        )
+
+        $label = $script:FeatureLabelLookup[$FeatureId]
+        if (-not [string]::IsNullOrWhiteSpace([string]$label)) {
+            return [string]$label
+        }
+
+        if (-not [string]::IsNullOrWhiteSpace([string]$FallbackLabel)) {
+            return [string]$FallbackLabel
+        }
+
+        return [string]$FeatureId
+    }
+
+    function Get-PendingTweakActions {
+        param(
+            [bool]$ShowAppliedTweaksMode
+        )
+
+        $actions = New-Object System.Collections.Generic.List[object]
+
+        if (-not $script:UiControlMappings) {
+            return @($actions.ToArray())
+        }
+
+        foreach ($mappingKey in $script:UiControlMappings.Keys) {
+            $control = $window.FindName($mappingKey)
+            if (-not $control) { continue }
+            $mapping = $script:UiControlMappings[$mappingKey]
+
+            if ($control -is [System.Windows.Controls.CheckBox] -and $mapping.Type -eq 'feature') {
+                $wasApplied = $false
+                if ($ShowAppliedTweaksMode -and $null -ne $control.PSObject.Properties['SystemState']) {
+                    $wasApplied = [bool]$control.SystemState
+                }
+                elseif ($null -ne $control.PSObject.Properties['InitialState']) {
+                    $wasApplied = [bool]$control.InitialState
+                }
+                elseif ($null -ne $control.PSObject.Properties['SystemState']) {
+                    $wasApplied = [bool]$control.SystemState
+                }
+                $isNowChecked = $control.IsChecked -eq $true
+
+                if (-not $wasApplied -and $isNowChecked) {
+                    $actions.Add([PSCustomObject]@{
+                        Action = 'Apply'
+                        FeatureId = [string]$mapping.FeatureId
+                        Label = (Get-FeatureLabel -FeatureId $mapping.FeatureId -FallbackLabel $mapping.Label)
+                    })
+                }
+                elseif ($wasApplied -and -not $isNowChecked) {
+                    $actions.Add([PSCustomObject]@{
+                        Action = 'Undo'
+                        FeatureId = [string]$mapping.FeatureId
+                        Label = (Get-FeatureLabel -FeatureId $mapping.FeatureId -FallbackLabel $mapping.Label)
+                    })
+                }
+            }
+            elseif ($control -is [System.Windows.Controls.ComboBox] -and $mapping.Type -eq 'group') {
+                $wasIndex = 0
+                if ($ShowAppliedTweaksMode -and $null -ne $control.PSObject.Properties['SystemIndex']) {
+                    $wasIndex = [int]$control.SystemIndex
+                }
+                elseif ($null -ne $control.PSObject.Properties['InitialIndex']) {
+                    $wasIndex = [int]$control.InitialIndex
+                }
+                elseif ($null -ne $control.PSObject.Properties['SystemIndex']) {
+                    $wasIndex = [int]$control.SystemIndex
+                }
+                $isNowIndex = $control.SelectedIndex
+
+                if ($wasIndex -eq $isNowIndex) { continue }
+
+                if ($isNowIndex -gt 0 -and $isNowIndex -le $mapping.Values.Count) {
+                    $selectedValue = $mapping.Values[$isNowIndex - 1]
+                    foreach ($fid in $selectedValue.FeatureIds) {
+                        $actions.Add([PSCustomObject]@{
+                            Action = 'Apply'
+                            FeatureId = [string]$fid
+                            Label = (Get-FeatureLabel -FeatureId $fid)
+                        })
+                    }
+                }
+                elseif ($isNowIndex -eq 0 -and $wasIndex -gt 0 -and $wasIndex -le $mapping.Values.Count) {
+                    $prevValue = $mapping.Values[$wasIndex - 1]
+                    foreach ($fid in $prevValue.FeatureIds) {
+                        $actions.Add([PSCustomObject]@{
+                            Action = 'Undo'
+                            FeatureId = [string]$fid
+                            Label = (Get-FeatureLabel -FeatureId $fid)
+                        })
+                    }
+                }
+            }
+        }
+
+        return @($actions.ToArray())
+    }
+
     function GenerateOverview {
         $changesList = @()
+        $showAppliedTweaksMode = ($ShowCurrentlyAppliedTweaksCheckBox -and $ShowCurrentlyAppliedTweaksCheckBox.IsChecked -eq $true)
         
         # Collect selected apps
         $selectedAppsCount = 0
@@ -1732,49 +1836,12 @@ function Show-MainWindow {
         
         UpdateAppSelectionStatus
         
-        # Collect only controls that changed from their initial (system) state
-        if ($script:UiControlMappings) {
-            foreach ($mappingKey in $script:UiControlMappings.Keys) {
-                $control = $window.FindName($mappingKey)
-                if (-not $control) { continue }
-                $mapping = $script:UiControlMappings[$mappingKey]
-
-                if ($control -is [System.Windows.Controls.CheckBox] -and $mapping.Type -eq 'feature') {
-                    $wasApplied   = if ($null -ne $control.PSObject.Properties['InitialState']) { [bool]$control.InitialState } else { $false }
-                    $isNowChecked = $control.IsChecked -eq $true
-
-                    if (-not $wasApplied -and $isNowChecked) {
-                        $label = $script:FeatureLabelLookup[$mapping.FeatureId]
-                        if (-not $label) { $label = $mapping.Label }
-                        $changesList += $label
-                    }
-                    elseif ($wasApplied -and -not $isNowChecked) {
-                        $label = $script:FeatureLabelLookup[$mapping.FeatureId]
-                        if (-not $label) { $label = $mapping.Label }
-                        $changesList += "Undo: $label"
-                    }
-                }
-                elseif ($control -is [System.Windows.Controls.ComboBox] -and $mapping.Type -eq 'group') {
-                    $wasIndex   = if ($null -ne $control.PSObject.Properties['InitialIndex']) { [int]$control.InitialIndex } else { 0 }
-                    $isNowIndex = $control.SelectedIndex
-
-                    if ($wasIndex -ne $isNowIndex) {
-                        if ($isNowIndex -gt 0 -and $isNowIndex -le $mapping.Values.Count) {
-                            $selectedValue = $mapping.Values[$isNowIndex - 1]
-                            foreach ($fid in $selectedValue.FeatureIds) {
-                                $label = $script:FeatureLabelLookup[$fid]
-                                if ($label) { $changesList += $label }
-                            }
-                        }
-                        elseif ($isNowIndex -eq 0 -and $wasIndex -gt 0 -and $wasIndex -le $mapping.Values.Count) {
-                            $prevValue = $mapping.Values[$wasIndex - 1]
-                            foreach ($fid in $prevValue.FeatureIds) {
-                                $label = $script:FeatureLabelLookup[$fid]
-                                if ($label) { $changesList += "Undo: $label" }
-                            }
-                        }
-                    }
-                }
+        foreach ($tweakAction in @(Get-PendingTweakActions -ShowAppliedTweaksMode:$showAppliedTweaksMode)) {
+            if ($tweakAction.Action -eq 'Undo') {
+                $changesList += "Undo: $($tweakAction.Label)"
+            }
+            else {
+                $changesList += $tweakAction.Label
             }
         }
         
@@ -1913,80 +1980,29 @@ function Show-MainWindow {
             }
         }
 
-        # Apply dynamic tweaks - only controls that changed from their initial (system) state
+        # Apply dynamic tweaks - only controls that changed from their current baseline state
         $script:UndoRegistryKeys = @()
         $script:UndoFeatureActions = @()
-        if ($script:UiControlMappings) {
-            foreach ($mappingKey in $script:UiControlMappings.Keys) {
-                $control = $window.FindName($mappingKey)
-                if (-not $control) { continue }
-                $mapping = $script:UiControlMappings[$mappingKey]
+        $seenUndoRegistryFeatures = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
+        $seenUndoActionFeatures = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
 
-                if ($control -is [System.Windows.Controls.CheckBox] -and $mapping.Type -eq 'feature') {
-                    $wasApplied = $false
-                    if ($showAppliedTweaksMode -and $null -ne $control.PSObject.Properties['SystemState']) {
-                        $wasApplied = [bool]$control.SystemState
-                    }
-                    elseif ($null -ne $control.PSObject.Properties['InitialState']) {
-                        $wasApplied = [bool]$control.InitialState
-                    }
-                    elseif ($null -ne $control.PSObject.Properties['SystemState']) {
-                        $wasApplied = [bool]$control.SystemState
-                    }
-                    $isNowChecked = $control.IsChecked -eq $true
+        foreach ($tweakAction in @(Get-PendingTweakActions -ShowAppliedTweaksMode:$showAppliedTweaksMode)) {
+            if ($tweakAction.Action -eq 'Apply') {
+                AddParameter $tweakAction.FeatureId
+                $null = $selectedForwardFeatureIds.Add([string]$tweakAction.FeatureId)
+                continue
+            }
 
-                    if (-not $wasApplied -and $isNowChecked) {
-                        # Forward: user is applying a tweak that isn't currently active
-                        AddParameter $mapping.FeatureId
-                        $null = $selectedForwardFeatureIds.Add([string]$mapping.FeatureId)
-                    }
-                    elseif ($wasApplied -and -not $isNowChecked) {
-                        # Undo: tweak was active and user unchecked it
-                        $feature = if ($script:Features.ContainsKey($mapping.FeatureId)) { $script:Features[$mapping.FeatureId] } else { $null }
-                        if ($feature -and $feature.RegistryUndoKey) {
-                            $script:UndoRegistryKeys += [PSCustomObject]@{ FeatureId = $mapping.FeatureId; UndoRegFile = $feature.RegistryUndoKey }
-                        }
-                        elseif ($mapping.FeatureId -in @('DisableStoreSearchSuggestions', 'EnableWindowsSandbox', 'EnableWindowsSubsystemForLinux')) {
-                            $script:UndoFeatureActions += [PSCustomObject]@{ FeatureId = $mapping.FeatureId }
-                        }
-                    }
+            $featureId = [string]$tweakAction.FeatureId
+            $feature = if ($script:Features.ContainsKey($featureId)) { $script:Features[$featureId] } else { $null }
+            if ($feature -and $feature.RegistryUndoKey) {
+                if ($seenUndoRegistryFeatures.Add($featureId)) {
+                    $script:UndoRegistryKeys += [PSCustomObject]@{ FeatureId = $featureId; UndoRegFile = $feature.RegistryUndoKey }
                 }
-                elseif ($control -is [System.Windows.Controls.ComboBox] -and $mapping.Type -eq 'group') {
-                    $wasIndex = 0
-                    if ($showAppliedTweaksMode -and $null -ne $control.PSObject.Properties['SystemIndex']) {
-                        $wasIndex = [int]$control.SystemIndex
-                    }
-                    elseif ($null -ne $control.PSObject.Properties['InitialIndex']) {
-                        $wasIndex = [int]$control.InitialIndex
-                    }
-                    elseif ($null -ne $control.PSObject.Properties['SystemIndex']) {
-                        $wasIndex = [int]$control.SystemIndex
-                    }
-                    $isNowIndex = $control.SelectedIndex
-
-                    if ($wasIndex -ne $isNowIndex) {
-                        if ($isNowIndex -gt 0 -and $isNowIndex -le $mapping.Values.Count) {
-                            # Apply the newly selected group option
-                            $selectedValue = $mapping.Values[$isNowIndex - 1]
-                            foreach ($fid in $selectedValue.FeatureIds) {
-                                AddParameter $fid
-                                $null = $selectedForwardFeatureIds.Add([string]$fid)
-                            }
-                        }
-                        elseif ($isNowIndex -eq 0 -and $wasIndex -gt 0 -and $wasIndex -le $mapping.Values.Count) {
-                            # Revert to 'No Change' from a detected initial state - undo the previously active option
-                            $prevValue = $mapping.Values[$wasIndex - 1]
-                            foreach ($fid in $prevValue.FeatureIds) {
-                                $feature = if ($script:Features.ContainsKey($fid)) { $script:Features[$fid] } else { $null }
-                                if ($feature -and $feature.RegistryUndoKey) {
-                                    $script:UndoRegistryKeys += [PSCustomObject]@{ FeatureId = $fid; UndoRegFile = $feature.RegistryUndoKey }
-                                }
-                                elseif ($fid -in @('DisableStoreSearchSuggestions', 'EnableWindowsSandbox', 'EnableWindowsSubsystemForLinux')) {
-                                    $script:UndoFeatureActions += [PSCustomObject]@{ FeatureId = $fid }
-                                }
-                            }
-                        }
-                    }
+            }
+            elseif ($featureId -in @('DisableStoreSearchSuggestions', 'EnableWindowsSandbox', 'EnableWindowsSubsystemForLinux')) {
+                if ($seenUndoActionFeatures.Add($featureId)) {
+                    $script:UndoFeatureActions += [PSCustomObject]@{ FeatureId = $featureId }
                 }
             }
         }

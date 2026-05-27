@@ -157,7 +157,7 @@ function Test-RegistryBackupMatchesSelectedFeatures {
     $planMap = New-RegistryBackupAllowListPlanMap -CapturePlans @($capturePlans)
 
     if ($planMap.Count -eq 0 -and @($RegistryKeys).Count -gt 0) {
-        $errors.Add('Backup contains registry snapshots but no allowed registry paths were derived from SelectedFeatures.')
+        $errors.Add('Backup contains registry snapshots but no allowed registry paths were derived from the selected features.')
     }
 
     foreach ($rootSnapshot in @($RegistryKeys)) {

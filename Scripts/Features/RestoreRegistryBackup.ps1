@@ -120,7 +120,7 @@ function Normalize-RegistryBackup {
         ComputerName = [string]$Backup.ComputerName
         Target = $normalizedTarget
         SelectedFeatures = @($selectedFeatures)
-            SelectedUndoFeatures = @($selectedUndoFeatures)
+        SelectedUndoFeatures = @($selectedUndoFeatures)
         RegistryKeys = @($normalizedKeys)
     }
 }

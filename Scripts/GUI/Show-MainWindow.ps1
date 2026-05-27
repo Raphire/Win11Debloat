@@ -1402,6 +1402,34 @@ function Show-MainWindow {
         }
     }
 
+    $script:SuppressAppliedTweaksUserSync = $false
+
+    function UpdateAppliedTweaksUserModeState {
+        $showAppliedTweaksMode = ($ShowCurrentlyAppliedTweaksCheckBox -and $ShowCurrentlyAppliedTweaksCheckBox.IsChecked -eq $true)
+
+        if ($showAppliedTweaksMode) {
+            if ($userSelectionCombo.SelectedIndex -ne 0 -and -not $script:SuppressAppliedTweaksUserSync) {
+                $script:SuppressAppliedTweaksUserSync = $true
+                try {
+                    $userSelectionCombo.SelectedIndex = 0
+                }
+                finally {
+                    $script:SuppressAppliedTweaksUserSync = $false
+                }
+            }
+
+            $userSelectionCombo.IsEnabled = $false
+            return
+        }
+
+        if ($script:Params.ContainsKey('Sysprep') -or $script:Params.ContainsKey('User')) {
+            $userSelectionCombo.IsEnabled = $false
+            return
+        }
+
+        $userSelectionCombo.IsEnabled = $true
+    }
+
     function UpdateTweaksResponsiveColumns {
         if (-not $tweaksGrid -or -not $col0 -or -not $col1 -or -not $col2) { return }
         if ($tweaksGrid.ColumnDefinitions.Count -lt 3) { return }
@@ -1545,8 +1573,8 @@ function Show-MainWindow {
 
     # Only show changed settings checkbox
     if ($ShowCurrentlyAppliedTweaksCheckBox) {
-        $ShowCurrentlyAppliedTweaksCheckBox.Add_Checked({ ResetTweaksToSystemState -loadSystemState $true })
-        $ShowCurrentlyAppliedTweaksCheckBox.Add_Unchecked({ ResetTweaksToSystemState -loadSystemState $false })
+        $ShowCurrentlyAppliedTweaksCheckBox.Add_Checked({ ResetTweaksToSystemState -loadSystemState $true; UpdateAppliedTweaksUserModeState })
+        $ShowCurrentlyAppliedTweaksCheckBox.Add_Unchecked({ ResetTweaksToSystemState -loadSystemState $false; UpdateAppliedTweaksUserModeState })
     }
 
     # Add Ctrl+F keyboard shortcut to focus search box on current tab
@@ -1647,6 +1675,17 @@ function Show-MainWindow {
 
     # Update user selection description and show/hide other user panel
     $userSelectionCombo.Add_SelectionChanged({
+        if ($ShowCurrentlyAppliedTweaksCheckBox -and $ShowCurrentlyAppliedTweaksCheckBox.IsChecked -eq $true -and $userSelectionCombo.SelectedIndex -ne 0 -and -not $script:SuppressAppliedTweaksUserSync) {
+            $script:SuppressAppliedTweaksUserSync = $true
+            try {
+                $userSelectionCombo.SelectedIndex = 0
+            }
+            finally {
+                $script:SuppressAppliedTweaksUserSync = $false
+            }
+            return
+        }
+
         switch ($userSelectionCombo.SelectedIndex) {
             0 { 
                 $userSelectionDescription.Text = "Changes will be applied to the currently logged-in user profile."
@@ -1680,6 +1719,7 @@ function Show-MainWindow {
 
         # Keep enabled/disabled state in sync with both app selection and user mode.
         UpdateAppSelectionStatus
+        UpdateAppliedTweaksUserModeState
     })
 
     # Helper function to update app removal scope description
@@ -2104,6 +2144,7 @@ function Show-MainWindow {
             $otherUsernameTextBox.IsEnabled = $false
         }
 
+        UpdateAppliedTweaksUserModeState
         UpdateNavigationButtons
     })
 

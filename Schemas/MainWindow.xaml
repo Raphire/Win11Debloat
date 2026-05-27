@@ -800,7 +800,7 @@
                                         </Popup>
                                     </StackPanel>
 
-                                    <CheckBox x:Name="ShowCurrentlyAppliedTweaksCheckBox" Grid.Column="2" Content="Check applied tweaks" IsChecked="True" Foreground="{DynamicResource FgColor}" VerticalAlignment="Center" AutomationProperties.Name="Check applied tweaks" ToolTip="Check all tweaks currently active on this system. Unchecking clears all selections."/>
+                                    <CheckBox x:Name="ShowCurrentlyAppliedTweaksCheckBox" Grid.Column="2" Content="Automatically check currently applied tweaks" IsChecked="True" Foreground="{DynamicResource FgColor}" VerticalAlignment="Center" AutomationProperties.Name="Check applied tweaks" ToolTip="Check all tweaks currently active on this system for the current user. Unchecking clears all selections."/>
 
                                     <Border x:Name="TweakSearchBorder" Grid.Column="4">
                                         <Border.Style>

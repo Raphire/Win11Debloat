@@ -89,13 +89,15 @@ function EnableStoreSearchSuggestions {
     takeown /F "$StoreAppsDatabase" /A | Out-Null
     icacls "$StoreAppsDatabase" /grant *S-1-5-32-544:F /C | Out-Null
 
+    $everyoneSid = [System.Security.Principal.SecurityIdentifier]::new('S-1-1-0') # 'EVERYONE' group
+
     try {
         $acl = Get-Acl -Path $StoreAppsDatabase
         $denyRules = @(
             $acl.Access | Where-Object {
-                $_.IdentityReference -eq 'Everyone' -and
                 $_.AccessControlType -eq [System.Security.AccessControl.AccessControlType]::Deny -and
-                (($_.FileSystemRights -band [System.Security.AccessControl.FileSystemRights]::FullControl) -ne 0)
+                (($_.FileSystemRights -band [System.Security.AccessControl.FileSystemRights]::FullControl) -ne 0) -and
+                (try { $_.IdentityReference.Translate([System.Security.Principal.SecurityIdentifier]) -eq $everyoneSid } catch { $false })
             }
         )
 
@@ -135,10 +137,12 @@ function Test-StoreSearchSuggestionsDisabled {
         return $false
     }
 
+    $everyoneSid = [System.Security.Principal.SecurityIdentifier]::new('S-1-1-0')
+
     foreach ($accessRule in @($acl.Access)) {
-        if ($accessRule.IdentityReference -eq 'Everyone' -and
-            $accessRule.AccessControlType -eq [System.Security.AccessControl.AccessControlType]::Deny -and
-            (($accessRule.FileSystemRights -band [System.Security.AccessControl.FileSystemRights]::FullControl) -ne 0)) {
+        if ($accessRule.AccessControlType -eq [System.Security.AccessControl.AccessControlType]::Deny -and
+            (($accessRule.FileSystemRights -band [System.Security.AccessControl.FileSystemRights]::FullControl) -ne 0) -and
+            (try { $accessRule.IdentityReference.Translate([System.Security.Principal.SecurityIdentifier]) -eq $everyoneSid } catch { $false })) {
             return $true
         }
     }

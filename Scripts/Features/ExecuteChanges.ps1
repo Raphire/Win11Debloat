@@ -42,6 +42,11 @@ function Invoke-UndoFeatureAction {
             Write-Host ""
             return
         }
+        default {
+            Write-Host "> No undo action defined for $FeatureId, skipping..." -ForegroundColor Yellow
+            Write-Host ""
+            return
+        }
     }
 }
 

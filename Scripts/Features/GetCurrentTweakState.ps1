@@ -9,6 +9,7 @@ function Get-ExpectedRegistryValueKind {
 
     switch ([string]$Operation.ValueType) {
         'DWord' { return [Microsoft.Win32.RegistryValueKind]::DWord }
+        'QWord' { return [Microsoft.Win32.RegistryValueKind]::QWord }
         'String' { return [Microsoft.Win32.RegistryValueKind]::String }
         'Binary' { return [Microsoft.Win32.RegistryValueKind]::Binary }
         'Hex2' { return [Microsoft.Win32.RegistryValueKind]::ExpandString }

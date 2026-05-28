@@ -67,14 +67,14 @@ function Get-RegistryRootKey {
 function Get-RegistryFilePathForFeature {
     param(
         [Parameter(Mandatory)]
-        $Feature,
+        [string]$RegistryKey,
         [switch]$UseSysprepRegFiles
     )
 
     $useSysprepLayout = $UseSysprepRegFiles -or $script:Params.ContainsKey('Sysprep') -or $script:Params.ContainsKey('User')
     if ($useSysprepLayout) {
-        return Join-Path (Join-Path $script:RegfilesPath 'Sysprep') $Feature.RegistryKey
+        return Join-Path (Join-Path $script:RegfilesPath 'Sysprep') $RegistryKey
     }
 
-    return Join-Path $script:RegfilesPath $Feature.RegistryKey
+    return Join-Path $script:RegfilesPath $RegistryKey
 }

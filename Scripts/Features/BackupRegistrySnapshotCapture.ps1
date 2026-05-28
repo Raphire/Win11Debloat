@@ -6,7 +6,7 @@ function Get-RegistryBackupCapturePlans {
 
     $planMap = @{}
     foreach ($feature in $SelectedRegistryFeatures) {
-        $regFilePath = Get-RegistryFilePathForFeature -Feature $feature -UseSysprepRegFiles:$UseSysprepRegFiles
+        $regFilePath = Get-RegistryFilePathForFeature -RegistryKey $feature.RegistryKey -UseSysprepRegFiles:$UseSysprepRegFiles
         if (-not (Test-Path $regFilePath)) {
             throw "Unable to find registry file for backup: $($feature.RegistryKey) ($regFilePath)"
         }

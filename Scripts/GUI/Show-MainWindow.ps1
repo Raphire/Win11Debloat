@@ -2041,11 +2041,6 @@ function Show-MainWindow {
         }
 
         # Apply dynamic tweaks - only controls that changed from their current baseline state
-        $script:UndoRegistryKeys = @()
-        $script:UndoFeatureActions = @()
-        $seenUndoRegistryFeatures = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
-        $seenUndoActionFeatures = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
-
         foreach ($tweakAction in @(Get-PendingTweakActions -ShowAppliedTweaksMode:$showAppliedTweaksMode)) {
             if ($tweakAction.Action -eq 'Apply') {
                 AddParameter $tweakAction.FeatureId
@@ -2053,21 +2048,10 @@ function Show-MainWindow {
                 continue
             }
 
-            $featureId = [string]$tweakAction.FeatureId
-            $feature = if ($script:Features.ContainsKey($featureId)) { $script:Features[$featureId] } else { $null }
-            if ($feature -and $feature.RegistryUndoKey) {
-                if ($seenUndoRegistryFeatures.Add($featureId)) {
-                    $script:UndoRegistryKeys += [PSCustomObject]@{ FeatureId = $featureId; UndoRegFile = $feature.RegistryUndoKey }
-                }
-            }
-            elseif ($featureId -in @('DisableStoreSearchSuggestions', 'EnableWindowsSandbox', 'EnableWindowsSubsystemForLinux')) {
-                if ($seenUndoActionFeatures.Add($featureId)) {
-                    $script:UndoFeatureActions += [PSCustomObject]@{ FeatureId = $featureId }
-                }
-            }
+            $script:UndoParams[[string]$tweakAction.FeatureId] = $true
         }
 
-        if (-not $hasAppSelection -and $selectedForwardFeatureIds.Count -eq 0 -and $script:UndoRegistryKeys.Count -eq 0 -and $script:UndoFeatureActions.Count -eq 0) {
+        if (-not $hasAppSelection -and $selectedForwardFeatureIds.Count -eq 0 -and $script:UndoParams.Count -eq 0) {
             Show-MessageBox -Message 'No changes have been selected, please select at least one option to proceed.' -Title 'No Changes Selected' -Button 'OK' -Icon 'Information'
             return
         }

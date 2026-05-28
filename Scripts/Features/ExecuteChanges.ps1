@@ -1,11 +1,3 @@
-# List of undo actions to execute after forward changes.
-# Each entry is a PSCustomObject with FeatureId and UndoRegFile (filename, without folder prefix).
-$script:UndoRegistryKeys = @()
-
-# List of undo actions for features that do not use registry undo files.
-# Each entry is a PSCustomObject with FeatureId.
-$script:UndoFeatureActions = @()
-
 # Resolves the path of an undo reg file relative to $script:RegfilesPath.
 # Checks the Undo/ subfolder first, then falls back to the root Regfiles/ folder.
 function Resolve-UndoRegFilePath {
@@ -218,11 +210,14 @@ function ExecuteAllChanges {
         }
     }
     # Undo operations that write registry values also require a backup
-    if (-not $hasRegistryBackedFeature -and $script:UndoRegistryKeys.Count -gt 0) {
-        $hasRegistryBackedFeature = $true
+    if (-not $hasRegistryBackedFeature) {
+        foreach ($featureId in $script:UndoParams.Keys) {
+            $f = if ($script:Features.ContainsKey($featureId)) { $script:Features[$featureId] } else { $null }
+            if ($f -and $f.RegistryUndoKey) { $hasRegistryBackedFeature = $true; break }
+        }
     }
     
-    $totalSteps = $actionableKeys.Count + $script:UndoRegistryKeys.Count + $script:UndoFeatureActions.Count
+    $totalSteps = $actionableKeys.Count + $script:UndoParams.Count
     if ($hasRegistryBackedFeature) { $totalSteps++ }
     if ($script:Params.ContainsKey("CreateRestorePoint")) { $totalSteps++ }
     $currentStep = 0
@@ -235,9 +230,12 @@ function ExecuteAllChanges {
 
         Write-Host "> Creating registry backup..."
         try {
-            $undoSyntheticFeatures = @($script:UndoRegistryKeys | ForEach-Object {
-                [PSCustomObject]@{ FeatureId = $_.FeatureId; RegistryKey = (Resolve-UndoRegFilePath $_.UndoRegFile) }
-            })
+            $undoSyntheticFeatures = @($script:UndoParams.Keys | ForEach-Object {
+                $f = if ($script:Features.ContainsKey($_)) { $script:Features[$_] } else { $null }
+                if ($f -and $f.RegistryUndoKey) {
+                    [PSCustomObject]@{ FeatureId = $_; RegistryKey = (Resolve-UndoRegFilePath $f.RegistryUndoKey) }
+                }
+            } | Where-Object { $_ })
             New-RegistrySettingsBackup -ActionableKeys $actionableKeys -ExtraFeatures $undoSyntheticFeatures | Out-Null
         }
         catch {
@@ -285,36 +283,24 @@ function ExecuteAllChanges {
     }
 
     # Execute all undo operations
-    foreach ($undoAction in $script:UndoRegistryKeys) {
+    foreach ($featureId in $script:UndoParams.Keys) {
         if ($script:CancelRequested) { return }
 
-        $undoLabel = if ($script:FeatureLabelLookup) { $script:FeatureLabelLookup[$undoAction.FeatureId] } else { $null }
-        if (-not $undoLabel) { $undoLabel = $undoAction.FeatureId }
+        $undoLabel = if ($script:FeatureLabelLookup) { $script:FeatureLabelLookup[$featureId] } else { $null }
+        if (-not $undoLabel) { $undoLabel = $featureId }
 
         $currentStep++
         if ($script:ApplyProgressCallback) {
             & $script:ApplyProgressCallback $currentStep $totalSteps "Undoing: $undoLabel"
         }
 
-        ImportRegistryFile "> Undoing: $undoLabel" (Resolve-UndoRegFilePath $undoAction.UndoRegFile)
-    }
-
-    foreach ($undoAction in $script:UndoFeatureActions) {
-        if ($script:CancelRequested) { return }
-
-        $undoLabel = if ($script:FeatureLabelLookup) { $script:FeatureLabelLookup[$undoAction.FeatureId] } else { $null }
-        if (-not $undoLabel) { $undoLabel = $undoAction.FeatureId }
-
-        $currentStep++
-        if ($script:ApplyProgressCallback) {
-            & $script:ApplyProgressCallback $currentStep $totalSteps "Undoing: $undoLabel"
+        $f = if ($script:Features.ContainsKey($featureId)) { $script:Features[$featureId] } else { $null }
+        if ($f -and $f.RegistryUndoKey) {
+            ImportRegistryFile "> Undoing: $undoLabel" (Resolve-UndoRegFilePath $f.RegistryUndoKey)
+        } else {
+            Invoke-UndoFeatureAction -FeatureId $featureId
         }
-
-        Invoke-UndoFeatureAction -FeatureId $undoAction.FeatureId
     }
-
-    $script:UndoRegistryKeys = @()
-    $script:UndoFeatureActions = @()
 
     if ($script:RegistryImportFailures -gt 0) {
         Write-Host ""

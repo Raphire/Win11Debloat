@@ -1,6 +1,22 @@
 # Tests whether the registry operations in a feature's .reg file currently match the live registry.
 # Returns $true if ALL operations in the apply reg file match current system state.
 # Returns $false if the feature has no RegistryKey, the file is missing, or any operation mismatches.
+function Get-ExpectedRegistryValueKind {
+    param(
+        [Parameter(Mandatory)]
+        $Operation
+    )
+
+    switch ([string]$Operation.ValueType) {
+        'DWord' { return [Microsoft.Win32.RegistryValueKind]::DWord }
+        'String' { return [Microsoft.Win32.RegistryValueKind]::String }
+        'Binary' { return [Microsoft.Win32.RegistryValueKind]::Binary }
+        'Hex2' { return [Microsoft.Win32.RegistryValueKind]::ExpandString }
+        'Hex7' { return [Microsoft.Win32.RegistryValueKind]::MultiString }
+        default { return $null }
+    }
+}
+
 function Test-FeatureApplied {
     param (
         [Parameter(Mandatory)]
@@ -73,6 +89,8 @@ function Test-FeatureApplied {
                     if (-not ($names -icontains $op.ValueName)) { return $false }
 
                     $actualKind = $key.GetValueKind($op.ValueName)
+                    $expectedKind = Get-ExpectedRegistryValueKind -Operation $op
+                    if ($null -eq $expectedKind -or $actualKind -ne $expectedKind) { return $false }
                     $actualRaw  = $key.GetValue($op.ValueName, $null, [Microsoft.Win32.RegistryValueOptions]::DoNotExpandEnvironmentNames)
 
                     $actual = switch ($actualKind) {

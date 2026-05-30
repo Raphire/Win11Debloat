@@ -84,9 +84,11 @@ function Get-RegistryBackupPayload {
         }
     }
 
-    $allCapturableFeatures = @($SelectedFeatures) + @($UndoFeatures)
-    $selectedRegistryFeatures = @(Get-RegistryBackedFeatures -Features $allCapturableFeatures)
-    $capturePlans = @(Get-RegistryBackupCapturePlans -SelectedRegistryFeatures $selectedRegistryFeatures)
+    $selectedRegistryFeatures = @(Get-RegistryBackedFeatures -Features $SelectedFeatures)
+    $undoRegistryFeatures = @($UndoFeatures | Where-Object { 
+        -not [string]::IsNullOrWhiteSpace([string]$_.RegistryUndoKey) -or -not [string]::IsNullOrWhiteSpace([string]$_.RegistryKey)
+    })
+    $capturePlans = @(Get-RegistryBackupCapturePlans -SelectedRegistryFeatures $selectedRegistryFeatures -UndoRegistryFeatures $undoRegistryFeatures)
     $registryKeys = @(Get-RegistrySnapshotsForBackup -CapturePlans $capturePlans)
 
     $backupPayload = @{

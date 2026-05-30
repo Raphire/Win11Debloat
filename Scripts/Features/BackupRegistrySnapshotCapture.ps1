@@ -1,10 +1,12 @@
 function Get-RegistryBackupCapturePlans {
     param(
         [object[]]$SelectedRegistryFeatures = @(),
+        [object[]]$UndoRegistryFeatures = @(),
         [switch]$UseSysprepRegFiles
     )
 
     $planMap = @{}
+
     foreach ($feature in $SelectedRegistryFeatures) {
         $regFilePath = Get-RegistryFilePathForFeature -RegistryKey $feature.RegistryKey -UseSysprepRegFiles:$UseSysprepRegFiles
         if (-not (Test-Path $regFilePath)) {
@@ -13,34 +15,30 @@ function Get-RegistryBackupCapturePlans {
 
         foreach ($operation in @(Get-RegFileOperations -regFilePath $regFilePath)) {
             if (-not $operation.KeyPath) { continue }
+            Add-RegistryPlanOperation -PlanMap $planMap -Operation $operation
+        }
+    }
 
-            $mapKey = $operation.KeyPath.ToLowerInvariant()
-            if (-not $planMap.ContainsKey($mapKey)) {
-                $planMap[$mapKey] = [PSCustomObject]@{
-                    Path = $operation.KeyPath
-                    IncludeSubKeys = $false
-                    CaptureAllValues = $false
-                    ValueNames = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
-                }
+    foreach ($feature in $UndoRegistryFeatures) {
+        $regFilePath = Resolve-RegistryBackupUndoFilePath -Feature $feature
+        if ([string]::IsNullOrWhiteSpace($regFilePath)) {
+            continue
+        }
+
+        if (-not (Test-Path $regFilePath)) {
+            $undoKeyDescription = if (-not [string]::IsNullOrWhiteSpace([string]$feature.RegistryUndoKey)) {
+                [string]$feature.RegistryUndoKey
+            }
+            else {
+                [string]$feature.RegistryKey
             }
 
-            $plan = $planMap[$mapKey]
-            switch ($operation.OperationType) {
-                'DeleteKey' {
-                    $plan.IncludeSubKeys = $true
-                    $plan.CaptureAllValues = $true
-                }
-                'SetValue' {
-                    if (-not $plan.CaptureAllValues) {
-                        $null = $plan.ValueNames.Add([string]$operation.ValueName)
-                    }
-                }
-                'DeleteValue' {
-                    if (-not $plan.CaptureAllValues) {
-                        $null = $plan.ValueNames.Add([string]$operation.ValueName)
-                    }
-                }
-            }
+            throw "Unable to find registry undo file for backup: $undoKeyDescription ($regFilePath)"
+        }
+
+        foreach ($operation in @(Get-RegFileOperations -regFilePath $regFilePath)) {
+            if (-not $operation.KeyPath) { continue }
+            Add-RegistryPlanOperation -PlanMap $planMap -Operation $operation
         }
     }
 
@@ -54,6 +52,65 @@ function Get-RegistryBackupCapturePlans {
             }
         }
     )
+}
+
+function Add-RegistryPlanOperation {
+    param(
+        [hashtable]$PlanMap,
+        [PSCustomObject]$Operation
+    )
+
+    $mapKey = $Operation.KeyPath.ToLowerInvariant()
+    if (-not $PlanMap.ContainsKey($mapKey)) {
+        $PlanMap[$mapKey] = [PSCustomObject]@{
+            Path = $Operation.KeyPath
+            IncludeSubKeys = $false
+            CaptureAllValues = $false
+            ValueNames = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
+        }
+    }
+
+    $plan = $PlanMap[$mapKey]
+    switch ($Operation.OperationType) {
+        'DeleteKey' {
+            $plan.IncludeSubKeys = $true
+            $plan.CaptureAllValues = $true
+        }
+        'SetValue' {
+            if (-not $plan.CaptureAllValues) {
+                $null = $plan.ValueNames.Add([string]$Operation.ValueName)
+            }
+        }
+        'DeleteValue' {
+            if (-not $plan.CaptureAllValues) {
+                $null = $plan.ValueNames.Add([string]$Operation.ValueName)
+            }
+        }
+    }
+}
+
+function Resolve-RegistryBackupUndoFilePath {
+    param(
+        [Parameter(Mandatory)]
+        $Feature
+    )
+
+    $undoRegistryKey = [string]$Feature.RegistryUndoKey
+    if (-not [string]::IsNullOrWhiteSpace($undoRegistryKey)) {
+        $resolvedUndoPath = Resolve-UndoRegFilePath -FileName $undoRegistryKey
+        return Join-Path $script:RegfilesPath $resolvedUndoPath
+    }
+
+    $resolvedRegistryKey = [string]$Feature.RegistryKey
+    if ([string]::IsNullOrWhiteSpace($resolvedRegistryKey)) {
+        return $null
+    }
+
+    if ([System.IO.Path]::IsPathRooted($resolvedRegistryKey)) {
+        return $resolvedRegistryKey
+    }
+
+    return Join-Path $script:RegfilesPath $resolvedRegistryKey
 }
 
 function Get-RegistrySnapshotsForBackup {

@@ -133,6 +133,9 @@ function Test-RegistryBackupMatchesSelectedFeatures {
         [AllowEmptyCollection()]
         [string[]]$SelectedFeatureIds,
         [Parameter(Mandatory)]
+        [AllowEmptyCollection()]
+        [string[]]$SelectedUndoFeatureIds,
+        [Parameter(Mandatory)]
         [string]$Target,
         [Parameter(Mandatory)]
         [AllowEmptyCollection()]
@@ -146,12 +149,13 @@ function Test-RegistryBackupMatchesSelectedFeatures {
         return $errors.ToArray()
     }
 
-    $selectedRegistryFeatures = @(Get-SelectedRegistryFeaturesForBackupValidation -SelectedFeatureIds @($SelectedFeatureIds) -Errors $errors)
+    $selectedRegistryFeatures = @(Get-SelectedRegistryFeaturesForBackupValidation -SelectedFeatureIds @($SelectedFeatureIds) -IsUndoFeature:$false -Errors $errors)
+    $undoRegistryFeatures = @(Get-SelectedRegistryFeaturesForBackupValidation -SelectedFeatureIds @($SelectedUndoFeatureIds) -IsUndoFeature:$true -Errors $errors)
     $useSysprepRegFiles = ($Target -eq 'DefaultUserProfile') -or ($Target -like 'User:*')
 
     $capturePlans = @()
-    if ($errors.Count -eq 0 -and $selectedRegistryFeatures.Count -gt 0) {
-        $capturePlans = @(Get-RegistryBackupCapturePlans -SelectedRegistryFeatures @($selectedRegistryFeatures) -UseSysprepRegFiles:$useSysprepRegFiles)
+    if ($errors.Count -eq 0 -and ($selectedRegistryFeatures.Count -gt 0 -or $undoRegistryFeatures.Count -gt 0)) {
+        $capturePlans = @(Get-RegistryBackupCapturePlans -SelectedRegistryFeatures @($selectedRegistryFeatures) -UndoRegistryFeatures @($undoRegistryFeatures) -UseSysprepRegFiles:$useSysprepRegFiles)
     }
 
     $planMap = New-RegistryBackupAllowListPlanMap -CapturePlans @($capturePlans)
@@ -173,6 +177,8 @@ function Get-SelectedRegistryFeaturesForBackupValidation {
         [AllowEmptyCollection()]
         [string[]]$SelectedFeatureIds,
         [Parameter(Mandatory)]
+        [bool]$IsUndoFeature,
+        [Parameter(Mandatory)]
         [AllowEmptyCollection()]
         $Errors
     )
@@ -189,7 +195,26 @@ function Get-SelectedRegistryFeaturesForBackupValidation {
         }
 
         $feature = $script:Features[$featureId]
-        if ($feature -and -not [string]::IsNullOrWhiteSpace([string]$feature.RegistryKey)) {
+        if (-not $feature) {
+            continue
+        }
+
+        # For undo features, check RegistryUndoKey if present (real features)
+        # Otherwise check RegistryKey (for synthetic features from backup capture)
+        $registryKeyToUse = if ($IsUndoFeature) {
+            $key = [string]$feature.RegistryUndoKey
+            if (-not [string]::IsNullOrWhiteSpace($key)) {
+                $key
+            }
+            else {
+                [string]$feature.RegistryKey
+            }
+        }
+        else {
+            [string]$feature.RegistryKey
+        }
+
+        if (-not [string]::IsNullOrWhiteSpace($registryKeyToUse)) {
             $selectedRegistryFeatures.Add($feature)
         }
     }

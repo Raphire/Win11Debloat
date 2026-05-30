@@ -391,6 +391,7 @@ function Show-MainWindow {
             $control = $window.FindName($controlName)
             if ($control -is [System.Windows.Controls.CheckBox]) {
                 $control.IsChecked = $false
+                $control.IsEnabled = $true
             }
             elseif ($control -is [System.Windows.Controls.ComboBox]) {
                 $control.SelectedIndex = 0
@@ -890,13 +891,19 @@ function Show-MainWindow {
                     $items = @('No Change', $opt)
                     $comboName = ("Feature_{0}_Combo" -f $feature.FeatureId) -replace '[^a-zA-Z0-9_]',''
                     $combo = CreateLabeledCombo -parent $panel -labelText $feature.Label -comboName $comboName -items $items
-                    # attach tooltip from Features.json if present
-                    if ($feature.ToolTip) {
+                    # attach tooltip from Features.json if present, and include the disabled-state reason
+                    if ($feature.ToolTip -or $feature.DisableWhenApplied -eq $true) {
+                        $tooltipText = $feature.ToolTip
+                        if ($feature.DisableWhenApplied -eq $true) {
+                            $tooltipText = "This tweak is already applied and cannot be undone automatically. Visit the Win11Debloat wiki for instructions on how to manually revert this change."
+                        }
+
                         $tipBlock = New-Object System.Windows.Controls.TextBlock
-                        $tipBlock.Text = $feature.ToolTip
+                        $tipBlock.Text = $tooltipText
                         $tipBlock.TextWrapping = 'Wrap'
                         $tipBlock.MaxWidth = 420
                         $combo.ToolTip = $tipBlock
+                        [System.Windows.Controls.ToolTipService]::SetShowOnDisabled($combo, $true)
                         $lblBorderObj = $null
                         try { $lblBorderObj = $window.FindName("$comboName`_LabelBorder") } catch {}
                         if ($lblBorderObj) { $lblBorderObj.ToolTip = $tipBlock }
@@ -937,10 +944,14 @@ function Show-MainWindow {
             if ($control -is [System.Windows.Controls.CheckBox] -and $mapping.Type -eq 'feature') {
                 $applied = $false
                 try { $applied = [bool](Test-FeatureApplied -FeatureId $mapping.FeatureId) } catch {}
-                Add-Member -InputObject $control -MemberType NoteProperty -Name 'SystemState'  -Value $applied -Force
+                $featureObj = $script:Features[$mapping.FeatureId]
+                $disableWhenApplied = $featureObj -and $featureObj.DisableWhenApplied -eq $true
+                Add-Member -InputObject $control -MemberType NoteProperty -Name 'SystemState'       -Value $applied            -Force
+                Add-Member -InputObject $control -MemberType NoteProperty -Name 'DisableWhenApplied' -Value $disableWhenApplied -Force
 
                 if ($ApplyToUi) {
                     $control.IsChecked = $applied
+                    $control.IsEnabled = -not ($applied -and $disableWhenApplied)
                     Add-Member -InputObject $control -MemberType NoteProperty -Name 'InitialState' -Value $applied -Force
                 }
             }
@@ -1379,11 +1390,14 @@ function Show-MainWindow {
                 if ($loadSystemState) {
                     # Set checkbox to the currently applied state from registry
                     $applied = if ($null -ne $control.PSObject.Properties['SystemState']) { [bool]$control.SystemState } else { $false }
+                    $disableWhenApplied = $null -ne $control.PSObject.Properties['DisableWhenApplied'] -and [bool]$control.DisableWhenApplied
                     $control.IsChecked = $applied
+                    $control.IsEnabled = -not ($applied -and $disableWhenApplied)
                     Add-Member -InputObject $control -MemberType NoteProperty -Name 'InitialState' -Value $applied -Force
                 } else {
                     # Clear the checkbox
                     $control.IsChecked = $false
+                    $control.IsEnabled = $true
                     Add-Member -InputObject $control -MemberType NoteProperty -Name 'InitialState' -Value $false -Force
                 }
             }

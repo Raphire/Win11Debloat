@@ -28,6 +28,23 @@ function Test-FeatureApplied {
     $feature = $script:Features[$FeatureId]
 
     switch ($FeatureId) {
+        'DisableWidgets' {
+            # Widgets packages cannot be reinstalled automatically, so we treat their
+            # absence as the applied state (checked) and presence as not-yet-applied.
+            $widgetAppIds = @(
+                'Microsoft.StartExperiencesApp',
+                'MicrosoftWindows.Client.WebExperience',
+                'Microsoft.WidgetsPlatformRuntime'
+            )
+
+            foreach ($appId in $widgetAppIds) {
+                if (Get-AppxPackage -Name $appId -AllUsers -ErrorAction SilentlyContinue) {
+                    return $false
+                }
+            }
+
+            return $true
+        }
         'DisableStoreSearchSuggestions' {
             if ($script:Params.ContainsKey('Sysprep')) {
                 return (Test-StoreSearchSuggestionsDisabledForAllUsers)

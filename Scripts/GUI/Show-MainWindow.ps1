@@ -1863,16 +1863,6 @@ function Show-MainWindow {
                         })
                     }
                 }
-                elseif ($isNowIndex -eq 0 -and $wasIndex -gt 0 -and $wasIndex -le $mapping.Values.Count) {
-                    $prevValue = $mapping.Values[$wasIndex - 1]
-                    foreach ($fid in $prevValue.FeatureIds) {
-                        $actions.Add([PSCustomObject]@{
-                            Action = 'Undo'
-                            FeatureId = [string]$fid
-                            Label = (Get-FeatureLabel -FeatureId $fid)
-                        })
-                    }
-                }
             }
         }
 

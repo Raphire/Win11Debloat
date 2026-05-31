@@ -1,4 +1,71 @@
 # Sets resource colors for a WPF window based on dark mode preference
+function GetIconFontFamilyName {
+    if ($script:IconFontFamilyName) {
+        return $script:IconFontFamilyName
+    }
+
+    $preferredFont = 'Segoe Fluent Icons'
+    $fallbackFont = 'Segoe MDL2 Assets'
+
+    try {
+        $systemFonts = [System.Windows.Media.Fonts]::SystemFontFamilies | ForEach-Object { $_.Source }
+
+        if ($systemFonts -contains $preferredFont) {
+            $script:IconFontFamilyName = $preferredFont
+        }
+        elseif ($systemFonts -contains $fallbackFont) {
+            $script:IconFontFamilyName = $fallbackFont
+        }
+        else {
+            # Last resort fallback if the expected symbol fonts are unavailable.
+            $script:IconFontFamilyName = 'Segoe UI Symbol'
+        }
+    }
+    catch {
+        $script:IconFontFamilyName = $fallbackFont
+    }
+
+    return $script:IconFontFamilyName
+}
+
+function SetIconFontFallback {
+    param($window)
+
+    if (-not $window) {
+        return
+    }
+
+    $targetFontName = GetIconFontFamilyName
+    if ($targetFontName -eq 'Segoe Fluent Icons') {
+        return
+    }
+
+    $targetFontFamily = [System.Windows.Media.FontFamily]::new($targetFontName)
+    $queue = [System.Collections.Queue]::new()
+    $queue.Enqueue($window)
+
+    while ($queue.Count -gt 0) {
+        $node = $queue.Dequeue()
+
+        if ($node -is [System.Windows.Controls.TextBlock]) {
+            if ($node.FontFamily -and $node.FontFamily.Source -eq 'Segoe Fluent Icons') {
+                $node.FontFamily = $targetFontFamily
+            }
+        }
+        elseif ($node -is [System.Windows.Controls.Control]) {
+            if ($node.FontFamily -and $node.FontFamily.Source -eq 'Segoe Fluent Icons') {
+                $node.FontFamily = $targetFontFamily
+            }
+        }
+
+        foreach ($child in [System.Windows.LogicalTreeHelper]::GetChildren($node)) {
+            if ($child -is [System.Windows.DependencyObject]) {
+                $queue.Enqueue($child)
+            }
+        }
+    }
+}
+
 function SetWindowThemeResources {
     param (
         $window,
@@ -92,4 +159,6 @@ function SetWindowThemeResources {
             $sharedReader.Close()
         }
     }
+
+    SetIconFontFallback -window $window
 }

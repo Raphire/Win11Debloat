@@ -2014,14 +2014,10 @@ function Show-MainWindow {
         $hasAppSelection = ($selectedApps.Count -gt 0)
         
         if ($selectedApps.Count -gt 0) {
-            # Check if Microsoft Store is selected
-            if ($selectedApps -contains "Microsoft.WindowsStore") {
-                $result = Show-MessageBox -Message 'Are you sure you wish to uninstall the Microsoft Store? This app cannot easily be reinstalled.' -Title 'Are you sure?' -Button 'YesNo' -Icon 'Warning'
-
-                if ($result -eq 'No') {
-                    return
-                }
+            if (-not (ConfirmUnsafeAppRemoval -SelectedApps $selectedApps -Owner $window)) {
+                return
             }
+            
             
             AddParameter 'RemoveApps'
             AddParameter 'Apps' ($selectedApps -join ',')

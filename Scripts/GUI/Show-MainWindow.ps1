@@ -189,6 +189,8 @@ function Show-MainWindow {
     $contentGrid = $window.FindName('ContentGrid')
     $maxContentWidth = 1600.0
 
+    $homeContentPanel = $window.FindName('HomeContentPanel')
+
     $updateContentMargin = {
         $w = $window.ActualWidth
         if ($w -gt $maxContentWidth) {
@@ -199,8 +201,21 @@ function Show-MainWindow {
         }
     }
 
+    $updateHomeContentPosition = {
+        if ($homeContentPanel) {
+            # Scale the top margin so the home content is roughly centered vertically
+            # Use ~35% of the available content height as the top offset
+            $availableHeight = $window.ActualHeight - 32  # subtract title bar height
+            if ($availableHeight -gt 0) {
+                $topMargin = ($availableHeight - 584) * 0.5
+                $homeContentPanel.Margin = [System.Windows.Thickness]::new(0, $topMargin, 0, 0)
+            }
+        }
+    }
+
     $window.Add_SizeChanged({
         & $updateContentMargin
+        & $updateHomeContentPosition
         UpdateTweaksResponsiveColumns
     })
 
@@ -557,14 +572,14 @@ function Show-MainWindow {
 
         if ($appRemovalScopeCombo -and $appRemovalScopeSection -and $appRemovalScopeDescription) {
             if ($selectedCount -gt 0) {
+                $appRemovalScopeSection.Visibility = 'Visible'
                 if ($userSelectionCombo.SelectedIndex -ne 2) {
                     $appRemovalScopeCombo.IsEnabled = $true
                 }
                 UpdateAppRemovalScopeDescription
             }
             else {
-                $appRemovalScopeCombo.IsEnabled = $false
-                $appRemovalScopeDescription.Text = "No apps selected for removal."
+                $appRemovalScopeSection.Visibility = 'Collapsed'
             }
         }
     }
@@ -915,8 +930,10 @@ function Show-MainWindow {
 
         # Build a feature-label lookup so GenerateOverview can resolve feature IDs without reloading JSON
         $script:FeatureLabelLookup = @{}
+        $script:UndoFeatureLabelLookup = @{}
         foreach ($f in $featuresJson.Features) {
             $script:FeatureLabelLookup[$f.FeatureId] = $f.Label
+            $script:UndoFeatureLabelLookup[$f.FeatureId] = $f.UndoLabel
         }
     }
 
@@ -1416,32 +1433,22 @@ function Show-MainWindow {
         }
     }
 
-    $script:SuppressAppliedTweaksUserSync = $false
-
     function UpdateAppliedTweaksUserModeState {
-        $showAppliedTweaksMode = ($ShowCurrentlyAppliedTweaksCheckBox -and $ShowCurrentlyAppliedTweaksCheckBox.IsChecked -eq $true)
-
-        if ($showAppliedTweaksMode) {
-            if ($userSelectionCombo.SelectedIndex -ne 0 -and -not $script:SuppressAppliedTweaksUserSync) {
-                $script:SuppressAppliedTweaksUserSync = $true
-                try {
-                    $userSelectionCombo.SelectedIndex = 0
-                }
-                finally {
-                    $script:SuppressAppliedTweaksUserSync = $false
-                }
+        # Show/hide detect applied tweaks checkbox based on user mode
+        if ($ShowCurrentlyAppliedTweaksCheckBox) {
+            if ($userSelectionCombo.SelectedIndex -eq 0) {
+                $ShowCurrentlyAppliedTweaksCheckBox.Visibility = 'Visible'
+            } else {
+                $ShowCurrentlyAppliedTweaksCheckBox.Visibility = 'Collapsed'
             }
-
-            $userSelectionCombo.IsEnabled = $false
-            return
         }
 
+        # Enable/disable user mode combo based on params only (not checkbox)
         if ($script:Params.ContainsKey('Sysprep') -or $script:Params.ContainsKey('User')) {
             $userSelectionCombo.IsEnabled = $false
-            return
+        } else {
+            $userSelectionCombo.IsEnabled = $true
         }
-
-        $userSelectionCombo.IsEnabled = $true
     }
 
     function UpdateTweaksResponsiveColumns {
@@ -1687,40 +1694,62 @@ function Show-MainWindow {
         }
     }
 
+    function UpdateUserSelectionDescription {
+        switch ($userSelectionCombo.SelectedIndex) {
+            0 {
+                $currentUserName = GetUserName
+                if ([string]::IsNullOrWhiteSpace($currentUserName)) {
+                    $userSelectionDescription.Text = "The currently logged-in user profile"
+                }
+                else {
+                    $userSelectionDescription.Text = "The currently logged-in user profile: $currentUserName"
+                }
+            }
+            1 {
+                $targetUserName = $otherUsernameTextBox.Text.Trim()
+                if ([string]::IsNullOrWhiteSpace($targetUserName)) {
+                    $userSelectionDescription.Text = "A different user profile on this system"
+                }
+                else {
+                    $userSelectionDescription.Text = "A different user profile on this system: $targetUserName"
+                }
+            }
+            default {
+                $userSelectionDescription.Text = "The default user template, affecting all new users created after this point. Useful for Sysprep deployment."
+            }
+        }
+    }
+
     # Update user selection description and show/hide other user panel
     $userSelectionCombo.Add_SelectionChanged({
-        if ($ShowCurrentlyAppliedTweaksCheckBox -and $ShowCurrentlyAppliedTweaksCheckBox.IsChecked -eq $true -and $userSelectionCombo.SelectedIndex -ne 0 -and -not $script:SuppressAppliedTweaksUserSync) {
-            $script:SuppressAppliedTweaksUserSync = $true
-            try {
-                $userSelectionCombo.SelectedIndex = 0
-            }
-            finally {
-                $script:SuppressAppliedTweaksUserSync = $false
-            }
-            return
-        }
+        UpdateUserSelectionDescription
 
         switch ($userSelectionCombo.SelectedIndex) {
             0 { 
-                $userSelectionDescription.Text = "Changes will be applied to the currently logged-in user profile."
                 $otherUserPanel.Visibility = 'Collapsed'
                 $usernameValidationMessage.Text = ""
                 # Show "Current user only" option, hide "Target user only" option
                 $appRemovalScopeCurrentUser.Visibility = 'Visible'
                 $appRemovalScopeTargetUser.Visibility = 'Collapsed'
                 $appRemovalScopeCombo.SelectedIndex = 0
+                # Re-check detect applied tweaks when switching back to current user
+                if ($ShowCurrentlyAppliedTweaksCheckBox -and $ShowCurrentlyAppliedTweaksCheckBox.IsChecked -ne $true) {
+                    $ShowCurrentlyAppliedTweaksCheckBox.IsChecked = $true
+                }
             }
             1 { 
-                $userSelectionDescription.Text = "Changes will be applied to a different user profile on this system."
                 $otherUserPanel.Visibility = 'Visible'
                 $usernameValidationMessage.Text = ""
                 # Hide "Current user only" option, show "Target user only" option
                 $appRemovalScopeCurrentUser.Visibility = 'Collapsed'
                 $appRemovalScopeTargetUser.Visibility = 'Visible'
                 $appRemovalScopeCombo.SelectedIndex = 0
+                # Uncheck detect applied tweaks for other user mode
+                if ($ShowCurrentlyAppliedTweaksCheckBox -and $ShowCurrentlyAppliedTweaksCheckBox.IsChecked -eq $true) {
+                    $ShowCurrentlyAppliedTweaksCheckBox.IsChecked = $false
+                }
             }
             2 { 
-                $userSelectionDescription.Text = "Changes will be applied to the default user template, affecting all new users created after this point. Useful for Sysprep deployment."
                 $otherUserPanel.Visibility = 'Collapsed'
                 $usernameValidationMessage.Text = ""
                 # Hide other user options since they don't apply to default user template
@@ -1728,6 +1757,10 @@ function Show-MainWindow {
                 $appRemovalScopeTargetUser.Visibility = 'Collapsed'
                 # Lock app removal scope to "All users" when applying to sysprep
                 $appRemovalScopeCombo.SelectedIndex = 0
+                # Uncheck detect applied tweaks for sysprep mode
+                if ($ShowCurrentlyAppliedTweaksCheckBox -and $ShowCurrentlyAppliedTweaksCheckBox.IsChecked -eq $true) {
+                    $ShowCurrentlyAppliedTweaksCheckBox.IsChecked = $false
+                }
             }
         }
 
@@ -1745,10 +1778,10 @@ function Show-MainWindow {
                     $appRemovalScopeDescription.Text = "Apps will be removed for all users and from the Windows image to prevent reinstallation for new users."
                 }
                 "Current user only" { 
-                    $appRemovalScopeDescription.Text = "Apps will only be removed for the current user. Other users and new users will not be affected."
+                    $appRemovalScopeDescription.Text = "Apps will only be removed for the current user. Existing and new users will not be affected."
                 }
                 "Target user only" { 
-                    $appRemovalScopeDescription.Text = "Apps will only be removed for the specified target user. Other users and new users will not be affected."
+                    $appRemovalScopeDescription.Text = "Apps will only be removed for the specified target user. Existing and new users will not be affected."
                 }
             }
         }
@@ -1766,6 +1799,8 @@ function Show-MainWindow {
         } else {
             $usernameTextBoxPlaceholder.Visibility = 'Collapsed'
         }
+
+        UpdateUserSelectionDescription
         
         ValidateOtherUsername
     })
@@ -1806,6 +1841,22 @@ function Show-MainWindow {
         }
 
         return [string]$FeatureId
+    }
+
+    function Get-UndoFeatureLabel {
+        param(
+            [string]$FeatureId,
+            $FallbackLabel = $null
+        )
+
+        $undoLabel = $script:UndoFeatureLabelLookup[$FeatureId]
+        if (-not [string]::IsNullOrWhiteSpace([string]$undoLabel)) {
+            return [string]$undoLabel
+        }
+
+        # Fall back to the regular label (prefixed for undo context)
+        $label = Get-FeatureLabel -FeatureId $FeatureId -FallbackLabel $FallbackLabel
+        return [string]$label
     }
 
     function Get-PendingTweakActions {
@@ -1939,9 +1990,29 @@ function Show-MainWindow {
         }
     })
 
+    $ensureValidTargetUserOrWarn = {
+        if (-not (ValidateOtherUsername)) {
+            $validationMessage = if (-not [string]::IsNullOrWhiteSpace($usernameValidationMessage.Text)) {
+                $usernameValidationMessage.Text
+            }
+            else {
+                "Please enter a valid username."
+            }
+
+            Show-MessageBox -Message $validationMessage -Title "Invalid Username" -Button 'OK' -Icon 'Warning' | Out-Null
+            return $false
+        }
+
+        return $true
+    }
+
     # Handle Home Start button
     $homeStartBtn = $window.FindName('HomeStartBtn')
     $homeStartBtn.Add_Click({
+        if (-not (& $ensureValidTargetUserOrWarn)) {
+            return
+        }
+
         # Navigate to first tab after home (App Removal)
         $tabControl.SelectedIndex = 1
         UpdateNavigationButtons
@@ -1950,6 +2021,10 @@ function Show-MainWindow {
     # Handle Home Default Mode button - apply defaults and navigate directly to overview
     $homeDefaultModeBtn = $window.FindName('HomeDefaultModeBtn')
     $homeDefaultModeBtn.Add_Click({
+        if (-not (& $ensureValidTargetUserOrWarn)) {
+            return
+        }
+
         if ($ShowCurrentlyAppliedTweaksCheckBox) {
             $ShowCurrentlyAppliedTweaksCheckBox.IsChecked = $false
         }
@@ -1987,14 +2062,7 @@ function Show-MainWindow {
     # Handle Apply Changes button - validates and immediately starts applying changes
     $deploymentApplyBtn = $window.FindName('DeploymentApplyBtn')
     $deploymentApplyBtn.Add_Click({
-        if (-not (ValidateOtherUsername)) {
-            $validationMessage = if (-not [string]::IsNullOrWhiteSpace($usernameValidationMessage.Text)) {
-                $usernameValidationMessage.Text
-            }
-            else {
-                "Please enter a valid username."
-            }
-            Show-MessageBox -Message $validationMessage -Title "Invalid Username" -Button 'OK' -Icon 'Warning' | Out-Null
+        if (-not (& $ensureValidTargetUserOrWarn)) {
             return
         }
 
@@ -2092,6 +2160,7 @@ function Show-MainWindow {
 
     # Initialize UI elements on window load
     $window.Add_Loaded({
+        & $updateHomeContentPosition
         BuildDynamicTweaks
         LoadCurrentTweakStateIntoUI
         UpdateTweaksResponsiveColumns
@@ -2128,6 +2197,7 @@ function Show-MainWindow {
             $otherUsernameTextBox.IsEnabled = $false
         }
 
+        UpdateUserSelectionDescription
         UpdateAppliedTweaksUserModeState
         UpdateNavigationButtons
     })

@@ -1,4 +1,4 @@
-{
+﻿{
   "Version": "1.0",
   "Categories": [
     {
@@ -289,6 +289,8 @@
       "Category": null,
       "RegistryKey": null,
       "ApplyText": "Removing selected apps...",
+      "UndoLabel": null,
+      "ApplyUndoText": null,
       "RegistryUndoKey": null,
       "MinVersion": null,
       "MaxVersion": null
@@ -299,6 +301,8 @@
       "Category": null,
       "RegistryKey": null,
       "ApplyText": "Removing selected apps...",
+      "UndoLabel": null,
+      "ApplyUndoText": null,
       "RegistryUndoKey": null,
       "MinVersion": null,
       "MaxVersion": null
@@ -309,6 +313,8 @@
       "Category": null,
       "RegistryKey": null,
       "ApplyText": "Removing selected apps...",
+      "UndoLabel": null,
+      "ApplyUndoText": null,
       "RegistryUndoKey": null,
       "MinVersion": null,
       "MaxVersion": null
@@ -319,6 +325,8 @@
       "Category": null,
       "RegistryKey": null,
       "ApplyText": "Removing selected apps...",
+      "UndoLabel": null,
+      "ApplyUndoText": null,
       "RegistryUndoKey": null,
       "MinVersion": null,
       "MaxVersion": null
@@ -329,6 +337,8 @@
       "Category": null,
       "RegistryKey": null,
       "ApplyText": "Removing selected apps...",
+      "UndoLabel": null,
+      "ApplyUndoText": null,
       "RegistryUndoKey": null,
       "MinVersion": null,
       "MaxVersion": null
@@ -339,6 +349,8 @@
       "Category": null,
       "RegistryKey": null,
       "ApplyText": "Removing selected apps...",
+      "UndoLabel": null,
+      "ApplyUndoText": null,
       "RegistryUndoKey": null,
       "MinVersion": null,
       "MaxVersion": null
@@ -349,6 +361,8 @@
       "Category": null,
       "RegistryKey": null,
       "ApplyText": "Removing selected apps...",
+      "UndoLabel": null,
+      "ApplyUndoText": null,
       "RegistryUndoKey": null,
       "MinVersion": null,
       "MaxVersion": null
@@ -359,6 +373,8 @@
       "Category": null,
       "RegistryKey": null,
       "ApplyText": null,
+      "UndoLabel": null,
+      "ApplyUndoText": null,
       "RegistryUndoKey": null,
       "MinVersion": null,
       "MaxVersion": null
@@ -370,6 +386,8 @@
       "Category": "Privacy & Suggested Content",
       "RegistryKey": "Disable_Telemetry.reg",
       "ApplyText": "Disabling telemetry, diagnostic data, activity history, app-launch tracking and targeted ads...",
+      "UndoLabel": "Enable telemetry, tracking & targeted ads",
+      "ApplyUndoText": "Enabling telemetry, diagnostic data, activity history, app-launch tracking and targeted ads...",
       "RegistryUndoKey": "Enable_Telemetry.reg",
       "MinVersion": null,
       "MaxVersion": null
@@ -381,6 +399,8 @@
       "Category": "Privacy & Suggested Content",
       "RegistryKey": "Disable_Windows_Suggestions.reg",
       "ApplyText": "Disabling tips, tricks, suggestions and ads throughout Windows...",
+      "UndoLabel": "Enable tips, tricks & suggested content throughout Windows",
+      "ApplyUndoText": "Enabling tips, tricks, suggestions and ads throughout Windows...",
       "RegistryUndoKey": "Enable_Windows_Suggestions.reg",
       "MinVersion": null,
       "MaxVersion": null
@@ -392,6 +412,8 @@
       "Category": "Privacy & Suggested Content",
       "RegistryKey": "Disable_Location_Services.reg",
       "ApplyText": "Disabling Windows location services and app location access...",
+      "UndoLabel": "Enable Windows location services & app location access",
+      "ApplyUndoText": "Enabling Windows location services and app location access...",
       "RegistryUndoKey": "Enable_Location_Services.reg",
       "MinVersion": null,
       "MaxVersion": null
@@ -403,6 +425,8 @@
       "Category": "Privacy & Suggested Content",
       "RegistryKey": "Disable_Find_My_Device.reg",
       "ApplyText": "Disabling Find My Device location tracking...",
+      "UndoLabel": "Enable Find My Device location tracking",
+      "ApplyUndoText": "Enabling Find My Device location tracking...",
       "RegistryUndoKey": "Enable_Find_My_Device.reg",
       "MinVersion": null,
       "MaxVersion": null
@@ -414,6 +438,8 @@
       "Category": "Privacy & Suggested Content",
       "RegistryKey": "Disable_Lockscreen_Tips.reg",
       "ApplyText": "Disabling tips & tricks on the lock screen...",
+      "UndoLabel": "Enable tips & tricks on the lock screen",
+      "ApplyUndoText": "Enabling tips & tricks on the lock screen...",
       "RegistryUndoKey": "Enable_Lockscreen_Tips.reg",
       "MinVersion": null,
       "MaxVersion": null
@@ -425,6 +451,8 @@
       "Category": "Privacy & Suggested Content",
       "RegistryKey": "Disable_Desktop_Spotlight.reg",
       "ApplyText": "Disabling the 'Windows Spotlight' desktop background option...",
+      "UndoLabel": "Enable Windows Spotlight for desktop",
+      "ApplyUndoText": "Enabling the 'Windows Spotlight' desktop background option...",
       "RegistryUndoKey": "Enable_Desktop_Spotlight.reg",
       "MinVersion": null,
       "MaxVersion": null
@@ -436,6 +464,8 @@
       "Category": "Privacy & Suggested Content",
       "RegistryKey": "Disable_Edge_Ads_And_Suggestions.reg",
       "ApplyText": "Disabling ads, suggestions and the MSN news feed in Microsoft Edge...",
+      "UndoLabel": "Enable ads, suggestions and newsfeed in Edge",
+      "ApplyUndoText": "Enabling ads, suggestions and the MSN news feed in Microsoft Edge...",
       "RegistryUndoKey": "Enable_Edge_Ads_And_Suggestions.reg",
       "MinVersion": null,
       "MaxVersion": null
@@ -447,6 +477,8 @@
       "Category": "AI",
       "RegistryKey": "Disable_Copilot.reg",
       "ApplyText": "Disabling Microsoft Copilot...",
+      "UndoLabel": "Enable Microsoft Copilot",
+      "ApplyUndoText": "Enabling Microsoft Copilot...",
       "RegistryUndoKey": "Enable_Copilot.reg",
       "MinVersion": 22621,
       "MaxVersion": null
@@ -458,6 +490,8 @@
       "Category": "AI",
       "RegistryKey": "Disable_AI_Recall.reg",
       "ApplyText": "Disabling Windows Recall...",
+      "UndoLabel": "Enable Windows Recall",
+      "ApplyUndoText": "Enabling Windows Recall...",
       "RegistryUndoKey": "Enable_AI_Recall.reg",
       "MinVersion": 22621,
       "MaxVersion": null
@@ -469,6 +503,8 @@
       "Category": "AI",
       "RegistryKey": "Disable_Click_to_Do.reg",
       "ApplyText": "Disabling Click to Do...",
+      "UndoLabel": "Enable Click To Do, AI text & image analysis",
+      "ApplyUndoText": "Enabling Click to Do...",
       "RegistryUndoKey": "Enable_Click_to_Do.reg",
       "MinVersion": 22621,
       "MaxVersion": null
@@ -480,6 +516,8 @@
       "Category": "AI",
       "RegistryKey": "Disable_AI_Service_Auto_Start.reg",
       "ApplyText": "Preventing AI service from starting automatically...",
+      "UndoLabel": "Allow AI service to start automatically",
+      "ApplyUndoText": "Allowing AI service to start automatically...",
       "RegistryUndoKey": "Enable_AI_Service_Auto_Start.reg",
       "MinVersion": 22621,
       "MaxVersion": null
@@ -491,6 +529,8 @@
       "Category": "Gaming",
       "RegistryKey": "Disable_DVR.reg",
       "ApplyText": "Disabling Xbox game/screen recording...",
+      "UndoLabel": "Enable Xbox game/screen recording",
+      "ApplyUndoText": "Enabling Xbox game/screen recording...",
       "RegistryUndoKey": "Enable_DVR.reg",
       "MinVersion": null,
       "MaxVersion": null
@@ -502,6 +542,8 @@
       "Category": "Gaming",
       "RegistryKey": "Disable_Game_Bar_Integration.reg",
       "ApplyText": "Disabling Game Bar integration...",
+      "UndoLabel": "Enable Game Bar integration",
+      "ApplyUndoText": "Enabling Game Bar integration...",
       "RegistryUndoKey": "Enable_Game_Bar_Integration.reg",
       "MinVersion": null,
       "MaxVersion": null
@@ -512,6 +554,8 @@
       "Category": "Start Menu & Search",
       "RegistryKey": null,
       "ApplyText": null,
+      "UndoLabel": null,
+      "ApplyUndoText": null,
       "RegistryUndoKey": null,
       "MinVersion": 22621,
       "MaxVersion": null
@@ -522,6 +566,8 @@
       "Category": "Start Menu & Search",
       "RegistryKey": null,
       "ApplyText": null,
+      "UndoLabel": null,
+      "ApplyUndoText": null,
       "RegistryUndoKey": null,
       "MinVersion": 22621,
       "MaxVersion": null
@@ -532,6 +578,8 @@
       "Category": null,
       "RegistryKey": null,
       "ApplyText": null,
+      "UndoLabel": null,
+      "ApplyUndoText": null,
       "RegistryUndoKey": null,
       "MinVersion": 22621,
       "MaxVersion": null
@@ -542,6 +590,8 @@
       "Category": null,
       "RegistryKey": null,
       "ApplyText": null,
+      "UndoLabel": null,
+      "ApplyUndoText": null,
       "RegistryUndoKey": null,
       "MinVersion": 22621,
       "MaxVersion": null
@@ -553,6 +603,8 @@
       "Category": "Start Menu & Search",
       "RegistryKey": "Disable_Start_Recommended.reg",
       "ApplyText": "Disabling the start menu recommended section...",
+      "UndoLabel": "Show recommended section in the start menu",
+      "ApplyUndoText": "Enabling the start menu recommended section...",
       "RegistryUndoKey": "Enable_Start_Recommended.reg",
       "MinVersion": 22621,
       "MaxVersion": null
@@ -564,6 +616,8 @@
       "Category": "Start Menu & Search",
       "RegistryKey": "Disable_Start_All_Apps.reg",
       "ApplyText": "Disabling the 'All Apps' section in the start menu...",
+      "UndoLabel": "Show 'All Apps' section in the start menu",
+      "ApplyUndoText": "Enabling the 'All Apps' section in the start menu...",
       "RegistryUndoKey": "Enable_Start_All_Apps.reg",
       "MinVersion": 26200,
       "MaxVersion": null
@@ -575,6 +629,8 @@
       "Category": "Start Menu & Search",
       "RegistryKey": "Disable_Phone_Link_In_Start.reg",
       "ApplyText": "Disabling the Phone Link mobile devices integration in the start menu...",
+      "UndoLabel": "Enable Phone Link integration in the start menu",
+      "ApplyUndoText": "Enabling the Phone Link mobile devices integration in the start menu...",
       "RegistryUndoKey": "Enable_Phone_Link_In_Start.reg",
       "MinVersion": 22621,
       "MaxVersion": null
@@ -586,6 +642,8 @@
       "Category": "Start Menu & Search",
       "RegistryKey": "Disable_Bing_Cortana_In_Search.reg",
       "ApplyText": "Disabling Bing web search & Copilot integration in Windows search...",
+      "UndoLabel": "Enable Bing web search & Copilot integration in search",
+      "ApplyUndoText": "Enabling Bing web search & Copilot integration in Windows search...",
       "RegistryUndoKey": "Enable_Bing_Cortana_In_Search.reg",
       "MinVersion": null,
       "MaxVersion": null
@@ -597,6 +655,8 @@
       "Category": "Start Menu & Search",
       "RegistryKey": null,
       "ApplyText": null,
+      "UndoLabel": "Enable Microsoft Store app suggestions in search",
+      "ApplyUndoText": "Enabling Microsoft Store app suggestions in search...",
       "RegistryUndoKey": null,
       "MinVersion": 22621,
       "MaxVersion": null
@@ -608,6 +668,8 @@
       "Category": "Privacy & Suggested Content",
       "RegistryKey": "Disable_Settings_365_Ads.reg",
       "ApplyText": "Disabling Microsoft 365 Copilot ads in Settings Home...",
+      "UndoLabel": "Show Microsoft 365 Copilot ads in Settings Home",
+      "ApplyUndoText": "Enabling Microsoft 365 Copilot ads in Settings Home...",
       "RegistryUndoKey": "Enable_Settings_365_Ads.reg",
       "MinVersion": null,
       "MaxVersion": null
@@ -619,6 +681,8 @@
       "Category": "Other",
       "RegistryKey": "Disable_Settings_Home.reg",
       "ApplyText": "Disabling the Settings Home page...",
+      "UndoLabel": "Show Settings 'Home' page",
+      "ApplyUndoText": "Enabling the Settings Home page...",
       "RegistryUndoKey": "Enable_Settings_Home.reg",
       "MinVersion": null,
       "MaxVersion": null
@@ -630,6 +694,8 @@
       "Category": "AI",
       "RegistryKey": "Disable_Edge_AI_Features.reg",
       "ApplyText": "Disabling AI features in Microsoft Edge...",
+      "UndoLabel": "Enable AI features in Microsoft Edge",
+      "ApplyUndoText": "Enabling AI features in Microsoft Edge...",
       "RegistryUndoKey": "Enable_Edge_AI_Features.reg",
       "MinVersion": 22621,
       "MaxVersion": null
@@ -641,6 +707,8 @@
       "Category": "AI",
       "RegistryKey": "Disable_Paint_AI_Features.reg",
       "ApplyText": "Disabling AI features in Paint...",
+      "UndoLabel": "Enable AI features in Paint",
+      "ApplyUndoText": "Enabling AI features in Paint...",
       "RegistryUndoKey": "Enable_Paint_AI_Features.reg",
       "MinVersion": 22621,
       "MaxVersion": null
@@ -652,6 +720,8 @@
       "Category": "AI",
       "RegistryKey": "Disable_Notepad_AI_Features.reg",
       "ApplyText": "Disabling AI features in Notepad...",
+      "UndoLabel": "Enable AI features in Notepad",
+      "ApplyUndoText": "Enabling AI features in Notepad...",
       "RegistryUndoKey": "Enable_Notepad_AI_Features.reg",
       "MinVersion": 22621,
       "MaxVersion": null
@@ -663,6 +733,8 @@
       "Category": "Appearance",
       "RegistryKey": "Enable_Dark_Mode.reg",
       "ApplyText": "Enabling dark mode for system and apps...",
+      "UndoLabel": "Disable dark theme for system and apps",
+      "ApplyUndoText": "Disabling dark mode for system and apps...",
       "RegistryUndoKey": "Enable_Light_Mode.reg",
       "MinVersion": null,
       "MaxVersion": null
@@ -674,6 +746,8 @@
       "Category": "System",
       "RegistryKey": "Disable_Share_Drag_Tray.reg",
       "ApplyText": "Disabling Drag Tray...",
+      "UndoLabel": "Enable 'Drag Tray' for sharing & moving files",
+      "ApplyUndoText": "Enabling Drag Tray...",
       "RegistryUndoKey": "Enable_Share_Drag_Tray.reg",
       "MinVersion": 26200,
       "MaxVersion": null
@@ -685,6 +759,8 @@
       "Category": "System",
       "RegistryKey": "Disable_Show_More_Options_Context_Menu.reg",
       "ApplyText": "Restoring the classic Windows 10 style context menu...",
+      "UndoLabel": "Use Windows 11 context menu style",
+      "ApplyUndoText": "Restoring the Windows 11 style context menu...",
       "RegistryUndoKey": "Enable_W11_Style_Context_Menu.reg",
       "MinVersion": 22000,
       "MaxVersion": null
@@ -696,6 +772,8 @@
       "Category": "System",
       "RegistryKey": "Disable_Enhance_Pointer_Precision.reg",
       "ApplyText": "Turning off Enhanced Pointer Precision...",
+      "UndoLabel": "Enable Enhance Pointer Precision (mouse acceleration)",
+      "ApplyUndoText": "Turning on Enhanced Pointer Precision...",
       "RegistryUndoKey": "Enable_Enhance_Pointer_Precision.reg",
       "RequiresReboot": true,
       "MinVersion": null,
@@ -708,6 +786,8 @@
       "Category": "System",
       "RegistryKey": "Disable_Sticky_Keys_Shortcut.reg",
       "ApplyText": "Disabling the Sticky Keys keyboard shortcut...",
+      "UndoLabel": "Enable Sticky Keys keyboard shortcut (5x shift)",
+      "ApplyUndoText": "Enabling the Sticky Keys keyboard shortcut...",
       "RegistryUndoKey": "Enable_Sticky_Keys_Shortcut.reg",
       "RequiresReboot": true,
       "MinVersion": 26100,
@@ -721,6 +801,8 @@
       "Priority": 1,
       "RegistryKey": "Disable_Window_Snapping.reg",
       "ApplyText": "Disabling window snapping...",
+      "UndoLabel": "Enable window snapping",
+      "ApplyUndoText": "Enabling window snapping...",
       "RegistryUndoKey": "Enable_Window_Snapping.reg",
       "MinVersion": null,
       "MaxVersion": null
@@ -733,6 +815,8 @@
       "Priority": 2,
       "RegistryKey": "Disable_Snap_Assist.reg",
       "ApplyText": "Disabling the Snap Assist suggestions...",
+      "UndoLabel": "Enable showing app suggestions when snapping windows",
+      "ApplyUndoText": "Enabling the Snap Assist suggestions...",
       "RegistryUndoKey": "Enable_Snap_Assist.reg",
       "MinVersion": 22000,
       "MaxVersion": null
@@ -745,6 +829,8 @@
       "Priority": 3,
       "RegistryKey": "Disable_Snap_Layouts.reg",
       "ApplyText": "Hiding snap layouts when dragging windows to top of the screen and on maximize button...",
+      "UndoLabel": "Show snap layout flyout at top of screen and on maximize button",
+      "ApplyUndoText": "Showing snap layouts when dragging windows to top of the screen and on maximize button...",
       "RegistryUndoKey": "Enable_Snap_Layouts.reg",
       "MinVersion": 22000,
       "MaxVersion": null
@@ -755,6 +841,8 @@
       "Category": "Multi-tasking",
       "RegistryKey": "Hide_Tabs_In_Alt_Tab.reg",
       "ApplyText": "Disable showing tabs from apps when snapping or pressing Alt+Tab...",
+      "UndoLabel": null,
+      "ApplyUndoText": null,
       "RegistryUndoKey": null,
       "MinVersion": 22000,
       "MaxVersion": null
@@ -765,6 +853,8 @@
       "Category": "Multi-tasking",
       "RegistryKey": "Show_3_Tabs_In_Alt_Tab.reg",
       "ApplyText": "Enable showing 3 tabs from apps when snapping or pressing Alt+Tab...",
+      "UndoLabel": null,
+      "ApplyUndoText": null,
       "RegistryUndoKey": null,
       "MinVersion": 22000,
       "MaxVersion": null
@@ -775,6 +865,8 @@
       "Category": "Multi-tasking",
       "RegistryKey": "Show_5_Tabs_In_Alt_Tab.reg",
       "ApplyText": "Enable showing 5 tabs from apps when snapping or pressing Alt+Tab...",
+      "UndoLabel": null,
+      "ApplyUndoText": null,
       "RegistryUndoKey": null,
       "MinVersion": 22000,
       "MaxVersion": null
@@ -785,6 +877,8 @@
       "Category": "Multi-tasking",
       "RegistryKey": "Show_20_Tabs_In_Alt_Tab.reg",
       "ApplyText": "Enable showing 20 tabs from apps when snapping or pressing Alt+Tab...",
+      "UndoLabel": null,
+      "ApplyUndoText": null,
       "RegistryUndoKey": null,
       "MinVersion": 22000,
       "MaxVersion": null
@@ -797,6 +891,8 @@
       "Priority": 1,
       "RegistryKey": "Align_Taskbar_Left.reg",
       "ApplyText": "Aligning taskbar buttons to the left...",
+      "UndoLabel": "Align taskbar to the center",
+      "ApplyUndoText": "Aligning taskbar buttons to the center...",
       "RegistryUndoKey": "Align_Taskbar_Center.reg",
       "MinVersion": 22000,
       "MaxVersion": null
@@ -807,6 +903,8 @@
       "Category": "Taskbar",
       "RegistryKey": "Hide_Search_Taskbar.reg",
       "ApplyText": "Hiding the search icon from the taskbar...",
+      "UndoLabel": "Show search box on the taskbar",
+      "ApplyUndoText": "Changing taskbar search to search box...",
       "RegistryUndoKey": "Show_Search_Box.reg",
       "MinVersion": 22000,
       "MaxVersion": null
@@ -817,6 +915,8 @@
       "Category": "Taskbar",
       "RegistryKey": "Show_Search_Icon.reg",
       "ApplyText": "Changing taskbar search to icon only...",
+      "UndoLabel": "Show search box on the taskbar",
+      "ApplyUndoText": "Changing taskbar search to search box...",
       "RegistryUndoKey": "Show_Search_Box.reg",
       "MinVersion": 22000,
       "MaxVersion": null
@@ -827,6 +927,8 @@
       "Category": "Taskbar",
       "RegistryKey": "Show_Search_Icon_And_Label.reg",
       "ApplyText": "Changing taskbar search to icon with label...",
+      "UndoLabel": "Show search box on the taskbar",
+      "ApplyUndoText": "Changing taskbar search to search box...",
       "RegistryUndoKey": "Show_Search_Box.reg",
       "MinVersion": 22000,
       "MaxVersion": null
@@ -837,6 +939,8 @@
       "Category": "Taskbar",
       "RegistryKey": "Show_Search_Box.reg",
       "ApplyText": "Changing taskbar search to search box...",
+      "UndoLabel": null,
+      "ApplyUndoText": null,
       "RegistryUndoKey": null,
       "MinVersion": 22000,
       "MaxVersion": null
@@ -849,6 +953,8 @@
       "Priority": 3,
       "RegistryKey": "Hide_Taskview_Taskbar.reg",
       "ApplyText": "Hiding the taskview button from the taskbar...",
+      "UndoLabel": "Show 'Task view' button on the taskbar",
+      "ApplyUndoText": "Showing the taskview button from the taskbar...",
       "RegistryUndoKey": "Show_Taskview_Taskbar.reg",
       "MinVersion": 22000,
       "MaxVersion": null
@@ -861,6 +967,8 @@
       "Priority": 4,
       "RegistryKey": null,
       "ApplyText": null,
+      "UndoLabel": null,
+      "ApplyUndoText": null,
       "RegistryUndoKey": null,
       "MinVersion": null,
       "MaxVersion": null,
@@ -874,6 +982,8 @@
       "Priority": 5,
       "RegistryKey": "Disable_Chat_Taskbar.reg",
       "ApplyText": "Hiding the chat icon from the taskbar...",
+      "UndoLabel": "Show Chat (meet now) icon on the taskbar",
+      "ApplyUndoText": "Showing the chat icon from the taskbar...",
       "RegistryUndoKey": "Enable_Chat_Taskbar.reg",
       "MinVersion": null,
       "MaxVersion": 22621
@@ -885,6 +995,8 @@
       "Category": "System",
       "RegistryKey": "Disable_Storage_Sense.reg",
       "ApplyText": "Disabling Storage Sense automatic disk cleanup...",
+      "UndoLabel": "Enable Storage Sense automatic disk cleanup",
+      "ApplyUndoText": "Enabling Storage Sense automatic disk cleanup...",
       "RegistryUndoKey": "Enable_Storage_Sense.reg",
       "MinVersion": 22000,
       "MaxVersion": null
@@ -896,6 +1008,8 @@
       "Category": "System",
       "RegistryKey": "Disable_Fast_Startup.reg",
       "ApplyText": "Disabling Fast Start-up...",
+      "UndoLabel": "Enable fast start-up",
+      "ApplyUndoText": "Enabling Fast Start-up...",
       "RegistryUndoKey": "Enable_Fast_Startup.reg",
       "MinVersion": null,
       "MaxVersion": null
@@ -907,6 +1021,8 @@
       "Category": "System",
       "RegistryKey": "Disable_Bitlocker_Auto_Encryption.reg",
       "ApplyText": "Disabling BitLocker automatic device encryption...",
+      "UndoLabel": "Enable BitLocker automatic device encryption",
+      "ApplyUndoText": "Enabling BitLocker automatic device encryption...",
       "RegistryUndoKey": "Enable_Bitlocker_Auto_Encryption.reg",
       "MinVersion": 22000,
       "MaxVersion": null
@@ -918,6 +1034,8 @@
       "Category": "System",
       "RegistryKey": "Disable_Modern_Standby_Networking.reg",
       "ApplyText": "Disabling network connectivity during Modern Standby...",
+      "UndoLabel": "Enable Modern Standby network connectivity",
+      "ApplyUndoText": "Enabling network connectivity during Modern Standby...",
       "RegistryUndoKey": "Enable_Modern_Standby_Networking.reg",
       "MinVersion": 22000,
       "MaxVersion": null
@@ -930,6 +1048,8 @@
       "Priority": 6,
       "RegistryKey": "Enable_End_Task.reg",
       "ApplyText": "Enabling the 'End Task' option in the taskbar right click menu...",
+      "UndoLabel": "Hide 'End Task' option in taskbar context menu",
+      "ApplyUndoText": "Disabling the 'End Task' option in the taskbar right click menu...",
       "RegistryUndoKey": "Disable_End_Task.reg",
       "MinVersion": 22631,
       "MaxVersion": null
@@ -942,6 +1062,8 @@
       "Priority": 7,
       "RegistryKey": "Enable_Last_Active_Click.reg",
       "ApplyText": "Enabling the 'Last Active Click' behavior in the taskbar app area...",
+      "UndoLabel": "Disable 'Last Active Click' behavior for taskbar apps",
+      "ApplyUndoText": "Disabling the 'Last Active Click' behavior in the taskbar app area...",
       "RegistryUndoKey": "Disable_Last_Active_Click.reg",
       "MinVersion": 22000,
       "MaxVersion": null
@@ -952,6 +1074,8 @@
       "Category": "Taskbar",
       "RegistryKey": "Combine_Taskbar_Always.reg",
       "ApplyText": "Setting the taskbar on the main display to always combine buttons and hide labels...",
+      "UndoLabel": "Use default taskbar combine behavior",
+      "ApplyUndoText": "Resetting the taskbar on the main display to always combine buttons and hide labels...",
       "RegistryUndoKey": null,
       "MinVersion": 22000,
       "MaxVersion": null
@@ -962,6 +1086,8 @@
       "Category": "Taskbar",
       "RegistryKey": "Combine_MMTaskbar_Always.reg",
       "ApplyText": "Setting the taskbar on secondary displays to always combine buttons and hide labels...",
+      "UndoLabel": "Use default taskbar combine behavior",
+      "ApplyUndoText": "Resetting the taskbar on secondary displays to always combine buttons and hide labels...",
       "RegistryUndoKey": null,
       "MinVersion": 22000,
       "MaxVersion": null
@@ -972,6 +1098,8 @@
       "Category": "Taskbar",
       "RegistryKey": "Combine_Taskbar_When_Full.reg",
       "ApplyText": "Setting the taskbar on the main display to only combine buttons and hide labels when the taskbar is full...",
+      "UndoLabel": "Always combine taskbar buttons and hide labels for the main display",
+      "ApplyUndoText": "Setting the taskbar on the main display to always combine buttons and hide labels...",
       "RegistryUndoKey": "Combine_Taskbar_Always.reg",
       "MinVersion": 22000,
       "MaxVersion": null
@@ -982,6 +1110,8 @@
       "Category": "Taskbar",
       "RegistryKey": "Combine_MMTaskbar_When_Full.reg",
       "ApplyText": "Setting the taskbar on secondary displays to only combine buttons and hide labels when the taskbar is full...",
+      "UndoLabel": "Always combine taskbar buttons and hide labels for secondary displays",
+      "ApplyUndoText": "Setting the taskbar on secondary displays to always combine buttons and hide labels...",
       "RegistryUndoKey": "Combine_MMTaskbar_Always.reg",
       "MinVersion": 22000,
       "MaxVersion": null
@@ -992,6 +1122,8 @@
       "Category": "Taskbar",
       "RegistryKey": "Combine_Taskbar_Never.reg",
       "ApplyText": "Setting the taskbar on the main display to never combine buttons or hide labels...",
+      "UndoLabel": "Always combine taskbar buttons and hide labels for the main display",
+      "ApplyUndoText": "Setting the taskbar on the main display to always combine buttons and hide labels...",
       "RegistryUndoKey": "Combine_Taskbar_Always.reg",
       "MinVersion": 22000,
       "MaxVersion": null
@@ -1002,6 +1134,8 @@
       "Category": "Taskbar",
       "RegistryKey": "Combine_MMTaskbar_Never.reg",
       "ApplyText": "Setting the taskbar on secondary displays to never combine buttons or hide labels...",
+      "UndoLabel": "Always combine taskbar buttons and hide labels for secondary displays",
+      "ApplyUndoText": "Setting the taskbar on secondary displays to always combine buttons and hide labels...",
       "RegistryUndoKey": "Combine_MMTaskbar_Always.reg",
       "MinVersion": 22000,
       "MaxVersion": null
@@ -1012,6 +1146,8 @@
       "Category": "Taskbar",
       "RegistryKey": "MMTaskbarMode_All.reg",
       "ApplyText": "Setting the taskbar to show app icons on all taskbars...",
+      "UndoLabel": null,
+      "ApplyUndoText": null,
       "RegistryUndoKey": null,
       "MinVersion": 22000,
       "MaxVersion": null
@@ -1022,6 +1158,8 @@
       "Category": "Taskbar",
       "RegistryKey": "MMTaskbarMode_Main_Active.reg",
       "ApplyText": "Setting the taskbar to show app icons on main taskbar and on taskbar where the windows is open...",
+      "UndoLabel": "Show app icons on all taskbars",
+      "ApplyUndoText": "Setting the taskbar to show app icons on all taskbars...",
       "RegistryUndoKey": "MMTaskbarMode_All.reg",
       "MinVersion": 22000,
       "MaxVersion": null
@@ -1032,6 +1170,8 @@
       "Category": "Taskbar",
       "RegistryKey": "MMTaskbarMode_Active.reg",
       "ApplyText": "Setting the taskbar to only show app icons on the taskbar where the window is open...",
+      "UndoLabel": "Show app icons on all taskbars",
+      "ApplyUndoText": "Setting the taskbar to show app icons on all taskbars...",
       "RegistryUndoKey": "MMTaskbarMode_All.reg",
       "MinVersion": 22000,
       "MaxVersion": null
@@ -1042,6 +1182,8 @@
       "Category": "File Explorer",
       "RegistryKey": "Launch_File_Explorer_To_Home.reg",
       "ApplyText": "Changing the default location that File Explorer opens to, to 'Home'...",
+      "UndoLabel": null,
+      "ApplyUndoText": null,
       "RegistryUndoKey": null,
       "MinVersion": null,
       "MaxVersion": null
@@ -1052,6 +1194,8 @@
       "Category": "File Explorer",
       "RegistryKey": "Launch_File_Explorer_To_This_PC.reg",
       "ApplyText": "Changing the default location that File Explorer opens to, to 'This PC'...",
+      "UndoLabel": "Change the default location that File Explorer opens to 'Home'",
+      "ApplyUndoText": "Changing the default location that File Explorer opens to, to 'Home'...",
       "RegistryUndoKey": "Launch_File_Explorer_To_Home.reg",
       "MinVersion": null,
       "MaxVersion": null
@@ -1062,6 +1206,8 @@
       "Category": "File Explorer",
       "RegistryKey": "Launch_File_Explorer_To_Downloads.reg",
       "ApplyText": "Changing the default location that File Explorer opens to, to 'Downloads'...",
+      "UndoLabel": "Change the default location that File Explorer opens to 'Home'",
+      "ApplyUndoText": "Changing the default location that File Explorer opens to, to 'Home'...",
       "RegistryUndoKey": "Launch_File_Explorer_To_Home.reg",
       "MinVersion": null,
       "MaxVersion": null
@@ -1072,6 +1218,8 @@
       "Category": "File Explorer",
       "RegistryKey": "Launch_File_Explorer_To_OneDrive.reg",
       "ApplyText": "Changing the default location that File Explorer opens to, to 'OneDrive'...",
+      "UndoLabel": "Change the default location that File Explorer opens to 'Home'",
+      "ApplyUndoText": "Changing the default location that File Explorer opens to, to 'Home'...",
       "RegistryUndoKey": "Launch_File_Explorer_To_Home.reg",
       "MinVersion": null,
       "MaxVersion": null
@@ -1084,6 +1232,8 @@
       "Priority": 2,
       "RegistryKey": "Show_Extensions_For_Known_File_Types.reg",
       "ApplyText": "Enabling file extensions for known file types...",
+      "UndoLabel": "Hide file extensions for known file types",
+      "ApplyUndoText": "Disabling file extensions for known file types...",
       "RegistryUndoKey": "Hide_Extensions_For_Known_File_Types.reg",
       "MinVersion": null,
       "MaxVersion": null
@@ -1096,6 +1246,8 @@
       "Priority": 3,
       "RegistryKey": "Show_Hidden_Folders.reg",
       "ApplyText": "Unhiding hidden files, folders and drives...",
+      "UndoLabel": "Hide hidden files, folders and drives",
+      "ApplyUndoText": "Hiding hidden files, folders and drives...",
       "RegistryUndoKey": "Hide_Hidden_Folders.reg",
       "MinVersion": null,
       "MaxVersion": null
@@ -1108,6 +1260,8 @@
       "Priority": 4,
       "RegistryKey": "Hide_duplicate_removable_drives_from_navigation_pane_of_File_Explorer.reg",
       "ApplyText": "Hiding duplicate removable drive entries from the File Explorer navigation pane...",
+      "UndoLabel": "Show duplicate removable drive entries",
+      "ApplyUndoText": "Showing duplicate removable drive entries from the File Explorer navigation pane...",
       "RegistryUndoKey": "Show_duplicate_removable_drives_in_navigation_pane_of_File_Explorer.reg",
       "MinVersion": null,
       "MaxVersion": null
@@ -1120,6 +1274,8 @@
       "Priority": 5,
       "RegistryKey": "Hide_Home_from_Explorer.reg",
       "ApplyText": "Hiding the 'Home' section from the File Explorer navigation pane...",
+      "UndoLabel": "Show 'Home' from navigation pane",
+      "ApplyUndoText": "Showing the 'Home' section from the File Explorer navigation pane...",
       "RegistryUndoKey": "Show_Home_in_Explorer.reg",
       "MinVersion": 22000,
       "MaxVersion": null
@@ -1132,6 +1288,8 @@
       "Priority": 6,
       "RegistryKey": "Hide_Gallery_from_Explorer.reg",
       "ApplyText": "Hiding the 'Gallery' section from the File Explorer navigation pane...",
+      "UndoLabel": "Show 'Gallery' from navigation pane",
+      "ApplyUndoText": "Showing the 'Gallery' section from the File Explorer navigation pane...",
       "RegistryUndoKey": "Show_Gallery_in_Explorer.reg",
       "MinVersion": 22000,
       "MaxVersion": null
@@ -1143,6 +1301,8 @@
       "Category": "Appearance",
       "RegistryKey": "Disable_Transparency.reg",
       "ApplyText": "Disabling transparency effects...",
+      "UndoLabel": "Enable transparency effects",
+      "ApplyUndoText": "Enabling transparency effects...",
       "RegistryUndoKey": "Enable_Transparency.reg",
       "MinVersion": null,
       "MaxVersion": null
@@ -1154,6 +1314,8 @@
       "Category": "Appearance",
       "RegistryKey": "Disable_Animations.reg",
       "ApplyText": "Disabling animations and visual effects...",
+      "UndoLabel": "Enable animations and visual effects",
+      "ApplyUndoText": "Enabling animations and visual effects...",
       "RegistryUndoKey": "Enable_Animations.reg",
       "RequiresReboot": true,
       "MinVersion": null,
@@ -1166,6 +1328,8 @@
       "Category": "Windows Update",
       "RegistryKey": "Disable_Update_ASAP.reg",
       "ApplyText": "Preventing Windows from getting updates as soon as they are available...",
+      "UndoLabel": "Allow getting updates as soon as they're available",
+      "ApplyUndoText": "Allowing Windows to get updates as soon as they are available...",
       "RegistryUndoKey": "Enable_Update_ASAP.reg",
       "MinVersion": null,
       "MaxVersion": null
@@ -1177,6 +1341,8 @@
       "Category": "Windows Update",
       "RegistryKey": "Prevent_Auto_Reboot.reg",
       "ApplyText": "Preventing automatic restarts after updates while signed in...",
+      "UndoLabel": "Allow automatic restarts after updates while signed in",
+      "ApplyUndoText": "Allowing automatic restarts after updates while signed in...",
       "RegistryUndoKey": "Allow_Auto_Reboot.reg",
       "MinVersion": null,
       "MaxVersion": null
@@ -1188,6 +1354,8 @@
       "Category": "Windows Update",
       "RegistryKey": "Disable_Delivery_Optimization.reg",
       "ApplyText": "Disabling sharing of downloaded updates with other PCs...",
+      "UndoLabel": "Enable sharing downloaded updates with other PCs",
+      "ApplyUndoText": "Enabling sharing of downloaded updates with other PCs...",
       "RegistryUndoKey": "Enable_Delivery_Optimization.reg",
       "MinVersion": null,
       "MaxVersion": null
@@ -1198,6 +1366,8 @@
       "Category": null,
       "RegistryKey": null,
       "ApplyText": null,
+      "UndoLabel": null,
+      "ApplyUndoText": null,
       "RegistryUndoKey": null,
       "MinVersion": null,
       "MaxVersion": null
@@ -1210,6 +1380,8 @@
       "Priority": 7,
       "RegistryKey": "Hide_Onedrive_Folder.reg",
       "ApplyText": "Hiding the 'OneDrive' section from the File Explorer navigation pane...",
+      "UndoLabel": "Show 'OneDrive' from navigation pane",
+      "ApplyUndoText": "Showing the 'OneDrive' section from the File Explorer navigation pane...",
       "RegistryUndoKey": "Show_Onedrive_Folder.reg",
       "MinVersion": null,
       "MaxVersion": null
@@ -1222,6 +1394,8 @@
       "Priority": 8,
       "RegistryKey": "Hide_3D_Objects_Folder.reg",
       "ApplyText": "Hiding the '3D objects' folder from the File Explorer navigation pane...",
+      "UndoLabel": "Show '3D objects' folder under 'This PC'",
+      "ApplyUndoText": "Showing the '3D objects' folder from the File Explorer navigation pane...",
       "RegistryUndoKey": "Show_3D_Objects_Folder.reg",
       "MinVersion": null,
       "MaxVersion": 21999
@@ -1234,6 +1408,8 @@
       "Priority": 9,
       "RegistryKey": "Hide_Music_Folder.reg",
       "ApplyText": "Hiding the 'Music' folder from the File Explorer navigation pane...",
+      "UndoLabel": "Show 'Music' folder under 'This PC'",
+      "ApplyUndoText": "Showing the 'Music' folder from the File Explorer navigation pane...",
       "RegistryUndoKey": "Show_Music_Folder.reg",
       "MinVersion": null,
       "MaxVersion": 21999
@@ -1246,6 +1422,8 @@
       "Priority": 10,
       "RegistryKey": "Add_All_Folders_Under_This_PC.reg",
       "ApplyText": "Adding all common folders (Desktop, Downloads, etc.) back to 'This PC' in File Explorer...",
+      "UndoLabel": "Remove common folders back to 'This PC' page",
+      "ApplyUndoText": "Removing all common folders (Desktop, Downloads, etc.) back to 'This PC' in File Explorer...",
       "RegistryUndoKey": "Remove_All_Folders_Under_This_PC.reg",
       "MinVersion": 22000,
       "MaxVersion": null
@@ -1258,6 +1436,8 @@
       "Priority": 11,
       "RegistryKey": "Disable_Include_in_library_from_context_menu.reg",
       "ApplyText": "Hiding 'Include in library' in the context menu...",
+      "UndoLabel": "Show 'Include in library' option in the context menu",
+      "ApplyUndoText": "Showing 'Include in library' in the context menu...",
       "RegistryUndoKey": "Enable_Include_in_library_in_context_menu.reg",
       "MinVersion": null,
       "MaxVersion": 21999
@@ -1270,6 +1450,8 @@
       "Priority": 12,
       "RegistryKey": "Disable_Give_access_to_context_menu.reg",
       "ApplyText": "Hiding 'Give access to' in the context menu...",
+      "UndoLabel": "Show 'Give access to' option in the context menu",
+      "ApplyUndoText": "Showing 'Give access to' in the context menu...",
       "RegistryUndoKey": "Enable_Give_access_to_context_menu.reg",
       "MinVersion": null,
       "MaxVersion": 21999
@@ -1282,6 +1464,8 @@
       "Priority": 13,
       "RegistryKey": "Disable_Share_from_context_menu.reg",
       "ApplyText": "Hiding 'Share' in the context menu...",
+      "UndoLabel": "Show 'Share' option in the context menu",
+      "ApplyUndoText": "Showing 'Share' in the context menu...",
       "RegistryUndoKey": "Enable_Share_in_context_menu.reg",
       "MinVersion": null,
       "MaxVersion": 21999
@@ -1293,6 +1477,8 @@
       "Category": "Other",
       "RegistryKey": "Disable_Brave_Bloat.reg",
       "ApplyText": "Disabling Brave AI, Crypto, News, Rewards, Talk and VPN in Brave browser...",
+      "UndoLabel": "Enable Brave browser features (AI, Crypto, etc.)",
+      "ApplyUndoText": "Enabling Brave AI, Crypto, News, Rewards, Talk and VPN in Brave browser...",
       "RegistryUndoKey": "Enable_Brave_Bloat.reg",
       "MinVersion": null,
       "MaxVersion": null
@@ -1304,6 +1490,8 @@
       "Category": "Optional Windows Features",
       "RegistryKey": null,
       "ApplyText": "Enabling Windows Sandbox...",
+      "UndoLabel": "Disable Windows Sandbox",
+      "ApplyUndoText": "Disabling Windows Sandbox...",
       "RegistryUndoKey": null,
       "RequiresReboot": true,
       "MinVersion": 22483,
@@ -1316,6 +1504,8 @@
       "Category": "Optional Windows Features",
       "RegistryKey": null,
       "ApplyText": "Enabling Windows Subsystem for Linux...",
+      "UndoLabel": "Disable Windows Subsystem for Linux",
+      "ApplyUndoText": "Disabling Windows Subsystem for Linux...",
       "RegistryUndoKey": null,
       "RequiresReboot": true,
       "MinVersion": 22000,
@@ -1328,6 +1518,8 @@
       "Category": "File Explorer",
       "RegistryKey": "Show_Drive_Letters_First.reg",
       "ApplyText": "Showing drive letters before drive label...",
+      "UndoLabel": "Show drive letters after drive label",
+      "ApplyUndoText": "Showing drive letters after drive label...",
       "RegistryUndoKey": "Show_Drive_Letters_Last.reg",
       "MinVersion": null,
       "MaxVersion": null
@@ -1339,6 +1531,8 @@
       "Category": "File Explorer",
       "RegistryKey": "Show_Drive_Letters_Last.reg",
       "ApplyText": "Showing drive letters after drive label...",
+      "UndoLabel": null,
+      "ApplyUndoText": null,
       "RegistryUndoKey": null,
       "MinVersion": null,
       "MaxVersion": null
@@ -1350,6 +1544,8 @@
       "Category": "File Explorer",
       "RegistryKey": "Show_Network_Drive_Letters_First.reg",
       "ApplyText": "Showing network drive letters before drive label...",
+      "UndoLabel": "Show drive letters after drive label",
+      "ApplyUndoText": "Showing drive letters after drive label...",
       "RegistryUndoKey": "Show_Drive_Letters_Last.reg",
       "MinVersion": null,
       "MaxVersion": null
@@ -1361,6 +1557,8 @@
       "Category": "File Explorer",
       "RegistryKey": "Hide_Drive_Letters.reg",
       "ApplyText": "Hiding all drive letters...",
+      "UndoLabel": "Show drive letters after drive label",
+      "ApplyUndoText": "Showing drive letters after drive label...",
       "RegistryUndoKey": "Show_Drive_Letters_Last.reg",
       "MinVersion": null,
       "MaxVersion": null

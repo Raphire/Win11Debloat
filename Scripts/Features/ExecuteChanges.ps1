@@ -261,9 +261,7 @@ function ExecuteAllChanges {
     
     # Execute all parameters
     foreach ($paramKey in $actionableKeys) {
-        if ($script:CancelRequested) { 
-            return
-        }
+        if ($script:CancelRequested) { return }
 
         $currentStep++
         
@@ -291,17 +289,17 @@ function ExecuteAllChanges {
     foreach ($featureId in $script:UndoParams.Keys) {
         if ($script:CancelRequested) { return }
 
-        $undoLabel = if ($script:FeatureLabelLookup) { $script:FeatureLabelLookup[$featureId] } else { $null }
-        if (-not $undoLabel) { $undoLabel = $featureId }
+        $f = if ($script:Features.ContainsKey($featureId)) { $script:Features[$featureId] } else { $null }
+        $undoLabel = if ($f -and $f.UndoLabel) { $f.UndoLabel } else { $featureId }
+        $applyUndoText = if ($f -and $f.ApplyUndoText) { $f.ApplyUndoText } else { $undoLabel }
 
         $currentStep++
         if ($script:ApplyProgressCallback) {
-            & $script:ApplyProgressCallback $currentStep $totalSteps "Undoing: $undoLabel"
+            & $script:ApplyProgressCallback $currentStep $totalSteps $applyUndoText
         }
 
-        $f = if ($script:Features.ContainsKey($featureId)) { $script:Features[$featureId] } else { $null }
         if ($f -and $f.RegistryUndoKey) {
-            ImportRegistryFile "> Undoing: $undoLabel" (Resolve-UndoRegFilePath $f.RegistryUndoKey)
+            ImportRegistryFile "> $applyUndoText" (Resolve-UndoRegFilePath $f.RegistryUndoKey)
         } else {
             Invoke-UndoFeatureAction -FeatureId $featureId
         }

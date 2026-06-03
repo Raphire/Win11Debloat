@@ -58,7 +58,7 @@
         <Style x:Key="CategoryHeaderTextBlock" TargetType="TextBlock">
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="FontSize" Value="16"/>
-            <Setter Property="Margin" Value="0,0,0,13"/>
+            <Setter Property="Margin" Value="0,0,0,12"/>
             <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
         </Style>
 
@@ -485,48 +485,81 @@
                 <!-- Home Tab -->
                 <TabItem Header="Home" x:Name="HomeTab">
                     <Grid>
-                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="600">
+                        <StackPanel x:Name="HomeContentPanel" HorizontalAlignment="Center" VerticalAlignment="Top">
                             <!-- Logo -->
-                            <Viewbox Width="220" Height="220" Margin="0,32,0,10" HorizontalAlignment="Center">
-                                <Grid Width="220" Height="220">
+                            <Viewbox Width="250" Height="250" Margin="0,0,0,10" HorizontalAlignment="Center">
+                                <Grid Width="250" Height="250">
                                     <!-- Windows logo style icon -->
                                     <Path x:Name="LogoFallback" Data="M0,0 L80,0 L80,80 L0,80 Z M90,0 L170,0 L170,80 L90,80 Z M0,90 L80,90 L80,170 L0,170 Z M90,90 L170,90 L170,170 L90,170 Z" 
                                         Fill="{DynamicResource ButtonBg}" Stretch="Uniform" Margin="10"/>
                                     <!-- Sparkle effects -->
-                                    <Canvas HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="45" Height="45" Margin="0,0,2,2">
+                                    <Canvas HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="50" Height="50" Margin="0,0,2,2">
                                         <Path Canvas.Left="10" Canvas.Top="16" Data="M12,0 L14,10 L24,12 L14,14 L12,24 L10,14 L0,12 L10,10 Z" 
-                                              Fill="{DynamicResource AccentColor}" Width="38" Height="38" Stretch="Uniform"/>
+                                              Fill="{DynamicResource AccentColor}" Width="40" Height="40" Stretch="Uniform"/>
                                         <Path Canvas.Left="0" Canvas.Top="0" Data="M6,0 L7,5 L12,6 L7,7 L6,12 L5,7 L0,6 L5,5 Z" 
-                                              Fill="{DynamicResource AccentColor}" Width="20" Height="20" Stretch="Uniform"/>
+                                              Fill="{DynamicResource AccentColor}" Width="22" Height="22" Stretch="Uniform"/>
                                         <Path Canvas.Left="35" Canvas.Top="8" Data="M4,0 L5,3 L8,4 L5,5 L4,8 L3,5 L0,4 L3,3 Z" 
-                                              Fill="{DynamicResource AccentColor}" Width="15" Height="15" Stretch="Uniform"/>
+                                              Fill="{DynamicResource AccentColor}" Width="17" Height="17" Stretch="Uniform"/>
                                     </Canvas>
-                                    <!-- Actual logo image if available -->
-                                    <Image x:Name="LogoImage" Stretch="Uniform"/>
                                 </Grid>
                             </Viewbox>
                             
                             <!-- Title -->
-                            <TextBlock Text="Welcome to Win11Debloat" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource FgColor}" HorizontalAlignment="Center" Margin="0,0,0,10"/>
-                            <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource FgColor}" FontSize="16" LineHeight="22" HorizontalAlignment="Center" Margin="0,0,0,30">
+                            <TextBlock Text="Welcome to Win11Debloat" FontSize="30" FontWeight="Bold" Foreground="{DynamicResource FgColor}" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                            <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource FgColor}" FontSize="18" LineHeight="22" HorizontalAlignment="Center" Margin="0,0,0,60">
                                 <Run Text="Your clean Windows experience is just a few clicks away!"/>
                             </TextBlock>
-                            
-                            <!-- Action Buttons -->
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
-                                <Button x:Name="HomeDefaultModeBtn" Width="180" Height="50" Style="{DynamicResource PrimaryButtonStyle}" Margin="0,0,12,0" AutomationProperties.Name="Default Mode">
-                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <TextBlock Text="&#xe735;" FontFamily="Segoe Fluent Icons" FontSize="16" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                                        <TextBlock Text="Default Mode" ToolTip="Quickly select the recommended settings" FontWeight="SemiBold" VerticalAlignment="Center" FontSize="17" Margin="0,0,0,2"/>
+
+                            <Border HorizontalAlignment="Center" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="16,12" Width="500">
+                                <StackPanel>
+                                    <TextBlock Text="What user do you want to apply changes to?" Style="{StaticResource CategoryHeaderTextBlock}"/>
+                                    <ComboBox x:Name="UserSelectionCombo" Margin="0,0,0,6" AutomationProperties.Name="Apply Changes To">
+                                        <ComboBoxItem Content="Current User" IsSelected="True"/>
+                                        <ComboBoxItem Content="Other User"/>
+                                        <ComboBoxItem Content="Windows Default User (Sysprep)"/>
+                                    </ComboBox>
+                                    <StackPanel x:Name="OtherUserPanel" Visibility="Collapsed" Margin="0,0,0,6">
+                                        <TextBlock x:Name="UsernameValidationMessage" Text="" FontStyle="Italic" Foreground="{DynamicResource CloseHover}" FontSize="11" Margin="3,0,0,4" TextWrapping="Wrap"/>
+                                        <Border IsEnabled="{Binding ElementName=OtherUsernameTextBox, Path=IsEnabled}">
+                                            <Border.Style>
+                                                <Style TargetType="Border" BasedOn="{StaticResource UserTextBoxBorderStyle}">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding ElementName=OtherUsernameTextBox, Path=IsFocused}" Value="True">
+                                                            <Setter Property="Background" Value="{DynamicResource InputFocusColor}"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Border.Style>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" Text="&#xE77B;" FontFamily="Segoe Fluent Icons" FontSize="14" VerticalAlignment="Center" Margin="4,0,8,0" Foreground="{DynamicResource FgColor}"/>
+                                                <TextBlock x:Name="UsernameTextBoxPlaceholder" Grid.Column="1" Text="Enter username" Foreground="{DynamicResource FgColor}" Opacity="0.5" FontSize="13" Margin="3,0,0,1" VerticalAlignment="Center" IsHitTestVisible="False"/>
+                                                <TextBox x:Name="OtherUsernameTextBox" Grid.Column="1" Style="{StaticResource UserTextBoxStyle}" Text="" AutomationProperties.Name="Enter username"/>
+                                            </Grid>
+                                        </Border>
                                     </StackPanel>
-                                </Button>
-                                <Button x:Name="HomeStartBtn" Width="180" Height="50" Style="{DynamicResource SecondaryButtonStyle}" AutomationProperties.Name="Custom Setup">
-                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <TextBlock Text="&#xe90f;" FontFamily="Segoe Fluent Icons" FontSize="14" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                                        <TextBlock Text="Custom Setup" ToolTip="Manually select your preferred settings" FontWeight="SemiBold" VerticalAlignment="Center" FontSize="17" Margin="0,0,0,2"/>
+
+                                    <Separator Margin="0,10,0,8" Background="{DynamicResource BorderColor}"/>
+
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,8,0,0">
+                                        <Button x:Name="HomeDefaultModeBtn" Width="227" Height="50" Style="{DynamicResource PrimaryButtonStyle}" Margin="0,0,12,0" AutomationProperties.Name="Default Mode">
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                <TextBlock Text="&#xe735;" FontFamily="Segoe Fluent Icons" FontSize="16" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                                <TextBlock Text="Default Mode" ToolTip="Quickly select the recommended settings" FontWeight="SemiBold" VerticalAlignment="Center" FontSize="17" Margin="0,0,0,2"/>
+                                            </StackPanel>
+                                        </Button>
+                                        <Button x:Name="HomeStartBtn" Width="227" Height="50" Style="{DynamicResource SecondaryButtonStyle}" AutomationProperties.Name="Custom Setup">
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                <TextBlock Text="&#xe90f;" FontFamily="Segoe Fluent Icons" FontSize="14" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                                <TextBlock Text="Custom Setup" ToolTip="Manually select your preferred settings" FontWeight="SemiBold" VerticalAlignment="Center" FontSize="17" Margin="0,0,0,2"/>
+                                            </StackPanel>
+                                        </Button>
                                     </StackPanel>
-                                </Button>
-                            </StackPanel>
+                                </StackPanel>
+                            </Border>
                         </StackPanel>
                     </Grid>
                 </TabItem>
@@ -895,43 +928,15 @@
                                         <!-- Apply Changes To -->
                                         <Border Grid.Row="0" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="16,12" Margin="0,0,0,16">
                                             <StackPanel>
-                                                <TextBlock Text="Apply Changes To" Style="{StaticResource CategoryHeaderTextBlock}"/>
-                                                <ComboBox x:Name="UserSelectionCombo" Margin="0,0,0,6" AutomationProperties.Name="Apply Changes To">
-                                                    <ComboBoxItem Content="Current User" IsSelected="True"/>
-                                                    <ComboBoxItem Content="Other User"/>
-                                                    <ComboBoxItem Content="Windows Default User (Sysprep)"/>
-                                                </ComboBox>
-                                                <StackPanel x:Name="OtherUserPanel" Visibility="Collapsed" Margin="0,0,0,6">
-                                                    <TextBlock x:Name="UsernameValidationMessage" Text="" FontStyle="Italic" Foreground="{DynamicResource CloseHover}" FontSize="11" Margin="3,0,0,4" TextWrapping="Wrap"/>
-                                                    <Border IsEnabled="{Binding ElementName=OtherUsernameTextBox, Path=IsEnabled}">
-                                                        <Border.Style>
-                                                            <Style TargetType="Border" BasedOn="{StaticResource UserTextBoxBorderStyle}">
-                                                                <Style.Triggers>
-                                                                    <DataTrigger Binding="{Binding ElementName=OtherUsernameTextBox, Path=IsFocused}" Value="True">
-                                                                        <Setter Property="Background" Value="{DynamicResource InputFocusColor}"/>
-                                                                    </DataTrigger>
-                                                                </Style.Triggers>
-                                                            </Style>
-                                                        </Border.Style>
-                                                        <Grid>
-                                                            <Grid.ColumnDefinitions>
-                                                                <ColumnDefinition Width="Auto"/>
-                                                                <ColumnDefinition Width="*"/>
-                                                            </Grid.ColumnDefinitions>
-                                                            <TextBlock Grid.Column="0" Text="&#xE77B;" FontFamily="Segoe Fluent Icons" FontSize="14" VerticalAlignment="Center" Margin="4,0,8,0" Foreground="{DynamicResource FgColor}"/>
-                                                            <TextBlock x:Name="UsernameTextBoxPlaceholder" Grid.Column="1" Text="Enter username" Foreground="{DynamicResource FgColor}" Opacity="0.5" FontSize="13" Margin="3,0,0,1" VerticalAlignment="Center" IsHitTestVisible="False"/>
-                                                            <TextBox x:Name="OtherUsernameTextBox" Grid.Column="1" Style="{StaticResource UserTextBoxStyle}" Text="" AutomationProperties.Name="Enter username"/>
-                                                        </Grid>
-                                                    </Border>
-                                                </StackPanel>
-                                                <TextBlock x:Name="UserSelectionDescription" Text="Changes will be applied to the currently logged-in user profile." Foreground="{DynamicResource FgColor}" FontSize="12" TextWrapping="Wrap" Margin="0,6,0,3"/>
+                                                <TextBlock Text="Changes will be applied to" Style="{StaticResource CategoryHeaderTextBlock}"/>
+                                                <TextBlock x:Name="UserSelectionDescription" Text="The currently logged-in user profile." Foreground="{DynamicResource FgColor}" FontSize="12" TextWrapping="Wrap" Margin="0,0,0,3"/>
                                             </StackPanel>
                                         </Border>
 
                                         <!-- App Removal Scope -->
                                         <Border Grid.Row="1" x:Name="AppRemovalScopeSection" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="16,12" Margin="0,0,0,16">
                                             <StackPanel>
-                                                <TextBlock Text="Remove Apps For" Style="{StaticResource CategoryHeaderTextBlock}"/>
+                                                <TextBlock Text="Apps will be removed for" Style="{StaticResource CategoryHeaderTextBlock}"/>
                                                 <ComboBox x:Name="AppRemovalScopeCombo" Margin="0,0,0,6" AutomationProperties.Name="App Removal Scope">
                                                     <ComboBoxItem x:Name="AppRemovalScopeAllUsers" Content="All users" IsSelected="True"/>
                                                     <ComboBoxItem x:Name="AppRemovalScopeCurrentUser" Content="Current user only"/>

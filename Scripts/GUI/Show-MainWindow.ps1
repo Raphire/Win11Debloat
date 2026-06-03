@@ -203,8 +203,6 @@ function Show-MainWindow {
 
     $updateHomeContentPosition = {
         if ($homeContentPanel) {
-            # Scale the top margin so the home content is roughly centered vertically
-            # Use ~35% of the available content height as the top offset
             $availableHeight = $window.ActualHeight - 32  # subtract title bar height
             if ($availableHeight -gt 0) {
                 $topMargin = ($availableHeight - 584) * 0.5

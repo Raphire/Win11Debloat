@@ -72,11 +72,11 @@ function ExecuteParameter {
         switch ($paramKey) {
             'DisableBing' {
                 # Also remove the app package for Bing search
-                RemoveApps 'Microsoft.BingSearch'
+                RemoveApps @('Microsoft.BingSearch')
             }
             'DisableCopilot' {
                 # Also remove the app package for Copilot
-                RemoveApps 'Microsoft.Copilot'
+                RemoveApps @('Microsoft.Copilot')
             }
         }
         return
@@ -111,25 +111,25 @@ function ExecuteParameter {
             RemoveApps $appsList
         }
         'RemoveCommApps' {
-            $appsList = 'Microsoft.windowscommunicationsapps', 'Microsoft.People'
+            $appsList = @('Microsoft.windowscommunicationsapps', 'Microsoft.People')
             Write-Host "> Removing Mail, Calendar and People apps..."
             RemoveApps $appsList
             return
         }
         'RemoveW11Outlook' {
-            $appsList = 'Microsoft.OutlookForWindows'
+            $appsList = @('Microsoft.OutlookForWindows')
             Write-Host "> Removing new Outlook for Windows app..."
             RemoveApps $appsList
             return
         }
         'RemoveGamingApps' {
-            $appsList = 'Microsoft.GamingApp', 'Microsoft.XboxGameOverlay', 'Microsoft.XboxGamingOverlay'
+            $appsList = @('Microsoft.GamingApp', 'Microsoft.XboxGameOverlay', 'Microsoft.XboxGamingOverlay')
             Write-Host "> Removing gaming related apps..."
             RemoveApps $appsList
             return
         }
         'RemoveHPApps' {
-            $appsList = 'AD2F1837.HPAIExperienceCenter', 'AD2F1837.HPJumpStarts', 'AD2F1837.HPPCHardwareDiagnosticsWindows', 'AD2F1837.HPPowerManager', 'AD2F1837.HPPrivacySettings', 'AD2F1837.HPSupportAssistant', 'AD2F1837.HPSureShieldAI', 'AD2F1837.HPSystemInformation', 'AD2F1837.HPQuickDrop', 'AD2F1837.HPWorkWell', 'AD2F1837.myHP', 'AD2F1837.HPDesktopSupportUtilities', 'AD2F1837.HPQuickTouch', 'AD2F1837.HPEasyClean', 'AD2F1837.HPConnectedMusic', 'AD2F1837.HPFileViewer', 'AD2F1837.HPRegistration', 'AD2F1837.HPWelcome', 'AD2F1837.HPConnectedPhotopoweredbySnapfish', 'AD2F1837.HPPrinterControl'
+            $appsList = @('AD2F1837.HPAIExperienceCenter', 'AD2F1837.HPJumpStarts', 'AD2F1837.HPPCHardwareDiagnosticsWindows', 'AD2F1837.HPPowerManager', 'AD2F1837.HPPrivacySettings', 'AD2F1837.HPSupportAssistant', 'AD2F1837.HPSureShieldAI', 'AD2F1837.HPSystemInformation', 'AD2F1837.HPQuickDrop', 'AD2F1837.HPWorkWell', 'AD2F1837.myHP', 'AD2F1837.HPDesktopSupportUtilities', 'AD2F1837.HPQuickTouch', 'AD2F1837.HPEasyClean', 'AD2F1837.HPConnectedMusic', 'AD2F1837.HPFileViewer', 'AD2F1837.HPRegistration', 'AD2F1837.HPWelcome', 'AD2F1837.HPConnectedPhotopoweredbySnapfish', 'AD2F1837.HPPrinterControl')
             Write-Host "> Removing HP apps..."
             RemoveApps $appsList
             return
@@ -137,9 +137,9 @@ function ExecuteParameter {
         'DisableWidgets' {
             Write-Host "> Disabling widgets on the taskbar & lock screen..."
             # Stop widgets related processes before removing the app packages to prevent potential issues
-            Get-Process *Widget* | Stop-Process
+            Get-Process *Widget* -ErrorAction SilentlyContinue | Stop-Process
             
-            RemoveApps 'Microsoft.StartExperiencesApp','MicrosoftWindows.Client.WebExperience','Microsoft.WidgetsPlatformRuntime'
+            RemoveApps @('Microsoft.StartExperiencesApp','MicrosoftWindows.Client.WebExperience','Microsoft.WidgetsPlatformRuntime')
         }
         "EnableWindowsSandbox" {
             Write-Host "> Enabling Windows Sandbox..."

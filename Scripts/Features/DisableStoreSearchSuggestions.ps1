@@ -140,9 +140,16 @@ function Test-StoreSearchSuggestionsDisabled {
     $everyoneSid = [System.Security.Principal.SecurityIdentifier]::new('S-1-1-0')
 
     foreach ($accessRule in @($acl.Access)) {
-        if ($accessRule.AccessControlType -eq [System.Security.AccessControl.AccessControlType]::Deny -and
-            (($accessRule.FileSystemRights -band [System.Security.AccessControl.FileSystemRights]::FullControl) -ne 0) -and
-            (try { $accessRule.IdentityReference.Translate([System.Security.Principal.SecurityIdentifier]) -eq $everyoneSid } catch { $false })) {
+        $isDenyFullControl = $accessRule.AccessControlType -eq [System.Security.AccessControl.AccessControlType]::Deny -and
+            (($accessRule.FileSystemRights -band [System.Security.AccessControl.FileSystemRights]::FullControl) -ne 0)
+        if (-not $isDenyFullControl) { continue }
+
+        $isEveryone = $false
+        try {
+            $isEveryone = $accessRule.IdentityReference.Translate([System.Security.Principal.SecurityIdentifier]) -eq $everyoneSid
+        } catch { }
+
+        if ($isEveryone) {
             return $true
         }
     }

@@ -280,6 +280,38 @@
           ]
         }
       ]
+    },
+    {
+      "GroupId": "StartAllAppsView",
+      "Label": "Start menu 'All Apps' view",
+      "ToolTip": "This setting allows you to change the layout of the 'All Apps' section in the start menu, or hide it entirely. Hiding this section may make it harder to find installed apps on your system. This feature uses policies, which will lock down certain settings.",
+      "Category": "Start Menu & Search",
+      "Values": [
+        {
+          "Label": "Hide",
+          "FeatureIds": [
+            "DisableStartAllApps"
+          ]
+        },
+        {
+          "Label": "Category (Default)",
+          "FeatureIds": [
+            "StartAllAppsCategory"
+          ]
+        },
+        {
+          "Label": "Grid",
+          "FeatureIds": [
+            "StartAllAppsGrid"
+          ]
+        },
+        {
+          "Label": "List",
+          "FeatureIds": [
+            "StartAllAppsList"
+          ]
+        }
+      ]
     }
   ],
   "Features": [
@@ -1537,6 +1569,45 @@
       "ApplyUndoText": "Showing drive letters after drive label...",
       "RegistryUndoKey": "Show_Drive_Letters_Last.reg",
       "MinVersion": null,
+      "MaxVersion": null
+    },
+    {
+      "FeatureId": "StartAllAppsCategory",
+      "Label": "Show All Apps in Category view (Default)",
+      "ToolTip": "This will set the All Apps section in the start menu to show apps grouped by category.",
+      "Category": "Start Menu & Search",
+      "RegistryKey": "Start_AllApps_Category.reg",
+      "ApplyText": "Setting All Apps view to Category...",
+      "UndoLabel": null,
+      "ApplyUndoText": null,
+      "RegistryUndoKey": null,
+      "MinVersion": 26200,
+      "MaxVersion": null
+    },
+    {
+      "FeatureId": "StartAllAppsGrid",
+      "Label": "Show All Apps in Grid view",
+      "ToolTip": "This will set the All Apps section in the start menu to show apps in an alphabetical grid layout.",
+      "Category": "Start Menu & Search",
+      "RegistryKey": "Start_AllApps_Grid.reg",
+      "ApplyText": "Setting All Apps view to Grid...",
+      "UndoLabel": "Show All Apps in Category view",
+      "ApplyUndoText": "Setting All Apps view to Category...",
+      "RegistryUndoKey": "Start_AllApps_Category.reg",
+      "MinVersion": 26200,
+      "MaxVersion": null
+    },
+    {
+      "FeatureId": "StartAllAppsList",
+      "Label": "Show All Apps in List view",
+      "ToolTip": "This will set the All Apps section in the start menu to show apps in an alphabetical list layout.",
+      "Category": "Start Menu & Search",
+      "RegistryKey": "Start_AllApps_List.reg",
+      "ApplyText": "Setting All Apps view to List...",
+      "UndoLabel": "Show All Apps in Category view",
+      "ApplyUndoText": "Setting All Apps view to Category...",
+      "RegistryUndoKey": "Start_AllApps_Category.reg",
+      "MinVersion": 26200,
       "MaxVersion": null
     }
   ]

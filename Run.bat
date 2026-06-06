@@ -19,8 +19,7 @@ if exist "%wtDefaultPath%" (
     set "wtPath="
 )
 
-:: Resolve short (8.3) path for the script to avoid quoting issues with spaces
-for %%I in ("%~dp0Win11Debloat.ps1") do set "SCRIPT_SHORT_PATH=%%~fsI"
+set "SCRIPT_SHORT_PATH=\"%~dp0Win11Debloat.ps1\""
 
 :: Launch script
 if defined wtPath (

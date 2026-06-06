@@ -19,15 +19,18 @@ if exist "%wtDefaultPath%" (
     set "wtPath="
 )
 
+:: Resolve short (8.3) path for the script to avoid quoting issues with spaces
+for %%I in ("%~dp0Win11Debloat.ps1") do set "SCRIPT_SHORT_PATH=%%~fsI"
+
 :: Launch script
 if defined wtPath (
     call :Log Launching Win11Debloat.ps1 with Windows Terminal...
-    PowerShell -Command "Start-Process -FilePath '%wtPath%' -ArgumentList 'PowerShell -NoProfile -ExecutionPolicy Bypass -File ""%~dp0Win11Debloat.ps1""' -Verb RunAs" >> "%logFile%" || call :Error "PowerShell command failed"
+    PowerShell -Command "Start-Process -FilePath '%wtPath%' -ArgumentList 'PowerShell -NoProfile -ExecutionPolicy Bypass -File %SCRIPT_SHORT_PATH%' -Verb RunAs" >> "%logFile%" || call :Error "PowerShell command failed"
     call :Log Script execution passed successfully to Win11Debloat.ps1
 ) else (
     echo Windows Terminal not found. Using default PowerShell instead...
     call :Log Windows Terminal not found. Using default PowerShell to launch Win11Debloat.ps1...
-    PowerShell -ExecutionPolicy Bypass -Command "& {Start-Process PowerShell -ArgumentList '-NoProfile -ExecutionPolicy Bypass -File ""%~dp0Win11Debloat.ps1""' -Verb RunAs}" >> "%logFile%" || call :Error "PowerShell command failed"
+    PowerShell -ExecutionPolicy Bypass -Command "& {Start-Process PowerShell -ArgumentList '-NoProfile -ExecutionPolicy Bypass -File %SCRIPT_SHORT_PATH%' -Verb RunAs}" >> "%logFile%" || call :Error "PowerShell command failed"
     call :Log Script execution passed successfully to Win11Debloat.ps1
 )
 

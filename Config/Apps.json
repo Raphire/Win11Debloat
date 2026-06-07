@@ -781,7 +781,7 @@
     {
       "FriendlyName": "Windows Terminal",
       "AppId": "Microsoft.WindowsTerminal",
-      "Description": "Default terminal app in windows 11 (Command Prompt, PowerShell, WSL), WARNING: Win11Debloat if it is launched via Windows Terminal.",
+      "Description": "Default terminal app in windows 11 (Command Prompt, PowerShell, WSL), WARNING: Do not remove if you launched Win11Debloat from Windows Terminal, as this will cause the script to fail.",
       "SelectedByDefault": false,
       "Recommendation": "unsafe"
     },

@@ -147,31 +147,14 @@ function Invoke-WithLoadedBackupHive {
         $ArgumentObject = $null
     )
 
-    $hiveDatPath = if ($script:Params.ContainsKey('Sysprep')) {
-        GetUserDirectory -userName 'Default' -fileName 'NTUSER.DAT'
+    $targetUserName = if ($script:Params.ContainsKey('Sysprep')) {
+        'Default'
     }
     else {
-        GetUserDirectory -userName $script:Params.Item('User') -fileName 'NTUSER.DAT'
+        $script:Params.Item('User')
     }
 
-    $global:LASTEXITCODE = 0
-    reg load 'HKU\Default' "$hiveDatPath" | Out-Null
-    $loadExitCode = $LASTEXITCODE
-    if ($loadExitCode -ne 0) {
-        throw "Failed to load user hive for registry backup at '$hiveDatPath' (exit code: $loadExitCode)"
-    }
-
-    try {
-        return & $ScriptBlock $ArgumentObject
-    }
-    finally {
-        $global:LASTEXITCODE = 0
-        reg unload 'HKU\Default' | Out-Null
-        $unloadExitCode = $LASTEXITCODE
-        if ($unloadExitCode -ne 0) {
-            throw "Failed to unload registry hive 'HKU\Default' (exit code: $unloadExitCode)"
-        }
-    }
+    return Invoke-WithTargetUserHive -TargetUserName $targetUserName -ScriptBlock $ScriptBlock -ArgumentObject $ArgumentObject
 }
 
 function Get-RegistryKeySnapshot {

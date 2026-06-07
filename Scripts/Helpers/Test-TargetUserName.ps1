@@ -31,14 +31,6 @@ function Test-TargetUserName {
         }
     }
 
-    if (TestIfUserIsLoggedIn -Username $normalizedUserName) {
-        return [PSCustomObject]@{
-            IsValid = $false
-            UserName = $normalizedUserName
-            Message = "User '$normalizedUserName' is currently logged in. Please sign out that user first."
-        }
-    }
-
     return [PSCustomObject]@{
         IsValid = $true
         UserName = $normalizedUserName

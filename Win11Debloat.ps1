@@ -341,6 +341,7 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 # Helper functions
 . "$PSScriptRoot/Scripts/Helpers/AddParameter.ps1"
 . "$PSScriptRoot/Scripts/Helpers/ResolveUserProfilePath.ps1"
+. "$PSScriptRoot/Scripts/Helpers/UserHiveHelpers.ps1"
 . "$PSScriptRoot/Scripts/Helpers/CheckIfUserExists.ps1"
 . "$PSScriptRoot/Scripts/Helpers/CheckModernStandbySupport.ps1"
 . "$PSScriptRoot/Scripts/Helpers/GenerateAppsList.ps1"
@@ -354,7 +355,6 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 . "$PSScriptRoot/Scripts/Helpers/GetUserName.ps1"
 . "$PSScriptRoot/Scripts/Helpers/RegistryPathHelpers.ps1"
 . "$PSScriptRoot/Scripts/Helpers/ApplyRegistryRegFile.ps1"
-. "$PSScriptRoot/Scripts/Helpers/TestIfUserIsLoggedIn.ps1"
 . "$PSScriptRoot/Scripts/Helpers/ConfirmUnsafeAppRemoval.ps1"
 
 # Threading functions

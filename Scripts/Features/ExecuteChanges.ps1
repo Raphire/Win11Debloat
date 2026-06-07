@@ -128,7 +128,14 @@ function ExecuteParameter {
 
 
 # Executes all selected parameters/features
-function ExecuteAllChanges {    
+function ExecuteAllChanges {
+    # When running as SYSTEM, require -User or -Sysprep to prevent applying
+    # changes to the SYSTEM profile instead of a real user.
+    $isSystem = ([Security.Principal.WindowsIdentity]::GetCurrent().User.Value -eq 'S-1-5-18')
+    if ($isSystem -and -not $script:Params.ContainsKey("User") -and -not $script:Params.ContainsKey("Sysprep")) {
+        throw "Win11Debloat is running as the SYSTEM account. Use the '-User' or '-Sysprep' parameter to target a specific user."
+    }
+
     $script:RegistryImportFailures = 0
 
     # Build list of actionable parameters (skip control params and data-only params)

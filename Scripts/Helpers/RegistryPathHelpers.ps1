@@ -27,21 +27,6 @@ function Split-RegistryPath {
         $null
     }
 
-    if ($hiveName.Equals('HKEY_USERS', [System.StringComparison]::OrdinalIgnoreCase) -and -not [string]::IsNullOrWhiteSpace($normalizedSubKey)) {
-        if ($normalizedSubKey -match '^(?<mount>[^\\]+)(?:\\(?<rest>.*))?$') {
-            $mountName = [string]$matches.mount
-            if ($mountName.Equals('.DEFAULT', [System.StringComparison]::OrdinalIgnoreCase)) {
-                $remainingSubKey = if ($matches.rest) { [string]$matches.rest } else { '' }
-                if ([string]::IsNullOrWhiteSpace($remainingSubKey)) {
-                    $normalizedSubKey = 'Default'
-                }
-                else {
-                    $normalizedSubKey = "Default\$remainingSubKey"
-                }
-            }
-        }
-    }
-
     if ($hiveName.Equals('HKEY_USERS', [System.StringComparison]::OrdinalIgnoreCase) -and
         -not [string]::IsNullOrWhiteSpace($normalizedSubKey) -and
         -not [string]::IsNullOrWhiteSpace([string]$script:RegistryTargetHiveMountName)) {

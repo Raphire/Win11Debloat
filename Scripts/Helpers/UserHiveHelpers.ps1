@@ -9,8 +9,7 @@ function New-TargetUserHiveContext {
         [AllowNull()]
         [string]$MountName,
         [bool]$WasAlreadyLoaded = $false,
-        [bool]$WasLoadedByScript = $false,
-        [bool]$RequiresRegFileRewrite = $false
+        [bool]$WasLoadedByScript = $false
     )
 
     $effectiveMountName = if ([string]::IsNullOrWhiteSpace($MountName)) { 'Default' } else { $MountName }
@@ -21,11 +20,8 @@ function New-TargetUserHiveContext {
         ProfilePath = if ($UserContext) { $UserContext.ProfilePath } else { $null }
         HiveDatPath = $HiveDatPath
         MountName = $effectiveMountName
-        HiveRoot = "HKEY_USERS\$effectiveMountName"
-        RegistryProviderRoot = "Registry::HKEY_USERS\$effectiveMountName"
         WasAlreadyLoaded = $WasAlreadyLoaded
         WasLoadedByScript = $WasLoadedByScript
-        RequiresRegFileRewrite = $RequiresRegFileRewrite
     }
 }
 
@@ -62,8 +58,7 @@ function Resolve-TargetUserHiveContext {
                 -HiveDatPath $hiveDatPath `
                 -MountName $userSid `
                 -WasAlreadyLoaded $true `
-                -WasLoadedByScript $false `
-                -RequiresRegFileRewrite $true)
+                -WasLoadedByScript $false)
         }
     }
 
@@ -73,8 +68,7 @@ function Resolve-TargetUserHiveContext {
         -HiveDatPath $hiveDatPath `
         -MountName 'Default' `
         -WasAlreadyLoaded $false `
-        -WasLoadedByScript $false `
-        -RequiresRegFileRewrite $false)
+        -WasLoadedByScript $false)
 }
 
 function Resolve-LoadedTargetUserHiveContext {
@@ -99,8 +93,7 @@ function Resolve-LoadedTargetUserHiveContext {
         -HiveDatPath $HiveContext.HiveDatPath `
         -MountName $userSid `
         -WasAlreadyLoaded $true `
-        -WasLoadedByScript $false `
-        -RequiresRegFileRewrite $true)
+        -WasLoadedByScript $false)
 }
 
 function Invoke-WithTargetUserHive {
@@ -115,7 +108,6 @@ function Invoke-WithTargetUserHive {
 
     $hiveContext = Resolve-TargetUserHiveContext -TargetUserName $TargetUserName
     $previousHiveMountName = $script:RegistryTargetHiveMountName
-    $previousHiveRoot = $script:RegistryTargetHiveRoot
 
     try {
         if (-not $hiveContext.WasAlreadyLoaded) {
@@ -138,7 +130,6 @@ function Invoke-WithTargetUserHive {
         }
 
         $script:RegistryTargetHiveMountName = [string]$hiveContext.MountName
-        $script:RegistryTargetHiveRoot = [string]$hiveContext.HiveRoot
 
         if ($PassHiveContext) {
             return & $ScriptBlock $ArgumentObject $hiveContext
@@ -148,62 +139,14 @@ function Invoke-WithTargetUserHive {
     }
     finally {
         $script:RegistryTargetHiveMountName = $previousHiveMountName
-        $script:RegistryTargetHiveRoot = $previousHiveRoot
 
         if ($hiveContext -and $hiveContext.WasLoadedByScript) {
             $global:LASTEXITCODE = 0
             reg unload "HKU\$($hiveContext.MountName)" | Out-Null
             $unloadExitCode = $LASTEXITCODE
             if ($unloadExitCode -ne 0) {
-                throw "Failed to unload registry hive 'HKU\$($hiveContext.MountName)' (exit code: $unloadExitCode)"
+                Write-Warning "Failed to unload registry hive 'HKU\$($hiveContext.MountName)' (exit code: $unloadExitCode)"
             }
         }
-    }
-}
-
-function Convert-RegFileForTargetHive {
-    param(
-        [Parameter(Mandatory)]
-        [string]$RegFilePath,
-        [AllowNull()]
-        $HiveContext
-    )
-
-    if (-not $HiveContext -or -not [bool]$HiveContext.RequiresRegFileRewrite) {
-        return [PSCustomObject]@{
-            Path = $RegFilePath
-            IsTemporary = $false
-        }
-    }
-
-    $targetHiveRoot = [string]$HiveContext.HiveRoot
-    if ([string]::IsNullOrWhiteSpace($targetHiveRoot)) {
-        throw 'Unable to rewrite registry file because the target hive root is empty.'
-    }
-
-    $content = Get-Content -LiteralPath $RegFilePath -Raw -ErrorAction Stop
-    $replaceWithTargetHive = [System.Text.RegularExpressions.MatchEvaluator]{ param($match) $targetHiveRoot }
-
-    $content = [regex]::Replace(
-        $content,
-        'HKEY_USERS\\\.DEFAULT(?=\\|\])',
-        $replaceWithTargetHive,
-        [System.Text.RegularExpressions.RegexOptions]::IgnoreCase
-    )
-
-    $content = [regex]::Replace(
-        $content,
-        'HKEY_USERS\\Default(?=\\|\])',
-        $replaceWithTargetHive,
-        [System.Text.RegularExpressions.RegexOptions]::IgnoreCase
-    )
-
-    $tempFileName = 'Win11Debloat_{0}.reg' -f ([guid]::NewGuid().ToString('N'))
-    $tempRegFilePath = Join-Path ([System.IO.Path]::GetTempPath()) $tempFileName
-    Set-Content -LiteralPath $tempRegFilePath -Value $content -Encoding Unicode -Force
-
-    return [PSCustomObject]@{
-        Path = $tempRegFilePath
-        IsTemporary = $true
     }
 }

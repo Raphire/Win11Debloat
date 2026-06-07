@@ -781,9 +781,9 @@
     {
       "FriendlyName": "Windows Terminal",
       "AppId": "Microsoft.WindowsTerminal",
-      "Description": "Default terminal app in windows 11 (Command Prompt, PowerShell, WSL)",
+      "Description": "Default terminal app in windows 11 (Command Prompt, PowerShell, WSL), WARNING: Win11Debloat if it is launched via Windows Terminal.",
       "SelectedByDefault": false,
-      "Recommendation": "optional"
+      "Recommendation": "unsafe"
     },
     {
       "FriendlyName": "Xbox TCUI Framework",

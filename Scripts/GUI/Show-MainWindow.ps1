@@ -1905,6 +1905,18 @@ function Show-MainWindow {
             }
         }
 
+        # When running as SYSTEM, the "Current User" option is not meaningful.
+        # Hide it from the dropdown and default to "Other User".
+        $isSystem = ([Security.Principal.WindowsIdentity]::GetCurrent().User.Value -eq 'S-1-5-18')
+        if ($isSystem -and $userSelectionCombo.Items.Count -gt 0) {
+            $currentUserItem = $userSelectionCombo.Items[0]
+            if ($currentUserItem -is [System.Windows.Controls.ComboBoxItem]) {
+                $currentUserItem.Visibility = 'Collapsed'
+                $currentUserItem.IsEnabled = $false
+            }
+            $userSelectionCombo.SelectedIndex = 1
+        }
+
         # Disable Restart Explorer option if NoRestartExplorer parameter is set
         $restartExplorerCheckBox = $window.FindName('RestartExplorerCheckBox')
         if ($restartExplorerCheckBox -and $script:Params.ContainsKey("NoRestartExplorer")) {

@@ -1,8 +1,13 @@
 # Restart the Windows Explorer process
 function RestartExplorer {
+    # Restarting Explorer while running in Sysprep or User context is not necessary
+    if ($script:Params.ContainsKey("Sysprep") -or $script:Params.ContainsKey("User")) {
+        return
+    }
+
     Write-Host "> Attempting to restart the Windows Explorer process to apply all changes..."
     
-    if ($script:Params.ContainsKey("Sysprep") -or $script:Params.ContainsKey("User") -or $script:Params.ContainsKey("NoRestartExplorer")) {
+    if ($script:Params.ContainsKey("NoRestartExplorer")) {
         Write-Host "Explorer process restart was skipped, please manually reboot your PC to apply all changes" -ForegroundColor Yellow
         return
     }

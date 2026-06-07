@@ -136,12 +136,12 @@ catch {
     Exit
 }
 
-# Remove old script folder if it exists, but keep configs, logs and backups
-if (Test-Path $tempWorkPath) {
-    Write-Output ""
-    Write-Output "> Cleaning up old Win11Debloat folder..."
+Write-Output ""
+Write-Output "> Cleaning up old Win11Debloat folder..."
 
-    Get-ChildItem -Path $tempWorkPath -Exclude Config,Logs,Backups | Remove-Item -Recurse -Force
+# Remove old script folder if it exists, but keep config and log files
+if (Test-Path $tempWorkPath) {
+    Get-ChildItem -Path $tempWorkPath -Exclude CustomAppsList,LastUsedSettings.json,Win11Debloat.log,Config,Logs,Backups | Remove-Item -Recurse -Force
 }
 
 $configDir = Join-Path $tempWorkPath 'Config'
@@ -149,9 +149,6 @@ $backupDir = Join-Path $tempWorkPath 'ConfigOld'
 
 # Temporarily move existing config files if they exist to prevent them from being overwritten by the new script files, will be moved back after the new script is unpacked
 if (Test-Path "$configDir") {
-    Write-Output ""
-    Write-Output "> Backing up existing config files..."
-
     New-Item -ItemType Directory -Path "$backupDir" -Force | Out-Null
 
     $filesToKeep = @(
@@ -181,9 +178,6 @@ if (Test-Path "$backupDir") {
     if (-not (Test-Path "$configDir")) {
         New-Item -ItemType Directory -Path "$configDir" -Force | Out-Null
     }
-
-    Write-Output ""
-    Write-Output "> Restoring existing config files..."
 
     Get-ChildItem -Path "$backupDir" -Recurse | Move-Item -Destination "$configDir"
     Remove-Item "$backupDir" -Recurse -Force
@@ -225,13 +219,13 @@ if ($null -ne $debloatProcess) {
     $debloatProcess.WaitForExit()
 }
 
-# Remove all remaining script files, except for configs, logs and backups
+# Remove all remaining script files, except for CustomAppsList and LastUsedSettings.json files
 if (Test-Path $tempWorkPath) {
     Write-Output ""
     Write-Output "> Cleaning up..."
 
     # Cleanup, remove Win11Debloat directory
-    Get-ChildItem -Path $tempWorkPath -Exclude Config,Logs,Backups | Remove-Item -Recurse -Force
+    Get-ChildItem -Path $tempWorkPath -Exclude CustomAppsList,LastUsedSettings.json,Win11Debloat.log,Win11Debloat-Run.log,Config,Logs,Backups | Remove-Item -Recurse -Force
 }
 
 Write-Output ""

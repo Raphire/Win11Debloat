@@ -7,38 +7,21 @@ function Invoke-WithLoadedRestoreHive {
         $ArgumentObject = $null
     )
 
-    $hiveDatPath = if ($Target -eq 'DefaultUserProfile') {
-        GetUserDirectory -userName 'Default' -fileName 'NTUSER.DAT'
+    $targetUserName = if ($Target -eq 'DefaultUserProfile') {
+        'Default'
     }
     elseif ($Target -like 'User:*') {
         $userName = $Target.Substring(5)
         if ([string]::IsNullOrWhiteSpace($userName)) {
             throw 'Invalid backup target format for user restore.'
         }
-        GetUserDirectory -userName $userName -fileName 'NTUSER.DAT'
+        $userName
     }
     else {
         throw "Unsupported backup target '$Target'."
     }
 
-    $global:LASTEXITCODE = 0
-    reg load 'HKU\Default' "$hiveDatPath" | Out-Null
-    $loadExitCode = $LASTEXITCODE
-    if ($loadExitCode -ne 0) {
-        throw "Failed to load target user hive '$hiveDatPath' (exit code: $loadExitCode)."
-    }
-
-    try {
-        & $ScriptBlock $ArgumentObject
-    }
-    finally {
-        $global:LASTEXITCODE = 0
-        reg unload 'HKU\Default' | Out-Null
-        $unloadExitCode = $LASTEXITCODE
-        if ($unloadExitCode -ne 0) {
-            throw "Failed to unload registry hive 'HKU\Default' (exit code: $unloadExitCode)"
-        }
-    }
+    Invoke-WithTargetUserHive -TargetUserName $targetUserName -ScriptBlock $ScriptBlock -ArgumentObject $ArgumentObject
 }
 
 function Restore-RegistryKeySnapshot {

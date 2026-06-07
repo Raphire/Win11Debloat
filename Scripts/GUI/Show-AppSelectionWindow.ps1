@@ -130,8 +130,12 @@ function Show-AppSelectionWindow {
             return
         }
 
-        if (-not (ConfirmUnsafeAppRemoval -SelectedApps $selectedApps -Owner $window)) {
-            return
+        if ($selectedApps -contains "Microsoft.WindowsStore" -and -not $Silent) {
+            $result = Show-MessageBox -Message 'Are you sure you wish to uninstall the Microsoft Store? This app cannot easily be reinstalled.' -Title 'Are you sure?' -Button 'YesNo' -Icon 'Warning' -Owner $window
+
+            if ($result -eq 'No') {
+                return
+            }
         }
 
         SaveCustomAppsListToFile -appsList $selectedApps

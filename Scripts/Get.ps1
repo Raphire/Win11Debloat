@@ -172,7 +172,7 @@ Expand-Archive $tempArchivePath $tempWorkPath
 Remove-Item $tempArchivePath
 
 # Move files
-Get-ChildItem -Path (Join-Path $tempWorkPath 'Raphire-Win11Debloat-*') -Recurse | Move-Item -Destination $tempWorkPath
+Get-ChildItem -Path (Join-Path $tempWorkPath '*Win11Debloat-*') -Recurse | Move-Item -Destination $tempWorkPath
 
 # Add existing config files back to Config folder
 if (Test-Path "$backupDir") {

@@ -170,6 +170,7 @@ function ExecuteAllChanges {
     if ($script:Params.ContainsKey("CreateRestorePoint")) { $totalSteps++ }
     $currentStep = 0
 
+    $backupFile = $null
     if ($hasRegistryBackedFeature) {
         $currentStep++
         if ($script:ApplyProgressCallback) {
@@ -184,7 +185,7 @@ function ExecuteAllChanges {
                     [PSCustomObject]@{ FeatureId = $_; RegistryKey = (Resolve-UndoRegFilePath $f.RegistryUndoKey) }
                 }
             } | Where-Object { $_ })
-            New-RegistrySettingsBackup -ActionableKeys $actionableKeys -ExtraFeatures $undoSyntheticFeatures | Out-Null
+            $backupFile = New-RegistrySettingsBackup -ActionableKeys $actionableKeys -ExtraFeatures $undoSyntheticFeatures
         }
         catch {
             throw "Registry backup failed before applying changes. $($_.Exception.Message)"
@@ -202,50 +203,67 @@ function ExecuteAllChanges {
         Write-Host ""
     }
     
-    # Execute all parameters
-    foreach ($paramKey in $actionableKeys) {
-        if ($script:CancelRequested) { return }
+    try {
+        # Execute all parameters
+        foreach ($paramKey in $actionableKeys) {
+            if ($script:CancelRequested) { return }
 
-        $currentStep++
-        
-        # Get friendly name for the step
-        $stepName = $paramKey
-        if ($script:Features.ContainsKey($paramKey)) {
-            $feature = $script:Features[$paramKey]
-            if ($feature.ApplyText) {
-                # Prefer explicit ApplyText when provided
-                $stepName = $feature.ApplyText
-            } elseif ($feature.Label) {
-                # Fallback: use label from Features.json
-                $stepName = $feature.Label
+            $currentStep++
+            
+            # Get friendly name for the step
+            $stepName = $paramKey
+            if ($script:Features.ContainsKey($paramKey)) {
+                $feature = $script:Features[$paramKey]
+                if ($feature.ApplyText) {
+                    # Prefer explicit ApplyText when provided
+                    $stepName = $feature.ApplyText
+                } elseif ($feature.Label) {
+                    # Fallback: use label from Features.json
+                    $stepName = $feature.Label
+                }
+            }
+            
+            if ($script:ApplyProgressCallback) {
+                & $script:ApplyProgressCallback $currentStep $totalSteps $stepName
+            }
+            
+            ExecuteParameter -paramKey $paramKey
+        }
+
+        # Execute all undo operations
+        foreach ($featureId in $script:UndoParams.Keys) {
+            if ($script:CancelRequested) { return }
+
+            $f = if ($script:Features.ContainsKey($featureId)) { $script:Features[$featureId] } else { $null }
+            $undoLabel = if ($f -and $f.UndoLabel) { $f.UndoLabel } else { $featureId }
+            $applyUndoText = if ($f -and $f.ApplyUndoText) { $f.ApplyUndoText } else { $undoLabel }
+
+            $currentStep++
+            if ($script:ApplyProgressCallback) {
+                & $script:ApplyProgressCallback $currentStep $totalSteps $applyUndoText
+            }
+
+            if ($f -and $f.RegistryUndoKey) {
+                ImportRegistryFile "> $applyUndoText" (Resolve-UndoRegFilePath $f.RegistryUndoKey)
+            } else {
+                Invoke-UndoFeatureAction -FeatureId $featureId
             }
         }
-        
-        if ($script:ApplyProgressCallback) {
-            & $script:ApplyProgressCallback $currentStep $totalSteps $stepName
-        }
-        
-        ExecuteParameter -paramKey $paramKey
     }
-
-    # Execute all undo operations
-    foreach ($featureId in $script:UndoParams.Keys) {
-        if ($script:CancelRequested) { return }
-
-        $f = if ($script:Features.ContainsKey($featureId)) { $script:Features[$featureId] } else { $null }
-        $undoLabel = if ($f -and $f.UndoLabel) { $f.UndoLabel } else { $featureId }
-        $applyUndoText = if ($f -and $f.ApplyUndoText) { $f.ApplyUndoText } else { $undoLabel }
-
-        $currentStep++
-        if ($script:ApplyProgressCallback) {
-            & $script:ApplyProgressCallback $currentStep $totalSteps $applyUndoText
+    catch {
+        Write-Error "Execution failed: $_"
+        if ($backupFile -and (Test-Path $backupFile)) {
+            Write-Warning "Attempting automatic registry rollback using backup: $backupFile"
+            try {
+                $backupData = Load-RegistryBackupFromFile -FilePath $backupFile
+                Restore-RegistryBackupState -Backup $backupData
+                Write-Host "Registry successfully rolled back to pre-execution state." -ForegroundColor Green
+            }
+            catch {
+                Write-Error "Registry rollback failed: $_"
+            }
         }
-
-        if ($f -and $f.RegistryUndoKey) {
-            ImportRegistryFile "> $applyUndoText" (Resolve-UndoRegFilePath $f.RegistryUndoKey)
-        } else {
-            Invoke-UndoFeatureAction -FeatureId $featureId
-        }
+        throw
     }
 
     if ($script:RegistryImportFailures -gt 0) {

@@ -26,6 +26,10 @@ function ExecuteParameter {
                 # Also remove the app package for Copilot
                 RemoveApps @('Microsoft.Copilot')
             }
+            'DisableTelemetry' {
+                # Also disable telemetry scheduled tasks
+                Disable-TelemetryScheduledTasks
+            }
         }
         return
     }
@@ -308,4 +312,39 @@ function Invoke-UndoFeatureAction {
             return
         }
     }
+}
+
+function Disable-TelemetryScheduledTasks {
+    $tasks = @(
+        @{ Path = "\Microsoft\Windows\Application Experience"; Name = "Microsoft Compatibility Appraiser" },
+        @{ Path = "\Microsoft\Windows\Application Experience"; Name = "ProgramDataUpdater" },
+        @{ Path = "\Microsoft\Windows\Application Experience"; Name = "StartupAppTask" },
+        @{ Path = "\Microsoft\Windows\Customer Experience Improvement Program"; Name = "Consolidator" },
+        @{ Path = "\Microsoft\Windows\Customer Experience Improvement Program"; Name = "UsbCeip" },
+        @{ Path = "\Microsoft\Windows\DiskDiagnostic"; Name = "Microsoft-Windows-DiskDiagnosticDataCollector" },
+        @{ Path = "\Microsoft\Windows\Autochk"; Name = "Proxy" }
+    )
+
+    Write-Host "> Disabling telemetry scheduled tasks..."
+    foreach ($task in $tasks) {
+        $taskObj = Get-ScheduledTask -TaskPath $task.Path -TaskName $task.Name -ErrorAction SilentlyContinue
+        if ($taskObj) {
+            if ($taskObj.State -ne 'Disabled') {
+                if ($WhatIfPreference) {
+                    Write-Host "[WhatIf] Disable Scheduled Task: $($task.Path)\$($task.Name)" -ForegroundColor Cyan
+                }
+                else {
+                    Disable-ScheduledTask -TaskPath $task.Path -TaskName $task.Name -ErrorAction SilentlyContinue | Out-Null
+                    Write-Host "Disabled Scheduled Task: $($task.Path)\$($task.Name)"
+                }
+            }
+            else {
+                Write-Verbose "Scheduled Task $($task.Path)\$($task.Name) is already disabled."
+            }
+        }
+        else {
+            Write-Verbose "Scheduled Task $($task.Path)\$($task.Name) not found."
+        }
+    }
+    Write-Host ""
 }

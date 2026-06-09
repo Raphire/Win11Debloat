@@ -340,6 +340,7 @@ function Load-AppsWithList {
     $LoadingAppsIndicator.Visibility = 'Collapsed'
 
     if ($appsToAdd.Count -eq 0) {
+        $OnlyInstalledAppsBox.IsHitTestVisible = $true
         $Window.FindName('DeploymentApplyBtn').IsEnabled = $true
         if ($ImportConfigBtn) {
             $ImportConfigBtn.IsEnabled = $true
@@ -468,7 +469,8 @@ function Load-AppsWithList {
         -AppRemovalScopeCombo $appRemovalScopeCombo -AppRemovalScopeSection $appRemovalScopeSection `
         -AppRemovalScopeDescription $appRemovalScopeDescription -UserSelectionCombo $userSelectionCombo
 
-    # Re-enable Apply button now that the full, correctly-checked app list is ready
+    # Re-enable controls now that the full, correctly-checked app list is ready
+    $OnlyInstalledAppsBox.IsHitTestVisible = $true
     $Window.FindName('DeploymentApplyBtn').IsEnabled = $true
     if ($ImportConfigBtn) {
         $ImportConfigBtn.IsEnabled = $true
@@ -496,8 +498,9 @@ function Load-AppsIntoMainUI {
     $LoadingAppsIndicator.Visibility = 'Visible'
     $AppsPanel.Children.Clear()
 
-    # Disable Apply button while apps are loading so it can't be clicked with a partial list
+    # Disable controls while apps are loading so they can't be interacted with mid-load
     $Window.FindName('DeploymentApplyBtn').IsEnabled = $false
+    $OnlyInstalledAppsBox.IsHitTestVisible = $false
 
     # Update navigation buttons to disable Next/Previous
     Update-NavigationButtons -Window $Window -TabControl $Window.FindName('MainTabControl')
@@ -526,6 +529,7 @@ function Load-AppsIntoMainUI {
             catch {
                 Write-Warning "Failed to load apps list: $($_.Exception.Message)"
                 $LoadingAppsIndicator.Visibility = 'Collapsed'
+                $OnlyInstalledAppsBox.IsHitTestVisible = $true
                 $Window.FindName('DeploymentApplyBtn').IsEnabled = $true
                 if ($ImportConfigBtn) { $ImportConfigBtn.IsEnabled = $true }
             }

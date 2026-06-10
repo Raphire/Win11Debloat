@@ -124,10 +124,7 @@ function RemoveApps {
             }
         }
         catch {
-            if ($DebugPreference -ne "SilentlyContinue") {
-                Write-Host "Something went wrong while trying to remove $app" -ForegroundColor Yellow
-                Write-Host $psitem.Exception.StackTrace -ForegroundColor Gray
-            }
+            Write-Verbose "Something went wrong while trying to remove $($app): $_"
         }
     }
 

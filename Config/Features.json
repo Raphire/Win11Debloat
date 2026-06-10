@@ -978,9 +978,9 @@
       "UndoLabel": null,
       "ApplyUndoText": null,
       "RegistryUndoKey": null,
+      "DisableWhenApplied": true,
       "MinVersion": null,
-      "MaxVersion": null,
-      "DisableWhenApplied": true
+      "MaxVersion": null
     },
     {
       "FeatureId": "HideChat",

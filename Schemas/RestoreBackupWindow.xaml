@@ -374,7 +374,7 @@
                                        LineHeight="20"
                                        Margin="0,0,0,12"
                                        Foreground="{DynamicResource FgColor}"
-                                       Text="This will restore the Start Menu pinned apps layout for the selected user(s) using a backup. Win11Debloat can automatically find the backup created by the script."/>
+                                       Text="This will restore the Start Menu pinned apps layout for the selected user(s) using a backup that is automatically created by Win11Debloat. Manually created backups can also be used."/>
 
                             <ComboBox x:Name="StartMenuScopeCombo"
                                         Grid.Row="1"

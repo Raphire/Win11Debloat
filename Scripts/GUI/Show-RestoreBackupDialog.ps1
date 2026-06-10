@@ -323,6 +323,30 @@ function Show-RestoreBackupDialog {
             return
         }
 
+        if (-not $useManualBackupFile) {
+            $autoBackupExists = $false
+            if ($scope -eq 'AllUsers') {
+                $userPathString = GetUserDirectory -userName "*" -fileName "AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState"
+                $usersStartMenuPaths = Get-ChildItem -Path $userPathString -ErrorAction SilentlyContinue
+                foreach ($startMenuPath in $usersStartMenuPaths) {
+                    if (Test-Path -LiteralPath (Join-Path $startMenuPath.FullName 'start2.bin.bak')) {
+                        $autoBackupExists = $true
+                        break
+                    }
+                }
+            }
+            else {
+                $autoBackupPath = "$env:LOCALAPPDATA\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState\start2.bin.bak"
+                $autoBackupExists = Test-Path -LiteralPath $autoBackupPath
+            }
+
+            if (-not $autoBackupExists) {
+                $scopeText = (& $getStartMenuScopeInfo).SummaryText
+                Show-MessageBox -Owner $window -Title 'No Backup Found' -Message "No Start Menu backup file was found. You can uncheck the 'Automatically find Start Menu backup' option to select a backup file manually." -Button 'OK' -Icon 'Warning' | Out-Null
+                return
+            }
+        }
+
         $window.Tag = @{
             Result = 'RestoreStartMenu'
             StartMenuScope = $scope

@@ -192,12 +192,13 @@ Add your feature to the `"Features"` array in `Config/Features.json`:
   "ToolTip": "Detailed explanation of what this feature does and its impact.",
   "Category": "Privacy & Suggested Content",
   "Priority": 1,
-  "Action": "Disable",
   "RegistryKey": "Disable_YourFeature.reg",
-  "ApplyText": "Disabling your feature...",
-  "UndoAction": "Enable",
+  "ApplyText": "Disabling your feature",
+  "UndoLabel": "Short description for the undo",
+  "ApplyUndoText": "Enabling your feature",
   "RegistryUndoKey": "Enable_YourFeature.reg",
   "RequiresReboot": false,
+  "DisableWhenApplied": false,
   "MinVersion": null,
   "MaxVersion": null
 }

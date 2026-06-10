@@ -8,13 +8,7 @@ function ImportRegistryFile {
     Write-Host $message
 
     $usesOfflineHive = $script:Params.ContainsKey("Sysprep") -or $script:Params.ContainsKey("User")
-    $regFileDirectory = if ($usesOfflineHive) {
-        Join-Path $script:RegfilesPath "Sysprep"
-    }
-    else {
-        $script:RegfilesPath
-    }
-    $regFilePath = Join-Path $regFileDirectory $path
+    $regFilePath = Get-RegistryFilePathForFeature -RegistryKey $path
 
     if (-not (Test-Path $regFilePath)) {
         $errorMessage = "Unable to find registry file: $path ($regFilePath)"

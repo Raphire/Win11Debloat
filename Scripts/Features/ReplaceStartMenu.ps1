@@ -39,7 +39,7 @@ function ReplaceStartMenuForAllUsers {
 }
 
 
-# Replace the startmenu for all users, when using the default startmenuTemplate this clears all pinned apps
+# Replace the startmenu at the specified location, when using the default startmenuTemplate this clears all pinned apps
 # Credit: https://lazyadmin.nl/win-11/customize-windows-11-start-menu-layout/
 function ReplaceStartMenu {
     param (

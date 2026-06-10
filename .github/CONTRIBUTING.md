@@ -67,7 +67,7 @@ Win11Debloat/
 │   ├── DefaultSettings.json     # Default configuration preset
 │   ├── Features.json            # All features with metadata
 │   └── LastUsedSettings.json    # Last used configuration (generated during use)
-├── Regfiles/                    # Registry files for each feature
+├── Regfiles/                    # Registry files for all features
 └── Schemas/                     # XAML Schemas for GUI elements
 ```
 
@@ -98,16 +98,16 @@ Avoid these common mistakes when contributing:
 
 1. **Forgetting Get.ps1**: When adding a new command-line parameter, contributors often remember to add it to `Win11Debloat.ps1` but forget to add the same parameter to `Scripts/Get.ps1`. Both files **must** have matching parameters.
 
-2. **Missing Registry Files**: Always create an `Undo` registry file for reversibility, aswell as a `Sysprep` registry file for Sysprep mode.
+2. **Missing Registry Files**: Always create an `Undo` registry file for reversibility, aswell as a `Sysprep` registry file for applying changes to other users and Sysprep mode.
 
-3. **Incorrect Registry Hives for Sysprep**: Sysprep registry files apply changes to Windows' default user, registry keys in the `HKEY_CURRENT_USER` hive must use `hkey_users\default` instead. Ensure you update **all** registry keys in the file.
+3. **Incorrect Registry Hives for Sysprep**: Sysprep registry files are meant to apply changes to a different user. Registry keys in the `HKEY_CURRENT_USER` hive must use `hkey_users\default` instead. Ensure you update **all** registry keys in the file.
 
 4. **Wrong Registry File Location**:
    - Main action files go in `Regfiles/`
    - Undo files go in `Regfiles/Undo/`
    - Sysprep files go in `Regfiles/Sysprep/`
 
-   Placing files in the wrong directory will cause the script to fail when trying to apply or undo changes.
+   Placing files in the wrong directory may cause the script to fail when trying to apply or undo changes.
 
 6. **Not Testing Undo Functionality**: Always test that your undo registry file properly reverts all changes.
 
@@ -204,19 +204,20 @@ Add your feature to the `"Features"` array in `Config/Features.json`:
 ```
 
 **Field Descriptions**:
-- `FeatureId`: Unique identifier (must match parameter name in Win11Debloat.ps1 and Get.ps1)
-- `Label`: Short description shown in the UI, written in a way to fit with the Action or UndoAction prefixed
-- `ToolTip`: Detailed explanation of what the feature does, used for tooltips in the GUI
+- `FeatureId`: Unique identifier, this must match parameter name in the Win11Debloat.ps1 and Get.ps1 files.
+- `Label`: Short description shown in the UI and wiki documentation.
+- `ToolTip`: Detailed explanation of what the feature does, used for tooltips in the GUI.
 - `Category`: One of the predefined categories (see Categories array in Features.json), features without a category won't be loaded into the GUI.
 - `Priority`: Optional. The priority value (int) is used to sort features within a category. If this field is omitted the feature will be sorted based on the order in the Features.json file.
-- `Action`: Action word for the feature (e.g., "Disable", "Enable", "Hide", "Show")
-- `RegistryKey`: Filename of the registry file to apply (in Regfiles/ directory) or null if feature does not require registry changes
-- `ApplyText`: Message shown when applying the feature
-- `UndoAction`: Action word for reverting (e.g., "Enable", "Show")
-- `RegistryUndoKey`: Filename of the registry file to revert changes or null if feature does not require registry changes
-- `RequiresReboot`: Optional boolean. Set to `true` if the feature requires a system reboot to take effect
-- `MinVersion`: Minimum Windows build version (e.g., "22000") or null
-- `MaxVersion`: Maximum Windows version or null
+- `RegistryKey`: Filename of the registry file to apply (in Regfiles/ directory) or null if feature does not require registry changes.
+- `ApplyText`: Message shown when applying the feature.
+- `UndoLabel`: Short description for the undo shown in the UI.
+- `ApplyUndoText`: Message shown when undoing the feature.
+- `RegistryUndoKey`: Filename of the registry file to revert changes or null if feature does not require registry changes.
+- `RequiresReboot`: Optional boolean. Set to `true` if the feature requires a system reboot to take effect.
+- `DisableWhenApplied`: Optional boolean. Set to `true` if the feature has no supported undo method.
+- `MinVersion`: Minimum Windows build version (e.g., "22000") or null.
+- `MaxVersion`: Maximum Windows version or null.
 
 #### 3. Add Command-Line Parameter
 

@@ -20,11 +20,11 @@ function ExecuteParameter {
         switch ($paramKey) {
             'DisableBing' {
                 # Also remove the app package for Bing search
-                RemoveApps 'Microsoft.BingSearch'
+                RemoveApps @('Microsoft.BingSearch')
             }
             'DisableCopilot' {
                 # Also remove the app package for Copilot
-                RemoveApps 'Microsoft.Copilot'
+                RemoveApps @('Microsoft.Copilot')
             }
         }
         return
@@ -33,7 +33,7 @@ function ExecuteParameter {
     # Handle features without RegistryKey or with special logic
     switch ($paramKey) {
         'RemoveApps' {
-            Write-Host "> Removing selected apps for $(GetFriendlyTargetUserName)..."
+            Write-Host "> $($feature.ApplyText) for $(GetFriendlyTargetUserName)..."
             $appsList = GenerateAppsList
 
             if ($appsList.Count -eq 0) {
@@ -46,7 +46,7 @@ function ExecuteParameter {
             RemoveApps $appsList
         }
         'RemoveAppsCustom' {
-            Write-Host "> Removing selected apps..."
+            Write-Host "> $($feature.ApplyText)..."
             $appsList = LoadAppsFromFile $script:CustomAppsListFilePath
 
             if ($appsList.Count -eq 0) {
@@ -58,58 +58,46 @@ function ExecuteParameter {
             Write-Host "$($appsList.Count) apps selected for removal"
             RemoveApps $appsList
         }
-        'RemoveCommApps' {
-            $appsList = 'Microsoft.windowscommunicationsapps', 'Microsoft.People'
-            Write-Host "> Removing Mail, Calendar and People apps..."
-            RemoveApps $appsList
-            return
-        }
-        'RemoveW11Outlook' {
-            $appsList = 'Microsoft.OutlookForWindows'
-            Write-Host "> Removing new Outlook for Windows app..."
-            RemoveApps $appsList
-            return
-        }
         'RemoveGamingApps' {
-            $appsList = 'Microsoft.GamingApp', 'Microsoft.XboxGameOverlay', 'Microsoft.XboxGamingOverlay'
-            Write-Host "> Removing gaming related apps..."
+            $appsList = @('Microsoft.GamingApp', 'Microsoft.XboxGameOverlay', 'Microsoft.XboxGamingOverlay')
+            Write-Host "> $($feature.ApplyText)..."
             RemoveApps $appsList
             return
         }
         'RemoveHPApps' {
-            $appsList = 'AD2F1837.HPAIExperienceCenter', 'AD2F1837.HPJumpStarts', 'AD2F1837.HPPCHardwareDiagnosticsWindows', 'AD2F1837.HPPowerManager', 'AD2F1837.HPPrivacySettings', 'AD2F1837.HPSupportAssistant', 'AD2F1837.HPSureShieldAI', 'AD2F1837.HPSystemInformation', 'AD2F1837.HPQuickDrop', 'AD2F1837.HPWorkWell', 'AD2F1837.myHP', 'AD2F1837.HPDesktopSupportUtilities', 'AD2F1837.HPQuickTouch', 'AD2F1837.HPEasyClean', 'AD2F1837.HPConnectedMusic', 'AD2F1837.HPFileViewer', 'AD2F1837.HPRegistration', 'AD2F1837.HPWelcome', 'AD2F1837.HPConnectedPhotopoweredbySnapfish', 'AD2F1837.HPPrinterControl'
-            Write-Host "> Removing HP apps..."
+            $appsList = @('AD2F1837.HPAIExperienceCenter', 'AD2F1837.HPJumpStarts', 'AD2F1837.HPPCHardwareDiagnosticsWindows', 'AD2F1837.HPPowerManager', 'AD2F1837.HPPrivacySettings', 'AD2F1837.HPSupportAssistant', 'AD2F1837.HPSureShieldAI', 'AD2F1837.HPSystemInformation', 'AD2F1837.HPQuickDrop', 'AD2F1837.HPWorkWell', 'AD2F1837.myHP', 'AD2F1837.HPDesktopSupportUtilities', 'AD2F1837.HPQuickTouch', 'AD2F1837.HPEasyClean', 'AD2F1837.HPConnectedMusic', 'AD2F1837.HPFileViewer', 'AD2F1837.HPRegistration', 'AD2F1837.HPWelcome', 'AD2F1837.HPConnectedPhotopoweredbySnapfish', 'AD2F1837.HPPrinterControl')
+            Write-Host "> $($feature.ApplyText)..."
             RemoveApps $appsList
             return
         }
         'DisableWidgets' {
-            Write-Host "> Disabling widgets on the taskbar & lock screen..."
+            Write-Host "> $($feature.ApplyText)..."
             # Stop widgets related processes before removing the app packages to prevent potential issues
-            Get-Process *Widget* | Stop-Process
-            
-            RemoveApps 'Microsoft.StartExperiencesApp','MicrosoftWindows.Client.WebExperience','Microsoft.WidgetsPlatformRuntime'
+            Get-Process *Widget* -ErrorAction SilentlyContinue | Stop-Process
+
+            RemoveApps @('Microsoft.StartExperiencesApp','MicrosoftWindows.Client.WebExperience','Microsoft.WidgetsPlatformRuntime')
         }
-        "EnableWindowsSandbox" {
-            Write-Host "> Enabling Windows Sandbox..."
+        'EnableWindowsSandbox' {
+            Write-Host "> $($feature.ApplyText)..."
             EnableWindowsFeature "Containers-DisposableClientVM"
             Write-Host ""
             return
         }
-        "EnableWindowsSubsystemForLinux" {
-            Write-Host "> Enabling Windows Subsystem for Linux..."
+        'EnableWindowsSubsystemForLinux' {
+            Write-Host "> $($feature.ApplyText)..."
             EnableWindowsFeature "VirtualMachinePlatform"
             EnableWindowsFeature "Microsoft-Windows-Subsystem-Linux"
             Write-Host ""
             return
         }
         'ClearStart' {
-            Write-Host "> Removing all pinned apps from the start menu for user $(GetUserName)..."
+            Write-Host "> $($feature.ApplyText) for user $(GetUserName)..."
             ReplaceStartMenu
             Write-Host ""
             return
         }
         'ReplaceStart' {
-            Write-Host "> Replacing the start menu for user $(GetUserName)..."
+            Write-Host "> $($feature.ApplyText) for user $(GetUserName)..."
             ReplaceStartMenu $script:Params.Item("ReplaceStart")
             Write-Host ""
             return
@@ -169,8 +157,15 @@ function ExecuteAllChanges {
             break
         }
     }
+    # Undo operations that write registry values also require a backup
+    if (-not $hasRegistryBackedFeature) {
+        foreach ($featureId in $script:UndoParams.Keys) {
+            $f = if ($script:Features.ContainsKey($featureId)) { $script:Features[$featureId] } else { $null }
+            if ($f -and $f.RegistryUndoKey) { $hasRegistryBackedFeature = $true; break }
+        }
+    }
     
-    $totalSteps = $actionableKeys.Count
+    $totalSteps = $actionableKeys.Count + $script:UndoParams.Count
     if ($hasRegistryBackedFeature) { $totalSteps++ }
     if ($script:Params.ContainsKey("CreateRestorePoint")) { $totalSteps++ }
     $currentStep = 0
@@ -183,7 +178,13 @@ function ExecuteAllChanges {
 
         Write-Host "> Creating registry backup..."
         try {
-            New-RegistrySettingsBackup -ActionableKeys $actionableKeys | Out-Null
+            $undoSyntheticFeatures = @($script:UndoParams.Keys | ForEach-Object {
+                $f = if ($script:Features.ContainsKey($_)) { $script:Features[$_] } else { $null }
+                if ($f -and $f.RegistryUndoKey) {
+                    [PSCustomObject]@{ FeatureId = $_; RegistryKey = (Resolve-UndoRegFilePath $f.RegistryUndoKey) }
+                }
+            } | Where-Object { $_ })
+            New-RegistrySettingsBackup -ActionableKeys $actionableKeys -ExtraFeatures $undoSyntheticFeatures | Out-Null
         }
         catch {
             throw "Registry backup failed before applying changes. $($_.Exception.Message)"
@@ -203,9 +204,7 @@ function ExecuteAllChanges {
     
     # Execute all parameters
     foreach ($paramKey in $actionableKeys) {
-        if ($script:CancelRequested) { 
-            return
-        }
+        if ($script:CancelRequested) { return }
 
         $currentStep++
         
@@ -229,8 +228,82 @@ function ExecuteAllChanges {
         ExecuteParameter -paramKey $paramKey
     }
 
+    # Execute all undo operations
+    foreach ($featureId in $script:UndoParams.Keys) {
+        if ($script:CancelRequested) { return }
+
+        $f = if ($script:Features.ContainsKey($featureId)) { $script:Features[$featureId] } else { $null }
+        $undoLabel = if ($f -and $f.UndoLabel) { $f.UndoLabel } else { $featureId }
+        $applyUndoText = if ($f -and $f.ApplyUndoText) { $f.ApplyUndoText } else { $undoLabel }
+
+        $currentStep++
+        if ($script:ApplyProgressCallback) {
+            & $script:ApplyProgressCallback $currentStep $totalSteps $applyUndoText
+        }
+
+        if ($f -and $f.RegistryUndoKey) {
+            ImportRegistryFile "> $applyUndoText" (Resolve-UndoRegFilePath $f.RegistryUndoKey)
+        } else {
+            Invoke-UndoFeatureAction -FeatureId $featureId
+        }
+    }
+
     if ($script:RegistryImportFailures -gt 0) {
         Write-Host ""
         Write-Host "$($script:RegistryImportFailures) registry import change(s) failed. See output above for details." -ForegroundColor Yellow
+    }
+}
+
+# Resolves the path of an undo reg file relative to $script:RegfilesPath.
+# Checks the Undo/ subfolder first, then falls back to the root Regfiles/ folder.
+function Resolve-UndoRegFilePath {
+    param ([string]$FileName)
+    $undoSubPath = Join-Path 'Undo' $FileName
+    if (Test-Path (Join-Path $script:RegfilesPath $undoSubPath)) {
+        return $undoSubPath
+    }
+    return $FileName
+}
+
+function Invoke-UndoFeatureAction {
+    param(
+        [Parameter(Mandatory)]
+        [string]$FeatureId
+    )
+
+    $feature = if ($script:Features.ContainsKey($FeatureId)) { $script:Features[$FeatureId] } else { $null }
+
+    switch ($FeatureId) {
+        'DisableStoreSearchSuggestions' {
+            if ($script:Params.ContainsKey('Sysprep')) {
+                Write-Host "> Re-enabling Microsoft Store search suggestions in the start menu for all users..."
+                EnableStoreSearchSuggestionsForAllUsers
+                Write-Host ""
+                return
+            }
+
+            Write-Host "> Re-enabling Microsoft Store search suggestions for user $(GetUserName)..."
+            EnableStoreSearchSuggestions
+            Write-Host ""
+            return
+        }
+        'EnableWindowsSandbox' {
+            Write-Host "> $($feature.ApplyUndoText)..."
+            DisableWindowsFeature 'Containers-DisposableClientVM'
+            Write-Host ""
+            return
+        }
+        'EnableWindowsSubsystemForLinux' {
+            Write-Host "> $($feature.ApplyUndoText)..."
+            DisableWindowsFeature 'Microsoft-Windows-Subsystem-Linux'
+            DisableWindowsFeature 'VirtualMachinePlatform'
+            Write-Host ""
+            return
+        }
+        default {
+            Write-Host "> No undo action defined for $FeatureId, skipping..." -ForegroundColor Yellow
+            Write-Host ""
+            return
+        }
     }
 }

@@ -17,9 +17,7 @@ param (
     [switch]$RemoveApps,
     [switch]$RemoveAppsCustom,
     [switch]$RemoveGamingApps,
-    [switch]$RemoveCommApps,
     [switch]$RemoveHPApps,
-    [switch]$RemoveW11Outlook,
     [switch]$ForceRemoveEdge,
     [switch]$DisableDVR,
     [switch]$DisableGameBarIntegration,
@@ -58,7 +56,7 @@ param (
     [switch]$HideSearchTb, [switch]$ShowSearchIconTb, [switch]$ShowSearchLabelTb, [switch]$ShowSearchBoxTb,
     [switch]$HideTaskview,
     [switch]$DisableStartRecommended,
-    [switch]$DisableStartAllApps,
+    [switch]$DisableStartAllApps, [switch]$StartAllAppsCategory, [switch]$StartAllAppsGrid, [switch]$StartAllAppsList,
     [switch]$DisableStartPhoneLink,
     [switch]$DisableCopilot,
     [switch]$DisableRecall,
@@ -174,7 +172,7 @@ Expand-Archive $tempArchivePath $tempWorkPath
 Remove-Item $tempArchivePath
 
 # Move files
-Get-ChildItem -Path (Join-Path $tempWorkPath 'Raphire-Win11Debloat-*') -Recurse | Move-Item -Destination $tempWorkPath
+Get-ChildItem -Path (Join-Path $tempWorkPath '*Win11Debloat-*') -Recurse | Move-Item -Destination $tempWorkPath
 
 # Add existing config files back to Config folder
 if (Test-Path "$backupDir") {

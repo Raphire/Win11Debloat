@@ -79,16 +79,70 @@ function Test-RestoreDialogFeatureVisibleInOverview {
     return -not [string]::IsNullOrWhiteSpace([string]$featureDefinition.Category)
 }
 
+function Get-SelectedForwardFeatureIdsFromBackup {
+    param($SelectedBackup)
+
+    $selectedFeatureIds = New-Object System.Collections.Generic.List[string]
+    $seenSelectedFeatureIds = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
+
+    foreach ($featureId in @($SelectedBackup.SelectedFeatures)) {
+        if ([string]::IsNullOrWhiteSpace([string]$featureId)) {
+            continue
+        }
+
+        $normalizedId = [string]$featureId
+        if ($seenSelectedFeatureIds.Add($normalizedId)) {
+            $selectedFeatureIds.Add($normalizedId)
+        }
+    }
+
+    return @($selectedFeatureIds.ToArray())
+}
+
+function Get-SelectedUndoFeatureIdsFromBackup {
+    param($SelectedBackup)
+
+    $selectedUndoFeatureIds = New-Object System.Collections.Generic.List[string]
+    $seenUndoFeatureIds = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
+
+    foreach ($featureId in @($SelectedBackup.SelectedUndoFeatures)) {
+        if ([string]::IsNullOrWhiteSpace([string]$featureId)) {
+            continue
+        }
+
+        $normalizedId = [string]$featureId
+        if ($seenUndoFeatureIds.Add($normalizedId)) {
+            $selectedUndoFeatureIds.Add($normalizedId)
+        }
+    }
+
+    return @($selectedUndoFeatureIds.ToArray())
+}
+
+function Get-CombinedSelectedFeatureIdsFromBackup {
+    param($SelectedBackup)
+
+    $featureIds = New-Object System.Collections.Generic.List[string]
+    $seenIds = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
+
+    foreach ($featureId in @(Get-SelectedForwardFeatureIdsFromBackup -SelectedBackup $SelectedBackup) + @(Get-SelectedUndoFeatureIdsFromBackup -SelectedBackup $SelectedBackup)) {
+        if ([string]::IsNullOrWhiteSpace([string]$featureId)) {
+            continue
+        }
+
+        $normalizedId = [string]$featureId
+        if ($seenIds.Add($normalizedId)) {
+            $featureIds.Add($normalizedId)
+        }
+    }
+
+    return @($featureIds.ToArray())
+}
+
 function Get-SelectedFeatureIdsFromBackup {
     param($SelectedBackup)
 
-    return @(
-        foreach ($featureId in @($SelectedBackup.SelectedFeatures)) {
-            if (-not [string]::IsNullOrWhiteSpace([string]$featureId)) {
-                [string]$featureId
-            }
-        }
-    )
+    return @(Get-CombinedSelectedFeatureIdsFromBackup -SelectedBackup $SelectedBackup)
 }
 
 function Get-RestoreBackupFeatureLists {

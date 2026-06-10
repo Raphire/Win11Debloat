@@ -17,9 +17,7 @@ param (
     [switch]$RemoveApps,
     [switch]$RemoveAppsCustom,
     [switch]$RemoveGamingApps,
-    [switch]$RemoveCommApps,
     [switch]$RemoveHPApps,
-    [switch]$RemoveW11Outlook,
     [switch]$ForceRemoveEdge,
     [switch]$DisableDVR,
     [switch]$DisableGameBarIntegration,
@@ -59,7 +57,7 @@ param (
     [switch]$HideSearchTb, [switch]$ShowSearchIconTb, [switch]$ShowSearchLabelTb, [switch]$ShowSearchBoxTb,
     [switch]$HideTaskview,
     [switch]$DisableStartRecommended,
-    [switch]$DisableStartAllApps,
+    [switch]$DisableStartAllApps, [switch]$StartAllAppsCategory, [switch]$StartAllAppsGrid, [switch]$StartAllAppsList,
     [switch]$DisableStartPhoneLink,
     [switch]$DisableCopilot,
     [switch]$DisableRecall,
@@ -293,6 +291,7 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 . "$PSScriptRoot/Scripts/CLI/PrintHeader.ps1"
 
 # Features functions
+. "$PSScriptRoot/Scripts/Features/GetCurrentTweakState.ps1"
 . "$PSScriptRoot/Scripts/Features/ExecuteChanges.ps1"
 . "$PSScriptRoot/Scripts/Features/CreateSystemRestorePoint.ps1"
 . "$PSScriptRoot/Scripts/Features/BackupRegistryFeatureSelection.ps1"
@@ -302,7 +301,7 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 . "$PSScriptRoot/Scripts/Features/RestoreRegistryApplyState.ps1"
 . "$PSScriptRoot/Scripts/Features/RestoreRegistryBackup.ps1"
 . "$PSScriptRoot/Scripts/Features/DisableStoreSearchSuggestions.ps1"
-. "$PSScriptRoot/Scripts/Features/EnableWindowsFeature.ps1"
+. "$PSScriptRoot/Scripts/Features/WindowsOptionalFeatures.ps1"
 . "$PSScriptRoot/Scripts/Features/ImportRegistryFile.ps1"
 . "$PSScriptRoot/Scripts/Features/ReplaceStartMenu.ps1"
 . "$PSScriptRoot/Scripts/Features/RestartExplorer.ps1"
@@ -330,6 +329,11 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 . "$PSScriptRoot/Scripts/GUI/Show-RestoreBackupWindow.ps1"
 . "$PSScriptRoot/Scripts/GUI/RestoreBackupDialogFeatureLists.ps1"
 . "$PSScriptRoot/Scripts/GUI/Show-RestoreBackupDialog.ps1"
+. "$PSScriptRoot/Scripts/GUI/MainWindow-WindowChrome.ps1"
+. "$PSScriptRoot/Scripts/GUI/MainWindow-AppSelection.ps1"
+. "$PSScriptRoot/Scripts/GUI/MainWindow-TweaksBuilder.ps1"
+. "$PSScriptRoot/Scripts/GUI/MainWindow-Navigation.ps1"
+. "$PSScriptRoot/Scripts/GUI/MainWindow-Deployment.ps1"
 . "$PSScriptRoot/Scripts/GUI/Show-MainWindow.ps1"
 . "$PSScriptRoot/Scripts/GUI/Show-AboutDialog.ps1"
 . "$PSScriptRoot/Scripts/GUI/Show-Bubble.ps1"
@@ -374,6 +378,7 @@ $WinVersion = Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\Current
 $script:ModernStandbySupported = CheckModernStandbySupport
 
 $script:Params = $PSBoundParameters
+$script:UndoParams = @{}
 
 # Add default Apps parameter when RemoveApps is requested and Apps was not explicitly provided
 if ((-not $script:Params.ContainsKey("Apps")) -and $script:Params.ContainsKey("RemoveApps")) {

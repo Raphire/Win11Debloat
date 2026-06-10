@@ -1,11 +1,14 @@
 function New-RegistrySettingsBackup {
     param(
-        [string[]]$ActionableKeys
+        [string[]]$ActionableKeys,
+        [object[]]$ExtraFeatures = @()
     )
 
     $ActionableKeys = @($ActionableKeys)
-    $selectedFeatures = Get-SelectedFeatures -ActionableKeys $ActionableKeys
-    if (@($selectedFeatures | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_.RegistryKey) }).Count -eq 0) {
+    $selectedFeatures = @(Get-SelectedFeatures -ActionableKeys $ActionableKeys)
+    $undoFeatures = @($ExtraFeatures | Where-Object { $_ -ne $null })
+    $allFeatures = @($selectedFeatures) + @($undoFeatures)
+    if (@($allFeatures | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_.RegistryKey) }).Count -eq 0) {
         return $null
     }
 
@@ -18,7 +21,7 @@ function New-RegistrySettingsBackup {
     $backupFileName = 'Win11Debloat-RegistryBackup-{0}.json' -f $timestamp.ToString('yyyyMMdd_HHmmss')
     $backupFilePath = Join-Path $backupDirectory $backupFileName
 
-    $backupConfig = Get-RegistryBackupPayload -SelectedFeatures $selectedFeatures -CreatedAt $timestamp
+    $backupConfig = Get-RegistryBackupPayload -SelectedFeatures $selectedFeatures -UndoFeatures $undoFeatures -CreatedAt $timestamp
     if (-not (SaveToFile -Config $backupConfig -FilePath $backupFilePath -MaxDepth 25)) {
         throw "Failed to save registry backup to '$backupFilePath'"
     }
@@ -55,8 +58,8 @@ function Get-SelectedFeatures {
 
 function Get-RegistryBackupPayload {
     param(
-        [Parameter(Mandatory)]
-        [object[]]$SelectedFeatures,
+        [object[]]$SelectedFeatures = @(),
+        [object[]]$UndoFeatures = @(),
         [Parameter(Mandatory)]
         [datetime]$CreatedAt
     )
@@ -71,11 +74,24 @@ function Get-RegistryBackupPayload {
         }
     }
 
-    $selectedRegistryFeatures = Get-RegistryBackedFeatures -Features $SelectedFeatures
-    $capturePlans = Get-RegistryBackupCapturePlans -SelectedRegistryFeatures $SelectedRegistryFeatures
+    $selectedUndoFeatureIds = New-Object System.Collections.Generic.List[string]
+    $seenUndoFeatureIds = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
+    foreach ($feature in $UndoFeatures) {
+        $featureId = Get-FeatureId -Feature $feature
+
+        if ($seenUndoFeatureIds.Add($featureId)) {
+            $selectedUndoFeatureIds.Add($featureId)
+        }
+    }
+
+    $selectedRegistryFeatures = @(Get-RegistryBackedFeatures -Features $SelectedFeatures)
+    $undoRegistryFeatures = @($UndoFeatures | Where-Object { 
+        -not [string]::IsNullOrWhiteSpace([string]$_.RegistryUndoKey) -or -not [string]::IsNullOrWhiteSpace([string]$_.RegistryKey)
+    })
+    $capturePlans = @(Get-RegistryBackupCapturePlans -SelectedRegistryFeatures $selectedRegistryFeatures -UndoRegistryFeatures $undoRegistryFeatures)
     $registryKeys = @(Get-RegistrySnapshotsForBackup -CapturePlans $capturePlans)
 
-    return @{
+    $backupPayload = @{
         Version = '1.0'
         BackupType = 'RegistryState'
         CreatedAt = $CreatedAt.ToString('o')
@@ -85,4 +101,10 @@ function Get-RegistryBackupPayload {
         SelectedFeatures = @($selectedFeatureIds)
         RegistryKeys = @($registryKeys)
     }
+
+    if ($selectedUndoFeatureIds.Count -gt 0) {
+        $backupPayload['SelectedUndoFeatures'] = @($selectedUndoFeatureIds)
+    }
+
+    return $backupPayload
 }

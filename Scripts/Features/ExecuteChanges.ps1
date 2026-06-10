@@ -14,7 +14,7 @@ function ExecuteParameter {
     
     # If feature has RegistryKey and ApplyText, use dynamic ImportRegistryFile
     if ($feature -and $feature.RegistryKey -and $feature.ApplyText) {
-        ImportRegistryFile "> $($feature.ApplyText)" $feature.RegistryKey
+        ImportRegistryFile "> $($feature.ApplyText)..." $feature.RegistryKey
         
         # Handle special cases that have additional logic after ImportRegistryFile
         switch ($paramKey) {

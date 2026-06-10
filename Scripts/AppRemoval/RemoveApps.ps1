@@ -25,7 +25,7 @@ function RemoveApps {
             & $script:ApplySubStepCallback "Removing apps ($appIndex/$appCount)" $appIndex $appCount
         }
 
-        Write-Host "Attempting to remove $app..."
+        Write-Host "Removing $app"
 
         # Use WinGet only to remove OneDrive and Edge
         if (($app -eq "Microsoft.OneDrive") -or ($edgeIds -contains $app)) {

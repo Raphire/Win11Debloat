@@ -442,7 +442,7 @@
     {
       "FeatureId": "DisableLockscreenTips",
       "Label": "Disable tips & tricks on the lock screen",
-      "ToolTip": "This will turn off the tips, tricks and fun facts that appear on the lock screen.",
+      "ToolTip": "This will turn off the lockscreen spotlight option and disable the tips, tricks and fun facts that appear on the lock screen.",
       "Category": "Privacy & Suggested Content",
       "RegistryKey": "Disable_Lockscreen_Tips.reg",
       "ApplyText": "Disabling tips & tricks on the lock screen",

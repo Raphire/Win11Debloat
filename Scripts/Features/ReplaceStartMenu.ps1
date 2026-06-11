@@ -26,6 +26,11 @@ function ReplaceStartMenuForAllUsers {
     # Also replace the start menu file for the default user profile
     $defaultStartMenuPath = GetUserDirectory -userName "Default" -fileName "AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState" -exitIfPathNotFound $false
 
+    if ($WhatIfPreference) {
+        Write-Host "[WhatIf] Replace Start Menu for Default user profile with template $startMenuTemplate" -ForegroundColor Cyan
+        return
+    }
+
     # Create folder if it doesn't exist
     if (-not (Test-Path $defaultStartMenuPath)) {
         new-item $defaultStartMenuPath -ItemType Directory -Force | Out-Null
@@ -64,6 +69,11 @@ function ReplaceStartMenu {
     }
 
     $userName = GetStartMenuUserNameFromPath -StartMenuBinFile $startMenuBinFile
+
+    if ($WhatIfPreference) {
+        Write-Host "[WhatIf] Replace Start Menu for user $userName with template $startMenuTemplate" -ForegroundColor Cyan
+        return
+    }
 
     $backupBinFile = $startMenuBinFile + ".bak"
 

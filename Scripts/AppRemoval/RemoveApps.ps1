@@ -25,6 +25,13 @@ function RemoveApps {
         $appslist
     )
 
+    if ($WhatIfPreference) {
+        foreach ($app in $appslist) {
+            Write-Host "[WhatIf] Remove App Package: $app" -ForegroundColor Cyan
+        }
+        return
+    }
+
     # Determine target from script-level params, defaulting to AllUsers
     $targetUser = GetTargetUserForAppRemoval
 

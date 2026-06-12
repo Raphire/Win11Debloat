@@ -515,9 +515,11 @@ function Load-AppsIntoMainUI {
                 $listOfApps = ""
 
                 if ($OnlyInstalledAppsBox.IsChecked -and ($script:WingetInstalled -eq $true)) {
-                    $listOfApps = GetInstalledAppsViaWinget -TimeOut 10 -NonBlocking
+                    Write-Host "Retrieving installed apps via winget..."
+                    $listOfApps = GetInstalledAppsViaWinget -TimeOut 20 -NonBlocking
 
                     if ($null -eq $listOfApps) {
+                        Write-Warning "WinGet returned no data (command timed out or failed)"
                         Show-MessageBox -Message 'Unable to load list of installed apps via WinGet.' -Title 'Error' -Button 'OK' -Icon 'Error' | Out-Null
                         $OnlyInstalledAppsBox.IsChecked = $false
                     }

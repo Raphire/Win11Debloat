@@ -26,6 +26,15 @@ function ExecuteParameter {
                 # Also remove the app package for Copilot
                 RemoveApps @('Microsoft.Copilot')
             }
+            'DisableTelemetry' {
+                # Disable telemetry-related scheduled tasks
+                Disable-ScheduledTaskSafe -TaskPath "\\Microsoft\\Windows\\Application Experience\\" -TaskName "Microsoft Compatibility Appraiser"
+                Disable-ScheduledTaskSafe -TaskPath "\\Microsoft\\Windows\\Application Experience\\" -TaskName "ProgramDataUpdater"
+                Disable-ScheduledTaskSafe -TaskPath "\\Microsoft\\Windows\\Application Experience\\" -TaskName "StartupAppScan"
+                Disable-ScheduledTaskSafe -TaskPath "\\Microsoft\\Windows\\Customer Experience Improvement Program\\" -TaskName "Consolidator"
+                Disable-ScheduledTaskSafe -TaskPath "\\Microsoft\\Windows\\Customer Experience Improvement Program\\" -TaskName "UsbCeip"
+                Disable-ScheduledTaskSafe -TaskPath "\\Microsoft\\Windows\\DiskDiagnostic\\" -TaskName "Microsoft-Windows-DiskDiagnosticDataCollector"
+            }
         }
         return
     }
@@ -65,7 +74,7 @@ function ExecuteParameter {
             return
         }
         'RemoveHPApps' {
-            $appsList = @('AD2F1837.HPAIExperienceCenter', 'AD2F1837.HPJumpStarts', 'AD2F1837.HPPCHardwareDiagnosticsWindows', 'AD2F1837.HPPowerManager', 'AD2F1837.HPPrivacySettings', 'AD2F1837.HPSupportAssistant', 'AD2F1837.HPSureShieldAI', 'AD2F1837.HPSystemInformation', 'AD2F1837.HPQuickDrop', 'AD2F1837.HPWorkWell', 'AD2F1837.myHP', 'AD2F1837.HPDesktopSupportUtilities', 'AD2F1837.HPQuickTouch', 'AD2F1837.HPEasyClean', 'AD2F1837.HPConnectedMusic', 'AD2F1837.HPFileViewer', 'AD2F1837.HPRegistration', 'AD2F1837.HPWelcome', 'AD2F1837.HPConnectedPhotopoweredbySnapfish', 'AD2F1837.HPPrinterControl')
+            $appsList = @('AD2F1837.HPAIExperienceCenter', 'AD2F1837.HPJumpStarts', 'AD2F1837.HPPCHardwareDiagnosticsWindows', 'AD2F1837.HPPowerManager', 'AD2F1837.HPPrivacySettings', 'AD2F1837.HPSupportAssistant', 'AD2F1837.HPSureShieldAI', 'AD2F1837.HPSystemInformation', 'AD2F1837.HPQuickDrop', 'AD2F1837.HPWorkWell', 'AD2F1837.myHP', 'AD2F1837.HPDesktopSupportUtilities', 'AD2F1837.HPQuickTouch', 'AD2F1837.HPEasyClean', 'AD2F1837.HPConnectedMusic', 'AD2F1837.HPFileViewer', 'AD2F1837.HPRegistration', 'AD2F1837.HPWelcome', 'AD2F1837.HPConnectedPhotopoweredbySnapfish', 'AD2F1837.HPPrinterControl', 'AD2F1837.HPInsights')
             Write-Host "> $($feature.ApplyText)..."
             RemoveApps $appsList
             return
@@ -243,9 +252,8 @@ function ExecuteAllChanges {
 
         if ($f -and $f.RegistryUndoKey) {
             ImportRegistryFile "> $applyUndoText" (Resolve-UndoRegFilePath $f.RegistryUndoKey)
-        } else {
-            Invoke-UndoFeatureAction -FeatureId $featureId
         }
+        Invoke-UndoFeatureAction -FeatureId $featureId
     }
 
     if ($script:RegistryImportFailures -gt 0) {
@@ -274,6 +282,15 @@ function Invoke-UndoFeatureAction {
     $feature = if ($script:Features.ContainsKey($FeatureId)) { $script:Features[$FeatureId] } else { $null }
 
     switch ($FeatureId) {
+        'DisableTelemetry' {
+            # Re-enable telemetry-related scheduled tasks
+            Enable-ScheduledTaskSafe -TaskPath "\\Microsoft\\Windows\\Application Experience\\" -TaskName "Microsoft Compatibility Appraiser"
+            Enable-ScheduledTaskSafe -TaskPath "\\Microsoft\\Windows\\Application Experience\\" -TaskName "ProgramDataUpdater"
+            Enable-ScheduledTaskSafe -TaskPath "\\Microsoft\\Windows\\Application Experience\\" -TaskName "StartupAppScan"
+            Enable-ScheduledTaskSafe -TaskPath "\\Microsoft\\Windows\\Customer Experience Improvement Program\\" -TaskName "Consolidator"
+            Enable-ScheduledTaskSafe -TaskPath "\\Microsoft\\Windows\\Customer Experience Improvement Program\\" -TaskName "UsbCeip"
+            Enable-ScheduledTaskSafe -TaskPath "\\Microsoft\\Windows\\DiskDiagnostic\\" -TaskName "Microsoft-Windows-DiskDiagnosticDataCollector"
+        }
         'DisableStoreSearchSuggestions' {
             if ($script:Params.ContainsKey('Sysprep')) {
                 Write-Host "> Re-enabling Microsoft Store search suggestions in the start menu for all users..."
@@ -301,8 +318,6 @@ function Invoke-UndoFeatureAction {
             return
         }
         default {
-            Write-Host "> No undo action defined for $FeatureId, skipping..." -ForegroundColor Yellow
-            Write-Host ""
             return
         }
     }

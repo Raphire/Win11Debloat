@@ -339,6 +339,7 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 . "$PSScriptRoot/Scripts/GUI/Show-Bubble.ps1"
 
 # Helper functions
+. "$PSScriptRoot/Scripts/Helpers/ScheduledTaskHelpers.ps1"
 . "$PSScriptRoot/Scripts/Helpers/AddParameter.ps1"
 . "$PSScriptRoot/Scripts/Helpers/ResolveUserProfilePath.ps1"
 . "$PSScriptRoot/Scripts/Helpers/UserHiveHelpers.ps1"

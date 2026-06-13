@@ -60,27 +60,19 @@
       "Values": [
         {
           "Label": "Show search box (Default)",
-          "FeatureIds": [
-            "ShowSearchBoxTb"
-          ]
+          "FeatureIds": ["ShowSearchBoxTb"]
         },
         {
           "Label": "Show search icon and label",
-          "FeatureIds": [
-            "ShowSearchLabelTb"
-          ]
+          "FeatureIds": ["ShowSearchLabelTb"]
         },
         {
           "Label": "Show search icon only",
-          "FeatureIds": [
-            "ShowSearchIconTb"
-          ]
+          "FeatureIds": ["ShowSearchIconTb"]
         },
         {
           "Label": "Hide",
-          "FeatureIds": [
-            "HideSearchTb"
-          ]
+          "FeatureIds": ["HideSearchTb"]
         }
       ]
     },
@@ -92,21 +84,15 @@
       "Values": [
         {
           "Label": "All taskbars (Default)",
-          "FeatureIds": [
-            "MMTaskbarModeAll"
-          ]
+          "FeatureIds": ["MMTaskbarModeAll"]
         },
         {
           "Label": "Main taskbar and taskbar where window is open",
-          "FeatureIds": [
-            "MMTaskbarModeMainActive"
-          ]
+          "FeatureIds": ["MMTaskbarModeMainActive"]
         },
         {
           "Label": "Taskbar where window is open",
-          "FeatureIds": [
-            "MMTaskbarModeActive"
-          ]
+          "FeatureIds": ["MMTaskbarModeActive"]
         }
       ]
     },
@@ -118,21 +104,15 @@
       "Values": [
         {
           "Label": "Always (Default)",
-          "FeatureIds": [
-            "CombineTaskbarAlways"
-          ]
+          "FeatureIds": ["CombineTaskbarAlways"]
         },
         {
           "Label": "When taskbar is full",
-          "FeatureIds": [
-            "CombineTaskbarWhenFull"
-          ]
+          "FeatureIds": ["CombineTaskbarWhenFull"]
         },
         {
           "Label": "Never",
-          "FeatureIds": [
-            "CombineTaskbarNever"
-          ]
+          "FeatureIds": ["CombineTaskbarNever"]
         }
       ]
     },
@@ -144,21 +124,15 @@
       "Values": [
         {
           "Label": "Always (Default)",
-          "FeatureIds": [
-            "CombineMMTaskbarAlways"
-          ]
+          "FeatureIds": ["CombineMMTaskbarAlways"]
         },
         {
           "Label": "When taskbar is full",
-          "FeatureIds": [
-            "CombineMMTaskbarWhenFull"
-          ]
+          "FeatureIds": ["CombineMMTaskbarWhenFull"]
         },
         {
           "Label": "Never",
-          "FeatureIds": [
-            "CombineMMTaskbarNever"
-          ]
+          "FeatureIds": ["CombineMMTaskbarNever"]
         }
       ]
     },
@@ -170,15 +144,11 @@
       "Values": [
         {
           "Label": "Remove for the selected user",
-          "FeatureIds": [
-            "ClearStart"
-          ]
+          "FeatureIds": ["ClearStart"]
         },
         {
           "Label": "Remove for all users",
-          "FeatureIds": [
-            "ClearStartAllUsers"
-          ]
+          "FeatureIds": ["ClearStartAllUsers"]
         }
       ]
     },
@@ -191,27 +161,19 @@
       "Values": [
         {
           "Label": "Home (Default)",
-          "FeatureIds": [
-            "ExplorerToHome"
-          ]
+          "FeatureIds": ["ExplorerToHome"]
         },
         {
           "Label": "This PC",
-          "FeatureIds": [
-            "ExplorerToThisPC"
-          ]
+          "FeatureIds": ["ExplorerToThisPC"]
         },
         {
           "Label": "Downloads",
-          "FeatureIds": [
-            "ExplorerToDownloads"
-          ]
+          "FeatureIds": ["ExplorerToDownloads"]
         },
         {
           "Label": "OneDrive",
-          "FeatureIds": [
-            "ExplorerToOneDrive"
-          ]
+          "FeatureIds": ["ExplorerToOneDrive"]
         }
       ]
     },
@@ -224,27 +186,19 @@
       "Values": [
         {
           "Label": "Show drive letters after drive label (Default)",
-          "FeatureIds": [
-            "ShowDriveLettersLast"
-          ]
+          "FeatureIds": ["ShowDriveLettersLast"]
         },
         {
           "Label": "Show drive letters before drive label",
-          "FeatureIds": [
-            "ShowDriveLettersFirst"
-          ]
+          "FeatureIds": ["ShowDriveLettersFirst"]
         },
         {
           "Label": "Show network drive letters before drive label",
-          "FeatureIds": [
-            "ShowNetworkDriveLettersFirst"
-          ]
+          "FeatureIds": ["ShowNetworkDriveLettersFirst"]
         },
         {
           "Label": "Hide all drive letters",
-          "FeatureIds": [
-            "HideDriveLetters"
-          ]
+          "FeatureIds": ["HideDriveLetters"]
         }
       ]
     },
@@ -257,27 +211,19 @@
       "Values": [
         {
           "Label": "Don't show tabs",
-          "FeatureIds": [
-            "HideTabsInAltTab"
-          ]
+          "FeatureIds": ["HideTabsInAltTab"]
         },
         {
           "Label": "Show 3 most recent tabs (Default)",
-          "FeatureIds": [
-            "Show3TabsInAltTab"
-          ]
+          "FeatureIds": ["Show3TabsInAltTab"]
         },
         {
           "Label": "Show 5 most recent tabs",
-          "FeatureIds": [
-            "Show5TabsInAltTab"
-          ]
+          "FeatureIds": ["Show5TabsInAltTab"]
         },
         {
           "Label": "Show 20 most recent tabs",
-          "FeatureIds": [
-            "Show20TabsInAltTab"
-          ]
+          "FeatureIds": ["Show20TabsInAltTab"]
         }
       ]
     },
@@ -289,27 +235,19 @@
       "Values": [
         {
           "Label": "Hide",
-          "FeatureIds": [
-            "DisableStartAllApps"
-          ]
+          "FeatureIds": ["DisableStartAllApps"]
         },
         {
           "Label": "Category (Default)",
-          "FeatureIds": [
-            "StartAllAppsCategory"
-          ]
+          "FeatureIds": ["StartAllAppsCategory"]
         },
         {
           "Label": "Grid",
-          "FeatureIds": [
-            "StartAllAppsGrid"
-          ]
+          "FeatureIds": ["StartAllAppsGrid"]
         },
         {
           "Label": "List",
-          "FeatureIds": [
-            "StartAllAppsList"
-          ]
+          "FeatureIds": ["StartAllAppsList"]
         }
       ]
     }
@@ -1082,9 +1020,9 @@
       "Category": "Taskbar",
       "RegistryKey": "Combine_Taskbar_Always.reg",
       "ApplyText": "Setting the taskbar on the main display to always combine buttons and hide labels",
-      "UndoLabel": "Use default taskbar combine behavior",
-      "ApplyUndoText": "Resetting the taskbar on the main display to always combine buttons and hide labels",
-      "RegistryUndoKey": null,
+      "UndoLabel": "Combine taskbar buttons and hide labels when taskbar is full for the main display",
+      "ApplyUndoText": "Setting the taskbar on the main display to only combine buttons and hide labels when the taskbar is full",
+      "RegistryUndoKey": "Combine_Taskbar_When_Full.reg",
       "MinVersion": 22000,
       "MaxVersion": null
     },
@@ -1094,9 +1032,9 @@
       "Category": "Taskbar",
       "RegistryKey": "Combine_MMTaskbar_Always.reg",
       "ApplyText": "Setting the taskbar on secondary displays to always combine buttons and hide labels",
-      "UndoLabel": "Use default taskbar combine behavior",
-      "ApplyUndoText": "Resetting the taskbar on secondary displays to always combine buttons and hide labels",
-      "RegistryUndoKey": null,
+      "UndoLabel": "Combine taskbar buttons and hide labels when taskbar is full for secondary displays",
+      "ApplyUndoText": "Setting the taskbar on secondary displays to only combine buttons and hide labels when the taskbar is full",
+      "RegistryUndoKey": "Combine_MMTaskbar_When_Full.reg",
       "MinVersion": 22000,
       "MaxVersion": null
     },

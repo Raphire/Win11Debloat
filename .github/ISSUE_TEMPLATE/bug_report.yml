@@ -1,6 +1,6 @@
 name: "🐞 Bug report"
 description: "Report an issue you encountered"
-labels: ["bug","unconfirmed"]
+labels: ["bug", "unconfirmed"]
 
 body:
   - type: markdown

@@ -4,7 +4,7 @@
 [![Join the Discussion](https://img.shields.io/badge/Join-the%20Discussion-2D9F2D?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Raphire/Win11Debloat/discussions)
 [![Static Badge](https://img.shields.io/badge/Documentation-_?style=for-the-badge&logo=bookstack&color=grey)](https://github.com/Raphire/Win11Debloat/wiki/)
 
- Win11Debloat is a lightweight, easy to use PowerShell script that allows you to quickly declutter and customize your Windows experience, no installation required! You can use it to remove pre-installed apps, disable telemetry, remove intrusive interface elements and much more. No need to painstakingly go through all the settings yourself or remove apps one by one. Win11Debloat makes the process quick and easy!
+Win11Debloat is a lightweight, easy to use PowerShell script that allows you to quickly declutter and customize your Windows experience, no installation required! You can use it to remove pre-installed apps, disable telemetry, remove intrusive interface elements and much more. No need to painstakingly go through all the settings yourself or remove apps one by one. Win11Debloat makes the process quick and easy!
 
 The script also includes many features that system administrators and power users will enjoy. Such as a powerful command-line interface, support for Windows Audit mode and the ability to make changes to other Windows users. Please refer to our [wiki](https://github.com/Raphire/Win11Debloat/wiki/) for more details.
 
@@ -40,11 +40,11 @@ This method supports command-line parameters to customize the behaviour of the s
 <details>
   <summary>Manually download & run the script.</summary><br/>
 
-  1. [Download the latest version of the script](https://github.com/Raphire/Win11Debloat/releases/latest), and extract the .ZIP file to your desired location.
-  2. Navigate to the Win11Debloat folder
-  3. Double click the `Run.bat` file to start the script. NOTE: If the console window immediately closes and nothing happens, try the advanced method below.
-  4. Accept the Windows UAC prompt to run the script as administrator, this is required for the script to function.
-  5. Carefully read through and follow the on-screen instructions.
+1. [Download the latest version of the script](https://github.com/Raphire/Win11Debloat/releases/latest), and extract the .ZIP file to your desired location.
+2. Navigate to the Win11Debloat folder
+3. Double click the `Run.bat` file to start the script. NOTE: If the console window immediately closes and nothing happens, try the advanced method below.
+4. Accept the Windows UAC prompt to run the script as administrator, this is required for the script to function.
+5. Carefully read through and follow the on-screen instructions.
 </details>
 
 ### Advanced method
@@ -52,24 +52,25 @@ This method supports command-line parameters to customize the behaviour of the s
 <details>
   <summary>Manually download the script & run the script via PowerShell. Recommended for advanced users.</summary><br/>
 
-  1. [Download the latest version of the script](https://github.com/Raphire/Win11Debloat/releases/latest), and extract the .ZIP file to your desired location.
-  2. Open PowerShell or Terminal as an administrator.
-  3. Temporarily enable PowerShell execution by entering the following command:
+1. [Download the latest version of the script](https://github.com/Raphire/Win11Debloat/releases/latest), and extract the .ZIP file to your desired location.
+2. Open PowerShell or Terminal as an administrator.
+3. Temporarily enable PowerShell execution by entering the following command:
 
-  ```PowerShell
-  Set-ExecutionPolicy Unrestricted -Scope Process -Force
-  ```
+```PowerShell
+Set-ExecutionPolicy Unrestricted -Scope Process -Force
+```
 
-  4. In PowerShell, navigate to the directory where the files were extracted. Example: `cd c:\Win11Debloat`
-  5. Now run the script by entering the following command:
+4. In PowerShell, navigate to the directory where the files were extracted. Example: `cd c:\Win11Debloat`
+5. Now run the script by entering the following command:
 
-  ```PowerShell
-  .\Win11Debloat.ps1
-  ```
+```PowerShell
+.\Win11Debloat.ps1
+```
 
-  6. Carefully read through and follow the on-screen instructions.
+6. Carefully read through and follow the on-screen instructions.
 
-  This method supports command-line parameters to customize the behaviour of the script. Please click [here](https://github.com/Raphire/Win11Debloat/wiki/Command%E2%80%90line-Interface#parameters) for more information.
+This method supports command-line parameters to customize the behaviour of the script. Please click [here](https://github.com/Raphire/Win11Debloat/wiki/Command%E2%80%90line-Interface#parameters) for more information.
+
 </details>
 
 ## Features

@@ -1,8 +1,10 @@
 function CreateSystemRestorePoint {
-    $SysRestore = Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SystemRestore" -Name "RPSessionInterval"
+    # Check if System Restore is disabled by reading the DisableSR registry value.
+    # DisableSR = 1 means disabled. If the value is missing or 0, System Restore is enabled.
+    $disableSR = (Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SystemRestore" -Name "DisableSR" -ErrorAction SilentlyContinue).DisableSR
     $failed = $false
 
-    if ($SysRestore.RPSessionInterval -eq 0) {
+    if ($disableSR -eq 1) {
         # In GUI mode, skip the prompt and just try to enable it
         if ($script:GuiWindow -or $Silent -or $( Read-Host -Prompt "System restore is disabled, would you like to enable it and create a restore point? (y/n)") -eq 'y') {
             try {
@@ -34,11 +36,17 @@ function CreateSystemRestorePoint {
     if (-not $failed) {
         try {
             $result = Invoke-NonBlocking -TimeoutSeconds 90 -ScriptBlock {
+                # Ensure the module is loaded in case this runs in a separate runspace
+                Import-Module Microsoft.PowerShell.Management -ErrorAction SilentlyContinue
+
                 try {
-                    $recentRestorePoints = Get-ComputerRestorePoint | Where-Object { (Get-Date) - [System.Management.ManagementDateTimeConverter]::ToDateTime($_.CreationTime) -le (New-TimeSpan -Hours 24) }
+                    # Use SilentlyContinue so that the common "no restore points exist" case
+                    # simply returns $null instead of throwing. This avoids relying on fragile
+                    # exception-message matching for a benign condition.
+                    $recentRestorePoints = @(Get-ComputerRestorePoint -ErrorAction SilentlyContinue | Where-Object { (Get-Date) - [System.Management.ManagementDateTimeConverter]::ToDateTime($_.CreationTime) -le (New-TimeSpan -Hours 24) })
                 }
                 catch {
-                    return [PSCustomObject]@{ Success = $false; Message = "Error: Unable to retrieve existing restore points: $_" }
+                    return [PSCustomObject]@{ Success = $false; Message = "Error: Unable to retrieve existing restore points: $($_.Exception.Message)" }
                 }
 
                 if ($recentRestorePoints.Count -eq 0) {

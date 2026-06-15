@@ -65,7 +65,7 @@ function ExecuteParameter {
             return
         }
         'RemoveHPApps' {
-            $appsList = @('AD2F1837.HPAIExperienceCenter', 'AD2F1837.HPJumpStarts', 'AD2F1837.HPPCHardwareDiagnosticsWindows', 'AD2F1837.HPPowerManager', 'AD2F1837.HPPrivacySettings', 'AD2F1837.HPSupportAssistant', 'AD2F1837.HPSureShieldAI', 'AD2F1837.HPSystemInformation', 'AD2F1837.HPQuickDrop', 'AD2F1837.HPWorkWell', 'AD2F1837.myHP', 'AD2F1837.HPDesktopSupportUtilities', 'AD2F1837.HPQuickTouch', 'AD2F1837.HPEasyClean', 'AD2F1837.HPConnectedMusic', 'AD2F1837.HPFileViewer', 'AD2F1837.HPRegistration', 'AD2F1837.HPWelcome', 'AD2F1837.HPConnectedPhotopoweredbySnapfish', 'AD2F1837.HPPrinterControl')
+            $appsList = @('AD2F1837.HPAIExperienceCenter', 'AD2F1837.HPJumpStarts', 'AD2F1837.HPPCHardwareDiagnosticsWindows', 'AD2F1837.HPPowerManager', 'AD2F1837.HPPrivacySettings', 'AD2F1837.HPSupportAssistant', 'AD2F1837.HPSureShieldAI', 'AD2F1837.HPSystemInformation', 'AD2F1837.HPQuickDrop', 'AD2F1837.HPWorkWell', 'AD2F1837.myHP', 'AD2F1837.HPDesktopSupportUtilities', 'AD2F1837.HPQuickTouch', 'AD2F1837.HPEasyClean', 'AD2F1837.HPConnectedMusic', 'AD2F1837.HPFileViewer', 'AD2F1837.HPRegistration', 'AD2F1837.HPWelcome', 'AD2F1837.HPConnectedPhotopoweredbySnapfish', 'AD2F1837.HPPrinterControl', 'AD2F1837.HPInsights')
             Write-Host "> $($feature.ApplyText)..."
             RemoveApps $appsList
             return
@@ -243,9 +243,8 @@ function ExecuteAllChanges {
 
         if ($f -and $f.RegistryUndoKey) {
             ImportRegistryFile "> $applyUndoText" (Resolve-UndoRegFilePath $f.RegistryUndoKey)
-        } else {
-            Invoke-UndoFeatureAction -FeatureId $featureId
         }
+        Invoke-UndoFeatureAction -FeatureId $featureId
     }
 
     if ($script:RegistryImportFailures -gt 0) {
@@ -301,8 +300,6 @@ function Invoke-UndoFeatureAction {
             return
         }
         default {
-            Write-Host "> No undo action defined for $FeatureId, skipping..." -ForegroundColor Yellow
-            Write-Host ""
             return
         }
     }

@@ -15,7 +15,7 @@ function ImportRegistryFile {
         $script:RegistryImportFailures++
         Write-Host "Error: $errorMessage" -ForegroundColor Red
         Write-Host ""
-        throw $errorMessage
+        return # Changed from throw to return to allow script to continue with other features
     }
 
     $importScript = {
@@ -27,9 +27,16 @@ function ImportRegistryFile {
         $usePowerShellFallbackOnly = $hiveContext -and [bool]$hiveContext.WasAlreadyLoaded
 
         if ($usePowerShellFallbackOnly) {
-            Invoke-RegistryOperationsFromRegFile -RegFilePath $targetRegFilePath
-            Write-Host "The operation completed successfully via PowerShell registry writer."
-            Write-Host ""
+            try {
+                Invoke-RegistryOperationsFromRegFile -RegFilePath $targetRegFilePath
+                Write-Host "The operation completed successfully via PowerShell registry writer."
+                Write-Host ""
+            }
+            catch {
+                $script:RegistryImportFailures++
+                Write-Host "Error: PowerShell registry writer failed for '$path': $($_.Exception.Message)" -ForegroundColor Red
+                Write-Host ""
+            }
             return
         }
 
@@ -52,7 +59,7 @@ function ImportRegistryFile {
                 $result.ExitCode = $importExitCode
 
                 if ($importExitCode -ne 0) {
-                    throw "Registry import failed with exit code $importExitCode for '$targetRegFilePath'"
+                    throw "Registry import failed with exit code $importExitCode"
                 }
             }
             catch {
@@ -83,8 +90,14 @@ function ImportRegistryFile {
         if (-not $hasSuccess) {
             $details = if ($regResult.Error) { $regResult.Error } else { "Exit code: $($regResult.ExitCode)" }
             Write-Warning "reg import failed for '$path'. Falling back to PowerShell registry writer. Details: $details"
-            Invoke-RegistryOperationsFromRegFile -RegFilePath $targetRegFilePath
-            Write-Host "The operation completed successfully via PowerShell registry writer."
+            try {
+                Invoke-RegistryOperationsFromRegFile -RegFilePath $targetRegFilePath
+                Write-Host "The operation completed successfully via PowerShell registry writer."
+            }
+            catch {
+                $script:RegistryImportFailures++
+                Write-Host "Error: PowerShell registry writer also failed for '$path': $($_.Exception.Message)" -ForegroundColor Red
+            }
         }
 
         Write-Host ""
@@ -102,7 +115,7 @@ function ImportRegistryFile {
     }
     catch {
         $script:RegistryImportFailures++
-        Write-Host $_.Exception.Message -ForegroundColor Red
+        Write-Host "Error executing import script for '$path': $($_.Exception.Message)" -ForegroundColor Red
         Write-Host ""
     }
 }

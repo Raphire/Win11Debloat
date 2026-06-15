@@ -45,6 +45,7 @@ This method supports command-line parameters to customize the behaviour of the s
 3. Double click the `Run.bat` file to start the script. NOTE: If the console window immediately closes and nothing happens, try the advanced method below.
 4. Accept the Windows UAC prompt to run the script as administrator, this is required for the script to function.
 5. Carefully read through and follow the on-screen instructions.
+
 </details>
 
 ### Advanced method

@@ -37,6 +37,44 @@ function RemoveApps {
     # Determine target from script-level params, defaulting to AllUsers
     $targetUser = GetTargetUserForAppRemoval
 
+    # Pre-fetch installed and provisioned packages to optimize performance
+    $installedApps = @()
+    $provisionedApps = @()
+    $querySuccess = $false
+
+    $packagesInfo = Invoke-NonBlocking -ScriptBlock {
+        param($target, $user)
+        $inst = @()
+        $prov = @()
+        $success = $false
+        try {
+            switch ($target) {
+                "AllUsers" {
+                    $inst = @(Get-AppxPackage -AllUsers -ErrorAction Stop | Select-Object -ExpandProperty Name)
+                    $prov = @(Get-AppxProvisionedPackage -Online -ErrorAction Stop | Select-Object -ExpandProperty PackageName)
+                }
+                "CurrentUser" {
+                    $inst = @(Get-AppxPackage -ErrorAction Stop | Select-Object -ExpandProperty Name)
+                }
+                default {
+                    $userAccount = New-Object System.Security.Principal.NTAccount($user)
+                    $userSid = $userAccount.Translate([System.Security.Principal.SecurityIdentifier]).Value
+                    $inst = @(Get-AppxPackage -User $userSid -ErrorAction Stop | Select-Object -ExpandProperty Name)
+                }
+            }
+            $success = $true
+        } catch {
+            Write-Verbose "Appx package pre-fetch query failed: $_"
+        }
+        return [PSCustomObject]@{ Installed = $inst; Provisioned = $prov; Success = $success }
+    } -ArgumentList @($targetUser, $targetUser)
+
+    if ($packagesInfo) {
+        $installedApps = @($packagesInfo.Installed)
+        $provisionedApps = @($packagesInfo.Provisioned)
+        $querySuccess = [bool]$packagesInfo.Success
+    }
+
     $appIndex = 0
     $appCount = @($appsList).Count
     $edgeIds = @('Microsoft.Edge', 'XPFFTQ037JWMHS')
@@ -53,6 +91,24 @@ function RemoveApps {
         # Update step name and sub-progress to show which app is being removed (only for bulk removal)
         if ($script:ApplySubStepCallback -and $appCount -gt 1) {
             & $script:ApplySubStepCallback "Removing apps... ($appIndex/$appCount)" $appIndex $appCount
+        }
+
+        # Check if the app is installed or provisioned (only if pre-fetch succeeded)
+        $isInstalled = $true
+        if ($querySuccess) {
+            if (($app -eq "Microsoft.OneDrive") -or ($edgeIds -contains $app)) {
+                $isInstalled = $true
+            } else {
+                $isInstalled = [bool]($installedApps | Where-Object { $_ -like "*$app*" })
+                if (-not $isInstalled -and $targetUser -eq "AllUsers") {
+                    $isInstalled = [bool]($provisionedApps | Where-Object { $_ -like "*$app*" })
+                }
+            }
+        }
+
+        if (-not $isInstalled) {
+            Write-Verbose "App $app is already uninstalled, skipping."
+            continue
         }
 
         Write-Host "Removing $app"

@@ -26,14 +26,11 @@ function ExecuteParameter {
                 # Also remove the app package for Copilot
                 RemoveApps @('Microsoft.Copilot')
             }
-            'DisableTelemetry' {
+                        'DisableTelemetry' {
                 # Disable telemetry-related scheduled tasks
-                Disable-ScheduledTaskSafe -TaskPath "\\Microsoft\\Windows\\Application Experience\\" -TaskName "Microsoft Compatibility Appraiser"
-                Disable-ScheduledTaskSafe -TaskPath "\\Microsoft\\Windows\\Application Experience\\" -TaskName "ProgramDataUpdater"
-                Disable-ScheduledTaskSafe -TaskPath "\\Microsoft\\Windows\\Application Experience\\" -TaskName "StartupAppScan"
-                Disable-ScheduledTaskSafe -TaskPath "\\Microsoft\\Windows\\Customer Experience Improvement Program\\" -TaskName "Consolidator"
-                Disable-ScheduledTaskSafe -TaskPath "\\Microsoft\\Windows\\Customer Experience Improvement Program\\" -TaskName "UsbCeip"
-                Disable-ScheduledTaskSafe -TaskPath "\\Microsoft\\Windows\\DiskDiagnostic\\" -TaskName "Microsoft-Windows-DiskDiagnosticDataCollector"
+                Get-TelemetryScheduledTasks | ForEach-Object {
+                    Disable-ScheduledTaskSafe -TaskPath $_.Path -TaskName $_.Name
+                }
             }
         }
         return
@@ -282,14 +279,11 @@ function Invoke-UndoFeatureAction {
     $feature = if ($script:Features.ContainsKey($FeatureId)) { $script:Features[$FeatureId] } else { $null }
 
     switch ($FeatureId) {
-        'DisableTelemetry' {
+                'DisableTelemetry' {
             # Re-enable telemetry-related scheduled tasks
-            Enable-ScheduledTaskSafe -TaskPath "\\Microsoft\\Windows\\Application Experience\\" -TaskName "Microsoft Compatibility Appraiser"
-            Enable-ScheduledTaskSafe -TaskPath "\\Microsoft\\Windows\\Application Experience\\" -TaskName "ProgramDataUpdater"
-            Enable-ScheduledTaskSafe -TaskPath "\\Microsoft\\Windows\\Application Experience\\" -TaskName "StartupAppScan"
-            Enable-ScheduledTaskSafe -TaskPath "\\Microsoft\\Windows\\Customer Experience Improvement Program\\" -TaskName "Consolidator"
-            Enable-ScheduledTaskSafe -TaskPath "\\Microsoft\\Windows\\Customer Experience Improvement Program\\" -TaskName "UsbCeip"
-            Enable-ScheduledTaskSafe -TaskPath "\\Microsoft\\Windows\\DiskDiagnostic\\" -TaskName "Microsoft-Windows-DiskDiagnosticDataCollector"
+            Get-TelemetryScheduledTasks | ForEach-Object {
+                Enable-ScheduledTaskSafe -TaskPath $_.Path -TaskName $_.Name
+            }
         }
         'DisableStoreSearchSuggestions' {
             if ($script:Params.ContainsKey('Sysprep')) {

@@ -37,6 +37,7 @@ You can launch the prerelease version of Win11Debloat by running this command:
    ```
 
 3. **Create a new branch** for your contribution:
+
    ```powershell
    git checkout -b feature/your-feature-name
    ```
@@ -45,11 +46,14 @@ You can launch the prerelease version of Win11Debloat by running this command:
 
 1. Open PowerShell as an administrator
 2. Enable script execution if necessary:
+
    ```powershell
    Set-ExecutionPolicy Unrestricted -Scope Process -Force
    ```
+
 3. Navigate to your Win11Debloat directory
 4. Run the script:
+
    ```powershell
    .\Win11Debloat.ps1
    ```
@@ -299,6 +303,7 @@ To add your feature to the default preset, edit `Config/DefaultSettings.json` an
 To add a new category for organizing features:
 
 - Add a new category entry to the `"Categories"` array in `Config/Features.json`:
+
   ```json
   {
     "Name": "Your Category Name",

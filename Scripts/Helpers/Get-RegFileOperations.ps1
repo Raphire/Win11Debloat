@@ -1,3 +1,8 @@
+# Operation type constants, used to indicate the type of operation for each registry entry
+$script:OpType_RemoveKey = 'DeleteKey'
+$script:OpType_RemoveValue = 'DeleteValue'
+$script:OpType_Store = 'SetValue'
+
 function Get-RegFileOperations {
     param(
         [Parameter(Mandatory)]
@@ -26,6 +31,7 @@ function Get-RegFileOperations {
     $operations = @()
     $currentKeyPath = $null
     $isDeletedKey = $false
+    $opRef = $script:OpType_RemoveKey
 
     foreach ($rawLine in $lines) {
         $line = $rawLine.Trim()
@@ -43,7 +49,7 @@ function Get-RegFileOperations {
 
             if ($isDeletedKey) {
                 $operations += [PSCustomObject]@{
-                    OperationType = 'DeleteKey'
+                    OperationType = $opRef
                     KeyPath = $currentKeyPath
                 }
             }
@@ -87,10 +93,12 @@ function Convert-RegValueData {
         [Parameter(Mandatory)]
         [string]$valueData
     )
+    $opStore = $script:OpType_Store
+    $opRemove = $script:OpType_RemoveValue
 
     if ($valueData -eq '-') {
         return [PSCustomObject]@{
-            OperationType = 'DeleteValue'
+            OperationType = $opRemove
             ValueType = $null
             ValueData = $null
         }
@@ -98,7 +106,7 @@ function Convert-RegValueData {
 
     if ($valueData -match '^dword:(?<value>[0-9a-fA-F]{1,8})$') {
         return [PSCustomObject]@{
-            OperationType = 'SetValue'
+            OperationType = $opStore
             ValueType = 'DWord'
             ValueData = [uint32]::Parse($matches.value, [System.Globalization.NumberStyles]::HexNumber)
         }
@@ -106,7 +114,7 @@ function Convert-RegValueData {
 
     if ($valueData -match '^qword:(?<value>[0-9a-fA-F]{1,16})$') {
         return [PSCustomObject]@{
-            OperationType = 'SetValue'
+            OperationType = $opStore
             ValueType = 'QWord'
             ValueData = [uint64]::Parse($matches.value, [System.Globalization.NumberStyles]::HexNumber)
         }
@@ -122,7 +130,7 @@ function Convert-RegValueData {
         }
 
         return [PSCustomObject]@{
-            OperationType = 'SetValue'
+            OperationType = $opStore
             ValueType = $valueType
             ValueData = $value
         }
@@ -133,7 +141,7 @@ function Convert-RegValueData {
         # Unescape registry string escape sequences
         $stringValue = $stringValue -replace '\\"', '"' -replace '\\\\', '\'
         return [PSCustomObject]@{
-            OperationType = 'SetValue'
+            OperationType = $opStore
             ValueType = 'String'
             ValueData = $stringValue
         }
@@ -149,13 +157,9 @@ function Convert-HexStringToByteArray {
     )
 
     $parts = $hexValue.Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ }
-    $bytes = New-Object byte[] $parts.Count
-
-    for ($i = 0; $i -lt $parts.Count; $i++) {
-        $bytes[$i] = [byte]::Parse($parts[$i], [System.Globalization.NumberStyles]::HexNumber)
-    }
-
-    return $bytes
+    return [System.Linq.Enumerable]::Select($parts, [Func[object, byte]] {
+            param($h) [System.Convert]::ToByte($h, 16)
+        }) -as [byte[]]
 }
 
 function Convert-RegistryByteArrayToString {

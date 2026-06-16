@@ -187,10 +187,10 @@ function Update-AppRemovalScopeDescription {
                 $AppRemovalScopeDescription.Text = "Apps will be removed for all users and from the Windows image to prevent reinstallation for new users."
             }
             "Current user only" {
-                $AppRemovalScopeDescription.Text = "Apps will only be removed for the current user. Existing and new users will not be affected."
+                $AppRemovalScopeDescription.Text = "Apps will only be removed for the current user."
             }
             "Target user only" {
-                $AppRemovalScopeDescription.Text = "Apps will only be removed for the specified target user. Existing and new users will not be affected."
+                $AppRemovalScopeDescription.Text = "Apps will only be removed for the specified target user."
             }
         }
     }

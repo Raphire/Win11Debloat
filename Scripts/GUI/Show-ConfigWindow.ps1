@@ -381,7 +381,7 @@ function Export-Configuration {
     $deploymentSettings = Get-DeploymentSettings -Owner $Owner -UserSelectionCombo $UserSelectionCombo -OtherUsernameTextBox $OtherUsernameTextBox
     $categoryDetails = Build-CategoryDetails -AppCount $selectedApps.Count -TweakCount $tweakSettings.Count -DeploymentSettings $deploymentSettings
 
-    $categories = Show-ImportExportConfigWindow -Owner $Owner -UsesDarkMode $UsesDarkMode -Title 'Export Configuration' -Prompt 'Select the settings you wish to include in your export.' -DisabledCategories $disabledCategories -CategoryDetails $categoryDetails -ActionLabel 'Export Settings'
+    $categories = Show-ImportExportConfigWindow -Owner $Owner -UsesDarkMode $UsesDarkMode -Title 'Export Configuration' -Prompt 'Create a configuration file based on the currently selected settings. You can choose which settings categories you wish to include in the export.' -DisabledCategories $disabledCategories -CategoryDetails $categoryDetails -ActionLabel 'Export Settings'
     if (-not $categories) {
         Write-Host 'Export canceled.'
         return
@@ -475,7 +475,7 @@ function Import-Configuration {
     $tweakCount = @($config.Tweaks | Where-Object { $_ -and $_.Name -and $_.Value -eq $true }).Count
     $categoryDetails = Build-CategoryDetails -AppCount $appCount -TweakCount $tweakCount -DeploymentSettings @($config.Deployment)
 
-    $categories = Show-ImportExportConfigWindow -Owner $Owner -UsesDarkMode $UsesDarkMode -Title 'Import Configuration' -Prompt 'Select the settings you wish to import. You can review and modify them before they are applied.' -Categories $availableCategories -CategoryDetails $categoryDetails -ActionLabel 'Import Settings'
+    $categories = Show-ImportExportConfigWindow -Owner $Owner -UsesDarkMode $UsesDarkMode -Title 'Import Configuration' -Prompt 'Choose the settings categories that you wish to import. You can review and modify the imported settings before they are applied.' -Categories $availableCategories -CategoryDetails $categoryDetails -ActionLabel 'Import Settings'
     if (-not $categories) {
         Write-Host 'Import canceled.'
         return

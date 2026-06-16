@@ -1,5 +1,15 @@
 # Win11Debloat
 
+<!-- Keep these links, translations synced daily. -->
+[Deutsch](https://zdoc.app/de/Raphire/Win11Debloat) |
+[Español](https://zdoc.app/es/Raphire/Win11Debloat) |
+[français](https://zdoc.app/fr/Raphire/Win11Debloat) |
+[日本語](https://zdoc.app/ja/Raphire/Win11Debloat) |
+[한국어](https://zdoc.app/ko/Raphire/Win11Debloat) |
+[Português](https://zdoc.app/pt/Raphire/Win11Debloat) |
+[Русский](https://zdoc.app/ru/Raphire/Win11Debloat) |
+[中文](https://zdoc.app/zh/Raphire/Win11Debloat)
+
 [![GitHub Release](https://img.shields.io/github/v/release/Raphire/Win11Debloat?style=for-the-badge&label=Latest%20release)](https://github.com/Raphire/Win11Debloat/releases/latest)
 [![Join the Discussion](https://img.shields.io/badge/Join-the%20Discussion-2D9F2D?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Raphire/Win11Debloat/discussions)
 [![Static Badge](https://img.shields.io/badge/Documentation-_?style=for-the-badge&logo=bookstack&color=grey)](https://github.com/Raphire/Win11Debloat/wiki/)

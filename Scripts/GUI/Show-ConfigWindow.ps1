@@ -116,6 +116,10 @@ function Show-ImportExportConfigWindow {
         if ($e.Key -eq 'Escape') { $dlg.Tag = 'Cancel'; $dlg.Close() }
     })
 
+    # Translate to Hebrew + right-to-left (title, prompt, category checkboxes and
+    # action button are all populated above and looked up in the dictionary).
+    Invoke-WindowLocalization -Window $dlg
+
     try {
         $dlg.ShowDialog() | Out-Null
     }
@@ -250,30 +254,30 @@ function Get-DeploymentCategoryDetailString {
 
     if ($lookup.ContainsKey('UserSelectionIndex')) {
         switch ([int]$lookup['UserSelectionIndex']) {
-            0 { $line1 += 'User: Current User' }
-            1 { $line1 += "User: $(if ($lookup['OtherUsername']) { $lookup['OtherUsername'] } else { 'Other User' })" }
-            2 { $line1 += 'User: Sysprep' }
+            0 { $line1 += Get-LocalizedString 'User: Current User' }
+            1 { $line1 += (Format-Localized 'User: {0}' @($(if ($lookup['OtherUsername']) { $lookup['OtherUsername'] } else { Get-LocalizedString 'Other User' }))) }
+            2 { $line1 += Get-LocalizedString 'User: Sysprep' }
         }
     }
 
     if ($lookup.ContainsKey('AppRemovalScopeIndex')) {
         switch ([int]$lookup['AppRemovalScopeIndex']) {
-            0 { $line1 += 'App Removal: All Users' }
-            1 { $line1 += 'App Removal: Current User' }
-            2 { $line1 += "App Removal: $(if ($lookup['OtherUsername']) { $lookup['OtherUsername'] } else { 'Other User' })" }
+            0 { $line1 += Get-LocalizedString 'App Removal: All Users' }
+            1 { $line1 += Get-LocalizedString 'App Removal: Current User' }
+            2 { $line1 += (Format-Localized 'App Removal: {0}' @($(if ($lookup['OtherUsername']) { $lookup['OtherUsername'] } else { Get-LocalizedString 'Other User' }))) }
         }
     }
 
     $options = @()
-    if ($lookup.ContainsKey('CreateRestorePoint') -and [bool]$lookup['CreateRestorePoint']) { $options += 'Restore Point' }
-    if ($lookup.ContainsKey('RestartExplorer')    -and [bool]$lookup['RestartExplorer'])    { $options += 'Restart Explorer' }
+    if ($lookup.ContainsKey('CreateRestorePoint') -and [bool]$lookup['CreateRestorePoint']) { $options += Get-LocalizedString 'Restore Point' }
+    if ($lookup.ContainsKey('RestartExplorer')    -and [bool]$lookup['RestartExplorer'])    { $options += Get-LocalizedString 'Restart Explorer' }
 
     $lines = @()
     if ($line1.Count -gt 0)   { $lines += $line1 -join ', ' }
-    if ($options.Count -gt 0) { $lines += "Options: $($options -join ', ')" }
+    if ($options.Count -gt 0) { $lines += (Format-Localized 'Options: {0}' @($options -join ', ')) }
 
     if ($lines.Count -gt 0) { return $lines -join "`n" }
-    return 'Default deployment settings'
+    return Get-LocalizedString 'Default deployment settings'
 }
 
 function Build-CategoryDetails {
@@ -286,11 +290,11 @@ function Build-CategoryDetails {
     $details = @{}
 
     if ($AppCount -gt 0) {
-        $details['Applications'] = "$AppCount app$(if ($AppCount -ne 1) { 's' })"
+        $details['Applications'] = if ($AppCount -eq 1) { Get-LocalizedString '{0} app' } else { Format-Localized '{0} apps' @($AppCount) }
     }
 
     if ($TweakCount -gt 0) {
-        $details['System Tweaks'] = "$TweakCount tweak$(if ($TweakCount -ne 1) { 's' })"
+        $details['System Tweaks'] = if ($TweakCount -eq 1) { Get-LocalizedString '{0} tweak' } else { Format-Localized '{0} tweaks' @($TweakCount) }
     }
 
     if ($DeploymentSettings) {

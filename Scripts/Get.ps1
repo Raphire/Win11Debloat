@@ -4,6 +4,7 @@ param (
     [switch]$Verbose,
     [switch]$Sysprep,
     [string]$LogPath,
+    [string]$Language,
     [string]$User,
     [switch]$NoRestartExplorer,
     [switch]$CreateRestorePoint,

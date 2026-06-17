@@ -13,6 +13,10 @@ function Build-DynamicTweaks {
         throw "Unable to load Features.json file. The GUI cannot continue without feature definitions."
     }
 
+    # Translate the display fields (labels, tooltips, value labels) to Hebrew.
+    # Category names are left as-is; they are localized only where displayed.
+    $featuresJson = Localize-FeaturesData $featuresJson
+
     # Column containers
     $col0 = $Window.FindName('Column0Panel')
     $col1 = $Window.FindName('Column1Panel')
@@ -138,7 +142,7 @@ function Build-DynamicTweaks {
         $headerRow.Children.Add($icon) | Out-Null
 
         $header = New-Object System.Windows.Controls.TextBlock
-        $header.Text = $categoryName
+        $header.Text = Get-LocalizedString $categoryName
         $header.Style = $Window.Resources['CategoryHeaderTextBlock']
         $headerRow.Children.Add($header) | Out-Null
 
@@ -148,7 +152,7 @@ function Build-DynamicTweaks {
 
         $helpBtn = New-Object System.Windows.Controls.Button
         $helpBtn.Content = $helpIcon
-        $helpBtn.ToolTip = "Open wiki for more info on '$categoryName' tweaks"
+        $helpBtn.ToolTip = (Format-Localized "Open wiki for more info on '{0}' tweaks" @((Get-LocalizedString $categoryName)))
         $helpBtn.Tag = (GetWikiUrlForCategory -category $categoryName)
         $helpBtn.Style = $Window.Resources['CategoryHelpLinkButtonStyle']
         $helpBtn.Add_Click({
@@ -250,7 +254,7 @@ function Build-DynamicTweaks {
         foreach ($item in $sortedItems) {
             if ($item.Type -eq 'group') {
                 $group = $item.Data
-                $items = @('No Change') + ($group.Values | ForEach-Object { $_.Label })
+                $items = @((Get-LocalizedString 'No Change')) + ($group.Values | ForEach-Object { $_.Label })
                 $comboName = 'Group_{0}Combo' -f $group.GroupId
                 $combo = CreateLabeledCombo -parent $panel -labelText $group.Label -comboName $comboName -items $items
                 # attach tooltip from UiGroups if present
@@ -277,7 +281,7 @@ function Build-DynamicTweaks {
                 if ($feature.ToolTip -or $feature.DisableWhenApplied -eq $true) {
                     $tooltipText = $feature.ToolTip
                     if ($feature.DisableWhenApplied -eq $true) {
-                        $tooltipText = "This tweak is already applied and cannot be undone automatically. Visit the Win11Debloat wiki for instructions on how to manually revert this change."
+                        $tooltipText = Get-LocalizedString "This tweak is already applied and cannot be undone automatically. Visit the Win11Debloat wiki for instructions on how to manually revert this change."
                     }
 
                     $tipBlock = New-Object System.Windows.Controls.TextBlock

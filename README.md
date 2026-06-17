@@ -72,6 +72,22 @@ This method supports command-line parameters to customize the behaviour of the s
   This method supports command-line parameters to customize the behaviour of the script. Please click [here](https://github.com/Raphire/Win11Debloat/wiki/Command%E2%80%90line-Interface#parameters) for more information.
 </details>
 
+### Languages
+
+By default the interface is in English. A translated, fully right-to-left (RTL) interface can be enabled per run with the `-Language` parameter:
+
+```PowerShell
+.\Win11Debloat.ps1 -Language he
+```
+
+To make a language the default without passing the parameter every time, set the `WIN11DEBLOAT_LANG` environment variable (e.g. `he`). When no language is selected the script behaves exactly as before.
+
+Currently available translations:
+
+| Code | Language |
+| ---- | -------- |
+| `he` | Hebrew (עברית) |
+
 ## Features
 
 Below is an overview of the key features and functionality offered by Win11Debloat. Please refer to [the wiki](https://github.com/Raphire/Win11Debloat/wiki/Default-Settings) for more information about the default settings preset.

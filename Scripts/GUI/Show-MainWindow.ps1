@@ -81,6 +81,9 @@
 
     SetWindowThemeResources -window $window -usesDarkMode $usesDarkMode
 
+    # Translate the window to Hebrew and switch it to right-to-left
+    Invoke-WindowLocalization -Window $window
+
     $mainBorder = $window.FindName('MainBorder')
     $titleBarBackground = $window.FindName('TitleBarBackground')
     $kofiBtn = $window.FindName('KofiBtn')
@@ -164,7 +167,7 @@
             Start-Process "explorer.exe" -ArgumentList $logsFolder
         }
         else {
-            Show-MessageBox -Message "No logs folder found at: $logsFolder" -Title "Logs" -Button 'OK' -Icon 'Information'
+            Show-MessageBox -Message (Format-Localized 'No logs folder found at: {0}' @($logsFolder)) -Title "Logs" -Button 'OK' -Icon 'Information'
         }
     })
 
@@ -237,7 +240,7 @@
         }
         catch {
             Write-Warning "Export configuration failed: $($_.Exception.Message)"
-            Show-MessageBox -Owner $window -Message "Unable to open export configuration dialog: $($_.Exception.Message)" -Title 'Export Configuration Failed' -Button 'OK' -Icon 'Error' | Out-Null
+            Show-MessageBox -Owner $window -Message (Format-Localized 'Unable to open export configuration dialog: {0}' @($_.Exception.Message)) -Title 'Export Configuration Failed' -Button 'OK' -Icon 'Error' | Out-Null
         }
     })
 
@@ -253,7 +256,7 @@
         }
         catch {
             Write-Warning "Import configuration failed: $($_.Exception.Message)"
-            Show-MessageBox -Owner $window -Message "Unable to open import configuration dialog: $($_.Exception.Message)" -Title 'Import Configuration Failed' -Button 'OK' -Icon 'Error' | Out-Null
+            Show-MessageBox -Owner $window -Message (Format-Localized 'Unable to open import configuration dialog: {0}' @($_.Exception.Message)) -Title 'Import Configuration Failed' -Button 'OK' -Icon 'Error' | Out-Null
         }
     })
 
@@ -273,7 +276,7 @@
             }
             catch {
                 Write-Warning "Restore backup action failed: $($_.Exception.Message)"
-                Show-MessageBox -Owner $window -Message "Unable to open restore backup dialog: $($_.Exception.Message)" -Title 'Restore Backup Failed' -Button 'OK' -Icon 'Error' | Out-Null
+                Show-MessageBox -Owner $window -Message (Format-Localized 'Unable to open restore backup dialog: {0}' @($_.Exception.Message)) -Title 'Restore Backup Failed' -Button 'OK' -Icon 'Error' | Out-Null
             }
         })
     }
@@ -296,11 +299,12 @@
     # ---- Build JSON-defined app presets ----
     foreach ($preset in (LoadAppPresetsFromJson)) {
         $checkbox = New-Object System.Windows.Controls.CheckBox
-        $checkbox.Content = $preset.Name
+        $localizedPresetName = Get-LocalizedString $preset.Name
+        $checkbox.Content = $localizedPresetName
         $checkbox.IsThreeState = $true
         $checkbox.Style = $window.Resources['PresetCheckBoxStyle']
-        $checkbox.ToolTip = "Select $($preset.Name)"
-        $checkbox.SetValue([System.Windows.Automation.AutomationProperties]::NameProperty, $preset.Name)
+        $checkbox.ToolTip = (Format-Localized 'Select {0}' @($localizedPresetName))
+        $checkbox.SetValue([System.Windows.Automation.AutomationProperties]::NameProperty, $localizedPresetName)
         Add-TriStateClickBehavior -CheckBox $checkbox
         Add-Member -InputObject $checkbox -MemberType NoteProperty -Name 'PresetAppIds' -Value $preset.AppIds
         $jsonPresetsPanel.Children.Add($checkbox) | Out-Null
@@ -665,7 +669,7 @@
                 $usernameValidationMessage.Text
             }
             else {
-                "Please enter a valid username."
+                Get-LocalizedString "Please enter a valid username."
             }
             Show-MessageBox -Message $validationMessage -Title "Invalid Username" -Button 'OK' -Icon 'Warning' | Out-Null
             return $false
@@ -741,10 +745,12 @@
 
             $selectedScopeItem = $appRemovalScopeCombo.SelectedItem
             if ($selectedScopeItem) {
-                switch ($selectedScopeItem.Content) {
-                    "All users" { AddParameter 'AppRemovalTarget' 'AllUsers' }
-                    "Current user only" { AddParameter 'AppRemovalTarget' 'CurrentUser' }
-                    "Target user only" { AddParameter 'AppRemovalTarget' ($otherUsernameTextBox.Text.Trim()) }
+                # Compare on SelectedIndex (stable order) instead of the displayed
+                # text, so the localized labels don't break this mapping.
+                switch ($appRemovalScopeCombo.SelectedIndex) {
+                    0 { AddParameter 'AppRemovalTarget' 'AllUsers' }
+                    1 { AddParameter 'AppRemovalTarget' 'CurrentUser' }
+                    2 { AddParameter 'AppRemovalTarget' ($otherUsernameTextBox.Text.Trim()) }
                 }
             }
         }
@@ -827,7 +833,7 @@
             if ($userSelectionCombo -and $userSelectionCombo.Items.Count -gt 0) {
                 $currentUserItem = $userSelectionCombo.Items[0]
                 if ($currentUserItem -is [System.Windows.Controls.ComboBoxItem]) {
-                    $currentUserItem.Content = "Current User ($(GetUserName))"
+                    $currentUserItem.Content = (Format-Localized 'Current User ({0})' @(GetUserName))
                 }
             }
 
@@ -867,7 +873,7 @@
         catch {
             Write-Warning "Error during GUI initialization: $($_.Exception.Message)"
             Write-Warning "Stack trace: $($_.Exception.StackTrace)"
-            Show-MessageBox -Message "An error occurred during initialization: $($_.Exception.Message)" -Title "Initialization Error" -Button 'OK' -Icon 'Error' | Out-Null
+            Show-MessageBox -Message (Format-Localized 'An error occurred during initialization: {0}' @($_.Exception.Message)) -Title "Initialization Error" -Button 'OK' -Icon 'Error' | Out-Null
         }
     })
 

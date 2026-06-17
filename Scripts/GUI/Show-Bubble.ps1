@@ -64,9 +64,11 @@ function Show-Bubble {
         $reader.Close()
     }
 
+    try { $bubblePanel.FlowDirection = [System.Windows.FlowDirection]::RightToLeft } catch { }
+
     $bubbleText = $bubblePanel.FindName('BubbleText')
     if ($bubbleText) {
-        $bubbleText.Text = $Message
+        $bubbleText.Text = Get-LocalizedString $Message
     }
 
     $bubblePanel.BeginAnimation([System.Windows.UIElement]::OpacityProperty, $null)

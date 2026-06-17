@@ -29,7 +29,7 @@
 
             <!-- Content -->
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="0,0,8,0">
-                <StackPanel x:Name="ContentPanel" Margin="20,4,20,8">
+                <StackPanel x:Name="ContentPanel" Margin="20,4">
                     <TextBlock x:Name="PromptText"
                                TextWrapping="Wrap"
                                FontSize="14"

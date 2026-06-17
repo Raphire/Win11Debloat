@@ -121,6 +121,8 @@ function Show-MessageBox {
             $button1.Content = 'OK'
             $button1.Add_Click({ $msgWindow.Tag = 'OK'; $msgWindow.Close() })
             $button2.Visibility = 'Collapsed'
+            # Right-align sole button by moving it to column 1
+            [System.Windows.Controls.Grid]::SetColumn($button1, 1)
         }
         'OKCancel' {
             $button1.Content = 'OK'

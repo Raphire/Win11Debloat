@@ -35,7 +35,7 @@
                 </Grid.RowDefinitions>
 
                 <!-- Message Text -->
-                <Grid Grid.Row="0" Margin="20,4,20,20">
+                <Grid Grid.Row="0" Margin="20,4,20,16">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
@@ -83,7 +83,7 @@
                         Margin="20,0"/>
 
                 <!-- Content -->
-                <StackPanel Grid.Row="2" Margin="20,18,20,20">
+                <StackPanel Grid.Row="2" Margin="20,16,20,16">
                     <!-- Donation Message -->
                     <TextBlock Text="Win11Debloat is a passion project that I maintain in my free time. If you've found this tool useful, please consider making a small donation to support its development. I really appreciate it!"
                             FontSize="14"
@@ -124,11 +124,17 @@
 
             <!-- Button Panel -->
             <Border Grid.Row="2" Style="{DynamicResource ModalFooterBorderStyle}">
-                <StackPanel x:Name="ButtonPanel" Style="{DynamicResource ModalFooterButtonsRightStyle}">
-                    <Button x:Name="CloseButton" 
-                            Content="Close" 
-                            Style="{DynamicResource ModalSecondaryActionButtonStyle}"/>
-                </StackPanel>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button x:Name="CloseButton"
+                            Grid.Column="1"
+                            Content="Close"
+                            Style="{DynamicResource ModalSecondaryStretchedButtonStyle}"/>
+                </Grid>
             </Border>
         </Grid>
     </Border>

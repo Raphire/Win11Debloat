@@ -109,7 +109,7 @@
 
     <!-- Modal Title Style -->
     <Style x:Key="ModalTitleStyle" TargetType="TextBlock">
-        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
         <Setter Property="FontSize" Value="20"/>
         <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
@@ -150,10 +150,10 @@
 
     <Style x:Key="ModalTitleTextStyle" TargetType="TextBlock">
         <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
-        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontSize" Value="20"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
-        <Setter Property="Margin" Value="20,0,0,0"/>
+        <Setter Property="Margin" Value="16,0,0,0"/>
     </Style>
 
     <Style x:Key="ModalFooterBorderStyle" TargetType="Border">
@@ -223,7 +223,8 @@
                                 Padding="{TemplateBinding Padding}"
                                 CornerRadius="4">
                             <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              Margin="0,0,0,1"/>
                         </Border>
                         <Border x:Name="AccentLine"
                                 Width="3"
@@ -254,6 +255,7 @@
         <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
         <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="FontSize" Value="13"/>
         <Setter Property="Margin" Value="0,4,0,12"/>
         <Setter Property="MinHeight" Value="33"/>
         <Setter Property="Template">
@@ -319,7 +321,7 @@
                         </ToggleButton>
                         <ContentPresenter x:Name="ContentPresenter"
                                           IsHitTestVisible="False"
-                                          Margin="10,0,20,0"
+                                          Margin="10,0,20,2"
                                           HorizontalAlignment="Left"
                                           VerticalAlignment="Center"
                                           Content="{TemplateBinding SelectionBoxItem}"
@@ -378,6 +380,7 @@
     <Style TargetType="CheckBox">
         <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
         <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="FontSize" Value="13"/>
         <Setter Property="Padding" Value="4,2"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -388,16 +391,16 @@
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <Border x:Name="CheckBoxBorder" Grid.Column="0" Width="18" Height="18" Background="{DynamicResource CheckBoxBgColor}" BorderBrush="{DynamicResource CheckBoxBorderColor}" BorderThickness="1" CornerRadius="4" Margin="0,0,8,0">
+                            <Border x:Name="CheckBoxBorder" Grid.Column="0" Width="20" Height="20" Background="{DynamicResource CheckBoxBgColor}" BorderBrush="{DynamicResource CheckBoxBorderColor}" BorderThickness="1" CornerRadius="4" Margin="0,0,8,0">
                                 <Grid>
-                                    <TextBlock x:Name="CheckMark" Text="&#xE73E;" FontFamily="Segoe Fluent Icons" FontSize="12" Foreground="{DynamicResource ButtonBg}" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0">
+                                    <TextBlock x:Name="CheckMark" Text="&#xE73E;" FontFamily="Segoe Fluent Icons" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource ButtonBg}" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0">
                                         <TextBlock.Clip>
                                             <RectangleGeometry x:Name="CheckMarkClip" Rect="0,0,0,16"/>
                                         </TextBlock.Clip>
                                     </TextBlock>
-                                    <TextBlock x:Name="IndeterminateMark" Text="&#xE738;" FontFamily="Segoe Fluent Icons" FontSize="11" Foreground="{DynamicResource ButtonBg}" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0" Margin="1,1,0,0">
+                                    <TextBlock x:Name="IndeterminateMark" Text="&#xe9ae;" FontFamily="Segoe Fluent Icons" FontSize="13" FontWeight="Bold" Foreground="{DynamicResource ButtonBg}" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0" Margin="1,0,0,1">
                                         <TextBlock.Clip>
-                                            <RectangleGeometry x:Name="IndeterminateMarkClip" Rect="0,0,0,16"/>
+                                            <RectangleGeometry x:Name="IndeterminateMarkClip" Rect="0,0,0,12"/>
                                         </TextBlock.Clip>
                                     </TextBlock>
                                 </Grid>
@@ -435,7 +438,6 @@
                         <Trigger Property="IsChecked" Value="{x:Null}">
                             <Setter TargetName="CheckBoxBorder" Property="Background" Value="{DynamicResource ButtonBg}"/>
                             <Setter TargetName="CheckBoxBorder" Property="BorderBrush" Value="{DynamicResource ButtonBg}"/>
-                            <Setter TargetName="CheckBoxBorder" Property="Opacity" Value="0.8"/>
                             <Setter TargetName="IndeterminateMark" Property="Foreground" Value="White"/>
                             <Setter TargetName="IndeterminateMark" Property="Opacity" Value="1"/>
                             <Setter TargetName="CheckMark" Property="Opacity" Value="0"/>

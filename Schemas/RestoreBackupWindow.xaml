@@ -96,7 +96,7 @@
             </Button>
 
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0">
-                <Grid Margin="20,4,20,18">
+                <Grid Margin="20,4,20,16">
 
                     <TabControl x:Name="RestoreModeTabs"
                                 SelectedIndex="0"

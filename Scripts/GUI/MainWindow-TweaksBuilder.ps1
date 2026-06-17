@@ -148,7 +148,7 @@ function Build-DynamicTweaks {
 
         $helpBtn = New-Object System.Windows.Controls.Button
         $helpBtn.Content = $helpIcon
-        $helpBtn.ToolTip = "Open wiki for more info on '$categoryName' tweaks"
+        $helpBtn.ToolTip = "Open the wiki for more info on '$categoryName' tweaks"
         $helpBtn.Tag = (GetWikiUrlForCategory -category $categoryName)
         $helpBtn.Style = $Window.Resources['CategoryHelpLinkButtonStyle']
         $helpBtn.Add_Click({

@@ -30,6 +30,10 @@
             "Value": true
         },
         {
+            "Name": "RemoveOrphanedTasks",
+            "Value": false
+        },
+        {
             "Name": "DisableCopilot",
             "Value": true
         },

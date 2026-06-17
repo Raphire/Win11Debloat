@@ -123,6 +123,12 @@ function ExecuteParameter {
             Write-Host ""
             return
         }
+        'RemoveOrphanedTasks' {
+            Write-Host "> $($feature.ApplyText)..."
+            RemoveOrphanedTasks
+            Write-Host ""
+            return
+        }
     }
 }
 

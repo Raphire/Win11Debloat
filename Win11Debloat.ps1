@@ -34,6 +34,7 @@ param (
     [switch]$DisableDeliveryOptimization,
     [switch]$DisableBing,
     [switch]$DisableStoreSearchSuggestions,
+    [switch]$RemoveOrphanedTasks,
     [switch]$DisableSearchHighlights,
     [switch]$DisableDesktopSpotlight,
     [switch]$DisableLockscreenTips,
@@ -301,6 +302,7 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 . "$PSScriptRoot/Scripts/Features/RestoreRegistryApplyState.ps1"
 . "$PSScriptRoot/Scripts/Features/RestoreRegistryBackup.ps1"
 . "$PSScriptRoot/Scripts/Features/DisableStoreSearchSuggestions.ps1"
+. "$PSScriptRoot/Scripts/Features/RemoveOrphanedTasks.ps1"
 . "$PSScriptRoot/Scripts/Features/WindowsOptionalFeatures.ps1"
 . "$PSScriptRoot/Scripts/Features/ImportRegistryFile.ps1"
 . "$PSScriptRoot/Scripts/Features/ReplaceStartMenu.ps1"

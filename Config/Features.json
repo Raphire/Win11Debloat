@@ -388,6 +388,19 @@
       "MaxVersion": null
     },
     {
+      "FeatureId": "RemoveOrphanedTasks",
+      "Label": "Remove orphaned third-party scheduled tasks",
+      "ToolTip": "Scans for and removes scheduled tasks from uninstalled third-party software that point to non-existent files. Bypasses native Windows/Microsoft tasks.",
+      "Category": "System",
+      "RegistryKey": null,
+      "ApplyText": "Removing orphaned third-party scheduled tasks",
+      "UndoLabel": null,
+      "ApplyUndoText": null,
+      "RegistryUndoKey": null,
+      "MinVersion": null,
+      "MaxVersion": null
+    },
+    {
       "FeatureId": "DisableTelemetry",
       "Label": "Disable telemetry, tracking & targeted ads",
       "ToolTip": "This setting disables telemetry, diagnostic data collection, activity history, app-launch tracking, targeted ads and more. It limits the data that is sent to Microsoft about your device and usage. If you are a Windows Insider, updates may be blocked until optional diagnostic data collection is turned back on.",

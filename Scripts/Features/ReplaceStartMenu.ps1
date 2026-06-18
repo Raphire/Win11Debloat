@@ -54,7 +54,7 @@ function ReplaceStartMenu {
         return
     }
 
-    if ([IO.Path]::GetExtension($startMenuTemplate) -ne ".bin" ) {
+    if ([IO.Path]::GetExtension($startMenuTemplate) -ne ".bin") {
         Write-Host "Error: Unable to replace start menu, template file is not a valid .bin file" -ForegroundColor Red
         return
     }

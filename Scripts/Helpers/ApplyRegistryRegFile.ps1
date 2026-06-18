@@ -100,14 +100,14 @@ function Invoke-RegistryDeleteValueOperation {
         [Parameter(Mandatory)]
         $Operation,
         [Parameter(Mandatory)]
-        $KeyInfo,
-        [switch]$DryRun
+        $KeyInfo
     )
 
     $valueName = Get-NormalizedRegistryValueName -ValueName $Operation.ValueName
     $displayValueName = if ([string]::IsNullOrEmpty($valueName)) { '(Default)' } else { $valueName }
 
-    if ($DryRun) {
+    $isWhatIf = $null -ne $script:Params -and $script:Params.ContainsKey("WhatIf")
+    if ($isWhatIf) {
         Write-Host "[WhatIf] Remove Registry Value: $($Operation.KeyPath) \ $displayValueName" -ForegroundColor Cyan
         return
     }
@@ -130,12 +130,12 @@ function Invoke-RegistrySetValueOperation {
         [Parameter(Mandatory)]
         $Operation,
         [Parameter(Mandatory)]
-        $KeyInfo,
-        [switch]$DryRun
+        $KeyInfo
     )
 
     $setArgs = Convert-RegOperationToValueKind -Operation $Operation
-    if ($DryRun) {
+    $isWhatIf = $null -ne $script:Params -and $script:Params.ContainsKey("WhatIf")
+    if ($isWhatIf) {
         $displayVal = if ($setArgs.Kind -eq [Microsoft.Win32.RegistryValueKind]::Binary) {
             "Binary data ($($setArgs.Value.Length) bytes)"
         } else {
@@ -183,30 +183,24 @@ function Invoke-RegistryOperation {
         [Parameter(Mandatory)]
         $Operation,
         [Parameter(Mandatory)]
-        [string]$RegFilePath,
-        [switch]$DryRun
+        [string]$RegFilePath
     )
 
     $operationType = [string]$Operation.OperationType
     $isSetValueOperation = $operationType -eq 'SetValue'
     $isDeleteKeyOperation = $operationType -eq 'DeleteKey'
 
-    # Check GPO policy override warnings
-    $gpoWarning = Get-GpoOverrideWarning -KeyPath $Operation.KeyPath -ValueName $Operation.ValueName
-    if ($gpoWarning) {
-        Write-Warning $gpoWarning
-    }
-
-    if ($DryRun) {
+    $isWhatIf = $null -ne $script:Params -and $script:Params.ContainsKey("WhatIf")
+    if ($isWhatIf) {
         switch ($operationType) {
             'DeleteKey' {
                 Write-Host "[WhatIf] Remove Registry Key (Tree): $($Operation.KeyPath)" -ForegroundColor Cyan
             }
             'DeleteValue' {
-                Invoke-RegistryDeleteValueOperation -Operation $Operation -KeyInfo $null -DryRun:$true
+                Invoke-RegistryDeleteValueOperation -Operation $Operation -KeyInfo $null
             }
             'SetValue' {
-                Invoke-RegistrySetValueOperation -Operation $Operation -KeyInfo $null -DryRun:$true
+                Invoke-RegistrySetValueOperation -Operation $Operation -KeyInfo $null
             }
             default {
                 throw "Unsupported reg operation type '$($Operation.OperationType)' in '$RegFilePath'"
@@ -238,17 +232,17 @@ function Invoke-RegistryOperation {
 function Invoke-RegistryOperationsFromRegFile {
     param(
         [Parameter(Mandatory)]
-        [string]$RegFilePath,
-        [switch]$DryRun
+        [string]$RegFilePath
     )
 
     $accessDeniedCount = 0
     $operations = @(Get-RegFileOperations -regFilePath $RegFilePath)
     $totalOperations = $operations.Count
+    $isWhatIf = $null -ne $script:Params -and $script:Params.ContainsKey("WhatIf")
 
     foreach ($operation in $operations) {
         try {
-            Invoke-RegistryOperation -Operation $operation -RegFilePath $RegFilePath -DryRun:$DryRun
+            Invoke-RegistryOperation -Operation $operation -RegFilePath $RegFilePath
         }
         catch [System.UnauthorizedAccessException], [System.Security.SecurityException] {
             $accessDeniedCount++
@@ -256,7 +250,7 @@ function Invoke-RegistryOperationsFromRegFile {
         }
     }
 
-    if (-not $DryRun) {
+    if (-not $isWhatIf) {
         if ($totalOperations -gt 0 -and $accessDeniedCount -eq $totalOperations) {
             throw "Registry fallback import could not apply any operations in '$RegFilePath' because all $accessDeniedCount operation(s) were blocked by access restrictions."
         }

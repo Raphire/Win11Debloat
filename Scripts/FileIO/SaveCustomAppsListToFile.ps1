@@ -4,6 +4,12 @@ function SaveCustomAppsListToFile {
         $appsList
     )
 
+    $isWhatIf = $null -ne $script:Params -and $script:Params.ContainsKey("WhatIf")
+    if ($isWhatIf) {
+        Write-Host "[WhatIf] Save custom apps list to file" -ForegroundColor Cyan
+        return
+    }
+
     $script:SelectedApps = $appsList
 
     # Create file that stores selected apps if it doesn't exist

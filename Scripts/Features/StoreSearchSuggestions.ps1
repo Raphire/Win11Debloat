@@ -54,7 +54,8 @@ function DisableStoreSearchSuggestions {
     $userName = [regex]::Match($StoreAppsDatabase, '(?:Users\\)([^\\]+)(?:\\AppData)').Groups[1].Value
     if (-not $userName) { $userName = '<unknown>' }
 
-    if ($WhatIfPreference) {
+    $isWhatIf = $null -ne $script:Params -and $script:Params.ContainsKey("WhatIf")
+    if ($isWhatIf) {
         Write-Host "[WhatIf] Disable Microsoft Store search suggestions for user $userName by restricting access to store.db" -ForegroundColor Cyan
         return
     }
@@ -137,7 +138,8 @@ function EnableStoreSearchSuggestions {
     $userName = [regex]::Match($StoreAppsDatabase, '(?:Users\\)([^\\]+)(?:\\AppData)').Groups[1].Value
     if (-not $userName) { $userName = '<unknown>' }
 
-    if ($WhatIfPreference) {
+    $isWhatIf = $null -ne $script:Params -and $script:Params.ContainsKey("WhatIf")
+    if ($isWhatIf) {
         Write-Host "[WhatIf] Re-enable Microsoft Store search suggestions for user $userName by restoring access to store.db" -ForegroundColor Cyan
         return
     }

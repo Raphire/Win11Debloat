@@ -221,6 +221,15 @@ else {
     Start-Transcript -Path $script:DefaultLogPath -Append -IncludeInvocationHeader -Force | Out-Null
 }
 
+# Check if the device is domain-joined and warn the user (Group Policy may override changes)
+try {
+    $isDomainJoined = (Get-CimInstance Win32_ComputerSystem -ErrorAction SilentlyContinue).PartOfDomain
+    if ($isDomainJoined) {
+        Write-Warning "This machine is domain-joined. Group Policy may override changes made by Win11Debloat."
+    }
+}
+catch {}
+
 # Check if script has all required files
 if (-not ((Test-Path $script:DefaultSettingsFilePath) -and (Test-Path $script:AppsListFilePath) -and (Test-Path $script:RegfilesPath) -and (Test-Path $script:AssetsPath) -and (Test-Path $script:AppSelectionSchema) -and (Test-Path $script:ApplyChangesWindowSchema) -and (Test-Path $script:SharedStylesSchema) -and (Test-Path $script:BubbleHintSchema) -and (Test-Path $script:RestoreBackupWindowSchema) -and (Test-Path $script:FeaturesFilePath))) {
     Write-Error "Win11Debloat is unable to find required files, please ensure all script files are present"

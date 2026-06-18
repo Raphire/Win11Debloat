@@ -21,9 +21,10 @@ function ImportRegistryFile {
     $importScript = {
         param($targetRegFilePath, $hiveContext)
 
-        if ($WhatIfPreference) {
+        $isWhatIf = $null -ne $script:Params -and $script:Params.ContainsKey("WhatIf")
+        if ($isWhatIf) {
             Write-Host "[WhatIf] Previewing registry changes for $path:" -ForegroundColor Cyan
-            Invoke-RegistryOperationsFromRegFile -RegFilePath $targetRegFilePath -DryRun:$true
+            Invoke-RegistryOperationsFromRegFile -RegFilePath $targetRegFilePath
             Write-Host ""
             return
         }

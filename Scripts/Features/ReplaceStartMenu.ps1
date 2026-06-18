@@ -26,7 +26,8 @@ function ReplaceStartMenuForAllUsers {
     # Also replace the start menu file for the default user profile
     $defaultStartMenuPath = GetUserDirectory -userName "Default" -fileName "AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState" -exitIfPathNotFound $false
 
-    if ($WhatIfPreference) {
+    $isWhatIf = $null -ne $script:Params -and $script:Params.ContainsKey("WhatIf")
+    if ($isWhatIf) {
         Write-Host "[WhatIf] Replace Start Menu for Default user profile with template $startMenuTemplate" -ForegroundColor Cyan
         return
     }
@@ -66,7 +67,8 @@ function ReplaceStartMenu {
 
     $userName = GetStartMenuUserNameFromPath -StartMenuBinFile $startMenuBinFile
 
-    if ($WhatIfPreference) {
+    $isWhatIf = $null -ne $script:Params -and $script:Params.ContainsKey("WhatIf")
+    if ($isWhatIf) {
         Write-Host "[WhatIf] Replace Start Menu for user $userName with template $startMenuTemplate" -ForegroundColor Cyan
         return
     }
@@ -130,6 +132,16 @@ function RestoreStartMenuFromBackup {
         $BackupFilePath
     }
     $currentBinBackup = $StartMenuBinFile + '.restore.bak'
+
+    $isWhatIf = $null -ne $script:Params -and $script:Params.ContainsKey("WhatIf")
+    if ($isWhatIf) {
+        Write-Host "[WhatIf] Restore start menu for user $userName from backup $backupBinFile" -ForegroundColor Cyan
+        return [PSCustomObject]@{
+            UserName = $userName
+            Result = $true
+            Message = "[WhatIf] Restored start menu for user $userName."
+        }
+    }
 
     if (-not (Test-Path -LiteralPath $backupBinFile)) {
         return [PSCustomObject]@{

@@ -25,7 +25,8 @@ function RemoveApps {
         $appslist
     )
 
-    if ($WhatIfPreference) {
+    $isWhatIf = $null -ne $script:Params -and $script:Params.ContainsKey("WhatIf")
+    if ($isWhatIf) {
         foreach ($app in $appslist) {
             Write-Host "[WhatIf] Remove App Package: $app" -ForegroundColor Cyan
         }

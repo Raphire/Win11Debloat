@@ -133,6 +133,12 @@ function Restore-RegistryBackupState {
 
     $friendlyTarget = GetFriendlyRegistryBackupTarget -Target ([string]$Backup.Target)
 
+    $isWhatIf = $null -ne $script:Params -and $script:Params.ContainsKey("WhatIf")
+    if ($isWhatIf) {
+        Write-Host "[WhatIf] Restore registry backup for $friendlyTarget" -ForegroundColor Cyan
+        return
+    }
+
     $restoreAction = {
         param($normalizedBackup)
 

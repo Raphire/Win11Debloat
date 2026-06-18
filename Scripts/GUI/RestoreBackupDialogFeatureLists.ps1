@@ -50,7 +50,7 @@ function Get-RestoreDialogFeatureDisplayLabel {
     )
 
     if ([string]::IsNullOrWhiteSpace($FeatureId)) {
-        return 'Unknown feature'
+        return Get-LocalizedString 'Unknown feature'
     }
 
     $featureDefinition = Get-RestoreDialogFeatureDefinition -FeatureId $FeatureId -Features $Features

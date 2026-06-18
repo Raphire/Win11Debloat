@@ -129,12 +129,12 @@ function New-Overview {
         }
     }
     if ($selectedAppsCount -gt 0) {
-        $changesList += "Remove $selectedAppsCount application(s)"
+        $changesList += (Format-Localized 'Remove {0} application(s)' @($selectedAppsCount))
     }
 
     foreach ($tweakAction in @(Get-PendingTweakActions -Window $Window -ShowAppliedTweaksMode:$showAppliedTweaksMode)) {
         if ($tweakAction.Action -eq 'Undo') {
-            $changesList += "Undo: $($tweakAction.Label)"
+            $changesList += (Format-Localized 'Undo: {0}' @($tweakAction.Label))
         }
         else {
             $changesList += $tweakAction.Label
@@ -438,23 +438,23 @@ function Update-UserSelectionDescription {
         0 {
             $currentUserName = GetUserName
             if ([string]::IsNullOrWhiteSpace($currentUserName)) {
-                $UserSelectionDescription.Text = "The currently logged-in user profile"
+                $UserSelectionDescription.Text = Get-LocalizedString "The currently logged-in user profile"
             }
             else {
-                $UserSelectionDescription.Text = "The currently logged-in user profile: $currentUserName"
+                $UserSelectionDescription.Text = (Format-Localized 'The currently logged-in user profile: {0}' @($currentUserName))
             }
         }
         1 {
             $targetUserName = $OtherUsernameTextBox.Text.Trim()
             if ([string]::IsNullOrWhiteSpace($targetUserName)) {
-                $UserSelectionDescription.Text = "A different user profile on this system"
+                $UserSelectionDescription.Text = Get-LocalizedString "A different user profile on this system"
             }
             else {
-                $UserSelectionDescription.Text = "A different user profile on this system: $targetUserName"
+                $UserSelectionDescription.Text = (Format-Localized 'A different user profile on this system: {0}' @($targetUserName))
             }
         }
         default {
-            $UserSelectionDescription.Text = "The default user template, affecting all new users created after this point. Useful for Sysprep deployment."
+            $UserSelectionDescription.Text = Get-LocalizedString "The default user template, affecting all new users created after this point. Useful for Sysprep deployment."
         }
     }
 }

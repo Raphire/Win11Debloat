@@ -156,6 +156,10 @@ function Show-MessageBox {
         }
     })
     
+    # Translate to Hebrew + right-to-left (title, message and buttons are looked
+    # up in the dictionary; unknown/interpolated text passes through unchanged).
+    Invoke-WindowLocalization -Window $msgWindow
+
     # Show dialog and return result from Tag
     try {
         $msgWindow.ShowDialog() | Out-Null

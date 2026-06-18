@@ -36,6 +36,9 @@ function Show-AppSelectionWindow {
 
     SetWindowThemeResources -window $window -usesDarkMode $usesDarkMode
 
+    # Translate to Hebrew + right-to-left
+    Invoke-WindowLocalization -Window $window
+
     $appsPanel = $window.FindName('AppsPanel')
     $checkAllBox = $window.FindName('CheckAllBox')
     $onlyInstalledBox = $window.FindName('OnlyInstalledBox')
@@ -78,7 +81,7 @@ function Show-AppSelectionWindow {
             $checkbox.Tag = $_.AppIdDisplay
             Add-Member -InputObject $checkbox -MemberType NoteProperty -Name 'AppIds' -Value @($_.AppId)
             $checkbox.IsChecked = $_.IsChecked
-            $checkbox.ToolTip = $_.Description
+            $checkbox.ToolTip = Get-LocalizedString $_.Description
             $checkbox.Style = $window.Resources["AppsPanelCheckBoxStyle"]
             
             # Attach shift-click behavior for range selection

@@ -4,6 +4,7 @@ param (
     [switch]$Silent,
     [switch]$Sysprep,
     [string]$LogPath,
+    [string]$Language,
     [string]$User,
     [switch]$NoRestartExplorer,
     [switch]$CreateRestorePoint,
@@ -165,7 +166,7 @@ $script:ImportExportConfigSchema = Join-Path $schemasPath 'ImportExportConfigWin
 $script:RestoreBackupWindowSchema = Join-Path $schemasPath 'RestoreBackupWindow.xaml'
 $script:LoadAppsDetailsScriptPath = Join-Path (Join-Path $scriptsPath 'FileIO') 'LoadAppsDetailsFromJson.ps1'
 
-$script:ControlParams = 'WhatIf', 'Confirm', 'Verbose', 'Debug', 'LogPath', 'Silent', 'Sysprep', 'User', 'NoRestartExplorer', 'RunDefaults', 'RunDefaultsLite', 'RunSavedSettings', 'Config', 'RunAppsListGenerator', 'CLI', 'AppRemovalTarget'
+$script:ControlParams = 'WhatIf', 'Confirm', 'Verbose', 'Debug', 'LogPath', 'Language', 'Silent', 'Sysprep', 'User', 'NoRestartExplorer', 'RunDefaults', 'RunDefaultsLite', 'RunSavedSettings', 'Config', 'RunAppsListGenerator', 'CLI', 'AppRemovalTarget'
 
 # Script-level variables for GUI elements
 $script:GuiWindow = $null
@@ -316,6 +317,10 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 . "$PSScriptRoot/Scripts/FileIO/LoadAppsFromFile.ps1"
 . "$PSScriptRoot/Scripts/FileIO/LoadAppsDetailsFromJson.ps1"
 . "$PSScriptRoot/Scripts/FileIO/LoadAppPresetsFromJson.ps1"
+
+# Hebrew (he-IL) localization layer - must load before the GUI scripts so the
+# Get-LocalizedString / Invoke-WindowLocalization helpers are available to them.
+. "$PSScriptRoot/Scripts/Localization/Localize.ps1"
 
 # GUI functions
 . "$PSScriptRoot/Scripts/GUI/GetSystemUsesDarkMode.ps1"

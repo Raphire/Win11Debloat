@@ -65,7 +65,10 @@ function Show-ApplyModal {
     
     # Apply theme resources
     SetWindowThemeResources -window $applyWindow -usesDarkMode $usesDarkMode
-    
+
+    # Translate to Hebrew + right-to-left
+    Invoke-WindowLocalization -Window $applyWindow
+
     # Get UI elements
     $script:ApplyInProgressPanel = $applyWindow.FindName('ApplyInProgressPanel')
     $script:ApplyCompletionPanel = $applyWindow.FindName('ApplyCompletionPanel')
@@ -84,16 +87,16 @@ function Show-ApplyModal {
     # Initialize in-progress state
     $script:ApplyInProgressPanel.Visibility = 'Visible'
     $script:ApplyCompletionPanel.Visibility = 'Collapsed'
-    $script:ApplyStepNameEl.Text = "Preparing..."
-    $script:ApplyStepCounterEl.Text = "Preparing..."
+    $script:ApplyStepNameEl.Text = Get-LocalizedString "Preparing..."
+    $script:ApplyStepCounterEl.Text = Get-LocalizedString "Preparing..."
     $script:ApplyProgressBarEl.Value = 0
     $script:ApplyModalInErrorState = $false
     
     # Set up progress callback for ExecuteAllChanges
     $script:ApplyProgressCallback = {
         param($currentStep, $totalSteps, $stepName)
-        $script:ApplyStepNameEl.Text = $stepName
-        $script:ApplyStepCounterEl.Text = "Step $currentStep of $totalSteps"
+        $script:ApplyStepNameEl.Text = Get-LocalizedString $stepName
+        $script:ApplyStepCounterEl.Text = (Format-Localized 'Step {0} of {1}' @($currentStep, $totalSteps))
         # Store current step/total in Tag properties for sub-step interpolation
         $script:ApplyStepCounterEl.Tag = $currentStep
         $script:ApplyProgressBarEl.Tag = $totalSteps
@@ -107,7 +110,7 @@ function Show-ApplyModal {
     # Sub-step callback updates step name and interpolates progress bar within the current step
     $script:ApplySubStepCallback = {
         param($subStepName, $subIndex, $subCount)
-        $script:ApplyStepNameEl.Text = $subStepName
+        $script:ApplyStepNameEl.Text = Get-LocalizedString $subStepName
         # Interpolate progress bar between previous step and current step
         $currentStep = [int]($script:ApplyStepCounterEl.Tag)
         $totalSteps = [int]($script:ApplyProgressBarEl.Tag)
@@ -153,15 +156,15 @@ function Show-ApplyModal {
             if ($script:CancelRequested) {
                 $script:ApplyCompletionIconEl.Text = [char]0xE7BA
                 $script:ApplyCompletionIconEl.Foreground = [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#e8912d"))
-                $script:ApplyCompletionTitleEl.Text = "Cancelled"
-                $script:ApplyCompletionMessageEl.Text = "Script execution was cancelled by the user."
+                $script:ApplyCompletionTitleEl.Text = Get-LocalizedString "Cancelled"
+                $script:ApplyCompletionMessageEl.Text = Get-LocalizedString "Script execution was cancelled by the user."
             } elseif ($registryImportFailureCount -gt 0) {
                 $script:ApplyCompletionIconEl.Text = [char]0xE7BA
                 $script:ApplyCompletionIconEl.Foreground = [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#e8912d"))
-                $script:ApplyCompletionTitleEl.Text = "Changes Applied with Errors"
-                $script:ApplyCompletionMessageEl.Text = "$registryImportFailureCount registry change(s) failed. See console for details."
+                $script:ApplyCompletionTitleEl.Text = Get-LocalizedString "Changes Applied with Errors"
+                $script:ApplyCompletionMessageEl.Text = (Format-Localized '{0} registry change(s) failed. See console for details.' @($registryImportFailureCount))
             } else {
-                $script:ApplyCompletionTitleEl.Text = "Changes Applied"
+                $script:ApplyCompletionTitleEl.Text = Get-LocalizedString "Changes Applied"
 
                 # Show completion message with reboot instructions if any applied features require reboot
                 if ($RestartExplorer) {
@@ -186,7 +189,7 @@ function Show-ApplyModal {
                         $applyRebootPanel.Visibility = 'Visible'
                     }
                     else {
-                        $script:ApplyCompletionMessageEl.Text = "Your system is ready. Thanks for using Win11Debloat!"
+                        $script:ApplyCompletionMessageEl.Text = Get-LocalizedString "Your system is ready. Thanks for using Win11Debloat!"
                     }
                 }
             }
@@ -198,8 +201,8 @@ function Show-ApplyModal {
             $script:ApplyCompletionPanel.Visibility = 'Visible'
             $script:ApplyCompletionIconEl.Text = [char]0xEA39
             $script:ApplyCompletionIconEl.Foreground = [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#c42b1c"))
-            $script:ApplyCompletionTitleEl.Text = "Error"
-            $script:ApplyCompletionMessageEl.Text = "An error occurred while applying changes: $($_.Exception.Message)"
+            $script:ApplyCompletionTitleEl.Text = Get-LocalizedString "Error"
+            $script:ApplyCompletionMessageEl.Text = (Format-Localized 'An error occurred while applying changes: {0}' @($_.Exception.Message))
             
             # Set error state to change Kofi button to report link
             $script:ApplyModalInErrorState = $true
@@ -208,7 +211,7 @@ function Show-ApplyModal {
             $applyKofiBtn.Content = $null
             
             $reportText = [System.Windows.Controls.TextBlock]::new()
-            $reportText.Text = 'Report a bug'
+            $reportText.Text = Get-LocalizedString 'Report a bug'
             $reportText.VerticalAlignment = 'Center'
             $reportText.FontSize = 14
             $reportText.Margin = [System.Windows.Thickness]::new(0, 0, 0, 1)

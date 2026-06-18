@@ -50,6 +50,10 @@ function Show-RestoreBackupDialog {
     }
     catch { }
 
+    # Translate the static window content to Hebrew + right-to-left. Strings that
+    # are re-assigned dynamically below are wrapped individually at their sites.
+    Invoke-WindowLocalization -Window $window
+
     $titleBar = $window.FindName('TitleBar')
     $titleText = $window.FindName('TitleText')
     $closeBtn = $window.FindName('CloseBtn')
@@ -96,8 +100,8 @@ function Show-RestoreBackupDialog {
     }
 
     $showStartMenuIntroState = {
-        $backupFileText.Text = 'Not selected'
-        $backupCreatedText.Text = 'N/A'
+        $backupFileText.Text = Get-LocalizedString 'Not selected'
+        $backupCreatedText.Text = Get-LocalizedString 'N/A'
         $overviewSummaryText.Visibility = 'Collapsed'
         $overviewPanel.Visibility = 'Collapsed'
         $startMenuIntroPanel.Visibility = 'Visible'
@@ -109,10 +113,10 @@ function Show-RestoreBackupDialog {
 
         $scopeInfo = & $getStartMenuScopeInfo
         $backupTargetText.Text = GetFriendlyRegistryBackupTarget -Target $scopeInfo.Target
-        $overviewSummaryText.Text = "This will replace the current Start Menu pinned apps layout for $($scopeInfo.SummaryText) with the selected backup."
+        $overviewSummaryText.Text = (Format-Localized 'This will replace the current Start Menu pinned apps layout for {0} with the selected backup.' @((Get-LocalizedString $scopeInfo.SummaryText)))
         $backupFileText.Text = Split-Path -Path $BackupFilePath -Leaf
 
-        $createdText = 'Unknown'
+        $createdText = Get-LocalizedString 'Unknown'
         try {
             $createdText = (Get-Item -LiteralPath $BackupFilePath -ErrorAction Stop).LastWriteTime.ToString('yyyy-MM-dd HH:mm')
         }
@@ -151,10 +155,10 @@ function Show-RestoreBackupDialog {
         $isAutoBackupEnabled = ($startMenuAutoBackupCheck.IsChecked -eq $true)
         $hasSelectedManualFile = -not [string]::IsNullOrWhiteSpace($state.SelectedStartMenuBackupFilePath)
         if ($isAutoBackupEnabled -or $hasSelectedManualFile) {
-            $primaryActionBtn.Content = 'Restore backup'
+            $primaryActionBtn.Content = Get-LocalizedString 'Restore backup'
         }
         else {
-            $primaryActionBtn.Content = 'Select backup file'
+            $primaryActionBtn.Content = Get-LocalizedString 'Select backup file'
         }
     }
 
@@ -164,35 +168,35 @@ function Show-RestoreBackupDialog {
     }
 
     $enterSelectTypeStep = {
-        $titleText.Text = 'Restore Backup'
+        $titleText.Text = Get-LocalizedString 'Restore Backup'
         $restoreModeTabs.SelectedIndex = 0
         $backBtn.Visibility = 'Visible'
-        $backBtn.Content = 'Cancel'
+        $backBtn.Content = Get-LocalizedString 'Cancel'
         $primaryActionBtn.Visibility = 'Collapsed'
         $chooseRegistryBtn.IsDefault = $true
         $primaryActionBtn.IsDefault = $false
     }
 
     $enterRegistryStep = {
-        $titleText.Text = 'Restore Registry Backup'
+        $titleText.Text = Get-LocalizedString 'Restore Registry Backup'
         $restoreModeTabs.SelectedIndex = 1
         $introInfoPanel.Visibility = 'Visible'
         $overviewPanel.Visibility = 'Collapsed'
         $overviewFeaturesSection.Visibility = 'Visible'
         $overviewSummaryText.Visibility = 'Collapsed'
         $backBtn.Visibility = 'Visible'
-        $backBtn.Content = 'Back'
+        $backBtn.Content = Get-LocalizedString 'Back'
         $primaryActionBtn.Visibility = 'Visible'
-        $primaryActionBtn.Content = 'Select backup file'
+        $primaryActionBtn.Content = Get-LocalizedString 'Select backup file'
         $primaryActionBtn.IsDefault = $true
         $chooseRegistryBtn.IsDefault = $false
     }
 
     $enterStartMenuStep = {
-        $titleText.Text = 'Restore Start Menu Backup'
+        $titleText.Text = Get-LocalizedString 'Restore Start Menu Backup'
         $restoreModeTabs.SelectedIndex = 2
         $backBtn.Visibility = 'Visible'
-        $backBtn.Content = 'Back'
+        $backBtn.Content = Get-LocalizedString 'Back'
         $primaryActionBtn.Visibility = 'Visible'
         $primaryActionBtn.IsDefault = $true
         $chooseRegistryBtn.IsDefault = $false
@@ -208,7 +212,7 @@ function Show-RestoreBackupDialog {
         )
 
         $createdText = if ([string]::IsNullOrWhiteSpace($SelectedBackup.CreatedAt)) {
-            'Unknown'
+            Get-LocalizedString 'Unknown'
         }
         else {
             try {
@@ -298,7 +302,7 @@ function Show-RestoreBackupDialog {
         }
 
         $state.SelectedRegistryBackup = $selectedBackup
-        $primaryActionBtn.Content = 'Restore from backup'
+        $primaryActionBtn.Content = Get-LocalizedString 'Restore from backup'
     }
 
     $handleStartMenuPrimaryAction = {

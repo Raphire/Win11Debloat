@@ -43,7 +43,10 @@ function Show-AboutDialog {
 
     # Apply theme resources
     SetWindowThemeResources -window $aboutWindow -usesDarkMode $usesDarkMode
-    
+
+    # Translate to Hebrew + right-to-left
+    Invoke-WindowLocalization -Window $aboutWindow
+
     # Get UI elements
     $titleBar = $aboutWindow.FindName('TitleBar')
     $versionText = $aboutWindow.FindName('VersionText')

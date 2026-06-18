@@ -158,7 +158,7 @@ function Update-AppSelectionStatus {
             $selectedCount++
         }
     }
-    $AppSelectionStatus.Text = "$selectedCount app(s) selected for removal"
+    $AppSelectionStatus.Text = (Format-Localized '{0} app(s) selected for removal' @($selectedCount))
 
     if ($AppRemovalScopeCombo -and $AppRemovalScopeSection -and $AppRemovalScopeDescription) {
         if ($selectedCount -gt 0) {
@@ -182,15 +182,16 @@ function Update-AppRemovalScopeDescription {
 
     $selectedItem = $AppRemovalScopeCombo.SelectedItem
     if ($selectedItem) {
-        switch ($selectedItem.Content) {
-            "All users" {
-                $AppRemovalScopeDescription.Text = "Apps will be removed for all users and from the Windows image to prevent reinstallation for new users."
+        # Compare on SelectedIndex (stable order) instead of the localized text.
+        switch ($AppRemovalScopeCombo.SelectedIndex) {
+            0 {
+                $AppRemovalScopeDescription.Text = Get-LocalizedString "Apps will be removed for all users and from the Windows image to prevent reinstallation for new users."
             }
-            "Current user only" {
-                $AppRemovalScopeDescription.Text = "Apps will only be removed for the current user."
+            1 {
+                $AppRemovalScopeDescription.Text = Get-LocalizedString "Apps will only be removed for the current user."
             }
-            "Target user only" {
-                $AppRemovalScopeDescription.Text = "Apps will only be removed for the specified target user."
+            2 {
+                $AppRemovalScopeDescription.Text = Get-LocalizedString "Apps will only be removed for the specified target user."
             }
         }
     }
@@ -379,9 +380,9 @@ function Load-AppsWithList {
         $dot.Style = $Window.Resources['AppRecommendationDotStyle']
         $dot.Fill = switch ($app.Recommendation) { 'safe' { $brushSafe } 'unsafe' { $brushUnsafe } default { $brushDefault } }
         $dot.ToolTip = switch ($app.Recommendation) {
-            'safe'   { '[Recommended] Safe to remove for most users' }
-            'unsafe' { '[Not Recommended] Only remove if you know what you are doing' }
-            default  { "[Optional] Remove if you don't need this app" }
+            'safe'   { Get-LocalizedString '[Recommended] Safe to remove for most users' }
+            'unsafe' { Get-LocalizedString '[Not Recommended] Only remove if you know what you are doing' }
+            default  { Get-LocalizedString "[Optional] Remove if you don't need this app" }
         }
         [System.Windows.Controls.Grid]::SetColumn($dot, 0)
 
@@ -391,9 +392,10 @@ function Load-AppsWithList {
         [System.Windows.Controls.Grid]::SetColumn($tbName, 1)
 
         $tbDesc = New-Object System.Windows.Controls.TextBlock
-        $tbDesc.Text = $app.Description
+        $localizedDescription = Get-LocalizedString $app.Description
+        $tbDesc.Text = $localizedDescription
         $tbDesc.Style = $Window.Resources['AppDescTextStyle']
-        $tbDesc.ToolTip = $app.Description
+        $tbDesc.ToolTip = $localizedDescription
         [System.Windows.Controls.Grid]::SetColumn($tbDesc, 2)
 
         $tbId = New-Object System.Windows.Controls.TextBlock
@@ -409,7 +411,7 @@ function Load-AppsWithList {
         $checkbox.Content = $row
 
         Add-Member -InputObject $checkbox -MemberType NoteProperty -Name 'AppName' -Value $app.FriendlyName
-        Add-Member -InputObject $checkbox -MemberType NoteProperty -Name 'AppDescription' -Value $app.Description
+        Add-Member -InputObject $checkbox -MemberType NoteProperty -Name 'AppDescription' -Value $localizedDescription
         Add-Member -InputObject $checkbox -MemberType NoteProperty -Name 'SelectedByDefault' -Value $app.SelectedByDefault
         Add-Member -InputObject $checkbox -MemberType NoteProperty -Name 'AppIds' -Value @($app.AppId)
         Add-Member -InputObject $checkbox -MemberType NoteProperty -Name 'AppIdDisplay' -Value $app.AppIdDisplay

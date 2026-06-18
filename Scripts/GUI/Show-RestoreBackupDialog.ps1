@@ -1,6 +1,5 @@
 function Show-RestoreBackupDialog {
     param(
-        [Parameter(Mandatory = $false)]
         [System.Windows.Window]$Owner = $null
     )
 

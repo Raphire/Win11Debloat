@@ -545,4 +545,47 @@
         </Setter>
     </Style>
 
+    <!-- TextBox outer border: side/top borders in side color, background with hover/focus states -->
+    <Style x:Key="TextBoxBorderStyle" TargetType="Border">
+        <Setter Property="Background" Value="{DynamicResource TextBoxBgColor}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource TextBoxSideBorderColor}"/>
+        <Setter Property="BorderThickness" Value="1,1,1,0"/>
+        <Setter Property="CornerRadius" Value="4"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource TextBoxHoverColor}"/>
+            </Trigger>
+            <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                <Setter Property="Background" Value="{DynamicResource TextBoxFocusColor}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- TextBox inner border: bottom accent line that thickens and changes color on focus -->
+    <Style x:Key="TextBoxBottomBorderStyle" TargetType="Border">
+        <Setter Property="BorderBrush" Value="{DynamicResource TextBoxBorderColor}"/>
+        <Setter Property="BorderThickness" Value="0,0,0,1"/>
+        <Setter Property="Padding" Value="8,6"/>
+        <Setter Property="CornerRadius" Value="0,0,4,4"/>
+        <Style.Triggers>
+            <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                <Setter Property="BorderBrush" Value="{DynamicResource ButtonBg}"/>
+                <Setter Property="BorderThickness" Value="0,0,0,2"/>
+                <Setter Property="Padding" Value="8,6,8,5"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- TextBox input (transparent, used inside TextBoxBorderStyle) -->
+    <Style x:Key="TextBoxInputStyle" TargetType="TextBox">
+        <Setter Property="CaretBrush" Value="{DynamicResource FgColor}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="Margin" Value="1,0,0,1"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="0"/>
+    </Style>
+
 </ResourceDictionary>

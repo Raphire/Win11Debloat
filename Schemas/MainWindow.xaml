@@ -137,44 +137,6 @@
             <Setter Property="CaretBrush" Value="{DynamicResource FgColor}"/>
         </Style>
 
-        <!-- User TextBox Style with disabled state -->
-        <Style x:Key="UserTextBoxStyle" TargetType="TextBox">
-            <Setter Property="CaretBrush" Value="{DynamicResource FgColor}"/>
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="FontSize" Value="13"/>
-            <Setter Property="Margin" Value="1,0,0,1"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="Padding" Value="0"/>
-            <Style.Triggers>
-                <Trigger Property="IsEnabled" Value="False">
-                    <Setter Property="Background" Value="{DynamicResource ButtonDisabled}"/>
-                    <Setter Property="Foreground" Value="{DynamicResource ButtonTextDisabled}"/>
-                    <Setter Property="Opacity" Value="0.6"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-
-        <!-- User TextBox Border Style with disabled state -->
-        <Style x:Key="UserTextBoxBorderStyle" TargetType="Border">
-            <Setter Property="Background" Value="{DynamicResource ComboBgColor}"/>
-            <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderColor}"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="CornerRadius" Value="4"/>
-            <Setter Property="Padding" Value="8,6"/>
-            <Style.Triggers>
-                <Trigger Property="IsEnabled" Value="False">
-                    <Setter Property="Background" Value="{DynamicResource ButtonDisabled}"/>
-                    <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
-                    <Setter Property="Opacity" Value="0.6"/>
-                </Trigger>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{DynamicResource ComboHoverColor}"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-
         <!-- TextBlock style for App ID column in apps table -->
         <Style x:Key="AppIdTextStyle" TargetType="TextBlock">
             <Setter Property="Foreground" Value="{DynamicResource AppIdColor}"/>
@@ -264,21 +226,6 @@
                 </Trigger>
                 <Trigger Property="IsPressed" Value="True">
                     <Setter Property="Background" Value="{DynamicResource TitlebarButtonPressed}"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-
-        <!-- SearchBox Border Style -->
-        <Style x:Key="SearchBoxBorderStyle" TargetType="Border">
-            <Setter Property="Background" Value="{DynamicResource ComboBgColor}"/>
-            <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderColor}"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="CornerRadius" Value="4"/>
-            <Setter Property="Width" Value="300"/>
-            <Setter Property="Padding" Value="8,6"/>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{DynamicResource ComboHoverColor}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -509,7 +456,7 @@
                             
                             <!-- Title -->
                             <TextBlock Text="Welcome to Win11Debloat" FontSize="40" FontWeight="SemiBold" Foreground="{DynamicResource FgColor}" HorizontalAlignment="Center"/>
-                            <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource FgColor}" FontSize="20" HorizontalAlignment="Center" Margin="0,16,0,64">
+                            <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource FgColor}" FontSize="20" HorizontalAlignment="Center" Margin="0,8,0,64">
                                 <Run Text="Your clean Windows experience is just a few clicks away!"/>
                             </TextBlock>
 
@@ -523,25 +470,18 @@
                                     </ComboBox>
                                     <StackPanel x:Name="OtherUserPanel" Visibility="Collapsed" Margin="0,0,0,6">
                                         <TextBlock x:Name="UsernameValidationMessage" Text="" FontStyle="Italic" Foreground="{DynamicResource CloseHover}" FontSize="11" Margin="3,0,0,4" TextWrapping="Wrap"/>
-                                        <Border IsEnabled="{Binding ElementName=OtherUsernameTextBox, Path=IsEnabled}">
-                                            <Border.Style>
-                                                <Style TargetType="Border" BasedOn="{StaticResource UserTextBoxBorderStyle}">
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding ElementName=OtherUsernameTextBox, Path=IsFocused}" Value="True">
-                                                            <Setter Property="Background" Value="{DynamicResource InputFocusColor}"/>
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </Border.Style>
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="Auto"/>
-                                                    <ColumnDefinition Width="*"/>
-                                                </Grid.ColumnDefinitions>
-                                                <TextBlock Grid.Column="0" Text="&#xE77B;" FontFamily="Segoe Fluent Icons" FontSize="14" VerticalAlignment="Center" Margin="4,0,8,0" Foreground="{DynamicResource FgColor}"/>
-                                                <TextBlock x:Name="UsernameTextBoxPlaceholder" Grid.Column="1" Text="Enter username" Foreground="{DynamicResource FgColor}" Opacity="0.5" FontSize="13" Margin="3,0,0,1" VerticalAlignment="Center" IsHitTestVisible="False"/>
-                                                <TextBox x:Name="OtherUsernameTextBox" Grid.Column="1" Style="{StaticResource UserTextBoxStyle}" Text="" AutomationProperties.Name="Enter username"/>
-                                            </Grid>
+                                        <Border Style="{DynamicResource TextBoxBorderStyle}">
+                                            <Border Style="{DynamicResource TextBoxBottomBorderStyle}">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock x:Name="UsernameTextBoxPlaceholder" Grid.Column="0" Text="Enter username" Foreground="{DynamicResource FgColor}" Opacity="0.7" FontSize="13" Margin="3,0,0,1" VerticalAlignment="Center" IsHitTestVisible="False"/>
+                                                    <TextBox x:Name="OtherUsernameTextBox" Grid.Column="0" Style="{DynamicResource TextBoxInputStyle}" Text="" AutomationProperties.Name="Enter username"/>
+                                                    <TextBlock Grid.Column="1" Text="&#xE77B;" FontFamily="Segoe Fluent Icons" FontSize="14" VerticalAlignment="Center" Margin="8,0,4,0" Foreground="{DynamicResource FgColor}" Opacity="0.7"/>
+                                                </Grid>
+                                            </Border>
                                         </Border>
                                     </StackPanel>
 
@@ -650,25 +590,20 @@
                                     
                                     <CheckBox x:Name="OnlyInstalledAppsBox" Grid.Column="2" Content="Only show installed apps" IsChecked="False" Foreground="{DynamicResource FgColor}" VerticalAlignment="Center" AutomationProperties.Name="Only show installed apps"/>
 
-                                    <Border x:Name="AppSearchBorder" Grid.Column="4">
-                                        <Border.Style>
-                                            <Style TargetType="Border" BasedOn="{StaticResource SearchBoxBorderStyle}">
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding ElementName=AppSearchBox, Path=IsFocused}" Value="True">
-                                                        <Setter Property="Background" Value="{DynamicResource InputFocusColor}"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Border.Style>
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto"/>
-                                                <ColumnDefinition Width="*"/>
-                                            </Grid.ColumnDefinitions>
-                                            <TextBlock Grid.Column="0" Text="&#xE721;" FontFamily="Segoe Fluent Icons" FontSize="14" VerticalAlignment="Center" Margin="4,0,8,0" Foreground="{DynamicResource FgColor}"/>
-                                            <TextBlock x:Name="AppSearchPlaceholder" Grid.Column="1" Text="Search apps" Foreground="{DynamicResource FgColor}" Opacity="0.5" FontSize="13" Margin="3,0,0,1" VerticalAlignment="Center" IsHitTestVisible="False"/>
-                                            <TextBox x:Name="AppSearchBox" Grid.Column="1" Background="Transparent" Foreground="{DynamicResource FgColor}" BorderThickness="0" FontSize="13" Margin="1,0,0,1" VerticalAlignment="Center" Text="" AutomationProperties.Name="Search app"/>
-                                        </Grid>
+                                    <Border x:Name="AppSearchBorder" Grid.Column="4" Width="300">
+                                        <Border Style="{DynamicResource TextBoxBorderStyle}">
+                                            <Border Style="{DynamicResource TextBoxBottomBorderStyle}">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock x:Name="AppSearchPlaceholder" Grid.Column="0" Text="Search apps..." Foreground="{DynamicResource FgColor}" Opacity="0.7" FontSize="13" Margin="3,0,0,1" VerticalAlignment="Center" IsHitTestVisible="False"/>
+                                                    <TextBox x:Name="AppSearchBox" Grid.Column="0" Style="{DynamicResource TextBoxInputStyle}" Text="" AutomationProperties.Name="Search app"/>
+                                                    <TextBlock Grid.Column="1" Text="&#xE721;" FontFamily="Segoe Fluent Icons" FontSize="14" VerticalAlignment="Center" Margin="8,0,4,0" Foreground="{DynamicResource FgColor}"  Opacity="0.7"/>
+                                                </Grid>
+                                            </Border>
+                                        </Border>
                                     </Border>
                                 </Grid>
                             </StackPanel>
@@ -838,25 +773,20 @@
 
                                     <CheckBox x:Name="ShowCurrentlyAppliedTweaksCheckBox" Grid.Column="2" Content="Detect applied tweaks" IsChecked="True" Foreground="{DynamicResource FgColor}" VerticalAlignment="Center" AutomationProperties.Name="Detect applied tweaks" ToolTip="Detect all tweaks currently applied for the current user."/>
 
-                                    <Border x:Name="TweakSearchBorder" Grid.Column="4">
-                                        <Border.Style>
-                                            <Style TargetType="Border" BasedOn="{StaticResource SearchBoxBorderStyle}">
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding ElementName=TweakSearchBox, Path=IsFocused}" Value="True">
-                                                        <Setter Property="Background" Value="{DynamicResource InputFocusColor}"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Border.Style>
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto"/>
-                                                <ColumnDefinition Width="*"/>
-                                            </Grid.ColumnDefinitions>
-                                            <TextBlock Grid.Column="0" Text="&#xE721;" FontFamily="Segoe Fluent Icons" FontSize="14" VerticalAlignment="Center" Margin="4,0,8,0" Foreground="{DynamicResource FgColor}"/>
-                                            <TextBlock x:Name="TweakSearchPlaceholder" Grid.Column="1" Text="Search tweaks" Foreground="{DynamicResource FgColor}" Opacity="0.5" FontSize="13" Margin="3,0,0,1" VerticalAlignment="Center" IsHitTestVisible="False"/>
-                                            <TextBox x:Name="TweakSearchBox" Grid.Column="1" Background="Transparent" Foreground="{DynamicResource FgColor}" BorderThickness="0" FontSize="13" Margin="1,0,0,1" VerticalAlignment="Center" Text=""/>
-                                        </Grid>
+                                    <Border x:Name="TweakSearchBorder" Grid.Column="4" Width="300">
+                                        <Border Style="{DynamicResource TextBoxBorderStyle}">
+                                            <Border Style="{DynamicResource TextBoxBottomBorderStyle}">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock x:Name="TweakSearchPlaceholder" Grid.Column="0" Text="Search tweaks..." Foreground="{DynamicResource FgColor}" Opacity="0.7" FontSize="13" Margin="3,0,0,1" VerticalAlignment="Center" IsHitTestVisible="False"/>
+                                                    <TextBox x:Name="TweakSearchBox" Grid.Column="0" Style="{DynamicResource TextBoxInputStyle}" Text=""/>
+                                                    <TextBlock Grid.Column="1" Text="&#xE721;" FontFamily="Segoe Fluent Icons" FontSize="14" VerticalAlignment="Center" Margin="8,0,4,0" Foreground="{DynamicResource FgColor}" Opacity="0.7"/>
+                                                </Grid>
+                                            </Border>
+                                        </Border>
                                     </Border>
                                 </Grid>
                             </StackPanel>

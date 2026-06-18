@@ -202,11 +202,21 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsActive, RelativeSource={RelativeSource AncestorType=Window}}" Value="False">
+                    <Setter Property="Foreground" Value="{DynamicResource TitlebarUnfocusedFg}"/>
+                </DataTrigger>
+            </Style.Triggers>
         </Style>
         <Style x:Key="CloseButton" TargetType="Button" BasedOn="{StaticResource TitleBarButton}">
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="{DynamicResource CloseHover}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource ClosePressed}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -223,9 +233,11 @@
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="{DynamicResource TitlebarButtonHover}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
                 </Trigger>
                 <Trigger Property="IsPressed" Value="True">
                     <Setter Property="Background" Value="{DynamicResource TitlebarButtonPressed}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -330,10 +342,20 @@
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" 
                                    Text="Win11Debloat" 
-                                   Foreground="{DynamicResource FgColor}"
                                    VerticalAlignment="Center" 
                                    Margin="12,0,0,0"
-                                   FontSize="12"/>
+                                   FontSize="12">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsActive, RelativeSource={RelativeSource AncestorType=Window}}" Value="False">
+                                            <Setter Property="Foreground" Value="{DynamicResource TitlebarUnfocusedFg}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
                         <StackPanel Grid.Column="1" Orientation="Horizontal">
                             <Button x:Name="KofiBtn" shell:WindowChrome.IsHitTestVisibleInChrome="True" Content="&#xEB52;" FontFamily="Segoe Fluent Icons" FontSize="15" Style="{StaticResource TitlebarButton}" ToolTip="Support the creator" AutomationProperties.Name="Support the creator"/>
                             <Button x:Name="MenuBtn" shell:WindowChrome.IsHitTestVisibleInChrome="True" Content="&#xE700;" FontFamily="Segoe Fluent Icons" FontSize="15" Style="{StaticResource TitlebarButton}" ToolTip="Options" AutomationProperties.Name="Options">

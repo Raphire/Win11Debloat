@@ -92,13 +92,15 @@ function ExecuteParameter {
         }
         'ClearStart' {
             Write-Host "> $($feature.ApplyText) for user $(GetUserName)..."
-            ReplaceStartMenu
+            $startMenuBinFile = GetStartMenuBinPathForUser -UserName (GetUserName)
+            ReplaceStartMenu -startMenuBinFile $startMenuBinFile
             Write-Host ""
             return
         }
         'ReplaceStart' {
             Write-Host "> $($feature.ApplyText) for user $(GetUserName)..."
-            ReplaceStartMenu $script:Params.Item("ReplaceStart")
+            $startMenuBinFile = GetStartMenuBinPathForUser -UserName (GetUserName)
+            ReplaceStartMenu -startMenuBinFile $startMenuBinFile -startMenuTemplate $script:Params.Item("ReplaceStart")
             Write-Host ""
             return
         }
@@ -107,7 +109,7 @@ function ExecuteParameter {
             return
         }
         'ReplaceStartAllUsers' {
-            ReplaceStartMenuForAllUsers $script:Params.Item("ReplaceStartAllUsers")
+            ReplaceStartMenuForAllUsers -startMenuTemplate $script:Params.Item("ReplaceStartAllUsers")
             return
         }
         'DisableStoreSearchSuggestions' {

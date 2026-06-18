@@ -209,7 +209,8 @@ Write-Host "                   " -NoNewline; Write-Host "    (" -ForegroundColor
 Write-Host "                   " -NoNewline; Write-Host "    ( " -ForegroundColor DarkYellow -NoNewline; Write-Host "'" -ForegroundColor Red -NoNewline; Write-Host " )   " -ForegroundColor DarkYellow -NoNewline; Write-Host "*" -ForegroundColor Yellow
 Write-Host ""
 Write-Host "             Win11Debloat is launching..." -ForegroundColor White
-Write-Host "               Leave this window open" -ForegroundColor DarkGray
+Write-Host "                Keep this window open" -ForegroundColor DarkGray
+Write-Host ""
 Write-Host ""
 
 # Log script output to 'Win11Debloat.log' at the specified path

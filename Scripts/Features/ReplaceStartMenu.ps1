@@ -2,7 +2,7 @@
 # Credit: https://lazyadmin.nl/win-11/customize-windows-11-start-menu-layout/
 function ReplaceStartMenuForAllUsers {
     param (
-        $startMenuTemplate = "$script:AssetsPath\Start\start2.bin"
+        [string]$startMenuTemplate = "$script:AssetsPath\Start\start2.bin"
     )
 
     Write-Host "> Removing all pinned apps from the start menu for all users..."
@@ -20,7 +20,7 @@ function ReplaceStartMenuForAllUsers {
 
     # Go through all users and replace the start menu file
     ForEach ($startMenuPath in $usersStartMenuPaths) {
-        ReplaceStartMenu $startMenuTemplate "$($startMenuPath.Fullname)\start2.bin"
+        ReplaceStartMenu -startMenuBinFile "$($startMenuPath.Fullname)\start2.bin" -startMenuTemplate $startMenuTemplate
     }
 
     # Also replace the start menu file for the default user profile
@@ -33,7 +33,7 @@ function ReplaceStartMenuForAllUsers {
     }
 
     # Copy template to default profile
-    Copy-Item -Path $startMenuTemplate -Destination $defaultStartMenuPath -Force
+    ReplaceStartMenu -startMenuBinFile "$($defaultStartMenuPath)\start2.bin" -startMenuTemplate $startMenuTemplate
     Write-Host "Replaced start menu for the default user profile"
     Write-Host ""
 }
@@ -43,14 +43,10 @@ function ReplaceStartMenuForAllUsers {
 # Credit: https://lazyadmin.nl/win-11/customize-windows-11-start-menu-layout/
 function ReplaceStartMenu {
     param (
-        $startMenuTemplate = "$script:AssetsPath\Start\start2.bin",
-        $startMenuBinFile = "$env:LOCALAPPDATA\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState\start2.bin"
+        [Parameter(Mandatory)]
+        [string]$startMenuBinFile,
+        [string]$startMenuTemplate = "$script:AssetsPath\Start\start2.bin"
     )
-
-    # Change path to correct user if a user was specified
-    if ($script:Params.ContainsKey("User")) {
-        $startMenuBinFile = GetStartMenuBinPathForUser -UserName (GetUserName)
-    }
 
     # Check if template bin file exists
     if (-not (Test-Path $startMenuTemplate)) {
@@ -113,7 +109,6 @@ function RestoreStartMenuFromBackup {
     param(
         [Parameter(Mandatory)]
         [string]$StartMenuBinFile,
-        [Parameter(Mandatory = $false)]
         [string]$BackupFilePath
     )
 
@@ -157,7 +152,6 @@ function RestoreStartMenuFromBackup {
 
 function RestoreStartMenu {
     param(
-        [Parameter(Mandatory = $false)]
         [string]$BackupFilePath
     )
 
@@ -171,7 +165,6 @@ function RestoreStartMenu {
 
 function RestoreStartMenuForAllUsers {
     param(
-        [Parameter(Mandatory = $false)]
         [string]$BackupFilePath
     )
 

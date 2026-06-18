@@ -22,7 +22,7 @@ function RemoveApps {
 
         # Update step name and sub-progress to show which app is being removed (only for bulk removal)
         if ($script:ApplySubStepCallback -and $appCount -gt 1) {
-            & $script:ApplySubStepCallback "Removing apps ($appIndex/$appCount)" $appIndex $appCount
+            & $script:ApplySubStepCallback "Removing apps... ($appIndex/$appCount)" $appIndex $appCount
         }
 
         Write-Host "Removing $app"

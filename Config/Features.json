@@ -1082,8 +1082,8 @@
       "Category": "Taskbar",
       "RegistryKey": "Combine_Taskbar_Always.reg",
       "ApplyText": "Setting the taskbar on the main display to always combine buttons and hide labels",
-      "UndoLabel": "Use default taskbar combine behavior",
-      "ApplyUndoText": "Resetting the taskbar on the main display to always combine buttons and hide labels",
+      "UndoLabel": null,
+      "ApplyUndoText": null,
       "RegistryUndoKey": null,
       "MinVersion": 22000,
       "MaxVersion": null
@@ -1094,8 +1094,8 @@
       "Category": "Taskbar",
       "RegistryKey": "Combine_MMTaskbar_Always.reg",
       "ApplyText": "Setting the taskbar on secondary displays to always combine buttons and hide labels",
-      "UndoLabel": "Use default taskbar combine behavior",
-      "ApplyUndoText": "Resetting the taskbar on secondary displays to always combine buttons and hide labels",
+      "UndoLabel": null,
+      "ApplyUndoText": null,
       "RegistryUndoKey": null,
       "MinVersion": 22000,
       "MaxVersion": null

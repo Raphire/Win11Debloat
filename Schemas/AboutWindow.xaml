@@ -79,7 +79,7 @@
                 <!-- Separator -->
                 <Border Grid.Row="1" 
                         Height="1" 
-                        Background="{DynamicResource BorderColor}"
+                        Background="{DynamicResource AppBorderColor}"
                         Margin="20,0"/>
 
                 <!-- Content -->
@@ -87,7 +87,7 @@
                     <!-- Donation Message -->
                     <TextBlock Text="Win11Debloat is a passion project that I maintain in my free time. If you've found this tool useful, please consider making a small donation to support its development. I really appreciate it!"
                             FontSize="14"
-                            Foreground="{DynamicResource FgColor}"
+                            Foreground="{DynamicResource AppFgColor}"
                             TextWrapping="Wrap"
                             Margin="0,0,0,15"/>
 
@@ -107,7 +107,7 @@
                                 FontWeight="SemiBold"
                                 FontFamily="Segoe Fluent Icons"
                                 Text="&#xEB52;" 
-                                Foreground="{DynamicResource CloseHover}"
+                                Foreground="{DynamicResource TitleBarCloseHoverColor}"
                                 Margin="0,0,8,0"/>
                         
                         <TextBlock x:Name="KofiLink"

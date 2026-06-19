@@ -12,7 +12,7 @@
         Topmost="False"
         ShowInTaskbar="False">
 
-    <Border BorderBrush="{DynamicResource BorderColor}" 
+    <Border BorderBrush="{DynamicResource AppBorderColor}" 
             BorderThickness="1" 
             CornerRadius="8"
             Background="{DynamicResource CardBgColor}"
@@ -51,7 +51,7 @@
                            Grid.Column="0"
                            FontFamily="Segoe Fluent Icons"
                            FontSize="24"
-                           Foreground="{DynamicResource FgColor}"
+                           Foreground="{DynamicResource AppFgColor}"
                            VerticalAlignment="Center"
                            Margin="4,0,14,0"
                            Visibility="Collapsed"/>
@@ -63,7 +63,7 @@
                                TextWrapping="Wrap"
                                FontSize="14"
                                LineHeight="20"
-                               Foreground="{DynamicResource FgColor}"
+                               Foreground="{DynamicResource AppFgColor}"
                                VerticalAlignment="Center"
                                Margin="0,0,20,0"/>
                 </ScrollViewer>
@@ -71,8 +71,8 @@
 
             <!-- Button Panel -->
             <Border Grid.Row="2" 
-                    Background="{DynamicResource BgColor}"
-                    BorderBrush="{DynamicResource BorderColor}"
+                    Background="{DynamicResource AppBgColor}"
+                    BorderBrush="{DynamicResource AppBorderColor}"
                     BorderThickness="0,1,0,0"
                     Padding="16,12"
                     CornerRadius="0,0,8,8">

@@ -87,27 +87,27 @@ function Show-MessageBox {
     switch ($Icon) {
         'Information' { 
             $iconText.Text = [char]0xE946
-            $iconText.Foreground = $msgWindow.FindResource('InformationIconColor')
+            $iconText.Foreground = $msgWindow.FindResource('IconInformationColor')
             $iconText.Visibility = 'Visible'
         }
         'Success' {
             $iconText.Text = [char]0xE73E
-            $iconText.Foreground = $msgWindow.FindResource('SuccessIconColor')
+            $iconText.Foreground = $msgWindow.FindResource('IconSuccessColor')
             $iconText.Visibility = 'Visible'
         }
         'Warning' { 
             $iconText.Text = [char]0xE7BA
-            $iconText.Foreground = $msgWindow.FindResource('WarningIconColor')
+            $iconText.Foreground = $msgWindow.FindResource('IconWarningColor')
             $iconText.Visibility = 'Visible'
         }
         'Error' { 
             $iconText.Text = [char]0xEA39
-            $iconText.Foreground = $msgWindow.FindResource('ErrorIconColor')
+            $iconText.Foreground = $msgWindow.FindResource('IconErrorColor')
             $iconText.Visibility = 'Visible'
         }
         'Question' { 
             $iconText.Text = [char]0xE897
-            $iconText.Foreground = $msgWindow.FindResource('QuestionIconColor')
+            $iconText.Foreground = $msgWindow.FindResource('IconQuestionColor')
             $iconText.Visibility = 'Visible'
         }
         default {

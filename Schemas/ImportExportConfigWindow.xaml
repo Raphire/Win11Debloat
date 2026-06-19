@@ -34,7 +34,7 @@
                                TextWrapping="Wrap"
                                FontSize="14"
                                LineHeight="20"
-                               Foreground="{DynamicResource FgColor}"
+                               Foreground="{DynamicResource AppFgColor}"
                                Margin="0,0,0,14"/>
                     <!-- Checkboxes are added dynamically at runtime -->
                     <StackPanel x:Name="CheckboxPanel"/>

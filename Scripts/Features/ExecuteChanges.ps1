@@ -334,8 +334,13 @@ function Disable-TelemetryScheduledTasks {
                     Write-Host "[WhatIf] Disable Scheduled Task: $($task.Path)\$($task.Name)" -ForegroundColor Cyan
                 }
                 else {
-                    Disable-ScheduledTask -TaskPath $task.Path -TaskName $task.Name -ErrorAction SilentlyContinue | Out-Null
-                    Write-Host "Disabled Scheduled Task: $($task.Path)\$($task.Name)"
+                    try {
+                        Disable-ScheduledTask -TaskPath $task.Path -TaskName $task.Name -ErrorAction Stop | Out-Null
+                        Write-Host "Disabled Scheduled Task: $($task.Path)\$($task.Name)"
+                    }
+                    catch {
+                        Write-Host "Failed to disable Scheduled Task: $($task.Path)\$($task.Name) - $($_.Exception.Message)" -ForegroundColor Yellow
+                    }
                 }
             }
             else {

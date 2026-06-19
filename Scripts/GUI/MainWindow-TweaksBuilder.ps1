@@ -275,7 +275,12 @@ function Build-DynamicTweaks {
 
                 # When only 1 value remains, render as the underlying feature directly
                 if ($filteredValues.Count -eq 1) {
-                    $soleFid = $filteredValues[0].FeatureIds[0]
+                    $featureIds = $filteredValues[0].FeatureIds
+
+                    if (-not $featureIds -or $featureIds.Count -eq 0) { continue }
+                    
+                    $soleFid = $featureIds[0]
+
                     if ($featureMap.ContainsKey($soleFid)) {
                         $soleFeature = $featureMap[$soleFid]
                         $opt = 'Apply'

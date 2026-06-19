@@ -136,7 +136,7 @@ function Restore-RegistryBackupState {
     $isWhatIf = $null -ne $script:Params -and $script:Params.ContainsKey("WhatIf")
     if ($isWhatIf) {
         Write-Host "[WhatIf] Restore registry backup for $friendlyTarget" -ForegroundColor Cyan
-        return
+        return [PSCustomObject]@{ Result = $true }
     }
 
     $restoreAction = {
@@ -154,9 +154,10 @@ function Restore-RegistryBackupState {
         Write-Host "Restore requires loading target user hive."
         Invoke-WithLoadedRestoreHive -Target $Backup.Target -ScriptBlock $restoreAction -ArgumentObject $Backup
         Write-Host "Restore completed for $friendlyTarget."
-        return
+        return [PSCustomObject]@{ Result = $true }
     }
 
     & $restoreAction $Backup
     Write-Host "Restore completed for $friendlyTarget."
+    return [PSCustomObject]@{ Result = $true }
 }

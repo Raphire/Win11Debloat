@@ -27,9 +27,17 @@ function Show-RestoreBackupWindow {
             }
 
             Write-Host "User confirmed registry restore for $($backup.Target)."
-            Restore-RegistryBackupState -Backup $backup
-            $restoreResult.RestoredRegistry = $true
-            $successMessage = 'Registry backup restored successfully. Some changes may require a restart to take effect.'
+            $restoreOpResult = Restore-RegistryBackupState -Backup $backup
+            if ($restoreOpResult -and $restoreOpResult.Result) {
+                $restoreResult.RestoredRegistry = $true
+                $isWhatIf = $null -ne $script:Params -and $script:Params.ContainsKey("WhatIf")
+                if ($isWhatIf) {
+                    $successMessage = '[WhatIf] Registry backup would be restored (no changes made).'
+                }
+                else {
+                    $successMessage = 'Registry backup restored successfully. Some changes may require a restart to take effect.'
+                }
+            }
         }
         elseif ($dialogResult.Result -eq 'RestoreStartMenu') {
             $scope = $dialogResult.StartMenuScope

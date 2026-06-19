@@ -422,7 +422,7 @@ function Export-Configuration {
     $isWhatIf = $null -ne $script:Params -and $script:Params.ContainsKey("WhatIf")
     if ($isWhatIf) {
         Write-Host "[WhatIf] Export configuration to '$($saveDialog.FileName)'" -ForegroundColor Cyan
-        Show-MessageBox -Message "[WhatIf] Configuration exported successfully." -Title 'Export Configuration' -Button 'OK' -Icon 'Information' | Out-Null
+        Show-MessageBox -Message "[WhatIf] Configuration would be exported to this file (no file written)." -Title 'Export Configuration' -Button 'OK' -Icon 'Information' | Out-Null
         return
     }
 

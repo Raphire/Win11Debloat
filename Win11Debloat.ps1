@@ -223,12 +223,14 @@ else {
 
 # Check if the device is domain-joined and warn the user (Group Policy may override changes)
 try {
-    $isDomainJoined = (Get-CimInstance Win32_ComputerSystem -ErrorAction SilentlyContinue).PartOfDomain
-    if ($isDomainJoined) {
+    $computerSystem = Get-CimInstance Win32_ComputerSystem -ErrorAction SilentlyContinue
+    if ($null -ne $computerSystem -and $computerSystem.PartOfDomain) {
         Write-Warning "This machine is domain-joined. Group Policy may override changes made by Win11Debloat."
     }
 }
-catch {}
+catch {
+    # Suppress WMI/CIM query and null reference errors to ensure the script does not crash on startup
+}
 
 # Check if script has all required files
 if (-not ((Test-Path $script:DefaultSettingsFilePath) -and (Test-Path $script:AppsListFilePath) -and (Test-Path $script:RegfilesPath) -and (Test-Path $script:AssetsPath) -and (Test-Path $script:AppSelectionSchema) -and (Test-Path $script:ApplyChangesWindowSchema) -and (Test-Path $script:SharedStylesSchema) -and (Test-Path $script:BubbleHintSchema) -and (Test-Path $script:RestoreBackupWindowSchema) -and (Test-Path $script:FeaturesFilePath))) {

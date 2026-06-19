@@ -57,10 +57,6 @@ function SetWindowThemeResources {
             SideBorderColor = @{ Light = '#ececec'; Dark = '#343434' }
         }
 
-        Input = @{
-            FocusColor = @{ Light = '#fbfbfb'; Dark = '#1f1f1f' }
-        }
-
         ScrollBar = @{
             ThumbColor      = @{ Light = '#b9b9b9'; Dark = '#3d3d3d' }
             ThumbHoverColor = @{ Light = '#8b8b8b'; Dark = '#4b4b4b' }

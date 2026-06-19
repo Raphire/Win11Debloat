@@ -192,6 +192,12 @@ function Build-DynamicTweaks {
         }
     }
 
+    # Build a FeatureId -> feature lookup for version filtering in groups
+    $featureMap = @{}
+    foreach ($f in $featuresJson.Features) {
+        $featureMap[$f.FeatureId] = $f
+    }
+
     foreach ($categoryObj in $orderedCategories) {
         $categoryName = $categoryObj.Name
 
@@ -250,7 +256,60 @@ function Build-DynamicTweaks {
         foreach ($item in $sortedItems) {
             if ($item.Type -eq 'group') {
                 $group = $item.Data
-                $items = @('No Change') + ($group.Values | ForEach-Object { $_.Label })
+                # Filter values by Windows version compatibility of their referenced features
+                $filteredValues = @($group.Values | Where-Object {
+                    $allCompatible = $true
+                    foreach ($fid in $_.FeatureIds) {
+                        if ($featureMap.ContainsKey($fid)) {
+                            $f = $featureMap[$fid]
+                            if (($f.MinVersion -and $WinVersion -lt $f.MinVersion) -or ($f.MaxVersion -and $WinVersion -gt $f.MaxVersion)) {
+                                $allCompatible = $false
+                                break
+                            }
+                        }
+                    }
+                    $allCompatible
+                })
+                # Skip the group entirely if all values are incompatible with this Windows version
+                if ($filteredValues.Count -eq 0) { continue }
+
+                # When only 1 value remains, render as the underlying feature directly
+                if ($filteredValues.Count -eq 1) {
+                    $featureIds = $filteredValues[0].FeatureIds
+
+                    if (-not $featureIds -or $featureIds.Count -eq 0) { continue }
+                    
+                    $soleFid = $featureIds[0]
+
+                    if ($featureMap.ContainsKey($soleFid)) {
+                        $soleFeature = $featureMap[$soleFid]
+                        $opt = 'Apply'
+                        if ($soleFeature.FeatureId -match '^Disable') { $opt = 'Disable' } elseif ($soleFeature.FeatureId -match '^Enable') { $opt = 'Enable' }
+                        $items = @('No Change', $opt)
+                        $comboName = ("Feature_{0}_Combo" -f $soleFeature.FeatureId) -replace '[^a-zA-Z0-9_]', ''
+                        $combo = CreateLabeledCombo -parent $panel -labelText $soleFeature.Label -comboName $comboName -items $items
+                        # attach tooltip from Features.json if present
+                        if ($soleFeature.ToolTip -or $soleFeature.DisableWhenApplied -eq $true) {
+                            $tooltipText = $soleFeature.ToolTip
+                            if ($soleFeature.DisableWhenApplied -eq $true) {
+                                $tooltipText = "This tweak is already applied and cannot be undone automatically. Visit the Win11Debloat wiki for instructions on how to manually revert this change."
+                            }
+                            $tipBlock = New-Object System.Windows.Controls.TextBlock
+                            $tipBlock.Text = $tooltipText
+                            $tipBlock.TextWrapping = 'Wrap'
+                            $tipBlock.MaxWidth = 420
+                            $combo.ToolTip = $tipBlock
+                            [System.Windows.Controls.ToolTipService]::SetShowOnDisabled($combo, $true)
+                            $lblBorderObj = $null
+                            try { $lblBorderObj = $Window.FindName("$comboName`_LabelBorder") } catch {}
+                            if ($lblBorderObj) { $lblBorderObj.ToolTip = $tipBlock }
+                        }
+                        $script:UiControlMappings[$comboName] = @{ Type = 'feature'; FeatureId = $soleFeature.FeatureId; Label = $soleFeature.Label; Category = $categoryName }
+                    }
+                    continue
+                }
+
+                $items = @('No Change') + ($filteredValues | ForEach-Object { $_.Label })
                 $comboName = 'Group_{0}Combo' -f $group.GroupId
                 $combo = CreateLabeledCombo -parent $panel -labelText $group.Label -comboName $comboName -items $items
                 # attach tooltip from UiGroups if present
@@ -264,7 +323,7 @@ function Build-DynamicTweaks {
                     try { $lblBorderObj = $Window.FindName("$comboName`_LabelBorder") } catch {}
                     if ($lblBorderObj) { $lblBorderObj.ToolTip = $tipBlock }
                 }
-                $script:UiControlMappings[$comboName] = @{ Type = 'group'; Values = $group.Values; Label = $group.Label; Category = $categoryName }
+                $script:UiControlMappings[$comboName] = @{ Type = 'group'; Values = $filteredValues; Label = $group.Label; Category = $categoryName }
             }
             elseif ($item.Type -eq 'feature') {
                 $feature = $item.Data

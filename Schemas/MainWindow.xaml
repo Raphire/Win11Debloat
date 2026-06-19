@@ -804,7 +804,7 @@
                                                         <ColumnDefinition Width="Auto"/>
                                                     </Grid.ColumnDefinitions>
                                                     <TextBlock x:Name="TweakSearchPlaceholder" Grid.Column="0" Text="Search tweaks..." Foreground="{DynamicResource FgColor}" Opacity="0.7" FontSize="13" Margin="3,0,0,1" VerticalAlignment="Center" IsHitTestVisible="False"/>
-                                                    <TextBox x:Name="TweakSearchBox" Grid.Column="0" Style="{DynamicResource TextBoxInputStyle}" Text=""/>
+                                                    <TextBox x:Name="TweakSearchBox" Grid.Column="0" Style="{DynamicResource TextBoxInputStyle}" Text="" AutomationProperties.Name="Search tweaks"/>
                                                     <TextBlock Grid.Column="1" Text="&#xE721;" FontFamily="Segoe Fluent Icons" FontSize="14" VerticalAlignment="Center" Margin="8,0,4,0" Foreground="{DynamicResource FgColor}" Opacity="0.7"/>
                                                 </Grid>
                                             </Border>

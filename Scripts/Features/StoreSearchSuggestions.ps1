@@ -41,7 +41,7 @@ function DisableStoreSearchSuggestionsForAllUsers {
     The full path to the user's store.db file.
 
     .EXAMPLE
-    DisableStoreSearchSuggestions -StoreAppsDatabase "C:\Users\Jeff\AppData\Local\Packages\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalState\store.db"
+    DisableStoreSearchSuggestions -StoreAppsDatabase "$env:LOCALAPPDATA\Packages\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalState\store.db"
 #>
 function DisableStoreSearchSuggestions {
     param (
@@ -117,7 +117,7 @@ function EnableStoreSearchSuggestionsForAllUsers {
     The full path to the user's store.db file.
 
     .EXAMPLE
-    EnableStoreSearchSuggestions -StoreAppsDatabase "C:\Users\Jeff\AppData\Local\Packages\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalState\store.db"
+    EnableStoreSearchSuggestions -StoreAppsDatabase "$env:LOCALAPPDATA\Packages\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalState\store.db"
 #>
 function EnableStoreSearchSuggestions {
     param (

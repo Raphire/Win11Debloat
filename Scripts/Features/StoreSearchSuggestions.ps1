@@ -23,7 +23,9 @@ function DisableStoreSearchSuggestionsForAllUsers {
 
     # Also disable start search suggestions for the default user profile
     $defaultStoreDbPath = GetStoreAppsDatabasePathForUser -UserName "Default"
-    DisableStoreSearchSuggestions -StoreAppsDatabase $defaultStoreDbPath
+    if ($defaultStoreDbPath) {
+        DisableStoreSearchSuggestions -StoreAppsDatabase $defaultStoreDbPath
+    }
 }
 
 
@@ -100,7 +102,9 @@ function EnableStoreSearchSuggestionsForAllUsers {
 
     # Also re-enable for the default user profile
     $defaultStoreDbPath = GetStoreAppsDatabasePathForUser -UserName "Default"
-    EnableStoreSearchSuggestions -StoreAppsDatabase $defaultStoreDbPath
+    if ($defaultStoreDbPath) {
+        EnableStoreSearchSuggestions -StoreAppsDatabase $defaultStoreDbPath
+    }
 }
 
 <#

@@ -1,4 +1,16 @@
-# Disables Microsoft Store search suggestions in the start menu for all users by denying access to the Store app database file for each user
+<#
+    .SYNOPSIS
+    Disables Microsoft Store search suggestions in the start menu for all user profiles.
+
+    .DESCRIPTION
+    Iterates over every existing user profile and the Default user profile,
+    denying the EVERYONE group FullControl access to each user's Store app
+    database file (store.db). This prevents Windows from showing Store search
+    suggestions in the start menu search pane.
+
+    .EXAMPLE
+    DisableStoreSearchSuggestionsForAllUsers
+#>
 function DisableStoreSearchSuggestionsForAllUsers {
     # Get path to Store app database for all users
     $userPathString = GetUserDirectory -userName "*" -fileName "AppData\Local\Packages"
@@ -15,7 +27,22 @@ function DisableStoreSearchSuggestionsForAllUsers {
 }
 
 
-# Disables Microsoft Store search suggestions in the start menu by denying access to the Store app database file
+<#
+    .SYNOPSIS
+    Disables Microsoft Store search suggestions for a single user.
+
+    .DESCRIPTION
+    Denies the EVERYONE group FullControl access to the specified Store app
+    database file (store.db). If the file does not exist (e.g. on EEA systems
+    where Store app suggestions are absent by default), it creates the file
+    and its parent directory first to prevent Windows from recreating it later.
+
+    .PARAMETER StoreAppsDatabase
+    The full path to the user's store.db file.
+
+    .EXAMPLE
+    DisableStoreSearchSuggestions -StoreAppsDatabase "C:\Users\Jeff\AppData\Local\Packages\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalState\store.db"
+#>
 function DisableStoreSearchSuggestions {
     param (
         [Parameter(Mandatory)]
@@ -48,6 +75,19 @@ function DisableStoreSearchSuggestions {
     Write-Host "Disabled Microsoft Store search suggestions for user $userName"
 }
 
+<#
+    .SYNOPSIS
+    Re-enables Microsoft Store search suggestions in the start menu for all user profiles.
+
+    .DESCRIPTION
+    Iterates over every existing user profile and the Default user profile,
+    removing the deny ACL from each user's Store app database file (store.db)
+    and then deleting the file. This restores the default Windows behavior
+    where Store search suggestions appear in the start menu.
+
+    .EXAMPLE
+    EnableStoreSearchSuggestionsForAllUsers
+#>
 function EnableStoreSearchSuggestionsForAllUsers {
     # Get path to Store app database for all users
     $userPathString = GetUserDirectory -userName "*" -fileName "AppData\Local\Packages"
@@ -63,6 +103,22 @@ function EnableStoreSearchSuggestionsForAllUsers {
     EnableStoreSearchSuggestions -StoreAppsDatabase $defaultStoreDbPath
 }
 
+<#
+    .SYNOPSIS
+    Re-enables Microsoft Store search suggestions for a single user.
+
+    .DESCRIPTION
+    Takes ownership of the specified Store app database file, removes any
+    EVERYONE deny FullControl ACL entries, and deletes the file. If the file
+    does not exist, no action is taken. Callers should handle the case where
+    the file is absent gracefully.
+
+    .PARAMETER StoreAppsDatabase
+    The full path to the user's store.db file.
+
+    .EXAMPLE
+    EnableStoreSearchSuggestions -StoreAppsDatabase "C:\Users\Jeff\AppData\Local\Packages\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalState\store.db"
+#>
 function EnableStoreSearchSuggestions {
     param (
         [Parameter(Mandatory)]
@@ -113,6 +169,24 @@ function EnableStoreSearchSuggestions {
     }
 }
 
+<#
+    .SYNOPSIS
+    Returns the full path to the Store app database file for a given user.
+
+    .DESCRIPTION
+    Resolves the path to the Microsoft Store app database (store.db) for the
+    specified username. When no username is provided or the value is empty,
+    falls back to the current user's local app data path via $env:LOCALAPPDATA.
+
+    .PARAMETER UserName
+    The target username. Pass an empty string or omit to resolve for the current user.
+
+    .EXAMPLE
+    GetStoreAppsDatabasePathForUser -UserName "Jeff"
+
+    .EXAMPLE
+    GetStoreAppsDatabasePathForUser -UserName "Default"
+#>
 function GetStoreAppsDatabasePathForUser {
     param(
         [string]$UserName
@@ -125,6 +199,21 @@ function GetStoreAppsDatabasePathForUser {
     return (GetUserDirectory -userName $UserName -fileName "AppData\Local\Packages\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalState\store.db" -exitIfPathNotFound $false)
 }
 
+<#
+    .SYNOPSIS
+    Tests whether Store search suggestions are disabled for a single user.
+
+    .DESCRIPTION
+    Checks whether the specified store.db file has an EVERYONE deny
+    FullControl ACL entry applied. Returns $true if the deny rule is present,
+    $false otherwise (including when the file or directory does not exist).
+
+    .PARAMETER StoreAppsDatabase
+    The full path to the user's store.db file.
+
+    .EXAMPLE
+    Test-StoreSearchSuggestionsDisabled -StoreAppsDatabase "C:\Users\Jeff\AppData\Local\Packages\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalState\store.db"
+#>
 function Test-StoreSearchSuggestionsDisabled {
     param(
         [Parameter(Mandatory)]
@@ -162,6 +251,19 @@ function Test-StoreSearchSuggestionsDisabled {
     return $false
 }
 
+<#
+    .SYNOPSIS
+    Tests whether Store search suggestions are disabled for all user profiles.
+
+    .DESCRIPTION
+    Collects the store.db paths for all existing user profiles and the Default
+    user profile, then verifies that every one of them has the EVERYONE deny
+    FullControl ACL applied. Returns $true only if ALL paths pass the check.
+    Returns $false immediately if any user's store.db is not disabled.
+
+    .EXAMPLE
+    Test-StoreSearchSuggestionsDisabledForAllUsers
+#>
 function Test-StoreSearchSuggestionsDisabledForAllUsers {
     $paths = @()
 

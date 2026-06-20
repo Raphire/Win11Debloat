@@ -292,7 +292,7 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 
 # Features functions
 . "$PSScriptRoot/Scripts/Features/GetCurrentTweakState.ps1"
-. "$PSScriptRoot/Scripts/Features/ExecuteChanges.ps1"
+. "$PSScriptRoot/Scripts/Features/InvokeChanges.ps1"
 . "$PSScriptRoot/Scripts/Features/CreateSystemRestorePoint.ps1"
 . "$PSScriptRoot/Scripts/Features/BackupRegistryFeatureSelection.ps1"
 . "$PSScriptRoot/Scripts/Features/BackupRegistrySnapshotCapture.ps1"
@@ -535,7 +535,7 @@ if (($controlParamsCount -eq $script:Params.Keys.Count) -or ($script:Params.Keys
 
 # Execute all selected/provided parameters using the consolidated function
 # (This also handles restore point creation if requested)
-ExecuteAllChanges
+Invoke-AllChanges
 
 RestartExplorer
 

@@ -249,15 +249,9 @@ function ExecuteAllChanges {
 
         if ($f -and $f.RegistryUndoKey) {
             ImportRegistryFile "> $applyUndoText" (Resolve-UndoRegFilePath $f.RegistryUndoKey)
-            switch ($featureId) {
-                'DisableTelemetry' {
-                    # Also re-enable telemetry scheduled tasks
-                    Enable-TelemetryScheduledTasks
-                }
-            }
-        } else {
-            Invoke-UndoFeatureAction -FeatureId $featureId
         }
+        
+        Invoke-UndoFeatureAction -FeatureId $featureId
     }
 
     if ($script:RegistryImportFailures -gt 0) {
@@ -312,94 +306,9 @@ function Invoke-UndoFeatureAction {
             Write-Host ""
             return
         }
-        default {
-            Write-Host "> No undo action defined for $FeatureId, skipping..." -ForegroundColor Yellow
-            Write-Host ""
-            return
+        'DisableTelemetry' {
+            # Also re-enable telemetry scheduled tasks
+            Enable-TelemetryScheduledTasks
         }
     }
-}
-
-function Disable-TelemetryScheduledTasks {
-    $tasks = @(
-        @{ Path = "\Microsoft\Windows\Application Experience"; Name = "Microsoft Compatibility Appraiser" },
-        @{ Path = "\Microsoft\Windows\Application Experience"; Name = "Microsoft Compatibility Appraiser Exp" },
-        @{ Path = "\Microsoft\Windows\Application Experience"; Name = "ProgramDataUpdater" },
-        @{ Path = "\Microsoft\Windows\Application Experience"; Name = "StartupAppTask" },
-        @{ Path = "\Microsoft\Windows\Customer Experience Improvement Program"; Name = "Consolidator" },
-        @{ Path = "\Microsoft\Windows\Customer Experience Improvement Program"; Name = "UsbCeip" },
-        @{ Path = "\Microsoft\Windows\DiskDiagnostic"; Name = "Microsoft-Windows-DiskDiagnosticDataCollector" },
-        @{ Path = "\Microsoft\Windows\Autochk"; Name = "Proxy" }
-    )
-
-    Write-Host "> Disabling telemetry scheduled tasks..."
-    $isWhatIf = $WhatIfPreference -or ($null -ne $script:Params -and $script:Params.ContainsKey("WhatIf"))
-    foreach ($task in $tasks) {
-        $taskObj = Get-ScheduledTask -TaskPath $task.Path -TaskName $task.Name -ErrorAction SilentlyContinue
-        if ($taskObj) {
-            if ($taskObj.State -ne 'Disabled') {
-                if ($isWhatIf) {
-                    Write-Host "[WhatIf] Disable Scheduled Task: $($task.Path)\$($task.Name)" -ForegroundColor Cyan
-                }
-                else {
-                    try {
-                        Disable-ScheduledTask -TaskPath $task.Path -TaskName $task.Name -ErrorAction Stop | Out-Null
-                        Write-Host "Disabled Scheduled Task: $($task.Path)\$($task.Name)"
-                    }
-                    catch {
-                        Write-Host "Failed to disable Scheduled Task: $($task.Path)\$($task.Name) - $($_.Exception.Message)" -ForegroundColor Yellow
-                    }
-                }
-            }
-            else {
-                Write-Verbose "Scheduled Task $($task.Path)\$($task.Name) is already disabled."
-            }
-        }
-        else {
-            Write-Verbose "Scheduled Task $($task.Path)\$($task.Name) not found."
-        }
-    }
-    Write-Host ""
-}
-
-function Enable-TelemetryScheduledTasks {
-    $tasks = @(
-        @{ Path = "\Microsoft\Windows\Application Experience"; Name = "Microsoft Compatibility Appraiser" },
-        @{ Path = "\Microsoft\Windows\Application Experience"; Name = "Microsoft Compatibility Appraiser Exp" },
-        @{ Path = "\Microsoft\Windows\Application Experience"; Name = "ProgramDataUpdater" },
-        @{ Path = "\Microsoft\Windows\Application Experience"; Name = "StartupAppTask" },
-        @{ Path = "\Microsoft\Windows\Customer Experience Improvement Program"; Name = "Consolidator" },
-        @{ Path = "\Microsoft\Windows\Customer Experience Improvement Program"; Name = "UsbCeip" },
-        @{ Path = "\Microsoft\Windows\DiskDiagnostic"; Name = "Microsoft-Windows-DiskDiagnosticDataCollector" },
-        @{ Path = "\Microsoft\Windows\Autochk"; Name = "Proxy" }
-    )
-
-    Write-Host "> Enabling telemetry scheduled tasks..."
-    $isWhatIf = $WhatIfPreference -or ($null -ne $script:Params -and $script:Params.ContainsKey("WhatIf"))
-    foreach ($task in $tasks) {
-        $taskObj = Get-ScheduledTask -TaskPath $task.Path -TaskName $task.Name -ErrorAction SilentlyContinue
-        if ($taskObj) {
-            if ($taskObj.State -eq 'Disabled') {
-                if ($isWhatIf) {
-                    Write-Host "[WhatIf] Enable Scheduled Task: $($task.Path)\$($task.Name)" -ForegroundColor Cyan
-                }
-                else {
-                    try {
-                        Enable-ScheduledTask -TaskPath $task.Path -TaskName $task.Name -ErrorAction Stop | Out-Null
-                        Write-Host "Enabled Scheduled Task: $($task.Path)\$($task.Name)"
-                    }
-                    catch {
-                        Write-Host "Failed to enable Scheduled Task: $($task.Path)\$($task.Name) - $($_.Exception.Message)" -ForegroundColor Yellow
-                    }
-                }
-            }
-            else {
-                Write-Verbose "Scheduled Task $($task.Path)\$($task.Name) is already enabled."
-            }
-        }
-        else {
-            Write-Verbose "Scheduled Task $($task.Path)\$($task.Name) not found."
-        }
-    }
-    Write-Host ""
 }

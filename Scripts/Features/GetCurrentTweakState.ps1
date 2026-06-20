@@ -50,10 +50,7 @@ function Test-FeatureApplied {
                 return (Test-StoreSearchSuggestionsDisabledForAllUsers)
             }
 
-            $storeDbPath = "$env:LocalAppData\Packages\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalState\store.db"
-            if ($script:Params.ContainsKey('User')) {
-                $storeDbPath = GetUserDirectory -userName "$(GetUserName)" -fileName "AppData\Local\Packages\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalState\store.db" -exitIfPathNotFound $false
-            }
+            $storeDbPath = GetStoreAppsDatabasePathForUser -UserName (GetUserName)
 
             return (Test-StoreSearchSuggestionsDisabled -StoreAppsDatabase $storeDbPath)
         }

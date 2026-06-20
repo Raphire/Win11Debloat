@@ -125,7 +125,8 @@ function ExecuteParameter {
             }
 
             Write-Host "> Disabling Microsoft Store search suggestions for user $(GetUserName)..."
-            DisableStoreSearchSuggestions
+            $storeDb = GetStoreAppsDatabasePathForUser -UserName (GetUserName)
+            DisableStoreSearchSuggestions -StoreAppsDatabase $storeDb
             Write-Host ""
             return
         }
@@ -289,7 +290,8 @@ function Invoke-UndoFeatureAction {
             }
 
             Write-Host "> Re-enabling Microsoft Store search suggestions for user $(GetUserName)..."
-            EnableStoreSearchSuggestions
+            $storeDb = GetStoreAppsDatabasePathForUser -UserName (GetUserName)
+            EnableStoreSearchSuggestions -StoreAppsDatabase $storeDb
             Write-Host ""
             return
         }

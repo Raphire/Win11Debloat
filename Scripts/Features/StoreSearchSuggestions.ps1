@@ -5,28 +5,25 @@ function DisableStoreSearchSuggestionsForAllUsers {
     $usersStoreDbPaths = Get-ChildItem -Path $userPathString -ErrorAction SilentlyContinue
 
     # Go through all users and disable start search suggestions
-    ForEach ($storeDbPath in $usersStoreDbPaths) {
-        DisableStoreSearchSuggestions ($storeDbPath.FullName + "\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalState\store.db")
+    foreach ($storeDbPath in $usersStoreDbPaths) {
+        DisableStoreSearchSuggestions -StoreAppsDatabase ($storeDbPath.FullName + "\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalState\store.db")
     }
 
     # Also disable start search suggestions for the default user profile
-    $defaultStoreDbPath = GetUserDirectory -userName "Default" -fileName "AppData\Local\Packages\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalState\store.db" -exitIfPathNotFound $false
-    DisableStoreSearchSuggestions $defaultStoreDbPath
+    $defaultStoreDbPath = GetStoreAppsDatabasePathForUser -UserName "Default"
+    DisableStoreSearchSuggestions -StoreAppsDatabase $defaultStoreDbPath
 }
 
 
 # Disables Microsoft Store search suggestions in the start menu by denying access to the Store app database file
 function DisableStoreSearchSuggestions {
     param (
-        $StoreAppsDatabase = "$env:LocalAppData\Packages\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalState\store.db"
+        [Parameter(Mandatory)]
+        [string]$StoreAppsDatabase
     )
 
-    # Change path to correct user if a user was specified
-    if ($script:Params.ContainsKey("User")) {
-        $StoreAppsDatabase = GetUserDirectory -userName "$(GetUserName)" -fileName "AppData\Local\Packages\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalState\store.db" -exitIfPathNotFound $false
-    }
-
     $userName = [regex]::Match($StoreAppsDatabase, '(?:Users\\)([^\\]+)(?:\\AppData)').Groups[1].Value
+    if (-not $userName) { $userName = '<unknown>' }
 
     # This file doesn't exist in EEA (No Store app suggestions).
     if (-not (Test-Path -Path $StoreAppsDatabase))
@@ -57,24 +54,20 @@ function EnableStoreSearchSuggestionsForAllUsers {
     $usersStoreDbPaths = Get-ChildItem -Path $userPathString -ErrorAction SilentlyContinue
 
     # Go through all users and re-enable start search suggestions
-    ForEach ($storeDbPath in $usersStoreDbPaths) {
-        EnableStoreSearchSuggestions ($storeDbPath.FullName + "\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalState\store.db")
+    foreach ($storeDbPath in $usersStoreDbPaths) {
+        EnableStoreSearchSuggestions -StoreAppsDatabase ($storeDbPath.FullName + "\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalState\store.db")
     }
 
     # Also re-enable for the default user profile
-    $defaultStoreDbPath = GetUserDirectory -userName "Default" -fileName "AppData\Local\Packages\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalState\store.db" -exitIfPathNotFound $false
-    EnableStoreSearchSuggestions $defaultStoreDbPath
+    $defaultStoreDbPath = GetStoreAppsDatabasePathForUser -UserName "Default"
+    EnableStoreSearchSuggestions -StoreAppsDatabase $defaultStoreDbPath
 }
 
 function EnableStoreSearchSuggestions {
     param (
-        $StoreAppsDatabase = "$env:LocalAppData\Packages\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalState\store.db"
+        [Parameter(Mandatory)]
+        [string]$StoreAppsDatabase
     )
-
-    # Change path to correct user if a user was specified
-    if ($script:Params.ContainsKey("User")) {
-        $StoreAppsDatabase = GetUserDirectory -userName "$(GetUserName)" -fileName "AppData\Local\Packages\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalState\store.db" -exitIfPathNotFound $false
-    }
 
     $userName = [regex]::Match($StoreAppsDatabase, '(?:Users\\)([^\\]+)(?:\\AppData)').Groups[1].Value
     if (-not $userName) { $userName = '<unknown>' }
@@ -118,6 +111,18 @@ function EnableStoreSearchSuggestions {
     catch {
         throw "Failed to remove '$StoreAppsDatabase' while undoing Microsoft Store search suggestions for user $userName. $($_.Exception.Message)"
     }
+}
+
+function GetStoreAppsDatabasePathForUser {
+    param(
+        [string]$UserName
+    )
+
+    if ([string]::IsNullOrWhiteSpace($UserName)) {
+        return "$env:LOCALAPPDATA\Packages\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalState\store.db"
+    }
+
+    return (GetUserDirectory -userName $UserName -fileName "AppData\Local\Packages\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalState\store.db" -exitIfPathNotFound $false)
 }
 
 function Test-StoreSearchSuggestionsDisabled {
@@ -166,7 +171,7 @@ function Test-StoreSearchSuggestionsDisabledForAllUsers {
         $paths += ($storeDbPath.FullName + "\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalState\store.db")
     }
 
-    $defaultStoreDbPath = GetUserDirectory -userName "Default" -fileName "AppData\Local\Packages\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalState\store.db" -exitIfPathNotFound $false
+    $defaultStoreDbPath = GetStoreAppsDatabasePathForUser -UserName "Default"
     if ($defaultStoreDbPath) {
         $paths += $defaultStoreDbPath
     }

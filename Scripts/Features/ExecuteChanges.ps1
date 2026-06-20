@@ -309,6 +309,7 @@ function Invoke-UndoFeatureAction {
         'DisableTelemetry' {
             # Also re-enable telemetry scheduled tasks
             Enable-TelemetryScheduledTasks
+            return
         }
     }
 }

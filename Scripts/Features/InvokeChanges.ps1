@@ -89,6 +89,7 @@ function Invoke-FeatureApply {
             Get-Process *Widget* -ErrorAction SilentlyContinue | Stop-Process
 
             RemoveApps @('Microsoft.StartExperiencesApp','MicrosoftWindows.Client.WebExperience','Microsoft.WidgetsPlatformRuntime')
+            return
         }
         'EnableWindowsSandbox' {
             Write-Host "> $($feature.ApplyText)..."

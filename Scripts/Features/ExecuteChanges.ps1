@@ -26,6 +26,10 @@ function ExecuteParameter {
                 # Also remove the app package for Copilot
                 RemoveApps @('Microsoft.Copilot')
             }
+            'DisableTelemetry' {
+                # Also disable telemetry scheduled tasks
+                Disable-TelemetryScheduledTasks
+            }
         }
         return
     }
@@ -245,9 +249,9 @@ function ExecuteAllChanges {
 
         if ($f -and $f.RegistryUndoKey) {
             ImportRegistryFile "> $applyUndoText" (Resolve-UndoRegFilePath $f.RegistryUndoKey)
-        } else {
-            Invoke-UndoFeatureAction -FeatureId $featureId
         }
+        
+        Invoke-UndoFeatureAction -FeatureId $featureId
     }
 
     if ($script:RegistryImportFailures -gt 0) {
@@ -302,9 +306,9 @@ function Invoke-UndoFeatureAction {
             Write-Host ""
             return
         }
-        default {
-            Write-Host "> No undo action defined for $FeatureId, skipping..." -ForegroundColor Yellow
-            Write-Host ""
+        'DisableTelemetry' {
+            # Also re-enable telemetry scheduled tasks
+            Enable-TelemetryScheduledTasks
             return
         }
     }

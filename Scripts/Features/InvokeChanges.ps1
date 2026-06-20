@@ -35,6 +35,10 @@ function Invoke-FeatureApply {
                 # Also remove the app package for Copilot
                 RemoveApps @('Microsoft.Copilot')
             }
+            'DisableTelemetry' {
+                # Also disable telemetry scheduled tasks
+                Disable-TelemetryScheduledTasks
+            }
         }
         return
     }
@@ -182,9 +186,9 @@ function Invoke-FeatureUndo {
             Write-Host ""
             return
         }
-        default {
-            Write-Host "> No undo action defined for $FeatureId, skipping..." -ForegroundColor Yellow
-            Write-Host ""
+        'DisableTelemetry' {
+            # Also re-enable telemetry scheduled tasks
+            Enable-TelemetryScheduledTasks
             return
         }
     }

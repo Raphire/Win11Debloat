@@ -393,9 +393,9 @@
       "ToolTip": "This setting disables telemetry, diagnostic data collection, activity history, app-launch tracking, targeted ads and more. It limits the data that is sent to Microsoft about your device and usage. If you are a Windows Insider, updates may be blocked until optional diagnostic data collection is turned back on.",
       "Category": "Privacy & Suggested Content",
       "RegistryKey": "Disable_Telemetry.reg",
-      "ApplyText": "Disabling telemetry, diagnostic data, activity history, app-launch tracking and targeted ads",
+      "ApplyText": "Disabling telemetry and diagnostic data collection",
       "UndoLabel": "Enable telemetry, tracking & targeted ads",
-      "ApplyUndoText": "Enabling telemetry, diagnostic data, activity history, app-launch tracking and targeted ads",
+      "ApplyUndoText": "Enabling telemetry and diagnostic data collection",
       "RegistryUndoKey": "Enable_Telemetry.reg",
       "MinVersion": null,
       "MaxVersion": null

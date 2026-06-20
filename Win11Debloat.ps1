@@ -300,7 +300,7 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 . "$PSScriptRoot/Scripts/Features/RegistryBackupValidation.ps1"
 . "$PSScriptRoot/Scripts/Features/RestoreRegistryApplyState.ps1"
 . "$PSScriptRoot/Scripts/Features/RestoreRegistryBackup.ps1"
-. "$PSScriptRoot/Scripts/Features/DisableStoreSearchSuggestions.ps1"
+. "$PSScriptRoot/Scripts/Features/StoreSearchSuggestions.ps1"
 . "$PSScriptRoot/Scripts/Features/TelemetryScheduledTasks.ps1"
 . "$PSScriptRoot/Scripts/Features/WindowsOptionalFeatures.ps1"
 . "$PSScriptRoot/Scripts/Features/ImportRegistryFile.ps1"

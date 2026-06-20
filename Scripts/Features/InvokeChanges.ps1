@@ -135,7 +135,10 @@ function Invoke-FeatureApply {
             }
 
             Write-Host "> Disabling Microsoft Store search suggestions for user $(GetUserName)..."
-            DisableStoreSearchSuggestions
+            $storeDb = GetStoreAppsDatabasePathForUser -UserName (GetUserName)
+            if ($storeDb) {
+                DisableStoreSearchSuggestions -StoreAppsDatabase $storeDb
+            }
             Write-Host ""
             return
         }
@@ -170,7 +173,10 @@ function Invoke-FeatureUndo {
             }
 
             Write-Host "> Re-enabling Microsoft Store search suggestions for user $(GetUserName)..."
-            EnableStoreSearchSuggestions
+            $storeDb = GetStoreAppsDatabasePathForUser -UserName (GetUserName)
+            if ($storeDb) {
+                EnableStoreSearchSuggestions -StoreAppsDatabase $storeDb
+            }
             Write-Host ""
             return
         }

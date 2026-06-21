@@ -1,3 +1,27 @@
+<#
+    .SYNOPSIS
+    Applies light or dark theme colors to a WPF window's resource dictionary.
+
+    .DESCRIPTION
+    Iterates over a predefined set of theme color categories (App, Card, Button,
+    CheckBox, ComboBox, TextBox, ScrollBar, TitleBar, Search, Table, Icon) and
+    populates the window's Resources with SolidColorBrush entries keyed by
+    category and resource name (e.g. "AppAccentColor"). Additionally loads and
+    merges shared XAML styles from the script's SharedStylesSchema path if
+    available.
+
+    .PARAMETER window
+    The WPF Window whose resource dictionary will be populated.
+
+    .PARAMETER usesDarkMode
+    When $true, dark theme colors are applied; when $false, light theme colors.
+
+    .EXAMPLE
+    SetWindowThemeResources -window $MainWindow -usesDarkMode $true
+
+    .EXAMPLE
+    SetWindowThemeResources -window $Dialog -usesDarkMode $false
+#>
 # Sets resource colors for a WPF window based on dark mode preference
 function SetWindowThemeResources {
     param (

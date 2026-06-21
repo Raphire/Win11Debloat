@@ -423,7 +423,11 @@ if ($script:Params.ContainsKey("User")) {
     GetUserDirectory -userName $script:Params.Item("User") | Out-Null
 }
 if ($script:Params.ContainsKey("AppRemovalTarget")) {
-    GetUserDirectory -userName $script:Params.Item("AppRemovalTarget") | Out-Null
+    $appRemovalTargetValue = $script:Params.Item("AppRemovalTarget")
+    # 'AllUsers' / 'CurrentUser' are sentinel scope values, not real usernames - don't resolve them as a profile
+    if ($appRemovalTargetValue -notin @('AllUsers', 'CurrentUser')) {
+        GetUserDirectory -userName $appRemovalTargetValue | Out-Null
+    }
 }
 
 # Remove LastUsedSettings.json file if it exists and is empty

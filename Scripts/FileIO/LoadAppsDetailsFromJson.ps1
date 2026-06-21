@@ -52,6 +52,7 @@ function LoadAppsDetailsFromJson {
             Description = $appData.Description
             SelectedByDefault = $appData.SelectedByDefault
             Recommendation = $appData.Recommendation
+            RemovalMethod = if ($appData.RemovalMethod) { $appData.RemovalMethod } else { 'Appx' }
         }
     }
 

@@ -26,8 +26,7 @@ function ReplaceStartMenuForAllUsers {
     # Also replace the start menu file for the default user profile
     $defaultStartMenuPath = GetUserDirectory -userName "Default" -fileName "AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState" -exitIfPathNotFound $false
 
-    $isWhatIf = $null -ne $script:Params -and $script:Params.ContainsKey("WhatIf")
-    if ($isWhatIf) {
+    if ($script:Params.ContainsKey("WhatIf")) {
         Write-Host "[WhatIf] Replace Start Menu for Default user profile with template $startMenuTemplate" -ForegroundColor Cyan
         return
     }
@@ -67,8 +66,7 @@ function ReplaceStartMenu {
 
     $userName = GetStartMenuUserNameFromPath -StartMenuBinFile $startMenuBinFile
 
-    $isWhatIf = $null -ne $script:Params -and $script:Params.ContainsKey("WhatIf")
-    if ($isWhatIf) {
+    if ($script:Params.ContainsKey("WhatIf")) {
         Write-Host "[WhatIf] Replace Start Menu for user $userName with template $startMenuTemplate" -ForegroundColor Cyan
         return
     }
@@ -133,8 +131,7 @@ function RestoreStartMenuFromBackup {
     }
     $currentBinBackup = $StartMenuBinFile + '.restore.bak'
 
-    $isWhatIf = $null -ne $script:Params -and $script:Params.ContainsKey("WhatIf")
-    if ($isWhatIf) {
+    if ($script:Params.ContainsKey("WhatIf")) {
         Write-Host "[WhatIf] Restore start menu for user $userName from backup $backupBinFile" -ForegroundColor Cyan
         return [PSCustomObject]@{
             UserName = $userName
@@ -206,19 +203,29 @@ function RestoreStartMenuForAllUsers {
     if (Test-Path $defaultStartMenuPath) {
         $defaultStartMenuBinFile = Join-Path $defaultStartMenuPath 'start2.bin'
         if (Test-Path -LiteralPath $defaultStartMenuBinFile) {
-            try {
-                Remove-Item -LiteralPath $defaultStartMenuBinFile -Force
+            if ($script:Params.ContainsKey("WhatIf")) {
+                Write-Host "[WhatIf] Remove start2.bin for the default user profile" -ForegroundColor Cyan
                 $results += [PSCustomObject]@{
                     UserName = 'Default'
                     Result   = $true
-                    Message  = 'Removed start2.bin for the default user profile.'
+                    Message  = '[WhatIf] Removed start2.bin for the default user profile.'
                 }
             }
-            catch {
-                $results += [PSCustomObject]@{
-                    UserName = 'Default'
-                    Result   = $false
-                    Message  = "Failed to remove start2.bin for the default user profile. $($_.Exception.Message)"
+            else {
+                try {
+                    Remove-Item -LiteralPath $defaultStartMenuBinFile -Force
+                    $results += [PSCustomObject]@{
+                        UserName = 'Default'
+                        Result   = $true
+                        Message  = 'Removed start2.bin for the default user profile.'
+                    }
+                }
+                catch {
+                    $results += [PSCustomObject]@{
+                        UserName = 'Default'
+                        Result   = $false
+                        Message  = "Failed to remove start2.bin for the default user profile. $($_.Exception.Message)"
+                    }
                 }
             }
         }

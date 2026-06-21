@@ -103,21 +103,15 @@ function Invoke-RegistryDeleteValueOperation {
         $KeyInfo
     )
 
-    $valueName = Get-NormalizedRegistryValueName -ValueName $Operation.ValueName
-    $displayValueName = if ([string]::IsNullOrEmpty($valueName)) { '(Default)' } else { $valueName }
-
-    $isWhatIf = $null -ne $script:Params -and $script:Params.ContainsKey("WhatIf")
-    if ($isWhatIf) {
-        Write-Host "[WhatIf] Remove Registry Value: $($Operation.KeyPath) \ $displayValueName" -ForegroundColor Cyan
-        return
-    }
-
     if ($null -eq $KeyInfo.Key) {
+        $valueName = Get-NormalizedRegistryValueName -ValueName $Operation.ValueName
+        $displayValueName = if ([string]::IsNullOrEmpty($valueName)) { '(Default)' } else { $valueName }
         Write-Verbose "Unable to find or open key '$($Operation.KeyPath)' and value '$displayValueName'"
         return
     }
 
     try {
+        $valueName = Get-NormalizedRegistryValueName -ValueName $Operation.ValueName
         $KeyInfo.Key.DeleteValue($valueName, $false)
     }
     finally {
@@ -133,23 +127,12 @@ function Invoke-RegistrySetValueOperation {
         $KeyInfo
     )
 
-    $setArgs = Convert-RegOperationToValueKind -Operation $Operation
-    $isWhatIf = $null -ne $script:Params -and $script:Params.ContainsKey("WhatIf")
-    if ($isWhatIf) {
-        $displayVal = if ($setArgs.Kind -eq [Microsoft.Win32.RegistryValueKind]::Binary) {
-            "Binary data ($($setArgs.Value.Length) bytes)"
-        } else {
-            $setArgs.Value
-        }
-        Write-Host "[WhatIf] Set Registry Value: $($Operation.KeyPath) \ $($setArgs.Name) = $displayVal ($($setArgs.Kind))" -ForegroundColor Cyan
-        return
-    }
-
     if ($null -eq $KeyInfo.Key) {
         throw [System.UnauthorizedAccessException]::new("Unable to open or create registry key '$($Operation.KeyPath)'")
     }
 
     try {
+        $setArgs = Convert-RegOperationToValueKind -Operation $Operation
         $KeyInfo.Key.SetValue($setArgs.Name, $setArgs.Value, $setArgs.Kind)
     }
     finally {
@@ -190,25 +173,6 @@ function Invoke-RegistryOperation {
     $isSetValueOperation = $operationType -eq 'SetValue'
     $isDeleteKeyOperation = $operationType -eq 'DeleteKey'
 
-    $isWhatIf = $null -ne $script:Params -and $script:Params.ContainsKey("WhatIf")
-    if ($isWhatIf) {
-        switch ($operationType) {
-            'DeleteKey' {
-                Write-Host "[WhatIf] Remove Registry Key (Tree): $($Operation.KeyPath)" -ForegroundColor Cyan
-            }
-            'DeleteValue' {
-                Invoke-RegistryDeleteValueOperation -Operation $Operation -KeyInfo $null
-            }
-            'SetValue' {
-                Invoke-RegistrySetValueOperation -Operation $Operation -KeyInfo $null
-            }
-            default {
-                throw "Unsupported reg operation type '$($Operation.OperationType)' in '$RegFilePath'"
-            }
-        }
-        return
-    }
-
     $keyInfo = Get-RegistryKeyForOperation -RegistryPath $Operation.KeyPath -CreateIfMissing:$isSetValueOperation -OpenKey:(-not $isDeleteKeyOperation)
 
     switch ($operationType) {
@@ -238,7 +202,11 @@ function Invoke-RegistryOperationsFromRegFile {
     $accessDeniedCount = 0
     $operations = @(Get-RegFileOperations -regFilePath $RegFilePath)
     $totalOperations = $operations.Count
-    $isWhatIf = $null -ne $script:Params -and $script:Params.ContainsKey("WhatIf")
+
+    if ($script:Params.ContainsKey("WhatIf")) {
+        Write-Host "[WhatIf] Apply $totalOperations registry changes from '$RegFilePath'" -ForegroundColor Cyan
+        return
+    }
 
     foreach ($operation in $operations) {
         try {
@@ -250,13 +218,11 @@ function Invoke-RegistryOperationsFromRegFile {
         }
     }
 
-    if (-not $isWhatIf) {
-        if ($totalOperations -gt 0 -and $accessDeniedCount -eq $totalOperations) {
-            throw "Registry fallback import could not apply any operations in '$RegFilePath' because all $accessDeniedCount operation(s) were blocked by access restrictions."
-        }
+    if ($totalOperations -gt 0 -and $accessDeniedCount -eq $totalOperations) {
+        throw "Registry fallback import could not apply any operations in '$RegFilePath' because all $accessDeniedCount operation(s) were blocked by access restrictions."
+    }
 
-        if ($accessDeniedCount -gt 0) {
-            Write-Warning "Registry fallback import completed with $accessDeniedCount access-restricted operation(s) skipped in '$RegFilePath'."
-        }
+    if ($accessDeniedCount -gt 0) {
+        Write-Warning "Registry fallback import completed with $accessDeniedCount access-restricted operation(s) skipped in '$RegFilePath'."
     }
 }

@@ -54,9 +54,8 @@ function DisableStoreSearchSuggestions {
     $userName = [regex]::Match($StoreAppsDatabase, '(?:Users\\)([^\\]+)(?:\\AppData)').Groups[1].Value
     if (-not $userName) { $userName = '<unknown>' }
 
-    $isWhatIf = $null -ne $script:Params -and $script:Params.ContainsKey("WhatIf")
-    if ($isWhatIf) {
-        Write-Host "[WhatIf] Disable Microsoft Store search suggestions for user $userName by restricting access to store.db" -ForegroundColor Cyan
+    if ($script:Params.ContainsKey("WhatIf")) {
+        Write-Host "[WhatIf] Disable Microsoft Store search suggestions for user $userName by restricting access to ${StoreAppsDatabase}" -ForegroundColor Cyan
         return
     }
 
@@ -138,9 +137,8 @@ function EnableStoreSearchSuggestions {
     $userName = [regex]::Match($StoreAppsDatabase, '(?:Users\\)([^\\]+)(?:\\AppData)').Groups[1].Value
     if (-not $userName) { $userName = '<unknown>' }
 
-    $isWhatIf = $null -ne $script:Params -and $script:Params.ContainsKey("WhatIf")
-    if ($isWhatIf) {
-        Write-Host "[WhatIf] Re-enable Microsoft Store search suggestions for user $userName by restoring access to store.db" -ForegroundColor Cyan
+    if ($script:Params.ContainsKey("WhatIf")) {
+        Write-Host "[WhatIf] Re-enable Microsoft Store search suggestions for user $userName by restoring access to ${StoreAppsDatabase}" -ForegroundColor Cyan
         return
     }
 
@@ -257,7 +255,8 @@ function Test-StoreSearchSuggestionsDisabled {
         $isEveryone = $false
         try {
             $isEveryone = $accessRule.IdentityReference.Translate([System.Security.Principal.SecurityIdentifier]) -eq $everyoneSid
-        } catch { }
+        }
+        catch { }
 
         if ($isEveryone) {
             return $true

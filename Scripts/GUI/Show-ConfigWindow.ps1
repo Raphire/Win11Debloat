@@ -21,7 +21,8 @@ function Show-ImportExportConfigWindow {
                 $Owner.Dispatcher.Invoke([action]{ $overlay.Visibility = 'Visible' })
             }
         }
-    } catch { }
+    } 
+    catch { }
 
     # Load XAML from schema file
     $schemaPath = $script:ImportExportConfigSchema
@@ -52,7 +53,8 @@ function Show-ImportExportConfigWindow {
         if ($mainCheckBoxStyle) {
             $dlg.Resources.Add([type][System.Windows.Controls.CheckBox], $mainCheckBoxStyle)
         }
-    } catch { }
+    }
+    catch { }
 
     # Populate named elements
     $dlg.Title = $Title
@@ -419,8 +421,7 @@ function Export-Configuration {
 
     Write-Host "Exporting configuration to '$($saveDialog.FileName)'... (Categories: $($categories -join ', '))"
 
-    $isWhatIf = $null -ne $script:Params -and $script:Params.ContainsKey("WhatIf")
-    if ($isWhatIf) {
+    if ($script:Params.ContainsKey("WhatIf")) {
         Write-Host "[WhatIf] Export configuration to '$($saveDialog.FileName)'" -ForegroundColor Cyan
         Show-MessageBox -Message "[WhatIf] Configuration would be exported to this file (no file written)." -Title 'Export Configuration' -Button 'OK' -Icon 'Information' | Out-Null
         return

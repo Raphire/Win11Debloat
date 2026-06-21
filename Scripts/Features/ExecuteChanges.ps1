@@ -77,8 +77,7 @@ function ExecuteParameter {
         'DisableWidgets' {
             Write-Host "> $($feature.ApplyText)..."
             # Stop widgets related processes before removing the app packages to prevent potential issues
-            $isWhatIf = $null -ne $script:Params -and $script:Params.ContainsKey("WhatIf")
-            if (-not $isWhatIf) {
+            if (-not $script:Params.ContainsKey("WhatIf")) {
                 Get-Process *Widget* -ErrorAction SilentlyContinue | Stop-Process
             }
 
@@ -182,14 +181,13 @@ function ExecuteAllChanges {
     if ($script:Params.ContainsKey("CreateRestorePoint")) { $totalSteps++ }
     $currentStep = 0
 
-    $isWhatIf = $null -ne $script:Params -and $script:Params.ContainsKey("WhatIf")
     if ($hasRegistryBackedFeature) {
         $currentStep++
         if ($script:ApplyProgressCallback) {
             & $script:ApplyProgressCallback $currentStep $totalSteps "Creating registry backup..."
         }
 
-        if ($isWhatIf) {
+        if ($script:Params.ContainsKey("WhatIf")) {
             Write-Host "[WhatIf] Create registry backup" -ForegroundColor Cyan
         }
         else {
@@ -215,7 +213,7 @@ function ExecuteAllChanges {
         if ($script:ApplyProgressCallback) {
             & $script:ApplyProgressCallback $currentStep $totalSteps "Creating system restore point, this may take a moment..."
         }
-        if ($isWhatIf) {
+        if ($script:Params.ContainsKey("WhatIf")) {
             Write-Host "[WhatIf] Create system restore point" -ForegroundColor Cyan
             Write-Host ""
         }

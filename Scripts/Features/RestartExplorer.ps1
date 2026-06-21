@@ -5,8 +5,7 @@ function RestartExplorer {
         return
     }
 
-    $isWhatIf = $null -ne $script:Params -and $script:Params.ContainsKey("WhatIf")
-    if ($isWhatIf) {
+    if ($script:Params.ContainsKey("WhatIf")) {
         Write-Host "[WhatIf] Restart the Windows Explorer process" -ForegroundColor Cyan
         return
     }

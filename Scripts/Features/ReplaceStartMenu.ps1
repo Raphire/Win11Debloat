@@ -295,7 +295,7 @@ function RestoreStartMenu {
     $targetUserName = GetUserName
     $startMenuBinFile = GetStartMenuBinPathForUser -UserName $targetUserName
 
-    if (-not $startMenuBinFile) {
+    if ([string]::IsNullOrWhiteSpace($startMenuBinFile)) {
         Write-Host "Unable to resolve start menu path for user $targetUserName, nothing to restore" -ForegroundColor Yellow
         return [PSCustomObject]@{
             UserName = $targetUserName

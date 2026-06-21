@@ -57,6 +57,7 @@ function Invoke-FeatureApply {
 
             Write-Host "$($appsList.Count) apps selected for removal"
             RemoveApps $appsList
+            return
         }
         'RemoveAppsCustom' {
             Write-Host "> $($feature.ApplyText)..."
@@ -70,6 +71,7 @@ function Invoke-FeatureApply {
 
             Write-Host "$($appsList.Count) apps selected for removal"
             RemoveApps $appsList
+            return
         }
         'RemoveGamingApps' {
             $appsList = @('Microsoft.GamingApp', 'Microsoft.XboxGameOverlay', 'Microsoft.XboxGamingOverlay')
@@ -109,7 +111,7 @@ function Invoke-FeatureApply {
         'ClearStart' {
             Write-Host "> $($feature.ApplyText) for user $(GetUserName)..."
             $startMenuBinFile = GetStartMenuBinPathForUser -UserName (GetUserName)
-            if ($startMenuBinFile) {
+            if (-not [string]::IsNullOrWhiteSpace($startMenuBinFile)) {
                 ReplaceStartMenu -startMenuBinFile $startMenuBinFile
             }
             Write-Host ""
@@ -118,7 +120,7 @@ function Invoke-FeatureApply {
         'ReplaceStart' {
             Write-Host "> $($feature.ApplyText) for user $(GetUserName)..."
             $startMenuBinFile = GetStartMenuBinPathForUser -UserName (GetUserName)
-            if ($startMenuBinFile) {
+            if (-not [string]::IsNullOrWhiteSpace($startMenuBinFile)) {
                 ReplaceStartMenu -startMenuBinFile $startMenuBinFile -startMenuTemplate $script:Params.Item("ReplaceStart")
             }
             Write-Host ""
@@ -309,9 +311,9 @@ function Invoke-UndoFeatures {
 
         if ($f -and $f.RegistryUndoKey) {
             ImportRegistryFile "> $undoText" (Resolve-UndoRegFilePath $f.RegistryUndoKey)
-        } else {
-            Invoke-FeatureUndo -FeatureId $featureId
         }
+        
+        Invoke-FeatureUndo -FeatureId $featureId
         $step++
     }
 }
@@ -382,18 +384,23 @@ function Invoke-AllChanges {
             & $script:ApplyProgressCallback $step $totalSteps "Creating registry backup..."
         }
 
-        Write-Host "> Creating registry backup..."
-        try {
-            $undoSyntheticFeatures = @($undoIds | ForEach-Object {
-                $f = if ($script:Features.ContainsKey($_)) { $script:Features[$_] } else { $null }
-                if ($f -and $f.RegistryUndoKey) {
-                    [PSCustomObject]@{ FeatureId = $_; RegistryKey = (Resolve-UndoRegFilePath $f.RegistryUndoKey) }
-                }
-            } | Where-Object { $_ })
-            New-RegistrySettingsBackup -ActionableKeys $applyIds -ExtraFeatures $undoSyntheticFeatures | Out-Null
+        if ($script:Params.ContainsKey("WhatIf")) {
+            Write-Host "[WhatIf] Create registry backup" -ForegroundColor Cyan
         }
-        catch {
-            throw "Registry backup failed before applying changes. $($_.Exception.Message)"
+        else {
+            Write-Host "> Creating registry backup..."
+            try {
+                $undoSyntheticFeatures = @($undoIds | ForEach-Object {
+                    $f = if ($script:Features.ContainsKey($_)) { $script:Features[$_] } else { $null }
+                    if ($f -and $f.RegistryUndoKey) {
+                        [PSCustomObject]@{ FeatureId = $_; RegistryKey = (Resolve-UndoRegFilePath $f.RegistryUndoKey) }
+                    }
+                } | Where-Object { $_ })
+                New-RegistrySettingsBackup -ActionableKeys $applyIds -ExtraFeatures $undoSyntheticFeatures | Out-Null
+            }
+            catch {
+                throw "Registry backup failed before applying changes. $($_.Exception.Message)"
+            }
         }
     }
 
@@ -405,9 +412,15 @@ function Invoke-AllChanges {
         if ($script:ApplyProgressCallback) {
             & $script:ApplyProgressCallback $step $totalSteps "Creating system restore point, this may take a moment..."
         }
-        Write-Host "> Creating a system restore point..."
-        CreateSystemRestorePoint
-        Write-Host ""
+        if ($script:Params.ContainsKey("WhatIf")) {
+            Write-Host "[WhatIf] Create system restore point" -ForegroundColor Cyan
+            Write-Host ""
+        }
+        else {
+            Write-Host "> Creating a system restore point..."
+            CreateSystemRestorePoint
+            Write-Host ""
+        }
     }
 
     # ================================================================

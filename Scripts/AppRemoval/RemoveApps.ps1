@@ -82,12 +82,16 @@ function RemoveApps {
             }
             else {
                 # Uninstall app via WinGet
-                $wingetOutput = Invoke-NonBlocking -ScriptBlock {
+                $wingetResult = Invoke-NonBlocking -ScriptBlock {
                     param($appId)
-                    winget uninstall --accept-source-agreements --disable-interactivity --id $appId
+                    $output = winget uninstall --accept-source-agreements --disable-interactivity --id $appId
+                    [PSCustomObject]@{ ExitCode = $LASTEXITCODE; Output = $output }
                 } -ArgumentList $app
 
-                $wingetFailed = Select-String -InputObject $wingetOutput -Pattern "Uninstall failed with exit code|No installed package found matching input criteria|No package found matching input criteria" -SimpleMatch:$false
+                # winget reports success/failure via its exit code, which is locale-independent.
+                # The previous match on English console text silently passed on non-English Windows.
+                # Treat a null result (timed out / not run) or any non-zero exit code as a failure.
+                $wingetFailed = ($null -eq $wingetResult) -or ($wingetResult.ExitCode -ne 0)
                 if ($isEdgeId) {
                     if (-not $wingetFailed) {
                         $edgeUninstallSucceeded = $true
@@ -116,6 +120,11 @@ function RemoveApps {
                             ForceRemoveEdge
                         }
                     }
+                }
+                elseif ($wingetFailed) {
+                    # OneDrive is the only other app removed via WinGet; surface the failure
+                    # instead of silently continuing (previously its result was never checked).
+                    Write-Host "Unable to uninstall $app via WinGet" -ForegroundColor Red
                 }
             }
 

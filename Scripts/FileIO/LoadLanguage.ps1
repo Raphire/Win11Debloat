@@ -79,3 +79,67 @@ function L {
     }
     return $Key
 }
+
+# Returns the translated category name, or the original English name if no translation exists
+function Get-LangCategory {
+    param ([string]$Name)
+    if ($null -ne $script:Lang -and $null -ne $script:Lang.FeaturesCategories) {
+        $val = $script:Lang.FeaturesCategories.$Name
+        if ($null -ne $val) { return [string]$val }
+    }
+    return $Name
+}
+
+# Returns the translated feature label (keyed by FeatureId), falling back to the English label
+function Get-LangFeature {
+    param ([string]$FeatureId, [string]$Fallback = "")
+    if ($null -ne $script:Lang -and $null -ne $script:Lang.FeaturesLabels) {
+        $val = $script:Lang.FeaturesLabels.$FeatureId
+        if ($null -ne $val) { return [string]$val }
+    }
+    return $Fallback
+}
+
+# Returns the translated group label (keyed by GroupId), falling back to the English label
+function Get-LangGroupLabel {
+    param ([string]$GroupId, [string]$Fallback = "")
+    if ($null -ne $script:Lang -and $null -ne $script:Lang.FeaturesGroups) {
+        $group = $script:Lang.FeaturesGroups.$GroupId
+        if ($null -ne $group -and $null -ne $group.Label) { return [string]$group.Label }
+    }
+    return $Fallback
+}
+
+# Returns the translated tooltip for a feature (keyed by FeatureId), falling back to the English tooltip
+function Get-LangFeatureTooltip {
+    param ([string]$FeatureId, [string]$Fallback = "")
+    if ($null -ne $script:Lang -and $null -ne $script:Lang.FeaturesToolTips) {
+        $val = $script:Lang.FeaturesToolTips.$FeatureId
+        if ($null -ne $val) { return [string]$val }
+    }
+    return $Fallback
+}
+
+# Returns the translated tooltip for a UI group (keyed by GroupId), falling back to the English tooltip
+function Get-LangGroupTooltip {
+    param ([string]$GroupId, [string]$Fallback = "")
+    if ($null -ne $script:Lang -and $null -ne $script:Lang.GroupsToolTips) {
+        $val = $script:Lang.GroupsToolTips.$GroupId
+        if ($null -ne $val) { return [string]$val }
+    }
+    return $Fallback
+}
+
+# Returns the translated label for a group value, identified by its primary FeatureId
+function Get-LangGroupValue {
+    param ([string]$GroupId, [string[]]$FeatureIds, [string]$Fallback = "")
+    if ($null -ne $script:Lang -and $null -ne $script:Lang.FeaturesGroups -and $FeatureIds.Count -gt 0) {
+        $group = $script:Lang.FeaturesGroups.$GroupId
+        if ($null -ne $group -and $null -ne $group.Values) {
+            $primaryId = $FeatureIds[0]
+            $val = $group.Values.$primaryId
+            if ($null -ne $val) { return [string]$val }
+        }
+    }
+    return $Fallback
+}

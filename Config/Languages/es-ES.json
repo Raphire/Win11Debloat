@@ -115,5 +115,257 @@
   "BtnOK": "Aceptar",
   "BtnCancel": "Cancelar",
   "BtnYes": "Sí",
-  "BtnNo": "No"
+  "BtnNo": "No",
+
+  "TweaksCategoryWikiTooltip": "Abrir wiki para más información sobre los ajustes de '{0}'",
+  "AppRecommendationSafe": "[Recomendado] Es seguro eliminar para la mayoría de usuarios",
+  "AppRecommendationUnsafe": "[No recomendado] Solo elimina si sabes lo que estás haciendo",
+  "AppRecommendationOptional": "[Opcional] Elimina si no necesitas esta aplicación",
+
+  "TweakNoChange": "Sin cambio",
+  "TweakDisable": "Deshabilitar",
+  "TweakEnable": "Habilitar",
+  "TweakApply": "Aplicar",
+  "TweakDisabledWhenApplied": "Este ajuste ya fue aplicado y no puede deshacerse automáticamente. Visita el wiki de Win11Debloat para instrucciones sobre cómo revertir este cambio manualmente.",
+
+  "FeaturesToolTips": {
+    "DisableTelemetry": "Este ajuste deshabilita la telemetría, recopilación de datos de diagnóstico, historial de actividad, seguimiento de inicio de apps, anuncios dirigidos y más. Limita los datos que se envían a Microsoft sobre tu dispositivo y uso. Si eres Windows Insider, las actualizaciones pueden bloquearse hasta que se reactive la recopilación de datos de diagnóstico opcional.",
+    "DisableSuggestions": "Este ajuste elimina muchas distracciones molestas de Windows. Esto incluye notificaciones, recordatorios y anuncios de proveedores de sincronización. También evita la instalación automatizada de apps sugeridas.",
+    "DisableLocationServices": "Esto desactivará los Servicios de ubicación de Windows y denegará a las apps el acceso a tu ubicación. Esta característica usa directivas, lo que bloqueará ciertos ajustes.",
+    "DisableFindMyDevice": "Esto desactivará la función 'Encontrar mi dispositivo', que periódicamente envía la ubicación de tu dispositivo a Microsoft. Esta característica usa directivas, lo que bloqueará ciertos ajustes.",
+    "DisableLockscreenTips": "Esto desactivará la opción de spotlight de la pantalla de bloqueo y deshabilitará los consejos, trucos e información interesante que aparecen en la pantalla de bloqueo.",
+    "DisableDesktopSpotlight": "Esto desactivará la función 'Windows Spotlight' para el fondo de escritorio, que muestra diferentes imágenes de fondo y ocasionalmente consejos e información en el escritorio. Esta característica usa directivas, lo que bloqueará ciertos ajustes.",
+    "DisableEdgeAds": "Esto desactivará varias distracciones de Microsoft Edge como anuncios, sugerencias y el feed de noticias de MSN. Esta característica usa directivas, lo que bloqueará ciertos ajustes.",
+    "DisableCopilot": "Esto deshabilitará y desinstalará Microsoft Copilot, el asistente de IA integrado de Windows.",
+    "DisableRecall": "Esto deshabilitará Windows Recall, una función impulsada por IA que proporciona acceso rápido a archivos, apps y actividades usados recientemente. Esta característica usa directivas, lo que bloqueará ciertos ajustes.",
+    "DisableClickToDo": "Esto deshabilitará Click To Do, que proporciona funciones de análisis de texto e imagen con IA en Windows. Esta característica usa directivas, lo que bloqueará ciertos ajustes.",
+    "DisableAISvcAutoStart": "Esto configurará el servicio WSAIFabricSvc en inicio manual, evitando que el servicio se inicie automáticamente con Windows.",
+    "DisableDVR": "Esto deshabilitará las funciones de grabación de juegos y pantalla de Xbox incluidas con la app Game Bar. Esta característica usa directivas, lo que bloqueará ciertos ajustes.",
+    "DisableGameBarIntegration": "Esto deshabilitará la integración de Game Bar con juegos y controladores. Esto detiene los molestos popups de ms-gamebar al iniciar juegos o conectar un controlador.",
+    "DisableStartRecommended": "Esto ocultará la sección de recomendados en el menú de inicio, que muestra apps añadidas recientemente, archivos abiertos recientemente y recomendaciones de apps. Esta característica usa directivas, lo que bloqueará ciertos ajustes.",
+    "DisableStartAllApps": "Esto ocultará la sección 'Todas las apps' en el menú de inicio, que muestra todas las apps instaladas. ADVERTENCIA: Ocultar esta sección puede dificultar encontrar apps instaladas en tu sistema. Esta característica usa directivas, lo que bloqueará ciertos ajustes.",
+    "DisableStartPhoneLink": "Esto eliminará la integración de Phone Link en el menú de inicio cuando tengas un dispositivo móvil vinculado a tu PC.",
+    "DisableBing": "Esto desactivará los resultados de búsqueda web de Bing y la integración de Copilot en la búsqueda de Windows. Esta característica usa directivas, lo que bloqueará ciertos ajustes.",
+    "DisableStoreSearchSuggestions": "Esto deshabilitará las sugerencias de apps de Microsoft Store en la búsqueda de Windows.",
+    "DisableSettings365Ads": "Esto desactivará los anuncios de Microsoft 365 Copilot que aparecen en la página de inicio de Configuración.",
+    "DisableSettingsHome": "Elimina la página 'Inicio' de la aplicación Configuración.",
+    "DisableEdgeAI": "Esto desactivará las funciones de IA en Microsoft Edge, como la barra lateral con IA y las funciones de Copilot. Esta característica usa directivas, lo que bloqueará ciertos ajustes.",
+    "DisablePaintAI": "Esto desactivará las funciones de IA en Paint, como las herramientas de generación y edición de imágenes con IA. Esta característica usa directivas, lo que bloqueará ciertos ajustes.",
+    "DisableNotepadAI": "Esto desactivará las funciones de IA en el Bloc de notas, como las sugerencias de escritura con IA. Esta característica usa directivas, lo que bloqueará ciertos ajustes.",
+    "EnableDarkMode": "Esto establecerá el tema de las apps y el sistema en modo oscuro.",
+    "DisableDragTray": "La Bandeja de arrastre es una nueva función para compartir y mover archivos en Windows 11, aparece en la parte superior de la pantalla al arrastrar archivos.",
+    "RevertContextMenu": "Esto restaurará el menú contextual clásico de Windows 10, que normalmente está oculto detrás de la entrada 'Mostrar más opciones' en el nuevo menú contextual de Windows 11.",
+    "DisableMouseAcceleration": "Esto deshabilitará la aceleración del ratón que está habilitada por defecto en Windows. Esto hace que el movimiento del ratón sea más consistente y predecible.",
+    "DisableStickyKeys": "Esto evitará que aparezca el diálogo de Teclas especiales cuando se presiona la tecla Shift 5 veces seguidas.",
+    "DisableWindowSnapping": "Esto desactivará la capacidad de ajustar ventanas a los lados o esquinas de la pantalla.",
+    "DisableSnapAssist": "Esto desactivará las sugerencias de apps al ajustar ventanas a los lados o esquinas de la pantalla.",
+    "DisableSnapLayouts": "Esto desactivará el menú de diseños de ajuste que aparece al pasar el cursor sobre el botón maximizar o arrastrar ventanas a la parte superior de la pantalla.",
+    "TaskbarAlignLeft": "Por defecto, Windows 11 tiene los botones de la barra de tareas centrados. Habilitar este ajuste moverá los botones a la izquierda, similar a versiones anteriores de Windows.",
+    "HideTaskview": "Esto ocultará el botón 'Vista de tareas' en la barra de tareas, que permite ver todas las ventanas abiertas y escritorios virtuales.",
+    "DisableWidgets": "Esto deshabilitará los widgets en Windows, incluyendo el botón de widgets en la barra de tareas y los widgets que pueden aparecer en la pantalla de bloqueo.",
+    "HideChat": "Esto deshabilitará el ícono de Chat en la barra de tareas.",
+    "DisableStorageSense": "Esto deshabilitará el Sensor de almacenamiento, que libera espacio en disco automáticamente eliminando archivos temporales, vaciando la papelera de reciclaje y limpiando archivos en la carpeta Descargas.",
+    "DisableFastStartup": "El inicio rápido ayuda a que tu PC arranque más rápido tras el apagado guardando una imagen del sistema en disco. Deshabilitarlo puede ayudar con ciertos problemas, pero puede resultar en tiempos de arranque ligeramente más largos.",
+    "DisableBitlockerAutoEncryption": "En los dispositivos compatibles, Windows 11 habilita automáticamente el cifrado con BitLocker. Deshabilitar esto desactivará el cifrado automático, pero aún puedes habilitarlo manualmente. Las unidades ya cifradas con BitLocker permanecerán cifradas al aplicar este ajuste.",
+    "DisableModernStandbyNetworking": "Por defecto, los dispositivos con Modo de espera moderno mantienen la conectividad de red durante la suspensión. Deshabilitar esto puede ayudar a ahorrar batería.",
+    "EnableEndTask": "Cuando está habilitado, agrega la opción 'Finalizar tarea' al menú contextual de apps en la barra de tareas, permitiendo forzar el cierre de apps rápidamente.",
+    "EnableLastActiveClick": "Cuando está habilitado, al hacer clic en una app en la barra de tareas se cambiará a la última ventana activa de esa app, en lugar de mostrar solo la vista previa en miniatura.",
+    "ShowKnownFileExt": "Esto mostrará las extensiones de archivo para tipos conocidos. Por defecto, Windows las oculta, lo que puede generar confusión y riesgos de seguridad.",
+    "ShowHiddenFolders": "Por defecto, Windows oculta ciertos archivos, carpetas y unidades para evitar modificaciones accidentales. Activa esto para mostrar todos los archivos en el Explorador de archivos.",
+    "HideDupliDrive": "Por defecto, Windows muestra las unidades extraíbles tanto en 'Este equipo' como en el panel de navegación. Habilita esto para mostrarlas solo en 'Este equipo'.",
+    "HideHome": "Oculta la sección 'Inicio' del panel de navegación del Explorador de archivos.",
+    "HideGallery": "Oculta la sección 'Galería' del panel de navegación del Explorador de archivos.",
+    "DisableTransparency": "Esto deshabilitará los efectos de transparencia en Windows. Puede ayudar a mejorar el rendimiento en hardware antiguo.",
+    "DisableAnimations": "Esto deshabilitará las animaciones y algunos efectos visuales en Windows, lo que puede hacer que la interfaz se sienta más ágil, especialmente en hardware antiguo.",
+    "DisableUpdateASAP": "Esto evitará que tu PC sea de los primeros en recibir nuevas actualizaciones que no sean de seguridad. Tu PC seguirá recibiéndolas eventualmente.",
+    "PreventUpdateAutoReboot": "Esto evitará que tu PC se reinicie automáticamente tras las actualizaciones mientras algún usuario tenga sesión iniciada.",
+    "DisableDeliveryOptimization": "Esto evitará que tu PC comparta actualizaciones descargadas con otros PCs en la red local o en internet. También evita que tu PC las descargue de otros PCs.",
+    "HideOnedrive": "Oculta la sección 'OneDrive' del panel de navegación del Explorador de archivos.",
+    "Hide3dObjects": "Oculta la carpeta 'Objetos 3D' del panel de navegación del Explorador de archivos.",
+    "HideMusic": "Oculta la carpeta 'Música' del panel de navegación del Explorador de archivos.",
+    "AddFoldersToThisPC": "Este ajuste agregará carpetas comunes como Escritorio, Documentos, Descargas, Música, Imágenes y Videos de vuelta a 'Este equipo' en el Explorador de archivos.",
+    "HideIncludeInLibrary": "Oculta la opción 'Incluir en biblioteca' del menú contextual del Explorador de archivos.",
+    "HideGiveAccessTo": "Oculta la opción 'Dar acceso a' del menú contextual del Explorador de archivos.",
+    "HideShare": "Oculta la opción 'Compartir' del menú contextual del Explorador de archivos.",
+    "DisableBraveBloat": "Esto deshabilitará las funciones de IA integradas de Brave, la billetera Crypto, Noticias, Recompensas, Talk y VPN. Esta característica usa directivas, lo que bloqueará ciertos ajustes.",
+    "EnableWindowsSandbox": "Windows Sandbox es un entorno de escritorio ligero para ejecutar aplicaciones de forma aislada. El software instalado dentro permanece aislado del equipo anfitrión. Solo compatible con Windows 11 Pro, Workstation y Enterprise.",
+    "EnableWindowsSubsystemForLinux": "El Subsistema de Windows para Linux permite ejecutar un entorno Linux directamente en Windows sin necesidad de una máquina virtual.",
+    "ShowDriveLettersFirst": "Este ajuste mostrará las letras de unidad antes del nombre de la unidad en el Explorador de archivos.",
+    "ShowDriveLettersLast": "Este ajuste mostrará las letras de unidad después del nombre de la unidad en el Explorador de archivos (comportamiento predeterminado de Windows).",
+    "ShowNetworkDriveLettersFirst": "Este ajuste mostrará solo las letras de unidades de red antes del nombre de la unidad en el Explorador de archivos.",
+    "HideDriveLetters": "Este ajuste ocultará todas las letras de unidad del panel de navegación del Explorador de archivos y 'Este equipo'.",
+    "StartAllAppsCategory": "Esto configurará la sección 'Todas las apps' del menú de inicio para mostrar las apps agrupadas por categoría.",
+    "StartAllAppsGrid": "Esto configurará la sección 'Todas las apps' del menú de inicio para mostrar las apps en una cuadrícula alfabética.",
+    "StartAllAppsList": "Esto configurará la sección 'Todas las apps' del menú de inicio para mostrar las apps en una lista alfabética."
+  },
+
+  "GroupsToolTips": {
+    "SearchIcon": "Este ajuste permite personalizar la apariencia del cuadro de búsqueda en la barra de tareas.",
+    "MultiMon": "Este ajuste permite elegir dónde se muestran los botones de apps de la barra de tareas cuando se usan varios monitores.",
+    "CombineButtons": "Este ajuste permite elegir cómo se combinan los botones de la barra de tareas en la pantalla principal.",
+    "CombineMMButtons": "Este ajuste permite elegir cómo se combinan los botones de la barra de tareas en las pantallas secundarias.",
+    "ClearStart": "Este ajuste permite eliminar rápidamente todas las apps fijadas del menú de inicio.",
+    "ExplorerLocation": "Este ajuste permite elegir la ubicación predeterminada a la que se abre el Explorador de archivos.",
+    "DriveLetterPosition": "Este ajuste permite elegir dónde se muestran las letras de unidad en el Explorador de archivos.",
+    "ShowTabsInAltTab": "Este ajuste permite elegir si se muestran pestañas de apps (como las del navegador Edge) al ajustar ventanas o presionar Alt+Tab.",
+    "StartAllAppsView": "Este ajuste permite cambiar el diseño de la sección 'Todas las apps' del menú de inicio u ocultarla. Ocultarla puede dificultar encontrar apps instaladas. Esta característica usa directivas, lo que bloqueará ciertos ajustes."
+  },
+
+  "FeaturesCategories": {
+    "Privacy & Suggested Content": "Privacidad y contenido sugerido",
+    "System": "Sistema",
+    "Start Menu & Search": "Menú de inicio y búsqueda",
+    "AI": "Inteligencia artificial",
+    "Windows Update": "Windows Update",
+    "Taskbar": "Barra de tareas",
+    "Appearance": "Apariencia",
+    "File Explorer": "Explorador de archivos",
+    "Gaming": "Juegos",
+    "Multi-tasking": "Multitarea",
+    "Optional Windows Features": "Características opcionales de Windows",
+    "Other": "Otros"
+  },
+
+  "FeaturesLabels": {
+    "DisableTelemetry": "Deshabilitar telemetría, rastreo y anuncios dirigidos",
+    "DisableSuggestions": "Deshabilitar consejos, trucos y contenido sugerido en Windows",
+    "DisableLocationServices": "Deshabilitar servicios de ubicación de Windows y acceso de apps a la ubicación",
+    "DisableFindMyDevice": "Deshabilitar seguimiento de ubicación de 'Encontrar mi dispositivo'",
+    "DisableLockscreenTips": "Deshabilitar consejos y trucos en la pantalla de bloqueo",
+    "DisableDesktopSpotlight": "Deshabilitar Windows Spotlight para el escritorio",
+    "DisableEdgeAds": "Deshabilitar anuncios, sugerencias y noticias en Edge",
+    "DisableSettings365Ads": "Ocultar anuncios de Microsoft 365 Copilot en Configuración",
+    "DisableCopilot": "Deshabilitar Microsoft Copilot",
+    "DisableRecall": "Deshabilitar Windows Recall",
+    "DisableClickToDo": "Deshabilitar Click To Do, análisis de texto e imagen con IA",
+    "DisableAISvcAutoStart": "Evitar que el servicio de IA se inicie automáticamente",
+    "DisableEdgeAI": "Deshabilitar funciones de IA en Microsoft Edge",
+    "DisablePaintAI": "Deshabilitar funciones de IA en Paint",
+    "DisableNotepadAI": "Deshabilitar funciones de IA en Bloc de notas",
+    "DisableDragTray": "Deshabilitar 'Bandeja de arrastre' para compartir y mover archivos",
+    "RevertContextMenu": "Usar el menú contextual clásico de Windows 10",
+    "DisableMouseAcceleration": "Deshabilitar precisión mejorada del puntero (aceleración del ratón)",
+    "DisableStickyKeys": "Deshabilitar atajo de Teclas especiales (5x Shift)",
+    "DisableStorageSense": "Deshabilitar limpieza automática con Sensor de almacenamiento",
+    "DisableFastStartup": "Deshabilitar inicio rápido",
+    "DisableBitlockerAutoEncryption": "Deshabilitar cifrado automático de dispositivo con BitLocker",
+    "DisableModernStandbyNetworking": "Deshabilitar conectividad de red en modo de espera moderno",
+    "DisableDVR": "Deshabilitar grabación de juegos/pantalla de Xbox",
+    "DisableGameBarIntegration": "Deshabilitar integración de Game Bar",
+    "DisableStartRecommended": "Ocultar sección de recomendados en el menú de inicio",
+    "DisableStartAllApps": "Ocultar sección 'Todas las apps' en el menú de inicio",
+    "DisableStartPhoneLink": "Deshabilitar integración de Phone Link en el menú de inicio",
+    "DisableBing": "Deshabilitar búsqueda web de Bing e integración de Copilot en búsqueda",
+    "DisableStoreSearchSuggestions": "Deshabilitar sugerencias de apps de Microsoft Store en búsqueda",
+    "TaskbarAlignLeft": "Alinear la barra de tareas a la izquierda",
+    "HideTaskview": "Ocultar botón 'Vista de tareas' en la barra de tareas",
+    "DisableWidgets": "Deshabilitar widgets en la barra de tareas y pantalla de bloqueo",
+    "HideChat": "Ocultar ícono de Chat en la barra de tareas",
+    "EnableEndTask": "Mostrar opción 'Finalizar tarea' en el menú contextual de la barra de tareas",
+    "EnableLastActiveClick": "Habilitar comportamiento 'Última ventana activa' para apps de la barra de tareas",
+    "EnableDarkMode": "Habilitar tema oscuro para el sistema y las apps",
+    "DisableTransparency": "Deshabilitar efectos de transparencia",
+    "DisableAnimations": "Deshabilitar animaciones y efectos visuales",
+    "ShowKnownFileExt": "Mostrar extensiones de archivo para tipos conocidos",
+    "ShowHiddenFolders": "Mostrar archivos, carpetas y unidades ocultos",
+    "HideDupliDrive": "Ocultar entradas duplicadas de unidades extraíbles",
+    "HideHome": "Ocultar 'Inicio' del panel de navegación",
+    "HideGallery": "Ocultar 'Galería' del panel de navegación",
+    "HideOnedrive": "Ocultar 'OneDrive' del panel de navegación",
+    "Hide3dObjects": "Ocultar carpeta 'Objetos 3D' en 'Este equipo'",
+    "HideMusic": "Ocultar carpeta 'Música' en 'Este equipo'",
+    "AddFoldersToThisPC": "Agregar carpetas comunes de vuelta a 'Este equipo'",
+    "HideIncludeInLibrary": "Ocultar opción 'Incluir en biblioteca' en el menú contextual",
+    "HideGiveAccessTo": "Ocultar opción 'Dar acceso a' en el menú contextual",
+    "HideShare": "Ocultar opción 'Compartir' en el menú contextual",
+    "DisableUpdateASAP": "Evitar recibir actualizaciones tan pronto como estén disponibles",
+    "PreventUpdateAutoReboot": "Evitar reinicios automáticos después de actualizaciones con sesión activa",
+    "DisableDeliveryOptimization": "Deshabilitar compartir actualizaciones descargadas con otros PCs",
+    "DisableWindowSnapping": "Deshabilitar ajuste de ventanas",
+    "DisableSnapAssist": "Deshabilitar sugerencias de apps al ajustar ventanas",
+    "DisableSnapLayouts": "Ocultar menú de diseños de ajuste al maximizar o arrastrar ventanas",
+    "EnableWindowsSandbox": "Habilitar Windows Sandbox",
+    "EnableWindowsSubsystemForLinux": "Habilitar Subsistema de Windows para Linux",
+    "DisableSettingsHome": "Ocultar página 'Inicio' de Configuración",
+    "DisableBraveBloat": "Deshabilitar extras de Brave (IA, Crypto, etc.)"
+  },
+
+  "FeaturesGroups": {
+    "SearchIcon": {
+      "Label": "Estilo de búsqueda en la barra de tareas",
+      "Values": {
+        "ShowSearchBoxTb": "Mostrar cuadro de búsqueda (Predeterminado)",
+        "ShowSearchLabelTb": "Mostrar ícono y etiqueta de búsqueda",
+        "ShowSearchIconTb": "Mostrar solo ícono de búsqueda",
+        "HideSearchTb": "Ocultar"
+      }
+    },
+    "MultiMon": {
+      "Label": "Mostrar apps de la barra de tareas en",
+      "Values": {
+        "MMTaskbarModeAll": "Todas las barras de tareas (Predeterminado)",
+        "MMTaskbarModeMainActive": "Barra principal y barra donde está la ventana abierta",
+        "MMTaskbarModeActive": "Solo la barra donde está la ventana abierta"
+      }
+    },
+    "CombineButtons": {
+      "Label": "Combinar botones en la barra de tareas principal",
+      "Values": {
+        "CombineTaskbarAlways": "Siempre (Predeterminado)",
+        "CombineTaskbarWhenFull": "Cuando la barra esté llena",
+        "CombineTaskbarNever": "Nunca"
+      }
+    },
+    "CombineMMButtons": {
+      "Label": "Combinar botones en barras de tareas secundarias",
+      "Values": {
+        "CombineMMTaskbarAlways": "Siempre (Predeterminado)",
+        "CombineMMTaskbarWhenFull": "Cuando la barra esté llena",
+        "CombineMMTaskbarNever": "Nunca"
+      }
+    },
+    "ClearStart": {
+      "Label": "Quitar apps fijadas del menú de inicio",
+      "Values": {
+        "ClearStart": "Quitar para el usuario seleccionado",
+        "ClearStartAllUsers": "Quitar para todos los usuarios"
+      }
+    },
+    "ExplorerLocation": {
+      "Label": "Abrir el Explorador de archivos en",
+      "Values": {
+        "ExplorerToHome": "Inicio (Predeterminado)",
+        "ExplorerToThisPC": "Este equipo",
+        "ExplorerToDownloads": "Descargas",
+        "ExplorerToOneDrive": "OneDrive"
+      }
+    },
+    "DriveLetterPosition": {
+      "Label": "Posición de letra de unidad",
+      "Values": {
+        "ShowDriveLettersLast": "Mostrar letras después del nombre de unidad (Predeterminado)",
+        "ShowDriveLettersFirst": "Mostrar letras antes del nombre de unidad",
+        "ShowNetworkDriveLettersFirst": "Mostrar letras de unidades de red antes del nombre",
+        "HideDriveLetters": "Ocultar todas las letras de unidad"
+      }
+    },
+    "ShowTabsInAltTab": {
+      "Label": "Mostrar pestañas al ajustar ventanas o presionar Alt+Tab",
+      "Values": {
+        "HideTabsInAltTab": "No mostrar pestañas",
+        "Show3TabsInAltTab": "Mostrar 3 pestañas recientes (Predeterminado)",
+        "Show5TabsInAltTab": "Mostrar 5 pestañas recientes",
+        "Show20TabsInAltTab": "Mostrar 20 pestañas recientes"
+      }
+    },
+    "StartAllAppsView": {
+      "Label": "Vista 'Todas las apps' del menú de inicio",
+      "Values": {
+        "DisableStartAllApps": "Ocultar",
+        "StartAllAppsCategory": "Por categoría (Predeterminado)",
+        "StartAllAppsGrid": "Cuadrícula",
+        "StartAllAppsList": "Lista"
+      }
+    }
+  }
 }

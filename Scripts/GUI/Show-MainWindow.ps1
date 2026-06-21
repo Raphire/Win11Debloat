@@ -69,8 +69,9 @@
     $WinVersion = Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' CurrentBuild
     $usesDarkMode = GetSystemUsesDarkMode
 
-    # ---- Load XAML ----
+    # ---- Load XAML (with language substitution) ----
     $xaml = Get-Content -Path $script:MainWindowSchema -Raw
+    $xaml = ConvertTo-LocalizedXaml -Xaml $xaml -Lang $script:Lang
     $reader = [System.Xml.XmlReader]::Create([System.IO.StringReader]::new($xaml))
     try {
         $window = [System.Windows.Markup.XamlReader]::Load($reader)
@@ -164,7 +165,7 @@
             Start-Process "explorer.exe" -ArgumentList $logsFolder
         }
         else {
-            Show-MessageBox -Message "No logs folder found at: $logsFolder" -Title "Logs" -Button 'OK' -Icon 'Information'
+            Show-MessageBox -Message ((L 'MsgNoLogsFolder') -f $logsFolder) -Title (L 'MsgLogsTitle') -Button 'OK' -Icon 'Information'
         }
     })
 
@@ -237,7 +238,7 @@
         }
         catch {
             Write-Warning "Export configuration failed: $($_.Exception.Message)"
-            Show-MessageBox -Owner $window -Message "Unable to open export configuration dialog: $($_.Exception.Message)" -Title 'Export Configuration Failed' -Button 'OK' -Icon 'Error' | Out-Null
+            Show-MessageBox -Owner $window -Message ((L 'MsgExportFailed') -f $_.Exception.Message) -Title (L 'MsgExportFailedTitle') -Button 'OK' -Icon 'Error' | Out-Null
         }
     })
 
@@ -247,13 +248,13 @@
                 $tabControl.SelectedIndex = 3
                 Update-NavigationButtons -Window $window -TabControl $tabControl
                 $window.Dispatcher.BeginInvoke([System.Windows.Threading.DispatcherPriority]::Loaded, [action]{
-                    Show-Bubble -TargetControl $reviewChangesBtn -Message 'View the selected changes here'
+                    Show-Bubble -TargetControl $reviewChangesBtn -Message (L 'BubbleViewChanges')
                 }) | Out-Null
             }
         }
         catch {
             Write-Warning "Import configuration failed: $($_.Exception.Message)"
-            Show-MessageBox -Owner $window -Message "Unable to open import configuration dialog: $($_.Exception.Message)" -Title 'Import Configuration Failed' -Button 'OK' -Icon 'Error' | Out-Null
+            Show-MessageBox -Owner $window -Message ((L 'MsgImportFailed') -f $_.Exception.Message) -Title (L 'MsgImportFailedTitle') -Button 'OK' -Icon 'Error' | Out-Null
         }
     })
 
@@ -665,9 +666,9 @@
                 $usernameValidationMessage.Text
             }
             else {
-                "Please enter a valid username."
+                L 'MsgEnterValidUsername'
             }
-            Show-MessageBox -Message $validationMessage -Title "Invalid Username" -Button 'OK' -Icon 'Warning' | Out-Null
+            Show-MessageBox -Message $validationMessage -Title (L 'MsgInvalidUsernameTitle') -Button 'OK' -Icon 'Warning' | Out-Null
             return $false
         }
         return $true
@@ -704,7 +705,7 @@
         Invoke-NavigationUpdate
 
         $window.Dispatcher.BeginInvoke([System.Windows.Threading.DispatcherPriority]::Loaded, [action]{
-            Show-Bubble -TargetControl $reviewChangesBtn -Message 'View the selected changes here'
+            Show-Bubble -TargetControl $reviewChangesBtn -Message (L 'BubbleViewChanges')
         }) | Out-Null
     })
 
@@ -739,13 +740,10 @@
             AddParameter 'RemoveApps'
             AddParameter 'Apps' ($selectedApps -join ',')
 
-            $selectedScopeItem = $appRemovalScopeCombo.SelectedItem
-            if ($selectedScopeItem) {
-                switch ($selectedScopeItem.Content) {
-                    "All users" { AddParameter 'AppRemovalTarget' 'AllUsers' }
-                    "Current user only" { AddParameter 'AppRemovalTarget' 'CurrentUser' }
-                    "Target user only" { AddParameter 'AppRemovalTarget' ($otherUsernameTextBox.Text.Trim()) }
-                }
+            switch ($appRemovalScopeCombo.SelectedIndex) {
+                0 { AddParameter 'AppRemovalTarget' 'AllUsers' }
+                1 { AddParameter 'AppRemovalTarget' 'CurrentUser' }
+                2 { AddParameter 'AppRemovalTarget' ($otherUsernameTextBox.Text.Trim()) }
             }
         }
 
@@ -760,7 +758,7 @@
         }
 
         if (-not $hasAppSelection -and $selectedForwardFeatureIds.Count -eq 0 -and $script:UndoParams.Count -eq 0) {
-            Show-MessageBox -Message 'No changes have been selected, please select at least one option to proceed.' -Title 'No Changes Selected' -Button 'OK' -Icon 'Information'
+            Show-MessageBox -Message (L 'MsgNoChangesSelected') -Title (L 'MsgNoChangesTitle') -Button 'OK' -Icon 'Information'
             return
         }
 
@@ -827,7 +825,7 @@
             if ($userSelectionCombo -and $userSelectionCombo.Items.Count -gt 0) {
                 $currentUserItem = $userSelectionCombo.Items[0]
                 if ($currentUserItem -is [System.Windows.Controls.ComboBoxItem]) {
-                    $currentUserItem.Content = "Current User ($(GetUserName))"
+                    $currentUserItem.Content = (L 'UserCurrentLabel') -f (GetUserName)
                 }
             }
 
@@ -867,7 +865,7 @@
         catch {
             Write-Warning "Error during GUI initialization: $($_.Exception.Message)"
             Write-Warning "Stack trace: $($_.Exception.StackTrace)"
-            Show-MessageBox -Message "An error occurred during initialization: $($_.Exception.Message)" -Title "Initialization Error" -Button 'OK' -Icon 'Error' | Out-Null
+            Show-MessageBox -Message ((L 'MsgInitError') -f $_.Exception.Message) -Title (L 'MsgInitErrorTitle') -Button 'OK' -Icon 'Error' | Out-Null
         }
     })
 

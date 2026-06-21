@@ -129,12 +129,12 @@ function New-Overview {
         }
     }
     if ($selectedAppsCount -gt 0) {
-        $changesList += "Remove $selectedAppsCount application(s)"
+        $changesList += (L 'OverviewRemoveApps') -f $selectedAppsCount
     }
 
     foreach ($tweakAction in @(Get-PendingTweakActions -Window $Window -ShowAppliedTweaksMode:$showAppliedTweaksMode)) {
         if ($tweakAction.Action -eq 'Undo') {
-            $changesList += "Undo: $($tweakAction.Label)"
+            $changesList += (L 'OverviewUndo') -f $tweakAction.Label
         }
         else {
             $changesList += $tweakAction.Label
@@ -154,12 +154,12 @@ function Invoke-ShowChangesOverview {
     $changesList = New-Overview -Window $Window -AppsPanel $AppsPanel -ShowCurrentlyAppliedTweaksCheckBox $ShowCurrentlyAppliedTweaksCheckBox
 
     if ($changesList.Count -eq 0) {
-        Show-MessageBox -Message 'No changes have been selected.' -Title 'Selected Changes' -Button 'OK' -Icon 'Information'
+        Show-MessageBox -Message (L 'MsgNoChangesOverview') -Title (L 'MsgChangesOverviewTitle') -Button 'OK' -Icon 'Information'
         return
     }
 
     $message = ($changesList | ForEach-Object { "$([char]0x2022) $_" }) -join "`n"
-    Show-MessageBox -Message $message -Title 'Selected Changes' -Button 'OK' -Icon 'None' -Width 600
+    Show-MessageBox -Message $message -Title (L 'MsgChangesOverviewTitle') -Button 'OK' -Icon 'None' -Width 600
 }
 
 function Build-TweakPresetControlMap {
@@ -438,23 +438,23 @@ function Update-UserSelectionDescription {
         0 {
             $currentUserName = GetUserName
             if ([string]::IsNullOrWhiteSpace($currentUserName)) {
-                $UserSelectionDescription.Text = "The currently logged-in user profile"
+                $UserSelectionDescription.Text = L 'UserDescCurrentLoggedIn'
             }
             else {
-                $UserSelectionDescription.Text = "The currently logged-in user profile: $currentUserName"
+                $UserSelectionDescription.Text = (L 'UserDescCurrentLoggedInNamed') -f $currentUserName
             }
         }
         1 {
             $targetUserName = $OtherUsernameTextBox.Text.Trim()
             if ([string]::IsNullOrWhiteSpace($targetUserName)) {
-                $UserSelectionDescription.Text = "A different user profile on this system"
+                $UserSelectionDescription.Text = L 'UserDescOtherUser'
             }
             else {
-                $UserSelectionDescription.Text = "A different user profile on this system: $targetUserName"
+                $UserSelectionDescription.Text = (L 'UserDescOtherUserNamed') -f $targetUserName
             }
         }
         default {
-            $UserSelectionDescription.Text = "The default user template, affecting all new users created after this point. Useful for Sysprep deployment."
+            $UserSelectionDescription.Text = L 'UserDescSysprep'
         }
     }
 }

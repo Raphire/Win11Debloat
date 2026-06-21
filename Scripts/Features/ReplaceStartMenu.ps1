@@ -74,8 +74,16 @@ function ReplaceStartMenu {
     $backupBinFile = $startMenuBinFile + ".bak"
 
     if (Test-Path $startMenuBinFile) {
-        # Backup current start menu file
-        Move-Item -Path $startMenuBinFile -Destination $backupBinFile -Force
+        if (Test-Path $backupBinFile) {
+            # A backup already exists from a previous run, so the current start2.bin is the
+            # already-replaced layout, not the user's original. Don't overwrite the original
+            # backup - just remove the current file (the template is copied in below).
+            Remove-Item -Path $startMenuBinFile -Force
+        }
+        else {
+            # Backup the original start menu file (first run only)
+            Move-Item -Path $startMenuBinFile -Destination $backupBinFile -Force
+        }
     }
     else {
         Write-Host "Unable to find original start2.bin file for user $userName, no backup was created for this user" -ForegroundColor Yellow

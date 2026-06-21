@@ -385,7 +385,7 @@ function Find-RegistryAllowListPlanMatch {
             continue
         }
 
-        $subKeyPrefix = "$($plan.NormalizedPath)\\"
+        $subKeyPrefix = "$($plan.NormalizedPath)\"
         if ($NormalizedPath.StartsWith($subKeyPrefix, [System.StringComparison]::OrdinalIgnoreCase)) {
             return [PSCustomObject]@{
                 IsDescendant = $true

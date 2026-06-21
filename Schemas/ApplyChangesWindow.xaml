@@ -36,10 +36,10 @@
                 <Button.Style>
                     <Style TargetType="Button">
                         <Setter Property="Background" Value="Transparent"/>
-                        <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
+                        <Setter Property="Foreground" Value="{DynamicResource AppFgColor}"/>
                         <Style.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="{DynamicResource CloseHover}"/>
+                                <Setter Property="Background" Value="{DynamicResource TitleBarCloseHoverColor}"/>
                             </Trigger>
                         </Style.Triggers>
                     </Style>
@@ -56,7 +56,7 @@
                             Text="&#xE895;" 
                             FontFamily="Segoe Fluent Icons" 
                             FontSize="36" 
-                            Foreground="{DynamicResource ButtonBg}" 
+                            Foreground="{DynamicResource ButtonBgColor}" 
                             HorizontalAlignment="Center" 
                             Margin="0,0,0,16"
                             RenderTransformOrigin="0.5,0.5">
@@ -102,7 +102,7 @@
                     <TextBlock x:Name="ApplyStepCounter" 
                             Text="Step 0 of 0" 
                             FontSize="12" 
-                            Foreground="{DynamicResource FgColor}" 
+                            Foreground="{DynamicResource AppFgColor}" 
                             HorizontalAlignment="Right" 
                             Opacity="0.8"/>
                     </StackPanel>
@@ -117,7 +117,7 @@
                             Text="&#xE73E;" 
                             FontFamily="Segoe Fluent Icons" 
                             FontSize="40"
-                            Foreground="{DynamicResource ButtonBg}" 
+                            Foreground="{DynamicResource ButtonBgColor}" 
                             HorizontalAlignment="Center" 
                             Margin="0,0,0,12"/>
                     
@@ -134,7 +134,7 @@
                 <!-- Reboot required section -->
                 <Border x:Name="ApplyRebootPanel"
                         Visibility="Collapsed"
-                        BorderBrush="{DynamicResource BorderColor}"
+                        BorderBrush="{DynamicResource AppBorderColor}"
                         HorizontalAlignment="Center"
                         BorderThickness="0,1,0,1"
                         Padding="24,12,24,14">
@@ -149,7 +149,7 @@
                             <TextBlock Text="A reboot is required for these changes to take effect:"
                                        FontSize="13"
                                        FontWeight="SemiBold"
-                                       Foreground="{DynamicResource FgColor}"
+                                       Foreground="{DynamicResource AppFgColor}"
                                        VerticalAlignment="Center"/>
                         </StackPanel>
                         <StackPanel x:Name="ApplyRebootList" Margin="22,0,0,0"/>

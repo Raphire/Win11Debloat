@@ -12,7 +12,7 @@
         Topmost="False"
         ShowInTaskbar="False">
 
-    <Border BorderBrush="{DynamicResource BorderColor}" 
+    <Border BorderBrush="{DynamicResource AppBorderColor}" 
             BorderThickness="1" 
             CornerRadius="8"
             Background="{DynamicResource CardBgColor}"
@@ -33,14 +33,10 @@
             </Grid.RowDefinitions>
 
             <!-- Title Bar -->
-            <Grid Grid.Row="0" x:Name="TitleBar" Height="40" Background="Transparent">
+            <Grid Grid.Row="0" x:Name="TitleBar" Style="{DynamicResource ModalTitleBarStyle}">
                 <TextBlock x:Name="TitleText" 
                            Text="Message" 
-                           Foreground="{DynamicResource FgColor}"
-                           FontSize="16"
-                           FontWeight="SemiBold"
-                           VerticalAlignment="Center" 
-                           Margin="16,0,0,0"/>
+                           Style="{DynamicResource ModalTitleTextStyle}"/>
             </Grid>
 
             <!-- Message Content -->
@@ -55,7 +51,7 @@
                            Grid.Column="0"
                            FontFamily="Segoe Fluent Icons"
                            FontSize="24"
-                           Foreground="{DynamicResource FgColor}"
+                           Foreground="{DynamicResource AppFgColor}"
                            VerticalAlignment="Center"
                            Margin="4,0,14,0"
                            Visibility="Collapsed"/>
@@ -67,7 +63,7 @@
                                TextWrapping="Wrap"
                                FontSize="14"
                                LineHeight="20"
-                               Foreground="{DynamicResource FgColor}"
+                               Foreground="{DynamicResource AppFgColor}"
                                VerticalAlignment="Center"
                                Margin="0,0,20,0"/>
                 </ScrollViewer>
@@ -75,24 +71,27 @@
 
             <!-- Button Panel -->
             <Border Grid.Row="2" 
-                    Background="{DynamicResource BgColor}"
-                    BorderBrush="{DynamicResource BorderColor}"
+                    Background="{DynamicResource AppBgColor}"
+                    BorderBrush="{DynamicResource AppBorderColor}"
                     BorderThickness="0,1,0,0"
                     Padding="16,12"
                     CornerRadius="0,0,8,8">
-                <StackPanel x:Name="ButtonPanel"
-                            Orientation="Horizontal"
-                            HorizontalAlignment="Right">
-                    <Button x:Name="Button1" 
-                            Content="OK" 
-                            Height="32" MinWidth="80" Margin="4,0"
-                            Style="{DynamicResource PrimaryButtonStyle}"/>
-                    <Button x:Name="Button2" 
-                            Content="Cancel" 
-                            Height="32" MinWidth="80" Margin="4,0"
-                            Style="{DynamicResource SecondaryButtonStyle}"
+                <Grid x:Name="ButtonPanel">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button x:Name="Button1"
+                            Grid.Column="0"
+                            Content="OK"
+                            Style="{DynamicResource ModalPrimaryStretchedButtonStyle}"/>
+                    <Button x:Name="Button2"
+                            Grid.Column="1"
+                            Content="Cancel"
+                            Style="{DynamicResource ModalSecondaryStretchedButtonStyle}"
                             Visibility="Collapsed"/>
-                </StackPanel>
+                </Grid>
             </Border>
         </Grid>
     </Border>

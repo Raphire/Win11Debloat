@@ -7,12 +7,12 @@
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
-        Foreground="{DynamicResource FgColor}">
+        Foreground="{DynamicResource AppFgColor}">
     <Window.Resources>
         <!-- Title Bar Button Style -->
         <Style x:Key="TitleBarButton" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
+            <Setter Property="Foreground" Value="{DynamicResource AppFgColor}"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Width" Value="46"/>
             <Setter Property="Height" Value="32"/>
@@ -31,17 +31,17 @@
         <Style x:Key="CloseButton" TargetType="Button" BasedOn="{StaticResource TitleBarButton}">
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{DynamicResource CloseHover}"/>
+                    <Setter Property="Background" Value="{DynamicResource TitleBarCloseHoverColor}"/>
                     <Setter Property="Foreground" Value="White"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
     </Window.Resources>
 
-    <Border BorderBrush="{DynamicResource BorderColor}" 
+    <Border BorderBrush="{DynamicResource AppBorderColor}" 
             BorderThickness="1" 
             CornerRadius="8" 
-            Background="{DynamicResource BgColor}"
+            Background="{DynamicResource AppBgColor}"
             Margin="25">
         <Border.Effect>
             <DropShadowEffect Color="Black" 
@@ -58,7 +58,7 @@
 
             <!-- Custom Title Bar -->
             <Grid Grid.Row="0" x:Name="TitleBar">
-                <Border Background="{DynamicResource BgColor}" CornerRadius="8,8,0,0">
+                <Border Background="{DynamicResource AppBgColor}" CornerRadius="8,8,0,0">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -66,7 +66,7 @@
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" 
                                    Text="Win11Debloat Application Selection" 
-                                   Foreground="{DynamicResource FgColor}"
+                                   Foreground="{DynamicResource AppFgColor}"
                                    VerticalAlignment="Center" 
                                    Margin="12,0,0,0"
                                    FontSize="12"/>
@@ -90,27 +90,27 @@
                     <TextBlock Grid.Row="0" 
                             Text="Check apps that you wish to remove, uncheck apps that you wish to keep" 
                             TextWrapping="Wrap"
-                            Foreground="{DynamicResource FgColor}"
+                            Foreground="{DynamicResource AppFgColor}"
                             Margin="0,0,0,10"/>
 
                     <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,8">
-                        <CheckBox x:Name="CheckAllBox" Content="Check/Uncheck all" Margin="8,0,15,0" Foreground="{DynamicResource FgColor}" AutomationProperties.Name="Check or Uncheck all"/>
+                        <CheckBox x:Name="CheckAllBox" Content="Check/Uncheck all" Margin="8,0,15,0" Foreground="{DynamicResource AppFgColor}" AutomationProperties.Name="Check or Uncheck all"/>
                     </StackPanel>
 
-                    <Border Grid.Row="2" BorderBrush="{DynamicResource BorderColor}" CornerRadius="4" BorderThickness="1" Margin="0,0,0,10" Background="{DynamicResource CardBgColor}">
+                    <Border Grid.Row="2" BorderBrush="{DynamicResource AppBorderColor}" CornerRadius="4" BorderThickness="1" Margin="0,0,0,10" Background="{DynamicResource CardBgColor}">
                         <Grid>
                             <ScrollViewer VerticalScrollBarVisibility="Auto">
                                 <StackPanel x:Name="AppsPanel" Margin="5"/>
                             </ScrollViewer>
                             <Border x:Name="LoadingAppsIndicator" CornerRadius="4" Background="{DynamicResource ScrollBarThumbColor}" Opacity="0.8" Visibility="Collapsed">
-                                <TextBlock Text="Loading apps..." FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource FgColor}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <TextBlock Text="Loading apps..." FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource AppFgColor}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </Border>
                         </Grid>
                     </Border>
 
                     <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
                         <Grid Margin="0,8,10,10">
-                            <CheckBox x:Name="OnlyInstalledBox" Content="Only show installed apps" Foreground="{DynamicResource FgColor}" AutomationProperties.Name="Only show installed apps"/>
+                            <CheckBox x:Name="OnlyInstalledBox" Content="Only show installed apps" Foreground="{DynamicResource AppFgColor}" AutomationProperties.Name="Only show installed apps"/>
                         </Grid>
                         <Button x:Name="ConfirmBtn" Width="80" Height="32" Margin="0,0,10,0" Content="Confirm" Style="{DynamicResource PrimaryButtonStyle}" AutomationProperties.Name="Confirm"/>
                         <Button x:Name="CancelBtn" Width="80" Height="32" Content="Cancel" Style="{DynamicResource SecondaryButtonStyle}" IsCancel="True" AutomationProperties.Name="Cancel"/>

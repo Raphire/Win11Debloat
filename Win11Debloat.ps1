@@ -156,7 +156,7 @@ $script:RegistryBackupsPath = Join-Path $PSScriptRoot 'Backups'
 $script:AssetsPath = Join-Path $PSScriptRoot 'Assets'
 $script:AppSelectionSchema = Join-Path $schemasPath 'AppSelectionWindow.xaml'
 $script:MainWindowSchema = Join-Path $schemasPath 'MainWindow.xaml'
-$script:MessageBoxSchema = Join-Path $schemasPath 'MessageBoxWindow.xaml'
+$script:MessageBoxSchema = Join-Path $schemasPath 'MessageBox.xaml'
 $script:AboutWindowSchema = Join-Path $schemasPath 'AboutWindow.xaml'
 $script:ApplyChangesWindowSchema = Join-Path $schemasPath 'ApplyChangesWindow.xaml'
 $script:SharedStylesSchema = Join-Path $schemasPath 'SharedStyles.xaml'
@@ -209,7 +209,8 @@ Write-Host "                   " -NoNewline; Write-Host "    (" -ForegroundColor
 Write-Host "                   " -NoNewline; Write-Host "    ( " -ForegroundColor DarkYellow -NoNewline; Write-Host "'" -ForegroundColor Red -NoNewline; Write-Host " )   " -ForegroundColor DarkYellow -NoNewline; Write-Host "*" -ForegroundColor Yellow
 Write-Host ""
 Write-Host "             Win11Debloat is launching..." -ForegroundColor White
-Write-Host "               Leave this window open" -ForegroundColor DarkGray
+Write-Host "                Keep this window open" -ForegroundColor DarkGray
+Write-Host ""
 Write-Host ""
 
 # Log script output to 'Win11Debloat.log' at the specified path

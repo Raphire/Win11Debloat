@@ -78,7 +78,7 @@ function Show-ImportExportConfigWindow {
         $cb.Margin = [System.Windows.Thickness]::new(0,0,0,4)
         $cb.FontSize = 14
         $cb.FontWeight = [System.Windows.FontWeights]::Medium
-        $cb.Foreground = $dlg.FindResource('FgColor')
+        $cb.Foreground = $dlg.FindResource("AppFgColor")
         if ($DisabledCategories -contains $cat) {
             $cb.IsChecked = $false
             $cb.IsEnabled = $false
@@ -93,9 +93,9 @@ function Show-ImportExportConfigWindow {
             $detailsText = New-Object System.Windows.Controls.TextBlock
             $detailsText.Text = $CategoryDetails[$cat]
             $detailsText.FontSize = 12
-            $detailsText.Foreground = $dlg.FindResource('FgColor')
-            $detailsText.Margin = [System.Windows.Thickness]::new(30,0,0,0)
-            $detailsText.Opacity = 0.75
+            $detailsText.Foreground = $dlg.FindResource("AppFgColor")
+            $detailsText.Margin = [System.Windows.Thickness]::new(32,0,0,0)
+            $detailsText.Opacity = if ($DisabledCategories -contains $cat) { 0.45 } else { 0.75 }
             $detailsText.TextWrapping = [System.Windows.TextWrapping]::Wrap
             $container.Children.Add($detailsText) | Out-Null
         }
@@ -286,11 +286,17 @@ function Build-CategoryDetails {
     $details = @{}
 
     if ($AppCount -gt 0) {
-        $details['Applications'] = "$AppCount app$(if ($AppCount -ne 1) { 's' })"
+        $details['Applications'] = "$AppCount app$(if ($AppCount -ne 1) { 's' }) selected"
+    }
+    else {
+        $details['Applications'] = 'No apps selected'
     }
 
     if ($TweakCount -gt 0) {
-        $details['System Tweaks'] = "$TweakCount tweak$(if ($TweakCount -ne 1) { 's' })"
+        $details['System Tweaks'] = "$TweakCount tweak$(if ($TweakCount -ne 1) { 's' }) selected"
+    }
+    else {
+        $details['System Tweaks'] = 'No tweaks selected'
     }
 
     if ($DeploymentSettings) {

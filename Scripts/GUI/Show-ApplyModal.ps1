@@ -178,7 +178,7 @@ function Show-ApplyModal {
                             $tb = [System.Windows.Controls.TextBlock]::new()
                             $tb.Text = "$([char]0x2022) $featureName"
                             $tb.FontSize = 12
-                            $tb.SetResourceReference([System.Windows.Controls.TextBlock]::ForegroundProperty, 'FgColor')
+                            $tb.SetResourceReference([System.Windows.Controls.TextBlock]::ForegroundProperty, "AppFgColor")
                             $tb.Opacity = 0.85
                             $tb.Margin = [System.Windows.Thickness]::new(0, 2, 0, 0)
                             $applyRebootList.Children.Add($tb) | Out-Null

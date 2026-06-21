@@ -14,8 +14,8 @@
 
     <Window.Resources>
         <Style x:Key="RestoreOptionTileStyle" TargetType="Button">
-            <Setter Property="Background" Value="{DynamicResource SecondaryButtonBg}"/>
-            <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
+            <Setter Property="Background" Value="{DynamicResource SecondaryButtonBgColor}"/>
+            <Setter Property="Foreground" Value="{DynamicResource AppFgColor}"/>
             <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderColor}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="12,10"/>
@@ -36,16 +36,16 @@
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsEnabled" Value="False">
-                    <Setter Property="Background" Value="{DynamicResource SecondaryButtonDisabled}"/>
-                    <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
-                    <Setter Property="Foreground" Value="{DynamicResource SecondaryButtonTextDisabled}"/>
+                    <Setter Property="Background" Value="{DynamicResource SecondaryButtonDisabledColor}"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource AppBorderColor}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource SecondaryButtonTextDisabledColor}"/>
                 </Trigger>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{DynamicResource SecondaryButtonHover}"/>
+                    <Setter Property="Background" Value="{DynamicResource SecondaryButtonHoverColor}"/>
                     <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderColor}"/>
                 </Trigger>
                 <Trigger Property="IsPressed" Value="True">
-                    <Setter Property="Background" Value="{DynamicResource SecondaryButtonPressed}"/>
+                    <Setter Property="Background" Value="{DynamicResource SecondaryButtonPressedColor}"/>
                     <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderColor}"/>
                 </Trigger>
             </Style.Triggers>
@@ -84,10 +84,10 @@
                 <Button.Style>
                     <Style TargetType="Button">
                         <Setter Property="Background" Value="Transparent"/>
-                        <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
+                        <Setter Property="Foreground" Value="{DynamicResource AppFgColor}"/>
                         <Style.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="{DynamicResource CloseHover}"/>
+                                <Setter Property="Background" Value="{DynamicResource TitleBarCloseHoverColor}"/>
                             </Trigger>
                         </Style.Triggers>
                     </Style>
@@ -96,7 +96,7 @@
             </Button>
 
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0">
-                <Grid Margin="20,4,20,18">
+                <Grid Margin="20,4,20,16">
 
                     <TabControl x:Name="RestoreModeTabs"
                                 SelectedIndex="0"
@@ -121,7 +121,7 @@
                                    TextWrapping="Wrap"
                                    FontSize="14"
                                    LineHeight="20"
-                                   Foreground="{DynamicResource FgColor}"
+                                   Foreground="{DynamicResource AppFgColor}"
                                    Text="Choose what changes you want to restore."/>
 
                         <Button x:Name="ChooseRegistryBtn"
@@ -203,14 +203,14 @@
                                        TextWrapping="Wrap"
                                        FontSize="14"
                                        LineHeight="20"
-                                       Foreground="{DynamicResource FgColor}"
-                                       Text="This will restore any system registry changes made by Win11Debloat to their previous state. You can review the changes after selecting a backup file. Apps will need to be reinstalled manually."/>
+                                       Foreground="{DynamicResource AppFgColor}"
+                                       Text="This will restore any system registry changes made by Win11Debloat to the previous state. You can review the changes after selecting a backup file. Removed applications will need to be reinstalled manually."/>
 
                             <TextBlock Grid.Row="1"
                                        Margin="0,12,0,2"
                                        TextWrapping="Wrap"
                                        FontSize="13"
-                                       Foreground="{DynamicResource FgColor}"
+                                       Foreground="{DynamicResource AppFgColor}"
                                        Opacity="0.75"
                                        Text="Warning: Only use backup files generated by Win11Debloat."/>
                         </Grid>
@@ -247,7 +247,7 @@
                                 <TextBlock x:Name="BackupTargetText" Grid.Row="2" Grid.Column="1" Text="N/A" Style="{DynamicResource ModalInfoValueTextStyle}" Margin="0"/>
                             </Grid>
 
-                            <Border Grid.Row="1" Height="1" Background="{DynamicResource BorderColor}" Margin="0,0,0,12"/>
+                            <Border Grid.Row="1" Height="1" Background="{DynamicResource AppBorderColor}" Margin="0,0,0,12"/>
 
                             <Grid x:Name="OverviewFeaturesSection" Grid.Row="2">
                                 <Grid.RowDefinitions>
@@ -258,7 +258,7 @@
                                 <TextBlock Grid.Row="0"
                                            Text="The following changes will be reverted:"
                                            FontSize="13"
-                                           Foreground="{DynamicResource FgColor}"
+                                           Foreground="{DynamicResource AppFgColor}"
                                            FontWeight="SemiBold"
                                            Margin="0,0,0,8"/>
 
@@ -270,7 +270,7 @@
                                     </ItemsControl.ItemsPanel>
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding DisplayText}" FontSize="12" Foreground="{DynamicResource FgColor}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                            <TextBlock Text="{Binding DisplayText}" FontSize="12" Foreground="{DynamicResource AppFgColor}" TextWrapping="Wrap" Margin="0,0,0,6"/>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
@@ -279,12 +279,12 @@
                             <TextBlock x:Name="OverviewSummaryText"
                                        Grid.Row="2"
                                        FontSize="13"
-                                       Foreground="{DynamicResource FgColor}"
+                                       Foreground="{DynamicResource AppFgColor}"
                                        TextWrapping="Wrap"
                                        Visibility="Collapsed"
                                        Text="This will restore the Start Menu pinned apps layout for the current user."/>
 
-                            <Border x:Name="ReappliedSeparator" Grid.Row="3" Height="1" Background="{DynamicResource BorderColor}" Margin="0,12,0,12" Visibility="Collapsed"/>
+                            <Border x:Name="ReappliedSeparator" Grid.Row="3" Height="1" Background="{DynamicResource AppBorderColor}" Margin="0,12,0,12" Visibility="Collapsed"/>
 
                             <Grid x:Name="ReappliedPanel" Grid.Row="4" Visibility="Collapsed">
                                 <Grid.RowDefinitions>
@@ -295,7 +295,7 @@
                                 <TextBlock Grid.Row="0"
                                            Text="The following changes will be re-applied:"
                                            FontSize="13"
-                                           Foreground="{DynamicResource FgColor}"
+                                           Foreground="{DynamicResource AppFgColor}"
                                            FontWeight="SemiBold"
                                            Margin="0,0,0,8"/>
 
@@ -307,13 +307,13 @@
                                     </ItemsControl.ItemsPanel>
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding DisplayText}" FontSize="12" Foreground="{DynamicResource FgColor}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                            <TextBlock Text="{Binding DisplayText}" FontSize="12" Foreground="{DynamicResource AppFgColor}" TextWrapping="Wrap" Margin="0,0,0,6"/>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
                             </Grid>
 
-                            <Border x:Name="NonRevertibleSeparator" Grid.Row="5" Height="1" Background="{DynamicResource BorderColor}" Margin="0,12,0,12" Visibility="Collapsed"/>
+                            <Border x:Name="NonRevertibleSeparator" Grid.Row="5" Height="1" Background="{DynamicResource AppBorderColor}" Margin="0,12,0,12" Visibility="Collapsed"/>
 
                             <Grid x:Name="NonRevertiblePanel" Grid.Row="6" Visibility="Collapsed">
                                 <Grid.RowDefinitions>
@@ -325,7 +325,7 @@
                                 <TextBlock Grid.Row="0"
                                            Text="The following changes won't be reverted:"
                                            FontSize="13"
-                                           Foreground="{DynamicResource FgColor}"
+                                           Foreground="{DynamicResource AppFgColor}"
                                            FontWeight="SemiBold"
                                            Margin="0,0,0,8"/>
 
@@ -337,7 +337,7 @@
                                     </ItemsControl.ItemsPanel>
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding DisplayText}" FontSize="12" Foreground="{DynamicResource FgColor}" Opacity="0.85" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                            <TextBlock Text="{Binding DisplayText}" FontSize="12" Foreground="{DynamicResource AppFgColor}" Opacity="0.85" TextWrapping="Wrap" Margin="0,0,0,6"/>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
@@ -373,7 +373,7 @@
                                        FontSize="14"
                                        LineHeight="20"
                                        Margin="0,0,0,12"
-                                       Foreground="{DynamicResource FgColor}"
+                                       Foreground="{DynamicResource AppFgColor}"
                                        Text="This will restore the Start Menu pinned apps layout for the selected user(s) using a backup that is automatically created by Win11Debloat. Manually created backups can also be used."/>
 
                             <ComboBox x:Name="StartMenuScopeCombo"
@@ -392,7 +392,7 @@
                                        IsChecked="True"
                                        FontSize="12"
                                        Margin="0,10,0,0"
-                                       Foreground="{DynamicResource FgColor}"
+                                       Foreground="{DynamicResource AppFgColor}"
                                        Opacity="0.85"/>
                         </Grid>
 

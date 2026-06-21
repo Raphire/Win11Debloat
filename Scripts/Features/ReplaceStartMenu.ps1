@@ -280,7 +280,11 @@ function RestoreStartMenu {
 
     if (-not $startMenuBinFile) {
         Write-Host "Unable to resolve start menu path for user $targetUserName, nothing to restore" -ForegroundColor Yellow
-        return
+        return [PSCustomObject]@{
+            UserName = $targetUserName
+            Result   = $false
+            Message  = "Could not resolve start menu path for user $targetUserName."
+        }
     }
 
     Write-Host "Restoring start menu for user $targetUserName from backup..."

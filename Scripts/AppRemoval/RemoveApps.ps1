@@ -99,7 +99,7 @@ function Remove-WinGetApp {
         winget uninstall --accept-source-agreements --disable-interactivity --id $appId
     } -ArgumentList $app
 
-    $wingetFailed = Select-String -InputObject $wingetOutput -Pattern "Uninstall failed with exit code|No installed package found matching input criteria|No package found matching input criteria" -SimpleMatch:$false
+    $wingetFailed = Select-String -InputObject $wingetOutput -Pattern "Uninstall failed with exit code" -SimpleMatch:$false
     if ($wingetFailed) {
         Write-Host "WinGet could not remove $app" -ForegroundColor Red
     }

@@ -44,9 +44,11 @@ function Invoke-FeatureApply {
     }
 
     # ---- Custom features (no registry backing, or special handling required) ----
+    # Resolve a safe apply-text fallback in case the feature is missing from Features.json
+    $applyText = if ($feature -and $feature.ApplyText) { $feature.ApplyText } else { $FeatureId }
     switch ($FeatureId) {
         'RemoveApps' {
-            Write-Host "> $($feature.ApplyText) for $(GetFriendlyTargetUserName)..."
+            Write-Host "> $applyText for $(GetFriendlyTargetUserName)..."
             $appsList = GenerateAppsList
 
             if ($appsList.Count -eq 0) {
@@ -60,7 +62,7 @@ function Invoke-FeatureApply {
             return
         }
         'RemoveAppsCustom' {
-            Write-Host "> $($feature.ApplyText)..."
+            Write-Host "> $applyText..."
             $appsList = LoadAppsFromFile $script:CustomAppsListFilePath
 
             if ($appsList.Count -eq 0) {
@@ -75,18 +77,18 @@ function Invoke-FeatureApply {
         }
         'RemoveGamingApps' {
             $appsList = @('Microsoft.GamingApp', 'Microsoft.XboxGameOverlay', 'Microsoft.XboxGamingOverlay')
-            Write-Host "> $($feature.ApplyText)..."
+            Write-Host "> $applyText..."
             RemoveApps $appsList
             return
         }
         'RemoveHPApps' {
             $appsList = @('AD2F1837.HPAIExperienceCenter', 'AD2F1837.HPJumpStarts', 'AD2F1837.HPPCHardwareDiagnosticsWindows', 'AD2F1837.HPPowerManager', 'AD2F1837.HPPrivacySettings', 'AD2F1837.HPSupportAssistant', 'AD2F1837.HPSureShieldAI', 'AD2F1837.HPSystemInformation', 'AD2F1837.HPQuickDrop', 'AD2F1837.HPWorkWell', 'AD2F1837.myHP', 'AD2F1837.HPDesktopSupportUtilities', 'AD2F1837.HPQuickTouch', 'AD2F1837.HPEasyClean', 'AD2F1837.HPConnectedMusic', 'AD2F1837.HPFileViewer', 'AD2F1837.HPRegistration', 'AD2F1837.HPWelcome', 'AD2F1837.HPConnectedPhotopoweredbySnapfish', 'AD2F1837.HPPrinterControl')
-            Write-Host "> $($feature.ApplyText)..."
+            Write-Host "> $applyText..."
             RemoveApps $appsList
             return
         }
         'DisableWidgets' {
-            Write-Host "> $($feature.ApplyText)..."
+            Write-Host "> $applyText..."
             # Stop widgets related processes before removing the app packages to prevent potential issues
             if (-not $script:Params.ContainsKey("WhatIf")) {
                 Get-Process *Widget* -ErrorAction SilentlyContinue | Stop-Process
@@ -96,20 +98,20 @@ function Invoke-FeatureApply {
             return
         }
         'EnableWindowsSandbox' {
-            Write-Host "> $($feature.ApplyText)..."
+            Write-Host "> $applyText..."
             EnableWindowsFeature "Containers-DisposableClientVM"
             Write-Host ""
             return
         }
         'EnableWindowsSubsystemForLinux' {
-            Write-Host "> $($feature.ApplyText)..."
+            Write-Host "> $applyText..."
             EnableWindowsFeature "VirtualMachinePlatform"
             EnableWindowsFeature "Microsoft-Windows-Subsystem-Linux"
             Write-Host ""
             return
         }
         'ClearStart' {
-            Write-Host "> $($feature.ApplyText) for user $(GetUserName)..."
+            Write-Host "> $applyText for user $(GetUserName)..."
             $startMenuBinFile = GetStartMenuBinPathForUser -UserName (GetUserName)
             if (-not [string]::IsNullOrWhiteSpace($startMenuBinFile)) {
                 ReplaceStartMenu -startMenuBinFile $startMenuBinFile
@@ -118,7 +120,7 @@ function Invoke-FeatureApply {
             return
         }
         'ReplaceStart' {
-            Write-Host "> $($feature.ApplyText) for user $(GetUserName)..."
+            Write-Host "> $applyText for user $(GetUserName)..."
             $startMenuBinFile = GetStartMenuBinPathForUser -UserName (GetUserName)
             if (-not [string]::IsNullOrWhiteSpace($startMenuBinFile)) {
                 ReplaceStartMenu -startMenuBinFile $startMenuBinFile -startMenuTemplate $script:Params.Item("ReplaceStart")
@@ -189,13 +191,15 @@ function Invoke-FeatureUndo {
             return
         }
         'EnableWindowsSandbox' {
-            Write-Host "> $($feature.ApplyUndoText)..."
+            $undoText = if ($feature) { $feature.ApplyUndoText } else { 'Disabling Windows Sandbox' }
+            Write-Host "> $undoText..."
             DisableWindowsFeature 'Containers-DisposableClientVM'
             Write-Host ""
             return
         }
         'EnableWindowsSubsystemForLinux' {
-            Write-Host "> $($feature.ApplyUndoText)..."
+            $undoText = if ($feature) { $feature.ApplyUndoText } else { 'Disabling Windows Subsystem for Linux' }
+            Write-Host "> $undoText..."
             DisableWindowsFeature 'Microsoft-Windows-Subsystem-Linux'
             DisableWindowsFeature 'VirtualMachinePlatform'
             Write-Host ""
@@ -312,7 +316,7 @@ function Invoke-UndoFeatures {
         if ($f -and $f.RegistryUndoKey) {
             ImportRegistryFile "> $undoText" (Resolve-UndoRegFilePath $f.RegistryUndoKey)
         }
-        
+
         Invoke-FeatureUndo -FeatureId $featureId
         $step++
     }
@@ -325,8 +329,8 @@ function Invoke-UndoFeatures {
 
     .DESCRIPTION
         Sequenced in four phases:
-        1. Registry backup - captures current state before any changes
-        2. System restore point - created if requested (CLI mode only)
+        1. Registry backup
+        2. System restore point
         3. Apply phase - applies all selected features via Invoke-ApplyFeatures
         4. Undo phase - undoes selected features via Invoke-UndoFeatures
 
@@ -376,7 +380,7 @@ function Invoke-AllChanges {
     $step = 0
 
     # ================================================================
-    # Phase 1: Registry backup (captures state before any changes)
+    # Phase 1: Registry backup
     # ================================================================
     if ($needsBackup) {
         $step++
@@ -405,7 +409,7 @@ function Invoke-AllChanges {
     }
 
     # ================================================================
-    # Phase 2: System restore point (CLI mode only)
+    # Phase 2: System restore point
     # ================================================================
     if ($script:Params.ContainsKey("CreateRestorePoint")) {
         $step++

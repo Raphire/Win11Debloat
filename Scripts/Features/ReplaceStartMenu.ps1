@@ -26,15 +26,17 @@ function ReplaceStartMenuForAllUsers {
     # Also replace the start menu file for the default user profile
     $defaultStartMenuPath = GetUserDirectory -userName "Default" -fileName "AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState" -exitIfPathNotFound $false
 
-    # Create folder if it doesn't exist
-    if (-not (Test-Path $defaultStartMenuPath)) {
-        new-item $defaultStartMenuPath -ItemType Directory -Force | Out-Null
-        Write-Host "Created LocalState folder for default user profile"
-    }
+    if ($defaultStartMenuPath) {
+        # Create folder if it doesn't exist
+        if (-not (Test-Path $defaultStartMenuPath)) {
+            new-item $defaultStartMenuPath -ItemType Directory -Force | Out-Null
+            Write-Host "Created LocalState folder for default user profile"
+        }
 
-    # Copy template to default profile
-    ReplaceStartMenu -startMenuBinFile "$($defaultStartMenuPath)\start2.bin" -startMenuTemplate $startMenuTemplate
-    Write-Host "Replaced start menu for the default user profile"
+        # Copy template to default profile
+        ReplaceStartMenu -startMenuBinFile "$($defaultStartMenuPath)\start2.bin" -startMenuTemplate $startMenuTemplate
+        Write-Host "Replaced start menu for the default user profile"
+    }
     Write-Host ""
 }
 
@@ -157,6 +159,11 @@ function RestoreStartMenu {
 
     $targetUserName = GetUserName
     $startMenuBinFile = GetStartMenuBinPathForUser -UserName $targetUserName
+
+    if (-not $startMenuBinFile) {
+        Write-Host "Unable to resolve start menu path for user $targetUserName, nothing to restore" -ForegroundColor Yellow
+        return
+    }
 
     Write-Host "Restoring start menu for user $targetUserName from backup..."
 

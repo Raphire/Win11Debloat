@@ -86,7 +86,9 @@ function Invoke-FeatureApply {
         'DisableWidgets' {
             Write-Host "> $($feature.ApplyText)..."
             # Stop widgets related processes before removing the app packages to prevent potential issues
-            Get-Process *Widget* -ErrorAction SilentlyContinue | Stop-Process
+            if (-not $script:Params.ContainsKey("WhatIf")) {
+                Get-Process *Widget* -ErrorAction SilentlyContinue | Stop-Process
+            }
 
             RemoveApps @('Microsoft.StartExperiencesApp','MicrosoftWindows.Client.WebExperience','Microsoft.WidgetsPlatformRuntime')
             return

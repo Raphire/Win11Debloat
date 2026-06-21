@@ -156,7 +156,7 @@ $script:RegistryBackupsPath = Join-Path $PSScriptRoot 'Backups'
 $script:AssetsPath = Join-Path $PSScriptRoot 'Assets'
 $script:AppSelectionSchema = Join-Path $schemasPath 'AppSelectionWindow.xaml'
 $script:MainWindowSchema = Join-Path $schemasPath 'MainWindow.xaml'
-$script:MessageBoxSchema = Join-Path $schemasPath 'MessageBoxWindow.xaml'
+$script:MessageBoxSchema = Join-Path $schemasPath 'MessageBox.xaml'
 $script:AboutWindowSchema = Join-Path $schemasPath 'AboutWindow.xaml'
 $script:ApplyChangesWindowSchema = Join-Path $schemasPath 'ApplyChangesWindow.xaml'
 $script:SharedStylesSchema = Join-Path $schemasPath 'SharedStyles.xaml'
@@ -209,7 +209,8 @@ Write-Host "                   " -NoNewline; Write-Host "    (" -ForegroundColor
 Write-Host "                   " -NoNewline; Write-Host "    ( " -ForegroundColor DarkYellow -NoNewline; Write-Host "'" -ForegroundColor Red -NoNewline; Write-Host " )   " -ForegroundColor DarkYellow -NoNewline; Write-Host "*" -ForegroundColor Yellow
 Write-Host ""
 Write-Host "             Win11Debloat is launching..." -ForegroundColor White
-Write-Host "               Leave this window open" -ForegroundColor DarkGray
+Write-Host "                Keep this window open" -ForegroundColor DarkGray
+Write-Host ""
 Write-Host ""
 
 # Log script output to 'Win11Debloat.log' at the specified path
@@ -219,6 +220,15 @@ if ($LogPath -and (Test-Path $LogPath)) {
 else {
     Start-Transcript -Path $script:DefaultLogPath -Append -IncludeInvocationHeader -Force | Out-Null
 }
+
+# Check if the device is domain-joined and warn the user (Group Policy may override changes)
+try {
+    $computerSystem = Get-CimInstance Win32_ComputerSystem -ErrorAction SilentlyContinue
+    if ($null -ne $computerSystem -and $computerSystem.PartOfDomain) {
+        Write-Warning "This machine is domain-joined. Group Policy may override changes made by Win11Debloat."
+    }
+}
+catch { }
 
 # Check if script has all required files
 if (-not ((Test-Path $script:DefaultSettingsFilePath) -and (Test-Path $script:AppsListFilePath) -and (Test-Path $script:RegfilesPath) -and (Test-Path $script:AssetsPath) -and (Test-Path $script:AppSelectionSchema) -and (Test-Path $script:ApplyChangesWindowSchema) -and (Test-Path $script:SharedStylesSchema) -and (Test-Path $script:BubbleHintSchema) -and (Test-Path $script:RestoreBackupWindowSchema) -and (Test-Path $script:FeaturesFilePath))) {
@@ -423,7 +433,11 @@ if ($script:Params.ContainsKey("User")) {
     GetUserDirectory -userName $script:Params.Item("User") | Out-Null
 }
 if ($script:Params.ContainsKey("AppRemovalTarget")) {
-    GetUserDirectory -userName $script:Params.Item("AppRemovalTarget") | Out-Null
+    $appRemovalTargetValue = $script:Params.Item("AppRemovalTarget")
+    # 'AllUsers' / 'CurrentUser' are sentinel scope values, not real usernames - don't resolve them as a profile
+    if ($appRemovalTargetValue -notin @('AllUsers', 'CurrentUser')) {
+        GetUserDirectory -userName $appRemovalTargetValue | Out-Null
+    }
 }
 
 # Remove LastUsedSettings.json file if it exists and is empty
@@ -489,7 +503,11 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
             try {
                 $result = Show-MainWindow
             
-                Stop-Transcript
+                try {
+                    Stop-Transcript
+                }
+                catch { }
+
                 Exit
             }
             catch {

@@ -953,6 +953,14 @@
     })
 
     $window.Show() | Out-Null
+
+    # If WhatIf mode is enabled, notify the user that no changes will be made
+    if ($script:Params.ContainsKey("WhatIf")) {
+        $window.Dispatcher.BeginInvoke([System.Windows.Threading.DispatcherPriority]::Loaded, [action]{
+            Show-MessageBox -Message "WhatIf mode is enabled. The script will not make any changes to your system in this mode.`n`nYou can observe the actions that would be taken by the script in the console output." -Title 'WhatIf Mode' -Button 'OK' -Icon 'Information' -Owner $window
+        }) | Out-Null
+    }
+
     [System.Windows.Threading.Dispatcher]::PushFrame($frame)
     return $null
 }

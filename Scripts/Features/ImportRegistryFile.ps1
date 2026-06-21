@@ -21,6 +21,12 @@ function ImportRegistryFile {
     $importScript = {
         param($targetRegFilePath, $hiveContext)
 
+        if ($script:Params.ContainsKey("WhatIf")) {
+            Invoke-RegistryOperationsFromRegFile -RegFilePath $targetRegFilePath
+            Write-Host ""
+            return
+        }
+
         # When the target user's hive is already loaded under their SID, the .reg file's
         # HKEY_USERS\Default paths won't match. Use the PowerShell registry writer instead,
         # which remaps Default → SID via Split-RegistryPath.

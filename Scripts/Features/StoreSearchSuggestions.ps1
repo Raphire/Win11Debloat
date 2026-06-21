@@ -54,6 +54,11 @@ function DisableStoreSearchSuggestions {
     $userName = [regex]::Match($StoreAppsDatabase, '(?:Users\\)([^\\]+)(?:\\AppData)').Groups[1].Value
     if (-not $userName) { $userName = '<unknown>' }
 
+    if ($script:Params.ContainsKey("WhatIf")) {
+        Write-Host "[WhatIf] Disable Microsoft Store search suggestions for user $userName by restricting access to ${StoreAppsDatabase}" -ForegroundColor Cyan
+        return
+    }
+
     # This file doesn't exist in EEA (No Store app suggestions).
     if (-not (Test-Path -Path $StoreAppsDatabase))
     {
@@ -131,6 +136,11 @@ function EnableStoreSearchSuggestions {
 
     $userName = [regex]::Match($StoreAppsDatabase, '(?:Users\\)([^\\]+)(?:\\AppData)').Groups[1].Value
     if (-not $userName) { $userName = '<unknown>' }
+
+    if ($script:Params.ContainsKey("WhatIf")) {
+        Write-Host "[WhatIf] Re-enable Microsoft Store search suggestions for user $userName by restoring access to ${StoreAppsDatabase}" -ForegroundColor Cyan
+        return
+    }
 
     if (-not (Test-Path -Path $StoreAppsDatabase)) {
         Write-Host "Store app database not found for user $userName, nothing to undo"
@@ -245,7 +255,8 @@ function Test-StoreSearchSuggestionsDisabled {
         $isEveryone = $false
         try {
             $isEveryone = $accessRule.IdentityReference.Translate([System.Security.Principal.SecurityIdentifier]) -eq $everyoneSid
-        } catch { }
+        }
+        catch { }
 
         if ($isEveryone) {
             return $true

@@ -1,5 +1,10 @@
 # Saves the current settings, excluding control parameters, to 'LastUsedSettings.json' file
 function SaveSettings {
+    if ($script:Params.ContainsKey("WhatIf")) {
+        Write-Host "[WhatIf] Save settings to LastUsedSettings.json" -ForegroundColor Cyan
+        return
+    }
+
     $settings = @{
         "Version" = "1.0"
         "Settings" = @()

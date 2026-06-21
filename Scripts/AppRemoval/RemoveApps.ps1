@@ -1,8 +1,38 @@
+<#
+    .SYNOPSIS
+    Removes one or more Windows app packages based on the target scope.
+
+    .DESCRIPTION
+    Iterates over the provided list of app identifiers and removes each one.
+    Apps are removed via WinGet (for OneDrive and Microsoft Edge) or via
+    Remove-AppxPackage / Remove-ProvisionedAppxPackage (for all other apps).
+    The target scope is determined by script-level parameters:
+    -Sysprep removes from the OS image for future users; -User targets a
+    specific user; otherwise the current user is targeted.
+
+    .PARAMETER appsList
+    An array of app package identifiers to remove (e.g. 'Microsoft.BingNews').
+
+    .EXAMPLE
+    RemoveApps @('Microsoft.BingNews', 'Microsoft.BingWeather')
+
+    .EXAMPLE
+    RemoveApps -appsList (GenerateAppsList)
+#>
 # Removes apps specified during function call based on the target scope.
 function RemoveApps {
     param (
         $appslist
     )
+
+    if ($script:Params.ContainsKey("WhatIf")) {
+        foreach ($app in $appslist) {
+            Write-Host "[WhatIf] Remove App Package: $app" -ForegroundColor Cyan
+        }
+
+        Write-Host ""
+        return
+    }
 
     # Determine target from script-level params, defaulting to AllUsers
     $targetUser = GetTargetUserForAppRemoval
@@ -22,7 +52,7 @@ function RemoveApps {
 
         # Update step name and sub-progress to show which app is being removed (only for bulk removal)
         if ($script:ApplySubStepCallback -and $appCount -gt 1) {
-            & $script:ApplySubStepCallback "Removing apps ($appIndex/$appCount)" $appIndex $appCount
+            & $script:ApplySubStepCallback "Removing apps... ($appIndex/$appCount)" $appIndex $appCount
         }
 
         Write-Host "Removing $app"

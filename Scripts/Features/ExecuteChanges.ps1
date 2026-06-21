@@ -24,7 +24,7 @@ function ExecuteParameter {
             }
             'DisableCopilot' {
                 # Also remove the app for Copilot
-                RemoveApps @('XP9CXNGPPJ97XX')
+                RemoveApps @('Microsoft.Copilot', 'XP9CXNGPPJ97XX')
             }
             'DisableTelemetry' {
                 # Also disable telemetry scheduled tasks

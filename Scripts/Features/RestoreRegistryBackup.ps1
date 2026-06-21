@@ -133,6 +133,11 @@ function Restore-RegistryBackupState {
 
     $friendlyTarget = GetFriendlyRegistryBackupTarget -Target ([string]$Backup.Target)
 
+    if ($script:Params.ContainsKey("WhatIf")) {
+        Write-Host "[WhatIf] Restore registry backup for $friendlyTarget" -ForegroundColor Cyan
+        return [PSCustomObject]@{ Result = $true }
+    }
+
     $restoreAction = {
         param($normalizedBackup)
 
@@ -148,9 +153,10 @@ function Restore-RegistryBackupState {
         Write-Host "Restore requires loading target user hive."
         Invoke-WithLoadedRestoreHive -Target $Backup.Target -ScriptBlock $restoreAction -ArgumentObject $Backup
         Write-Host "Restore completed for $friendlyTarget."
-        return
+        return [PSCustomObject]@{ Result = $true }
     }
 
     & $restoreAction $Backup
     Write-Host "Restore completed for $friendlyTarget."
+    return [PSCustomObject]@{ Result = $true }
 }

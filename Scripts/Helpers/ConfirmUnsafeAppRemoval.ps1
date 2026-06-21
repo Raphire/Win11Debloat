@@ -16,8 +16,6 @@ function ConfirmUnsafeAppRemoval {
     if ($SelectedApps -contains "Microsoft.WindowsStore") {
         $result = Show-MessageBox -Message 'Are you sure that you wish to uninstall the Microsoft Store? This app cannot easily be reinstalled.' -Title 'Are you sure?' -Button 'YesNo' -Icon 'Warning' -Owner $Owner
 
-        # Proceed only on an explicit 'Yes'. Dismissing the dialog (X / Alt+F4 -> $null,
-        # or Escape -> 'Cancel') must decline, not fall through to removal.
         if ($result -ne 'Yes') {
             return $false
         }
@@ -27,8 +25,6 @@ function ConfirmUnsafeAppRemoval {
     if ($SelectedApps -contains "Microsoft.WindowsTerminal") {
         $result = Show-MessageBox -Message 'Are you sure that you wish to remove Windows Terminal? Windows Terminal is the default command-line app for Windows. Ensure you are not running Win11Debloat via Windows Terminal before proceeding to avoid a mid-process failure.' -Title 'Are you sure?' -Button 'YesNo' -Icon 'Warning' -Owner $Owner
 
-        # Proceed only on an explicit 'Yes'. Dismissing the dialog (X / Alt+F4 -> $null,
-        # or Escape -> 'Cancel') must decline, not fall through to removal.
         if ($result -ne 'Yes') {
             return $false
         }

@@ -43,12 +43,29 @@ function RemoveApps {
     $edgeUninstallSucceeded = $false
     $edgeScheduledTaskAdded = $false
 
+    # Packages that must never be removed: removing them breaks the shell, sign-in, or the app runtime
+    $criticalAppDenylist = @(
+        'ShellExperienceHost', 'StartMenuExperienceHost', 'AAD.BrokerPlugin', 'CloudExperienceHost',
+        'Microsoft.UI.Xaml', 'Microsoft.VCLibs', 'Microsoft.NET.Native', 'Microsoft.WindowsAppRuntime',
+        'DesktopAppInstaller', 'Microsoft.AccountsControl', 'Microsoft.LockApp', 'SecHealthUI'
+    )
+
     Foreach ($app in $appsList) {
         if ($script:CancelRequested) {
             return
         }
 
         $appIndex++
+
+        # Safety guard: never remove packages critical to the shell, sign-in, or app runtimes
+        $isCriticalApp = $false
+        foreach ($criticalApp in $criticalAppDenylist) {
+            if ($app -like "*$criticalApp*") { $isCriticalApp = $true; break }
+        }
+        if ($isCriticalApp) {
+            Write-Host "Skipping '$app': this package is critical to Windows and removal is blocked." -ForegroundColor Yellow
+            continue
+        }
 
         # Update step name and sub-progress to show which app is being removed (only for bulk removal)
         if ($script:ApplySubStepCallback -and $appCount -gt 1) {

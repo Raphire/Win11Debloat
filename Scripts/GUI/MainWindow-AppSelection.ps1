@@ -158,7 +158,7 @@ function Update-AppSelectionStatus {
             $selectedCount++
         }
     }
-    $AppSelectionStatus.Text = "$selectedCount app(s) selected for removal"
+    $AppSelectionStatus.Text = (L 'AppStatusSelected') -f $selectedCount
 
     if ($AppRemovalScopeCombo -and $AppRemovalScopeSection -and $AppRemovalScopeDescription) {
         if ($selectedCount -gt 0) {
@@ -180,19 +180,10 @@ function Update-AppRemovalScopeDescription {
         [System.Windows.Controls.TextBlock]$AppRemovalScopeDescription
     )
 
-    $selectedItem = $AppRemovalScopeCombo.SelectedItem
-    if ($selectedItem) {
-        switch ($selectedItem.Content) {
-            "All users" {
-                $AppRemovalScopeDescription.Text = "Apps will be removed for all users and from the Windows image to prevent reinstallation for new users."
-            }
-            "Current user only" {
-                $AppRemovalScopeDescription.Text = "Apps will only be removed for the current user."
-            }
-            "Target user only" {
-                $AppRemovalScopeDescription.Text = "Apps will only be removed for the specified target user."
-            }
-        }
+    switch ($AppRemovalScopeCombo.SelectedIndex) {
+        0 { $AppRemovalScopeDescription.Text = L 'AppScopeAllUsersDesc' }
+        1 { $AppRemovalScopeDescription.Text = L 'AppScopeCurrentUserDesc' }
+        2 { $AppRemovalScopeDescription.Text = L 'AppScopeTargetUserDesc' }
     }
 }
 
@@ -379,9 +370,9 @@ function Load-AppsWithList {
         $dot.Style = $Window.Resources['AppRecommendationDotStyle']
         $dot.Fill = switch ($app.Recommendation) { 'safe' { $brushSafe } 'unsafe' { $brushUnsafe } default { $brushDefault } }
         $dot.ToolTip = switch ($app.Recommendation) {
-            'safe'   { '[Recommended] Safe to remove for most users' }
-            'unsafe' { '[Not Recommended] Only remove if you know what you are doing' }
-            default  { "[Optional] Remove if you don't need this app" }
+            'safe'   { L 'AppRecommendationSafe' }
+            'unsafe' { L 'AppRecommendationUnsafe' }
+            default  { L 'AppRecommendationOptional' }
         }
         [System.Windows.Controls.Grid]::SetColumn($dot, 0)
 

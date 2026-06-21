@@ -149,6 +149,7 @@ $script:AppsListFilePath = Join-Path $configPath 'Apps.json'
 $script:DefaultSettingsFilePath = Join-Path $configPath 'DefaultSettings.json'
 $script:FeaturesFilePath = Join-Path $configPath 'Features.json'
 $script:SavedSettingsFilePath = Join-Path $configPath 'LastUsedSettings.json'
+$script:LanguagesPath = Join-Path $configPath 'Languages'
 $script:CustomAppsListFilePath = Join-Path $configPath 'CustomAppsList'
 $script:DefaultLogPath = Join-Path $logsPath 'Win11Debloat.log'
 $script:RegfilesPath = Join-Path $PSScriptRoot 'Regfiles'
@@ -308,6 +309,7 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 . "$PSScriptRoot/Scripts/Features/RestartExplorer.ps1"
 
 # File I/O functions
+. "$PSScriptRoot/Scripts/FileIO/LoadLanguage.ps1"
 . "$PSScriptRoot/Scripts/FileIO/LoadJsonFile.ps1"
 . "$PSScriptRoot/Scripts/FileIO/SaveToFile.ps1"
 . "$PSScriptRoot/Scripts/FileIO/SaveSettings.ps1"
@@ -371,6 +373,9 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 ##################################################################################################################
 
 
+
+# Load UI language (uses system language by default; falls back to en-US)
+$script:Lang = LoadLanguage
 
 # Get current Windows build version
 $WinVersion = Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' CurrentBuild

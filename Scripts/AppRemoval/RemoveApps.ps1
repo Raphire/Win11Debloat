@@ -25,6 +25,15 @@ function RemoveApps {
         $appslist
     )
 
+    if ($script:Params.ContainsKey("WhatIf")) {
+        foreach ($app in $appslist) {
+            Write-Host "[WhatIf] Remove App Package: $app" -ForegroundColor Cyan
+        }
+
+        Write-Host ""
+        return
+    }
+
     $targetUser = GetTargetUserForAppRemoval
     $appCount = @($appsList).Count
     $appIndex = 0

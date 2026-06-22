@@ -338,6 +338,8 @@ function Invoke-AllChanges {
         if ($script:ControlParams -contains $key) { continue }
         if ($key -eq 'Apps') { continue }
         if ($key -eq 'CreateRestorePoint') { continue }
+        # Skip unknown parameters that aren't defined in Features.json
+        if (-not $script:Features.ContainsKey($key)) { continue }
         $applyIds += $key
     }
     $undoIds = @($script:UndoParams.Keys)

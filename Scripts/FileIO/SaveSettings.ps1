@@ -11,7 +11,7 @@ function SaveSettings {
     }
     
     foreach ($param in $script:Params.Keys) {
-        if ($script:ControlParams -notcontains $param) {
+        if ($script:ControlParams -notcontains $param -and $script:Features.ContainsKey($param)) {
             $value = $script:Params[$param]
 
             $settings.Settings += @{

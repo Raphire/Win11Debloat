@@ -40,7 +40,6 @@ function Show-RestoreBackupWindow {
         }
         elseif ($dialogResult.Result -eq 'RestoreStartMenu') {
             $scope = $dialogResult.StartMenuScope
-            $useManualBackupFile = ($dialogResult.UseManualBackupFile -eq $true)
             $backupFilePath = $null
             if ($dialogResult -is [hashtable] -and $dialogResult.ContainsKey('BackupFilePath')) {
                 $backupFilePath = $dialogResult['BackupFilePath']
@@ -49,7 +48,7 @@ function Show-RestoreBackupWindow {
                 $backupFilePath = $dialogResult.BackupFilePath
             }
 
-            if ($useManualBackupFile -and [string]::IsNullOrWhiteSpace($backupFilePath)) {
+            if ([string]::IsNullOrWhiteSpace($backupFilePath)) {
                 throw 'Start Menu restore canceled: no backup file selected.'
             }
 

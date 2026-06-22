@@ -61,6 +61,7 @@ function Show-RestoreBackupDialog {
     $startMenuIntroPanel = $window.FindName('StartMenuIntroPanel')
     $startMenuScopeCombo = $window.FindName('StartMenuScopeCombo')
     $startMenuAutoBackupCheck = $window.FindName('StartMenuAutoBackupCheck')
+    $startMenuAutoBackupCheck.Visibility = 'Collapsed'
     $introInfoPanel = $window.FindName('IntroInfoPanel')
     $overviewPanel = $window.FindName('OverviewPanel')
     $overviewFeaturesSection = $window.FindName('OverviewFeaturesSection')
@@ -148,9 +149,8 @@ function Show-RestoreBackupDialog {
             return
         }
 
-        $isAutoBackupEnabled = ($startMenuAutoBackupCheck.IsChecked -eq $true)
-        $hasSelectedManualFile = -not [string]::IsNullOrWhiteSpace($state.SelectedStartMenuBackupFilePath)
-        if ($isAutoBackupEnabled -or $hasSelectedManualFile) {
+        $hasSelectedFile = -not [string]::IsNullOrWhiteSpace($state.SelectedStartMenuBackupFilePath)
+        if ($hasSelectedFile) {
             $primaryActionBtn.Content = 'Restore backup'
         }
         else {
@@ -302,15 +302,11 @@ function Show-RestoreBackupDialog {
     }
 
     $handleStartMenuPrimaryAction = {
-        $scope = (& $getStartMenuScopeInfo).Scope
-        $useManualBackupFile = -not ($startMenuAutoBackupCheck.IsChecked -eq $true)
-
-        if ($useManualBackupFile -and [string]::IsNullOrWhiteSpace($state.SelectedStartMenuBackupFilePath)) {
+        if ([string]::IsNullOrWhiteSpace($state.SelectedStartMenuBackupFilePath)) {
             $openDialog = New-Object Microsoft.Win32.OpenFileDialog
             $openDialog.Title = 'Select Start Menu Backup File'
             $openDialog.Filter = 'Start Menu backup (*.bak)|*.bak'
-            $openDialog.InitialDirectory = "$env:LOCALAPPDATA\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState"
-            $openDialog.DefaultExt = '.bak'
+            $openDialog.InitialDirectory = (Join-Path $script:AppDataPath 'Backups')
 
             if ($openDialog.ShowDialog($window) -ne $true) {
                 return
@@ -322,34 +318,10 @@ function Show-RestoreBackupDialog {
             return
         }
 
-        if (-not $useManualBackupFile) {
-            $autoBackupExists = $false
-            if ($scope -eq 'AllUsers') {
-                $userPathString = GetUserDirectory -userName "*" -fileName "AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState"
-                $usersStartMenuPaths = Get-ChildItem -Path $userPathString -ErrorAction SilentlyContinue
-                foreach ($startMenuPath in $usersStartMenuPaths) {
-                    if (Test-Path -LiteralPath (Join-Path $startMenuPath.FullName 'start2.bin.bak')) {
-                        $autoBackupExists = $true
-                        break
-                    }
-                }
-            }
-            else {
-                $autoBackupPath = "$env:LOCALAPPDATA\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState\start2.bin.bak"
-                $autoBackupExists = Test-Path -LiteralPath $autoBackupPath
-            }
-
-            if (-not $autoBackupExists) {
-                $scopeText = (& $getStartMenuScopeInfo).SummaryText
-                Show-MessageBox -Owner $window -Title 'No Backup Found' -Message "No Start Menu backup file was found. You can uncheck the 'Automatically find Start Menu backup' option to select a backup file manually." -Button 'OK' -Icon 'Warning' | Out-Null
-                return
-            }
-        }
-
+        $scope = (& $getStartMenuScopeInfo).Scope
         $window.Tag = @{
             Result = 'RestoreStartMenu'
             StartMenuScope = $scope
-            UseManualBackupFile = $useManualBackupFile
             BackupFilePath = $state.SelectedStartMenuBackupFilePath
         }
         $window.DialogResult = $true
@@ -367,14 +339,6 @@ function Show-RestoreBackupDialog {
             'StartMenu' { & $enterStartMenuStep }
         }
     }
-
-    $startMenuAutoBackupCheck.Add_Checked({
-        $state.SelectedStartMenuBackupFilePath = $null
-        & $refreshStartMenuUi
-    })
-    $startMenuAutoBackupCheck.Add_Unchecked({
-        & $refreshStartMenuUi
-    })
 
     $startMenuScopeCombo.Add_SelectionChanged({
         & $refreshStartMenuUi
@@ -410,7 +374,6 @@ function Show-RestoreBackupDialog {
 
         if ($state.WizardStep -eq 'StartMenu') {
             $state.SelectedStartMenuBackupFilePath = $null
-            $startMenuAutoBackupCheck.IsChecked = $true
         }
 
         & $setWizardStep 'SelectType'

@@ -139,17 +139,17 @@ if (-not $isAdmin) {
 # Define script-level variables & paths
 $script:Version = "2026.06.14"
 $configPath = Join-Path $PSScriptRoot 'Config'
-$logsPath = Join-Path $PSScriptRoot 'Logs'
 $schemasPath = Join-Path $PSScriptRoot 'Schemas'
 $scriptsPath = Join-Path $PSScriptRoot 'Scripts'
 
+$script:AppDataPath = Join-Path $env:LOCALAPPDATA 'Win11Debloat'
 $script:AppsListFilePath = Join-Path $configPath 'Apps.json'
 $script:DefaultSettingsFilePath = Join-Path $configPath 'DefaultSettings.json'
 $script:FeaturesFilePath = Join-Path $configPath 'Features.json'
-$script:SavedSettingsFilePath = Join-Path $configPath 'LastUsedSettings.json'
-$script:DefaultLogPath = Join-Path $logsPath 'Win11Debloat.log'
+$script:SavedSettingsFilePath = Join-Path $script:AppDataPath 'LastUsedSettings.json'
+$script:DefaultLogPath = Join-Path (Join-Path $script:AppDataPath 'Logs') 'Win11Debloat.log'
 $script:RegfilesPath = Join-Path $PSScriptRoot 'Regfiles'
-$script:RegistryBackupsPath = Join-Path $PSScriptRoot 'Backups'
+$script:RegistryBackupsPath = Join-Path $script:AppDataPath 'Backups'
 $script:AssetsPath = Join-Path $PSScriptRoot 'Assets'
 $script:AppSelectionSchema = Join-Path $schemasPath 'AppSelectionWindow.xaml'
 $script:MainWindowSchema = Join-Path $schemasPath 'MainWindow.xaml'

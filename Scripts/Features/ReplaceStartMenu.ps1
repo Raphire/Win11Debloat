@@ -113,7 +113,12 @@ function ReplaceStartMenu {
         return
     }
 
-    $backupBinFile = $startMenuBinFile + ".bak"
+    $startMenuBackupsDir = Join-Path $script:AppDataPath 'Backups'
+    if (-not (Test-Path $startMenuBackupsDir)) {
+        New-Item -ItemType Directory -Path $startMenuBackupsDir -Force | Out-Null
+    }
+    $backupTimestamp = (Get-Date).ToString('yyyyMMdd_HHmmss')
+    $backupBinFile = Join-Path $startMenuBackupsDir "Win11Debloat-Start2BinBackup-$userName-$backupTimestamp.bak"
 
     if (Test-Path $startMenuBinFile) {
         # Backup current start menu file
@@ -221,16 +226,18 @@ function RestoreStartMenuFromBackup {
     )
 
     $userName = GetStartMenuUserNameFromPath -StartMenuBinFile $StartMenuBinFile
+    $backupTimestamp = (Get-Date).ToString('yyyyMMdd_HHmmss')
+    $startMenuBackupsDir = Join-Path $script:AppDataPath 'Backups'
     $backupBinFile = if ([string]::IsNullOrWhiteSpace($BackupFilePath)) {
-        $StartMenuBinFile + '.bak'
+        Join-Path $startMenuBackupsDir "Win11Debloat-Start2BinBackup-$userName-$backupTimestamp.bak"
     }
     else {
         $BackupFilePath
     }
-    $currentBinBackup = $StartMenuBinFile + '.restore.bak'
+    $currentBinBackup = Join-Path $startMenuBackupsDir "Win11Debloat-Start2BinRestore-$userName-$backupTimestamp.bak"
 
     if ($script:Params.ContainsKey("WhatIf")) {
-        Write-Host "[WhatIf] Restore start menu for user $userName from backup $backupBinFile" -ForegroundColor Cyan
+        Write-Host "[WhatIf] Restore start menu for user $userName from backup $BackupFilePath" -ForegroundColor Cyan
         return [PSCustomObject]@{
             UserName = $userName
             Result = $true
@@ -238,11 +245,11 @@ function RestoreStartMenuFromBackup {
         }
     }
 
-    if (-not (Test-Path -LiteralPath $backupBinFile)) {
+    if (-not (Test-Path -LiteralPath $BackupFilePath)) {
         return [PSCustomObject]@{
             UserName = $userName
             Result = $false
-            Message = "No start menu backup file found for user $userName."
+            Message = "Start menu backup file not found: $BackupFilePath"
         }
     }
 
@@ -251,7 +258,7 @@ function RestoreStartMenuFromBackup {
             Move-Item -Path $StartMenuBinFile -Destination $currentBinBackup -Force
         }
 
-        Copy-Item -Path $backupBinFile -Destination $StartMenuBinFile -Force
+        Copy-Item -Path $BackupFilePath -Destination $StartMenuBinFile -Force
         return [PSCustomObject]@{
             UserName = $userName
             Result = $true
@@ -278,17 +285,14 @@ function RestoreStartMenuFromBackup {
     be resolved.
 
     .PARAMETER BackupFilePath
-    Path to the backup file to restore from. If omitted, defaults to
-    the .bak file alongside the current start2.bin.
+    Path to the backup file to restore from.
 
     .EXAMPLE
-    RestoreStartMenu
-
-    .EXAMPLE
-    RestoreStartMenu -BackupFilePath "C:\Backups\start2.bin"
+    RestoreStartMenu -BackupFilePath "$env:LOCALAPPDATA\Win11Debloat\Backups\Win11Debloat-Start2BinBackup-Jeff-20260623_143000.bak"
 #>
 function RestoreStartMenu {
     param(
+        [Parameter(Mandatory)]
         [string]$BackupFilePath
     )
 
@@ -315,22 +319,19 @@ function RestoreStartMenu {
 
     .DESCRIPTION
     Iterates over every existing user profile and restores each user's
-    start2.bin from its .bak backup. For the Default user profile, removes
-    the start2.bin file (which was previously copied from a template) so
-    that new profiles revert to the system default start menu.
+    start2.bin from the specified backup file. For the Default user profile,
+    removes the start2.bin file (which was previously copied from a template)
+    so that new profiles revert to the system default start menu.
 
     .PARAMETER BackupFilePath
-    Path to the backup file to restore from. If omitted, defaults to
-    the .bak file alongside each user's current start2.bin.
+    Path to the backup file to restore from.
 
     .EXAMPLE
-    RestoreStartMenuForAllUsers
-
-    .EXAMPLE
-    RestoreStartMenuForAllUsers -BackupFilePath "C:\Backups\start2.bin"
+    RestoreStartMenuForAllUsers -BackupFilePath "$env:LOCALAPPDATA\Win11Debloat\Backups\Win11Debloat-Start2BinBackup-Jeff-20260623_143000.bak"
 #>
-function RestoreStartMenuForAllUsers {
+function RestoreStartMenuForAllUsers { 
     param(
+        [Parameter(Mandatory)]
         [string]$BackupFilePath
     )
 

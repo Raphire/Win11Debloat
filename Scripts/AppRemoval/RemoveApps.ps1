@@ -280,6 +280,11 @@ function Request-EdgeForceRemove {
     which handles hive loading and HKEY_USERS\Default → SID remapping.
     Used instead of static .reg files to avoid file dependency for each WinGet app.
 
+    The winget command is Base64-encoded and invoked via powershell.exe -EncodedCommand
+    rather than interpolated directly into cmd.exe /c. This prevents shell metacharacters
+    (such as &, |, <, >, ^, ") in the app ID from being interpreted as command syntax,
+    even if future catalog updates introduce IDs containing those characters.
+
     .PARAMETER appId
     The winget package ID to schedule for uninstall (e.g. 'XP9CXNGPPJ97XX').
 #>
@@ -287,13 +292,24 @@ function Set-RunOnceWingetTask {
     param([string]$appId)
 
     $targetUserName = if ($script:Params.ContainsKey("Sysprep")) { "Default" } else { $script:Params.Item("User") }
-    $taskName = "Uninstall_$appId"
+
+    # Sanitize appId for use in registry value names (backslashes are path separators)
+    $safeAppId = $appId.Replace('\', '_')
+
+    $taskName = "Uninstall_$safeAppId"
+
+    # Escape single quotes in appId, then wrap in single quotes so cmd/pwsh metacharacters
+    # like & | < > ^ " are treated as literals. Base64-encode the whole command so the
+    # RunOnce value contains only [A-Za-z0-9+/=] — safe in any shell parser.
+    $escapedAppId = $appId.Replace("'", "''")
+    $wingetCommand = "winget uninstall --accept-source-agreements --disable-interactivity --id '$escapedAppId'"
+    $encodedWingetCommand = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($wingetCommand))
 
     $operation = [PSCustomObject]@{
         KeyPath       = 'HKEY_USERS\Default\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce'
         ValueName     = $taskName
         ValueType     = 'String'
-        ValueData     = "cmd.exe /c winget uninstall --accept-source-agreements --disable-interactivity --id $appId"
+        ValueData     = "powershell.exe -NoProfile -EncodedCommand $encodedWingetCommand"
         OperationType = 'SetValue'
     }
 

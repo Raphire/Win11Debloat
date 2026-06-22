@@ -23,7 +23,7 @@ function ExecuteParameter {
                 RemoveApps @('Microsoft.BingSearch')
             }
             'DisableCopilot' {
-                # Also remove the app for Copilot
+                # Also remove the app packages for Copilot
                 RemoveApps @('Microsoft.Copilot', 'XP9CXNGPPJ97XX')
             }
             'DisableTelemetry' {

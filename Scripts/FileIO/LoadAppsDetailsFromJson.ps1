@@ -32,6 +32,13 @@ function LoadAppsDetailsFromJson {
                     $isInstalled = $true
                     break
                 }
+                if (($appId -eq "Microsoft.OneDrive") -and (
+                        (Test-Path "$env:ProgramFiles\Microsoft OneDrive\OneDrive.exe") -or
+                        (Test-Path "$env:LOCALAPPDATA\Microsoft\OneDrive\OneDrive.exe")
+                    )) {
+                    $isInstalled = $true
+                    break
+                }
             }
             if (-not $isInstalled) { continue }
         }

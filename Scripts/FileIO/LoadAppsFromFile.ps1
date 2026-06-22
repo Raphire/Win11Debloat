@@ -1,4 +1,19 @@
-# Returns list of apps from the specified file, it trims the app names and removes any comments
+<#
+    .SYNOPSIS
+        Returns a list of app IDs from the specified JSON file.
+
+    .DESCRIPTION
+        Reads an Apps.json file and returns the AppIds for every entry where
+        SelectedByDefault is $true. Each app entry may declare a single AppId
+        or an array of AppIds; both forms are handled transparently.
+
+    .PARAMETER appsFilePath
+        Path to a JSON file in the Config/Apps.json format.
+
+    .OUTPUTS
+        System.String[]. An array of app ID strings, or an empty array if the
+        file does not exist or contains no selected-by-default apps.
+#>
 function LoadAppsFromFile {
     param (
         $appsFilePath
@@ -11,30 +26,14 @@ function LoadAppsFromFile {
     }
 
     try {
-        # Check if file is JSON or text format
-        if ($appsFilePath -like "*.json") {
-            # JSON file format
-            $jsonContent = Get-Content -Path $appsFilePath -Raw | ConvertFrom-Json
-            Foreach ($appData in $jsonContent.Apps) {
-                # Handle AppId as array (could be single or multiple IDs)
-                $appIdArray = if ($appData.AppId -is [array]) { $appData.AppId } else { @($appData.AppId) }
-                $appIdArray = $appIdArray | ForEach-Object { $_.Trim() } | Where-Object { $_.length -gt 0 }
-                $selectedByDefault = $appData.SelectedByDefault
-                if ($selectedByDefault -and $appIdArray.Count -gt 0) {
-                    $appsList += $appIdArray
-                }
-            }
-        }
-        else {
-            # Legacy text file format
-            Foreach ($app in (Get-Content -Path $appsFilePath | Where-Object { $_ -notmatch '^#.*' -and $_ -notmatch '^\s*$' } )) { 
-                if (-not ($app.IndexOf('#') -eq -1)) {
-                    $app = $app.Substring(0, $app.IndexOf('#'))
-                }
-
-                $app = $app.Trim()
-                $appString = $app.Trim('*')
-                $appsList += $appString
+        $jsonContent = Get-Content -Path $appsFilePath -Raw | ConvertFrom-Json
+        Foreach ($appData in $jsonContent.Apps) {
+            # Handle AppId as array (could be single or multiple IDs)
+            $appIdArray = if ($appData.AppId -is [array]) { $appData.AppId } else { @($appData.AppId) }
+            $appIdArray = $appIdArray | ForEach-Object { $_.Trim() } | Where-Object { $_.length -gt 0 }
+            $selectedByDefault = $appData.SelectedByDefault
+            if ($selectedByDefault -and $appIdArray.Count -gt 0) {
+                $appsList += $appIdArray
             }
         }
 

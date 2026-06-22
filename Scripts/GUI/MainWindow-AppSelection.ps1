@@ -311,12 +311,13 @@ function Load-AppsWithList {
         [System.Windows.Controls.CheckBox]$OnlyInstalledAppsBox,
         [System.Windows.Controls.Border]$LoadingAppsIndicator,
         [System.Windows.Controls.MenuItem]$ImportConfigBtn,
-        [string]$ListOfApps
+        [object[]]$ListOfApps
     )
 
     $script:MainWindowLastSelectedCheckbox = $null
 
     $loaderScriptPath = $script:LoadAppsDetailsScriptPath
+    $helperScriptPath = $script:TestAppInWingetListScriptPath
     $appsFilePath = $script:AppsListFilePath
     $onlyInstalled = [bool]$OnlyInstalledAppsBox.IsChecked
 
@@ -326,13 +327,16 @@ function Load-AppsWithList {
         $script:PreloadedAppData = $null
     }
     else {
-        # Load apps details in a background job to keep the UI responsive
+        # Load apps details in a background job to keep the UI responsive.
+        # The helper is dot-sourced inside the job because the runspace
+        # does not inherit the parent scope's dot-sourced functions.
         $rawAppData = Invoke-NonBlocking -ScriptBlock {
-            param($loaderScript, $appsListFilePath, $installedList, $onlyInstalled)
+            param($loaderScript, $helperScript, $appsListFilePath, $installedList, $onlyInstalled)
             $script:AppsListFilePath = $appsListFilePath
+            . $helperScript
             . $loaderScript
             LoadAppsDetailsFromJson -OnlyInstalled:$onlyInstalled -InstalledList $installedList -InitialCheckedFromJson:$false
-        } -ArgumentList $loaderScriptPath, $appsFilePath, $ListOfApps, $onlyInstalled
+        } -ArgumentList $loaderScriptPath, $helperScriptPath, $appsFilePath, $ListOfApps, $onlyInstalled
     }
 
     $appsToAdd = @($rawAppData | Where-Object { $_ -and ($_.AppId -or $_.FriendlyName) } | Sort-Object -Property FriendlyName)
@@ -348,10 +352,9 @@ function Load-AppsWithList {
         return
     }
 
-    $brushSafe = [System.Windows.Media.BrushConverter]::new().ConvertFromString('#4CAF50')
-    $brushUnsafe = [System.Windows.Media.BrushConverter]::new().ConvertFromString('#F44336')
-    $brushDefault = [System.Windows.Media.BrushConverter]::new().ConvertFromString('#FFC107')
-    $brushSafe.Freeze(); $brushUnsafe.Freeze(); $brushDefault.Freeze()
+    $brushSafe    = $Window.Resources['AppRecommendationSafeColor']
+    $brushDefault = $Window.Resources['AppRecommendationOptionalColor']
+    $brushUnsafe  = $Window.Resources['AppRecommendationUnsafeColor']
 
     # Create WPF controls; pump the Dispatcher every batch so the spinner keeps animating.
     $batchSize = 20
@@ -381,7 +384,7 @@ function Load-AppsWithList {
         $dot.ToolTip = switch ($app.Recommendation) {
             'safe'   { '[Recommended] Safe to remove for most users' }
             'unsafe' { '[Not Recommended] Only remove if you know what you are doing' }
-            default  { "[Optional] Remove if you don't need this app" }
+            default  { "[Optional] Can be safely removed if you don't need this app" }
         }
         [System.Windows.Controls.Grid]::SetColumn($dot, 0)
 
@@ -512,7 +515,7 @@ function Load-AppsIntoMainUI {
     $Window.Dispatcher.Invoke([System.Windows.Threading.DispatcherPriority]::Render, [action] {})
     $Window.Dispatcher.BeginInvoke([System.Windows.Threading.DispatcherPriority]::Background, [action] {
             try {
-                $listOfApps = ""
+                $listOfApps = $null
 
                 if ($OnlyInstalledAppsBox.IsChecked -and ($script:WingetInstalled -eq $true)) {
                     Write-Host "Retrieving installed apps via winget..."

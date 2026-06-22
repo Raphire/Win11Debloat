@@ -8,7 +8,8 @@ function ShowCLIAppRemoval {
 
     if ($result -eq $true) {
         Write-Output "You have selected $($script:SelectedApps.Count) apps for removal"
-        AddParameter 'RemoveAppsCustom'
+        AddParameter 'RemoveApps'
+        AddParameter 'Apps' ($script:SelectedApps -join ',')
 
         SaveSettings
 

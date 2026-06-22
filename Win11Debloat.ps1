@@ -161,6 +161,7 @@ $script:BubbleHintSchema = Join-Path $schemasPath 'BubbleHint.xaml'
 $script:ImportExportConfigSchema = Join-Path $schemasPath 'ImportExportConfigWindow.xaml'
 $script:RestoreBackupWindowSchema = Join-Path $schemasPath 'RestoreBackupWindow.xaml'
 $script:LoadAppsDetailsScriptPath = Join-Path (Join-Path $scriptsPath 'FileIO') 'LoadAppsDetailsFromJson.ps1'
+$script:TestAppInWingetListScriptPath = Join-Path (Join-Path $scriptsPath 'AppRemoval') 'Test-AppInWingetList.ps1'
 
 $script:ControlParams = 'WhatIf', 'Confirm', 'Verbose', 'Debug', 'LogPath', 'Silent', 'Sysprep', 'User', 'NoRestartExplorer', 'RunDefaults', 'RunDefaultsLite', 'RunSavedSettings', 'Config', 'CLI', 'AppRemovalTarget'
 
@@ -286,6 +287,7 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 . "$PSScriptRoot/Scripts/AppRemoval/ForceRemoveEdge.ps1"
 . "$PSScriptRoot/Scripts/AppRemoval/RemoveApps.ps1"
 . "$PSScriptRoot/Scripts/AppRemoval/GetInstalledAppsViaWinget.ps1"
+. "$PSScriptRoot/Scripts/AppRemoval/Test-AppInWingetList.ps1"
 
 # CLI functions
 . "$PSScriptRoot/Scripts/CLI/AwaitKeyToExit.ps1"

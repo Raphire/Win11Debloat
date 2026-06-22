@@ -53,12 +53,12 @@ function Show-AppSelectionWindow {
         $window.Dispatcher.Invoke([System.Windows.Threading.DispatcherPriority]::Background, [action]{})
 
         $appsPanel.Children.Clear()
-        $listOfApps = ""
+        $listOfApps = $null
 
         if ($onlyInstalledBox.IsChecked -and ($script:WingetInstalled -eq $true)) {
             # Attempt to get a list of installed apps via WinGet, times out after 10 seconds
-            $listOfApps = GetInstalledAppsViaWinget -TimeOut 10
-            if (-not $listOfApps) {
+            $listOfApps = GetInstalledAppsViaWinget -TimeOut 10 -NonBlocking
+            if ($null -eq $listOfApps) {
                 # Show error that the script was unable to get list of apps from WinGet
                 Show-MessageBox -Message 'Unable to load list of installed apps via WinGet.' -Title 'Error' -Button 'OK' -Icon 'Error' -Owner $window | Out-Null
                 $onlyInstalledBox.IsChecked = $false

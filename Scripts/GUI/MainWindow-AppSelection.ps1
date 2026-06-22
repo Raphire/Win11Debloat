@@ -311,12 +311,13 @@ function Load-AppsWithList {
         [System.Windows.Controls.CheckBox]$OnlyInstalledAppsBox,
         [System.Windows.Controls.Border]$LoadingAppsIndicator,
         [System.Windows.Controls.MenuItem]$ImportConfigBtn,
-        [string]$ListOfApps
+        [object[]]$ListOfApps
     )
 
     $script:MainWindowLastSelectedCheckbox = $null
 
     $loaderScriptPath = $script:LoadAppsDetailsScriptPath
+    $helperScriptPath = $script:TestAppInWingetListScriptPath
     $appsFilePath = $script:AppsListFilePath
     $onlyInstalled = [bool]$OnlyInstalledAppsBox.IsChecked
 
@@ -326,13 +327,16 @@ function Load-AppsWithList {
         $script:PreloadedAppData = $null
     }
     else {
-        # Load apps details in a background job to keep the UI responsive
+        # Load apps details in a background job to keep the UI responsive.
+        # The helper is dot-sourced inside the job because the runspace
+        # does not inherit the parent scope's dot-sourced functions.
         $rawAppData = Invoke-NonBlocking -ScriptBlock {
-            param($loaderScript, $appsListFilePath, $installedList, $onlyInstalled)
+            param($loaderScript, $helperScript, $appsListFilePath, $installedList, $onlyInstalled)
             $script:AppsListFilePath = $appsListFilePath
+            . $helperScript
             . $loaderScript
             LoadAppsDetailsFromJson -OnlyInstalled:$onlyInstalled -InstalledList $installedList -InitialCheckedFromJson:$false
-        } -ArgumentList $loaderScriptPath, $appsFilePath, $ListOfApps, $onlyInstalled
+        } -ArgumentList $loaderScriptPath, $helperScriptPath, $appsFilePath, $ListOfApps, $onlyInstalled
     }
 
     $appsToAdd = @($rawAppData | Where-Object { $_ -and ($_.AppId -or $_.FriendlyName) } | Sort-Object -Property FriendlyName)
@@ -511,7 +515,7 @@ function Load-AppsIntoMainUI {
     $Window.Dispatcher.Invoke([System.Windows.Threading.DispatcherPriority]::Render, [action] {})
     $Window.Dispatcher.BeginInvoke([System.Windows.Threading.DispatcherPriority]::Background, [action] {
             try {
-                $listOfApps = ""
+                $listOfApps = $null
 
                 if ($OnlyInstalledAppsBox.IsChecked -and ($script:WingetInstalled -eq $true)) {
                     Write-Host "Retrieving installed apps via winget..."

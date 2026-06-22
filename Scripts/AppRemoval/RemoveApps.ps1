@@ -75,7 +75,7 @@ function RemoveApps {
 
     # Check whether any winget-removed apps are still present, and report errors for each one.
     if ($wingetRemovedApps.Count -gt 0 -or $edgeAppsInList.Count -gt 0) {
-        $postRemovalList = if ($script:WingetInstalled) { GetInstalledAppsViaWinget -TimeOut 10 } else { $null }
+        $postRemovalList = if ($script:WingetInstalled) { GetInstalledAppsViaWinget -TimeOut 10 -NonBlocking } else { $null }
         foreach ($app in $wingetRemovedApps) {
             if (Test-AppStillInstalled -appId $app -InstalledList $postRemovalList) {
                 Write-Host "Unable to uninstall $app via WinGet" -ForegroundColor Red
@@ -228,21 +228,23 @@ function Remove-AppxApp {
 
     .DESCRIPTION
     Checks Get-AppxPackage across all users first (fast, no process launch),
-    then falls back to a timeout-guarded WinGet list for non-Appx packages.
+    then falls back to a pre-fetched or live winget list for non-Appx packages.
+    Uses Test-AppInWingetList which provides exact-match-first with substring
+    fallback against the parsed winget objects.
     Returns $true if the app is still present, $false otherwise.
 
     .PARAMETER appId
     The package identifier to check (e.g. 'Microsoft.BingNews').
 
     .PARAMETER InstalledList
-    Optional pre-fetched output from GetInstalledAppsViaWinget. When provided,
-    the function searches this list directly instead of launching a new winget
-    process, enabling efficient batched verification of multiple apps.
+    Optional pre-fetched array of winget objects from GetInstalledAppsViaWinget.
+    When provided, the function searches the .Id properties directly instead of
+    launching a new winget process, enabling efficient batched verification.
 #>
 function Test-AppStillInstalled {
     param(
         [string]$appId,
-        [string]$InstalledList
+        [object[]]$InstalledList
     )
 
     # Check Get-AppxPackage for all users first (fast, covers all Store apps).
@@ -251,14 +253,14 @@ function Test-AppStillInstalled {
     }
 
     # Search a pre-fetched winget list if provided (avoids per-app process launches).
-    if ($InstalledList) {
-        return $InstalledList -match [regex]::Escape($appId)
+    if (Test-AppInWingetList -appId $appId -InstalledList $InstalledList) {
+        return $true
     }
 
     # Fall back to a live winget list (slower, only used for standalone calls).
     if ($script:WingetInstalled) {
         $liveList = GetInstalledAppsViaWinget -TimeOut 10 -NonBlocking
-        if ($liveList -and ($liveList -match [regex]::Escape($appId))) {
+        if (Test-AppInWingetList -appId $appId -InstalledList $liveList) {
             return $true
         }
     }

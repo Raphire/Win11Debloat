@@ -940,7 +940,7 @@
 
     # ---- Preload app data ----
     try {
-        $script:PreloadedAppData = LoadAppsDetailsFromJson -OnlyInstalled:$false -InstalledList '' -InitialCheckedFromJson:$false
+        $script:PreloadedAppData = LoadAppsDetailsFromJson -OnlyInstalled:$false -InstalledList $null -InitialCheckedFromJson:$false
     }
     catch {
         Write-Warning "Failed to preload apps list: $_"

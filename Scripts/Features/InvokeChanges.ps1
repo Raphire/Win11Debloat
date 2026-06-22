@@ -16,15 +16,11 @@ function Invoke-FeatureApply {
     )
 
     # Resolve feature metadata from Features.json
-    $feature = $null
-    if ($script:Features.ContainsKey($FeatureId)) {
-        $feature = $script:Features[$FeatureId]
-    }
-    
-    $applyText = if ($feature -and $feature.ApplyText) { $feature.ApplyText } else { $FeatureId }
+    $feature = $script:Features[$FeatureId]
+    $applyText = $feature.ApplyText
 
     # ---- Registry-backed features: import .reg file, then handle side effects ----
-    if ($feature -and $feature.RegistryKey) {
+    if ($feature.RegistryKey) {
         ImportRegistryFile "> $applyText..." $feature.RegistryKey
 
         # Post-import side effects for specific features
@@ -177,15 +173,13 @@ function Invoke-FeatureUndo {
             return
         }
         'EnableWindowsSandbox' {
-            $undoText = if ($feature) { $feature.ApplyUndoText } else { 'Disabling Windows Sandbox' }
-            Write-Host "> $undoText..."
+            Write-Host "> $($feature.ApplyUndoText)..."
             DisableWindowsFeature 'Containers-DisposableClientVM'
             Write-Host ""
             return
         }
         'EnableWindowsSubsystemForLinux' {
-            $undoText = if ($feature) { $feature.ApplyUndoText } else { 'Disabling Windows Subsystem for Linux' }
-            Write-Host "> $undoText..."
+            Write-Host "> $($feature.ApplyUndoText)..."
             DisableWindowsFeature 'Microsoft-Windows-Subsystem-Linux'
             DisableWindowsFeature 'VirtualMachinePlatform'
             Write-Host ""
@@ -245,15 +239,8 @@ function Invoke-ApplyFeatures {
         if ($script:CancelRequested) { return }
 
         # Resolve display name for the progress indicator
-        $displayName = $featureId
-        if ($script:Features.ContainsKey($featureId)) {
-            $f = $script:Features[$featureId]
-            if ($f.ApplyText) {
-                $displayName = $f.ApplyText
-            } elseif ($f.Label) {
-                $displayName = $f.Label
-            }
-        }
+        $f = $script:Features[$featureId]
+        $displayName = $f.ApplyText
 
         if ($script:ApplyProgressCallback) {
             & $script:ApplyProgressCallback $step $TotalSteps $displayName
@@ -345,7 +332,6 @@ function Invoke-AllChanges {
     # ---- Determine if registry backup is needed ----
     $needsBackup = $false
     foreach ($id in $applyIds) {
-        if (-not $script:Features.ContainsKey($id)) { continue }
         $f = $script:Features[$id]
         if ($f -and -not [string]::IsNullOrWhiteSpace([string]$f.RegistryKey)) {
             $needsBackup = $true

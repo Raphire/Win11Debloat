@@ -45,14 +45,8 @@ function PrintPendingChanges {
                 continue
             }
             default {
-                if ($script:Features -and $script:Features.ContainsKey($parameterName)) {
-                    $message = $script:Features[$parameterName].Label
-                    Write-Output "- $message"
-                }
-                else {
-                    # Fallback: show the parameter name if no feature description is available
-                    Write-Output "- $parameterName"
-                }
+                $message = $script:Features[$parameterName].Label
+                Write-Output "- $message"
                 continue
             }
         }

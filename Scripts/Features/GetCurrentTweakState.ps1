@@ -1,6 +1,10 @@
-# Tests whether the registry operations in a feature's .reg file currently match the live registry.
-# Returns $true if ALL operations in the apply reg file match current system state.
-# Returns $false if the feature has no RegistryKey, the file is missing, or any operation mismatches.
+<#
+    .SYNOPSIS
+        Maps a .reg file value type string to its RegistryValueKind enum.
+
+    .PARAMETER Operation
+        A parsed .reg operation object containing a ValueType property.
+#>
 function Get-ExpectedRegistryValueKind {
     param(
         [Parameter(Mandatory)]
@@ -18,13 +22,25 @@ function Get-ExpectedRegistryValueKind {
     }
 }
 
+<#
+    .SYNOPSIS
+        Tests whether a feature's registry operations currently match the live registry.
+
+    .DESCRIPTION
+        Returns $true when ALL operations in the apply .reg file match current system
+        state. Returns $false if the feature has no RegistryKey, the reg file is
+        missing, or any operation mismatches. Special-cased features (Widgets, Store
+        suggestions, Windows Sandbox, WSL) bypass .reg checking entirely.
+
+    .PARAMETER FeatureId
+        The feature identifier to test.
+#>
 function Test-FeatureApplied {
     param (
         [Parameter(Mandatory)]
         [string]$FeatureId
     )
 
-    if (-not $script:Features.ContainsKey($FeatureId)) { return $false }
     $feature = $script:Features[$FeatureId]
 
     switch ($FeatureId) {
@@ -147,8 +163,18 @@ function Test-FeatureApplied {
     return $true
 }
 
-# Returns the 1-based index of the UiGroup option whose features all match current system state,
-# or 0 if no option fully matches (meaning the current state is unknown / "No Change").
+<#
+    .SYNOPSIS
+        Returns the 1-based index of the UiGroup option whose features all match
+        current system state.
+
+    .DESCRIPTION
+        Returns 0 if no option fully matches, meaning the current state is unknown
+        or represents "No Change".
+
+    .PARAMETER Group
+        A UiGroup object whose Values array contains options with FeatureIds.
+#>
 function Get-CurrentGroupActiveIndex {
     param (
         [Parameter(Mandatory)]

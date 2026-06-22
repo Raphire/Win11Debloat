@@ -1,3 +1,18 @@
+<#
+    .SYNOPSIS
+        Creates a timestamped JSON backup of registry state for selected features.
+
+    .DESCRIPTION
+        Resolves selected and undo features from the provided keys, captures their
+        registry state, and saves the result as a JSON file in the Backups/ folder.
+        Returns the file path on success, $null if no registry-backed features exist.
+
+    .PARAMETER ActionableKeys
+        Param keys from $script:Params to resolve into apply features.
+
+    .PARAMETER ExtraFeatures
+        Additional synthetic feature objects (e.g. undo features) to include.
+#>
 function New-RegistrySettingsBackup {
     param(
         [string[]]$ActionableKeys,
@@ -32,6 +47,13 @@ function New-RegistrySettingsBackup {
     return $backupFilePath
 }
 
+<#
+    .SYNOPSIS
+        Resolves param keys into deduplicated feature objects from the catalog.
+
+    .PARAMETER ActionableKeys
+        Param keys to look up in $script:Features.
+#>
 function Get-SelectedFeatures {
     param(
         [string[]]$ActionableKeys
@@ -46,8 +68,7 @@ function Get-SelectedFeatures {
         $feature = $script:Features[$paramKey]
         if (-not $feature) { continue }
 
-        $featureId = Get-FeatureId -Feature $feature
-
+        $featureId = [string]$feature.FeatureId
         if ($selectedFeatureIds.Add($featureId)) {
             $selectedFeatures.Add($feature)
         }
@@ -56,6 +77,23 @@ function Get-SelectedFeatures {
     return @($selectedFeatures.ToArray())
 }
 
+<#
+    .SYNOPSIS
+        Builds the full backup payload object from selected and undo features.
+
+    .DESCRIPTION
+        Deduplicates feature IDs, resolves registry capture plans, snapshots all
+        registry keys, and assembles the final backup hashtable with metadata.
+
+    .PARAMETER SelectedFeatures
+        Feature objects from the apply side.
+
+    .PARAMETER UndoFeatures
+        Synthetic feature objects from the undo side.
+
+    .PARAMETER CreatedAt
+        Timestamp recorded in the backup metadata.
+#>
 function Get-RegistryBackupPayload {
     param(
         [object[]]$SelectedFeatures = @(),
@@ -67,8 +105,7 @@ function Get-RegistryBackupPayload {
     $selectedFeatureIds = New-Object System.Collections.Generic.List[string]
     $seenSelectedFeatureIds = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
     foreach ($feature in $SelectedFeatures) {
-        $featureId = Get-FeatureId -Feature $feature
-
+        $featureId = [string]$feature.FeatureId
         if ($seenSelectedFeatureIds.Add($featureId)) {
             $selectedFeatureIds.Add($featureId)
         }
@@ -77,8 +114,7 @@ function Get-RegistryBackupPayload {
     $selectedUndoFeatureIds = New-Object System.Collections.Generic.List[string]
     $seenUndoFeatureIds = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
     foreach ($feature in $UndoFeatures) {
-        $featureId = Get-FeatureId -Feature $feature
-
+        $featureId = [string]$feature.FeatureId
         if ($seenUndoFeatureIds.Add($featureId)) {
             $selectedUndoFeatureIds.Add($featureId)
         }

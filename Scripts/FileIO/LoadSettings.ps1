@@ -21,6 +21,9 @@ function LoadSettings {
 
         $feature = $script:Features[$setting.Name]
 
+        # Skip unknown settings that aren't defined in Features.json
+        if (-not $feature) { continue }
+
         # Check version and feature compatibility using Features.json
         if (($feature.MinVersion -and $WinVersion -lt $feature.MinVersion) -or ($feature.MaxVersion -and $WinVersion -gt $feature.MaxVersion) -or ($feature.FeatureId -eq 'DisableModernStandbyNetworking' -and (-not $script:ModernStandbySupported))) {
            continue

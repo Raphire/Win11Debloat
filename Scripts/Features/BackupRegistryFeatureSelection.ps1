@@ -1,17 +1,10 @@
-function Get-FeatureId {
-    param(
-        [Parameter(Mandatory)]
-        $Feature
-    )
+<#
+    .SYNOPSIS
+        Filters a list of features to those that have a non-empty RegistryKey.
 
-    $featureId = [string]$Feature.FeatureId
-    if ([string]::IsNullOrWhiteSpace($featureId)) {
-        throw 'Selected feature is missing required FeatureId.'
-    }
-
-    return $featureId
-}
-
+    .PARAMETER Features
+        An array of feature objects to filter.
+#>
 function Get-RegistryBackedFeatures {
     param(
         [object[]]$Features = @()

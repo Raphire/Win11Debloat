@@ -368,7 +368,7 @@
       "Label": "Create a system restore point",
       "Category": null,
       "RegistryKey": null,
-      "ApplyText": null,
+      "ApplyText": "Creating system restore point",
       "UndoLabel": null,
       "ApplyUndoText": null,
       "RegistryUndoKey": null,

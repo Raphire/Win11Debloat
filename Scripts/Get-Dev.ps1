@@ -131,8 +131,29 @@ catch {
     Exit
 }
 
-# Remove old script folder if it exists
+# Migrate old user data from previous runs to AppData before cleanup
 if (Test-Path $tempWorkPath) {
+    $appDataPath = Join-Path $env:LOCALAPPDATA 'Win11Debloat'
+    if (-not (Test-Path $appDataPath)) { New-Item -ItemType Directory -Path $appDataPath -Force | Out-Null }
+
+    $oldBackupsDir = Join-Path $tempWorkPath 'Backups'
+    $oldLogsDir = Join-Path $tempWorkPath 'Logs'
+    $oldSettingsFile = Join-Path $tempWorkPath 'Config\LastUsedSettings.json'
+
+    if ((Test-Path $oldBackupsDir) -and (Get-ChildItem -Path $oldBackupsDir -ErrorAction SilentlyContinue)) {
+        $newBackupsDir = Join-Path $appDataPath 'Backups'
+        if (-not (Test-Path $newBackupsDir)) { New-Item -ItemType Directory -Path $newBackupsDir -Force | Out-Null }
+        Get-ChildItem -Path $oldBackupsDir | Move-Item -Destination $newBackupsDir -Force -ErrorAction SilentlyContinue
+    }
+    if ((Test-Path $oldLogsDir) -and (Get-ChildItem -Path $oldLogsDir -ErrorAction SilentlyContinue)) {
+        $newLogsDir = Join-Path $appDataPath 'Logs'
+        if (-not (Test-Path $newLogsDir)) { New-Item -ItemType Directory -Path $newLogsDir -Force | Out-Null }
+        Get-ChildItem -Path $oldLogsDir | Move-Item -Destination $newLogsDir -Force -ErrorAction SilentlyContinue
+    }
+    if (Test-Path $oldSettingsFile) {
+        Move-Item -Path $oldSettingsFile -Destination $appDataPath -Force -ErrorAction SilentlyContinue
+    }
+
     Write-Output ""
     Write-Output "> Cleaning up old Win11Debloat folder..."
 

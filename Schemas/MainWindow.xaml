@@ -184,6 +184,11 @@
         <SolidColorBrush x:Key="ValidationErrorColor" Color="#c42b1c"/>
         <SolidColorBrush x:Key="ValidationSuccessColor" Color="#28a745"/>
 
+        <!-- App recommendation dot / legend colors -->
+        <SolidColorBrush x:Key="AppRecommendationSafeColor" Color="#4CAF50"/>
+        <SolidColorBrush x:Key="AppRecommendationOptionalColor" Color="#FFC107"/>
+        <SolidColorBrush x:Key="AppRecommendationUnsafeColor" Color="#F44336"/>
+
         <!-- Title Bar Button Style -->
         <Style x:Key="TitleBarButton" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
@@ -714,17 +719,17 @@
                                     <TextBlock Text="Legend:" Foreground="{DynamicResource AppFgColor}" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,10,0" Opacity="0.8"/>
                                     <!-- Recommended (safe) -->
                                     <StackPanel Orientation="Horizontal" Margin="0,0,16,0" ToolTip="[Recommended] Safe to remove for most users">
-                                        <Ellipse Width="9" Height="9" Fill="#4CAF50" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                        <Ellipse Width="9" Height="9" Fill="{DynamicResource AppRecommendationSafeColor}" VerticalAlignment="Center" Margin="0,0,6,0"/>
                                         <TextBlock Text="Recommended" Foreground="{DynamicResource AppFgColor}" FontSize="12" VerticalAlignment="Center" Opacity="0.8"/>
                                     </StackPanel>
                                     <!-- Optional (default) -->
                                     <StackPanel Orientation="Horizontal" Margin="0,0,16,0" ToolTip="[Optional] Can be safely removed if you don't need this app">
-                                        <Ellipse Width="9" Height="9" Fill="#FFC107" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                        <Ellipse Width="9" Height="9" Fill="{DynamicResource AppRecommendationOptionalColor}" VerticalAlignment="Center" Margin="0,0,6,0"/>
                                         <TextBlock Text="Optional" Foreground="{DynamicResource AppFgColor}" FontSize="12" VerticalAlignment="Center" Opacity="0.8"/>
                                     </StackPanel>
                                     <!-- Not Recommended (unsafe) -->
                                     <StackPanel Orientation="Horizontal" ToolTip="[Not Recommended] Only remove if you know what you are doing">
-                                        <Ellipse Width="9" Height="9" Fill="#F44336" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                        <Ellipse Width="9" Height="9" Fill="{DynamicResource AppRecommendationUnsafeColor}" VerticalAlignment="Center" Margin="0,0,6,0"/>
                                         <TextBlock Text="Not Recommended" Foreground="{DynamicResource AppFgColor}" FontSize="12" VerticalAlignment="Center" Opacity="0.8"/>
                                     </StackPanel>
                                 </StackPanel>

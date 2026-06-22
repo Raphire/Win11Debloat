@@ -348,10 +348,9 @@ function Load-AppsWithList {
         return
     }
 
-    $brushSafe = [System.Windows.Media.BrushConverter]::new().ConvertFromString('#4CAF50')
-    $brushUnsafe = [System.Windows.Media.BrushConverter]::new().ConvertFromString('#F44336')
-    $brushDefault = [System.Windows.Media.BrushConverter]::new().ConvertFromString('#FFC107')
-    $brushSafe.Freeze(); $brushUnsafe.Freeze(); $brushDefault.Freeze()
+    $brushSafe    = $Window.Resources['AppRecommendationSafeColor']
+    $brushDefault = $Window.Resources['AppRecommendationOptionalColor']
+    $brushUnsafe  = $Window.Resources['AppRecommendationUnsafeColor']
 
     # Create WPF controls; pump the Dispatcher every batch so the spinner keeps animating.
     $batchSize = 20

@@ -7,7 +7,6 @@ param (
     [string]$User,
     [switch]$NoRestartExplorer,
     [switch]$CreateRestorePoint,
-    [switch]$RunAppsListGenerator,
     [switch]$RunDefaults,
     [switch]$RunDefaultsLite,
     [switch]$RunSavedSettings,
@@ -15,7 +14,6 @@ param (
     [string]$Apps,
     [string]$AppRemovalTarget,
     [switch]$RemoveApps,
-    [switch]$RemoveAppsCustom,
     [switch]$RemoveGamingApps,
     [switch]$RemoveHPApps,
     [switch]$ForceRemoveEdge,
@@ -149,7 +147,6 @@ $script:AppsListFilePath = Join-Path $configPath 'Apps.json'
 $script:DefaultSettingsFilePath = Join-Path $configPath 'DefaultSettings.json'
 $script:FeaturesFilePath = Join-Path $configPath 'Features.json'
 $script:SavedSettingsFilePath = Join-Path $configPath 'LastUsedSettings.json'
-$script:CustomAppsListFilePath = Join-Path $configPath 'CustomAppsList'
 $script:DefaultLogPath = Join-Path $logsPath 'Win11Debloat.log'
 $script:RegfilesPath = Join-Path $PSScriptRoot 'Regfiles'
 $script:RegistryBackupsPath = Join-Path $PSScriptRoot 'Backups'
@@ -165,7 +162,7 @@ $script:ImportExportConfigSchema = Join-Path $schemasPath 'ImportExportConfigWin
 $script:RestoreBackupWindowSchema = Join-Path $schemasPath 'RestoreBackupWindow.xaml'
 $script:LoadAppsDetailsScriptPath = Join-Path (Join-Path $scriptsPath 'FileIO') 'LoadAppsDetailsFromJson.ps1'
 
-$script:ControlParams = 'WhatIf', 'Confirm', 'Verbose', 'Debug', 'LogPath', 'Silent', 'Sysprep', 'User', 'NoRestartExplorer', 'RunDefaults', 'RunDefaultsLite', 'RunSavedSettings', 'Config', 'RunAppsListGenerator', 'CLI', 'AppRemovalTarget'
+$script:ControlParams = 'WhatIf', 'Confirm', 'Verbose', 'Debug', 'LogPath', 'Silent', 'Sysprep', 'User', 'NoRestartExplorer', 'RunDefaults', 'RunDefaultsLite', 'RunSavedSettings', 'Config', 'CLI', 'AppRemovalTarget'
 
 # Script-level variables for GUI elements
 $script:GuiWindow = $null
@@ -322,7 +319,6 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 . "$PSScriptRoot/Scripts/FileIO/SaveToFile.ps1"
 . "$PSScriptRoot/Scripts/FileIO/SaveSettings.ps1"
 . "$PSScriptRoot/Scripts/FileIO/LoadSettings.ps1"
-. "$PSScriptRoot/Scripts/FileIO/SaveCustomAppsListToFile.ps1"
 . "$PSScriptRoot/Scripts/FileIO/ValidateAppslist.ps1"
 . "$PSScriptRoot/Scripts/FileIO/LoadAppsFromFile.ps1"
 . "$PSScriptRoot/Scripts/FileIO/LoadAppsDetailsFromJson.ps1"
@@ -447,24 +443,6 @@ if ((Test-Path $script:SavedSettingsFilePath) -and ([String]::IsNullOrWhiteSpace
 
 # Default to CLI mode for deployment-targeted parameters.
 $launchInCLI = $CLI -or $script:Params.ContainsKey("User") -or $script:Params.ContainsKey("Sysprep") -or $script:Params.ContainsKey("AppRemovalTarget")
-
-# Only run the app selection form if the 'RunAppsListGenerator' parameter was passed to the script
-if ($RunAppsListGenerator) {
-    PrintHeader "Custom Apps List Generator"
-
-    $result = Show-AppSelectionWindow
-
-    # Show different message based on whether the app selection was saved or cancelled
-    if ($result -ne $true) {
-        Write-Host "Application selection window was closed without saving." -ForegroundColor Red
-    }
-    else {
-        Write-Output "Your app selection was saved to the 'CustomAppsList' file, found at:"
-        Write-Host "$PSScriptRoot" -ForegroundColor Yellow
-    }
-
-    AwaitKeyToExit
-}
 
 # Change script execution based on provided parameters or user input
 if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSavedSettings -or $Config -or ($controlParamsCount -eq $script:Params.Count)) {

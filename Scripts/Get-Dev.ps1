@@ -7,7 +7,6 @@ param (
     [string]$User,
     [switch]$NoRestartExplorer,
     [switch]$CreateRestorePoint,
-    [switch]$RunAppsListGenerator,
     [switch]$RunDefaults,
     [switch]$RunDefaultsLite,
     [switch]$RunSavedSettings,
@@ -15,7 +14,6 @@ param (
     [string]$Apps,
     [string]$AppRemovalTarget,
     [switch]$RemoveApps,
-    [switch]$RemoveAppsCustom,
     [switch]$RemoveGamingApps,
     [switch]$RemoveHPApps,
     [switch]$ForceRemoveEdge,
@@ -152,7 +150,6 @@ if (Test-Path "$configDir") {
     New-Item -ItemType Directory -Path "$backupDir" -Force | Out-Null
 
     $filesToKeep = @(
-        'CustomAppsList',
         'LastUsedSettings.json'
     )
 

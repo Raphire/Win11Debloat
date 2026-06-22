@@ -49,19 +49,6 @@ function ExecuteParameter {
             Write-Host "$($appsList.Count) apps selected for removal"
             RemoveApps $appsList
         }
-        'RemoveAppsCustom' {
-            Write-Host "> $($feature.ApplyText)..."
-            $appsList = LoadAppsFromFile $script:CustomAppsListFilePath
-
-            if ($appsList.Count -eq 0) {
-                Write-Host "No valid apps were selected for removal" -ForegroundColor Yellow
-                Write-Host ""
-                return
-            }
-
-            Write-Host "$($appsList.Count) apps selected for removal"
-            RemoveApps $appsList
-        }
         'RemoveGamingApps' {
             $appsList = @('Microsoft.GamingApp', 'Microsoft.XboxGameOverlay', 'Microsoft.XboxGamingOverlay')
             Write-Host "> $($feature.ApplyText)..."

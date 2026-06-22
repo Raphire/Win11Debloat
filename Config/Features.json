@@ -340,18 +340,6 @@
       "MaxVersion": null
     },
     {
-      "FeatureId": "RemoveAppsCustom",
-      "Label": "Remove custom selection of apps",
-      "Category": null,
-      "RegistryKey": null,
-      "ApplyText": "Removing selected apps",
-      "UndoLabel": null,
-      "ApplyUndoText": null,
-      "RegistryUndoKey": null,
-      "MinVersion": null,
-      "MaxVersion": null
-    },
-    {
       "FeatureId": "RemoveGamingApps",
       "Label": "Remove the Xbox App and Xbox Gamebar",
       "Category": null,

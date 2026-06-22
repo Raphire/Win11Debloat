@@ -134,7 +134,7 @@ function Show-AppSelectionWindow {
             return
         }
 
-        SaveCustomAppsListToFile -appsList $selectedApps
+        $script:SelectedApps = $selectedApps
 
         $window.DialogResult = $true
     })

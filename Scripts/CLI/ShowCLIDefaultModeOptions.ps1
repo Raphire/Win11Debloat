@@ -25,7 +25,8 @@ function ShowCLIDefaultModeOptions {
                 AddParameter 'Apps' 'Default'
             }
             '2' {
-                AddParameter 'RemoveAppsCustom'
+                AddParameter 'RemoveApps'
+                AddParameter 'Apps' ($script:SelectedApps -join ',')
 
                 if ($DisableGameBarIntegrationInput) {
                     AddParameter 'DisableDVR'

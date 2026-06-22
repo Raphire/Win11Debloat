@@ -381,7 +381,7 @@ function Load-AppsWithList {
         $dot.ToolTip = switch ($app.Recommendation) {
             'safe'   { '[Recommended] Safe to remove for most users' }
             'unsafe' { '[Not Recommended] Only remove if you know what you are doing' }
-            default  { "[Optional] Remove if you don't need this app" }
+            default  { "[Optional] Can be safely removed if you don't need this app" }
         }
         [System.Windows.Controls.Grid]::SetColumn($dot, 0)
 

@@ -703,10 +703,32 @@
                                 </Border>
                             </Grid>
 
-                            <!-- Status Info -->
-                            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="20,0,20,0">
-                                <TextBlock x:Name="AppSelectionStatus" Text="" Foreground="{DynamicResource AppFgColor}" Margin="10,0,0,5" HorizontalAlignment="Left"/>
-                            </StackPanel>
+                            <!-- Status Info & Color Legend -->
+                            <Grid Grid.Row="1" Margin="20,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock x:Name="AppSelectionStatus" Grid.Column="0" Text="" Foreground="{DynamicResource AppFgColor}" Margin="10,0,0,5" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+                                <StackPanel x:Name="AppColorLegend" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,5">
+                                    <TextBlock Text="Legend:" Foreground="{DynamicResource AppFgColor}" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,10,0" Opacity="0.8"/>
+                                    <!-- Recommended (safe) -->
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,16,0" ToolTip="[Recommended] Safe to remove for most users">
+                                        <Ellipse Width="9" Height="9" Fill="#4CAF50" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                        <TextBlock Text="Recommended" Foreground="{DynamicResource AppFgColor}" FontSize="12" VerticalAlignment="Center" Opacity="0.8"/>
+                                    </StackPanel>
+                                    <!-- Optional (default) -->
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,16,0" ToolTip="[Optional] Can be safely removed if you don't need this app">
+                                        <Ellipse Width="9" Height="9" Fill="#FFC107" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                        <TextBlock Text="Optional" Foreground="{DynamicResource AppFgColor}" FontSize="12" VerticalAlignment="Center" Opacity="0.8"/>
+                                    </StackPanel>
+                                    <!-- Not Recommended (unsafe) -->
+                                    <StackPanel Orientation="Horizontal" ToolTip="[Not Recommended] Only remove if you know what you are doing">
+                                        <Ellipse Width="9" Height="9" Fill="#F44336" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                        <TextBlock Text="Not Recommended" Foreground="{DynamicResource AppFgColor}" FontSize="12" VerticalAlignment="Center" Opacity="0.8"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Grid>
                         </Grid>
                     </DockPanel>
                 </TabItem>

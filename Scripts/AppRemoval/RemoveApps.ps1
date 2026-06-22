@@ -238,8 +238,7 @@ function Remove-AppxApp {
 
     .PARAMETER InstalledList
     Optional pre-fetched array of winget objects from GetInstalledAppsViaWinget.
-    When provided, the function searches the .Id properties directly instead of
-    launching a new winget process, enabling efficient batched verification.
+    When provided, used directly; otherwise a live winget call is made.
 #>
 function Test-AppStillInstalled {
     param(
@@ -252,12 +251,11 @@ function Test-AppStillInstalled {
         return $true
     }
 
-    # Search a pre-fetched winget list if provided (avoids per-app process launches).
-    if (Test-AppInWingetList -appId $appId -InstalledList $InstalledList) {
-        return $true
+    # Use the pre-fetched list if provided; otherwise fall back to a live winget call.
+    if ($InstalledList) {
+        return (Test-AppInWingetList -appId $appId -InstalledList $InstalledList)
     }
 
-    # Fall back to a live winget list (slower, only used for standalone calls).
     if ($script:WingetInstalled) {
         $liveList = GetInstalledAppsViaWinget -TimeOut 10 -NonBlocking
         if (Test-AppInWingetList -appId $appId -InstalledList $liveList) {

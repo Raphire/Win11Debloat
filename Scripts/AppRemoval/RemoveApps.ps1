@@ -243,7 +243,9 @@ function Get-AppRemovalMethod {
                 }
             }
         }
-        catch { }
+        catch {
+            Write-Warning "Failed to load app removal methods from '$script:AppsListFilePath'. Defaulting unknown apps to Appx. Error: $_"
+        }
     }
 
     if ($script:AppRemovalMethodCache.ContainsKey($appId)) {

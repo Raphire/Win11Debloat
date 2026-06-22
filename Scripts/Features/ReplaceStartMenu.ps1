@@ -1,5 +1,24 @@
-# Replace the startmenu for all users, when using the default startmenuTemplate this clears all pinned apps
-# Credit: https://lazyadmin.nl/win-11/customize-windows-11-start-menu-layout/
+<#
+    .SYNOPSIS
+    Replaces the start menu layout for all user profiles.
+
+    .DESCRIPTION
+    Iterates over every existing user profile and the Default user profile,
+    replacing each user's start2.bin file with the specified template. When
+    using the default template, this clears all pinned apps from the start menu.
+
+    Credit: https://lazyadmin.nl/win-11/customize-windows-11-start-menu-layout/
+
+    .PARAMETER startMenuTemplate
+    Path to the .bin template file to apply. Defaults to the blank template
+    bundled with the script (Assets/Start/start2.bin).
+
+    .EXAMPLE
+    ReplaceStartMenuForAllUsers
+
+    .EXAMPLE
+    ReplaceStartMenuForAllUsers -startMenuTemplate "C:\CustomLayout.bin"
+#>
 function ReplaceStartMenuForAllUsers {
     param (
         [string]$startMenuTemplate = "$script:AssetsPath\Start\start2.bin"
@@ -44,8 +63,31 @@ function ReplaceStartMenuForAllUsers {
 }
 
 
-# Replace the startmenu at the specified location, when using the default startmenuTemplate this clears all pinned apps
-# Credit: https://lazyadmin.nl/win-11/customize-windows-11-start-menu-layout/
+<#
+    .SYNOPSIS
+    Replaces the start menu layout for a single user.
+
+    .DESCRIPTION
+    Backs up the current start2.bin file (if it exists), then copies the
+    specified template over it. When using the default template this clears
+    all pinned apps from the start menu. Validates that the template file
+    exists and has a .bin extension before proceeding.
+
+    Credit: https://lazyadmin.nl/win-11/customize-windows-11-start-menu-layout/
+
+    .PARAMETER startMenuBinFile
+    The full path to the user's start2.bin file to replace.
+
+    .PARAMETER startMenuTemplate
+    Path to the .bin template file to apply. Defaults to the blank template
+    bundled with the script (Assets/Start/start2.bin).
+
+    .EXAMPLE
+    ReplaceStartMenu -startMenuBinFile "$env:LOCALAPPDATA\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState\start2.bin"
+
+    .EXAMPLE
+    ReplaceStartMenu -startMenuBinFile "$env:LOCALAPPDATA\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState\start2.bin" -startMenuTemplate "C:\CustomLayout.bin"
+#>
 function ReplaceStartMenu {
     param (
         [Parameter(Mandatory)]
@@ -88,6 +130,24 @@ function ReplaceStartMenu {
     Write-Host "Replaced start menu for user $userName"
 }
 
+<#
+    .SYNOPSIS
+    Returns the full path to the start menu bin file for a given user.
+
+    .DESCRIPTION
+    Resolves the path to the start2.bin file for the specified username.
+    When no username is provided or the value is empty, falls back to
+    the current user's local app data path via $env:LOCALAPPDATA.
+
+    .PARAMETER UserName
+    The target username. Pass an empty string or omit to resolve for the current user.
+
+    .EXAMPLE
+    GetStartMenuBinPathForUser -UserName "Jeff"
+
+    .EXAMPLE
+    GetStartMenuBinPathForUser -UserName "Default"
+#>
 function GetStartMenuBinPathForUser {
     param(
         [string]$UserName
@@ -100,6 +160,21 @@ function GetStartMenuBinPathForUser {
     return (GetUserDirectory -userName $UserName -fileName "AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState\start2.bin" -exitIfPathNotFound $false)
 }
 
+<#
+    .SYNOPSIS
+    Extracts the username from a start2.bin file path.
+
+    .DESCRIPTION
+    Parses a typical C:\Users\<UserName>\AppData\... path and returns the
+    username portion. Returns 'unknown' if the path does not match the
+    expected pattern.
+
+    .PARAMETER StartMenuBinFile
+    The full path to a start2.bin file.
+
+    .EXAMPLE
+    GetStartMenuUserNameFromPath -StartMenuBinFile "$env:LOCALAPPDATA\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState\start2.bin"
+#>
 function GetStartMenuUserNameFromPath {
     param(
         [string]$StartMenuBinFile
@@ -115,6 +190,29 @@ function GetStartMenuUserNameFromPath {
 
 
 
+<#
+    .SYNOPSIS
+    Restores a user's start menu from a backup file.
+
+    .DESCRIPTION
+    Moves the current start2.bin to a .restore.bak safety copy, then copies
+    the specified backup file into place. Returns a PSCustomObject with
+    UserName, Result ($true/$false), and Message properties describing
+    the outcome.
+
+    .PARAMETER StartMenuBinFile
+    The full path to the user's start2.bin file to restore.
+
+    .PARAMETER BackupFilePath
+    Path to the backup file to restore from. If omitted, defaults to
+    StartMenuBinFile with a .bak extension.
+
+    .EXAMPLE
+    RestoreStartMenuFromBackup -StartMenuBinFile "$env:LOCALAPPDATA\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState\start2.bin"
+
+    .EXAMPLE
+    RestoreStartMenuFromBackup -StartMenuBinFile "$env:LOCALAPPDATA\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState\start2.bin" -BackupFilePath "C:\Backups\start2.bin"
+#>
 function RestoreStartMenuFromBackup {
     param(
         [Parameter(Mandatory)]
@@ -169,6 +267,26 @@ function RestoreStartMenuFromBackup {
     }
 }
 
+<#
+    .SYNOPSIS
+    Restores the start menu for the current target user from a backup.
+
+    .DESCRIPTION
+    Resolves the start2.bin path for the current user (or the user specified
+    via the -User parameter), then delegates to RestoreStartMenuFromBackup.
+    Returns early with a warning if the user's start menu path cannot
+    be resolved.
+
+    .PARAMETER BackupFilePath
+    Path to the backup file to restore from. If omitted, defaults to
+    the .bak file alongside the current start2.bin.
+
+    .EXAMPLE
+    RestoreStartMenu
+
+    .EXAMPLE
+    RestoreStartMenu -BackupFilePath "C:\Backups\start2.bin"
+#>
 function RestoreStartMenu {
     param(
         [string]$BackupFilePath
@@ -177,11 +295,40 @@ function RestoreStartMenu {
     $targetUserName = GetUserName
     $startMenuBinFile = GetStartMenuBinPathForUser -UserName $targetUserName
 
+    if ([string]::IsNullOrWhiteSpace($startMenuBinFile)) {
+        Write-Host "Unable to resolve start menu path for user $targetUserName, nothing to restore" -ForegroundColor Yellow
+        return [PSCustomObject]@{
+            UserName = $targetUserName
+            Result   = $false
+            Message  = "Could not resolve start menu path for user $targetUserName."
+        }
+    }
+
     Write-Host "Restoring start menu for user $targetUserName from backup..."
 
     return RestoreStartMenuFromBackup -StartMenuBinFile $startMenuBinFile -BackupFilePath $BackupFilePath
 }
 
+<#
+    .SYNOPSIS
+    Restores the start menu for all user profiles from a backup.
+
+    .DESCRIPTION
+    Iterates over every existing user profile and restores each user's
+    start2.bin from its .bak backup. For the Default user profile, removes
+    the start2.bin file (which was previously copied from a template) so
+    that new profiles revert to the system default start menu.
+
+    .PARAMETER BackupFilePath
+    Path to the backup file to restore from. If omitted, defaults to
+    the .bak file alongside each user's current start2.bin.
+
+    .EXAMPLE
+    RestoreStartMenuForAllUsers
+
+    .EXAMPLE
+    RestoreStartMenuForAllUsers -BackupFilePath "C:\Backups\start2.bin"
+#>
 function RestoreStartMenuForAllUsers {
     param(
         [string]$BackupFilePath

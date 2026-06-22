@@ -4,6 +4,12 @@ function EnableWindowsFeature {
         [string]$FeatureName
     )
 
+    if ($script:Params.ContainsKey("WhatIf")) {
+        Write-Host "[WhatIf] Enable Windows feature: $FeatureName" -ForegroundColor Cyan
+        Write-Host ""
+        return
+    }
+
     $result = Invoke-NonBlocking -ScriptBlock {
         param($name)
         Enable-WindowsOptionalFeature -Online -FeatureName $name -All -NoRestart
@@ -20,6 +26,12 @@ function DisableWindowsFeature {
     param (
         [string]$FeatureName
     )
+
+    if ($script:Params.ContainsKey("WhatIf")) {
+        Write-Host "[WhatIf] Disable Windows feature: $FeatureName" -ForegroundColor Cyan
+        Write-Host ""
+        return
+    }
 
     $result = Invoke-NonBlocking -ScriptBlock {
         param($name)

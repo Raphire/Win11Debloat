@@ -7,9 +7,9 @@
         SnapsToDevicePixels="True"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
-        AllowsTransparency="False"
-        Background="{DynamicResource BgColor}"
-        Foreground="{DynamicResource FgColor}">
+        AllowsTransparency="True"
+        Background="Transparent"
+        Foreground="{DynamicResource AppFgColor}">
     <shell:WindowChrome.WindowChrome>
         <shell:WindowChrome ResizeBorderThickness="5"
                             CaptionHeight="32"
@@ -30,8 +30,8 @@
         </Style>
         <!-- TextBlock Label Style -->
         <Style x:Key="LabelStyle" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
-            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="{DynamicResource AppFgColor}"/>
+            <Setter Property="FontSize" Value="13"/>
             <Setter Property="Margin" Value="0,0,0,2"/>
         </Style>
 
@@ -46,28 +46,30 @@
 
         <!-- Category card border style -->
         <Style x:Key="CategoryCardBorderStyle" TargetType="Border">
-            <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource AppBorderColor}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="CornerRadius" Value="4"/>
             <Setter Property="Background" Value="{DynamicResource CardBgColor}"/>
-            <Setter Property="Padding" Value="16,12,16,2"/>
+            <Setter Property="Padding" Value="16,13,16,4"/>
             <Setter Property="Margin" Value="0,0,0,16"/>
         </Style>
 
         <!-- Category header text style -->
         <Style x:Key="CategoryHeaderTextBlock" TargetType="TextBlock">
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="FontSize" Value="16"/>
-            <Setter Property="Margin" Value="0,0,0,12"/>
-            <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="LineHeight" Value="20"/>
+            <Setter Property="Margin" Value="0,0,0,16"/>
+            <Setter Property="Foreground" Value="{DynamicResource AppFgColor}"/>
         </Style>
 
         <!-- Category header icon style -->
         <Style x:Key="CategoryHeaderIcon" TargetType="TextBlock">
             <Setter Property="FontFamily" Value="Segoe Fluent Icons"/>
-            <Setter Property="FontSize" Value="19"/>
-            <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
-            <Setter Property="Margin" Value="0,0,8,12"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="LineHeight" Value="20"/>
+            <Setter Property="Foreground" Value="{DynamicResource AppFgColor}"/>
+            <Setter Property="Margin" Value="0,0,8,16"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
 
@@ -83,7 +85,7 @@
             <Setter Property="IsTabStop" Value="False"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-            <Setter Property="Foreground" Value="{DynamicResource ButtonBg}"/>
+            <Setter Property="Foreground" Value="{DynamicResource ButtonBgColor}"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -95,17 +97,18 @@
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Foreground" Value="{DynamicResource ButtonHover}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource ButtonHoverColor}"/>
                 </Trigger>
                 <Trigger Property="IsPressed" Value="True">
-                    <Setter Property="Foreground" Value="{DynamicResource ButtonPressed}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource ButtonPressedColor}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
 
         <Style x:Key="CategoryHelpLinkTextStyle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="12"/>
-            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,0,0,5"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Foreground">
                 <Setter.Value>
@@ -116,14 +119,14 @@
 
         <!-- Overview changes text style -->
         <Style x:Key="OverviewNoChangesTextStyle" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
+            <Setter Property="Foreground" Value="{DynamicResource AppFgColor}"/>
             <Setter Property="Margin" Value="0,0,0,8"/>
             <Setter Property="FontSize" Value="12"/>
             <Setter Property="FontStyle" Value="Italic"/>
         </Style>
 
         <Style x:Key="OverviewChangeBulletStyle" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
+            <Setter Property="Foreground" Value="{DynamicResource AppFgColor}"/>
             <Setter Property="Margin" Value="0,0,0,8"/>
             <Setter Property="FontSize" Value="12"/>
             <Setter Property="TextWrapping" Value="Wrap"/>
@@ -131,45 +134,7 @@
 
         <!-- TextBox Style for search -->
         <Style TargetType="TextBox">
-            <Setter Property="CaretBrush" Value="{DynamicResource FgColor}"/>
-        </Style>
-
-        <!-- User TextBox Style with disabled state -->
-        <Style x:Key="UserTextBoxStyle" TargetType="TextBox">
-            <Setter Property="CaretBrush" Value="{DynamicResource FgColor}"/>
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="FontSize" Value="13"/>
-            <Setter Property="Margin" Value="1,0,0,1"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="Padding" Value="0"/>
-            <Style.Triggers>
-                <Trigger Property="IsEnabled" Value="False">
-                    <Setter Property="Background" Value="{DynamicResource ButtonDisabled}"/>
-                    <Setter Property="Foreground" Value="{DynamicResource ButtonTextDisabled}"/>
-                    <Setter Property="Opacity" Value="0.6"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-
-        <!-- User TextBox Border Style with disabled state -->
-        <Style x:Key="UserTextBoxBorderStyle" TargetType="Border">
-            <Setter Property="Background" Value="{DynamicResource ComboBgColor}"/>
-            <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderColor}"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="CornerRadius" Value="4"/>
-            <Setter Property="Padding" Value="8,6"/>
-            <Style.Triggers>
-                <Trigger Property="IsEnabled" Value="False">
-                    <Setter Property="Background" Value="{DynamicResource ButtonDisabled}"/>
-                    <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
-                    <Setter Property="Opacity" Value="0.6"/>
-                </Trigger>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{DynamicResource ComboHoverColor}"/>
-                </Trigger>
-            </Style.Triggers>
+            <Setter Property="CaretBrush" Value="{DynamicResource AppFgColor}"/>
         </Style>
 
         <!-- TextBlock style for App ID column in apps table -->
@@ -194,7 +159,7 @@
 
         <!-- Column widths for the app table rows and header (dot | name | description | id) -->
         <GridLength x:Key="AppTableDotColWidth">16</GridLength>
-        <GridLength x:Key="AppTableNameColWidth">151</GridLength>
+        <GridLength x:Key="AppTableNameColWidth">180</GridLength>
         <GridLength x:Key="AppTableDescColWidth">1*</GridLength>
         <GridLength x:Key="AppTableIdColWidth">261</GridLength>
 
@@ -222,7 +187,7 @@
         <!-- Title Bar Button Style -->
         <Style x:Key="TitleBarButton" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
+            <Setter Property="Foreground" Value="{DynamicResource AppFgColor}"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Width" Value="46"/>
             <Setter Property="Height" Value="32"/>
@@ -237,11 +202,21 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsActive, RelativeSource={RelativeSource AncestorType=Window}}" Value="False">
+                    <Setter Property="Foreground" Value="{DynamicResource TitleBarUnfocusedFgColor}"/>
+                </DataTrigger>
+            </Style.Triggers>
         </Style>
         <Style x:Key="CloseButton" TargetType="Button" BasedOn="{StaticResource TitleBarButton}">
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{DynamicResource CloseHover}"/>
+                    <Setter Property="Background" Value="{DynamicResource TitleBarCloseHoverColor}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource AppFgColor}"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource TitleBarClosePressedColor}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource AppFgColor}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -257,25 +232,12 @@
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{DynamicResource TitlebarButtonHover}"/>
+                    <Setter Property="Background" Value="{DynamicResource TitleBarButtonHoverColor}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource AppFgColor}"/>
                 </Trigger>
                 <Trigger Property="IsPressed" Value="True">
-                    <Setter Property="Background" Value="{DynamicResource TitlebarButtonPressed}"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-
-        <!-- SearchBox Border Style -->
-        <Style x:Key="SearchBoxBorderStyle" TargetType="Border">
-            <Setter Property="Background" Value="{DynamicResource ComboBgColor}"/>
-            <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderColor}"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="CornerRadius" Value="4"/>
-            <Setter Property="Width" Value="300"/>
-            <Setter Property="Padding" Value="8,6"/>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{DynamicResource ComboHoverColor}"/>
+                    <Setter Property="Background" Value="{DynamicResource TitleBarButtonPressedColor}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource AppFgColor}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -283,7 +245,7 @@
         <!-- ContextMenu Style -->
         <Style TargetType="ContextMenu">
             <Setter Property="Background" Value="{DynamicResource CardBgColor}"/>
-            <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource AppBorderColor}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="4"/>
             <Setter Property="HasDropShadow" Value="True"/>
@@ -311,7 +273,7 @@
 
         <!-- MenuItem Style -->
         <Style TargetType="MenuItem">
-            <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
+            <Setter Property="Foreground" Value="{DynamicResource AppFgColor}"/>
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Padding" Value="8,6"/>
             <Setter Property="Height" Value="32"/>
@@ -337,10 +299,10 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsHighlighted" Value="True">
-                                <Setter Property="Background" Value="{DynamicResource ComboItemHoverColor}"/>
+                                <Setter Property="Background" Value="{DynamicResource ComboBoxItemHoverColor}"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter Property="Background" Value="{DynamicResource ComboItemSelectedColor}"/>
+                                <Setter Property="Background" Value="{DynamicResource ComboBoxItemSelectedColor}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -349,10 +311,10 @@
         </Style>
     </Window.Resources>
 
-    <Border x:Name="MainBorder" BorderBrush="{DynamicResource BorderColor}" 
+    <Border x:Name="MainBorder" BorderBrush="{DynamicResource AppBorderColor}" 
             BorderThickness="1" 
             CornerRadius="8" 
-            Background="{DynamicResource BgColor}"
+            Background="{DynamicResource AppBgColor}"
             Margin="0">
         <Grid>
             <Grid.RowDefinitions>
@@ -372,7 +334,7 @@
 
             <!-- Custom Title Bar -->
             <Grid Grid.Row="0" x:Name="TitleBar">
-                <Border x:Name="TitleBarBackground" Background="{DynamicResource BgColor}" CornerRadius="8,8,0,0">
+                <Border x:Name="TitleBarBackground" Background="{DynamicResource AppBgColor}" CornerRadius="8,8,0,0">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -380,10 +342,20 @@
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" 
                                    Text="Win11Debloat" 
-                                   Foreground="{DynamicResource FgColor}"
                                    VerticalAlignment="Center" 
                                    Margin="12,0,0,0"
-                                   FontSize="12"/>
+                                   FontSize="12">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Foreground" Value="{DynamicResource AppFgColor}"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsActive, RelativeSource={RelativeSource AncestorType=Window}}" Value="False">
+                                            <Setter Property="Foreground" Value="{DynamicResource TitleBarUnfocusedFgColor}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
                         <StackPanel Grid.Column="1" Orientation="Horizontal">
                             <Button x:Name="KofiBtn" shell:WindowChrome.IsHitTestVisibleInChrome="True" Content="&#xEB52;" FontFamily="Segoe Fluent Icons" FontSize="15" Style="{StaticResource TitlebarButton}" ToolTip="Support the creator" AutomationProperties.Name="Support the creator"/>
                             <Button x:Name="MenuBtn" shell:WindowChrome.IsHitTestVisibleInChrome="True" Content="&#xE700;" FontFamily="Segoe Fluent Icons" FontSize="15" Style="{StaticResource TitlebarButton}" ToolTip="Options" AutomationProperties.Name="Options">
@@ -395,7 +367,7 @@
                                                 <Setter Property="Template">
                                                     <Setter.Value>
                                                         <ControlTemplate TargetType="Separator">
-                                                            <Border Height="1" Background="{DynamicResource BorderColor}" SnapsToDevicePixels="True" HorizontalAlignment="Stretch"/>
+                                                            <Border Height="1" Background="{DynamicResource AppBorderColor}" SnapsToDevicePixels="True" HorizontalAlignment="Stretch"/>
                                                         </ControlTemplate>
                                                     </Setter.Value>
                                                 </Setter>
@@ -403,38 +375,38 @@
                                         </ContextMenu.Resources>
                                         <MenuItem x:Name="ImportConfigBtn" Header="Import config" AutomationProperties.Name="Import configuration">
                                             <MenuItem.Icon>
-                                                <TextBlock Text="&#xe838;" FontFamily="Segoe Fluent Icons" FontSize="16" Foreground="{DynamicResource FgColor}"/>
+                                                <TextBlock Text="&#xe838;" FontFamily="Segoe Fluent Icons" FontSize="16" Foreground="{DynamicResource AppFgColor}"/>
                                             </MenuItem.Icon>
                                         </MenuItem>
                                         <MenuItem x:Name="ExportConfigBtn" Header="Export config" AutomationProperties.Name="Export configuration">
                                             <MenuItem.Icon>
-                                                <TextBlock Text="&#xe74e;" FontFamily="Segoe Fluent Icons" FontSize="16" Foreground="{DynamicResource FgColor}"/>
+                                                <TextBlock Text="&#xe74e;" FontFamily="Segoe Fluent Icons" FontSize="16" Foreground="{DynamicResource AppFgColor}"/>
                                             </MenuItem.Icon>
                                         </MenuItem>
                                         <MenuItem x:Name="RestoreBackupBtn" Header="Restore backup" AutomationProperties.Name="Restore registry backup">
                                             <MenuItem.Icon>
-                                                <TextBlock Text="&#xe81c;" FontFamily="Segoe Fluent Icons" FontSize="16" Foreground="{DynamicResource FgColor}"/>
+                                                <TextBlock Text="&#xe81c;" FontFamily="Segoe Fluent Icons" FontSize="16" Foreground="{DynamicResource AppFgColor}"/>
                                             </MenuItem.Icon>
                                         </MenuItem>
                                         <Separator />
                                         <MenuItem x:Name="MenuDocumentation" Header="Documentation" AutomationProperties.Name="Documentation">
                                             <MenuItem.Icon>
-                                                <TextBlock Text="&#xe736;" FontFamily="Segoe MDL2 Assets" FontSize="16" Foreground="{DynamicResource FgColor}"/>
+                                                <TextBlock Text="&#xe736;" FontFamily="Segoe MDL2 Assets" FontSize="16" Foreground="{DynamicResource AppFgColor}"/>
                                             </MenuItem.Icon>
                                         </MenuItem>
                                         <MenuItem x:Name="MenuReportBug" Header="Report a bug" AutomationProperties.Name="Report a bug">
                                             <MenuItem.Icon>
-                                                <TextBlock Text="&#xEBE8;" FontFamily="Segoe Fluent Icons" FontSize="16" Foreground="{DynamicResource FgColor}"/>
+                                                <TextBlock Text="&#xEBE8;" FontFamily="Segoe Fluent Icons" FontSize="16" Foreground="{DynamicResource AppFgColor}"/>
                                             </MenuItem.Icon>
                                         </MenuItem>
                                         <MenuItem x:Name="MenuLogs" Header="Logs" AutomationProperties.Name="Logs">
                                             <MenuItem.Icon>
-                                                <TextBlock Text="&#xf000;" FontFamily="Segoe Fluent Icons" FontSize="16" Foreground="{DynamicResource FgColor}"/>
+                                                <TextBlock Text="&#xf000;" FontFamily="Segoe Fluent Icons" FontSize="16" Foreground="{DynamicResource AppFgColor}"/>
                                             </MenuItem.Icon>
                                         </MenuItem>
                                         <MenuItem x:Name="MenuAbout" Header="About" AutomationProperties.Name="About">
                                             <MenuItem.Icon>
-                                                <TextBlock Text="&#xE946;" FontFamily="Segoe Fluent Icons" FontSize="16" Foreground="{DynamicResource FgColor}"/>
+                                                <TextBlock Text="&#xE946;" FontFamily="Segoe Fluent Icons" FontSize="16" Foreground="{DynamicResource AppFgColor}"/>
                                             </MenuItem.Icon>
                                         </MenuItem>
                                     </ContextMenu>
@@ -459,16 +431,16 @@
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate TargetType="TabItem">
-                                    <Border Name="Border" Background="{DynamicResource SecondaryButtonBg}" BorderThickness="0" CornerRadius="0" Padding="10,10" Margin="0">
+                                    <Border Name="Border" Background="{DynamicResource SecondaryButtonBgColor}" BorderThickness="0" CornerRadius="0" Padding="10,10" Margin="0">
                                         <ContentPresenter ContentSource="Header" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                     </Border>
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsSelected" Value="True">
-                                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource ButtonBg}"/>
+                                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource ButtonBgColor}"/>
                                             <Setter Property="Foreground" Value="White"/>
                                         </Trigger>
                                         <Trigger Property="IsSelected" Value="False">
-                                            <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
+                                            <Setter Property="Foreground" Value="{DynamicResource AppFgColor}"/>
                                         </Trigger>
                                     </ControlTemplate.Triggers>
                                 </ControlTemplate>
@@ -487,30 +459,30 @@
                     <Grid>
                         <StackPanel x:Name="HomeContentPanel" HorizontalAlignment="Center" VerticalAlignment="Top">
                             <!-- Logo -->
-                            <Viewbox Width="250" Height="250" Margin="0,0,0,10" HorizontalAlignment="Center">
+                            <Viewbox Width="250" Height="250" Margin="0,0,0,24" HorizontalAlignment="Center">
                                 <Grid Width="250" Height="250">
                                     <!-- Windows logo style icon -->
                                     <Path x:Name="LogoFallback" Data="M0,0 L80,0 L80,80 L0,80 Z M90,0 L170,0 L170,80 L90,80 Z M0,90 L80,90 L80,170 L0,170 Z M90,90 L170,90 L170,170 L90,170 Z" 
-                                        Fill="{DynamicResource ButtonBg}" Stretch="Uniform" Margin="10"/>
+                                        Fill="{DynamicResource ButtonBgColor}" Stretch="Uniform" Margin="10"/>
                                     <!-- Sparkle effects -->
                                     <Canvas HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="50" Height="50" Margin="0,0,2,2">
                                         <Path Canvas.Left="10" Canvas.Top="16" Data="M12,0 L14,10 L24,12 L14,14 L12,24 L10,14 L0,12 L10,10 Z" 
-                                              Fill="{DynamicResource AccentColor}" Width="40" Height="40" Stretch="Uniform"/>
+                                              Fill="{DynamicResource AppAccentColor}" Width="40" Height="40" Stretch="Uniform"/>
                                         <Path Canvas.Left="0" Canvas.Top="0" Data="M6,0 L7,5 L12,6 L7,7 L6,12 L5,7 L0,6 L5,5 Z" 
-                                              Fill="{DynamicResource AccentColor}" Width="22" Height="22" Stretch="Uniform"/>
+                                              Fill="{DynamicResource AppAccentColor}" Width="22" Height="22" Stretch="Uniform"/>
                                         <Path Canvas.Left="35" Canvas.Top="8" Data="M4,0 L5,3 L8,4 L5,5 L4,8 L3,5 L0,4 L3,3 Z" 
-                                              Fill="{DynamicResource AccentColor}" Width="17" Height="17" Stretch="Uniform"/>
+                                              Fill="{DynamicResource AppAccentColor}" Width="17" Height="17" Stretch="Uniform"/>
                                     </Canvas>
                                 </Grid>
                             </Viewbox>
                             
                             <!-- Title -->
-                            <TextBlock Text="Welcome to Win11Debloat" FontSize="30" FontWeight="Bold" Foreground="{DynamicResource FgColor}" HorizontalAlignment="Center" Margin="0,0,0,10"/>
-                            <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource FgColor}" FontSize="18" LineHeight="22" HorizontalAlignment="Center" Margin="0,0,0,60">
+                            <TextBlock Text="Welcome to Win11Debloat" FontSize="40" FontWeight="SemiBold" Foreground="{DynamicResource AppFgColor}" HorizontalAlignment="Center"/>
+                            <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource AppFgColor}" FontSize="20" HorizontalAlignment="Center" Margin="0,8,0,64">
                                 <Run Text="Your clean Windows experience is just a few clicks away!"/>
                             </TextBlock>
 
-                            <Border HorizontalAlignment="Center" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="16,12" Width="500">
+                            <Border HorizontalAlignment="Center" BorderBrush="{DynamicResource AppBorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="16,12" Width="500">
                                 <StackPanel>
                                     <TextBlock Text="What user do you want to apply changes to?" Style="{StaticResource CategoryHeaderTextBlock}"/>
                                     <ComboBox x:Name="UserSelectionCombo" Margin="0,0,0,6" AutomationProperties.Name="Apply Changes To">
@@ -519,32 +491,25 @@
                                         <ComboBoxItem Content="Windows Default User (Sysprep)"/>
                                     </ComboBox>
                                     <StackPanel x:Name="OtherUserPanel" Visibility="Collapsed" Margin="0,0,0,6">
-                                        <TextBlock x:Name="UsernameValidationMessage" Text="" FontStyle="Italic" Foreground="{DynamicResource CloseHover}" FontSize="11" Margin="3,0,0,4" TextWrapping="Wrap"/>
-                                        <Border IsEnabled="{Binding ElementName=OtherUsernameTextBox, Path=IsEnabled}">
-                                            <Border.Style>
-                                                <Style TargetType="Border" BasedOn="{StaticResource UserTextBoxBorderStyle}">
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding ElementName=OtherUsernameTextBox, Path=IsFocused}" Value="True">
-                                                            <Setter Property="Background" Value="{DynamicResource InputFocusColor}"/>
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </Border.Style>
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="Auto"/>
-                                                    <ColumnDefinition Width="*"/>
-                                                </Grid.ColumnDefinitions>
-                                                <TextBlock Grid.Column="0" Text="&#xE77B;" FontFamily="Segoe Fluent Icons" FontSize="14" VerticalAlignment="Center" Margin="4,0,8,0" Foreground="{DynamicResource FgColor}"/>
-                                                <TextBlock x:Name="UsernameTextBoxPlaceholder" Grid.Column="1" Text="Enter username" Foreground="{DynamicResource FgColor}" Opacity="0.5" FontSize="13" Margin="3,0,0,1" VerticalAlignment="Center" IsHitTestVisible="False"/>
-                                                <TextBox x:Name="OtherUsernameTextBox" Grid.Column="1" Style="{StaticResource UserTextBoxStyle}" Text="" AutomationProperties.Name="Enter username"/>
-                                            </Grid>
+                                        <TextBlock x:Name="UsernameValidationMessage" Text="" FontStyle="Italic" Foreground="{DynamicResource TitleBarCloseHoverColor}" FontSize="11" Margin="3,0,0,4" TextWrapping="Wrap"/>
+                                        <Border Style="{DynamicResource TextBoxBorderStyle}">
+                                            <Border Style="{DynamicResource TextBoxBottomBorderStyle}">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock x:Name="UsernameTextBoxPlaceholder" Grid.Column="0" Text="Enter username" Foreground="{DynamicResource AppFgColor}" Opacity="0.7" FontSize="13" Margin="3,0,0,1" VerticalAlignment="Center" IsHitTestVisible="False"/>
+                                                    <TextBox x:Name="OtherUsernameTextBox" Grid.Column="0" Style="{DynamicResource TextBoxInputStyle}" Text="" AutomationProperties.Name="Enter username"/>
+                                                    <TextBlock Grid.Column="1" Text="&#xE77B;" FontFamily="Segoe Fluent Icons" FontSize="14" VerticalAlignment="Center" Margin="8,0,4,0" Foreground="{DynamicResource AppFgColor}" Opacity="0.7"/>
+                                                </Grid>
+                                            </Border>
                                         </Border>
                                     </StackPanel>
 
-                                    <Separator Margin="0,10,0,8" Background="{DynamicResource BorderColor}"/>
+                                    <Separator Margin="0,10,0,8" Background="{DynamicResource AppBorderColor}"/>
 
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,8,0,0">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,8,0,4">
                                         <Button x:Name="HomeDefaultModeBtn" Width="227" Height="50" Style="{DynamicResource PrimaryButtonStyle}" Margin="0,0,12,0" AutomationProperties.Name="Default Mode">
                                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                                 <TextBlock Text="&#xe735;" FontFamily="Segoe Fluent Icons" FontSize="16" VerticalAlignment="Center" Margin="0,0,8,-1"/>
@@ -567,10 +532,10 @@
                 <!-- App Removal Tab -->
                 <TabItem Header="App Removal">
                     <DockPanel>
-                        <Border DockPanel.Dock="Top" Padding="20,10,20,0">
+                        <Border DockPanel.Dock="Top" Padding="20,4,20,0">
                             <StackPanel>
-                                <TextBlock Text="App Removal" FontWeight="Bold" FontSize="20" Margin="0,0,0,5" Foreground="{DynamicResource FgColor}"/>
-                                <TextBlock Text="Select which apps you want to remove from your system" FontSize="13" Margin="0,0,0,20" Foreground="{DynamicResource FgColor}" TextWrapping="Wrap"/>
+                                <TextBlock Text="App Removal" FontWeight="SemiBold" FontSize="24" Foreground="{DynamicResource AppFgColor}"/>
+                                <TextBlock Text="Select which apps you want to remove" FontSize="14" Margin="0,5,0,20" Foreground="{DynamicResource AppFgColor}" TextWrapping="Wrap"/>
 
                                 <!-- Filter Options -->
                                 <Grid Margin="0,0,0,12">
@@ -583,11 +548,11 @@
                                     </Grid.ColumnDefinitions>
                                     
                                     <StackPanel Orientation="Horizontal" Grid.Column="0">
-                                        <ToggleButton x:Name="PresetsBtn" ToolTip="Select or clear app presets" Height="32" Padding="10,0" Margin="0,0,10,0" AutomationProperties.Name="App Presets">
+                                        <ToggleButton x:Name="PresetsBtn" Height="32" Padding="10,0" Margin="0,0,10,0" AutomationProperties.Name="App Presets">
                                             <ToggleButton.Style>
                                                 <Style TargetType="ToggleButton">
-                                                    <Setter Property="Background" Value="{DynamicResource SecondaryButtonBg}"/>
-                                                    <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
+                                                    <Setter Property="Background" Value="{DynamicResource SecondaryButtonBgColor}"/>
+                                                    <Setter Property="Foreground" Value="{DynamicResource AppFgColor}"/>
                                                     <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderColor}"/>
                                                     <Setter Property="BorderThickness" Value="1"/>
                                                     <Setter Property="FontSize" Value="14"/>
@@ -603,20 +568,20 @@
                                                     </Setter>
                                                     <Style.Triggers>
                                                         <Trigger Property="IsMouseOver" Value="True">
-                                                            <Setter Property="Background" Value="{DynamicResource SecondaryButtonHover}"/>
+                                                            <Setter Property="Background" Value="{DynamicResource SecondaryButtonHoverColor}"/>
                                                         </Trigger>
                                                         <Trigger Property="IsPressed" Value="True">
-                                                            <Setter Property="Background" Value="{DynamicResource SecondaryButtonPressed}"/>
+                                                            <Setter Property="Background" Value="{DynamicResource SecondaryButtonPressedColor}"/>
                                                         </Trigger>
                                                         <Trigger Property="IsChecked" Value="True">
-                                                            <Setter Property="Background" Value="{DynamicResource SecondaryButtonHover}"/>
+                                                            <Setter Property="Background" Value="{DynamicResource SecondaryButtonHoverColor}"/>
                                                         </Trigger>
                                                     </Style.Triggers>
                                                 </Style>
                                             </ToggleButton.Style>
                                             <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="&#xE735;" FontFamily="Segoe Fluent Icons" FontSize="14" VerticalAlignment="Center" Margin="0,0,6,0"/>
-                                                <TextBlock Text="Quick Select" FontSize="13" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                                <TextBlock Text="&#xE735;" FontFamily="Segoe Fluent Icons" FontSize="14" VerticalAlignment="Center" Margin="0,1,6,0"/>
+                                                <TextBlock Text="Quick Select" FontSize="13" VerticalAlignment="Center" Margin="0,0,6,1"/>
                                                 <TextBlock x:Name="PresetsArrow" Text="&#xE70D;" FontFamily="Segoe Fluent Icons" FontSize="10" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
                                                     <TextBlock.RenderTransform>
                                                         <RotateTransform x:Name="PresetsArrowRotation" Angle="0"/>
@@ -626,46 +591,41 @@
                                         </ToggleButton>
                                         <Button x:Name="ClearAppSelectionBtn" ToolTip="Clear all selected apps" Style="{DynamicResource SecondaryButtonStyle}" Height="32"  Padding="10,0" Margin="0,0,10,0" AutomationProperties.Name="Clear Selection">
                                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                                <TextBlock Text="&#xE711;" FontFamily="Segoe Fluent Icons" FontSize="14" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                                <TextBlock Text="&#xE711;" FontFamily="Segoe Fluent Icons" FontSize="15" VerticalAlignment="Center" Margin="0,3,6,0"/>
                                                 <TextBlock Text="Clear Selection" FontSize="13" VerticalAlignment="Center" Margin="0,0,0,1"/>
                                             </StackPanel>
                                         </Button>
                                         <Popup x:Name="PresetsPopup" PlacementTarget="{Binding ElementName=PresetsBtn}" Placement="Bottom" StaysOpen="True" AllowsTransparency="True" VerticalOffset="2">
-                                            <Border Background="{DynamicResource CardBgColor}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="6" Padding="4,6" Margin="12">
+                                            <Border Background="{DynamicResource CardBgColor}" BorderBrush="{DynamicResource AppBorderColor}" BorderThickness="1" CornerRadius="6" Padding="4,6" Margin="12">
                                                 <Border.Effect>
                                                     <DropShadowEffect BlurRadius="12" Opacity="0.25" ShadowDepth="4"/>
                                                 </Border.Effect>
                                                 <StackPanel x:Name="PresetsPanel" MinWidth="220">
-                                                    <CheckBox x:Name="PresetDefaultApps" Content="Default apps" IsThreeState="True" ToolTip="Select the apps that are safe to remove for most users" Foreground="{DynamicResource FgColor}" Margin="8,4" AutomationProperties.Name="Default selection"/>
-                                                    <CheckBox x:Name="PresetLastUsed" Content="Last used apps" IsThreeState="True" ToolTip="Select the apps that were removed the last time Win11Debloat was run" Foreground="{DynamicResource FgColor}" Margin="8,4" AutomationProperties.Name="Last used selection"/>
-                                                    <Separator Margin="4,6" Background="{DynamicResource BorderColor}"/>
+                                                    <CheckBox x:Name="PresetDefaultApps" Content="Default apps" IsThreeState="True" ToolTip="Select the apps that are safe to remove for most users" Foreground="{DynamicResource AppFgColor}" Margin="8,4" AutomationProperties.Name="Default selection"/>
+                                                    <CheckBox x:Name="PresetLastUsed" Content="Previously selected apps" IsThreeState="True" ToolTip="Select the apps that were removed the last time Win11Debloat was run" Foreground="{DynamicResource AppFgColor}" Margin="8,4" AutomationProperties.Name="Previously selected apps"/>
+                                                    <Separator Margin="4,6" Background="{DynamicResource AppBorderColor}"/>
                                                     <StackPanel x:Name="JsonPresetsPanel"/>
                                                 </StackPanel>
                                             </Border>
                                         </Popup>
                                     </StackPanel>
                                     
-                                    <CheckBox x:Name="OnlyInstalledAppsBox" Grid.Column="2" Content="Only show installed apps" IsChecked="False" Foreground="{DynamicResource FgColor}" VerticalAlignment="Center" AutomationProperties.Name="Only show installed apps"/>
+                                    <CheckBox x:Name="OnlyInstalledAppsBox" Grid.Column="2" Content="Only show installed apps" ToolTip="Only show applications that are currently installed on this system" IsChecked="False" Foreground="{DynamicResource AppFgColor}" VerticalAlignment="Center" AutomationProperties.Name="Only show installed apps"/>
 
-                                    <Border x:Name="AppSearchBorder" Grid.Column="4">
-                                        <Border.Style>
-                                            <Style TargetType="Border" BasedOn="{StaticResource SearchBoxBorderStyle}">
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding ElementName=AppSearchBox, Path=IsFocused}" Value="True">
-                                                        <Setter Property="Background" Value="{DynamicResource InputFocusColor}"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Border.Style>
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto"/>
-                                                <ColumnDefinition Width="*"/>
-                                            </Grid.ColumnDefinitions>
-                                            <TextBlock Grid.Column="0" Text="&#xE721;" FontFamily="Segoe Fluent Icons" FontSize="14" VerticalAlignment="Center" Margin="4,0,8,0" Foreground="{DynamicResource FgColor}"/>
-                                            <TextBlock x:Name="AppSearchPlaceholder" Grid.Column="1" Text="Search app" Foreground="{DynamicResource FgColor}" Opacity="0.5" FontSize="13" Margin="3,0,0,1" VerticalAlignment="Center" IsHitTestVisible="False"/>
-                                            <TextBox x:Name="AppSearchBox" Grid.Column="1" Background="Transparent" Foreground="{DynamicResource FgColor}" BorderThickness="0" FontSize="13" Margin="1,0,0,1" VerticalAlignment="Center" Text="" AutomationProperties.Name="Search app"/>
-                                        </Grid>
+                                    <Border x:Name="AppSearchBorder" Grid.Column="4" Width="300">
+                                        <Border Style="{DynamicResource TextBoxBorderStyle}">
+                                            <Border Style="{DynamicResource TextBoxBottomBorderStyle}">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock x:Name="AppSearchPlaceholder" Grid.Column="0" Text="Search apps..." Foreground="{DynamicResource AppFgColor}" Opacity="0.7" FontSize="13" Margin="3,0,0,1" VerticalAlignment="Center" IsHitTestVisible="False"/>
+                                                    <TextBox x:Name="AppSearchBox" Grid.Column="0" Style="{DynamicResource TextBoxInputStyle}" Text="" AutomationProperties.Name="Search app"/>
+                                                    <TextBlock Grid.Column="1" Text="&#xE721;" FontFamily="Segoe Fluent Icons" FontSize="14" VerticalAlignment="Center" Margin="8,0,4,0" Foreground="{DynamicResource AppFgColor}"  Opacity="0.7"/>
+                                                </Grid>
+                                            </Border>
+                                        </Border>
                                     </Border>
                                 </Grid>
                             </StackPanel>
@@ -683,7 +643,7 @@
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
                                 <!-- Column Headers -->
-                                <Border Grid.Row="0" Background="{DynamicResource TableHeaderColor}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1,1,1,0" CornerRadius="4,4,0,0">
+                                <Border Grid.Row="0" Background="{DynamicResource TableHeaderColor}" BorderBrush="{DynamicResource AppBorderColor}" BorderThickness="1,1,1,0" CornerRadius="4,4,0,0">
                                     <Grid Margin="42,6,23,8">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="{StaticResource AppTableDotColWidth}"/>
@@ -692,34 +652,34 @@
                                             <ColumnDefinition Width="{StaticResource AppTableIdColWidth}"/>
                                         </Grid.ColumnDefinitions>
                                         <StackPanel x:Name="HeaderNameBtn" Grid.Column="1" Orientation="Horizontal" Cursor="Hand" VerticalAlignment="Center" Style="{StaticResource SortHeaderBtnStyle}">
-                                            <TextBlock Text="Name" FontWeight="SemiBold" FontSize="16" Foreground="{DynamicResource FgColor}"/>
-                                            <TextBlock x:Name="SortArrowName" Text="&#xE70E;" FontFamily="Segoe Fluent Icons" FontSize="11" Foreground="{DynamicResource FgColor}" VerticalAlignment="Center" Margin="5,1,0,0" Opacity="0.3" RenderTransformOrigin="0.5,0.5">
+                                            <TextBlock Text="Name" FontWeight="SemiBold" FontSize="16" Foreground="{DynamicResource AppFgColor}"/>
+                                            <TextBlock x:Name="SortArrowName" Text="&#xE70E;" FontFamily="Segoe Fluent Icons" FontSize="11" Foreground="{DynamicResource AppFgColor}" VerticalAlignment="Center" Margin="5,1,0,0" Opacity="0.3" RenderTransformOrigin="0.5,0.5">
                                                 <TextBlock.RenderTransform><RotateTransform Angle="0"/></TextBlock.RenderTransform>
                                             </TextBlock>
                                         </StackPanel>
                                         <StackPanel x:Name="HeaderDescriptionBtn" Grid.Column="2" Orientation="Horizontal" Cursor="Hand" VerticalAlignment="Center" Margin="8,0,0,0" Style="{StaticResource SortHeaderBtnStyle}">
-                                            <TextBlock Text="Description" FontWeight="SemiBold" FontSize="16" Foreground="{DynamicResource FgColor}"/>
-                                            <TextBlock x:Name="SortArrowDescription" Text="&#xE70E;" FontFamily="Segoe Fluent Icons" FontSize="11" Foreground="{DynamicResource FgColor}" VerticalAlignment="Center" Margin="5,1,0,0" Opacity="0.3" RenderTransformOrigin="0.5,0.5">
+                                            <TextBlock Text="Description" FontWeight="SemiBold" FontSize="16" Foreground="{DynamicResource AppFgColor}"/>
+                                            <TextBlock x:Name="SortArrowDescription" Text="&#xE70E;" FontFamily="Segoe Fluent Icons" FontSize="11" Foreground="{DynamicResource AppFgColor}" VerticalAlignment="Center" Margin="5,1,0,0" Opacity="0.3" RenderTransformOrigin="0.5,0.5">
                                                 <TextBlock.RenderTransform><RotateTransform Angle="0"/></TextBlock.RenderTransform>
                                             </TextBlock>
                                         </StackPanel>
                                         <StackPanel x:Name="HeaderAppIdBtn" Grid.Column="3" Orientation="Horizontal" Cursor="Hand" VerticalAlignment="Center" Style="{StaticResource SortHeaderBtnStyle}">
-                                            <TextBlock Text="App ID" FontWeight="SemiBold" FontSize="16" Foreground="{DynamicResource FgColor}"/>
-                                            <TextBlock x:Name="SortArrowAppId" Text="&#xE70E;" FontFamily="Segoe Fluent Icons" FontSize="11" Foreground="{DynamicResource FgColor}" VerticalAlignment="Center" Margin="5,1,0,0" Opacity="0.3" RenderTransformOrigin="0.5,0.5">
+                                            <TextBlock Text="App ID" FontWeight="SemiBold" FontSize="16" Foreground="{DynamicResource AppFgColor}"/>
+                                            <TextBlock x:Name="SortArrowAppId" Text="&#xE70E;" FontFamily="Segoe Fluent Icons" FontSize="11" Foreground="{DynamicResource AppFgColor}" VerticalAlignment="Center" Margin="5,1,0,0" Opacity="0.3" RenderTransformOrigin="0.5,0.5">
                                                 <TextBlock.RenderTransform><RotateTransform Angle="0"/></TextBlock.RenderTransform>
                                             </TextBlock>
                                         </StackPanel>
                                     </Grid>
                                 </Border>
                                 <!-- Apps content -->
-                                <Border Grid.Row="1" BorderBrush="{DynamicResource BorderColor}" CornerRadius="0,0,4,4" BorderThickness="1" Background="{DynamicResource CardBgColor}" Padding="0,1,1,1">
+                                <Border Grid.Row="1" BorderBrush="{DynamicResource AppBorderColor}" CornerRadius="0,0,4,4" BorderThickness="1" Background="{DynamicResource CardBgColor}" Padding="0,1,1,1">
                                     <Grid>
                                         <ScrollViewer VerticalScrollBarVisibility="Visible">
                                             <StackPanel x:Name="AppSelectionPanel" Margin="10,4,0,4"/>
                                         </ScrollViewer>
                                         <Border x:Name="LoadingAppsIndicator" CornerRadius="0,0,4,4" Background="{DynamicResource CardBgColor}" Opacity="0.8" Visibility="Collapsed">
                                             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                                                <TextBlock Text="&#xF16A;" FontFamily="Segoe Fluent Icons" FontSize="28" Foreground="{DynamicResource FgColor}" HorizontalAlignment="Center" Margin="0,0,0,8" RenderTransformOrigin="0.5,0.5">
+                                                <TextBlock Text="&#xF16A;" FontFamily="Segoe Fluent Icons" FontSize="28" Foreground="{DynamicResource AppFgColor}" HorizontalAlignment="Center" Margin="0,0,0,8" RenderTransformOrigin="0.5,0.5">
                                                     <TextBlock.RenderTransform>
                                                         <RotateTransform Angle="0"/>
                                                     </TextBlock.RenderTransform>
@@ -736,7 +696,7 @@
                                                         </EventTrigger>
                                                     </TextBlock.Triggers>
                                                 </TextBlock>
-                                                <TextBlock Text="Loading apps..." FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource FgColor}" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Loading apps..." FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource AppFgColor}" HorizontalAlignment="Center"/>
                                             </StackPanel>
                                         </Border>
                                     </Grid>
@@ -745,7 +705,7 @@
 
                             <!-- Status Info -->
                             <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="20,0,20,0">
-                                <TextBlock x:Name="AppSelectionStatus" Text="" Foreground="{DynamicResource FgColor}" Margin="10,0,0,5" HorizontalAlignment="Left"/>
+                                <TextBlock x:Name="AppSelectionStatus" Text="" Foreground="{DynamicResource AppFgColor}" Margin="10,0,0,5" HorizontalAlignment="Left"/>
                             </StackPanel>
                         </Grid>
                     </DockPanel>
@@ -754,10 +714,10 @@
                 <!-- Tweaks Tab -->
                 <TabItem Header="Tweaks">
                     <DockPanel>
-                        <Border DockPanel.Dock="Top" Padding="20,10,20,0" Background="{DynamicResource BgColor}">
+                        <Border DockPanel.Dock="Top" Padding="20,4,20,0" Background="{DynamicResource AppBgColor}">
                             <StackPanel>
-                                <TextBlock Text="System Tweaks" FontWeight="Bold" FontSize="20" Margin="0,0,0,5" Foreground="{DynamicResource FgColor}"/>
-                                <TextBlock Text="Select which tweaks you want to apply to your system, hover over settings for more information" FontSize="13" Margin="0,0,0,20" Foreground="{DynamicResource FgColor}" TextWrapping="Wrap"/>
+                                <TextBlock Text="System Tweaks" FontWeight="SemiBold" FontSize="24" Foreground="{DynamicResource AppFgColor}"/>
+                                <TextBlock Text="Select what changes you want to make, you can hover over settings for more information" FontSize="14" Margin="0,5,0,20" Foreground="{DynamicResource AppFgColor}" TextWrapping="Wrap"/>
                             
                                 <!-- Filter Options -->
                                 <Grid Margin="0,0,0,12">
@@ -770,11 +730,11 @@
                                     </Grid.ColumnDefinitions>
                                     
                                     <StackPanel Grid.Column="0" Orientation="Horizontal">
-                                        <ToggleButton x:Name="TweaksPresetsBtn" ToolTip="Select tweak presets" Height="32" Padding="10,0" Margin="0,0,10,0" AutomationProperties.Name="Tweak Presets">
+                                        <ToggleButton x:Name="TweaksPresetsBtn" Height="32" Padding="10,0" Margin="0,0,10,0" AutomationProperties.Name="Tweak Presets">
                                             <ToggleButton.Style>
                                                 <Style TargetType="ToggleButton">
-                                                    <Setter Property="Background" Value="{DynamicResource SecondaryButtonBg}"/>
-                                                    <Setter Property="Foreground" Value="{DynamicResource FgColor}"/>
+                                                    <Setter Property="Background" Value="{DynamicResource SecondaryButtonBgColor}"/>
+                                                    <Setter Property="Foreground" Value="{DynamicResource AppFgColor}"/>
                                                     <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderColor}"/>
                                                     <Setter Property="BorderThickness" Value="1"/>
                                                     <Setter Property="FontSize" Value="14"/>
@@ -790,20 +750,20 @@
                                                     </Setter>
                                                     <Style.Triggers>
                                                         <Trigger Property="IsMouseOver" Value="True">
-                                                            <Setter Property="Background" Value="{DynamicResource SecondaryButtonHover}"/>
+                                                            <Setter Property="Background" Value="{DynamicResource SecondaryButtonHoverColor}"/>
                                                         </Trigger>
                                                         <Trigger Property="IsPressed" Value="True">
-                                                            <Setter Property="Background" Value="{DynamicResource SecondaryButtonPressed}"/>
+                                                            <Setter Property="Background" Value="{DynamicResource SecondaryButtonPressedColor}"/>
                                                         </Trigger>
                                                         <Trigger Property="IsChecked" Value="True">
-                                                            <Setter Property="Background" Value="{DynamicResource SecondaryButtonHover}"/>
+                                                            <Setter Property="Background" Value="{DynamicResource SecondaryButtonHoverColor}"/>
                                                         </Trigger>
                                                     </Style.Triggers>
                                                 </Style>
                                             </ToggleButton.Style>
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock Text="&#xE735;" FontFamily="Segoe Fluent Icons" FontSize="14" VerticalAlignment="Center" Margin="0,1,6,0"/>
-                                                <TextBlock Text="Quick Select" FontSize="13" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                                <TextBlock Text="Quick Select" FontSize="13" VerticalAlignment="Center" Margin="0,0,6,1"/>
                                                 <TextBlock x:Name="TweaksPresetsArrow" Text="&#xE70D;" FontFamily="Segoe Fluent Icons" FontSize="10" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
                                                     <TextBlock.RenderTransform>
                                                         <RotateTransform Angle="0"/>
@@ -813,47 +773,42 @@
                                         </ToggleButton>
                                         <Button x:Name="ClearAllTweaksBtn" ToolTip="Clear all selected tweaks" Style="{DynamicResource SecondaryButtonStyle}" Padding="10,0" Height="32" Margin="0,0,10,0" AutomationProperties.Name="Clear Selection">
                                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                                <TextBlock Text="&#xE711;" FontFamily="Segoe Fluent Icons" FontSize="14" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                                <TextBlock Text="&#xE711;" FontFamily="Segoe Fluent Icons" FontSize="15" VerticalAlignment="Center" Margin="0,3,6,0"/>
                                                 <TextBlock Text="Clear Selection" FontSize="13" VerticalAlignment="Center" Margin="0,0,0,1"/>
                                             </StackPanel>
                                         </Button>
                                         <Popup x:Name="TweaksPresetsPopup" PlacementTarget="{Binding ElementName=TweaksPresetsBtn}" Placement="Bottom" StaysOpen="True" AllowsTransparency="True" VerticalOffset="2">
-                                            <Border Background="{DynamicResource CardBgColor}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="6" Padding="4,6" Margin="12">
+                                            <Border Background="{DynamicResource CardBgColor}" BorderBrush="{DynamicResource AppBorderColor}" BorderThickness="1" CornerRadius="6" Padding="4,6" Margin="12">
                                                 <Border.Effect>
                                                     <DropShadowEffect BlurRadius="12" Opacity="0.25" ShadowDepth="4"/>
                                                 </Border.Effect>
                                                 <StackPanel MinWidth="220">
-                                                    <CheckBox x:Name="PresetDefaultTweaksBtn" Content="Default settings" IsThreeState="True" ToolTip="Select the settings that are recommended for most people" Foreground="{DynamicResource FgColor}" Style="{DynamicResource PresetCheckBoxStyle}" AutomationProperties.Name="Default settings"/>
-                                                    <CheckBox x:Name="PresetLastUsedTweaksBtn" Content="Last used settings" IsThreeState="True" ToolTip="Select the settings that were used the last time Win11Debloat was run" Foreground="{DynamicResource FgColor}" Style="{DynamicResource PresetCheckBoxStyle}" AutomationProperties.Name="Last used settings"/>
-                                                    <Separator Margin="4,6" Background="{DynamicResource BorderColor}"/>
-                                                    <CheckBox x:Name="PresetPrivacyTweaksBtn" Content="Privacy &amp; Suggested Content" IsThreeState="True" ToolTip="Select all Privacy &amp; Suggested Content tweaks" Foreground="{DynamicResource FgColor}" Style="{DynamicResource PresetCheckBoxStyle}" AutomationProperties.Name="All Privacy and Suggested Content"/>
-                                                    <CheckBox x:Name="PresetAITweaksBtn" Content="AI features" IsThreeState="True" ToolTip="Select all AI feature tweaks" Foreground="{DynamicResource FgColor}" Style="{DynamicResource PresetCheckBoxStyle}" AutomationProperties.Name="All AI features"/>
+                                                    <CheckBox x:Name="PresetDefaultTweaksBtn" Content="Default settings" IsThreeState="True" ToolTip="Select the settings that are recommended for most people" Foreground="{DynamicResource AppFgColor}" Style="{DynamicResource PresetCheckBoxStyle}" AutomationProperties.Name="Default settings"/>
+                                                    <CheckBox x:Name="PresetLastUsedTweaksBtn" Content="Previously selected settings" IsThreeState="True" ToolTip="Select the settings that were applied the last time Win11Debloat was run" Foreground="{DynamicResource AppFgColor}" Style="{DynamicResource PresetCheckBoxStyle}" AutomationProperties.Name="Previously selected settings"/>
+                                                    <Separator Margin="4,6" Background="{DynamicResource AppBorderColor}"/>
+                                                    <CheckBox x:Name="PresetPrivacyTweaksBtn" Content="Privacy &amp; suggested content" IsThreeState="True" ToolTip="Select all tweaks related to privacy &amp; suggested content" Foreground="{DynamicResource AppFgColor}" Style="{DynamicResource PresetCheckBoxStyle}" AutomationProperties.Name="All Privacy and Suggested Content"/>
+                                                    <CheckBox x:Name="PresetAITweaksBtn" Content="AI features" IsThreeState="True" ToolTip="Select all AI related tweaks" Foreground="{DynamicResource AppFgColor}" Style="{DynamicResource PresetCheckBoxStyle}" AutomationProperties.Name="All AI features"/>
                                                 </StackPanel>
                                             </Border>
                                         </Popup>
                                     </StackPanel>
 
-                                    <CheckBox x:Name="ShowCurrentlyAppliedTweaksCheckBox" Grid.Column="2" Content="Detect applied tweaks" IsChecked="True" Foreground="{DynamicResource FgColor}" VerticalAlignment="Center" AutomationProperties.Name="Detect applied tweaks" ToolTip="Detect all tweaks currently applied for the current user."/>
+                                    <CheckBox x:Name="ShowCurrentlyAppliedTweaksCheckBox" Grid.Column="2" Content="Detect applied tweaks" IsChecked="True" Foreground="{DynamicResource AppFgColor}" VerticalAlignment="Center" AutomationProperties.Name="Detect applied tweaks" ToolTip="Detect all tweaks currently applied for the current user"/>
 
-                                    <Border x:Name="TweakSearchBorder" Grid.Column="4">
-                                        <Border.Style>
-                                            <Style TargetType="Border" BasedOn="{StaticResource SearchBoxBorderStyle}">
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding ElementName=TweakSearchBox, Path=IsFocused}" Value="True">
-                                                        <Setter Property="Background" Value="{DynamicResource InputFocusColor}"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Border.Style>
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto"/>
-                                                <ColumnDefinition Width="*"/>
-                                            </Grid.ColumnDefinitions>
-                                            <TextBlock Grid.Column="0" Text="&#xE721;" FontFamily="Segoe Fluent Icons" FontSize="14" VerticalAlignment="Center" Margin="4,0,8,0" Foreground="{DynamicResource FgColor}"/>
-                                            <TextBlock x:Name="TweakSearchPlaceholder" Grid.Column="1" Text="Search setting" Foreground="{DynamicResource FgColor}" Opacity="0.5" FontSize="13" Margin="3,0,0,1" VerticalAlignment="Center" IsHitTestVisible="False"/>
-                                            <TextBox x:Name="TweakSearchBox" Grid.Column="1" Background="Transparent" Foreground="{DynamicResource FgColor}" BorderThickness="0" FontSize="13" Margin="1,0,0,1" VerticalAlignment="Center" Text=""/>
-                                        </Grid>
+                                    <Border x:Name="TweakSearchBorder" Grid.Column="4" Width="300">
+                                        <Border Style="{DynamicResource TextBoxBorderStyle}">
+                                            <Border Style="{DynamicResource TextBoxBottomBorderStyle}">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock x:Name="TweakSearchPlaceholder" Grid.Column="0" Text="Search tweaks..." Foreground="{DynamicResource AppFgColor}" Opacity="0.7" FontSize="13" Margin="3,0,0,1" VerticalAlignment="Center" IsHitTestVisible="False"/>
+                                                    <TextBox x:Name="TweakSearchBox" Grid.Column="0" Style="{DynamicResource TextBoxInputStyle}" Text="" AutomationProperties.Name="Search tweaks"/>
+                                                    <TextBlock Grid.Column="1" Text="&#xE721;" FontFamily="Segoe Fluent Icons" FontSize="14" VerticalAlignment="Center" Margin="8,0,4,0" Foreground="{DynamicResource AppFgColor}" Opacity="0.7"/>
+                                                </Grid>
+                                            </Border>
+                                        </Border>
                                     </Border>
                                 </Grid>
                             </StackPanel>
@@ -878,7 +833,7 @@
                                 </Grid>
                             </ScrollViewer>
                             <!-- Top fade gradient -->
-                            <Border IsHitTestVisible="False" VerticalAlignment="Top" Height="10" Margin="0,-12,20,0" Background="{DynamicResource BgColor}">
+                            <Border IsHitTestVisible="False" VerticalAlignment="Top" Height="10" Margin="0,-12,20,0" Background="{DynamicResource AppBgColor}">
                                 <Border.OpacityMask>
                                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                                         <GradientStop Color="Black" Offset="0"/>
@@ -888,7 +843,7 @@
                                 </Border.OpacityMask>
                             </Border>
                             <!-- Bottom fade gradient -->
-                            <Border IsHitTestVisible="False" VerticalAlignment="Bottom" Height="20" Margin="0,0,20,0" Background="{DynamicResource BgColor}">
+                            <Border IsHitTestVisible="False" VerticalAlignment="Bottom" Height="20" Margin="0,0,20,0" Background="{DynamicResource AppBgColor}">
                                 <Border.OpacityMask>
                                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                                         <GradientStop Color="Transparent" Offset="0"/>
@@ -903,10 +858,10 @@
                 <!-- Deployment Settings Tab -->
                 <TabItem Header="Deployment Settings" x:Name="DeploymentSettingsTab">
                     <DockPanel>
-                        <Border DockPanel.Dock="Top" Padding="20,10,20,0">
+                        <Border DockPanel.Dock="Top" Padding="20,4,20,0">
                             <StackPanel>
-                                <TextBlock Text="Deployment Settings" FontWeight="Bold" FontSize="20" Margin="0,0,0,5" Foreground="{DynamicResource FgColor}"/>
-                                <TextBlock Text="Configure how your changes will be applied and more" FontSize="13" Margin="0,0,0,20" Foreground="{DynamicResource FgColor}" TextWrapping="Wrap"/>
+                                <TextBlock Text="Deployment Settings" FontWeight="SemiBold" FontSize="24" Foreground="{DynamicResource AppFgColor}"/>
+                                <TextBlock Text="Configure how the selected changes will be applied to your system" FontSize="14" Margin="0,5,0,20" Foreground="{DynamicResource AppFgColor}" TextWrapping="Wrap"/>
                             </StackPanel>
                         </Border>
 
@@ -926,15 +881,15 @@
                                         </Grid.RowDefinitions>
 
                                         <!-- Apply Changes To -->
-                                        <Border Grid.Row="0" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="16,12" Margin="0,0,0,16">
+                                        <Border Grid.Row="0" BorderBrush="{DynamicResource AppBorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="16,12" Margin="0,0,0,16">
                                             <StackPanel>
                                                 <TextBlock Text="Changes will be applied to" Style="{StaticResource CategoryHeaderTextBlock}"/>
-                                                <TextBlock x:Name="UserSelectionDescription" Text="The currently logged-in user profile." Foreground="{DynamicResource FgColor}" FontSize="12" TextWrapping="Wrap" Margin="0,0,0,3"/>
+                                                <TextBlock x:Name="UserSelectionDescription" Text="The currently logged-in user profile." Foreground="{DynamicResource AppFgColor}" FontSize="13" TextWrapping="Wrap" Margin="0,-2,0,3"/>
                                             </StackPanel>
                                         </Border>
 
                                         <!-- App Removal Scope -->
-                                        <Border Grid.Row="1" x:Name="AppRemovalScopeSection" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="16,12" Margin="0,0,0,16">
+                                        <Border Grid.Row="1" x:Name="AppRemovalScopeSection" BorderBrush="{DynamicResource AppBorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="16,12" Margin="0,0,0,16">
                                             <StackPanel>
                                                 <TextBlock Text="Apps will be removed for" Style="{StaticResource CategoryHeaderTextBlock}"/>
                                                 <ComboBox x:Name="AppRemovalScopeCombo" Margin="0,0,0,6" AutomationProperties.Name="App Removal Scope">
@@ -942,12 +897,12 @@
                                                     <ComboBoxItem x:Name="AppRemovalScopeCurrentUser" Content="Current user only"/>
                                                     <ComboBoxItem x:Name="AppRemovalScopeTargetUser" Content="Target user only" Visibility="Collapsed"/>
                                                 </ComboBox>
-                                                <TextBlock x:Name="AppRemovalScopeDescription" Text="Apps will be removed for all users and from the Windows image to prevent reinstallation for new users." Foreground="{DynamicResource FgColor}" FontSize="12" TextWrapping="Wrap" Margin="0,6,0,3"/>
+                                                <TextBlock x:Name="AppRemovalScopeDescription" Text="Apps will be removed for all users and from the Windows image to prevent reinstallation for new users." Foreground="{DynamicResource AppFgColor}" FontSize="13" TextWrapping="Wrap" Margin="0,6,0,3"/>
                                             </StackPanel>
                                         </Border>
 
                                         <!-- Options -->
-                                        <Border Grid.Row="2" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="16,12,16,3" Margin="0,0,0,16">
+                                        <Border Grid.Row="2" BorderBrush="{DynamicResource AppBorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="16,12,16,3" Margin="0,0,0,16">
                                             <StackPanel>
                                                 <TextBlock Text="Options" Style="{StaticResource CategoryHeaderTextBlock}"/>
 
@@ -965,7 +920,7 @@
                                     </Grid>
                                 </ScrollViewer>
                                 <!-- Top fade gradient -->
-                                <Border IsHitTestVisible="False" VerticalAlignment="Top" Height="10" Margin="0,-12,20,0" Background="{DynamicResource BgColor}">
+                                <Border IsHitTestVisible="False" VerticalAlignment="Top" Height="10" Margin="0,-12,20,0" Background="{DynamicResource AppBgColor}">
                                     <Border.OpacityMask>
                                         <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                                             <GradientStop Color="Black" Offset="0"/>
@@ -975,7 +930,7 @@
                                     </Border.OpacityMask>
                                 </Border>
                                 <!-- Bottom fade gradient -->
-                                <Border IsHitTestVisible="False" VerticalAlignment="Bottom" Height="20" Margin="0,0,20,0" Background="{DynamicResource BgColor}">
+                                <Border IsHitTestVisible="False" VerticalAlignment="Bottom" Height="20" Margin="0,0,20,0" Background="{DynamicResource AppBgColor}">
                                     <Border.OpacityMask>
                                         <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                                             <GradientStop Color="Transparent" Offset="0"/>
@@ -986,23 +941,23 @@
                             </Grid>
 
                             <!-- Review & Apply Section -->
-                            <StackPanel Grid.Row="1" HorizontalAlignment="Stretch" Background="{DynamicResource BgColor}">
+                            <StackPanel Grid.Row="1" HorizontalAlignment="Stretch" Background="{DynamicResource AppBgColor}">
                                 <Button x:Name="ReviewChangesBtn" Background="Transparent" BorderThickness="0" Cursor="Hand" HorizontalAlignment="Center" Margin="0,4,0,10" AutomationProperties.Name="Review selected changes">
                                     <Button.Template>
                                         <ControlTemplate TargetType="Button">
-                                            <TextBlock x:Name="LinkText" Text="Review selected changes" FontSize="14" Foreground="{DynamicResource ButtonBg}" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+                                            <TextBlock x:Name="LinkText" Text="Review selected changes" FontSize="16" Foreground="{DynamicResource ButtonBgColor}" FontWeight="SemiBold" HorizontalAlignment="Center"/>
                                             <ControlTemplate.Triggers>
                                                 <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter TargetName="LinkText" Property="Foreground" Value="{DynamicResource ButtonHover}"/>
+                                                    <Setter TargetName="LinkText" Property="Foreground" Value="{DynamicResource ButtonHoverColor}"/>
                                                 </Trigger>
                                                 <Trigger Property="IsPressed" Value="True">
-                                                    <Setter TargetName="LinkText" Property="Foreground" Value="{DynamicResource ButtonPressed}"/>
+                                                    <Setter TargetName="LinkText" Property="Foreground" Value="{DynamicResource ButtonPressedColor}"/>
                                                 </Trigger>
                                             </ControlTemplate.Triggers>
                                         </ControlTemplate>
                                     </Button.Template>
                                 </Button>
-                                <Button x:Name="DeploymentApplyBtn" Style="{DynamicResource PrimaryButtonStyle}" Width="190" Height="44" HorizontalAlignment="Center" AutomationProperties.Name="Apply Changes">
+                                <Button x:Name="DeploymentApplyBtn" Style="{DynamicResource PrimaryButtonStyle}" Width="200" Height="44" HorizontalAlignment="Center" AutomationProperties.Name="Apply Changes">
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                         <TextBlock Text="&#xE73E;" FontFamily="Segoe Fluent Icons" FontSize="20" FontWeight="SemiBold" VerticalAlignment="Center"/>
                                         <TextBlock Text="Apply Changes" VerticalAlignment="Center" FontSize="18" FontWeight="SemiBold" Margin="8,0,0,4"/>
@@ -1022,17 +977,17 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <Button x:Name="PreviousBtn" Grid.Column="0" Width="120" Height="36" Style="{DynamicResource SecondaryButtonStyle}" Visibility="Collapsed" Margin="10,0,0,0" AutomationProperties.Name="Back">
+                    <Button x:Name="PreviousBtn" Grid.Column="0" Width="120" Height="36" Style="{DynamicResource SecondaryButtonStyle}" Visibility="Collapsed" AutomationProperties.Name="Back">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <TextBlock Text="&#xE72B;" FontFamily="Segoe Fluent Icons" FontSize="12" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                            <TextBlock Text="Back" VerticalAlignment="Center" FontSize="14" Margin="0,0,0,1"/>
+                            <TextBlock Text="Back" VerticalAlignment="Center" FontSize="14" Margin="0,0,0,3"/>
                         </StackPanel>
                     </Button>
                     
                     <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Button x:Name="NextBtn" Width="120" Height="36" Margin="0,0,10,0" Style="{DynamicResource PrimaryButtonStyle}" AutomationProperties.Name="Next">
+                        <Button x:Name="NextBtn" Width="120" Height="36" Style="{DynamicResource PrimaryButtonStyle}" AutomationProperties.Name="Next">
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                <TextBlock Text="Next" VerticalAlignment="Center" FontSize="14" Margin="0,0,0,1"/>
+                                <TextBlock Text="Next" VerticalAlignment="Center" FontSize="14" Margin="0,0,0,3"/>
                                 <TextBlock Text="&#xE72A;" FontFamily="Segoe Fluent Icons" FontSize="12" Margin="8,0,0,0" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>

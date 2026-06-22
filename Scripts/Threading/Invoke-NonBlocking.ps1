@@ -45,6 +45,15 @@ function Invoke-NonBlocking {
 
         $result = $ps.EndInvoke($handle)
 
+        # Surface non-terminating errors raised inside the runspace so GUI-mode operations
+        # (e.g. failed app removals) don't fail silently - the runspace keeps its own error
+        # stream that is otherwise discarded on Dispose.
+        if ($ps.HadErrors) {
+            foreach ($runspaceError in $ps.Streams.Error) {
+                Write-Error -ErrorRecord $runspaceError
+            }
+        }
+
         if ($result.Count -eq 0) { return $null }
         if ($result.Count -eq 1) { return $result[0] }
         return @($result)

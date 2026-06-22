@@ -27,9 +27,16 @@ function Show-RestoreBackupWindow {
             }
 
             Write-Host "User confirmed registry restore for $($backup.Target)."
-            Restore-RegistryBackupState -Backup $backup
-            $restoreResult.RestoredRegistry = $true
-            $successMessage = 'Registry backup restored successfully. Some changes may require a restart to take effect.'
+            $restoreOpResult = Restore-RegistryBackupState -Backup $backup
+            if ($restoreOpResult -and $restoreOpResult.Result) {
+                $restoreResult.RestoredRegistry = $true
+                if ($script:Params.ContainsKey("WhatIf")) {
+                    $successMessage = '[WhatIf] Registry backup would be restored (no changes made).'
+                }
+                else {
+                    $successMessage = 'Registry backup restored successfully. Some changes may require a restart to take effect.'
+                }
+            }
         }
         elseif ($dialogResult.Result -eq 'RestoreStartMenu') {
             $scope = $dialogResult.StartMenuScope
@@ -67,7 +74,10 @@ function Show-RestoreBackupWindow {
                 $warningMessage = "The Start Menu backup was successfully restored for $successCount user(s).`nSome users could not be restored:`n$failureSummary"
             }
             else {
-                if ($scope -eq 'AllUsers') {
+                if ($script:Params.ContainsKey("WhatIf")) {
+                    $successMessage = '[WhatIf] Start Menu backup would be restored (no changes made).'
+                }
+                elseif ($scope -eq 'AllUsers') {
                     $successMessage = "The Start Menu backup was successfully restored for all users. The changes will apply the next time users sign in."
                 }
                 else {

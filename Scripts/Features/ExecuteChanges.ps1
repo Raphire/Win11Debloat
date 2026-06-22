@@ -77,7 +77,9 @@ function ExecuteParameter {
         'DisableWidgets' {
             Write-Host "> $($feature.ApplyText)..."
             # Stop widgets related processes before removing the app packages to prevent potential issues
-            Get-Process *Widget* -ErrorAction SilentlyContinue | Stop-Process
+            if (-not $script:Params.ContainsKey("WhatIf")) {
+                Get-Process *Widget* -ErrorAction SilentlyContinue | Stop-Process
+            }
 
             RemoveApps @('Microsoft.StartExperiencesApp','MicrosoftWindows.Client.WebExperience','Microsoft.WidgetsPlatformRuntime')
         }
@@ -185,18 +187,23 @@ function ExecuteAllChanges {
             & $script:ApplyProgressCallback $currentStep $totalSteps "Creating registry backup..."
         }
 
-        Write-Host "> Creating registry backup..."
-        try {
-            $undoSyntheticFeatures = @($script:UndoParams.Keys | ForEach-Object {
-                $f = if ($script:Features.ContainsKey($_)) { $script:Features[$_] } else { $null }
-                if ($f -and $f.RegistryUndoKey) {
-                    [PSCustomObject]@{ FeatureId = $_; RegistryKey = (Resolve-UndoRegFilePath $f.RegistryUndoKey) }
-                }
-            } | Where-Object { $_ })
-            New-RegistrySettingsBackup -ActionableKeys $actionableKeys -ExtraFeatures $undoSyntheticFeatures | Out-Null
+        if ($script:Params.ContainsKey("WhatIf")) {
+            Write-Host "[WhatIf] Create registry backup" -ForegroundColor Cyan
         }
-        catch {
-            throw "Registry backup failed before applying changes. $($_.Exception.Message)"
+        else {
+            Write-Host "> Creating registry backup..."
+            try {
+                $undoSyntheticFeatures = @($script:UndoParams.Keys | ForEach-Object {
+                    $f = if ($script:Features.ContainsKey($_)) { $script:Features[$_] } else { $null }
+                    if ($f -and $f.RegistryUndoKey) {
+                        [PSCustomObject]@{ FeatureId = $_; RegistryKey = (Resolve-UndoRegFilePath $f.RegistryUndoKey) }
+                    }
+                } | Where-Object { $_ })
+                New-RegistrySettingsBackup -ActionableKeys $actionableKeys -ExtraFeatures $undoSyntheticFeatures | Out-Null
+            }
+            catch {
+                throw "Registry backup failed before applying changes. $($_.Exception.Message)"
+            }
         }
     }
     
@@ -206,9 +213,15 @@ function ExecuteAllChanges {
         if ($script:ApplyProgressCallback) {
             & $script:ApplyProgressCallback $currentStep $totalSteps "Creating system restore point, this may take a moment..."
         }
-        Write-Host "> Creating a system restore point..."
-        CreateSystemRestorePoint
-        Write-Host ""
+        if ($script:Params.ContainsKey("WhatIf")) {
+            Write-Host "[WhatIf] Create system restore point" -ForegroundColor Cyan
+            Write-Host ""
+        }
+        else {
+            Write-Host "> Creating a system restore point..."
+            CreateSystemRestorePoint
+            Write-Host ""
+        }
     }
     
     # Execute all parameters

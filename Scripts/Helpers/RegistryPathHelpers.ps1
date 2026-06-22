@@ -81,3 +81,4 @@ function Get-RegistryFilePathForFeature {
 
     return Join-Path $script:RegfilesPath $RegistryKey
 }
+

@@ -7,26 +7,6 @@ function Show-ApplyModal {
     )
     
     Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase | Out-Null
-
-    # P/Invoke helpers for forcing focus back after Explorer restart
-    if (-not ([System.Management.Automation.PSTypeName]'Win11Debloat.FocusHelper').Type) {
-        Add-Type -Namespace Win11Debloat -Name FocusHelper -MemberDefinition @'
-            [DllImport("user32.dll")] public static extern bool SetForegroundWindow(IntPtr hWnd);
-            [DllImport("user32.dll")] public static extern IntPtr GetForegroundWindow();
-            [DllImport("user32.dll")] public static extern uint GetWindowThreadProcessId(IntPtr hWnd, IntPtr lpdwProcessId);
-            [DllImport("user32.dll")] public static extern bool AttachThreadInput(uint idAttach, uint idAttachTo, bool fAttach);
-            [DllImport("kernel32.dll")] public static extern uint GetCurrentThreadId();
-
-            public static void ForceActivate(IntPtr hwnd) {
-                IntPtr fg = GetForegroundWindow();
-                uint fgThread = GetWindowThreadProcessId(fg, IntPtr.Zero);
-                uint myThread = GetCurrentThreadId();
-                if (fgThread != myThread) AttachThreadInput(myThread, fgThread, true);
-                SetForegroundWindow(hwnd);
-                if (fgThread != myThread) AttachThreadInput(myThread, fgThread, false);
-            }
-'@
-    }
     
     $usesDarkMode = GetSystemUsesDarkMode
     
@@ -133,8 +113,7 @@ function Show-ApplyModal {
                 # Wait for Explorer to finish relaunching, then reclaim focus.
                 Start-Sleep -Milliseconds 800
                 $applyWindow.Dispatcher.Invoke([action]{
-                    $hwnd = (New-Object System.Windows.Interop.WindowInteropHelper($applyWindow)).Handle
-                    [Win11Debloat.FocusHelper]::ForceActivate($hwnd)
+                    $applyWindow.Activate()
                 })
             }
             
@@ -178,7 +157,7 @@ function Show-ApplyModal {
                             $tb = [System.Windows.Controls.TextBlock]::new()
                             $tb.Text = "$([char]0x2022) $featureName"
                             $tb.FontSize = 12
-                            $tb.SetResourceReference([System.Windows.Controls.TextBlock]::ForegroundProperty, 'FgColor')
+                            $tb.SetResourceReference([System.Windows.Controls.TextBlock]::ForegroundProperty, "AppFgColor")
                             $tb.Opacity = 0.85
                             $tb.Margin = [System.Windows.Thickness]::new(0, 2, 0, 0)
                             $applyRebootList.Children.Add($tb) | Out-Null

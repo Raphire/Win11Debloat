@@ -203,6 +203,11 @@ function Invoke-RegistryOperationsFromRegFile {
     $operations = @(Get-RegFileOperations -regFilePath $RegFilePath)
     $totalOperations = $operations.Count
 
+    if ($script:Params.ContainsKey("WhatIf")) {
+        Write-Host "[WhatIf] Apply $totalOperations registry changes from '$RegFilePath'" -ForegroundColor Cyan
+        return
+    }
+
     foreach ($operation in $operations) {
         try {
             Invoke-RegistryOperation -Operation $operation -RegFilePath $RegFilePath

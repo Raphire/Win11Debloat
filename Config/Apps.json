@@ -1124,7 +1124,7 @@
   ],
   "Presets": [
     {
-      "Name": "Xbox Gaming apps",
+      "Name": "Xbox gaming apps",
       "AppIds": [
         "Microsoft.GamingApp",
         "Microsoft.XboxGameOverlay",

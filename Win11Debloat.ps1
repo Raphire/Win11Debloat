@@ -212,6 +212,9 @@ Write-Host ""
 Write-Host ""
 
 # Log script output to 'Win11Debloat.log' at the specified path
+$logDir = if ($LogPath) { $LogPath } else { Split-Path $script:DefaultLogPath -Parent }
+if (-not (Test-Path $logDir)) { New-Item -ItemType Directory -Path $logDir -Force | Out-Null }
+
 if ($LogPath -and (Test-Path $LogPath)) {
     Start-Transcript -Path (Join-Path $LogPath 'Win11Debloat.log') -Append -IncludeInvocationHeader -Force | Out-Null
 }

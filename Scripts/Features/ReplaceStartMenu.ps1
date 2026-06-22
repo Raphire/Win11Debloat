@@ -228,7 +228,9 @@ function RestoreStartMenuFromBackup {
     $userName = GetStartMenuUserNameFromPath -StartMenuBinFile $StartMenuBinFile
     $backupTimestamp = (Get-Date).ToString('yyyyMMdd_HHmmss')
     $startMenuBackupsDir = Join-Path $script:AppDataPath 'Backups'
-    $backupBinFile = if ([string]::IsNullOrWhiteSpace($BackupFilePath)) {
+    if (-not (Test-Path $startMenuBackupsDir)) { New-Item -ItemType Directory -Path $startMenuBackupsDir -Force | Out-Null }
+
+    $resolvedBackupPath = if ([string]::IsNullOrWhiteSpace($BackupFilePath)) {
         Join-Path $startMenuBackupsDir "Win11Debloat-Start2BinBackup-$userName-$backupTimestamp.bak"
     }
     else {
@@ -237,7 +239,7 @@ function RestoreStartMenuFromBackup {
     $currentBinBackup = Join-Path $startMenuBackupsDir "Win11Debloat-Start2BinRestore-$userName-$backupTimestamp.bak"
 
     if ($script:Params.ContainsKey("WhatIf")) {
-        Write-Host "[WhatIf] Restore start menu for user $userName from backup $BackupFilePath" -ForegroundColor Cyan
+        Write-Host "[WhatIf] Restore start menu for user $userName from backup $resolvedBackupPath" -ForegroundColor Cyan
         return [PSCustomObject]@{
             UserName = $userName
             Result = $true
@@ -245,11 +247,11 @@ function RestoreStartMenuFromBackup {
         }
     }
 
-    if (-not (Test-Path -LiteralPath $BackupFilePath)) {
+    if (-not (Test-Path -LiteralPath $resolvedBackupPath)) {
         return [PSCustomObject]@{
             UserName = $userName
             Result = $false
-            Message = "Start menu backup file not found: $BackupFilePath"
+            Message = "Start menu backup file not found: $resolvedBackupPath"
         }
     }
 
@@ -258,7 +260,7 @@ function RestoreStartMenuFromBackup {
             Move-Item -Path $StartMenuBinFile -Destination $currentBinBackup -Force
         }
 
-        Copy-Item -Path $BackupFilePath -Destination $StartMenuBinFile -Force
+        Copy-Item -Path $resolvedBackupPath -Destination $StartMenuBinFile -Force
         return [PSCustomObject]@{
             UserName = $userName
             Result = $true

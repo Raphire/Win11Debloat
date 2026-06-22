@@ -28,10 +28,6 @@ function LoadAppsDetailsFromJson {
                     $isInstalled = $true
                     break
                 }
-                if (($appId -eq "Microsoft.Edge") -and ($InstalledList -like "* Microsoft.Edge *")) {
-                    $isInstalled = $true
-                    break
-                }
             }
             if (-not $isInstalled) { continue }
         }

@@ -232,7 +232,8 @@ function Get-AppRemovalMethod {
             if (Test-Path $script:AppsListFilePath) {
                 $appsJson = Get-Content -Path $script:AppsListFilePath -Raw | ConvertFrom-Json
                 foreach ($appData in $appsJson.Apps) {
-                    $method = if ($appData.RemovalMethod) { $appData.RemovalMethod } else { 'Appx' }
+                    $rawMethod = $appData.RemovalMethod
+                    $method = if ($rawMethod -and $rawMethod -eq 'WinGet') { 'WinGet' } else { 'Appx' }
                     if ($appData.AppId -is [array]) {
                         foreach ($id in $appData.AppId) { $script:AppRemovalMethodCache[$id.Trim()] = $method }
                     }

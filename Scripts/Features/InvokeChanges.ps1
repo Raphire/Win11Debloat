@@ -17,11 +17,10 @@ function Invoke-FeatureApply {
 
     # Resolve feature metadata from Features.json
     $feature = $script:Features[$FeatureId]
-
-    $applyText = if ($feature.ApplyText) { $feature.ApplyText } else { $FeatureId }
+    $applyText = $feature.ApplyText
 
     # ---- Registry-backed features: import .reg file, then handle side effects ----
-    if ($feature -and $feature.RegistryKey) {
+    if ($feature.RegistryKey) {
         ImportRegistryFile "> $applyText..." $feature.RegistryKey
 
         # Post-import side effects for specific features
@@ -174,15 +173,13 @@ function Invoke-FeatureUndo {
             return
         }
         'EnableWindowsSandbox' {
-            $undoText = if ($feature) { $feature.ApplyUndoText } else { 'Disabling Windows Sandbox' }
-            Write-Host "> $undoText..."
+            Write-Host "> $($feature.ApplyUndoText)..."
             DisableWindowsFeature 'Containers-DisposableClientVM'
             Write-Host ""
             return
         }
         'EnableWindowsSubsystemForLinux' {
-            $undoText = if ($feature) { $feature.ApplyUndoText } else { 'Disabling Windows Subsystem for Linux' }
-            Write-Host "> $undoText..."
+            Write-Host "> $($feature.ApplyUndoText)..."
             DisableWindowsFeature 'Microsoft-Windows-Subsystem-Linux'
             DisableWindowsFeature 'VirtualMachinePlatform'
             Write-Host ""
@@ -243,7 +240,7 @@ function Invoke-ApplyFeatures {
 
         # Resolve display name for the progress indicator
         $f = $script:Features[$featureId]
-        $displayName = if ($f.ApplyText) { $f.ApplyText } else { $featureId }
+        $displayName = $f.ApplyText
 
         if ($script:ApplyProgressCallback) {
             & $script:ApplyProgressCallback $step $TotalSteps $displayName

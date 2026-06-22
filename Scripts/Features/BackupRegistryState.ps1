@@ -46,8 +46,7 @@ function Get-SelectedFeatures {
         $feature = $script:Features[$paramKey]
         if (-not $feature) { continue }
 
-        $featureId = Get-FeatureId -Feature $feature
-
+        $featureId = [string]$feature.FeatureId
         if ($selectedFeatureIds.Add($featureId)) {
             $selectedFeatures.Add($feature)
         }
@@ -67,8 +66,7 @@ function Get-RegistryBackupPayload {
     $selectedFeatureIds = New-Object System.Collections.Generic.List[string]
     $seenSelectedFeatureIds = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
     foreach ($feature in $SelectedFeatures) {
-        $featureId = Get-FeatureId -Feature $feature
-
+        $featureId = [string]$feature.FeatureId
         if ($seenSelectedFeatureIds.Add($featureId)) {
             $selectedFeatureIds.Add($featureId)
         }
@@ -77,8 +75,7 @@ function Get-RegistryBackupPayload {
     $selectedUndoFeatureIds = New-Object System.Collections.Generic.List[string]
     $seenUndoFeatureIds = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
     foreach ($feature in $UndoFeatures) {
-        $featureId = Get-FeatureId -Feature $feature
-
+        $featureId = [string]$feature.FeatureId
         if ($seenUndoFeatureIds.Add($featureId)) {
             $selectedUndoFeatureIds.Add($featureId)
         }

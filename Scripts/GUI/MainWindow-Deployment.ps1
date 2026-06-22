@@ -1,29 +1,8 @@
 # MainWindow-Deployment.ps1
 # Overview generation, pending tweak actions, feature labels, tweak preset maps, apply logic, user mode state, user selection, and validation.
 
-function Get-FeatureLabel {
-    param(
-        [string]$FeatureId,
-        $FallbackLabel = $null
-    )
-
-    $label = $script:FeatureLabelLookup[$FeatureId]
-    if (-not [string]::IsNullOrWhiteSpace([string]$label)) {
-        return [string]$label
-    }
-
-    if (-not [string]::IsNullOrWhiteSpace([string]$FallbackLabel)) {
-        return [string]$FallbackLabel
-    }
-
-    return [string]$FeatureId
-}
-
 function Get-UndoFeatureLabel {
-    param(
-        [string]$FeatureId,
-        $FallbackLabel = $null
-    )
+    param([string]$FeatureId)
 
     $undoLabel = $script:UndoFeatureLabelLookup[$FeatureId]
     if (-not [string]::IsNullOrWhiteSpace([string]$undoLabel)) {
@@ -31,8 +10,7 @@ function Get-UndoFeatureLabel {
     }
 
     # Fall back to the regular label (prefixed for undo context)
-    $label = Get-FeatureLabel -FeatureId $FeatureId -FallbackLabel $FallbackLabel
-    return [string]$label
+    return [string]$script:FeatureLabelLookup[$FeatureId]
 }
 
 function Get-PendingTweakActions {
@@ -69,14 +47,14 @@ function Get-PendingTweakActions {
                 $actions.Add([PSCustomObject]@{
                         Action    = 'Apply'
                         FeatureId = [string]$mapping.FeatureId
-                        Label     = (Get-FeatureLabel -FeatureId $mapping.FeatureId -FallbackLabel $mapping.Label)
+                        Label     = [string]$script:FeatureLabelLookup[$mapping.FeatureId]
                     })
             }
             elseif ($wasApplied -and -not $isNowChecked) {
                 $actions.Add([PSCustomObject]@{
                         Action    = 'Undo'
                         FeatureId = [string]$mapping.FeatureId
-                        Label     = (Get-FeatureLabel -FeatureId $mapping.FeatureId -FallbackLabel $mapping.Label)
+                        Label     = [string]$script:FeatureLabelLookup[$mapping.FeatureId]
                     })
             }
         }
@@ -101,7 +79,7 @@ function Get-PendingTweakActions {
                     $actions.Add([PSCustomObject]@{
                             Action    = 'Apply'
                             FeatureId = [string]$fid
-                            Label     = (Get-FeatureLabel -FeatureId $fid)
+                            Label     = [string]$script:FeatureLabelLookup[$fid]
                         })
                 }
             }

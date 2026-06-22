@@ -24,7 +24,6 @@ function Test-FeatureApplied {
         [string]$FeatureId
     )
 
-    if (-not $script:Features.ContainsKey($FeatureId)) { return $false }
     $feature = $script:Features[$FeatureId]
 
     switch ($FeatureId) {

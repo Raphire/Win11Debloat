@@ -84,6 +84,7 @@ function RemoveApps {
                 # Uninstall app via WinGet
                 $wingetResult = Invoke-NonBlocking -ScriptBlock {
                     param($appId)
+                    $global:LASTEXITCODE = 0
                     $output = winget uninstall --accept-source-agreements --disable-interactivity --id $appId
                     [PSCustomObject]@{ ExitCode = $LASTEXITCODE; Output = $output }
                 } -ArgumentList $app
@@ -122,8 +123,6 @@ function RemoveApps {
                     }
                 }
                 elseif ($wingetFailed) {
-                    # OneDrive is the only other app removed via WinGet; surface the failure
-                    # instead of silently continuing (previously its result was never checked).
                     Write-Host "Unable to uninstall $app via WinGet" -ForegroundColor Red
                 }
             }

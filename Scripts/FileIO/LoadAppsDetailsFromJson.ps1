@@ -32,10 +32,6 @@ function LoadAppsDetailsFromJson {
                     $isInstalled = $true
                     break
                 }
-                # OneDrive is a Win32 app (per-machine or per-user), not an Appx package, and
-                # winget lists it under its ARP display name ("Microsoft OneDrive") rather than
-                # the "Microsoft.OneDrive" id, so neither the Get-AppxPackage nor the winget
-                # string match above detects it. Fall back to its install footprint.
                 if (($appId -eq "Microsoft.OneDrive") -and (
                         (Test-Path "$env:ProgramFiles\Microsoft OneDrive\OneDrive.exe") -or
                         (Test-Path "$env:LOCALAPPDATA\Microsoft\OneDrive\OneDrive.exe")

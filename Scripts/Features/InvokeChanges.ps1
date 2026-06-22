@@ -20,10 +20,12 @@ function Invoke-FeatureApply {
     if ($script:Features.ContainsKey($FeatureId)) {
         $feature = $script:Features[$FeatureId]
     }
+    
+    $applyText = if ($feature -and $feature.ApplyText) { $feature.ApplyText } else { $FeatureId }
 
     # ---- Registry-backed features: import .reg file, then handle side effects ----
-    if ($feature -and $feature.RegistryKey -and $feature.ApplyText) {
-        ImportRegistryFile "> $($feature.ApplyText)..." $feature.RegistryKey
+    if ($feature -and $feature.RegistryKey) {
+        ImportRegistryFile "> $applyText..." $feature.RegistryKey
 
         # Post-import side effects for specific features
         switch ($FeatureId) {
@@ -44,8 +46,6 @@ function Invoke-FeatureApply {
     }
 
     # ---- Custom features (no registry backing, or special handling required) ----
-    # Resolve a safe apply-text fallback in case the feature is missing from Features.json
-    $applyText = if ($feature -and $feature.ApplyText) { $feature.ApplyText } else { $FeatureId }
     switch ($FeatureId) {
         'RemoveApps' {
             Write-Host "> $applyText for $(GetFriendlyTargetUserName)..."

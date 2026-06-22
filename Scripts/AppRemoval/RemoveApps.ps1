@@ -40,6 +40,7 @@ function RemoveApps {
 
     $edgeIds = @('Microsoft.Edge', 'XPFFTQ037JWMHS')
     $edgeAppsInList = @()
+    $wingetRemovedApps = @()
 
     Foreach ($app in $appsList) {
         if ($script:CancelRequested) { return }
@@ -60,6 +61,7 @@ function RemoveApps {
 
         if ((Get-AppRemovalMethod $app) -eq 'WinGet') {
             Remove-WinGetApp -app $app
+            $wingetRemovedApps += $app
         }
         else {
             Remove-AppxApp -app $app -targetUser $targetUser
@@ -69,6 +71,29 @@ function RemoveApps {
     # Remove Microsoft Edge
     if ($edgeAppsInList.Count -gt 0) {
         Remove-EdgeApp -edgeAppsInList $edgeAppsInList
+    }
+
+    # Check whether any winget-removed apps are still present, and report errors for each one.
+    if ($wingetRemovedApps.Count -gt 0 -or $edgeAppsInList.Count -gt 0) {
+        $postRemovalList = if ($script:WingetInstalled) { GetInstalledAppsViaWinget -TimeOut 10 } else { $null }
+        foreach ($app in $wingetRemovedApps) {
+            if (Test-AppStillInstalled -appId $app -InstalledList $postRemovalList) {
+                Write-Host "Unable to uninstall $app via WinGet" -ForegroundColor Red
+            }
+        }
+
+        # Verify Edge separately (triggers its own force-remove path if still installed)
+        $edgeStillInstalled = $false
+        foreach ($edgeApp in $edgeAppsInList) {
+            if (Test-AppStillInstalled -appId $edgeApp -InstalledList $postRemovalList) {
+                $edgeStillInstalled = $true
+                break
+            }
+        }
+        if ($edgeStillInstalled) {
+            Write-Host "Unable to uninstall Microsoft Edge via WinGet" -ForegroundColor Red
+            Request-EdgeForceRemove
+        }
     }
 
     Write-Host ""
@@ -110,11 +135,6 @@ function Remove-WinGetApp {
         param($appId)
         winget uninstall --accept-source-agreements --disable-interactivity --id $appId
     } -ArgumentList $app
-
-    # Verify whether the app is actually still installed rather than relying on winget output
-    if (Test-AppStillInstalled -appId $app) {
-        Write-Host "Unable to uninstall $app via WinGet" -ForegroundColor Red
-    }
 }
 
 <#
@@ -154,20 +174,6 @@ function Remove-EdgeApp {
             param($appId)
             winget uninstall --accept-source-agreements --disable-interactivity --id $appId
         } -ArgumentList $edgeApp
-    }
-
-    # Verify whether Edge is actually still installed rather than relying on winget output
-    $edgeStillInstalled = $false
-    foreach ($edgeApp in $edgeAppsInList) {
-        if (Test-AppStillInstalled -appId $edgeApp) {
-            $edgeStillInstalled = $true
-            break
-        }
-    }
-
-    if ($edgeStillInstalled) { 
-        Write-Host "Unable to uninstall Microsoft Edge via WinGet" -ForegroundColor Red
-        Request-EdgeForceRemove
     }
 }
 
@@ -221,27 +227,43 @@ function Remove-AppxApp {
     Checks whether an app package is still installed after a removal attempt.
 
     .DESCRIPTION
-    Uses Get-AppxPackage first (fast), then falls back to winget list
-    (for non-Appx packages). Returns $true if the app is still present,
-    $false if it was successfully removed or was never installed.
+    Checks Get-AppxPackage across all users first (fast, no process launch),
+    then falls back to a timeout-guarded WinGet list for non-Appx packages.
+    Returns $true if the app is still present, $false otherwise.
 
     .PARAMETER appId
     The package identifier to check (e.g. 'Microsoft.BingNews').
+
+    .PARAMETER InstalledList
+    Optional pre-fetched output from GetInstalledAppsViaWinget. When provided,
+    the function searches this list directly instead of launching a new winget
+    process, enabling efficient batched verification of multiple apps.
 #>
 function Test-AppStillInstalled {
-    param([string]$appId)
+    param(
+        [string]$appId,
+        [string]$InstalledList
+    )
 
-    # Check via Get-AppxPackage first (fast, covers most store apps)
-    if (Get-AppxPackage -Name "*$appId*" -ErrorAction SilentlyContinue) {
+    # Check Get-AppxPackage for all users first (fast, covers all Store apps).
+    if (Get-AppxPackage -Name "$appId" -AllUsers -ErrorAction SilentlyContinue) {
         return $true
     }
 
-    # Fall back to winget list (slower but covers non-Appx packages)
+    # Search a pre-fetched winget list if provided (avoids per-app process launches).
+    if ($InstalledList) {
+        return $InstalledList -match [regex]::Escape($appId)
+    }
+
+    # Fall back to a live winget list (slower, only used for standalone calls).
     if ($script:WingetInstalled) {
-        $installedList = winget list --accept-source-agreements --disable-interactivity
-        if ($installedList -match [regex]::Escape($appId)) {
+        $liveList = GetInstalledAppsViaWinget -TimeOut 10 -NonBlocking
+        if ($liveList -and ($liveList -match [regex]::Escape($appId))) {
             return $true
         }
+    }
+    else {
+        Write-Warning "Unable to verify whether '$appId' is still installed (WinGet is unavailable)"
     }
 
     return $false

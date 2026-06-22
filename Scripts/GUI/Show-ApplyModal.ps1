@@ -69,7 +69,7 @@ function Show-ApplyModal {
     $script:ApplyProgressBarEl.Value = 0
     $script:ApplyModalInErrorState = $false
     
-    # Set up progress callback for ExecuteAllChanges
+    # Set up progress callback for Invoke-AllChanges
     $script:ApplyProgressCallback = {
         param($currentStep, $totalSteps, $stepName)
         $script:ApplyStepNameEl.Text = $stepName
@@ -102,7 +102,7 @@ function Show-ApplyModal {
     # Run changes in background to keep UI responsive
     $applyWindow.Dispatcher.BeginInvoke([System.Windows.Threading.DispatcherPriority]::Background, [action]{
         try {
-            ExecuteAllChanges
+            Invoke-AllChanges
 
             $registryImportFailureCount = [int]$script:RegistryImportFailures
             

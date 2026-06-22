@@ -1,6 +1,7 @@
 # How to Contribute?
 
 We welcome contributions from the community. You can contribute to Win11Debloat by:
+
 - Reporting issues and bugs [here](https://github.com/Raphire/Win11Debloat/issues/new?template=bug_report.yml)
 - Submitting feature requests [here](https://github.com/Raphire/Win11Debloat/issues/new?template=feature_request.yml)
 - Testing Win11Debloat
@@ -15,6 +16,7 @@ You can help us test the latest changes and additions to the script. If you enco
 > The prerelease version of Win11Debloat is meant for developers to test the script. Don't use this in production environments!
 
 You can launch the prerelease version of Win11Debloat by running this command:
+
 ```ps1
 & ([scriptblock]::Create((irm "https://debloat.raphi.re/dev")))
 ```
@@ -28,12 +30,14 @@ You can launch the prerelease version of Win11Debloat by running this command:
 1. **Fork the project** on GitHub by clicking the "Fork" button at the top right of the repository page.
 
 2. **Clone the repository** to your local machine:
+
    ```powershell
    git clone https://github.com/YOUR-USERNAME/Win11Debloat.git
    cd Win11Debloat
    ```
 
 3. **Create a new branch** for your contribution:
+
    ```powershell
    git checkout -b feature/your-feature-name
    ```
@@ -42,11 +46,14 @@ You can launch the prerelease version of Win11Debloat by running this command:
 
 1. Open PowerShell as an administrator
 2. Enable script execution if necessary:
+
    ```powershell
    Set-ExecutionPolicy Unrestricted -Scope Process -Force
    ```
+
 3. Navigate to your Win11Debloat directory
 4. Run the script:
+
    ```powershell
    .\Win11Debloat.ps1
    ```
@@ -57,18 +64,31 @@ You can launch the prerelease version of Win11Debloat by running this command:
 
 Understanding the project structure is essential for contributing effectively:
 
-```
+```text
 Win11Debloat/
 ├── Win11Debloat.ps1             # Main PowerShell script
+├── Run.bat                      # Batch launcher for the quick launch method
 ├── Scripts/                     # Additional PowerShell scripts and functions
-│    └── Get.ps1                 # Script used for the quick launch method to automatically download and run Win11debloat
+│   ├── Get.ps1                  # Script used for the quick launch method to automatically download and run Win11debloat
+│   ├── AppRemoval/              # App package removal logic
+│   ├── CLI/                     # Command-line interface helpers
+│   ├── Features/                # Feature apply/undo logic (e.g. InvokeChanges.ps1, ReplaceStartMenu.ps1)
+│   ├── FileIO/                  # File input/output helpers
+│   ├── GUI/                     # GUI window definitions and logic
+│   ├── Helpers/                 # Shared helper functions
+│   └── Threading/               # Threading utilities
 ├── Config/
 │   ├── Apps.json                # List of supported apps for removal
 │   ├── DefaultSettings.json     # Default configuration preset
 │   ├── Features.json            # All features with metadata
 │   └── LastUsedSettings.json    # Last used configuration (generated during use)
 ├── Regfiles/                    # Registry files for all features
-└── Schemas/                     # XAML Schemas for GUI elements
+│   ├── Undo/                    # Registry files for reverting features
+│   └── Sysprep/                 # Registry files for Sysprep mode
+├── Schemas/                     # XAML Schemas for GUI elements
+├── Assets/                      # Static assets (icons, start menu templates)
+├── Backups/                     # Registry backups (generated during use)
+└── Logs/                        # Script logs (generated during use)
 ```
 
 ### Best Practices
@@ -109,9 +129,9 @@ Avoid these common mistakes when contributing:
 
    Placing files in the wrong directory may cause the script to fail when trying to apply or undo changes.
 
-6. **Not Testing Undo Functionality**: Always test that your undo registry file properly reverts all changes.
+5. **Not Testing Undo Functionality**: Always test that your undo registry file properly reverts all changes.
 
-7. **Not Testing User/Sysprep Functionality**: Always test that your feature works when applied to another user or to the Windows default user with Sysprep. Sysprep changes can be tested by creating new users after running the script.
+6. **Not Testing User/Sysprep Functionality**: Always test that your feature works when applied to another user or to the Windows default user with Sysprep. Sysprep changes can be tested by creating new users after running the script.
 
 7. **Missing Category**: Features without a `Category` field (set to `null`) won't appear in the GUI. This is intentional for command-line-only features, make sure this is what you want before submitting.
 
@@ -127,11 +147,13 @@ Avoid these common mistakes when contributing:
 To add a new app that can be removed via Win11Debloat:
 
 1. **Find the AppId**: To find the correct AppId for an app:
+
    ```powershell
    Get-AppxPackage | Select-Object Name, PackageFullName
    ```
 
 2. **Edit `Config/Apps.json`**: Add a new entry to the `"Apps"` array:
+
    ```json
    {
      "FriendlyName": "Display Name",
@@ -142,9 +164,10 @@ To add a new app that can be removed via Win11Debloat:
    ```
 
 3. **Follow the Guidelines**:
-- Use clear, user-friendly names for `FriendlyName`
-- Set `SelectedByDefault` to `true` only for apps that are largely considered bloatware, otherwise set to `false`
-- Provide a concise description explaining what the app does
+
+   - Use clear, user-friendly names for `FriendlyName`
+   - Set `SelectedByDefault` to `true` only for apps that are largely considered bloatware, otherwise set to `false`
+   - Provide a concise description explaining what the app does
 
 ### Adding a New Feature
 
@@ -162,6 +185,7 @@ Create new registry files in the `Regfiles/` directory:
 - **Sysprep file**: `Sysprep/Disable_YourFeature.reg` (for Sysprep mode)
 
 Example registry file structure:
+
 ```reg
 Windows Registry Editor Version 5.00
 
@@ -170,6 +194,7 @@ Windows Registry Editor Version 5.00
 ```
 
 A Sysprep registry file should apply the same changes as the normal action. Replace the hive of registry keys that start with `HKEY_CURRENT_USER` with `hkey_users\default`. For example:
+
 ```reg
 Windows Registry Editor Version 5.00
 
@@ -179,7 +204,7 @@ Windows Registry Editor Version 5.00
 
 #### 1b. Implement the Feature Logic
 
-If your feature requires more than just applying a registry file, add custom logic to the main script in the appropriate section. In most cases this will involve creating a new entry in the `ExecuteParameter` function for your new feature.
+If your feature requires more than just applying a registry file, add custom logic to the main script in the appropriate section. In most cases this will involve creating a new entry in the `Invoke-FeatureApply` function (in `Scripts/Features/InvokeChanges.ps1`) for your new feature. If your feature also requires custom undo logic (beyond a simple registry file import), add a corresponding entry to the `Invoke-FeatureUndo` function in the same file.
 
 #### 2. Add Feature to Features.json
 
@@ -205,6 +230,7 @@ Add your feature to the `"Features"` array in `Config/Features.json`:
 ```
 
 **Field Descriptions**:
+
 - `FeatureId`: Unique identifier, this must match parameter name in the Win11Debloat.ps1 and Get.ps1 files.
 - `Label`: Short description shown in the UI and wiki documentation.
 - `ToolTip`: Detailed explanation of what the feature does, used for tooltips in the GUI.
@@ -223,6 +249,7 @@ Add your feature to the `"Features"` array in `Config/Features.json`:
 #### 3. Add Command-Line Parameter
 
 Add a corresponding parameter to both `Win11Debloat.ps1` AND `Scripts/Get.ps1`, the parameter name should match the FeatureId you have defined in `Features.json`. In most cases this will be a switch parameter, example:
+
 ```powershell
 [switch]$YourFeatureId,
 ```
@@ -235,12 +262,14 @@ Add a corresponding parameter to both `Win11Debloat.ps1` AND `Scripts/Get.ps1`, 
 The default preset (`Config/DefaultSettings.json`) defines which features are automatically applied when users run Win11Debloat in "Default Mode" or with the `-RunDefaults` parameter. This preset should include features that are widely considered to improve the Windows experience without breaking functionality.
 
 **When to add a feature to the default preset:**
+
 - The feature removes obvious bloatware or distractions
 - The feature enhances privacy without breaking core functionality
 - The feature is generally non-controversial and beneficial to most users
 - The change can be easily reverted if needed
 
 **When NOT to add a feature to the default preset:**
+
 - The feature significantly changes core Windows behavior
 - The feature might break applications or workflows for some users
 - The feature is highly opinionated or preference-based
@@ -256,10 +285,12 @@ To add your feature to the default preset, edit `Config/DefaultSettings.json` an
 ```
 
 **Field Descriptions**:
+
 - `Name`: Must exactly match the `FeatureId` from Features.json
 - `Value`: Set to `true` to enable the feature in default mode
 
 **Example:**
+
 ```json
 {
   "Version": "1.0",
@@ -285,12 +316,13 @@ To add your feature to the default preset, edit `Config/DefaultSettings.json` an
 To add a new category for organizing features:
 
 - Add a new category entry to the `"Categories"` array in `Config/Features.json`:
-   ```json
-   {
-     "Name": "Your Category Name",
-     "Icon": "&#xE#### ;"
-   }
-   ```
+
+  ```json
+  {
+    "Name": "Your Category Name",
+    "Icon": "&#xE#### ;"
+  }
+  ```
 
 > [!TIP]
 > Use [Segoe Fluent Icon Assets](https://learn.microsoft.com/en-us/windows/apps/design/iconography/segoe-fluent-icons-font) for icon codes.
@@ -322,17 +354,20 @@ UI Groups allow features to be grouped together in the GUI with a combobox (drop
 ## Submitting a Pull Request
 
 1. **Commit your changes** with clear, descriptive commit messages:
+
    ```powershell
    git add .
    git commit -m "Add feature: Description of your changes"
    ```
 
 2. **Push to your fork**:
+
    ```powershell
    git push origin feature/your-feature-name
    ```
 
 3. **Create a Pull Request** on GitHub:
+
    - Go to the original Win11Debloat repository
    - Click "New Pull Request"
    - Select your fork and branch
@@ -344,6 +379,7 @@ UI Groups allow features to be grouped together in the GUI with a combobox (drop
 # Questions?
 
 If you have questions about contributing, feel free to:
+
 - Open a [discussion](https://github.com/Raphire/Win11Debloat/discussions)
 - Comment on an existing issue
 - Ask in your pull request

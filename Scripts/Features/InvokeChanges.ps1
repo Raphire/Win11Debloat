@@ -16,12 +16,9 @@ function Invoke-FeatureApply {
     )
 
     # Resolve feature metadata from Features.json
-    $feature = $null
-    if ($script:Features.ContainsKey($FeatureId)) {
-        $feature = $script:Features[$FeatureId]
-    }
-    
-    $applyText = if ($feature -and $feature.ApplyText) { $feature.ApplyText } else { $FeatureId }
+    $feature = $script:Features[$FeatureId]
+
+    $applyText = if ($feature.ApplyText) { $feature.ApplyText } else { $FeatureId }
 
     # ---- Registry-backed features: import .reg file, then handle side effects ----
     if ($feature -and $feature.RegistryKey) {
@@ -245,15 +242,8 @@ function Invoke-ApplyFeatures {
         if ($script:CancelRequested) { return }
 
         # Resolve display name for the progress indicator
-        $displayName = $featureId
-        if ($script:Features.ContainsKey($featureId)) {
-            $f = $script:Features[$featureId]
-            if ($f.ApplyText) {
-                $displayName = $f.ApplyText
-            } elseif ($f.Label) {
-                $displayName = $f.Label
-            }
-        }
+        $f = $script:Features[$featureId]
+        $displayName = if ($f.ApplyText) { $f.ApplyText } else { $featureId }
 
         if ($script:ApplyProgressCallback) {
             & $script:ApplyProgressCallback $step $TotalSteps $displayName
@@ -338,8 +328,6 @@ function Invoke-AllChanges {
         if ($script:ControlParams -contains $key) { continue }
         if ($key -eq 'Apps') { continue }
         if ($key -eq 'CreateRestorePoint') { continue }
-        # Skip unknown parameters that aren't defined in Features.json
-        if (-not $script:Features.ContainsKey($key)) { continue }
         $applyIds += $key
     }
     $undoIds = @($script:UndoParams.Keys)
@@ -347,7 +335,6 @@ function Invoke-AllChanges {
     # ---- Determine if registry backup is needed ----
     $needsBackup = $false
     foreach ($id in $applyIds) {
-        if (-not $script:Features.ContainsKey($id)) { continue }
         $f = $script:Features[$id]
         if ($f -and -not [string]::IsNullOrWhiteSpace([string]$f.RegistryKey)) {
             $needsBackup = $true

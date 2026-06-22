@@ -45,11 +45,6 @@ function PrintPendingChanges {
                 continue
             }
             default {
-                # Skip unknown parameters that aren't defined in Features.json
-                if (-not $script:Features -or -not $script:Features.ContainsKey($parameterName)) {
-                    continue
-                }
-
                 $message = $script:Features[$parameterName].Label
                 Write-Output "- $message"
                 continue

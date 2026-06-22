@@ -54,7 +54,7 @@ function Get-RestoreDialogFeatureDisplayLabel {
     }
 
     $featureDefinition = Get-RestoreDialogFeatureDefinition -FeatureId $FeatureId -Features $Features
-    if ($featureDefinition -and -not [string]::IsNullOrWhiteSpace([string]$featureDefinition.Label)) {
+    if ($featureDefinition) {
         return [string]$featureDefinition.Label
     }
 

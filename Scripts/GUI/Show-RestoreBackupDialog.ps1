@@ -290,10 +290,19 @@ function Show-RestoreBackupDialog {
             return
         }
 
-        Write-Host "Backup file selected: $($openDialog.FileName)"
-        $selectedBackup = Load-RegistryBackupFromFile -FilePath $openDialog.FileName
+        $selectedFilePath = $openDialog.FileName
 
-        if (-not (& $showRegistryOverview -SelectedBackup $selectedBackup -SelectedBackupFilePath $openDialog.FileName)) {
+        if ([string]::IsNullOrWhiteSpace($selectedFilePath) -or
+            $selectedFilePath -notmatch '\.json$' -or
+            -not (Test-Path -LiteralPath $selectedFilePath -PathType Leaf)) {
+            Write-Host "Invalid or non-existent backup file: $selectedFilePath"
+            return
+        }
+
+        Write-Host "Backup file selected: $selectedFilePath"
+        $selectedBackup = Load-RegistryBackupFromFile -FilePath $selectedFilePath
+
+        if (-not (& $showRegistryOverview -SelectedBackup $selectedBackup -SelectedBackupFilePath $selectedFilePath)) {
             return
         }
 

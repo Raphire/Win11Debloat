@@ -54,7 +54,29 @@ function Update-MainWindowChrome {
     $windowStateMaximized = [System.Windows.WindowState]::Maximized
 
     if ($Window.WindowState -eq $windowStateMaximized) {
-        $MainBorder.Margin = [System.Windows.SystemParameters]::WindowResizeBorderThickness
+        $chrome = [System.Windows.Shell.WindowChrome]::GetWindowChrome($Window)
+        $resizeBorder = if ($chrome) { $chrome.ResizeBorderThickness } else { [System.Windows.SystemParameters]::WindowResizeBorderThickness }
+
+        # Compute margins using screen bounds vs working area
+        $marginLeft = $resizeBorder.Left
+        $marginTop = $resizeBorder.Top
+        $marginRight = $resizeBorder.Right
+        $marginBottom = $resizeBorder.Bottom
+
+        $screen = Get-WindowScreen -Window $Window
+        if ($screen) {
+            $workTL = ConvertTo-ScreenPointToDip -Window $Window -X $screen.WorkingArea.Left -Y $screen.WorkingArea.Top
+            $workSize = ConvertTo-ScreenPixelsToDip -Window $Window -Width $screen.WorkingArea.Width -Height $screen.WorkingArea.Height
+            $screenTL = ConvertTo-ScreenPointToDip -Window $Window -X $screen.Bounds.Left -Y $screen.Bounds.Top
+            $screenSize = ConvertTo-ScreenPixelsToDip -Window $Window -Width $screen.Bounds.Width -Height $screen.Bounds.Height
+
+            $marginLeft += ($workTL.X - $screenTL.X)
+            $marginTop += ($workTL.Y - $screenTL.Y)
+            $marginRight += ($screenTL.X + $screenSize.Width) - ($workTL.X + $workSize.Width)
+            $marginBottom += ($screenTL.Y + $screenSize.Height) - ($workTL.Y + $workSize.Height)
+        }
+
+        $MainBorder.Margin = [System.Windows.Thickness]::new($marginLeft, $marginTop, $marginRight, $marginBottom)
         $MainBorder.BorderThickness = [System.Windows.Thickness]::new(0)
         $MainBorder.CornerRadius = [System.Windows.CornerRadius]::new(0)
         $MainBorder.Effect = $null

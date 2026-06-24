@@ -163,28 +163,6 @@ function Show-RestoreBackupDialog {
         & $updateStartMenuPrimaryActionText
     }
 
-    $findStartMenuAutoBackup = {
-        $scopeInfo = & $getStartMenuScopeInfo
-        
-        if ($scopeInfo.Scope -eq 'AllUsers') {
-            $userPathString = GetUserDirectory -userName "*" -fileName "AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState"
-            $usersStartMenuPaths = Get-ChildItem -Path $userPathString -ErrorAction SilentlyContinue
-            foreach ($startMenuPath in $usersStartMenuPaths) {
-                $found = Get-ChildItem -Path (Join-Path $startMenuPath.FullName 'Win11Debloat-StartBackup-*.bak') -ErrorAction SilentlyContinue | Select-Object -First 1
-                if ($found) { return $true }
-            }
-            return $false
-        }
-        else {
-            $localStateDir = "$env:LOCALAPPDATA\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState"
-            $latestBackup = Get-ChildItem -Path (Join-Path $localStateDir 'Win11Debloat-StartBackup-*.bak') -ErrorAction SilentlyContinue |
-                Sort-Object Name -Descending |
-                Select-Object -First 1
-
-            return ($null -ne $latestBackup)
-        }
-    }
-
     $enterSelectTypeStep = {
         $titleText.Text = 'Restore Backup'
         $restoreModeTabs.SelectedIndex = 0
@@ -349,12 +327,14 @@ function Show-RestoreBackupDialog {
         }
 
         if (-not $useManualBackupFile) {
-            if (-not (& $findStartMenuAutoBackup)) {
-                $scopeText = (& $getStartMenuScopeInfo).SummaryText
-                Show-MessageBox -Owner $window -Title 'No Backup Found' -Message "No Start Menu backup file was found for $scopeText. Uncheck 'Automatically find' to select a backup file manually." -Button 'OK' -Icon 'Warning' | Out-Null
+            $scopeInfo = & $getStartMenuScopeInfo
+            $autoBackupPath = Get-StartMenuBackupPath -Scope $scopeInfo.Scope
+            if ($null -eq $autoBackupPath) {
+                $scopeText = $scopeInfo.SummaryText
+                Show-MessageBox -Owner $window -Title 'No Backup Found' -Message "No Start Menu backup file was found for $scopeText. Uncheck 'Automatically find Start Menu backup' to select a backup file manually." -Button 'OK' -Icon 'Warning' | Out-Null
                 return
             }
-            $state.SelectedStartMenuBackupFilePath = $null
+            $state.SelectedStartMenuBackupFilePath = if ($scopeInfo.Scope -eq 'CurrentUser') { $autoBackupPath } else { $null }
         }
 
         $window.Tag = @{

@@ -193,6 +193,55 @@ function GetStartMenuUserNameFromPath {
 }
 
 
+<#
+    .SYNOPSIS
+    Returns the path to the latest start menu backup file for the given scope.
+
+    .DESCRIPTION
+    Resolves the LocalState folder for the specified scope and returns the
+    full path to the most recent Win11Debloat-StartBackup-*.bak file, or
+    $null if no backup exists.
+
+    For CurrentUser, uses $env:LOCALAPPDATA directly. For AllUsers, scans
+    every user profile.
+
+    .PARAMETER Scope
+    The scope to check: CurrentUser or AllUsers.
+
+    .EXAMPLE
+    $backupPath = Get-StartMenuBackupPath -Scope 'CurrentUser'
+
+    .EXAMPLE
+    $backupPath = Get-StartMenuBackupPath -Scope 'AllUsers'
+#>
+function Get-StartMenuBackupPath {
+    param(
+        [Parameter(Mandatory)]
+        [ValidateSet('CurrentUser', 'AllUsers')]
+        [string]$Scope
+    )
+
+    if ($Scope -eq 'CurrentUser') {
+        $localStateDir = "$env:LOCALAPPDATA\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState"
+        $latestBackup = Get-ChildItem -Path (Join-Path $localStateDir 'Win11Debloat-StartBackup-*.bak') -ErrorAction SilentlyContinue |
+            Sort-Object Name -Descending |
+            Select-Object -First 1
+        if ($latestBackup) { return $latestBackup.FullName }
+        return $null
+    }
+    else {
+        $userPathString = GetUserDirectory -userName "*" -fileName "AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState"
+        $usersStartMenuPaths = Get-ChildItem -Path $userPathString -ErrorAction SilentlyContinue
+        foreach ($startMenuPath in $usersStartMenuPaths) {
+            $latestBackup = Get-ChildItem -Path (Join-Path $startMenuPath.FullName 'Win11Debloat-StartBackup-*.bak') -ErrorAction SilentlyContinue |
+                Sort-Object Name -Descending |
+                Select-Object -First 1
+            if ($latestBackup) { return $latestBackup.FullName }
+        }
+        return $null
+    }
+}
+
 
 <#
     .SYNOPSIS
@@ -232,12 +281,7 @@ function RestoreStartMenuFromBackup {
             Sort-Object Name -Descending |
             Select-Object -First 1
 
-        if ($latestBackup) {
-            $latestBackup.FullName
-        }
-        else {
-            $StartMenuBinFile + '.bak'
-        }
+        if ($latestBackup) { $latestBackup.FullName } else { $null }
     }
     else {
         $BackupFilePath
@@ -245,6 +289,14 @@ function RestoreStartMenuFromBackup {
     $restoreTimestamp = Get-Date -Format 'yyyyMMdd_HHmmss'
     $restoreBackupFileName = "Win11Debloat-StartRestore-$restoreTimestamp.bak"
     $currentBinBackup = Join-Path (Split-Path $StartMenuBinFile -Parent) $restoreBackupFileName
+
+    if ([string]::IsNullOrWhiteSpace($backupBinFile)) {
+        return [PSCustomObject]@{
+            UserName = $userName
+            Result = $false
+            Message = "No start menu backup file found for user $userName."
+        }
+    }
 
     if ($script:Params.ContainsKey("WhatIf")) {
         Write-Host "[WhatIf] Restore start menu for user $userName from backup $backupBinFile" -ForegroundColor Cyan
@@ -289,10 +341,8 @@ function RestoreStartMenuFromBackup {
     Restores the start menu for the current target user from a backup.
 
     .DESCRIPTION
-    Resolves the start2.bin path for the current user (or the user specified
-    via the -User parameter), then delegates to RestoreStartMenuFromBackup.
-    Returns early with a warning if the user's start menu path cannot
-    be resolved.
+    Resolves the start2.bin path for the currently logged-in user, then
+    delegates to RestoreStartMenuFromBackup.
 
     .PARAMETER BackupFilePath
     Path to the backup file to restore from. If omitted, automatically
@@ -309,17 +359,8 @@ function RestoreStartMenu {
         [string]$BackupFilePath
     )
 
-    $targetUserName = GetUserName
-    $startMenuBinFile = GetStartMenuBinPathForUser -UserName $targetUserName
-
-    if ([string]::IsNullOrWhiteSpace($startMenuBinFile)) {
-        Write-Host "Unable to resolve start menu path for user $targetUserName, nothing to restore" -ForegroundColor Yellow
-        return [PSCustomObject]@{
-            UserName = $targetUserName
-            Result   = $false
-            Message  = "Could not resolve start menu path for user $targetUserName."
-        }
-    }
+    $targetUserName = $env:USERNAME
+    $startMenuBinFile = "$env:LOCALAPPDATA\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState\start2.bin"
 
     Write-Host "Restoring start menu for user $targetUserName from backup..."
 

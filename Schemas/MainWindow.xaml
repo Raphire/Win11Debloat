@@ -7,8 +7,8 @@
         SnapsToDevicePixels="True"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
-        AllowsTransparency="True"
-        Background="Transparent"
+        AllowsTransparency="False"
+        Background="{DynamicResource AppBorderColor}"
         Foreground="{DynamicResource AppFgColor}">
     <shell:WindowChrome.WindowChrome>
         <shell:WindowChrome ResizeBorderThickness="5"

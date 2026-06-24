@@ -1,71 +1,6 @@
 ﻿function Show-MainWindow {
     Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase,System.Windows.Forms | Out-Null
 
-    # ---- Constrain maximized window to taskbar work area ----
-    if (-not ([System.Management.Automation.PSTypeName]'Win11Debloat.MaximizedWindowHelper').Type) {
-        Add-Type -Namespace Win11Debloat -Name MaximizedWindowHelper `
-            -ReferencedAssemblies 'PresentationFramework','System.Windows.Forms','System.Drawing' `
-            -MemberDefinition @'
-            [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
-            private struct MINMAXINFO {
-                public POINT ptReserved, ptMaxSize, ptMaxPosition, ptMinTrackSize, ptMaxTrackSize;
-            }
-            [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
-            private struct POINT { public int x, y; }
-
-            [System.Runtime.InteropServices.DllImport("user32.dll")]
-            private static extern System.IntPtr MonitorFromWindow(System.IntPtr hwnd, uint dwFlags);
-
-            [System.Runtime.InteropServices.DllImport("user32.dll", CharSet = System.Runtime.InteropServices.CharSet.Auto)]
-            private static extern bool GetMonitorInfo(System.IntPtr hMonitor, ref MONITORINFO lpmi);
-
-            [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
-            private struct RECT {
-                public int Left, Top, Right, Bottom;
-            }
-
-            [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential, CharSet = System.Runtime.InteropServices.CharSet.Auto)]
-            private struct MONITORINFO {
-                public int cbSize;
-                public RECT rcMonitor;
-                public RECT rcWork;
-                public uint dwFlags;
-            }
-
-            public static System.IntPtr WmGetMinMaxInfoHook(
-                System.IntPtr hwnd, int msg, System.IntPtr wParam, System.IntPtr lParam, ref bool handled) {
-                if (msg == 0x0024) { // WM_GETMINMAXINFO
-                    var mmi = (MINMAXINFO)System.Runtime.InteropServices.Marshal.PtrToStructure(
-                        lParam, typeof(MINMAXINFO));
-
-                    const uint MONITOR_DEFAULTTONEAREST = 0x00000002;
-                    var monitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
-                    var monitorInfo = new MONITORINFO();
-                    monitorInfo.cbSize = System.Runtime.InteropServices.Marshal.SizeOf(typeof(MONITORINFO));
-
-                    if (monitor != System.IntPtr.Zero && GetMonitorInfo(monitor, ref monitorInfo)) {
-                        mmi.ptMaxPosition.x = monitorInfo.rcWork.Left - monitorInfo.rcMonitor.Left;
-                        mmi.ptMaxPosition.y = monitorInfo.rcWork.Top - monitorInfo.rcMonitor.Top;
-                        mmi.ptMaxSize.x     = monitorInfo.rcWork.Right - monitorInfo.rcWork.Left;
-                        mmi.ptMaxSize.y     = monitorInfo.rcWork.Bottom - monitorInfo.rcWork.Top;
-                    }
-                    else {
-                        var screen = System.Windows.Forms.Screen.FromHandle(hwnd);
-                        var wa = screen.WorkingArea;
-                        var bounds = screen.Bounds;
-                        mmi.ptMaxPosition.x = wa.Left - bounds.Left;
-                        mmi.ptMaxPosition.y = wa.Top - bounds.Top;
-                        mmi.ptMaxSize.x     = wa.Width;
-                        mmi.ptMaxSize.y     = wa.Height;
-                    }
-
-                    System.Runtime.InteropServices.Marshal.StructureToPtr(mmi, lParam, true);
-                }
-                return System.IntPtr.Zero;
-            }
-'@
-    }
-
     $WinVersion = Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' CurrentBuild
     $usesDarkMode = GetSystemUsesDarkMode
 
@@ -123,12 +58,6 @@
     $window.Add_SourceInitialized({
         & $applyInitialWindowSize
         & $updateWindowChrome
-
-        $hwndHelper = New-Object System.Windows.Interop.WindowInteropHelper($window)
-        $hwndSource = [System.Windows.Interop.HwndSource]::FromHwnd($hwndHelper.Handle)
-        $hookMethod = [Win11Debloat.MaximizedWindowHelper].GetMethod('WmGetMinMaxInfoHook')
-        $hook = [System.Delegate]::CreateDelegate([System.Windows.Interop.HwndSourceHook], $hookMethod)
-        $hwndSource.AddHook($hook)
     })
 
     $window.Add_SizeChanged({

@@ -179,7 +179,7 @@ function Show-RestoreBackupDialog {
             # CurrentUser: find the latest backup in the current user's LocalState
             $localStateDir = "$env:LOCALAPPDATA\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState"
             $latestBackup = Get-ChildItem -Path (Join-Path $localStateDir 'Win11Debloat-StartBackup-*.bak') -ErrorAction SilentlyContinue |
-                Sort-Object LastWriteTime -Descending |
+                Sort-Object Name -Descending |
                 Select-Object -First 1
             return @{
                 FilePath = if ($latestBackup) { $latestBackup.FullName } else { $null }

@@ -229,7 +229,7 @@ function RestoreStartMenuFromBackup {
         # Auto-detect latest backup in the same folder as the start2.bin
         $startMenuDir = Split-Path $StartMenuBinFile -Parent
         $latestBackup = Get-ChildItem -Path (Join-Path $startMenuDir 'Win11Debloat-StartBackup-*.bak') -ErrorAction SilentlyContinue |
-            Sort-Object LastWriteTime -Descending |
+            Sort-Object Name -Descending |
             Select-Object -First 1
 
         if ($latestBackup) {

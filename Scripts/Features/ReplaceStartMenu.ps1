@@ -113,11 +113,15 @@ function ReplaceStartMenu {
         return
     }
 
-    $backupBinFile = $startMenuBinFile + ".bak"
+    $timestamp = Get-Date -Format 'yyyyMMdd_HHmmss'
+    $backupFileName = "Win11Debloat-StartBackup-$timestamp.bak"
+    $startMenuDir = Split-Path $startMenuBinFile -Parent
+    $backupBinFile = Join-Path $startMenuDir $backupFileName
 
     if (Test-Path $startMenuBinFile) {
         # Backup current start menu file
-        Move-Item -Path $startMenuBinFile -Destination $backupBinFile -Force
+        Copy-Item -Path $startMenuBinFile -Destination $backupBinFile -Force
+        Write-Verbose "Start menu backup for user $userName saved to $backupFileName"
     }
     else {
         Write-Host "Unable to find original start2.bin file for user $userName, no backup was created for this user" -ForegroundColor Yellow
@@ -204,14 +208,14 @@ function GetStartMenuUserNameFromPath {
     The full path to the user's start2.bin file to restore.
 
     .PARAMETER BackupFilePath
-    Path to the backup file to restore from. If omitted, defaults to
-    StartMenuBinFile with a .bak extension.
+    Path to the backup file to restore from. If omitted, automatically
+    finds the latest Win11Debloat-StartBackup-*.bak file.
 
     .EXAMPLE
     RestoreStartMenuFromBackup -StartMenuBinFile "$env:LOCALAPPDATA\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState\start2.bin"
 
     .EXAMPLE
-    RestoreStartMenuFromBackup -StartMenuBinFile "$env:LOCALAPPDATA\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState\start2.bin" -BackupFilePath "C:\Backups\start2.bin"
+    RestoreStartMenuFromBackup -StartMenuBinFile "$env:LOCALAPPDATA\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState\start2.bin" -BackupFilePath "C:\Backups\Win11Debloat-StartBackup-20260101_120000.bak"
 #>
 function RestoreStartMenuFromBackup {
     param(
@@ -222,12 +226,25 @@ function RestoreStartMenuFromBackup {
 
     $userName = GetStartMenuUserNameFromPath -StartMenuBinFile $StartMenuBinFile
     $backupBinFile = if ([string]::IsNullOrWhiteSpace($BackupFilePath)) {
-        $StartMenuBinFile + '.bak'
+        # Auto-detect latest backup in the same folder as the start2.bin
+        $startMenuDir = Split-Path $StartMenuBinFile -Parent
+        $latestBackup = Get-ChildItem -Path (Join-Path $startMenuDir 'Win11Debloat-StartBackup-*.bak') -ErrorAction SilentlyContinue |
+            Sort-Object LastWriteTime -Descending |
+            Select-Object -First 1
+
+        if ($latestBackup) {
+            $latestBackup.FullName
+        }
+        else {
+            $StartMenuBinFile + '.bak'
+        }
     }
     else {
         $BackupFilePath
     }
-    $currentBinBackup = $StartMenuBinFile + '.restore.bak'
+    $restoreTimestamp = Get-Date -Format 'yyyyMMdd_HHmmss'
+    $restoreBackupFileName = "Win11Debloat-StartRestore-$restoreTimestamp.bak"
+    $currentBinBackup = Join-Path (Split-Path $StartMenuBinFile -Parent) $restoreBackupFileName
 
     if ($script:Params.ContainsKey("WhatIf")) {
         Write-Host "[WhatIf] Restore start menu for user $userName from backup $backupBinFile" -ForegroundColor Cyan
@@ -278,14 +295,14 @@ function RestoreStartMenuFromBackup {
     be resolved.
 
     .PARAMETER BackupFilePath
-    Path to the backup file to restore from. If omitted, defaults to
-    the .bak file alongside the current start2.bin.
+    Path to the backup file to restore from. If omitted, automatically
+    finds the latest Win11Debloat-StartBackup-*.bak file.
 
     .EXAMPLE
     RestoreStartMenu
 
     .EXAMPLE
-    RestoreStartMenu -BackupFilePath "C:\Backups\start2.bin"
+    RestoreStartMenu -BackupFilePath "C:\Backups\Win11Debloat-StartBackup-20260101_120000.bak"
 #>
 function RestoreStartMenu {
     param(
@@ -315,19 +332,21 @@ function RestoreStartMenu {
 
     .DESCRIPTION
     Iterates over every existing user profile and restores each user's
-    start2.bin from its .bak backup. For the Default user profile, removes
-    the start2.bin file (which was previously copied from a template) so
-    that new profiles revert to the system default start menu.
+    start2.bin from the latest backup in their LocalState folder. For the
+    Default user profile, removes the start2.bin file (which was previously
+    copied from a template) so that new profiles revert to the system
+    default start menu.
 
     .PARAMETER BackupFilePath
-    Path to the backup file to restore from. If omitted, defaults to
-    the .bak file alongside each user's current start2.bin.
+    Path to the backup file to restore from. If omitted, automatically
+    finds the latest Win11Debloat-StartBackup-*.bak in each user's
+    LocalState folder.
 
     .EXAMPLE
     RestoreStartMenuForAllUsers
 
     .EXAMPLE
-    RestoreStartMenuForAllUsers -BackupFilePath "C:\Backups\start2.bin"
+    RestoreStartMenuForAllUsers -BackupFilePath "C:\Backups\Win11Debloat-StartBackup-20260101_120000.bak"
 #>
 function RestoreStartMenuForAllUsers {
     param(

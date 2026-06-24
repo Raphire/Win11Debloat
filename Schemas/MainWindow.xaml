@@ -2,7 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
         Title="Win11Debloat" 
-        MinWidth="860" MinHeight="600"
+        MinWidth="860" MinHeight="640"
         ResizeMode="CanResize" 
         SnapsToDevicePixels="True"
         WindowStartupLocation="CenterScreen"
@@ -464,7 +464,7 @@
                     <Grid>
                         <StackPanel x:Name="HomeContentPanel" HorizontalAlignment="Center" VerticalAlignment="Top">
                             <!-- Logo -->
-                            <Viewbox Width="250" Height="250" Margin="0,0,0,24" HorizontalAlignment="Center">
+                            <Viewbox Width="250" Height="250" Margin="0,0,0,16" HorizontalAlignment="Center">
                                 <Grid Width="250" Height="250">
                                     <!-- Windows logo style icon -->
                                     <Path x:Name="LogoFallback" Data="M0,0 L80,0 L80,80 L0,80 Z M90,0 L170,0 L170,80 L90,80 Z M0,90 L80,90 L80,170 L0,170 Z M90,90 L170,90 L170,170 L90,170 Z" 
@@ -483,7 +483,7 @@
                             
                             <!-- Title -->
                             <TextBlock Text="Welcome to Win11Debloat" FontSize="40" FontWeight="SemiBold" Foreground="{DynamicResource AppFgColor}" HorizontalAlignment="Center"/>
-                            <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource AppFgColor}" FontSize="20" HorizontalAlignment="Center" Margin="0,8,0,64">
+                            <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource AppFgColor}" FontSize="20" HorizontalAlignment="Center" Margin="0,4,0,48">
                                 <Run Text="Your clean Windows experience is just a few clicks away!"/>
                             </TextBlock>
 

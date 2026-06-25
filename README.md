@@ -6,7 +6,7 @@
 
  Win11Debloat is a lightweight, easy to use PowerShell script that allows you to quickly declutter and customize your Windows experience, no installation required! You can use it to remove pre-installed apps, disable telemetry, remove intrusive interface elements and much more. No need to painstakingly go through all the settings yourself or remove apps one by one. Win11Debloat makes the process quick and easy!
 
-The script also includes many features that system administrators and power users will enjoy. Such as a powerful command-line interface, support for Windows Audit mode and the ability to make changes to other Windows users. Please refer to our [wiki](https://github.com/Raphire/Win11Debloat/wiki/) for more details.
+The script also includes many features that system administrators and power users will enjoy. Such as a powerful command-line interface, support for Windows Audit mode and the ability to make changes to other Windows users. You can also easily export & import your preferred settings, allowing you to quickly apply the same settings on all your systems. Please refer to our [wiki](https://github.com/Raphire/Win11Debloat/wiki) for more details.
 
 ![Win11Debloat Menu](/Assets/Images/menu.png)
 
@@ -23,14 +23,14 @@ The script also includes many features that system administrators and power user
 
 Download & run the script automatically via PowerShell.
 
-1. Open PowerShell or Terminal, preferably as an administrator.
+1. Open PowerShell or Terminal.
 2. Copy and paste the command below into PowerShell:
 
 ```PowerShell
 & ([scriptblock]::Create((irm "https://debloat.raphi.re/")))
 ```
 
-3. Wait for the script to automatically download Win11Debloat.
+3. Wait for the script to automatically download and launch Win11Debloat.
 4. Carefully read through and follow the on-screen instructions.
 
 This method supports command-line parameters to customize the behaviour of the script. Please click [here](https://github.com/Raphire/Win11Debloat/wiki/Command%E2%80%90line-Interface#parameters) for more information.
@@ -74,10 +74,10 @@ This method supports command-line parameters to customize the behaviour of the s
 
 ## Features
 
-Below is an overview of the key features and functionality offered by Win11Debloat. Please refer to [the wiki](https://github.com/Raphire/Win11Debloat/wiki/Default-Settings) for more information about the default settings preset.
+Below is an overview of the key features and functionality offered by Win11Debloat. You can visit the [the wiki](https://github.com/Raphire/Win11Debloat/wiki) for more details.
 
 > [!Tip]
-> All of the changes made by Win11Debloat can easily be reverted and almost all of the apps can be reinstalled through the Microsoft Store. A full guide on how to revert changes can be found [here](https://github.com/Raphire/Win11Debloat/wiki/Reverting-Changes).
+> All of the changes made by Win11Debloat can easily be reverted and almost all of the apps can be reinstalled through the Microsoft Store. You can visit [the wiki](https://github.com/Raphire/Win11Debloat/wiki/Reverting-Changes) for more information on reverting changes.
 
 #### App Removal
 
@@ -86,23 +86,15 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 #### Privacy & Suggested Content
 
 - Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads.
-- Disable tips, tricks, suggestions & ads across Windows.
-- Disable Windows location services & app location access.
-- Disable Find My Device location tracking.
-- Disable 'Windows Spotlight' and tips & tricks on the lock screen.
-- Disable 'Windows Spotlight' desktop background option.
-- Disable ads, suggestions and the MSN news feed in Microsoft Edge.
+- Disable tips, tricks, suggestions & ads across Windows, the lock screen and Microsoft Edge.
+- Disable Windows location services, app location access and Find My Device location tracking.
 - Hide Microsoft 365 ads on the Settings 'Home' page, or hide the 'Home' page entirely.
 
 #### AI Features
 
-- Disable & remove Microsoft Copilot.
-- Disable Windows Recall.
-- Disable Click to Do, AI text & image analysis tool.
+- Disable & remove Microsoft Copilot, Windows Recall and Click to Do.
 - Prevent AI service (WSAIFabricSvc) from starting automatically.
-- Disable AI Features in Edge.
-- Disable AI Features in Paint.
-- Disable AI Features in Notepad.
+- Disable AI Features in Edge, Paint and Notepad.
 
 #### System
 
@@ -124,50 +116,38 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 #### Appearance
 
 - Enable dark mode for system and apps.
-- Disable transparency effects
-- Disable animations and visual effects.
+- Disable transparency, animations and visual effects.
 
 #### Start Menu & Search
 
-- Remove or replace all pinned apps from the start menu.
-- Hide the recommended section in the start menu.
-- Hide the 'All Apps' section in the start menu.
+- Customize the start menu by removing pinned apps, hiding recommendations, and customizing the 'All Apps' section.
 - Disable the Phone Link mobile devices integration in the start menu.
-- Disable Bing web search & Copilot integration in Windows search.
-- Disable Microsoft Store app suggestions in Windows search.
-- Disable Search Highlights (dynamic/branded content) in the taskbar search box.
-- Disable local Windows search history.
+- Disable Bing web search & Copilot integration and Microsoft Store app suggestions in Windows search.
 
 #### Taskbar
 
-- Align taskbar icons to the left.
-- Hide or change the search icon/box on the taskbar.
-- Hide the taskview button from the taskbar.
+- Change taskbar alignment.
+- Customize or hide taskbar buttons like the search bar, taskview and more.
 - Disable widgets on the taskbar & lock screen.
-- Hide the chat (meet now) icon from the taskbar.
-- Enable the 'End Task' option in the taskbar right click menu.
+- Enable the 'End Task' option in the taskbar right click menu to quickly force-close apps.
 - Enable the 'Last Active Click' behavior in the taskbar app area. This allows you to repeatedly click on an application's icon in the taskbar to switch focus between the open windows of that application.
-- Choose how app icons are shown on the taskbar when using multiple monitors.
-- Choose combine mode for taskbar buttons and labels.
+- Customize how app buttons are shown on the taskbar.
 
 #### File Explorer
 
 - Change the default location that File Explorer opens to.
 - Show file extensions for known file types.
 - Show hidden files, folders and drives.
-- Hide the Home or Gallery section from the File Explorer navigation pane.
+- Hide the Home, Gallery or OneDrive section from the File Explorer navigation pane.
 - Hide duplicate removable drive entries from the File Explorer navigation pane, so only the entry under 'This PC' remains.
 - Add all common folders (Desktop, Downloads, etc.) back to 'This PC' in File Explorer.
-- Hide the 3D objects, music or OneDrive folder from the File Explorer navigation pane.
-- Hide the 'Include in library', 'Give access to' and 'Share' options from the context menu.
 - Change drive letter position or visibility in File Explorer.
 
 #### Multi-tasking
 
 - Disable window snapping.
-- Disable Snap Assist suggestions when snapping a window.
-- Disable Snap Layout suggestions when dragging windows to the top of screen and when hovering on the maximize button.
-- Change if tabs are shown when snapping or pressing Alt+Tab.
+- Disable Snap Assist and Snap Layout suggestions when dragging or snapping windows.
+- Change whether tabs are shown when snapping windows or pressing Alt+Tab.
 
 #### Optional Windows Features
 
@@ -181,12 +161,12 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 
 #### Advanced Features
 
-- Option to [apply changes to a different user](https://github.com/Raphire/Win11Debloat/wiki/Advanced-Features#running-as-another-user), instead of the currently logged in user.
+- Ability to [apply changes to a different user](https://github.com/Raphire/Win11Debloat/wiki/Advanced-Features#running-as-another-user), instead of the currently logged in user.
 - [Sysprep mode](https://github.com/Raphire/Win11Debloat/wiki/Advanced-Features#sysprep-mode) to apply changes to the Windows Default user profile. Which ensures, all new users will have the changes automatically applied to them.
 
 ## Contributing
 
-We welcome contributions of all kinds! Please see our [Contributing Guidelines](/.github/CONTRIBUTING.md) for detailed instructions on how to get started and best practices for contributing.
+We welcome contributions of all kinds! Please see our [Contributing Guidelines](https://github.com/Raphire/Win11Debloat/blob/main/.github/CONTRIBUTING.md) for detailed instructions on how to get started and best practices for contributing.
 
 ## License
 

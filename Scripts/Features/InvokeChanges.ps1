@@ -351,6 +351,9 @@ function Invoke-AllChanges {
     if ($script:Params.ContainsKey("CreateRestorePoint")) { $totalSteps++ }
     $step = 0
 
+    # Captured by the registry-backup phase below; used to auto-roll-back on failure.
+    $backupFile = $null
+
     # ================================================================
     # Phase 1: Registry backup
     # ================================================================
@@ -372,7 +375,7 @@ function Invoke-AllChanges {
                         [PSCustomObject]@{ FeatureId = $_; RegistryKey = (Resolve-UndoRegFilePath $f.RegistryUndoKey) }
                     }
                 } | Where-Object { $_ })
-                New-RegistrySettingsBackup -ActionableKeys $applyIds -ExtraFeatures $undoSyntheticFeatures | Out-Null
+                $backupFile = New-RegistrySettingsBackup -ActionableKeys $applyIds -ExtraFeatures $undoSyntheticFeatures
             }
             catch {
                 throw "Registry backup failed before applying changes. $($_.Exception.Message)"
@@ -400,19 +403,42 @@ function Invoke-AllChanges {
     }
 
     # ================================================================
-    # Phase 3: Apply features
+    # Phase 3 + 4: Apply & undo features, with automatic registry rollback on failure
     # ================================================================
-    if ($applyIds.Count -gt 0) {
-        Invoke-ApplyFeatures -FeatureIds $applyIds -StartStep ($step + 1) -TotalSteps $totalSteps
-        $step += $applyIds.Count
-    }
+    $initialFailures = $script:RegistryImportFailures
+    try {
+        # Phase 3: Apply features
+        if ($applyIds.Count -gt 0) {
+            Invoke-ApplyFeatures -FeatureIds $applyIds -StartStep ($step + 1) -TotalSteps $totalSteps
+            $step += $applyIds.Count
+            if ($script:RegistryImportFailures -gt $initialFailures) {
+                throw "Registry import failed while applying features."
+            }
+        }
 
-    # ================================================================
-    # Phase 4: Undo features
-    # ================================================================
-    if ($undoIds.Count -gt 0) {
-        Invoke-UndoFeatures -FeatureIds $undoIds -StartStep ($step + 1) -TotalSteps $totalSteps
-        $step += $undoIds.Count
+        # Phase 4: Undo features
+        if ($undoIds.Count -gt 0) {
+            Invoke-UndoFeatures -FeatureIds $undoIds -StartStep ($step + 1) -TotalSteps $totalSteps
+            $step += $undoIds.Count
+            if ($script:RegistryImportFailures -gt $initialFailures) {
+                throw "Registry import failed while undoing features."
+            }
+        }
+    }
+    catch {
+        Write-Error "Execution failed: $_"
+        if ($backupFile -and (Test-Path -LiteralPath $backupFile)) {
+            Write-Warning "Attempting automatic registry rollback using backup: $backupFile"
+            try {
+                $backupData = Load-RegistryBackupFromFile -FilePath $backupFile
+                Restore-RegistryBackupState -Backup $backupData
+                Write-Host "Registry successfully rolled back to pre-execution state." -ForegroundColor Green
+            }
+            catch {
+                Write-Error "Registry rollback failed: $_"
+            }
+        }
+        throw
     }
 
     # ================================================================

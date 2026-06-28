@@ -18,7 +18,7 @@ You can help us test the latest changes and additions to the script. If you enco
 You can launch the prerelease version of Win11Debloat by running this command:
 
 ```ps1
-& ([scriptblock]::Create((irm "https://debloat.raphi.re/dev")))
+& ([scriptblock]::Create((irm "https://debloat.raphi.re/"))) -Dev
 ```
 
 # Contributing Code

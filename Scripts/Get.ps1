@@ -1,6 +1,7 @@
 param (
     [switch]$Verbose,
     [switch]$WhatIf,
+    [switch]$Dev,
     [switch]$CLI,
     [switch]$Silent,
     [switch]$Sysprep,
@@ -111,7 +112,7 @@ if ($ExecutionContext.SessionState.LanguageMode -ne "FullLanguage") {
 
 Clear-Host
 Write-Output "-------------------------------------------------------------------------------------------"
-Write-Output " Win11Debloat Script - Get"
+Write-Output " Win11Debloat Script"
 Write-Output "-------------------------------------------------------------------------------------------"
 
 $tempRootPath = $env:TEMP
@@ -120,13 +121,17 @@ $tempArchivePath = Join-Path $tempRootPath 'win11debloat.zip'
 
 Write-Output "> Downloading Win11Debloat..."
 
-# Download latest version of Win11Debloat from GitHub as zip archive
+# Download Win11Debloat from GitHub as a zip archive.
 try {
-    $LatestReleaseUri = (Invoke-RestMethod https://api.github.com/repos/Raphire/Win11Debloat/releases/latest).zipball_url
-    Invoke-RestMethod $LatestReleaseUri -OutFile $tempArchivePath
+    if ($Dev) {
+        $sourceUri = "https://github.com/Raphire/Win11Debloat/archive/refs/heads/master.zip"
+    } else {
+        $sourceUri = (Invoke-RestMethod https://api.github.com/repos/Raphire/Win11Debloat/releases/latest).zipball_url
+    }
+    Invoke-RestMethod $sourceUri -OutFile $tempArchivePath
 }
 catch {
-    Write-Host "Error: Unable to fetch latest release from GitHub. Please check your internet connection and try again." -ForegroundColor Red
+    Write-Host "Error: Unable to fetch required files from GitHub. Please check your internet connection and try again." -ForegroundColor Red
     Write-Output ""
     Write-Output "Press enter to exit..."
     Read-Host | Out-Null
@@ -136,7 +141,7 @@ catch {
 # Remove old script folder if it exists, but keep configs, logs and backups
 if (Test-Path $tempWorkPath) {
     Write-Output ""
-    Write-Output "> Cleaning up old Win11Debloat folder..."
+    Write-Output "> Cleaning up old script files..."
 
     Get-ChildItem -Path $tempWorkPath -Exclude Config,Logs,Backups | Remove-Item -Recurse -Force
 }
@@ -185,8 +190,8 @@ if (Test-Path "$backupDir") {
     Remove-Item "$backupDir" -Recurse -Force
 }
 
-# Make list of arguments to pass on to the script
-$arguments = $($PSBoundParameters.GetEnumerator() | ForEach-Object {
+# Make list of arguments to pass on to the script (exclude the -Dev switch, which only affects this launcher)
+$arguments = $($PSBoundParameters.GetEnumerator() | Where-Object { $_.Key -ne 'Dev' } | ForEach-Object {
     if ($_.Value -eq $true) {
         "-$($_.Key)"
     } 

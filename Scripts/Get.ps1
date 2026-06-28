@@ -1,7 +1,8 @@
 param (
+    [switch]$Verbose,
+    [switch]$WhatIf,
     [switch]$CLI,
     [switch]$Silent,
-    [switch]$Verbose,
     [switch]$Sysprep,
     [string]$LogPath,
     [string]$User,

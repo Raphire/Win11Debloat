@@ -295,9 +295,19 @@ function Show-RestoreBackupDialog {
         }
 
         Write-Host "Backup file selected: $($openDialog.FileName)"
-        $selectedBackup = Load-RegistryBackupFromFile -FilePath $openDialog.FileName
 
-        if (-not (& $showRegistryOverview -SelectedBackup $selectedBackup -SelectedBackupFilePath $openDialog.FileName)) {
+        try {
+            $selectedBackup = Load-RegistryBackupFromFile -FilePath $openDialog.FileName
+
+            if (-not (& $showRegistryOverview -SelectedBackup $selectedBackup -SelectedBackupFilePath $openDialog.FileName)) {
+                return
+            }
+        }
+        catch {
+            # Surface load/validation failures to the user. Without this, the throw escapes the
+            # button-click handler, is caught only by the dispatcher's global unhandled-exception
+            # handler (which merely writes a console warning), and the dialog silently does nothing.
+            Show-MessageBox -Owner $window -Title 'Invalid Backup File' -Message "The selected file could not be loaded as a registry backup:`n`n$($_.Exception.Message)" -Button 'OK' -Icon 'Error' | Out-Null
             return
         }
 

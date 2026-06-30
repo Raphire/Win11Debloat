@@ -111,7 +111,18 @@ if (-not $isAdmin) {
     $choice = Read-Host "Restart as Administrator? (y/n)"
 
     if ($choice -match '^[Yy]$') {
-        $elevatedArgs = @("-NoProfile", "-ExecutionPolicy", "Bypass", "-File", $PSCommandPath)
+        # Win32-safe argument quoting for Start-Process -ArgumentList. Windows PowerShell 5.1 joins the
+        # array with spaces and does not quote, so each value is re-parsed by CommandLineToArgvW on the
+        # elevated side. Double any backslashes that precede a quote or the closing quote, escape embedded
+        # quotes, then wrap -- otherwise a value containing '"' or ending in '\' (e.g. a directory path)
+        # corrupts the relaunch command line.
+        function Format-ElevatedArg([string]$Value) {
+            $escaped = $Value -replace '(\\*)"', '$1$1\"'
+            $escaped = $escaped -replace '(\\+)$', '$1$1'
+            return '"' + $escaped + '"'
+        }
+
+        $elevatedArgs = @("-NoProfile", "-ExecutionPolicy", "Bypass", "-File", (Format-ElevatedArg $PSCommandPath))
 
         foreach ($paramName in $PSBoundParameters.Keys) {
             $paramValue = $PSBoundParameters[$paramName]
@@ -123,7 +134,7 @@ if (-not $isAdmin) {
             }
             else {
                 $elevatedArgs += "-$paramName"
-                $elevatedArgs += "$paramValue"
+                $elevatedArgs += (Format-ElevatedArg $paramValue)
             }
         }
 

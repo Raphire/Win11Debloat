@@ -111,7 +111,7 @@ if (-not $isAdmin) {
     $choice = Read-Host "Restart as Administrator? (y/n)"
 
     if ($choice -match '^[Yy]$') {
-        $elevatedArgs = @("-NoProfile", "-ExecutionPolicy", "Bypass", "-File", $PSCommandPath)
+        $elevatedArgs = @("-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "`"$PSCommandPath`"")
 
         foreach ($paramName in $PSBoundParameters.Keys) {
             $paramValue = $PSBoundParameters[$paramName]
@@ -123,7 +123,7 @@ if (-not $isAdmin) {
             }
             else {
                 $elevatedArgs += "-$paramName"
-                $elevatedArgs += "$paramValue"
+                $elevatedArgs += "`"$paramValue`""
             }
         }
 

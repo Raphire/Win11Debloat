@@ -1,3 +1,24 @@
+<#
+    .SYNOPSIS
+        Displays the Restore Backup wizard dialog.
+
+    .DESCRIPTION
+        Presents a modal wizard that lets the user choose and restore either a
+        registry backup or a Start Menu pinned-apps backup. Returns the user's 
+        selection via $window.Tag.
+
+    .PARAMETER Owner
+        Optional parent WPF Window used to host this modal dialog. Defaults to the
+        shared $script:GuiWindow when not supplied.
+
+    .OUTPUTS
+        Hashtable
+        Returns a Hashtable describing the user's choice. Possible shapes:
+          RestoreRegistry  - @{ Result='RestoreRegistry'; Backup=<normalizedBackup> }
+          RestoreStartMenu - @{ Result='RestoreStartMenu'; StartMenuScope=<scope>;
+                               UseManualBackupFile=<bool>; BackupFilePath=<path|string> }
+          Cancelled        - @{ Result='Cancelled' } (from New-RestoreDialogState)
+#>
 function Show-RestoreBackupDialog {
     param(
         [System.Windows.Window]$Owner = $null

@@ -97,9 +97,16 @@ function Normalize-RegistryBackup {
     if ($allSelectedFeatures.Count -eq 0) {
         $errors.Add('Backup must contain at least one feature ID in SelectedFeatures or SelectedUndoFeatures.')
     }
-    $allowListValidationErrors = @(Test-RegistryBackupMatchesSelectedFeatures -SelectedFeatureIds @($selectedFeatures) -SelectedUndoFeatureIds @($selectedUndoFeatures) -Target $normalizedTarget -RegistryKeys @($normalizedKeys))
-    foreach ($allowListValidationError in $allowListValidationErrors) {
-        $errors.Add([string]$allowListValidationError)
+    else {
+        try {
+            $allowListValidationErrors = @(Test-RegistryBackupMatchesSelectedFeatures -SelectedFeatureIds @($selectedFeatures) -SelectedUndoFeatureIds @($selectedUndoFeatures) -Target $normalizedTarget -RegistryKeys @($normalizedKeys))
+            foreach ($allowListValidationError in $allowListValidationErrors) {
+                $errors.Add([string]$allowListValidationError)
+            }
+        }
+        catch {
+            $errors.Add("Failed to validate backup: $($_.Exception.Message)")
+        }
     }
 
     if ($errors.Count -gt 0) {

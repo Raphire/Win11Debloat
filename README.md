@@ -166,7 +166,7 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 
 ## Contributing
 
-We welcome contributions of all kinds! Please see our [Contributing Guidelines](https://github.com/Raphire/Win11Debloat/blob/main/.github/CONTRIBUTING.md) for detailed instructions on how to get started and best practices for contributing.
+We welcome contributions of all kinds! Please see our [Contributing Guidelines](https://github.com/Raphire/Win11Debloat/blob/master/.github/CONTRIBUTING.md) for detailed instructions on how to get started and best practices for contributing.
 
 ## License
 

@@ -111,11 +111,7 @@ if (-not $isAdmin) {
     $choice = Read-Host "Restart as Administrator? (y/n)"
 
     if ($choice -match '^[Yy]$') {
-        # Win32-safe argument quoting for Start-Process -ArgumentList. Windows PowerShell 5.1 joins the
-        # array with spaces and does not quote, so each value is re-parsed by CommandLineToArgvW on the
-        # elevated side. Double any backslashes that precede a quote or the closing quote, escape embedded
-        # quotes, then wrap -- otherwise a value containing '"' or ending in '\' (e.g. a directory path)
-        # corrupts the relaunch command line.
+        # Win32-safe escaping for arguments to pass to elevated process
         function Format-ElevatedArg([string]$Value) {
             $escaped = $Value -replace '(\\*)"', '$1$1\"'
             $escaped = $escaped -replace '(\\+)$', '$1$1'
@@ -139,7 +135,9 @@ if (-not $isAdmin) {
         }
 
         if ($MyInvocation.UnboundArguments.Count -gt 0) {
-            $elevatedArgs += $MyInvocation.UnboundArguments
+            foreach ($unboundArg in $MyInvocation.UnboundArguments) {
+                $elevatedArgs += (Format-ElevatedArg "$unboundArg")
+            }
         }
 
         Start-Process powershell -ArgumentList $elevatedArgs -Verb RunAs

@@ -111,7 +111,14 @@ if (-not $isAdmin) {
     $choice = Read-Host "Restart as Administrator? (y/n)"
 
     if ($choice -match '^[Yy]$') {
-        $elevatedArgs = @("-NoProfile", "-ExecutionPolicy", "Bypass", "-File", $PSCommandPath)
+        # Win32-safe escaping for arguments to pass to elevated process
+        function Format-ElevatedArg([string]$Value) {
+            $escaped = $Value -replace '(\\*)"', '$1$1\"'
+            $escaped = $escaped -replace '(\\+)$', '$1$1'
+            return '"' + $escaped + '"'
+        }
+
+        $elevatedArgs = @("-NoProfile", "-ExecutionPolicy", "Bypass", "-File", (Format-ElevatedArg $PSCommandPath))
 
         foreach ($paramName in $PSBoundParameters.Keys) {
             $paramValue = $PSBoundParameters[$paramName]
@@ -123,12 +130,14 @@ if (-not $isAdmin) {
             }
             else {
                 $elevatedArgs += "-$paramName"
-                $elevatedArgs += "$paramValue"
+                $elevatedArgs += (Format-ElevatedArg $paramValue)
             }
         }
 
         if ($MyInvocation.UnboundArguments.Count -gt 0) {
-            $elevatedArgs += $MyInvocation.UnboundArguments
+            foreach ($unboundArg in $MyInvocation.UnboundArguments) {
+                $elevatedArgs += (Format-ElevatedArg "$unboundArg")
+            }
         }
 
         Start-Process powershell -ArgumentList $elevatedArgs -Verb RunAs

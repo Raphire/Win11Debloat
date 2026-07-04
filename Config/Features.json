@@ -415,6 +415,19 @@
       "MaxVersion": null
     },
     {
+      "FeatureId": "DisableNotifications",
+      "Label": "Disable Windows Notifications",
+      "ToolTip": "This will turn off Windows notifications that could be misleading or bothersome. It may block notifications from apps such as Discord, Whatsapp, Teams, Slack and others.",
+      "Category": "Privacy & Suggested Content",
+      "RegistryKey": "Disable_Notifications.reg",
+      "ApplyText": "Disabling Windows notifications and reminders",
+      "UndoLabel": "Enable Windows notifications and reminders",
+      "ApplyUndoText": "Enabling Windows notifications and reminders",
+      "RegistryUndoKey": "Enable_Notifications.reg",
+      "MinVersion": null,
+      "MaxVersion": null
+    },
+    {
       "FeatureId": "DisableFindMyDevice",
       "Label": "Disable Find My Device location tracking",
       "ToolTip": "This will turn off the 'Find My Device' feature, which periodically sends your device's location to Microsoft. This feature uses policies, which will lock down certain settings.",

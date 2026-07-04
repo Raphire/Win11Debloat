@@ -158,9 +158,14 @@ function EnableStoreSearchSuggestions {
         $acl = Get-Acl -Path $StoreAppsDatabase
         $denyRules = @(
             $acl.Access | Where-Object {
-                $_.AccessControlType -eq [System.Security.AccessControl.AccessControlType]::Deny -and
-                (($_.FileSystemRights -band [System.Security.AccessControl.FileSystemRights]::FullControl) -ne 0) -and
-                (try { $_.IdentityReference.Translate([System.Security.Principal.SecurityIdentifier]) -eq $everyoneSid } catch { $false })
+                if ($_.AccessControlType -ne [System.Security.AccessControl.AccessControlType]::Deny) { return $false }
+                if (($_.FileSystemRights -band [System.Security.AccessControl.FileSystemRights]::FullControl) -eq 0) { return $false }
+                try {
+                    return ($_.IdentityReference.Translate([System.Security.Principal.SecurityIdentifier]) -eq $everyoneSid)
+                }
+                catch {
+                    return $false
+                }
             }
         )
 

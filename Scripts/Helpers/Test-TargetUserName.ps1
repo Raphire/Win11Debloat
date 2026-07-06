@@ -15,7 +15,7 @@ function Test-TargetUserName {
         }
     }
 
-    if ($normalizedUserName -eq $env:USERNAME) {
+    if (Test-UserNameMatch -UserNameA $normalizedUserName -UserNameB $env:USERNAME) {
         return [PSCustomObject]@{
             IsValid = $false
             UserName = $normalizedUserName

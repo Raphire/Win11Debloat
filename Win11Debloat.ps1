@@ -31,6 +31,7 @@ param (
     [switch]$PreventUpdateAutoReboot,
     [switch]$DisableDeliveryOptimization,
     [switch]$DisableBing,
+    [switch]$DisableNotifications,
     [switch]$DisableStoreSearchSuggestions,
     [switch]$DisableSearchHighlights,
     [switch]$DisableDesktopSpotlight,

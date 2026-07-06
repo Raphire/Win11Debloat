@@ -28,6 +28,7 @@ param (
     [switch]$DisableFastStartup,
     [switch]$DisableBitlockerAutoEncryption,
     [switch]$DisableModernStandbyNetworking,
+    [switch]$DisableNotifications,
     [switch]$DisableStorageSense,
     [switch]$DisableUpdateASAP,
     [switch]$PreventUpdateAutoReboot,

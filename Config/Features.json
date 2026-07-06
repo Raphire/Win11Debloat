@@ -402,6 +402,19 @@
       "MaxVersion": null
     },
     {
+      "FeatureId": "DisableNotifications",
+      "Label": "Disable Windows Notifications (From apps and other senders)",
+      "ToolTip": "Disables native Windows notifications from apps and other senders, this includes notifications from apps like Discord, WhatsApp, Teams, and Slack.",
+      "Category": "Privacy & Suggested Content",
+      "RegistryKey": "Disable_Notifications.reg",
+      "ApplyText": "Disabling Windows notifications and reminders",
+      "UndoLabel": "Enable Windows notifications and reminders",
+      "ApplyUndoText": "Enabling Windows notifications and reminders",
+      "RegistryUndoKey": "Enable_Notifications.reg",
+      "MinVersion": null,
+      "MaxVersion": null
+    },
+    {
       "FeatureId": "DisableLocationServices",
       "Label": "Disable Windows location services & app location access",
       "ToolTip": "This will turn off Windows Location Services and deny apps access to your location. This feature uses policies, which will lock down certain settings.",
@@ -411,19 +424,6 @@
       "UndoLabel": "Enable Windows location services & app location access",
       "ApplyUndoText": "Enabling Windows location services and app location access",
       "RegistryUndoKey": "Enable_Location_Services.reg",
-      "MinVersion": null,
-      "MaxVersion": null
-    },
-    {
-      "FeatureId": "DisableNotifications",
-      "Label": "Disable Windows Notifications",
-      "ToolTip": "This will turn off Windows notifications that could be misleading or bothersome. It may block notifications from apps such as Discord, Whatsapp, Teams, Slack and others.",
-      "Category": "Privacy & Suggested Content",
-      "RegistryKey": "Disable_Notifications.reg",
-      "ApplyText": "Disabling Windows notifications and reminders",
-      "UndoLabel": "Enable Windows notifications and reminders",
-      "ApplyUndoText": "Enabling Windows notifications and reminders",
-      "RegistryUndoKey": "Enable_Notifications.reg",
       "MinVersion": null,
       "MaxVersion": null
     },

@@ -1,5 +1,5 @@
 @echo off
-setlocal EnableDelayedExpansion
+setlocal
 
 :: Set Windows Terminal installation paths. (Default and Scoop installation)
 set "wtDefaultPath=%LOCALAPPDATA%\Microsoft\WindowsApps\wt.exe"
@@ -15,22 +15,20 @@ if exist "%wtDefaultPath%" (
 ) else if exist "%wtScoopPath%" (
     set "wtPath=%wtScoopPath%"
 ) else (
-    echo Windows Terminal not found. Using default PowerShell instead.
     set "wtPath="
 )
 
+:: Interpolated into a PS single-quoted string below;
+:: Apostrophes escaped via %:'=''% and -File arg uses [char]34 to avoid quote-parity bugs.
 set "SCRIPT_PATH=%~dp0Win11Debloat.ps1"
 
-:: Launch script
 if defined wtPath (
     call :Log Launching Win11Debloat.ps1 with Windows Terminal...
-    PowerShell -NoProfile -ExecutionPolicy Bypass -Command "$p='%SCRIPT_PATH%'; $q=[char]34; Start-Process -FilePath '%wtPath%' -ArgumentList ('PowerShell -NoProfile -ExecutionPolicy Bypass -File ' + $q + $p + $q) -Verb RunAs" >> "%logFile%" || call :Error "PowerShell command failed"
-    call :Log Script execution passed successfully to Win11Debloat.ps1
+    PowerShell -NoProfile -ExecutionPolicy Bypass -Command "$p='%SCRIPT_PATH:'=''%'; $q=[char]34; Start-Process -FilePath '%wtPath%' -ArgumentList ('PowerShell -NoProfile -ExecutionPolicy Bypass -File ' + $q + $p + $q) -Verb RunAs" >> "%logFile%" || call :Error "PowerShell command failed"
 ) else (
-    echo Windows Terminal not found. Using default PowerShell instead...
+    echo Windows Terminal not found, using default PowerShell...
     call :Log Windows Terminal not found. Using default PowerShell to launch Win11Debloat.ps1...
-    PowerShell -NoProfile -ExecutionPolicy Bypass -Command "$p='%SCRIPT_PATH%'; $q=[char]34; Start-Process PowerShell -ArgumentList ('-NoProfile -ExecutionPolicy Bypass -File ' + $q + $p + $q) -Verb RunAs" >> "%logFile%" || call :Error "PowerShell command failed"
-    call :Log Script execution passed successfully to Win11Debloat.ps1
+    PowerShell -NoProfile -ExecutionPolicy Bypass -Command "$p='%SCRIPT_PATH:'=''%'; $q=[char]34; Start-Process PowerShell -ArgumentList ('-NoProfile -ExecutionPolicy Bypass -File ' + $q + $p + $q) -Verb RunAs" >> "%logFile%" || call :Error "PowerShell command failed"
 )
 
 echo.
@@ -40,11 +38,13 @@ goto :EOF
 
 :: Logging Function
 :Log
-echo %* >> "%logFile%"
+echo(%* >> "%logFile%"
 goto :EOF
+
 :: Error Handler
 :Error
-echo ERROR: %*
+echo(ERROR: %*
+call :Log ERROR: %*
 echo Logged in %logFile%
 pause
 goto :EOF

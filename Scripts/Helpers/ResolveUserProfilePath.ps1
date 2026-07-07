@@ -3,10 +3,8 @@
         Normalize a user-name string for lookup and comparison.
 
     .DESCRIPTION
-        User input can carry zero-width characters or stray whitespace that
-        would silently break lookups and matches. Normalizing once up front
-        keeps every downstream comparison robust against purely cosmetic
-        differences. Returns an empty string for blank input.
+        Strips zero-width chars and collapses whitespace so cosmetic input
+        differences don't break downstream lookups. Returns '' for blank input.
 
     .PARAMETER Value
         Raw user-supplied name to normalize.
@@ -37,11 +35,8 @@ if (-not $script:ResolvedUserSidCache) {
         Build a form-agnostic cache key for a user name.
 
     .DESCRIPTION
-        SID resolution is expensive and called repeatedly for the same identity,
-        so the cache must be keyed by something that survives cosmetic input
-        differences. Normalizing and lower-casing ensures the same identity hits
-        regardless of case, whitespace, or qualifier form. Returns an empty
-        string for blank input.
+        Normalized + lower-cased so the same identity hits regardless of
+        case, whitespace, or qualifier form. Returns '' for blank input.
 
     .PARAMETER Value
         User name to derive a key from.
@@ -67,9 +62,8 @@ function GetUserLookupCacheKey {
         Escape a string for safe embedding in a WQL single-quoted literal.
 
     .DESCRIPTION
-        WQL string literals are single-quoted, so any embedded quote must be
-        doubled. Without this, a user-supplied name containing an apostrophe
-        could break the filter or enable WQL injection.
+        Doubles embedded single quotes; without this a user name containing
+        an apostrophe could break the WQL filter.
 
     .PARAMETER Value
         String to escape.
@@ -94,10 +88,8 @@ function EscapeWqlString {
         Extract the local name segment from a possibly domain-qualified identity.
 
     .DESCRIPTION
-        Profile folder leafs never carry the domain prefix, so qualified
-        identities (DOMAIN\user, user@domain) must be reduced to the local
-        segment before any on-disk comparison can succeed. Returns an empty
-        string for blank input.
+        Reduces DOMAIN\user or user@domain to the bare leaf, since profile
+        folder leafs never carry the domain prefix. Returns '' for blank input.
 
     .PARAMETER UserName
         User name that may be domain-qualified.
@@ -131,13 +123,8 @@ function GetLocalUserNameSegment {
         Determine whether the local machine is joined to a domain.
 
     .DESCRIPTION
-        Domain vs. workgroup selects entirely different matching rules
-        (suffix-aware vs. strict legacy), so every downstream decision needs
-        one cheap, consistent answer. Cached in script scope to avoid repeated
-        CIM round-trips. The cache is valid only for the current process
-        lifetime; joining/unjoining while the script runs is not supported.
-        Returns $false on any error or on workgroup machines, so callers
-        safely fall back to legacy matching.
+        Cached in script scope for the process lifetime. Returns $false on
+        error or workgroup, so callers fall back to legacy matching.
 
     .OUTPUTS
         System.Boolean
@@ -171,11 +158,9 @@ function Test-MachineIsDomainJoined {
 
     .DESCRIPTION
         On domain-joined machines Windows writes profile folders as
-        user.CONTOSO; knowing the suffix lets a bare user name match that
-        folder. Workgroup USERDOMAIN is just the computer name and would
-        produce false matches, so it is excluded. Falls back to the NetBIOS
-        domain captured by Test-MachineIsDomainJoined when USERDOMAIN is
-        empty in restricted execution contexts.
+        user.CONTOSO; knowing the suffix lets a bare name match that folder.
+        Excluded on workgroup (USERDOMAIN == COMPUTERNAME) to avoid false
+        matches. Returns '' when not applicable.
 
     .OUTPUTS
         System.String
@@ -187,17 +172,16 @@ function GetProfileFolderDomainSuffix {
 
     $domain = $env:USERDOMAIN
     if ([string]::IsNullOrWhiteSpace($domain)) {
-        # Some restricted execution contexts leave USERDOMAIN empty even when
-        # joined; the value captured by the Win32_ComputerSystem query is the
-        # reliable alternative.
+        # USERDOMAIN can be empty in restricted contexts; fall back to the
+        # NetBIOS domain captured by Test-MachineIsDomainJoined.
         $domain = $script:MachineNetBiosDomain
     }
     if ([string]::IsNullOrWhiteSpace($domain)) {
         return ''
     }
 
-    # USERDOMAIN == COMPUTERNAME means the box is effectively standalone; a
-    # suffix here would produce false matches instead of disambiguation.
+    # USERDOMAIN == COMPUTERNAME means effectively standalone; a suffix here
+    # would produce false matches instead of disambiguation.
     if ($domain -ieq $env:COMPUTERNAME) {
         return ''
     }
@@ -210,11 +194,9 @@ function GetProfileFolderDomainSuffix {
         Enumerate the name forms equivalent to a given identity.
 
     .DESCRIPTION
-        One identity surfaces in different forms depending on where it was
-        captured (bare, qualified, domain-suffixed). Enumerating every
-        equivalent form lets cross-source matching succeed without broadening
-        workgroup validation. Duplicates are removed. Returns an empty array
-        for blank input.
+        One identity surfaces in different forms (bare, qualified,
+        domain-suffixed); enumerating equivalents lets cross-source matching
+        succeed without broadening workgroup validation. Returns @() for blank.
 
     .PARAMETER Value
         User name to expand into equivalent forms.
@@ -240,12 +222,11 @@ function GetUserNameMatchCandidates {
         [void]$candidates.Add($localSegment)
     }
 
-    # Domain-suffixed forms only make sense where Windows actually writes them.
+    # Domain-suffixed forms only apply where Windows writes them.
     $domainSuffix = GetProfileFolderDomainSuffix
     if (-not [string]::IsNullOrWhiteSpace($domainSuffix)) {
-        # The base the suffix extends: prefer the local segment so qualified
-        # identities (DOMAIN\user) still produce user.CONTOSO rather than the
-        # fully qualified string.
+        # Prefer the local segment as the stem so DOMAIN\user still yields
+        # user.CONTOSO rather than the fully qualified string.
         $stem = if (-not [string]::IsNullOrWhiteSpace($localSegment)) { $localSegment } else { $normalized }
         if (-not [string]::IsNullOrWhiteSpace($stem)) {
             $suffixedForm = "$stem.$domainSuffix"
@@ -283,10 +264,8 @@ function GetUserNameMatchCandidates {
         Test whether a user name and a profile folder leaf share an account.
 
     .DESCRIPTION
-        A profile leaf and a user input may describe the same account in
-        different forms; comparing candidate sets instead of raw strings
-        tolerates that. Domain-joined machines also accept suffixed forms via
-        GetUserNameMatchCandidates.
+        Compares candidate sets (via GetUserNameMatchCandidates) instead of
+        raw strings, so different forms of the same account still match.
 
     .PARAMETER UserName
         User-supplied name to compare.
@@ -326,11 +305,9 @@ function Test-UserNameMatchesProfileLeaf {
         Test whether two user-name strings refer to the same account.
 
     .DESCRIPTION
-        Backups record whatever name the running session reported, which may
-        not match the restore session's form. Accepting any equivalent
-        candidate makes restore work across sessions and machine join states.
-        Workgroup stays a strict normalized equality check to avoid broadening
-        validation where suffixes aren't meaningful.
+        Accepts any equivalent candidate form so restore works across
+        sessions and join states. Workgroup stays a strict normalized equality
+        check to avoid broadening validation where suffixes aren't meaningful.
 
     .PARAMETER UserNameA
         First user name to compare.
@@ -354,8 +331,7 @@ function Test-UserNameMatch {
         return $false
     }
 
-    # Keep workgroup strict to avoid silently broadening restore scope where no
-    # suffix disambiguation exists to justify it.
+    # Workgroup: strict equality (no suffix disambiguation available).
     if (-not (Test-MachineIsDomainJoined)) {
         $normalizedA = NormalizeUserLookupValue -Value $UserNameA
         $normalizedB = NormalizeUserLookupValue -Value $UserNameB
@@ -381,9 +357,8 @@ function Test-UserNameMatch {
         Memoize a resolved SID under every equivalent name form.
 
     .DESCRIPTION
-        SID resolution is expensive and called repeatedly for the same user.
-        Memoizing under every equivalent form means later lookups short-circuit
-        regardless of which variant the caller has in hand. No-op on blank SID.
+        Keyed under all equivalent forms so later lookups short-circuit
+        regardless of which variant the caller holds. No-op on blank SID.
 
     .PARAMETER Candidates
         Equivalent name forms to key the cache entry under.
@@ -414,9 +389,7 @@ function SetResolvedUserSidCache {
         Retrieve a previously cached resolved SID.
 
     .DESCRIPTION
-        Companion to SetResolvedUserSidCache. Checks every equivalent form
-        because the caller may only hold one of them, but a prior resolution
-        under a different form should still hit. Returns $null on a miss.
+        Probes every equivalent form; returns $null on a miss.
 
     .PARAMETER Candidates
         Equivalent name forms to probe the cache with.
@@ -444,10 +417,8 @@ function GetCachedResolvedUserSid {
         Attempt SID resolution via NTAccount translation.
 
     .DESCRIPTION
-        NTAccount.Translate is the most authoritative SID source, but only
-        resolves when the name is reachable through standard security APIs.
-        Failures fall through to cheaper, broader heuristics in the caller.
-        Returns $null on failure.
+        Most authoritative name->SID source; only resolves names reachable
+        through standard security APIs. Returns $null on failure.
 
     .PARAMETER UserName
         Name to translate.
@@ -483,10 +454,8 @@ function TryResolveSidByNtAccount {
         Attempt SID resolution against the local account database.
 
     .DESCRIPTION
-        Local SAM and Win32_UserAccount are ground truth for local accounts.
-        Prefers Get-LocalUser (typed, fast) and falls back to CIM for older
-        hosts or contexts where the cmdlet is unavailable. Returns $null when
-        no candidate resolves.
+        Prefers Get-LocalUser (typed, fast), falls back to Win32_UserAccount
+        CIM for older hosts or unavailable cmdlet. Returns $null if no match.
 
     .PARAMETER Candidates
         Equivalent name forms to try.
@@ -542,10 +511,8 @@ function TryResolveSidByLocalLookup {
         Recover a SID from the ProfileList registry hive.
 
     .DESCRIPTION
-        Last-resort heuristic: when name-resolution APIs fail, the ProfileList
-        hive still links SIDs to on-disk profile folders, so matching the
-        folder leaf can recover a SID that no other source would surface.
-        Returns $null on failure.
+        Last-resort heuristic: matches the profile folder leaf to recover a
+        SID when name-resolution APIs fail. Returns $null on failure.
 
     .PARAMETER Candidates
         Equivalent name forms to match against profile folder leafs.
@@ -601,9 +568,8 @@ function TryResolveSidFromProfileList {
         Construct a resolved user context object.
 
     .DESCRIPTION
-        Bundles the resolved fields so callers don't re-derive their
-        relationship downstream or thread three loose values through every
-        call site.
+        Bundles UserName/UserSid/ProfilePath so callers don't re-derive or
+        thread three loose values.
 
     .PARAMETER UserName
         Normalized user name.
@@ -633,17 +599,68 @@ function NewResolvedUserContext {
 
 <#
     .SYNOPSIS
-        Resolve a user name to its SID with progressive fallbacks.
+        Return the qualified (DOMAIN\user) name of the current process when it matches the input.
 
     .DESCRIPTION
-        Tries the most authoritative sources first and degrades to heuristics
-        so the common case is fast and the degenerate case still resolves.
-        Qualified identities are pinned to their full form to avoid matching an
-        unrelated local account that happens to share the leaf name. Returns
-        $null if no source resolves.
+        Used to qualify a bare name on domain-joined boxes; returns $null when
+        the input doesn't match the current process identity.
+
+    .PARAMETER Candidate
+        Bare user name to compare against the current process identity.
+
+    .OUTPUTS
+        System.String
+#>
+function GetQualifiedProcessIdentityName {
+    param(
+        [string]$Candidate
+    )
+
+    $normalizedCandidate = NormalizeUserLookupValue -Value $Candidate
+    if ([string]::IsNullOrWhiteSpace($normalizedCandidate)) {
+        return $null
+    }
+
+    try {
+        $currentIdentity = [System.Security.Principal.WindowsIdentity]::GetCurrent()
+        if ($null -eq $currentIdentity) {
+            return $null
+        }
+
+        # Skip service/SYSTEM identities (no user profile).
+        $currentSidString = [string]$currentIdentity.User.Value
+        if ($currentSidString -in @('S-1-5-18', 'S-1-5-19', 'S-1-5-20')) {
+            return $null
+        }
+
+        $currentName = [string]$currentIdentity.Name
+        if ([string]::IsNullOrWhiteSpace($currentName)) {
+            return $null
+        }
+
+        $currentLocalSegment = GetLocalUserNameSegment -UserName $currentName
+        if (-not [string]::IsNullOrWhiteSpace($currentLocalSegment) -and $currentLocalSegment -ieq $normalizedCandidate) {
+            return $currentName
+        }
+    }
+    catch {
+        # Fall through to name-based resolution.
+    }
+
+    return $null
+}
+
+<#
+    .SYNOPSIS
+        Resolve a user name to its SID.
+
+    .DESCRIPTION
+        Always qualifies the input first (DOMAIN\user) and resolves that form;
+        never guesses from a bare name on domain-joined boxes to avoid
+        same-named local SAM shadowing.
 
     .PARAMETER UserName
-        User name to resolve.
+        User name to resolve. May be bare, DOMAIN\user, or user@domain.
 
     .OUTPUTS
         System.String
@@ -666,15 +683,10 @@ function ResolveUserSid {
         $leafNameCandidates = @($localNameSegment)
     }
 
-    $cacheCandidates = if ($hasQualifiedIdentity) {
+    # Unqualified inputs probe both the bare name and (for qualified inputs) the
+    # local leaf segment; qualified inputs pin to the caller's full form only.
+    $lookupCandidates = if ($hasQualifiedIdentity) {
         @($candidateUserName)
-    }
-    else {
-        @($candidateUserName) + $leafNameCandidates | Select-Object -Unique
-    }
-
-    $localLookupCandidates = if ($hasQualifiedIdentity) {
-        @()
     }
     else {
         @($candidateUserName) + $leafNameCandidates | Select-Object -Unique
@@ -687,40 +699,66 @@ function ResolveUserSid {
         @($candidateUserName)
     }
 
-    $cachedSid = GetCachedResolvedUserSid -Candidates $cacheCandidates
+    $cachedSid = GetCachedResolvedUserSid -Candidates $lookupCandidates
     if ($cachedSid) {
         return $cachedSid
     }
 
-    # Resolve qualified identities via their full form first; using the bare
-    # leaf here would risk matching an unrelated local account that shares it.
+    # Step 1: derive the qualified form(s) to resolve; never guess from a bare
+    # name on domain-joined boxes (local SAM nameshare risk).
+    $qualifiedNamesToTry = New-Object 'System.Collections.Generic.List[string]'
+
     if ($hasQualifiedIdentity) {
-        $resolvedSid = TryResolveSidByNtAccount -UserName $candidateUserName
+        # Caller already qualified; honor verbatim.
+        [void]$qualifiedNamesToTry.Add($candidateUserName)
+    }
+    elseif (Test-MachineIsDomainJoined) {
+        # Prefer process identity (authoritative), then USERDOMAIN\input.
+        $processQualifiedName = GetQualifiedProcessIdentityName -Candidate $candidateUserName
+        if (-not [string]::IsNullOrWhiteSpace($processQualifiedName)) {
+            [void]$qualifiedNamesToTry.Add($processQualifiedName)
+        }
+
+        $domainSuffix = GetProfileFolderDomainSuffix
+        if (-not [string]::IsNullOrWhiteSpace($domainSuffix)) {
+            $domainQualifiedName = "$domainSuffix\$candidateUserName"
+            if (-not ($qualifiedNamesToTry -contains $domainQualifiedName)) {
+                [void]$qualifiedNamesToTry.Add($domainQualifiedName)
+            }
+        }
+    }
+    else {
+        # Workgroup: bare name is unambiguous.
+        [void]$qualifiedNamesToTry.Add($candidateUserName)
+    }
+
+    # Step 2: resolve qualified form(s) via NTAccount.Translate.
+    foreach ($qualifiedName in $qualifiedNamesToTry) {
+        $resolvedSid = TryResolveSidByNtAccount -UserName $qualifiedName
         if ($resolvedSid) {
-            SetResolvedUserSidCache -Candidates $cacheCandidates -Sid $resolvedSid
+            $allCacheKeys = @($candidateUserName) + $qualifiedNamesToTry | Select-Object -Unique
+            SetResolvedUserSidCache -Candidates $allCacheKeys -Sid $resolvedSid
             return $resolvedSid
         }
     }
 
-    $resolvedSid = TryResolveSidByLocalLookup -Candidates $localLookupCandidates
-    if ($resolvedSid) {
-        SetResolvedUserSidCache -Candidates $cacheCandidates -Sid $resolvedSid
-        return $resolvedSid
-    }
-
-    # Last-ditch NTAccount translation for non-qualified names; qualified names
-    # already tried this path above.
-    if (-not $hasQualifiedIdentity) {
-        $resolvedSid = TryResolveSidByNtAccount -UserName $candidateUserName
+    # Step 3: local SAM fallback (workgroup only; skipped on domain to avoid
+    # nameshare shadowing).
+    if (-not (Test-MachineIsDomainJoined)) {
+        $resolvedSid = TryResolveSidByLocalLookup -Candidates $lookupCandidates
         if ($resolvedSid) {
-            SetResolvedUserSidCache -Candidates $cacheCandidates -Sid $resolvedSid
+            $allCacheKeys = @($candidateUserName) + $qualifiedNamesToTry | Select-Object -Unique
+            SetResolvedUserSidCache -Candidates $allCacheKeys -Sid $resolvedSid
             return $resolvedSid
         }
     }
 
+    # Step 4: ProfileList leaf heuristic (last resort; disambiguates by
+    # on-disk folder name, suffix-aware on domain boxes).
     $resolvedSid = TryResolveSidFromProfileList -Candidates $profileHeuristicCandidates
     if ($resolvedSid) {
-        SetResolvedUserSidCache -Candidates $cacheCandidates -Sid $resolvedSid
+        $allCacheKeys = @($candidateUserName) + $qualifiedNamesToTry | Select-Object -Unique
+        SetResolvedUserSidCache -Candidates $allCacheKeys -Sid $resolvedSid
         return $resolvedSid
     }
 
@@ -732,9 +770,8 @@ function ResolveUserSid {
         Resolve a user name to its profile folder path.
 
     .DESCRIPTION
-        Convenience wrapper around ResolveUserProfileContext: most callers
-        need only the path and shouldn't have to unwrap the context object
-        themselves. Returns $null if no profile is found.
+        Wrapper around ResolveUserProfileContext returning only the path.
+        Returns $null if no profile is found.
 
     .PARAMETER UserName
         User name whose profile path is required.
@@ -761,10 +798,10 @@ function ResolveUserProfilePath {
         Resolve a user name to a full profile context (name, SID, path).
 
     .DESCRIPTION
-        Resolves via SID-keyed registry data first (authoritative), then
-        degrades to on-disk path probing so resolution still succeeds when the
-        account or SID can't be looked up (e.g. deleted account, restricted
-        execution context). Returns $null if no profile is found.
+        SID-keyed registry data first (authoritative), then on-disk path
+        probing so resolution still succeeds when the account or SID can't be
+        looked up (deleted account, restricted context). Returns $null if not
+        found.
 
     .PARAMETER UserName
         User name whose profile context is required.
@@ -839,14 +876,14 @@ function ResolveUserProfileContext {
             continue
         }
 
-        # Exact leaf match is the common case and avoids an unnecessary scan.
+        # Exact leaf match first (common case; avoids an unnecessary scan).
         $candidateUserPath = Join-Path $rootPath $candidateUserName
         if (Test-Path -LiteralPath $candidateUserPath -PathType Container) {
             return (NewResolvedUserContext -UserName $candidateUserName -UserSid $userSid -ProfilePath $candidateUserPath)
         }
 
-        # Only domain-joined boxes can write suffixed folders, so only scan there;
-        # scanning workgroup roots would risk matching the wrong account.
+        # Only domain-joined boxes write suffixed folders; scanning workgroup
+        # roots would risk matching the wrong account.
         if (Test-MachineIsDomainJoined) {
             try {
                 foreach ($child in @(Get-ChildItem -LiteralPath $rootPath -Directory -ErrorAction SilentlyContinue)) {

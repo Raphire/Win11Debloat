@@ -120,11 +120,79 @@ function GetLocalUserNameSegment {
 
 <#
     .SYNOPSIS
+        Reduce a Win32_ComputerSystem.Domain value to a NetBIOS label.
+
+    .DESCRIPTION
+        Win32_ComputerSystem.Domain may be DNS-style (e.g. contoso.com);
+        prefer Win32_NTDomain.DomainName and fall back to the first DNS label
+        so cached suffixes stay single-label (user.CONTOSO, not
+        user.contoso.com). Returns the trimmed value as-is when already a
+        single label. Falls back safely (no match) for FQDNs like
+        corp.contoso.com whose NetBIOS label is CONTOSO.
+
+    .PARAMETER RawDomain
+        Value reported by Win32_ComputerSystem.Domain.
+
+    .OUTPUTS
+        System.String
+#>
+function ResolveNetBiosDomainName {
+    param(
+        [string]$RawDomain
+    )
+
+    $trimmed = NormalizeUserLookupValue -Value $RawDomain
+    if ([string]::IsNullOrWhiteSpace($trimmed)) {
+        return ''
+    }
+
+    try {
+        # Prefer the joined-domain instance over the local SAM shadow
+        # (DomainName == COMPUTERNAME); DomainControllerName may be $null.
+        $computerName = $env:COMPUTERNAME
+        $ntDomainInstances = @(Get-CimInstance -ClassName Win32_NTDomain -OperationTimeoutSec 5 -ErrorAction Stop |
+            Where-Object {
+                -not [string]::IsNullOrWhiteSpace($_.DomainName) -and
+                $_.DomainName -ine 'WORKGROUP' -and
+                $_.DomainName -ine $computerName
+            })
+
+        $ntDomainInstance = $ntDomainInstances |
+            Where-Object { -not [string]::IsNullOrWhiteSpace($_.DomainControllerName) } |
+            Select-Object -First 1
+        if (-not $ntDomainInstance -and $ntDomainInstances.Count -gt 0) {
+            $ntDomainInstance = $ntDomainInstances | Select-Object -First 1
+        }
+
+        if ($ntDomainInstance -and -not [string]::IsNullOrWhiteSpace($ntDomainInstance.DomainName)) {
+            $fromNtDomain = NormalizeUserLookupValue -Value $ntDomainInstance.DomainName
+            if (-not [string]::IsNullOrWhiteSpace($fromNtDomain)) {
+                return $fromNtDomain
+            }
+        }
+    }
+    catch {
+        # Fall through to DNS-label derivation.
+    }
+
+    if ($trimmed.Contains('.')) {
+        $leaf = NormalizeUserLookupValue -Value (($trimmed -split '\.')[0])
+        if (-not [string]::IsNullOrWhiteSpace($leaf)) {
+            return $leaf
+        }
+    }
+
+    return $trimmed
+}
+
+<#
+    .SYNOPSIS
         Determine whether the local machine is joined to a domain.
 
     .DESCRIPTION
         Cached in script scope for the process lifetime. Returns $false on
-        error or workgroup, so callers fall back to legacy matching.
+        error or workgroup. When joined, also caches the NetBIOS domain label
+        (ResolveNetBiosDomainName) for use as a profile-folder suffix.
 
     .OUTPUTS
         System.Boolean
@@ -142,7 +210,7 @@ function Test-MachineIsDomainJoined {
         $computerSystem = Get-CimInstance -ClassName Win32_ComputerSystem -ErrorAction Stop
         if ($null -ne $computerSystem -and $computerSystem.PartOfDomain) {
             $script:MachineIsDomainJoined = $true
-            $script:MachineNetBiosDomain = [string]$computerSystem.Domain
+            $script:MachineNetBiosDomain = ResolveNetBiosDomainName -RawDomain ([string]$computerSystem.Domain)
         }
     }
     catch {
@@ -173,7 +241,7 @@ function GetProfileFolderDomainSuffix {
     $domain = $env:USERDOMAIN
     if ([string]::IsNullOrWhiteSpace($domain)) {
         # USERDOMAIN can be empty in restricted contexts; fall back to the
-        # NetBIOS domain captured by Test-MachineIsDomainJoined.
+        # cached NetBIOS label (single-label, safe as a folder suffix).
         $domain = $script:MachineNetBiosDomain
     }
     if ([string]::IsNullOrWhiteSpace($domain)) {

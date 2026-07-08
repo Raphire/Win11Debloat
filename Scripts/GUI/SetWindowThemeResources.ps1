@@ -122,10 +122,8 @@ function SetWindowThemeResources {
         }
     }
 
-    # ---- Per-OS icon font ----
-    # Segoe Fluent Icons ships only on Windows 11 (build >= 22000). On Windows 10,
-    # fall back to Segoe MDL2 Assets, which is present on every supported Windows 10
-    # build and still installed on Windows 11.
+    # Segoe Fluent Icons ships only on Windows 11 (build >= 22000). 
+    # On Windows 10, fall back to Segoe MDL2 Assets.
     $winBuild = 0
     try {
         $winBuild = [int](Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' CurrentBuild -ErrorAction Stop)

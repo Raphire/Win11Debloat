@@ -129,7 +129,7 @@ function Build-DynamicTweaks {
 
         # Add category icon
         $icon = New-Object System.Windows.Controls.TextBlock
-        # Convert HTML entity to character (e.g., &#xE72E; -> actual character).
+        # Convert HTML entity to character (e.g., &#xE72E; -> actual character)
         if ($categoryIcon -match '&#x([0-9A-Fa-f]+);') {
             $hexValue = [Convert]::ToInt32($matches[1], 16)
             if ($WinVersion -lt 22000 -and $hexValue -eq 0xE794) {

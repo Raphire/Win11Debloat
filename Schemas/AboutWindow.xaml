@@ -106,7 +106,7 @@
                                 VerticalAlignment="Center"
                                 FontWeight="SemiBold"
                                 FontFamily="{DynamicResource AppIconFontFamily}"
-                                Text="{DynamicResource IconKofi}" 
+                                Text="&#xEB52;" 
                                 Foreground="{DynamicResource TitleBarCloseHoverColor}"
                                 Margin="0,0,8,0"/>
                         

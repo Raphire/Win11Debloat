@@ -362,7 +362,7 @@
                             </TextBlock.Style>
                         </TextBlock>
                         <StackPanel Grid.Column="1" Orientation="Horizontal">
-                            <Button x:Name="KofiBtn" shell:WindowChrome.IsHitTestVisibleInChrome="True" Content="{DynamicResource IconKofi}" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="15" Style="{StaticResource TitlebarButton}" ToolTip="Support the creator" AutomationProperties.Name="Support the creator"/>
+                            <Button x:Name="KofiBtn" shell:WindowChrome.IsHitTestVisibleInChrome="True" Content="&#xEB52;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="15" Style="{StaticResource TitlebarButton}" ToolTip="Support the creator" AutomationProperties.Name="Support the creator"/>
                             <Button x:Name="MenuBtn" shell:WindowChrome.IsHitTestVisibleInChrome="True" Content="&#xE700;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="15" Style="{StaticResource TitlebarButton}" ToolTip="Options" AutomationProperties.Name="Options">
                                 <Button.ContextMenu>
                                     <ContextMenu x:Name="MainMenu">
@@ -401,12 +401,12 @@
                                         </MenuItem>
                                         <MenuItem x:Name="MenuReportBug" Header="Report a bug" AutomationProperties.Name="Report a bug">
                                             <MenuItem.Icon>
-                                                <TextBlock Text="{DynamicResource IconReportBug}" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="16" Foreground="{DynamicResource AppFgColor}"/>
+                                                <TextBlock Text="&#xEBE8;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="16" Foreground="{DynamicResource AppFgColor}"/>
                                             </MenuItem.Icon>
                                         </MenuItem>
                                         <MenuItem x:Name="MenuLogs" Header="Logs" AutomationProperties.Name="Logs">
                                             <MenuItem.Icon>
-                                                <TextBlock Text="{DynamicResource IconLogs}" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="16" Foreground="{DynamicResource AppFgColor}"/>
+                                                <TextBlock Text="&#xf000;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="16" Foreground="{DynamicResource AppFgColor}"/>
                                             </MenuItem.Icon>
                                         </MenuItem>
                                         <MenuItem x:Name="MenuAbout" Header="About" AutomationProperties.Name="About">
@@ -684,7 +684,7 @@
                                         </ScrollViewer>
                                         <Border x:Name="LoadingAppsIndicator" CornerRadius="0,0,4,4" Background="{DynamicResource CardBgColor}" Opacity="0.8" Visibility="Collapsed">
                                             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                                                <TextBlock Text="{DynamicResource IconLoadingApps}" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="28" Foreground="{DynamicResource AppFgColor}" HorizontalAlignment="Center" Margin="0,0,0,8" RenderTransformOrigin="0.5,0.5">
+                                                <TextBlock Text="&#xF16A;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="28" Foreground="{DynamicResource AppFgColor}" HorizontalAlignment="Center" Margin="0,0,0,8" RenderTransformOrigin="0.5,0.5">
                                                     <TextBlock.RenderTransform>
                                                         <RotateTransform Angle="0"/>
                                                     </TextBlock.RenderTransform>

@@ -134,7 +134,7 @@
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Grid.Column="0"
-                                           Text="{DynamicResource IconRegistryRestore}"
+                                           Text="&#xEF58;"
                                            FontFamily="{DynamicResource AppIconFontFamily}"
                                            FontSize="24"
                                            VerticalAlignment="Center"

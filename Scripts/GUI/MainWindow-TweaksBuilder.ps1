@@ -204,9 +204,8 @@ function Build-DynamicTweaks {
     foreach ($categoryObj in $orderedCategories) {
         $categoryName = $categoryObj.Name
 
-        # Create/get card for this category
-        $panel = GetOrCreateCategoryCard -categoryObj $categoryObj
-        if (-not $panel) { continue }
+        # Card is created lazily on the first rendered item
+        $panel = $null
 
         # Collect groups and features for this category, then sort by priority
         $categoryItems = @()
@@ -290,6 +289,7 @@ function Build-DynamicTweaks {
                         if ($soleFeature.FeatureId -match '^Disable') { $opt = 'Disable' } elseif ($soleFeature.FeatureId -match '^Enable') { $opt = 'Enable' }
                         $items = @('No Change', $opt)
                         $comboName = ("Feature_{0}_Combo" -f $soleFeature.FeatureId) -replace '[^a-zA-Z0-9_]', ''
+                        if (-not $panel) { $panel = GetOrCreateCategoryCard -categoryObj $categoryObj }
                         $combo = CreateLabeledCombo -parent $panel -labelText $soleFeature.Label -comboName $comboName -items $items
                         # attach tooltip from Features.json if present
                         if ($soleFeature.ToolTip -or $soleFeature.DisableWhenApplied -eq $true) {
@@ -314,6 +314,7 @@ function Build-DynamicTweaks {
 
                 $items = @('No Change') + ($filteredValues | ForEach-Object { $_.Label })
                 $comboName = 'Group_{0}Combo' -f $group.GroupId
+                if (-not $panel) { $panel = GetOrCreateCategoryCard -categoryObj $categoryObj }
                 $combo = CreateLabeledCombo -parent $panel -labelText $group.Label -comboName $comboName -items $items
                 # attach tooltip from UiGroups if present
                 if ($group.ToolTip) {
@@ -334,6 +335,7 @@ function Build-DynamicTweaks {
                 if ($feature.FeatureId -match '^Disable') { $opt = 'Disable' } elseif ($feature.FeatureId -match '^Enable') { $opt = 'Enable' }
                 $items = @('No Change', $opt)
                 $comboName = ("Feature_{0}_Combo" -f $feature.FeatureId) -replace '[^a-zA-Z0-9_]', ''
+                if (-not $panel) { $panel = GetOrCreateCategoryCard -categoryObj $categoryObj }
                 $combo = CreateLabeledCombo -parent $panel -labelText $feature.Label -comboName $comboName -items $items
                 # attach tooltip from Features.json if present, and include the disabled-state reason
                 if ($feature.ToolTip -or $feature.DisableWhenApplied -eq $true) {

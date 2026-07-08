@@ -922,6 +922,14 @@
       "RemovalMethod": "Appx"
     },
     {
+      "FriendlyName": "LG Monitor App",
+      "AppId": "LGElectronics.LGMonitorApp",
+      "Description": "LG OEM software for controlling your LG monitor",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
       "FriendlyName": "HP AI Experience Center",
       "AppId": "AD2F1837.HPAIExperienceCenter",
       "Description": "HP OEM software, AI-enhanced features and support",
@@ -1156,6 +1164,7 @@
         "AD2F1837.myHP",
         "E046963F.LenovoCompanion",
         "LenovoCompanyLimited.LenovoVantageService",
+        "LGElectronics.LGMonitorApp",
         "DellInc.DellSupportAssistforPCs",
         "DellInc.DellDigitalDelivery",
         "DellInc.DellMobileConnect"

@@ -100,6 +100,17 @@ param (
     [switch]$HideDriveLetters
 )
 
+# Win11Debloat depends on Windows PowerShell 5.1 cmdlets (the Appx module's Get-AppxPackage /
+# Remove-AppxPackage, and Get-ComputerRestorePoint) that do not load in PowerShell 7 (pwsh), where the
+# Appx module fails with "Operation is not supported on this platform" (0x80131539). Without this guard
+# the run continues and silently fails to remove any apps while still reporting success. See issue #675.
+if ($PSVersionTable.PSEdition -eq 'Core') {
+    Write-Host "Win11Debloat requires Windows PowerShell 5.1, but it is running under PowerShell $($PSVersionTable.PSVersion) (pwsh / Core edition)." -ForegroundColor Red
+    Write-Host "App removal and system restore points rely on modules that are not available in PowerShell 7, so the run cannot complete correctly here." -ForegroundColor Red
+    Write-Host "Please re-run this script with Windows PowerShell instead (powershell.exe)." -ForegroundColor Yellow
+    exit 1
+}
+
 # Check if script is running as administrator
 $isAdmin = ([Security.Principal.WindowsPrincipal] `
     [Security.Principal.WindowsIdentity]::GetCurrent()

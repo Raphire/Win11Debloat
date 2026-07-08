@@ -1140,7 +1140,7 @@
       ]
     },
     {
-      "Name": "OEM software (Dell, HP, Lenovo)",
+      "Name": "OEM software (Dell, HP, Lenovo, LG)",
       "AppIds": [
         "AD2F1837.HPAIExperienceCenter",
         "AD2F1837.HPConnectedMusic",

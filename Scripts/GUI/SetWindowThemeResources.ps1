@@ -7,7 +7,8 @@
     populates the window's Resources with SolidColorBrush entries keyed by
     category and resource name (e.g. "AppAccentColor"). Additionally loads and
     merges shared XAML styles from the script's SharedStylesSchema path if
-    available.
+    available. Also resolves the icon font: Segoe Fluent Icons on Windows 11
+    and Segoe MDL2 Assets on Windows 10.
 
     .PARAMETER window
     The WPF Window whose resource dictionary will be populated.
@@ -121,6 +122,12 @@ function SetWindowThemeResources {
             )
         }
     }
+
+    # Segoe Fluent Icons ships only on Windows 11 (build >= 22000). 
+    # On Windows 10, fall back to Segoe MDL2 Assets.
+    $winBuild = Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' CurrentBuild
+    $iconFontName = if ($winBuild -ge 22000) { 'Segoe Fluent Icons' } else { 'Segoe MDL2 Assets' }
+    $window.Resources['AppIconFontFamily'] = [System.Windows.Media.FontFamily]::new($iconFontName)
 
     # Load and merge shared styles
     if ($script:SharedStylesSchema -and (Test-Path $script:SharedStylesSchema)) {

@@ -92,7 +92,7 @@
                         </Style.Triggers>
                     </Style>
                 </Button.Style>
-                <TextBlock Text="&#xE8BB;" FontFamily="Segoe Fluent Icons" FontSize="10"/>
+                <TextBlock Text="&#xE8BB;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="10"/>
             </Button>
 
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0">
@@ -135,7 +135,7 @@
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Grid.Column="0"
                                            Text="&#xEF58;"
-                                           FontFamily="Segoe Fluent Icons"
+                                           FontFamily="{DynamicResource AppIconFontFamily}"
                                            FontSize="24"
                                            VerticalAlignment="Center"
                                            Margin="14,0,14,0"/>
@@ -165,7 +165,7 @@
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Grid.Column="0"
                                            Text="&#xE8FC;"
-                                           FontFamily="Segoe Fluent Icons"
+                                           FontFamily="{DynamicResource AppIconFontFamily}"
                                            FontSize="24"
                                            VerticalAlignment="Center"
                                            Margin="14,0,14,0"/>

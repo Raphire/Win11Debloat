@@ -93,7 +93,8 @@ function Normalize-RegistryBackup {
         }
         elseif ($normalizedTarget -like 'CurrentUser:*') {
             $targetCurrentUserName = $normalizedTarget.Substring(12)
-            if ([string]::IsNullOrWhiteSpace($targetCurrentUserName) -or ($targetCurrentUserName -ne $env:USERNAME)) {
+            if ([string]::IsNullOrWhiteSpace($targetCurrentUserName) -or
+                -not (Test-UserNameMatch -UserNameA $targetCurrentUserName -UserNameB $env:USERNAME)) {
                  $errors.Add("Backup was made for '$targetCurrentUserName', this does not match current user '$env:USERNAME'.")
             }
         }

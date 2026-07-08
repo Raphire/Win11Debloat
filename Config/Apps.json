@@ -924,7 +924,7 @@
     {
       "FriendlyName": "LG Monitor App",
       "AppId": "LGElectronics.LGMonitorApp",
-      "Description": "LG OEM software for controlling your LG monitor",
+      "Description": "LG OEM software for controlling your LG monitor, Windows Update may silently reinstall this app if you have an LG monitor connected",
       "SelectedByDefault": false,
       "Recommendation": "optional",
       "RemovalMethod": "Appx"

@@ -1370,6 +1370,19 @@
       "MaxVersion": null
     },
     {
+      "FeatureId": "DisableDeviceAutoAppDownload",
+      "Label": "Prevent Windows from auto-downloading device companion apps",
+      "ToolTip": "Stops Windows from silently downloading device companion apps via Windows Update when you connect certain devices, like monitors from LG and Alienware. These devices will still work as expected, this only stops Windows Update from automatically installing additional apps without consent.",
+      "Category": "Windows Update",
+      "RegistryKey": "Disable_Device_Auto_App_Download.reg",
+      "ApplyText": "Preventing automatic download of device companion apps",
+      "UndoLabel": "Allow automatic download of device companion apps",
+      "ApplyUndoText": "Allowing automatic download of device companion apps",
+      "RegistryUndoKey": "Enable_Device_Auto_App_Download.reg",
+      "MinVersion": null,
+      "MaxVersion": null
+    },
+    {
       "FeatureId": "ForceRemoveEdge",
       "Label": "Forcefully uninstall Microsoft Edge. NOT RECOMMENDED!",
       "Category": null,

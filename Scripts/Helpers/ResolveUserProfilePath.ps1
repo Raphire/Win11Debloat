@@ -883,11 +883,11 @@ function ResolveUserProfileContext {
         [string]$UserName
     )
 
-    if ([string]::IsNullOrWhiteSpace($UserName)) {
+    $candidateUserName = NormalizeUserLookupValue -Value $UserName
+    if ([string]::IsNullOrWhiteSpace($candidateUserName)) {
         return $null
     }
 
-    $candidateUserName = NormalizeUserLookupValue -Value $UserName
     $rootPaths = @(
         (Join-Path $env:SystemDrive 'Users')
         (Split-Path -Path $env:USERPROFILE -Parent)

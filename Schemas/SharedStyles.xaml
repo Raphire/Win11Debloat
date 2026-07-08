@@ -272,7 +272,7 @@
                                                 <Border x:Name="Border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="4">
                                                     <TextBlock x:Name="Arrow"
                                                                Text="&#xE70D;"
-                                                               FontFamily="Segoe Fluent Icons"
+                                                               FontFamily="{DynamicResource AppIconFontFamily}"
                                                                FontSize="10"
                                                                HorizontalAlignment="Right"
                                                                VerticalAlignment="Center"
@@ -393,12 +393,12 @@
                             </Grid.ColumnDefinitions>
                             <Border x:Name="CheckBoxBorder" Grid.Column="0" Width="20" Height="20" Background="{DynamicResource CheckBoxBgColor}" BorderBrush="{DynamicResource CheckBoxBorderColor}" BorderThickness="1" CornerRadius="4" Margin="0,0,8,0">
                                 <Grid>
-                                    <TextBlock x:Name="CheckMark" Text="&#xE73E;" FontFamily="Segoe Fluent Icons" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource ButtonBgColor}" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0">
+                                    <TextBlock x:Name="CheckMark" Text="&#xE73E;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource ButtonBgColor}" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0">
                                         <TextBlock.Clip>
                                             <RectangleGeometry x:Name="CheckMarkClip" Rect="0,0,0,16"/>
                                         </TextBlock.Clip>
                                     </TextBlock>
-                                    <TextBlock x:Name="IndeterminateMark" Text="&#xe9ae;" FontFamily="Segoe Fluent Icons" FontSize="13" FontWeight="Bold" Foreground="{DynamicResource ButtonBgColor}" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0" Margin="1,0,0,1">
+                                    <TextBlock x:Name="IndeterminateMark" Text="&#xe9ae;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="13" FontWeight="Bold" Foreground="{DynamicResource ButtonBgColor}" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0" Margin="1,0,0,1">
                                         <TextBlock.Clip>
                                             <RectangleGeometry x:Name="IndeterminateMarkClip" Rect="0,0,0,12"/>
                                         </TextBlock.Clip>

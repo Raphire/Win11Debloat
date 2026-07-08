@@ -65,7 +65,7 @@
 
         <!-- Category header icon style -->
         <Style x:Key="CategoryHeaderIcon" TargetType="TextBlock">
-            <Setter Property="FontFamily" Value="Segoe Fluent Icons"/>
+            <Setter Property="FontFamily" Value="{DynamicResource AppIconFontFamily}"/>
             <Setter Property="FontSize" Value="20"/>
             <Setter Property="LineHeight" Value="20"/>
             <Setter Property="Foreground" Value="{DynamicResource AppFgColor}"/>
@@ -196,7 +196,7 @@
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Width" Value="46"/>
             <Setter Property="Height" Value="32"/>
-            <Setter Property="FontFamily" Value="Segoe Fluent Icons"/>
+            <Setter Property="FontFamily" Value="{DynamicResource AppIconFontFamily}"/>
             <Setter Property="FontSize" Value="10"/>
             <Setter Property="Template">
                 <Setter.Value>
@@ -362,8 +362,8 @@
                             </TextBlock.Style>
                         </TextBlock>
                         <StackPanel Grid.Column="1" Orientation="Horizontal">
-                            <Button x:Name="KofiBtn" shell:WindowChrome.IsHitTestVisibleInChrome="True" Content="&#xEB52;" FontFamily="Segoe Fluent Icons" FontSize="15" Style="{StaticResource TitlebarButton}" ToolTip="Support the creator" AutomationProperties.Name="Support the creator"/>
-                            <Button x:Name="MenuBtn" shell:WindowChrome.IsHitTestVisibleInChrome="True" Content="&#xE700;" FontFamily="Segoe Fluent Icons" FontSize="15" Style="{StaticResource TitlebarButton}" ToolTip="Options" AutomationProperties.Name="Options">
+                            <Button x:Name="KofiBtn" shell:WindowChrome.IsHitTestVisibleInChrome="True" Content="{DynamicResource IconKofi}" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="15" Style="{StaticResource TitlebarButton}" ToolTip="Support the creator" AutomationProperties.Name="Support the creator"/>
+                            <Button x:Name="MenuBtn" shell:WindowChrome.IsHitTestVisibleInChrome="True" Content="&#xE700;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="15" Style="{StaticResource TitlebarButton}" ToolTip="Options" AutomationProperties.Name="Options">
                                 <Button.ContextMenu>
                                     <ContextMenu x:Name="MainMenu">
                                         <ContextMenu.Resources>
@@ -380,38 +380,38 @@
                                         </ContextMenu.Resources>
                                         <MenuItem x:Name="ImportConfigBtn" Header="Import config" AutomationProperties.Name="Import configuration">
                                             <MenuItem.Icon>
-                                                <TextBlock Text="&#xe838;" FontFamily="Segoe Fluent Icons" FontSize="16" Foreground="{DynamicResource AppFgColor}"/>
+                                                <TextBlock Text="&#xe838;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="16" Foreground="{DynamicResource AppFgColor}"/>
                                             </MenuItem.Icon>
                                         </MenuItem>
                                         <MenuItem x:Name="ExportConfigBtn" Header="Export config" AutomationProperties.Name="Export configuration">
                                             <MenuItem.Icon>
-                                                <TextBlock Text="&#xe74e;" FontFamily="Segoe Fluent Icons" FontSize="16" Foreground="{DynamicResource AppFgColor}"/>
+                                                <TextBlock Text="&#xe74e;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="16" Foreground="{DynamicResource AppFgColor}"/>
                                             </MenuItem.Icon>
                                         </MenuItem>
                                         <MenuItem x:Name="RestoreBackupBtn" Header="Restore backup" AutomationProperties.Name="Restore registry backup">
                                             <MenuItem.Icon>
-                                                <TextBlock Text="&#xe81c;" FontFamily="Segoe Fluent Icons" FontSize="16" Foreground="{DynamicResource AppFgColor}"/>
+                                                <TextBlock Text="&#xe81c;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="16" Foreground="{DynamicResource AppFgColor}"/>
                                             </MenuItem.Icon>
                                         </MenuItem>
                                         <Separator />
                                         <MenuItem x:Name="MenuDocumentation" Header="Documentation" AutomationProperties.Name="Documentation">
                                             <MenuItem.Icon>
-                                                <TextBlock Text="&#xe736;" FontFamily="Segoe MDL2 Assets" FontSize="16" Foreground="{DynamicResource AppFgColor}"/>
+                                                <TextBlock Text="&#xe736;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="16" Foreground="{DynamicResource AppFgColor}"/>
                                             </MenuItem.Icon>
                                         </MenuItem>
                                         <MenuItem x:Name="MenuReportBug" Header="Report a bug" AutomationProperties.Name="Report a bug">
                                             <MenuItem.Icon>
-                                                <TextBlock Text="&#xEBE8;" FontFamily="Segoe Fluent Icons" FontSize="16" Foreground="{DynamicResource AppFgColor}"/>
+                                                <TextBlock Text="{DynamicResource IconReportBug}" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="16" Foreground="{DynamicResource AppFgColor}"/>
                                             </MenuItem.Icon>
                                         </MenuItem>
                                         <MenuItem x:Name="MenuLogs" Header="Logs" AutomationProperties.Name="Logs">
                                             <MenuItem.Icon>
-                                                <TextBlock Text="&#xf000;" FontFamily="Segoe Fluent Icons" FontSize="16" Foreground="{DynamicResource AppFgColor}"/>
+                                                <TextBlock Text="{DynamicResource IconLogs}" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="16" Foreground="{DynamicResource AppFgColor}"/>
                                             </MenuItem.Icon>
                                         </MenuItem>
                                         <MenuItem x:Name="MenuAbout" Header="About" AutomationProperties.Name="About">
                                             <MenuItem.Icon>
-                                                <TextBlock Text="&#xE946;" FontFamily="Segoe Fluent Icons" FontSize="16" Foreground="{DynamicResource AppFgColor}"/>
+                                                <TextBlock Text="&#xE946;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="16" Foreground="{DynamicResource AppFgColor}"/>
                                             </MenuItem.Icon>
                                         </MenuItem>
                                     </ContextMenu>
@@ -506,7 +506,7 @@
                                                     </Grid.ColumnDefinitions>
                                                     <TextBlock x:Name="UsernameTextBoxPlaceholder" Grid.Column="0" Text="Enter username" Foreground="{DynamicResource AppFgColor}" Opacity="0.7" FontSize="13" Margin="3,0,0,1" VerticalAlignment="Center" IsHitTestVisible="False"/>
                                                     <TextBox x:Name="OtherUsernameTextBox" Grid.Column="0" Style="{DynamicResource TextBoxInputStyle}" Text="" AutomationProperties.Name="Enter username"/>
-                                                    <TextBlock Grid.Column="1" Text="&#xE77B;" FontFamily="Segoe Fluent Icons" FontSize="14" VerticalAlignment="Center" Margin="8,0,4,0" Foreground="{DynamicResource AppFgColor}" Opacity="0.7"/>
+                                                    <TextBlock Grid.Column="1" Text="&#xE77B;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="14" VerticalAlignment="Center" Margin="8,0,4,0" Foreground="{DynamicResource AppFgColor}" Opacity="0.7"/>
                                                 </Grid>
                                             </Border>
                                         </Border>
@@ -517,13 +517,13 @@
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,8,0,4">
                                         <Button x:Name="HomeDefaultModeBtn" Width="227" Height="50" Style="{DynamicResource PrimaryButtonStyle}" Margin="0,0,12,0" AutomationProperties.Name="Default Mode">
                                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                                <TextBlock Text="&#xe735;" FontFamily="Segoe Fluent Icons" FontSize="16" VerticalAlignment="Center" Margin="0,0,8,-1"/>
+                                                <TextBlock Text="&#xe735;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="16" VerticalAlignment="Center" Margin="0,0,8,-1"/>
                                                 <TextBlock Text="Default Mode" ToolTip="Quickly select the recommended settings" FontWeight="SemiBold" VerticalAlignment="Center" FontSize="17" Margin="0,0,0,1"/>
                                             </StackPanel>
                                         </Button>
                                         <Button x:Name="HomeStartBtn" Width="227" Height="50" Style="{DynamicResource SecondaryButtonStyle}" AutomationProperties.Name="Custom Setup">
                                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                                <TextBlock Text="&#xe90f;" FontFamily="Segoe Fluent Icons" FontSize="14" VerticalAlignment="Center" Margin="0,0,8,-1"/>
+                                                <TextBlock Text="&#xe90f;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="14" VerticalAlignment="Center" Margin="0,0,8,-1"/>
                                                 <TextBlock Text="Custom Setup" ToolTip="Manually select your preferred settings" FontWeight="SemiBold" VerticalAlignment="Center" FontSize="17" Margin="0,0,0,1"/>
                                             </StackPanel>
                                         </Button>
@@ -585,9 +585,9 @@
                                                 </Style>
                                             </ToggleButton.Style>
                                             <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="&#xE735;" FontFamily="Segoe Fluent Icons" FontSize="14" VerticalAlignment="Center" Margin="0,1,6,0"/>
+                                                <TextBlock Text="&#xE735;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="14" VerticalAlignment="Center" Margin="0,1,6,0"/>
                                                 <TextBlock Text="Quick Select" FontSize="13" VerticalAlignment="Center" Margin="0,0,6,1"/>
-                                                <TextBlock x:Name="PresetsArrow" Text="&#xE70D;" FontFamily="Segoe Fluent Icons" FontSize="10" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+                                                <TextBlock x:Name="PresetsArrow" Text="&#xE70D;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="10" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
                                                     <TextBlock.RenderTransform>
                                                         <RotateTransform x:Name="PresetsArrowRotation" Angle="0"/>
                                                     </TextBlock.RenderTransform>
@@ -596,7 +596,7 @@
                                         </ToggleButton>
                                         <Button x:Name="ClearAppSelectionBtn" ToolTip="Clear all selected apps" Style="{DynamicResource SecondaryButtonStyle}" Height="32"  Padding="10,0" Margin="0,0,10,0" AutomationProperties.Name="Clear Selection">
                                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                                <TextBlock Text="&#xE711;" FontFamily="Segoe Fluent Icons" FontSize="15" VerticalAlignment="Center" Margin="0,3,6,0"/>
+                                                <TextBlock Text="&#xE711;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="15" VerticalAlignment="Center" Margin="0,3,6,0"/>
                                                 <TextBlock Text="Clear Selection" FontSize="13" VerticalAlignment="Center" Margin="0,0,0,1"/>
                                             </StackPanel>
                                         </Button>
@@ -627,7 +627,7 @@
                                                     </Grid.ColumnDefinitions>
                                                     <TextBlock x:Name="AppSearchPlaceholder" Grid.Column="0" Text="Search apps..." Foreground="{DynamicResource AppFgColor}" Opacity="0.7" FontSize="13" Margin="3,0,0,1" VerticalAlignment="Center" IsHitTestVisible="False"/>
                                                     <TextBox x:Name="AppSearchBox" Grid.Column="0" Style="{DynamicResource TextBoxInputStyle}" Text="" AutomationProperties.Name="Search app"/>
-                                                    <TextBlock Grid.Column="1" Text="&#xE721;" FontFamily="Segoe Fluent Icons" FontSize="14" VerticalAlignment="Center" Margin="8,0,4,0" Foreground="{DynamicResource AppFgColor}"  Opacity="0.7"/>
+                                                    <TextBlock Grid.Column="1" Text="&#xE721;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="14" VerticalAlignment="Center" Margin="8,0,4,0" Foreground="{DynamicResource AppFgColor}"  Opacity="0.7"/>
                                                 </Grid>
                                             </Border>
                                         </Border>
@@ -658,19 +658,19 @@
                                         </Grid.ColumnDefinitions>
                                         <StackPanel x:Name="HeaderNameBtn" Grid.Column="1" Orientation="Horizontal" Cursor="Hand" VerticalAlignment="Center" Style="{StaticResource SortHeaderBtnStyle}">
                                             <TextBlock Text="Name" FontWeight="SemiBold" FontSize="16" Foreground="{DynamicResource AppFgColor}"/>
-                                            <TextBlock x:Name="SortArrowName" Text="&#xE70E;" FontFamily="Segoe Fluent Icons" FontSize="11" Foreground="{DynamicResource AppFgColor}" VerticalAlignment="Center" Margin="5,1,0,0" Opacity="0.3" RenderTransformOrigin="0.5,0.5">
+                                            <TextBlock x:Name="SortArrowName" Text="&#xE70E;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="11" Foreground="{DynamicResource AppFgColor}" VerticalAlignment="Center" Margin="5,1,0,0" Opacity="0.3" RenderTransformOrigin="0.5,0.5">
                                                 <TextBlock.RenderTransform><RotateTransform Angle="0"/></TextBlock.RenderTransform>
                                             </TextBlock>
                                         </StackPanel>
                                         <StackPanel x:Name="HeaderDescriptionBtn" Grid.Column="2" Orientation="Horizontal" Cursor="Hand" VerticalAlignment="Center" Margin="8,0,0,0" Style="{StaticResource SortHeaderBtnStyle}">
                                             <TextBlock Text="Description" FontWeight="SemiBold" FontSize="16" Foreground="{DynamicResource AppFgColor}"/>
-                                            <TextBlock x:Name="SortArrowDescription" Text="&#xE70E;" FontFamily="Segoe Fluent Icons" FontSize="11" Foreground="{DynamicResource AppFgColor}" VerticalAlignment="Center" Margin="5,1,0,0" Opacity="0.3" RenderTransformOrigin="0.5,0.5">
+                                            <TextBlock x:Name="SortArrowDescription" Text="&#xE70E;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="11" Foreground="{DynamicResource AppFgColor}" VerticalAlignment="Center" Margin="5,1,0,0" Opacity="0.3" RenderTransformOrigin="0.5,0.5">
                                                 <TextBlock.RenderTransform><RotateTransform Angle="0"/></TextBlock.RenderTransform>
                                             </TextBlock>
                                         </StackPanel>
                                         <StackPanel x:Name="HeaderAppIdBtn" Grid.Column="3" Orientation="Horizontal" Cursor="Hand" VerticalAlignment="Center" Style="{StaticResource SortHeaderBtnStyle}">
                                             <TextBlock Text="App ID" FontWeight="SemiBold" FontSize="16" Foreground="{DynamicResource AppFgColor}"/>
-                                            <TextBlock x:Name="SortArrowAppId" Text="&#xE70E;" FontFamily="Segoe Fluent Icons" FontSize="11" Foreground="{DynamicResource AppFgColor}" VerticalAlignment="Center" Margin="5,1,0,0" Opacity="0.3" RenderTransformOrigin="0.5,0.5">
+                                            <TextBlock x:Name="SortArrowAppId" Text="&#xE70E;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="11" Foreground="{DynamicResource AppFgColor}" VerticalAlignment="Center" Margin="5,1,0,0" Opacity="0.3" RenderTransformOrigin="0.5,0.5">
                                                 <TextBlock.RenderTransform><RotateTransform Angle="0"/></TextBlock.RenderTransform>
                                             </TextBlock>
                                         </StackPanel>
@@ -684,7 +684,7 @@
                                         </ScrollViewer>
                                         <Border x:Name="LoadingAppsIndicator" CornerRadius="0,0,4,4" Background="{DynamicResource CardBgColor}" Opacity="0.8" Visibility="Collapsed">
                                             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                                                <TextBlock Text="&#xF16A;" FontFamily="Segoe Fluent Icons" FontSize="28" Foreground="{DynamicResource AppFgColor}" HorizontalAlignment="Center" Margin="0,0,0,8" RenderTransformOrigin="0.5,0.5">
+                                                <TextBlock Text="{DynamicResource IconLoadingApps}" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="28" Foreground="{DynamicResource AppFgColor}" HorizontalAlignment="Center" Margin="0,0,0,8" RenderTransformOrigin="0.5,0.5">
                                                     <TextBlock.RenderTransform>
                                                         <RotateTransform Angle="0"/>
                                                     </TextBlock.RenderTransform>
@@ -789,9 +789,9 @@
                                                 </Style>
                                             </ToggleButton.Style>
                                             <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="&#xE735;" FontFamily="Segoe Fluent Icons" FontSize="14" VerticalAlignment="Center" Margin="0,1,6,0"/>
+                                                <TextBlock Text="&#xE735;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="14" VerticalAlignment="Center" Margin="0,1,6,0"/>
                                                 <TextBlock Text="Quick Select" FontSize="13" VerticalAlignment="Center" Margin="0,0,6,1"/>
-                                                <TextBlock x:Name="TweaksPresetsArrow" Text="&#xE70D;" FontFamily="Segoe Fluent Icons" FontSize="10" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+                                                <TextBlock x:Name="TweaksPresetsArrow" Text="&#xE70D;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="10" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
                                                     <TextBlock.RenderTransform>
                                                         <RotateTransform Angle="0"/>
                                                     </TextBlock.RenderTransform>
@@ -800,7 +800,7 @@
                                         </ToggleButton>
                                         <Button x:Name="ClearAllTweaksBtn" ToolTip="Clear all selected tweaks" Style="{DynamicResource SecondaryButtonStyle}" Padding="10,0" Height="32" Margin="0,0,10,0" AutomationProperties.Name="Clear Selection">
                                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                                <TextBlock Text="&#xE711;" FontFamily="Segoe Fluent Icons" FontSize="15" VerticalAlignment="Center" Margin="0,3,6,0"/>
+                                                <TextBlock Text="&#xE711;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="15" VerticalAlignment="Center" Margin="0,3,6,0"/>
                                                 <TextBlock Text="Clear Selection" FontSize="13" VerticalAlignment="Center" Margin="0,0,0,1"/>
                                             </StackPanel>
                                         </Button>
@@ -832,7 +832,7 @@
                                                     </Grid.ColumnDefinitions>
                                                     <TextBlock x:Name="TweakSearchPlaceholder" Grid.Column="0" Text="Search tweaks..." Foreground="{DynamicResource AppFgColor}" Opacity="0.7" FontSize="13" Margin="3,0,0,1" VerticalAlignment="Center" IsHitTestVisible="False"/>
                                                     <TextBox x:Name="TweakSearchBox" Grid.Column="0" Style="{DynamicResource TextBoxInputStyle}" Text="" AutomationProperties.Name="Search tweaks"/>
-                                                    <TextBlock Grid.Column="1" Text="&#xE721;" FontFamily="Segoe Fluent Icons" FontSize="14" VerticalAlignment="Center" Margin="8,0,4,0" Foreground="{DynamicResource AppFgColor}" Opacity="0.7"/>
+                                                    <TextBlock Grid.Column="1" Text="&#xE721;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="14" VerticalAlignment="Center" Margin="8,0,4,0" Foreground="{DynamicResource AppFgColor}" Opacity="0.7"/>
                                                 </Grid>
                                             </Border>
                                         </Border>
@@ -986,7 +986,7 @@
                                 </Button>
                                 <Button x:Name="DeploymentApplyBtn" Style="{DynamicResource PrimaryButtonStyle}" Width="200" Height="44" HorizontalAlignment="Center" AutomationProperties.Name="Apply Changes">
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <TextBlock Text="&#xE73E;" FontFamily="Segoe Fluent Icons" FontSize="20" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                        <TextBlock Text="&#xE73E;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="20" FontWeight="SemiBold" VerticalAlignment="Center"/>
                                         <TextBlock Text="Apply Changes" VerticalAlignment="Center" FontSize="18" FontWeight="SemiBold" Margin="8,0,0,4"/>
                                     </StackPanel>
                                 </Button>
@@ -1006,7 +1006,7 @@
                     </Grid.ColumnDefinitions>
                     <Button x:Name="PreviousBtn" Grid.Column="0" Width="120" Height="36" Style="{DynamicResource SecondaryButtonStyle}" Visibility="Collapsed" AutomationProperties.Name="Back">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock Text="&#xE72B;" FontFamily="Segoe Fluent Icons" FontSize="12" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="&#xE72B;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="12" Margin="0,0,8,0" VerticalAlignment="Center"/>
                             <TextBlock Text="Back" VerticalAlignment="Center" FontSize="14" Margin="0,0,0,3"/>
                         </StackPanel>
                     </Button>
@@ -1015,7 +1015,7 @@
                         <Button x:Name="NextBtn" Width="120" Height="36" Style="{DynamicResource PrimaryButtonStyle}" AutomationProperties.Name="Next">
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                 <TextBlock Text="Next" VerticalAlignment="Center" FontSize="14" Margin="0,0,0,3"/>
-                                <TextBlock Text="&#xE72A;" FontFamily="Segoe Fluent Icons" FontSize="12" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="&#xE72A;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="12" Margin="8,0,0,0" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
                     </StackPanel>

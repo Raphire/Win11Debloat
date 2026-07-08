@@ -49,7 +49,7 @@
                 <!-- Icon -->
                 <TextBlock x:Name="IconText"
                            Grid.Column="0"
-                           FontFamily="Segoe Fluent Icons"
+                           FontFamily="{DynamicResource AppIconFontFamily}"
                            FontSize="24"
                            Foreground="{DynamicResource AppFgColor}"
                            VerticalAlignment="Center"

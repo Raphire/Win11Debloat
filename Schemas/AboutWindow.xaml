@@ -105,8 +105,8 @@
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 FontWeight="SemiBold"
-                                FontFamily="Segoe Fluent Icons"
-                                Text="&#xEB52;" 
+                                FontFamily="{DynamicResource AppIconFontFamily}"
+                                Text="{DynamicResource IconKofi}" 
                                 Foreground="{DynamicResource TitleBarCloseHoverColor}"
                                 Margin="0,0,8,0"/>
                         

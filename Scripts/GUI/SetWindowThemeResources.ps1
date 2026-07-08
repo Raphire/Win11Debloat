@@ -122,6 +122,37 @@ function SetWindowThemeResources {
         }
     }
 
+    # ---- Per-OS icon font + glyph fallbacks ----
+    # Segoe Fluent Icons ships only on Windows 11 (build >= 22000). On Windows 10,
+    # fall back to Segoe MDL2 Assets, which is present on every supported Windows 10
+    # build and still installed on Windows 11.
+    $winBuild = 0
+    try {
+        $winBuild = [int](Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' CurrentBuild -ErrorAction Stop)
+    }
+    catch { }
+
+    $iconFontName = if ($winBuild -ge 22000) { 'Segoe Fluent Icons' } else { 'Segoe MDL2 Assets' }
+    $window.Resources['AppIconFontFamily'] = [System.Windows.Media.FontFamily]::new($iconFontName)
+
+    # Fluent-only glyph codepoints that have no (or unreliable) counterpart in
+    # Segoe MDL2 Assets. On Windows 10 we supply MDL2-safe equivalents; on
+    # Windows 11 we keep the original Fluent codepoints.
+    if ($winBuild -ge 22000) {
+        $window.Resources['IconKofi']            = [string][char]0xEB52
+        $window.Resources['IconReportBug']       = [string][char]0xEBE8
+        $window.Resources['IconLogs']            = [string][char]0xF000
+        $window.Resources['IconLoadingApps']     = [string][char]0xF16A
+        $window.Resources['IconRegistryRestore'] = [string][char]0xEF58
+    }
+    else {
+        $window.Resources['IconKofi']            = [string][char]0xE8B9  # Heart
+        $window.Resources['IconReportBug']       = [string][char]0xE7BA  # Warning / alert
+        $window.Resources['IconLogs']            = [string][char]0xE7C4  # Notes / journal
+        $window.Resources['IconLoadingApps']     = [string][char]0xE895  # ProgressRing spinner
+        $window.Resources['IconRegistryRestore'] = [string][char]0xE751  # Restore
+    }
+
     # Load and merge shared styles
     if ($script:SharedStylesSchema -and (Test-Path $script:SharedStylesSchema)) {
         $sharedXaml = Get-Content -Path $script:SharedStylesSchema -Raw

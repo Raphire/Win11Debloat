@@ -16,7 +16,7 @@
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Width" Value="46"/>
             <Setter Property="Height" Value="32"/>
-            <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
+            <Setter Property="FontFamily" Value="{DynamicResource AppIconFontFamily}"/>
             <Setter Property="FontSize" Value="10"/>
             <Setter Property="Template">
                 <Setter.Value>

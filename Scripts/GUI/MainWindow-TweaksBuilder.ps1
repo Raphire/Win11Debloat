@@ -129,9 +129,20 @@ function Build-DynamicTweaks {
 
         # Add category icon
         $icon = New-Object System.Windows.Controls.TextBlock
-        # Convert HTML entity to character (e.g., &#xE72E; -> actual character)
+        # Convert HTML entity to character (e.g., &#xE72E; -> actual character).
+        # Category icons are defined in Features.json with Fluent codepoints; on
+        # Windows 10 (build < 22000), Segoe MDL2 Assets does not include some of
+        # the higher-range codepoints, so remap the Fluent-only ones to MDL2-safe
+        # equivalents before assigning the icon text.
+        $win10CategoryIconRemap = @{
+            0xEC50 = 0xE8B7  # FileExplorer: E8B7 (folder)
+            0xEFDA = 0xE771  # OptionalWindowsFeatures: E771 (gear/settings)
+        }
         if ($categoryIcon -match '&#x([0-9A-Fa-f]+);') {
             $hexValue = [Convert]::ToInt32($matches[1], 16)
+            if ($WinVersion -lt 22000 -and $win10CategoryIconRemap.ContainsKey($hexValue)) {
+                $hexValue = $win10CategoryIconRemap[$hexValue]
+            }
             $icon.Text = [char]$hexValue
         }
         $icon.Style = $Window.Resources['CategoryHeaderIcon']

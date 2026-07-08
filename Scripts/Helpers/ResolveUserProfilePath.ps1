@@ -59,6 +59,35 @@ function GetUserLookupCacheKey {
 
 <#
     .SYNOPSIS
+        Normalize and de-duplicate a set of user-name candidates.
+
+    .DESCRIPTION
+        Centralizes the normalize/filter/dedupe step shared by the SID
+        resolution fallbacks so the dedupe semantic lives in one place.
+        Returns @() for empty or all-blank input.
+
+    .PARAMETER Candidates
+        Equivalent name forms to normalize.
+
+    .OUTPUTS
+        System.String[]
+#>
+function GetNormalizedLookupCandidates {
+    param(
+        [string[]]$Candidates
+    )
+
+    $normalized = @($Candidates) |
+        ForEach-Object { NormalizeUserLookupValue -Value $_ } |
+        Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
+        Select-Object -Unique
+
+    # The unary comma prevents PowerShell from unwrapping a single-element array.
+    return ,@($normalized)
+}
+
+<#
+    .SYNOPSIS
         Escape a string for safe embedding in a WQL single-quoted literal.
 
     .DESCRIPTION
@@ -536,7 +565,7 @@ function TryResolveSidByLocalLookup {
         [string[]]$Candidates
     )
 
-    $lookupCandidates = @($Candidates) | ForEach-Object { NormalizeUserLookupValue -Value $_ } | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Select-Object -Unique
+    $lookupCandidates = GetNormalizedLookupCandidates -Candidates $Candidates
     if ($lookupCandidates.Count -eq 0) {
         return $null
     }
@@ -593,7 +622,7 @@ function TryResolveSidFromProfileList {
         [string[]]$Candidates
     )
 
-    $lookupCandidates = @($Candidates) | ForEach-Object { NormalizeUserLookupValue -Value $_ } | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Select-Object -Unique
+    $lookupCandidates = GetNormalizedLookupCandidates -Candidates $Candidates
     if ($lookupCandidates.Count -eq 0) {
         return $null
     }
@@ -828,34 +857,6 @@ function ResolveUserSid {
         $allCacheKeys = @($candidateUserName) + $qualifiedNamesToTry | Select-Object -Unique
         SetResolvedUserSidCache -Candidates $allCacheKeys -Sid $resolvedSid
         return $resolvedSid
-    }
-
-    return $null
-}
-
-<#
-    .SYNOPSIS
-        Resolve a user name to its profile folder path.
-
-    .DESCRIPTION
-        Wrapper around ResolveUserProfileContext returning only the path.
-        Returns $null if no profile is found.
-
-    .PARAMETER UserName
-        User name whose profile path is required.
-
-    .OUTPUTS
-        System.String
-#>
-function ResolveUserProfilePath {
-    param(
-        [Parameter(Mandatory)]
-        [string]$UserName
-    )
-
-    $userContext = ResolveUserProfileContext -UserName $UserName
-    if ($userContext) {
-        return $userContext.ProfilePath
     }
 
     return $null

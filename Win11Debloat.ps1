@@ -30,6 +30,7 @@ param (
     [switch]$DisableUpdateASAP,
     [switch]$PreventUpdateAutoReboot,
     [switch]$DisableDeliveryOptimization,
+    [switch]$DisableDeviceAutoAppDownload,
     [switch]$DisableBing,
     [switch]$DisableNotifications,
     [switch]$DisableStoreSearchSuggestions,

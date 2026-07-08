@@ -33,6 +33,7 @@ param (
     [switch]$DisableUpdateASAP,
     [switch]$PreventUpdateAutoReboot,
     [switch]$DisableDeliveryOptimization,
+    [switch]$DisableDeviceAutoAppDownload,
     [switch]$DisableBing,
     [switch]$DisableStoreSearchSuggestions,
     [switch]$DisableDesktopSpotlight,

@@ -159,9 +159,25 @@ To add a new app that can be removed via Win11Debloat:
      "FriendlyName": "Display Name",
      "AppId": "AppPackageIdentifier",
      "Description": "Brief description of the app",
-     "SelectedByDefault": true|false
+     "SelectedByDefault": false,
+     "Recommendation": "optional",
+     "RemovalMethod": "Appx"
    }
    ```
+
+   **Field Descriptions**:
+
+   - `FriendlyName`: Display name shown in the GUI.
+   - `AppId`: The `AppPackageIdentifier` from `Get-AppxPackage` or the `Id` from `winget list`, depending on removal method.
+   - `Description`: Brief description of the app shown in the GUI.
+   - `SelectedByDefault`: Set to `true` only for apps that are largely considered bloatware, otherwise set to `false`.
+   - `Recommendation`: Indicates how strongly the app is recommended for removal. One of:
+     - `safe` — safe to remove for most users
+     - `optional` — can be safely removed if the user doesn't need the app
+     - `unsafe` — should only remove if the user knows what they are doing
+   - `RemovalMethod`: The method used to remove the app. One of:
+     - `Appx` — remove as a standard Appx package via `Remove-AppxPackage` (most apps)
+     - `WinGet` — remove via WinGet (`winget uninstall`). Use for non-Appx apps such as Microsoft Copilot.
 
 3. **Follow the Guidelines**:
 

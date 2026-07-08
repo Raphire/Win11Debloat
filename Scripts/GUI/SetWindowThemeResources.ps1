@@ -124,12 +124,7 @@ function SetWindowThemeResources {
 
     # Segoe Fluent Icons ships only on Windows 11 (build >= 22000). 
     # On Windows 10, fall back to Segoe MDL2 Assets.
-    $winBuild = 0
-    try {
-        $winBuild = [int](Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' CurrentBuild -ErrorAction Stop)
-    }
-    catch { }
-
+    $winBuild = Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' CurrentBuild
     $iconFontName = if ($winBuild -ge 22000) { 'Segoe Fluent Icons' } else { 'Segoe MDL2 Assets' }
     $window.Resources['AppIconFontFamily'] = [System.Windows.Media.FontFamily]::new($iconFontName)
 

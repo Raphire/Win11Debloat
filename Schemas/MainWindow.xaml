@@ -362,8 +362,8 @@
                             </TextBlock.Style>
                         </TextBlock>
                         <StackPanel Grid.Column="1" Orientation="Horizontal">
-                            <Button x:Name="KofiBtn" shell:WindowChrome.IsHitTestVisibleInChrome="True" Content="&#xEB52;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="15" Style="{StaticResource TitlebarButton}" ToolTip="Support the creator" AutomationProperties.Name="Support the creator"/>
-                            <Button x:Name="MenuBtn" shell:WindowChrome.IsHitTestVisibleInChrome="True" Content="&#xE700;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="15" Style="{StaticResource TitlebarButton}" ToolTip="Options" AutomationProperties.Name="Options">
+                            <Button x:Name="KofiBtn" shell:WindowChrome.IsHitTestVisibleInChrome="True" Content="&#xEB52;" FontSize="15" Style="{StaticResource TitlebarButton}" ToolTip="Support the creator" AutomationProperties.Name="Support the creator"/>
+                            <Button x:Name="MenuBtn" shell:WindowChrome.IsHitTestVisibleInChrome="True" Content="&#xE700;" FontSize="15" Style="{StaticResource TitlebarButton}" ToolTip="Options" AutomationProperties.Name="Options">
                                 <Button.ContextMenu>
                                     <ContextMenu x:Name="MainMenu">
                                         <ContextMenu.Resources>

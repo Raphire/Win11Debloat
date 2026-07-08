@@ -100,7 +100,7 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 
 - Disable the Drag Tray for sharing & moving files.
 - Restore the old Windows 10 style context menu.
-- Turn off Enhance Pointer Precision, also known as mouse acceleration.
+- Turn off Enhance Pointer Precision (mouse acceleration).
 - Disable the Sticky Keys keyboard shortcut.
 - Disable Storage Sense automatic disk cleanup.
 - Disable fast start-up to ensure a full shutdown.
@@ -112,6 +112,7 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 - Prevent Windows from getting updates as soon as they're available.
 - Prevent automatic restarts after updates while signed in.
 - Disable sharing of downloaded updates with other PCs, also known as Delivery Optimization.
+- Prevent Windows from auto-downloading device companion apps.
 
 #### Appearance
 

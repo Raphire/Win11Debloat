@@ -1,13 +1,12 @@
 name: "🐞 Bug report"
 description: "Report an issue you encountered"
-labels: ["bug", "unconfirmed"]
+labels: ["bug", "confirmed", "unconfirmed"]
 
 body:
   - type: markdown
     attributes:
       value: |
         # 🐞 **Bug report**
-        Thanks for taking the time to fill out this bug report! Please provide as much information as possible in your report to help us understand and resolve the issue.
 
   - type: checkboxes
     id: checklist
@@ -16,9 +15,9 @@ body:
       description: Please confirm the following before posting your issue.
       options:
         - label: I have searched for existing issues/discussions and didn't find any similar ones.
-          required: true
-        - label: I haven't used any other scripts, tools or programs that might have caused this issue.
           required: false
+        - label: I haven't used any other scripts, tools or programs that might have caused this issue.
+          required: true
 
   - type: input
     id: windows_version
@@ -27,7 +26,7 @@ body:
       description: What version of Windows are you using?
       placeholder: e.g. Windows 11 24H2 (26100.4202)
     validations:
-      required: true
+      required: false
 
   - type: input
     id: script_setting
@@ -36,7 +35,7 @@ body:
       description: What mode/options did you use with the script?
       placeholder: e.g. "Default mode", "Custom mode with options X, Y, Z"
     validations:
-      required: true
+      required: false
 
   - type: textarea
     id: issue_description
@@ -45,7 +44,7 @@ body:
       description: Provide a clear and detailed description of the issue.
       placeholder: e.g. "When I ran the script I expected [...], but instead [...]. This caused [...]."
     validations:
-      required: true
+      required: false
 
   - type: textarea
     id: steps_to_reproduce
@@ -58,7 +57,7 @@ body:
         3. Wait for '...'
         4. Etc.
     validations:
-      required: true
+      required: false
 
   - type: textarea
     id: error_logs
@@ -67,7 +66,7 @@ body:
       description: "Include any relevant logs or error messages. Logs can be found in `%temp%/Win11Debloat` or the root folder of the script. Please keep in mind that logs may contain personal information such as usernames and the name of your PC, so review them before submitting."
       placeholder: Include any relevant logs or error messages.
     validations:
-      required: false
+      required: true
 
   - type: textarea
     id: additional_context
@@ -76,4 +75,4 @@ body:
       description: Add any other context about the problem here.
       placeholder: e.g. Screenshots, links to related discussions, etc.
     validations:
-      required: false
+      required: true

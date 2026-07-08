@@ -7,7 +7,8 @@
     populates the window's Resources with SolidColorBrush entries keyed by
     category and resource name (e.g. "AppAccentColor"). Additionally loads and
     merges shared XAML styles from the script's SharedStylesSchema path if
-    available.
+    available. Also resolves the icon font: Segoe Fluent Icons on Windows 11
+    and Segoe MDL2 Assets on Windows 10.
 
     .PARAMETER window
     The WPF Window whose resource dictionary will be populated.

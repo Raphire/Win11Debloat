@@ -680,7 +680,7 @@
       "UndoLabel": "Show Microsoft 365 Copilot ads in Settings Home",
       "ApplyUndoText": "Enabling Microsoft 365 Copilot ads in Settings Home",
       "RegistryUndoKey": "Enable_Settings_365_Ads.reg",
-      "MinVersion": null,
+      "MinVersion": 22000,
       "MaxVersion": null
     },
     {
@@ -693,7 +693,7 @@
       "UndoLabel": "Show Settings 'Home' page",
       "ApplyUndoText": "Enabling the Settings Home page",
       "RegistryUndoKey": "Enable_Settings_Home.reg",
-      "MinVersion": null,
+      "MinVersion": 22000,
       "MaxVersion": null
     },
     {

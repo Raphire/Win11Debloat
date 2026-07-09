@@ -813,6 +813,7 @@
       "UndoLabel": "Enable window snapping",
       "ApplyUndoText": "Enabling window snapping",
       "RegistryUndoKey": "Enable_Window_Snapping.reg",
+      "RequiresReboot": true,
       "MinVersion": null,
       "MaxVersion": null
     },

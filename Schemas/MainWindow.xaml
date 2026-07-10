@@ -490,7 +490,7 @@
                             <Border HorizontalAlignment="Center" BorderBrush="{DynamicResource AppBorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="16,12" Width="500">
                                 <StackPanel>
                                     <TextBlock Text="What user do you want to apply changes to?" Style="{StaticResource CategoryHeaderTextBlock}"/>
-                                    <ComboBox x:Name="UserSelectionCombo" Margin="0,0,0,6" AutomationProperties.Name="Apply Changes To">
+                                    <ComboBox x:Name="UserSelectionCombo" Margin="0,0,0,6" AutomationProperties.Name="Apply Changes To" ToolTip="The currently logged-in user profile">
                                         <ComboBoxItem Content="Current User" IsSelected="True"/>
                                         <ComboBoxItem Content="Other User"/>
                                         <ComboBoxItem Content="Windows Default User (Sysprep)"/>

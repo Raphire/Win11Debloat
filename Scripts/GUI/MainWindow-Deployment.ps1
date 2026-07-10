@@ -435,6 +435,9 @@ function Update-UserSelectionDescription {
             $UserSelectionDescription.Text = "The default user template, affecting all new users created after this point. Useful for Sysprep deployment."
         }
     }
+
+    # Mirror the description text on the combo's tooltip so the same context is shown on hover.
+    $UserSelectionCombo.ToolTip = $UserSelectionDescription.Text
 }
 
 function Test-OtherUsername {

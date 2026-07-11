@@ -17,10 +17,13 @@ function RestartExplorer {
         return
     }
 
-    foreach ($paramKey in $script:Params.Keys) {
+    $candidateParamKeys = @($script:Params.Keys) + @($script:UndoParams.Keys)
+    foreach ($paramKey in $candidateParamKeys) {
         if ($script:Features.ContainsKey($paramKey) -and $script:Features[$paramKey].RequiresReboot -eq $true) {
             $feature = $script:Features[$paramKey]
-            Write-Host "Warning: '$($feature.Label)' requires a reboot to take full effect" -ForegroundColor Yellow
+            $isUndo = $script:UndoParams.ContainsKey($paramKey)
+            $displayLabel = if ($isUndo -and $feature.UndoLabel) { $feature.UndoLabel } else { $feature.Label }
+            Write-Host "Warning: '$displayLabel' requires a reboot to take full effect" -ForegroundColor Yellow
         }
     }
 

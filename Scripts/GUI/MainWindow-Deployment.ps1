@@ -54,7 +54,7 @@ function Get-PendingTweakActions {
                 $actions.Add([PSCustomObject]@{
                         Action    = 'Undo'
                         FeatureId = [string]$mapping.FeatureId
-                        Label     = [string]$script:FeatureLabelLookup[$mapping.FeatureId]
+                        Label     = [string](Get-UndoFeatureLabel -FeatureId $mapping.FeatureId)
                     })
             }
         }

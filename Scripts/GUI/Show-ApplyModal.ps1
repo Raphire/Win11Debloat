@@ -144,13 +144,7 @@ function Show-ApplyModal {
 
                 # Show completion message with reboot instructions if any applied features require reboot
                 if ($RestartExplorer) {
-                    $rebootFeatures = @()
-                    foreach ($paramKey in $script:Params.Keys) {
-                        if ($script:Features.ContainsKey($paramKey) -and $script:Features[$paramKey].RequiresReboot -eq $true) {
-                            $feature = $script:Features[$paramKey]
-                            $rebootFeatures += "$($feature.Label)"
-                        }
-                    }
+                    $rebootFeatures = Get-RebootFeatureLabels
 
                     if ($rebootFeatures.Count -gt 0) {
                         foreach ($featureName in $rebootFeatures) {

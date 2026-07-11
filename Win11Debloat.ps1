@@ -382,6 +382,7 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 . "$PSScriptRoot/Scripts/Helpers/GenerateAppsList.ps1"
 . "$PSScriptRoot/Scripts/Helpers/GetFriendlyRegistryBackupTarget.ps1"
 . "$PSScriptRoot/Scripts/Helpers/GetFriendlyTargetUserName.ps1"
+. "$PSScriptRoot/Scripts/Helpers/Get-RebootFeatureLabels.ps1"
 . "$PSScriptRoot/Scripts/Helpers/ImportConfigToParams.ps1"
 . "$PSScriptRoot/Scripts/Helpers/GetTargetUserForAppRemoval.ps1"
 . "$PSScriptRoot/Scripts/Helpers/Get-RegFileOperations.ps1"
@@ -562,7 +563,11 @@ if (($controlParamsCount -eq $script:Params.Keys.Count) -or ($script:Params.Keys
 # (This also handles restore point creation if requested)
 Invoke-AllChanges
 
-RestartExplorer
+
+# Restart Explorer process unless running in Sysprep or User context
+if (-not ($script:Params.ContainsKey("Sysprep") -or $script:Params.ContainsKey("User"))) {
+    RestartExplorer
+}
 
 Write-Output ""
 Write-Output ""

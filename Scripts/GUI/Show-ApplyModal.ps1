@@ -144,16 +144,7 @@ function Show-ApplyModal {
 
                 # Show completion message with reboot instructions if any applied features require reboot
                 if ($RestartExplorer) {
-                    $rebootFeatures = @()
-                    $candidateParamKeys = @($script:Params.Keys) + @($script:UndoParams.Keys)
-                    foreach ($paramKey in $candidateParamKeys) {
-                        if ($script:Features.ContainsKey($paramKey) -and $script:Features[$paramKey].RequiresReboot -eq $true) {
-                            $feature = $script:Features[$paramKey]
-                            $isUndo = $script:UndoParams.ContainsKey($paramKey)
-                            $displayLabel = if ($isUndo -and $feature.UndoLabel) { $feature.UndoLabel } else { $feature.Label }
-                            $rebootFeatures += "$displayLabel"
-                        }
-                    }
+                    $rebootFeatures = @(Get-RebootFeatureLabels)
 
                     if ($rebootFeatures.Count -gt 0) {
                         foreach ($featureName in $rebootFeatures) {

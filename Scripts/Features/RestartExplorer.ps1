@@ -18,7 +18,7 @@ function RestartExplorer {
         return
     }
 
-    $rebootFeatures = @(Get-RebootFeatureLabels)
+    $rebootFeatures = Get-RebootFeatureLabels
     foreach ($displayLabel in $rebootFeatures) {
         Write-Host "Warning: '$displayLabel' requires a reboot to take full effect" -ForegroundColor Yellow
     }

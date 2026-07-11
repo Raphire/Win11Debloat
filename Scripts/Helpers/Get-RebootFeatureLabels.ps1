@@ -8,7 +8,7 @@
     UndoLabel when available.
 #>
 function Get-RebootFeatureLabels {
-    $rebootFeatureLabels = @()
+    $rebootFeatureLabels = [System.Collections.Generic.List[string]]::new()
     $candidateParamKeys = (@($script:Params.Keys) + @($script:UndoParams.Keys)) | Select-Object -Unique
 
     foreach ($paramKey in $candidateParamKeys) {
@@ -18,7 +18,7 @@ function Get-RebootFeatureLabels {
             $displayLabel = if ($isUndo -and $feature.UndoLabel) { $feature.UndoLabel } else { $feature.Label }
 
             if (-not [string]::IsNullOrWhiteSpace([string]$displayLabel)) {
-                $rebootFeatureLabels += [string]$displayLabel
+                [void]$rebootFeatureLabels.Add([string]$displayLabel)
             }
         }
     }

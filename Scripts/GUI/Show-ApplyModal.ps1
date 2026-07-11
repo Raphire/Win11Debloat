@@ -144,7 +144,7 @@ function Show-ApplyModal {
 
                 # Show completion message with reboot instructions if any applied features require reboot
                 if ($RestartExplorer) {
-                    $rebootFeatures = @(Get-RebootFeatureLabels)
+                    $rebootFeatures = Get-RebootFeatureLabels
 
                     if ($rebootFeatures.Count -gt 0) {
                         foreach ($featureName in $rebootFeatures) {

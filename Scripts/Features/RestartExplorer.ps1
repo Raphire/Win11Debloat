@@ -1,10 +1,11 @@
-# Restart the Windows Explorer process
-function RestartExplorer {
-    # Restarting Explorer while running in Sysprep or User context is not necessary
-    if ($script:Params.ContainsKey("Sysprep") -or $script:Params.ContainsKey("User")) {
-        return
-    }
+<#
+    .SYNOPSIS
+    Restarts Windows Explorer to apply system changes.
 
+    .DESCRIPTION
+    Restarts the Explorer process to ensure all UI modifications take effect. Shows a warning if any of the applied features require a reboot to take full effect.
+#>
+function RestartExplorer {
     if ($script:Params.ContainsKey("WhatIf")) {
         Write-Host "[WhatIf] Restart the Windows Explorer process" -ForegroundColor Cyan
         return

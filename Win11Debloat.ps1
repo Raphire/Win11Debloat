@@ -562,7 +562,11 @@ if (($controlParamsCount -eq $script:Params.Keys.Count) -or ($script:Params.Keys
 # (This also handles restore point creation if requested)
 Invoke-AllChanges
 
-RestartExplorer
+
+# Restart Explorer process unless running in Sysprep or User context
+if (-not ($script:Params.ContainsKey("Sysprep") -or $script:Params.ContainsKey("User"))) {
+    RestartExplorer
+}
 
 Write-Output ""
 Write-Output ""

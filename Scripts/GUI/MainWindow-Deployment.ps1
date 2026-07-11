@@ -13,6 +13,13 @@ function Get-UndoFeatureLabel {
     return [string]$script:FeatureLabelLookup[$FeatureId]
 }
 
+<#
+    .SYNOPSIS
+    Returns the tweak actions that are pending based on the current UI state.
+
+    .OUTPUTS
+    [PSCustomObject[]] Objects with Action, FeatureId, and Label properties.
+#>
 function Get-PendingTweakActions {
     param(
         [System.Windows.Window]$Window,

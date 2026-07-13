@@ -73,6 +73,11 @@ function RemoveApps {
         Remove-EdgeApp -edgeAppsInList $edgeAppsInList
     }
 
+    if ($script:CancelRequested) {
+        Write-Host ""
+        return
+    }
+
     # Check whether any winget-removed apps are still present, and report errors for each one.
     if ($wingetRemovedApps.Count -gt 0 -or $edgeAppsInList.Count -gt 0) {
         $postRemovalList = if ($script:WingetInstalled) { GetInstalledAppsViaWinget -TimeOut 10 -NonBlocking } else { $null }
@@ -122,6 +127,13 @@ function Remove-WinGetApp {
         return
     }
 
+    Invoke-NonBlocking -ScriptBlock {
+        param($appId)
+        winget uninstall --accept-source-agreements --disable-interactivity --id $appId
+    } -ArgumentList $app
+
+    if ($script:CancelRequested) { return }
+
     if ($script:Params.ContainsKey("User")) {
         Write-Host "Adding scheduled task to uninstall $app for user $(GetUserName)..."
         Set-RunOnceWingetTask -appId $app
@@ -130,11 +142,6 @@ function Remove-WinGetApp {
         Write-Host "Adding scheduled task to uninstall $app for new users..."
         Set-RunOnceWingetTask -appId $app
     }
-
-    Invoke-NonBlocking -ScriptBlock {
-        param($appId)
-        winget uninstall --accept-source-agreements --disable-interactivity --id $appId
-    } -ArgumentList $app
 }
 
 <#
@@ -159,6 +166,18 @@ function Remove-EdgeApp {
         return
     }
 
+    foreach ($edgeApp in $edgeAppsInList) {
+        if ($script:CancelRequested) { return }
+
+        Write-Host "Removing $edgeApp"
+        Invoke-NonBlocking -ScriptBlock {
+            param($appId)
+            winget uninstall --accept-source-agreements --disable-interactivity --id $appId
+        } -ArgumentList $edgeApp
+    }
+
+    if ($script:CancelRequested) { return }
+
     if ($script:Params.ContainsKey("User")) {
         Write-Host "Adding scheduled task to uninstall Microsoft Edge for user $(GetUserName)..."
         Set-RunOnceWingetTask -appId 'Microsoft.Edge'
@@ -166,14 +185,6 @@ function Remove-EdgeApp {
     elseif ($script:Params.ContainsKey("Sysprep")) {
         Write-Host "Adding scheduled task to uninstall Microsoft Edge for new users..."
         Set-RunOnceWingetTask -appId 'Microsoft.Edge'
-    }
-
-    foreach ($edgeApp in $edgeAppsInList) {
-        Write-Host "Removing $edgeApp"
-        Invoke-NonBlocking -ScriptBlock {
-            param($appId)
-            winget uninstall --accept-source-agreements --disable-interactivity --id $appId
-        } -ArgumentList $edgeApp
     }
 }
 

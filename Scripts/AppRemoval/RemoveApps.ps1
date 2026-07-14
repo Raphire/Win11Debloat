@@ -114,8 +114,6 @@ function Remove-WinGetApp {
         winget uninstall --accept-source-agreements --disable-interactivity --id $appId
     } -ArgumentList $app
 
-    if ($script:CancelRequested) { return }
-
     if ($script:Params.ContainsKey("User")) {
         Write-Host "Adding scheduled task to uninstall $app for user $(GetUserName)..."
         Set-RunOnceWingetTask -appId $app

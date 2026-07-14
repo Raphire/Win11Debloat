@@ -37,7 +37,6 @@ function RemoveApps {
     $appIndex = 0
 
     $edgeIds = @('Microsoft.Edge', 'XPFFTQ037JWMHS')
-    $edgeAppsInList = @()
     $wingetRemovedApps = @()
 
     Foreach ($app in $appsList) {
@@ -52,10 +51,6 @@ function RemoveApps {
         Write-Host "Removing $app"
 
         if ((Get-AppRemovalMethod $app) -eq 'WinGet') {
-            if ($edgeIds -contains $app) {
-                $edgeAppsInList += $app
-            }
-
             Remove-WinGetApp -app $app
             $wingetRemovedApps += $app
         }
@@ -79,7 +74,7 @@ function RemoveApps {
                 continue
             }
 
-            if ($edgeAppsInList -contains $app) {
+            if ($edgeIds -contains $app) {
                 Write-Host "Unable to uninstall Microsoft Edge via WinGet" -ForegroundColor Red
                 if (-not $edgeForceRemoveRequested) {
                     Request-EdgeForceRemove

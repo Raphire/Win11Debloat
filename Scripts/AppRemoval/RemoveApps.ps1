@@ -6,9 +6,8 @@
     Iterates over the provided list of app identifiers and removes each one.
     The removal method (winget vs. Appx cmdlets) is determined per-app from
     Apps.json. A scheduled task is only created when the User or Sysprep
-    parameter was passed.
-    After each winget removal, the system is checked to confirm whether the
-    app is still installed before reporting an error.
+    parameter was passed. After winget removal, the system is checked to 
+    confirm whether the app is still installed before reporting an error.
 
     .PARAMETER appsList
     An array of app package identifiers to remove (e.g. 'Microsoft.BingNews').
@@ -98,14 +97,11 @@ function RemoveApps {
 
 <#
     .SYNOPSIS
-    Uninstalls a non-Edge app via WinGet and/or schedules its removal.
+    Uninstalls an app via WinGet and/or schedules its removal.
 
     .DESCRIPTION
     Runs winget uninstall for a single app. If the User or Sysprep
     parameter was passed, also schedules removal for future logins.
-    After uninstall, the system is checked to confirm whether the app
-    is still present — winget output is not trusted on its
-    own, as it sometimes reports failure after a successful removal.
 
     .PARAMETER app
     The WinGet package ID to uninstall (e.g. 'Microsoft.BingNews').

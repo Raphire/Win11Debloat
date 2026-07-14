@@ -8,6 +8,7 @@
     Apps.json. A scheduled task is only created when the User or Sysprep
     parameter was passed. After winget removal, the system is checked to 
     confirm whether the app is still installed before reporting an error.
+    Returns early if the CancelRequested flag is set.
 
     .PARAMETER appsList
     An array of app package identifiers to remove (e.g. 'Microsoft.BingNews').

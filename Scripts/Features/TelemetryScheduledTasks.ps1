@@ -40,6 +40,8 @@ function Disable-TelemetryScheduledTasks {
     $tasks = Get-TelemetryScheduledTasks
 
     foreach ($task in $tasks) {
+        if ($script:CancelRequested) { return }
+
         if ($script:Params.ContainsKey("WhatIf")) {
             Write-Host "[WhatIf] Disable Scheduled Task: $($task.Path)$($task.Name)" -ForegroundColor Cyan
             continue
@@ -92,6 +94,8 @@ function Enable-TelemetryScheduledTasks {
     $tasks = Get-TelemetryScheduledTasks
 
     foreach ($task in $tasks) {
+        if ($script:CancelRequested) { return }
+
         if ($script:Params.ContainsKey("WhatIf")) {
             Write-Host "[WhatIf] Enable Scheduled Task: $($task.Path)$($task.Name)" -ForegroundColor Cyan
             continue

@@ -5,11 +5,10 @@
     .DESCRIPTION
     Iterates over the provided list of app identifiers and removes each one.
     The removal method (winget vs. Appx cmdlets) is determined per-app from
-    Apps.json. Microsoft Edge is deferred to the end of the loop so that all
-    winget attempts run before any force-remove prompt. A scheduled task is
-    only created when the User or Sysprep parameter was passed.
-    After each winget removal, the system is checked to confirm whether the
-    app is still installed before reporting an error.
+    Apps.json. A scheduled task is only created when the User or Sysprep
+    parameter was passed. After winget removal, the system is checked to 
+    confirm whether the app is still installed before reporting an error.
+    Returns early if the CancelRequested flag is set.
 
     .PARAMETER appsList
     An array of app package identifiers to remove (e.g. 'Microsoft.BingNews').
@@ -39,7 +38,6 @@ function RemoveApps {
     $appIndex = 0
 
     $edgeIds = @('Microsoft.Edge', 'XPFFTQ037JWMHS')
-    $edgeAppsInList = @()
     $wingetRemovedApps = @()
 
     Foreach ($app in $appsList) {
@@ -49,12 +47,6 @@ function RemoveApps {
 
         if ($script:ApplySubStepCallback -and $appCount -gt 1) {
             & $script:ApplySubStepCallback "Removing apps ($appIndex/$appCount)" $appIndex $appCount
-        }
-
-        # Microsoft Edge is handled after the loop to avoid duplicate scheduled tasks and allow fallback if winget fails
-        if ($edgeIds -contains $app) {
-            $edgeAppsInList += $app
-            continue
         }
 
         Write-Host "Removing $app"
@@ -68,31 +60,31 @@ function RemoveApps {
         }
     }
 
-    # Remove Microsoft Edge
-    if ($edgeAppsInList.Count -gt 0) {
-        Remove-EdgeApp -edgeAppsInList $edgeAppsInList
+    if ($script:CancelRequested) {
+        Write-Host ""
+        return
     }
 
     # Check whether any winget-removed apps are still present, and report errors for each one.
-    if ($wingetRemovedApps.Count -gt 0 -or $edgeAppsInList.Count -gt 0) {
+    if ($wingetRemovedApps.Count -gt 0) {
         $postRemovalList = if ($script:WingetInstalled) { GetInstalledAppsViaWinget -TimeOut 10 -NonBlocking } else { $null }
+        $edgeForceRemoveRequested = $false
+
         foreach ($app in $wingetRemovedApps) {
-            if (Test-AppStillInstalled -appId $app -InstalledList $postRemovalList) {
+            if (-not (Test-AppStillInstalled -appId $app -InstalledList $postRemovalList)) {
+                continue
+            }
+
+            if ($edgeIds -contains $app) {
+                Write-Host "Unable to uninstall Microsoft Edge via WinGet" -ForegroundColor Red
+                if (-not $edgeForceRemoveRequested) {
+                    Request-EdgeForceRemove
+                    $edgeForceRemoveRequested = $true
+                }
+            }
+            else {
                 Write-Host "Unable to uninstall $app via WinGet" -ForegroundColor Red
             }
-        }
-
-        # Verify Edge separately (triggers its own force-remove path if still installed)
-        $edgeStillInstalled = $false
-        foreach ($edgeApp in $edgeAppsInList) {
-            if (Test-AppStillInstalled -appId $edgeApp -InstalledList $postRemovalList) {
-                $edgeStillInstalled = $true
-                break
-            }
-        }
-        if ($edgeStillInstalled) {
-            Write-Host "Unable to uninstall Microsoft Edge via WinGet" -ForegroundColor Red
-            Request-EdgeForceRemove
         }
     }
 
@@ -101,15 +93,11 @@ function RemoveApps {
 
 <#
     .SYNOPSIS
-    Uninstalls a non-Edge app via WinGet and/or schedules its removal.
+    Uninstalls an app via WinGet and/or schedules its removal.
 
     .DESCRIPTION
     Runs winget uninstall for a single app. If the User or Sysprep
     parameter was passed, also schedules removal for future logins.
-    After uninstall, the system is checked to confirm whether the app
-    is still present — winget output is not trusted on its
-    own, as it sometimes reports failure after a successful removal.
-    Edge apps are handled separately after the main loop.
 
     .PARAMETER app
     The WinGet package ID to uninstall (e.g. 'Microsoft.BingNews').
@@ -122,6 +110,11 @@ function Remove-WinGetApp {
         return
     }
 
+    Invoke-NonBlocking -ScriptBlock {
+        param($appId)
+        winget uninstall --accept-source-agreements --disable-interactivity --id $appId
+    } -ArgumentList $app
+
     if ($script:Params.ContainsKey("User")) {
         Write-Host "Adding scheduled task to uninstall $app for user $(GetUserName)..."
         Set-RunOnceWingetTask -appId $app
@@ -129,51 +122,6 @@ function Remove-WinGetApp {
     elseif ($script:Params.ContainsKey("Sysprep")) {
         Write-Host "Adding scheduled task to uninstall $app for new users..."
         Set-RunOnceWingetTask -appId $app
-    }
-
-    Invoke-NonBlocking -ScriptBlock {
-        param($appId)
-        winget uninstall --accept-source-agreements --disable-interactivity --id $appId
-    } -ArgumentList $app
-}
-
-<#
-    .SYNOPSIS
-    Removes Microsoft Edge via WinGet (both AppIds), with fallback to force-remove.
-
-    .DESCRIPTION
-    Edge has multiple package IDs. Runs winget uninstall for each one,
-    then creates a single scheduled task if the User or Sysprep parameter
-    was passed. After all attempts, the system is checked to confirm
-    whether Edge is still present. The force-remove prompt only
-    appears if Edge remains installed — winget false positives are ignored.
-
-    .PARAMETER edgeAppsInList
-    The Edge AppIds that appear in the removal list (one or both).
-#>
-function Remove-EdgeApp {
-    param([string[]]$edgeAppsInList)
-
-    if (-not $script:WingetInstalled) {
-        Write-Host "ERROR: WinGet is either not installed or is outdated, Microsoft Edge could not be removed" -ForegroundColor Red
-        return
-    }
-
-    if ($script:Params.ContainsKey("User")) {
-        Write-Host "Adding scheduled task to uninstall Microsoft Edge for user $(GetUserName)..."
-        Set-RunOnceWingetTask -appId 'Microsoft.Edge'
-    }
-    elseif ($script:Params.ContainsKey("Sysprep")) {
-        Write-Host "Adding scheduled task to uninstall Microsoft Edge for new users..."
-        Set-RunOnceWingetTask -appId 'Microsoft.Edge'
-    }
-
-    foreach ($edgeApp in $edgeAppsInList) {
-        Write-Host "Removing $edgeApp"
-        Invoke-NonBlocking -ScriptBlock {
-            param($appId)
-            winget uninstall --accept-source-agreements --disable-interactivity --id $appId
-        } -ArgumentList $edgeApp
     }
 }
 

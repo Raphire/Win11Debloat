@@ -121,13 +121,13 @@ $tempRootPath = $env:TEMP
 $tempWorkPath = Join-Path $tempRootPath 'Win11Debloat'
 $tempArchivePath = Join-Path $tempRootPath 'win11debloat.zip'
 
-Write-Output "> Downloading Win11Debloat..."
-
 # Download Win11Debloat from GitHub as a zip archive.
 try {
     if ($Dev) {
+        Write-Output "> Downloading development version of Win11Debloat..."
         $sourceUri = "https://github.com/Raphire/Win11Debloat/archive/refs/heads/master.zip"
     } else {
+        Write-Output "> Downloading Win11Debloat..."
         $sourceUri = (Invoke-RestMethod https://api.github.com/repos/Raphire/Win11Debloat/releases/latest).zipball_url
     }
     Invoke-RestMethod $sourceUri -OutFile $tempArchivePath

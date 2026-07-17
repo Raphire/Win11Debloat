@@ -449,13 +449,25 @@ function Test-RegistryValueKindNameSupported {
     }
 }
 
-# A corrupted or hand-edited backup can have Data that doesn't fit its declared
-# Kind (e.g. Kind=DWord with Data=4294967296, which overflows uint32). Restore-
-# RegistryValueSnapshot's Convert-RegistryValueDataFromBackup performs the same
-# narrowing casts without a try/catch, and by the time it runs the live registry
-# subtree has already been deleted (Restore-RegistryKeySnapshot deletes before
-# rewriting) - so an invalid Data/Kind pairing must be rejected here, before any
-# restore begins, not left to fail mid-restore. See #686.
+<#
+    .SYNOPSIS
+        Checks whether a backed-up value's Data can be converted to its declared Kind.
+
+    .DESCRIPTION
+        A corrupted or hand-edited backup can have Data that doesn't fit its declared
+        Kind (e.g. Kind=DWord with Data=4294967296, which overflows uint32). Restore-
+        RegistryValueSnapshot's Convert-RegistryValueDataFromBackup performs the same
+        narrowing casts without a try/catch, and by the time it runs the live registry
+        subtree has already been deleted (Restore-RegistryKeySnapshot deletes before
+        rewriting) - so an invalid Data/Kind pairing must be rejected here, before any
+        restore begins, not left to fail mid-restore. See #686.
+
+    .PARAMETER KindName
+        The value's declared registry kind name (e.g. "DWord", "QWord", "String").
+
+    .PARAMETER Data
+        The value's backed-up data to validate against KindName.
+#>
 function Test-RegistryValueDataMatchesKind {
     param(
         [string]$KindName,

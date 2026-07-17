@@ -112,7 +112,7 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 - Prevent Windows from getting updates as soon as they're available.
 - Prevent automatic restarts after updates while signed in.
 - Disable sharing of downloaded updates with other PCs, also known as Delivery Optimization.
-- Prevent Windows from auto-installing device companion apps.
+- Prevent Windows from auto-installing device companion apps, like LG Monitor App, Alienware Command Center and more.
 
 #### Appearance
 

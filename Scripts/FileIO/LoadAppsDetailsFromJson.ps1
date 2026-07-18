@@ -1,4 +1,26 @@
-# Read Apps.json and return list of app objects with optional filtering
+<#
+    .SYNOPSIS
+        Loads application details from Apps.json.
+
+    .DESCRIPTION
+        Reads the application definitions from Apps.json, optionally filters the
+        results to installed applications, and returns normalized app objects for
+        display and selection.
+
+    .PARAMETER OnlyInstalled
+        Filters the results to applications detected through Appx or the supplied
+        winget installation list.
+
+    .PARAMETER InstalledList
+        A pre-fetched winget installation list used when filtering installed apps.
+
+    .PARAMETER InitialCheckedFromJson
+        Sets each returned app's IsChecked value from its SelectedByDefault setting.
+
+    .OUTPUTS
+        System.Management.Automation.PSCustomObject[]
+        Application detail objects containing display, selection, and removal data.
+#>
 function LoadAppsDetailsFromJson {
     param (
         [switch]$OnlyInstalled,

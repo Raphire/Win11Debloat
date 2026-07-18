@@ -9,10 +9,6 @@
         - Custom logic: app removal, Windows optional features, start menu
         replacement, and other special-case features.
 #>
-function Test-RunningAsSystem {
-    return ([Security.Principal.WindowsIdentity]::GetCurrent().User.Value -eq 'S-1-5-18')
-}
-
 function Invoke-FeatureApply {
     param(
         [Parameter(Mandatory)]
@@ -432,4 +428,20 @@ function Invoke-AllChanges {
         Write-Host ""
         Write-Host "$($script:RegistryImportFailures) registry import change(s) failed. See output above for details." -ForegroundColor Yellow
     }
+}
+
+<#
+    .SYNOPSIS
+        Tests whether Win11Debloat is running under the SYSTEM account.
+
+    .DESCRIPTION
+        Compares the current Windows identity's security identifier (SID) with
+        the well-known Local System SID (S-1-5-18).
+
+    .OUTPUTS
+        System.Boolean
+        Returns $true when the current process runs as SYSTEM; otherwise, $false.
+#>
+function Test-RunningAsSystem {
+    return ([Security.Principal.WindowsIdentity]::GetCurrent().User.Value -eq 'S-1-5-18')
 }

@@ -1,3 +1,16 @@
+<#
+    .SYNOPSIS
+        Runs a script block against the registry hive for a backup target.
+
+    .PARAMETER Target
+        A supported backup target: DefaultUserProfile or User:<user name>.
+
+    .PARAMETER ScriptBlock
+        The operation to run after the target user hive is available.
+
+    .PARAMETER ArgumentObject
+        Optional object passed to the script block.
+#>
 function Invoke-WithLoadedRestoreHive {
     param(
         [Parameter(Mandatory)]
@@ -24,6 +37,13 @@ function Invoke-WithLoadedRestoreHive {
     Invoke-WithTargetUserHive -TargetUserName $targetUserName -ScriptBlock $ScriptBlock -ArgumentObject $ArgumentObject
 }
 
+<#
+    .SYNOPSIS
+        Restores a registry key and its child keys from a backup snapshot.
+
+    .PARAMETER Snapshot
+        The saved registry-key state, including existence, values, and subkeys.
+#>
 function Restore-RegistryKeySnapshot {
     param(
         [Parameter(Mandatory)]
@@ -74,6 +94,16 @@ function Restore-RegistryKeySnapshot {
     }
 }
 
+<#
+    .SYNOPSIS
+        Restores or removes a registry value from a backup snapshot.
+
+    .PARAMETER RegistryKey
+        The open registry key that contains the value.
+
+    .PARAMETER Snapshot
+        The saved registry-value state to apply.
+#>
 function Restore-RegistryValueSnapshot {
     param(
         [Parameter(Mandatory)]
@@ -105,6 +135,16 @@ function Restore-RegistryValueSnapshot {
     }
 }
 
+<#
+    .SYNOPSIS
+        Converts a backed-up registry value-kind name to its .NET enum value.
+
+    .PARAMETER KindName
+        The registry value-kind name stored in the backup.
+
+    .OUTPUTS
+        Microsoft.Win32.RegistryValueKind
+#>
 function Convert-RegistryValueKindFromBackup {
     param(
         [string]$KindName
@@ -122,6 +162,16 @@ function Convert-RegistryValueKindFromBackup {
     }
 }
 
+<#
+    .SYNOPSIS
+        Converts backed-up data to a value suitable for registry restoration.
+
+    .PARAMETER Kind
+        The registry value kind that determines how the data is converted.
+
+    .PARAMETER Data
+        The serialized value data from the backup.
+#>
 function Convert-RegistryValueDataFromBackup {
     param(
         [Microsoft.Win32.RegistryValueKind]$Kind,
@@ -162,6 +212,17 @@ function Convert-RegistryValueDataFromBackup {
     }
 }
 
+<#
+    .SYNOPSIS
+        Converts serialized binary backup data to a byte array.
+
+    .PARAMETER Data
+        A byte array or collection of integer byte values from the backup.
+
+    .OUTPUTS
+        System.Byte[]
+        Returns $null when the input contains invalid byte data.
+#>
 function Convert-BackupDataToByteArray {
     param(
         $Data

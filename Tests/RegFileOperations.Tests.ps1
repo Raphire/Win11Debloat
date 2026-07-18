@@ -36,6 +36,7 @@ Describe 'Convert-RegValueData' {
     It '<Case>' -ForEach @(
         @{ Case = 'parses a registry value deletion'; ValueData = '-'; ExpectedOperation = 'DeleteValue' }
         @{ Case = 'ignores unsupported data'; ValueData = 'hex(b):not-hex'; ExpectedOperation = $null }
+        @{ Case = 'rejects hex data with an empty byte token'; ValueData = 'hex:01,,ff'; ExpectedOperation = $null }
     ) {
         $result = Convert-RegValueData -valueData $ValueData
         if ($ExpectedOperation) {

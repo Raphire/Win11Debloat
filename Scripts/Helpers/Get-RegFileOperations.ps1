@@ -161,7 +161,11 @@ function Convert-HexStringToByteArray {
         [string]$hexValue
     )
 
-    $parts = @($hexValue.Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ })
+    $parts = @($hexValue.Split(',') | ForEach-Object { $_.Trim() })
+    if ($parts | Where-Object { [string]::IsNullOrWhiteSpace($_) }) {
+        return $null
+    }
+
     $bytes = New-Object byte[] $parts.Count
     for ($i = 0; $i -lt $parts.Count; $i++) {
         if ($parts[$i] -notmatch '^[0-9a-fA-F]{1,2}$') {

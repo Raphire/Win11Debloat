@@ -3,12 +3,12 @@ function Show-ApplyModal {
         [Parameter(Mandatory=$false)]
         [System.Windows.Window]$Owner = $null,
         [Parameter(Mandatory=$false)]
-        [bool]$RestartExplorer = $false
+        [bool]$InvokeRestartExplorer = $false
     )
     
     Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase | Out-Null
     
-    $usesDarkMode = GetSystemUsesDarkMode
+    $usesDarkMode = Get-SystemUsesDarkMode
     
     # Determine owner window
     $ownerWindow = if ($Owner) { $Owner } else { $script:GuiWindow }
@@ -44,7 +44,7 @@ function Show-ApplyModal {
     }
     
     # Apply theme resources
-    SetWindowThemeResources -window $applyWindow -usesDarkMode $usesDarkMode
+    Set-WindowThemeResources -window $applyWindow -usesDarkMode $usesDarkMode
     
     # Get UI elements
     $script:ApplyInProgressPanel = $applyWindow.FindName('ApplyInProgressPanel')
@@ -81,7 +81,7 @@ function Show-ApplyModal {
         $pct = if ($totalSteps -gt 0) { [math]::Round((($currentStep - 1) / $totalSteps) * 100) } else { 0 }
         $script:ApplyProgressBarEl.Value = $pct
         # Process pending window messages to keep UI responsive
-        DoEvents
+        Invoke-DoEvents
     }
 
     # Sub-step callback updates step name and interpolates progress bar within the current step
@@ -96,7 +96,7 @@ function Show-ApplyModal {
             $stepFraction = ($subIndex / $subCount) / $totalSteps
             $script:ApplyProgressBarEl.Value = [math]::Round(($baseProgress + $stepFraction) * 100)
         }
-        DoEvents
+        Invoke-DoEvents
     }
     
     # Run changes in background to keep UI responsive
@@ -107,8 +107,8 @@ function Show-ApplyModal {
             $registryImportFailureCount = [int]$script:RegistryImportFailures
             
             # Restart explorer if requested
-            if ($RestartExplorer -and -not $script:CancelRequested) {
-                RestartExplorer
+            if ($InvokeRestartExplorer -and -not $script:CancelRequested) {
+                Invoke-RestartExplorer
                 
                 # Wait for Explorer to finish relaunching, then reclaim focus.
                 Start-Sleep -Milliseconds 800
@@ -143,7 +143,7 @@ function Show-ApplyModal {
                 $script:ApplyCompletionTitleEl.Text = "Changes Applied"
 
                 # Show completion message with reboot instructions if any applied features require reboot
-                if ($RestartExplorer) {
+                if ($InvokeRestartExplorer) {
                     $rebootFeatures = Get-RebootFeatureLabels
 
                     if ($rebootFeatures.Count -gt 0) {

@@ -31,7 +31,7 @@ function Invoke-NonBlocking {
                     $ps.Stop()
                     throw "Operation timed out after $TimeoutSeconds seconds"
                 }
-                DoEvents
+                Invoke-DoEvents
                 Start-Sleep -Milliseconds 16
             }
         }

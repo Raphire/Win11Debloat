@@ -1,8 +1,8 @@
-﻿function Show-MainWindow {
+function Show-MainWindow {
     Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase,System.Windows.Forms | Out-Null
 
     $WinVersion = Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' CurrentBuild
-    $usesDarkMode = GetSystemUsesDarkMode
+    $usesDarkMode = Get-SystemUsesDarkMode
 
     # ---- Load XAML ----
     $xaml = Get-Content -Path $script:MainWindowSchema -Raw
@@ -14,7 +14,7 @@
         $reader.Close()
     }
 
-    SetWindowThemeResources -window $window -usesDarkMode $usesDarkMode
+    Set-WindowThemeResources -window $window -usesDarkMode $usesDarkMode
 
     $mainBorder = $window.FindName('MainBorder')
     $titleBarBackground = $window.FindName('TitleBarBackground')
@@ -223,7 +223,7 @@
     if ($importConfigBtn) { $importConfigBtn.IsEnabled = $false }
 
     # ---- Build JSON-defined app presets ----
-    foreach ($preset in (LoadAppPresetsFromJson)) {
+    foreach ($preset in (Import-AppPresetsFromJson)) {
         $checkbox = New-Object System.Windows.Controls.CheckBox
         $checkbox.Content = $preset.Name
         $checkbox.IsThreeState = $true
@@ -301,8 +301,8 @@
 
     # ---- Load apps ----
     $appLoadStatusCallback = { Update-AppSelectionStatus -AppsPanel $appsPanel -AppSelectionStatus $appSelectionStatus -AppRemovalScopeCombo $appRemovalScopeCombo -AppRemovalScopeSection $appRemovalScopeSection -AppRemovalScopeDescription $appRemovalScopeDescription -UserSelectionCombo $userSelectionCombo }
-    $onlyInstalledAppsBox.Add_Checked({ Load-AppsIntoMainUI -Window $window -AppsPanel $appsPanel -OnlyInstalledAppsBox $onlyInstalledAppsBox -LoadingAppsIndicator $loadingAppsIndicator -ImportConfigBtn $importConfigBtn })
-    $onlyInstalledAppsBox.Add_Unchecked({ Load-AppsIntoMainUI -Window $window -AppsPanel $appsPanel -OnlyInstalledAppsBox $onlyInstalledAppsBox -LoadingAppsIndicator $loadingAppsIndicator -ImportConfigBtn $importConfigBtn })
+    $onlyInstalledAppsBox.Add_Checked({ Initialize-MainWindowApps -Window $window -AppsPanel $appsPanel -OnlyInstalledAppsBox $onlyInstalledAppsBox -LoadingAppsIndicator $loadingAppsIndicator -ImportConfigBtn $importConfigBtn })
+    $onlyInstalledAppsBox.Add_Unchecked({ Initialize-MainWindowApps -Window $window -AppsPanel $appsPanel -OnlyInstalledAppsBox $onlyInstalledAppsBox -LoadingAppsIndicator $loadingAppsIndicator -ImportConfigBtn $importConfigBtn })
 
     # ---- App presets popup ----
     $presetsPopup.Add_Opened({
@@ -617,9 +617,9 @@
             $ShowCurrentlyAppliedTweaksCheckBox.IsChecked = $false
         }
 
-        $defaultsJson = LoadJsonFile -filePath $script:DefaultSettingsFilePath -expectedVersion "1.0"
+        $defaultsJson = Import-JsonFile -filePath $script:DefaultSettingsFilePath -expectedVersion "1.0"
         if ($defaultsJson) {
-            ApplySettingsToUiControls -window $window -settingsJson $defaultsJson -uiControlMappings $script:UiControlMappings
+            Apply-SettingsToUiControls -window $window -settingsJson $defaultsJson -uiControlMappings $script:UiControlMappings
         }
 
         if ($script:IsLoadingApps) {
@@ -663,17 +663,17 @@
         $hasAppSelection = ($selectedApps.Count -gt 0)
 
         if ($selectedApps.Count -gt 0) {
-            if (-not (ConfirmUnsafeAppRemoval -SelectedApps $selectedApps -Owner $window)) { return }
+            if (-not (Confirm-UnsafeAppRemoval -SelectedApps $selectedApps -Owner $window)) { return }
 
-            AddParameter 'RemoveApps'
-            AddParameter 'Apps' ($selectedApps -join ',')
+            Add-Parameter 'RemoveApps'
+            Add-Parameter 'Apps' ($selectedApps -join ',')
 
             $selectedScopeItem = $appRemovalScopeCombo.SelectedItem
             if ($selectedScopeItem) {
                 switch ($selectedScopeItem.Content) {
-                    "All users" { AddParameter 'AppRemovalTarget' 'AllUsers' }
-                    "Current user only" { AddParameter 'AppRemovalTarget' 'CurrentUser' }
-                    "Target user only" { AddParameter 'AppRemovalTarget' ($otherUsernameTextBox.Text.Trim()) }
+                    "All users" { Add-Parameter 'AppRemovalTarget' 'AllUsers' }
+                    "Current user only" { Add-Parameter 'AppRemovalTarget' 'CurrentUser' }
+                    "Target user only" { Add-Parameter 'AppRemovalTarget' ($otherUsernameTextBox.Text.Trim()) }
                 }
             }
         }
@@ -681,7 +681,7 @@
         # Apply dynamic tweaks
         foreach ($tweakAction in @(Get-PendingTweakActions -Window $window -ShowAppliedTweaksMode:$showAppliedTweaksMode)) {
             if ($tweakAction.Action -eq 'Apply') {
-                AddParameter $tweakAction.FeatureId
+                Add-Parameter $tweakAction.FeatureId
                 $null = $selectedForwardFeatureIds.Add([string]$tweakAction.FeatureId)
                 continue
             }
@@ -695,27 +695,27 @@
 
         $restorePointCheckBox = $window.FindName('RestorePointCheckBox')
         if ($restorePointCheckBox -and $restorePointCheckBox.IsChecked) {
-            AddParameter 'CreateRestorePoint'
+            Add-Parameter 'CreateRestorePoint'
         }
 
         switch ($userSelectionCombo.SelectedIndex) {
-            0 { Write-Host "Selected user mode: current user ($(GetUserName))" }
+            0 { Write-Host "Selected user mode: current user ($(Get-UserName))" }
             1 {
                 Write-Host "Selected user mode: $($otherUsernameTextBox.Text.Trim())"
-                AddParameter User ($otherUsernameTextBox.Text.Trim())
+                Add-Parameter User ($otherUsernameTextBox.Text.Trim())
             }
             2 {
                 Write-Host "Selected user mode: default user profile (Sysprep)"
-                AddParameter Sysprep
+                Add-Parameter Sysprep
             }
         }
 
-        SaveSettings
+        Save-Settings
 
         $restartExplorerCheckBox = $window.FindName('RestartExplorerCheckBox')
         $shouldRestartExplorer = $restartExplorerCheckBox -and $restartExplorerCheckBox.IsChecked
 
-        Show-ApplyModal -Owner $window -RestartExplorer $shouldRestartExplorer
+        Show-ApplyModal -Owner $window -InvokeRestartExplorer $shouldRestartExplorer
         $window.Close()
     })
 
@@ -737,12 +737,12 @@
     $window.Add_Loaded({
         try {
             & $updateHomeContentPosition
-            Build-DynamicTweaks -Window $window -WinVersion $WinVersion
-            Load-CurrentTweakStateIntoUI -Window $window
+            New-DynamicTweakControls -Window $window -WinVersion $WinVersion
+            Set-CurrentTweakStateInUi -Window $window
             Update-TweaksResponsiveColumns -Window $window
 
-            $lastUsedSettingsJson = LoadJsonFile -filePath $script:SavedSettingsFilePath -expectedVersion "1.0" -optionalFile
-            $defaultsJson = LoadJsonFile -filePath $script:DefaultSettingsFilePath -expectedVersion "1.0"
+            $lastUsedSettingsJson = Import-JsonFile -filePath $script:SavedSettingsFilePath -expectedVersion "1.0" -optionalFile
+            $defaultsJson = Import-JsonFile -filePath $script:DefaultSettingsFilePath -expectedVersion "1.0"
 
             $script:SavedAppIds = Get-SavedAppIdsFromSettingsJson -SettingsJson $lastUsedSettingsJson
 
@@ -750,13 +750,13 @@
             Register-TweakPresetControlStateHandlers -Window $window
             Update-TweakPresetStates -Window $window
 
-            Load-AppsIntoMainUI -Window $window -AppsPanel $appsPanel -OnlyInstalledAppsBox $onlyInstalledAppsBox -LoadingAppsIndicator $loadingAppsIndicator -ImportConfigBtn $importConfigBtn
+            Initialize-MainWindowApps -Window $window -AppsPanel $appsPanel -OnlyInstalledAppsBox $onlyInstalledAppsBox -LoadingAppsIndicator $loadingAppsIndicator -ImportConfigBtn $importConfigBtn
 
             # Update Current User label
             if ($userSelectionCombo -and $userSelectionCombo.Items.Count -gt 0) {
                 $currentUserItem = $userSelectionCombo.Items[0]
                 if ($currentUserItem -is [System.Windows.Controls.ComboBoxItem]) {
-                    $currentUserItem.Content = "Current User ($(GetUserName))"
+                    $currentUserItem.Content = "Current User ($(Get-UserName))"
                 }
             }
 
@@ -809,8 +809,8 @@
     })
 
     # ---- Tweak presets wiring ----
-    $lastUsedSettingsJson = LoadJsonFile -filePath $script:SavedSettingsFilePath -expectedVersion "1.0" -optionalFile
-    $defaultsJson = LoadJsonFile -filePath $script:DefaultSettingsFilePath -expectedVersion "1.0"
+    $lastUsedSettingsJson = Import-JsonFile -filePath $script:SavedSettingsFilePath -expectedVersion "1.0" -optionalFile
+    $defaultsJson = Import-JsonFile -filePath $script:DefaultSettingsFilePath -expectedVersion "1.0"
     $script:DefaultTweakPresetMap = @{}
     $script:LastUsedTweakPresetMap = @{}
     $script:PrivacyTweakPresetMap = @{}
@@ -869,7 +869,7 @@
 
     # ---- Preload app data ----
     try {
-        $script:PreloadedAppData = LoadAppsDetailsFromJson -OnlyInstalled:$false -InstalledList $null -InitialCheckedFromJson:$false
+        $script:PreloadedAppData = Import-AppDetailsFromJson -OnlyInstalled:$false -InstalledList $null -InitialCheckedFromJson:$false
     }
     catch {
         Write-Warning "Failed to preload apps list: $_"

@@ -1,13 +1,13 @@
 # MainWindow-TweaksBuilder.ps1
 # Dynamic tweaks UI construction from Features.json, tweak state management, selection clear, and search/highlight.
 
-function Build-DynamicTweaks {
+function New-DynamicTweakControls {
     param(
         [System.Windows.Window]$Window,
         [int]$WinVersion
     )
 
-    $featuresJson = LoadJsonFile -filePath $script:FeaturesFilePath -expectedVersion "1.0"
+    $featuresJson = Import-JsonFile -filePath $script:FeaturesFilePath -expectedVersion "1.0"
 
     if (-not $featuresJson) {
         throw "Unable to load Features.json file. The GUI cannot continue without feature definitions."
@@ -29,7 +29,7 @@ function Build-DynamicTweaks {
     $script:TweaksCompactMode = $null
     $script:TweaksCardsMovedFromCol2 = @()
 
-    function CreateLabeledCombo($parent, $labelText, $comboName, $items) {
+    function New-LabeledCombo($parent, $labelText, $comboName, $items) {
         # If only 2 items (No Change + one option), use a checkbox instead
         if ($items.Count -eq 2) {
             $checkbox = New-Object System.Windows.Controls.CheckBox
@@ -96,7 +96,7 @@ function Build-DynamicTweaks {
         return $combo
     }
 
-    function GetWikiUrlForCategory($category) {
+    function Get-WikiUrlForCategory($category) {
         if (-not $category) { return 'https://github.com/Raphire/Win11Debloat/wiki/Features' }
 
         $slug = $category.ToLowerInvariant()
@@ -107,7 +107,7 @@ function Build-DynamicTweaks {
         return "https://github.com/Raphire/Win11Debloat/wiki/Features#$slug"
     }
 
-    function GetOrCreateCategoryCard($categoryObj) {
+    function Get-OrCreateCategoryCard($categoryObj) {
         $categoryName = $categoryObj.Name
         $categoryIcon = $categoryObj.Icon
 
@@ -152,7 +152,7 @@ function Build-DynamicTweaks {
         $helpBtn = New-Object System.Windows.Controls.Button
         $helpBtn.Content = $helpIcon
         $helpBtn.ToolTip = "Open the wiki for more info on '$categoryName' tweaks"
-        $helpBtn.Tag = (GetWikiUrlForCategory -category $categoryName)
+        $helpBtn.Tag = (Get-WikiUrlForCategory -category $categoryName)
         $helpBtn.Style = $Window.Resources['CategoryHelpLinkButtonStyle']
         $helpBtn.Add_Click({
                 param($button, $e)
@@ -289,8 +289,8 @@ function Build-DynamicTweaks {
                         if ($soleFeature.FeatureId -match '^Disable') { $opt = 'Disable' } elseif ($soleFeature.FeatureId -match '^Enable') { $opt = 'Enable' }
                         $items = @('No Change', $opt)
                         $comboName = ("Feature_{0}_Combo" -f $soleFeature.FeatureId) -replace '[^a-zA-Z0-9_]', ''
-                        if (-not $panel) { $panel = GetOrCreateCategoryCard -categoryObj $categoryObj }
-                        $combo = CreateLabeledCombo -parent $panel -labelText $soleFeature.Label -comboName $comboName -items $items
+                        if (-not $panel) { $panel = Get-OrCreateCategoryCard -categoryObj $categoryObj }
+                        $combo = New-LabeledCombo -parent $panel -labelText $soleFeature.Label -comboName $comboName -items $items
                         # attach tooltip from Features.json if present
                         if ($soleFeature.ToolTip -or $soleFeature.DisableWhenApplied -eq $true) {
                             $tooltipText = $soleFeature.ToolTip
@@ -314,8 +314,8 @@ function Build-DynamicTweaks {
 
                 $items = @('No Change') + ($filteredValues | ForEach-Object { $_.Label })
                 $comboName = 'Group_{0}Combo' -f $group.GroupId
-                if (-not $panel) { $panel = GetOrCreateCategoryCard -categoryObj $categoryObj }
-                $combo = CreateLabeledCombo -parent $panel -labelText $group.Label -comboName $comboName -items $items
+                if (-not $panel) { $panel = Get-OrCreateCategoryCard -categoryObj $categoryObj }
+                $combo = New-LabeledCombo -parent $panel -labelText $group.Label -comboName $comboName -items $items
                 # attach tooltip from UiGroups if present
                 if ($group.ToolTip) {
                     $tipBlock = New-Object System.Windows.Controls.TextBlock
@@ -335,8 +335,8 @@ function Build-DynamicTweaks {
                 if ($feature.FeatureId -match '^Disable') { $opt = 'Disable' } elseif ($feature.FeatureId -match '^Enable') { $opt = 'Enable' }
                 $items = @('No Change', $opt)
                 $comboName = ("Feature_{0}_Combo" -f $feature.FeatureId) -replace '[^a-zA-Z0-9_]', ''
-                if (-not $panel) { $panel = GetOrCreateCategoryCard -categoryObj $categoryObj }
-                $combo = CreateLabeledCombo -parent $panel -labelText $feature.Label -comboName $comboName -items $items
+                if (-not $panel) { $panel = Get-OrCreateCategoryCard -categoryObj $categoryObj }
+                $combo = New-LabeledCombo -parent $panel -labelText $feature.Label -comboName $comboName -items $items
                 # attach tooltip from Features.json if present, and include the disabled-state reason
                 if ($feature.ToolTip -or $feature.DisableWhenApplied -eq $true) {
                     $tooltipText = $feature.ToolTip
@@ -377,7 +377,7 @@ function Update-CurrentTweakSystemState {
     if (-not $script:UiControlMappings) { return }
     if (-not $script:Features) { return }
 
-    $featuresJson = LoadJsonFile -filePath $script:FeaturesFilePath -expectedVersion "1.0"
+    $featuresJson = Import-JsonFile -filePath $script:FeaturesFilePath -expectedVersion "1.0"
     if (-not $featuresJson) { return }
 
     $groupMap = @{}
@@ -423,7 +423,7 @@ function Update-CurrentTweakSystemState {
     }
 }
 
-function Load-CurrentTweakStateIntoUI {
+function Set-CurrentTweakStateInUi {
     param([System.Windows.Window]$Window)
 
     Update-CurrentTweakSystemState -Window $Window -ApplyToUi:$true

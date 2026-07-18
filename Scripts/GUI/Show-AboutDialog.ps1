@@ -6,7 +6,7 @@ function Show-AboutDialog {
     
     Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase | Out-Null
     
-    $usesDarkMode = GetSystemUsesDarkMode
+    $usesDarkMode = Get-SystemUsesDarkMode
     
     # Determine owner window
     $ownerWindow = if ($Owner) { $Owner } else { $script:GuiWindow }
@@ -42,7 +42,7 @@ function Show-AboutDialog {
     }
 
     # Apply theme resources
-    SetWindowThemeResources -window $aboutWindow -usesDarkMode $usesDarkMode
+    Set-WindowThemeResources -window $aboutWindow -usesDarkMode $usesDarkMode
     
     # Get UI elements
     $titleBar = $aboutWindow.FindName('TitleBar')

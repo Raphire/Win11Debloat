@@ -163,7 +163,11 @@ Describe 'Set-RunOnceWingetTask' {
             param($TargetUserName, $ScriptBlock, $ArgumentObject)
             & $ScriptBlock $ArgumentObject
         }
-        Mock Invoke-RegistryOperation {}
+        $script:runOnceOperation = $null
+        Mock Invoke-RegistryOperation {
+            param($Operation)
+            $script:runOnceOperation = $Operation
+        }
     }
 
     It 'encodes shell metacharacters and writes a safe RunOnce operation' {
@@ -171,8 +175,12 @@ Describe 'Set-RunOnceWingetTask' {
         Should -Invoke Invoke-WithTargetUserHive -Times 1 -Exactly -ParameterFilter { $TargetUserName -eq 'Alice' }
         Should -Invoke Invoke-RegistryOperation -Times 1 -Exactly -ParameterFilter {
             $Operation.ValueName -eq "Uninstall_Vendor.App&'Test" -and
-            $Operation.ValueData -match '^powershell\.exe -NoProfile -EncodedCommand [A-Za-z0-9+/=]+$' -and
             $RegFilePath -eq '<dynamic>'
         }
+
+        $script:runOnceOperation.ValueData | Should -Match '^powershell\.exe -NoProfile -EncodedCommand [A-Za-z0-9+/=]+$'
+        $encodedCommand = $script:runOnceOperation.ValueData -replace '^powershell\.exe -NoProfile -EncodedCommand ', ''
+        $decodedCommand = [System.Text.Encoding]::Unicode.GetString([Convert]::FromBase64String($encodedCommand))
+        $decodedCommand | Should -Be "winget uninstall --accept-source-agreements --disable-interactivity --id 'Vendor.App&''Test'"
     }
 }

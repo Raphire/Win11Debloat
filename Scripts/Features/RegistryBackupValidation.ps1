@@ -300,6 +300,9 @@ function Test-RegistrySnapshotAgainstAllowList {
             if (-not (Test-RegistryValueKindNameSupported -KindName $kindName)) {
                 $Errors.Add("Backup contains unsupported registry value kind '$kindName' for '$valueReference'.")
             }
+            elseif (-not (Test-RegistryValueDataMatchesKind -KindName $kindName -Data $valueSnapshot.Data)) {
+                $Errors.Add("Backup value '$valueReference' has Data that does not fit its Kind '$kindName'.")
+            }
         }
         elseif (-not [string]::IsNullOrWhiteSpace($kindName)) {
             $Errors.Add("Backup value '$valueReference' must not define Kind when Exists is false.")
@@ -443,5 +446,60 @@ function Test-RegistryValueKindNameSupported {
     }
     catch {
         return $false
+    }
+}
+
+<#
+    .SYNOPSIS
+        Checks whether a backed-up value's Data can be converted to its declared Kind.
+
+    .DESCRIPTION
+        A corrupted or hand-edited backup can have Data that doesn't fit its declared
+        Kind (e.g. Kind=DWord with Data=4294967296, which overflows uint32). Restore-
+        RegistryValueSnapshot's Convert-RegistryValueDataFromBackup performs the same
+        narrowing casts without a try/catch, and by the time it runs the live registry
+        subtree has already been deleted (Restore-RegistryKeySnapshot deletes before
+        rewriting) - so an invalid Data/Kind pairing must be rejected here, before any
+        restore begins, not left to fail mid-restore. See #686.
+
+    .PARAMETER KindName
+        The value's declared registry kind name (e.g. "DWord", "QWord", "String").
+
+    .PARAMETER Data
+        The value's backed-up data to validate against KindName.
+#>
+function Test-RegistryValueDataMatchesKind {
+    param(
+        [string]$KindName,
+        $Data
+    )
+
+    $kind = [System.Enum]::Parse([Microsoft.Win32.RegistryValueKind], $KindName, $true)
+
+    switch ($kind) {
+        ([Microsoft.Win32.RegistryValueKind]::DWord) {
+            try {
+                [void][uint32]$Data
+                return $true
+            }
+            catch {
+                return $false
+            }
+        }
+        ([Microsoft.Win32.RegistryValueKind]::QWord) {
+            try {
+                [void][uint64]$Data
+                return $true
+            }
+            catch {
+                return $false
+            }
+        }
+        default {
+            # String/MultiString/Binary/None conversions in Convert-RegistryValueDataFromBackup
+            # cannot throw for arbitrary Data - they stringify, array-map to strings, or fall
+            # back to an empty byte array / null.
+            return $true
+        }
     }
 }

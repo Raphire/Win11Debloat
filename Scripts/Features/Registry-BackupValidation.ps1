@@ -489,3 +489,4 @@ function Test-RegistryValueKindNameSupported {
         return $false
     }
 }
+

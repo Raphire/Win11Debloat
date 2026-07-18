@@ -17,8 +17,13 @@ function LoadAppsDetailsFromJson {
 
     foreach ($appData in $jsonContent.Apps) {
         # Handle AppId as array (could be single or multiple IDs)
-        $appIdArray = if ($appData.AppId -is [array]) { $appData.AppId } else { @($appData.AppId) }
-        $appIdArray = $appIdArray | ForEach-Object { $_.Trim() } | Where-Object { $_.length -gt 0 }
+        $appIdArray = @(
+            foreach ($rawAppId in @($appData.AppId)) {
+                if ($rawAppId -isnot [string]) { continue }
+                $normalizedAppId = $rawAppId.Trim()
+                if ($normalizedAppId.Length -gt 0) { $normalizedAppId }
+            }
+        )
         if ($appIdArray.Count -eq 0) { continue }
 
         if ($OnlyInstalled) {

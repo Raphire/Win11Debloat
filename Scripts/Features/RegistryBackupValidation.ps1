@@ -259,7 +259,8 @@ function ConvertTo-RegistryValueNameSet {
         $null = $valueNameSet.Add([string]$valueName)
     }
 
-    return $valueNameSet
+    # Prevent PowerShell from enumerating the HashSet into an array or single string
+    return ,$valueNameSet
 }
 
 function Test-RegistrySnapshotAgainstAllowList {
@@ -300,6 +301,9 @@ function Test-RegistrySnapshotAgainstAllowList {
             if (-not (Test-RegistryValueKindNameSupported -KindName $kindName)) {
                 $Errors.Add("Backup contains unsupported registry value kind '$kindName' for '$valueReference'.")
             }
+            elseif (-not (Test-RegistryValueDataSupported -KindName $kindName -Data $valueSnapshot.Data)) {
+                $Errors.Add("Backup contains invalid registry data for kind '$kindName' at '$valueReference'.")
+            }
         }
         elseif (-not [string]::IsNullOrWhiteSpace($kindName)) {
             $Errors.Add("Backup value '$valueReference' must not define Kind when Exists is false.")
@@ -308,6 +312,46 @@ function Test-RegistrySnapshotAgainstAllowList {
 
     foreach ($subKeySnapshot in @($Snapshot.SubKeys)) {
         Test-RegistrySnapshotAgainstAllowList -Snapshot $subKeySnapshot -PlanMap $PlanMap -Errors $Errors
+    }
+}
+
+function Test-RegistryValueDataSupported {
+    param(
+        [Parameter(Mandatory)]
+        [string]$KindName,
+        [AllowNull()]
+        $Data
+    )
+
+    $kind = [System.Enum]::Parse([Microsoft.Win32.RegistryValueKind], $KindName, $true)
+    switch ($kind) {
+        ([Microsoft.Win32.RegistryValueKind]::DWord) {
+            $parsed = [uint32]0
+            return [uint32]::TryParse([string]$Data, [System.Globalization.NumberStyles]::Integer, [System.Globalization.CultureInfo]::InvariantCulture, [ref]$parsed)
+        }
+        ([Microsoft.Win32.RegistryValueKind]::QWord) {
+            $parsed = [uint64]0
+            return [uint64]::TryParse([string]$Data, [System.Globalization.NumberStyles]::Integer, [System.Globalization.CultureInfo]::InvariantCulture, [ref]$parsed)
+        }
+        ([Microsoft.Win32.RegistryValueKind]::Binary) {
+            if ($null -eq $Data) { return $true }
+            foreach ($item in @($Data)) {
+                if ($item -isnot [ValueType] -and $item -isnot [string]) { return $false }
+                $parsed = 0
+                if (-not [int]::TryParse([string]$item, [ref]$parsed) -or $parsed -lt 0 -or $parsed -gt 255) {
+                    return $false
+                }
+            }
+            return $true
+        }
+        ([Microsoft.Win32.RegistryValueKind]::MultiString) {
+            foreach ($item in @($Data)) {
+                if ($item -isnot [string]) { return $false }
+            }
+            return $true
+        }
+        ([Microsoft.Win32.RegistryValueKind]::None) { return ($null -eq $Data) }
+        default { return ($null -eq $Data -or $Data -is [string]) }
     }
 }
 

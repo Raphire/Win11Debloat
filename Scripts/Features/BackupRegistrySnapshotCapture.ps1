@@ -198,7 +198,7 @@ function Get-RegistryKeySnapshot {
 function Convert-RegistryKeyToSnapshot {
     param(
         [Parameter(Mandatory)]
-        [Microsoft.Win32.RegistryKey]$RegistryKey,
+        $RegistryKey,
         [Parameter(Mandatory)]
         [string]$FullPath,
         [bool]$CaptureAllValues = $false,
@@ -256,7 +256,7 @@ function Convert-RegistryKeyToSnapshot {
 function Convert-RegistryValueToSnapshot {
     param(
         [Parameter(Mandatory)]
-        [Microsoft.Win32.RegistryKey]$RegistryKey,
+        $RegistryKey,
         [Parameter(Mandatory)]
         [AllowEmptyString()]
         [string]$ValueName

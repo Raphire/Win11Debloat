@@ -67,6 +67,31 @@ function Get-RegistryRootKey {
     }
 }
 
+function Remove-RegistrySubKeyTreeIfExists {
+    param(
+        [Parameter(Mandatory)]
+        $RootKey,
+        [Parameter(Mandatory)]
+        [string]$SubKeyPath
+    )
+
+    try {
+        $RootKey.DeleteSubKeyTree($SubKeyPath, $false)
+    }
+    catch {
+        $failure = $_.Exception
+        while ($failure.InnerException) {
+            $failure = $failure.InnerException
+        }
+        if ($failure -is [System.ArgumentException]) {
+            # The key can disappear between snapshot inspection and deletion.
+            return
+        }
+
+        throw
+    }
+}
+
 function Get-RegistryFilePathForFeature {
     param(
         [Parameter(Mandatory)]

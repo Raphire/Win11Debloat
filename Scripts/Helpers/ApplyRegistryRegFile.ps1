@@ -39,25 +39,6 @@ function Convert-RegOperationToValueKind {
     }
 }
 
-function Remove-RegistrySubKeyTreeIfExists {
-    param(
-        [Parameter(Mandatory)]
-        [Microsoft.Win32.RegistryKey]$RootKey,
-        [Parameter(Mandatory)]
-        [string]$SubKeyPath
-    )
-
-    try {
-        $RootKey.DeleteSubKeyTree($SubKeyPath, $false)
-    }
-    catch [System.UnauthorizedAccessException], [System.Security.SecurityException] {
-        throw
-    }
-    catch {
-        # Best-effort cleanup only; missing keys are fine.
-    }
-}
-
 function Get-RegistryKeyForOperation {
     param(
         [Parameter(Mandatory)]

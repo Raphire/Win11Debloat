@@ -241,11 +241,12 @@ function Get-AppRemovalMethod {
                 foreach ($appData in $appsJson.Apps) {
                     $rawMethod = $appData.RemovalMethod
                     $method = if ($rawMethod -and $rawMethod -eq 'WinGet') { 'WinGet' } else { 'Appx' }
-                    if ($appData.AppId -is [array]) {
-                        foreach ($id in $appData.AppId) { $script:AppRemovalMethodCache[$id.Trim()] = $method }
-                    }
-                    else {
-                        $script:AppRemovalMethodCache[$appData.AppId.Trim()] = $method
+                    foreach ($id in @($appData.AppId)) {
+                        if ($id -isnot [string]) { continue }
+                        $normalizedId = $id.Trim()
+                        if (-not [string]::IsNullOrWhiteSpace($normalizedId)) {
+                            $script:AppRemovalMethodCache[$normalizedId] = $method
+                        }
                     }
                 }
             }

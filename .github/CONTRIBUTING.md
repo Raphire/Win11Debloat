@@ -58,6 +58,25 @@ You can launch the prerelease version of Win11Debloat by running this command:
    .\Win11Debloat.ps1
    ```
 
+### Running Automated Tests
+
+The automated test cases use Pester 5 and do not modify the registry or other
+system state. The optional bootstrap step installs Pester for your user account
+when needed. To run the complete suite:
+
+```powershell
+.\Scripts\Run-Tests.ps1 -Bootstrap
+```
+
+After the initial setup, run the suite with:
+
+```powershell
+.\Scripts\Run-Tests.ps1
+```
+
+GitHub Actions runs the same test command with Windows PowerShell 5.1 for pull
+requests and pushes to `master`.
+
 ## Implementation Guidelines
 
 ### Project Structure

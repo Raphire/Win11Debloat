@@ -9,6 +9,10 @@
         - Custom logic: app removal, Windows optional features, start menu
         replacement, and other special-case features.
 #>
+function Test-RunningAsSystem {
+    return ([Security.Principal.WindowsIdentity]::GetCurrent().User.Value -eq 'S-1-5-18')
+}
+
 function Invoke-FeatureApply {
     param(
         [Parameter(Mandatory)]
@@ -311,8 +315,10 @@ function Invoke-UndoFeatures {
         (used by the GUI modal). Cancellation is checked between each step.
 #>
 function Invoke-AllChanges {
+    if ($script:CancelRequested) { return }
+
     # Guard: prevent running as SYSTEM account without explicit target user
-    $isSystem = ([Security.Principal.WindowsIdentity]::GetCurrent().User.Value -eq 'S-1-5-18')
+    $isSystem = Test-RunningAsSystem
     if ($isSystem -and -not $script:Params.ContainsKey("User") -and -not $script:Params.ContainsKey("Sysprep")) {
         throw "Win11Debloat is running as the SYSTEM account. Use the '-User' or '-Sysprep' parameter to target a specific user."
     }
@@ -355,6 +361,7 @@ function Invoke-AllChanges {
     # Phase 1: Registry backup
     # ================================================================
     if ($needsBackup) {
+        if ($script:CancelRequested) { return }
         $step++
         if ($script:ApplyProgressCallback) {
             & $script:ApplyProgressCallback $step $totalSteps "Creating registry backup..."
@@ -384,6 +391,7 @@ function Invoke-AllChanges {
     # Phase 2: System restore point
     # ================================================================
     if ($script:Params.ContainsKey("CreateRestorePoint")) {
+        if ($script:CancelRequested) { return }
         $step++
         if ($script:ApplyProgressCallback) {
             & $script:ApplyProgressCallback $step $totalSteps "Creating system restore point, this may take a moment..."
@@ -406,6 +414,8 @@ function Invoke-AllChanges {
         Invoke-ApplyFeatures -FeatureIds $applyIds -StartStep ($step + 1) -TotalSteps $totalSteps
         $step += $applyIds.Count
     }
+
+    if ($script:CancelRequested) { return }
 
     # ================================================================
     # Phase 4: Undo features

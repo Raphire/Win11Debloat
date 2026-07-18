@@ -121,8 +121,13 @@ function Convert-RegValueData {
     }
 
     if ($valueData -match '^hex(?:\((?<kind>[0-9a-fA-F]+)\))?:(?<bytes>[0-9a-fA-F,\s]+)$') {
-        $bytes = Convert-HexStringToByteArray -hexValue $matches.bytes
+        $parsedBytes = Convert-HexStringToByteArray -hexValue $matches.bytes
+        if ($null -eq $parsedBytes) {
+            return $null
+        }
+        $bytes = [byte[]]@($parsedBytes)
         $valueType = if ($matches.kind) { "Hex$($matches.kind)" } else { 'Binary' }
+
         $value = switch ($matches.kind) {
             '2' { Convert-RegistryByteArrayToString -byteData $bytes }
             '7' { Convert-RegistryByteArrayToMultiString -byteData $bytes }
@@ -156,10 +161,15 @@ function Convert-HexStringToByteArray {
         [string]$hexValue
     )
 
-    $parts = $hexValue.Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ }
-    return [System.Linq.Enumerable]::Select($parts, [Func[object, byte]] {
-            param($h) [System.Convert]::ToByte($h, 16)
-        }) -as [byte[]]
+    $parts = @($hexValue.Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ })
+    $bytes = New-Object byte[] $parts.Count
+    for ($i = 0; $i -lt $parts.Count; $i++) {
+        if ($parts[$i] -notmatch '^[0-9a-fA-F]{1,2}$') {
+            return $null
+        }
+        $bytes[$i] = [System.Convert]::ToByte($parts[$i], 16)
+    }
+    return ,$bytes
 }
 
 function Convert-RegistryByteArrayToString {

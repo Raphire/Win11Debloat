@@ -77,7 +77,7 @@ function Restore-RegistryKeySnapshot {
 function Restore-RegistryValueSnapshot {
     param(
         [Parameter(Mandatory)]
-        [Microsoft.Win32.RegistryKey]$RegistryKey,
+        $RegistryKey,
         [Parameter(Mandatory)]
         $Snapshot
     )
@@ -101,17 +101,6 @@ function Restore-RegistryValueSnapshot {
         $RegistryKey.SetValue($valueName, $normalizedData, $valueKind)
     }
     catch {
-        $retryBytes = Convert-BackupDataToByteArray -Data $Snapshot.Data
-        if ($null -ne $retryBytes) {
-            try {
-                $RegistryKey.SetValue($valueName, $retryBytes, [Microsoft.Win32.RegistryValueKind]::Binary)
-                return
-            }
-            catch {
-                # Fall through to original error message for context.
-            }
-        }
-
         throw "Failed setting registry value '$valueName' in '$($RegistryKey.Name)': $($_.Exception.Message)"
     }
 }
@@ -150,11 +139,17 @@ function Convert-RegistryValueDataFromBackup {
         }
         ([Microsoft.Win32.RegistryValueKind]::MultiString) { return @($Data | ForEach-Object { [string]$_ }) }
         ([Microsoft.Win32.RegistryValueKind]::Binary) {
+            if ($null -eq $Data) {
+                return ,(New-Object byte[] 0)
+            }
+
             $bytes = Convert-BackupDataToByteArray -Data $Data
             if ($null -eq $bytes) {
-                return (New-Object byte[] 0)
+                throw 'Invalid binary registry data in backup. Expected byte values from 0 through 255.'
             }
-            return $bytes
+            # Keep the byte array intact instead of writing each byte to the
+            # pipeline. RegistryKey.SetValue requires a byte[] for Binary.
+            return ,$bytes
         }
         ([Microsoft.Win32.RegistryValueKind]::None) { return $null }
         default {
@@ -206,19 +201,4 @@ function Convert-BackupDataToByteArray {
     }
 
     return ,$bytes
-}
-
-function Remove-RegistrySubKeyTreeIfExists {
-    param(
-        [Parameter(Mandatory)]
-        [Microsoft.Win32.RegistryKey]$RootKey,
-        [Parameter(Mandatory)]
-        [string]$SubKeyPath
-    )
-
-    $existing = $RootKey.OpenSubKey($SubKeyPath, $false)
-    if ($existing) {
-        $existing.Close()
-        $RootKey.DeleteSubKeyTree($SubKeyPath, $false)
-    }
 }

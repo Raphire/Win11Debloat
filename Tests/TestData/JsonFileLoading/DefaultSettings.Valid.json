@@ -1,0 +1,10 @@
+{
+  "Version": "1.0",
+  "Settings": [
+    { "Name": "Supported", "Value": "configured" },
+    { "Name": "Supported", "Value": false },
+    { "Name": "Unknown", "Value": true },
+    { "Name": "TooNew", "Value": true },
+    { "Name": "DisableModernStandbyNetworking", "Value": true }
+  ]
+}

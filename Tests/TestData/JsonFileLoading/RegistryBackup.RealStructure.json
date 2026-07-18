@@ -1,0 +1,43 @@
+{
+  "RegistryKeys": [
+    {
+      "SubKeys": [],
+      "Path": "HKEY_CURRENT_USER\\Control Panel\\Accessibility\\StickyKeys",
+      "Values": [
+        {
+          "Kind": "String",
+          "Name": "Flags",
+          "Data": "510",
+          "Exists": true
+        }
+      ],
+      "Exists": true
+    },
+    {
+      "SubKeys": [],
+      "Path": "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize",
+      "Values": [
+        {
+          "Kind": "DWord",
+          "Name": "EnableTransparency",
+          "Data": 0,
+          "Exists": true
+        }
+      ],
+      "Exists": true
+    }
+  ],
+  "ComputerName": "TEST-COMPUTER",
+  "BackupType": "RegistryState",
+  "SelectedUndoFeatures": [
+    "DisableTransparency"
+  ],
+  "CreatedBy": "Win11Debloat",
+  "Version": "1.0",
+  "Target": "CurrentUser:fixture-user",
+  "SelectedFeatures": [
+    "RemoveApps",
+    "DisableStickyKeys"
+  ],
+  "CreatedAt": "2026-07-11T20:00:33.9825666+02:00"
+}

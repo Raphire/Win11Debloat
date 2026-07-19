@@ -93,7 +93,10 @@ function ConvertTo-NormalizedRegistryBackup {
         }
         elseif ($normalizedTarget -like 'CurrentUser:*') {
             $targetCurrentUserName = $normalizedTarget.Substring(12)
-            if ([string]::IsNullOrWhiteSpace($targetCurrentUserName) -or
+            if (Test-RunningAsSystem) {
+                $errors.Add("Backup was made for '$targetCurrentUserName' and is user-scoped. Re-run as that user; SYSTEM cannot restore a CurrentUser backup.")
+            }
+            elseif ([string]::IsNullOrWhiteSpace($targetCurrentUserName) -or
                 -not (Test-UserNameMatch -UserNameA $targetCurrentUserName -UserNameB $env:USERNAME)) {
                  $errors.Add("Backup was made for '$targetCurrentUserName', this does not match current user '$env:USERNAME'.")
             }

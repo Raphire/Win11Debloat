@@ -1,4 +1,5 @@
 BeforeAll {
+    function Test-RunningAsSystem { $false }
     . (Join-Path $PSScriptRoot '..\Scripts\Helpers\Registry-PathHelpers.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\Helpers\Get-FriendlyRegistryBackupTarget.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\Helpers\Resolve-UserProfilePath.ps1')
@@ -91,6 +92,17 @@ Describe 'ConvertTo-NormalizedRegistryBackup' {
         }
 
         { ConvertTo-NormalizedRegistryBackup -Backup $backup } | Should -Throw "Validation failed: Invalid user 'User:bad/user'"
+    }
+
+    It 'does not allow current-user backup restore when running as SYSTEM' {
+        Mock Test-RunningAsSystem { $true }
+        $backup = [PSCustomObject]@{
+            Version = '1.0'; BackupType = 'RegistryState'; Target = 'CurrentUser:Alice'
+            SelectedFeatures = @('Example'); RegistryKeys = @()
+        }
+
+        { ConvertTo-NormalizedRegistryBackup -Backup $backup } |
+            Should -Throw "Validation failed: Backup was made for 'Alice' and is user-scoped*"
     }
 }
 

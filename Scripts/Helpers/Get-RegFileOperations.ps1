@@ -74,7 +74,10 @@ function Get-RegFileOperations {
         }
 
         $parsedValue = Convert-RegValueData -valueData $matches.valueData.Trim()
-        if (-not $parsedValue) { continue }
+        if (-not $parsedValue) {
+            Write-Warning "Skipping unsupported or malformed registry value '$valueName' in '$currentKeyPath'."
+            continue
+        }
 
         $operations += [PSCustomObject]@{
             OperationType = $parsedValue.OperationType

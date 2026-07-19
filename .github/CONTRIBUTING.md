@@ -91,7 +91,7 @@ Win11Debloat/
 │   ├── Get.ps1                  # Script used for the quick launch method to automatically download and run Win11debloat
 │   ├── AppRemoval/              # App package removal logic
 │   ├── CLI/                     # Command-line interface helpers
-│   ├── Features/                # Feature apply/undo logic (e.g. InvokeChanges.ps1, ReplaceStartMenu.ps1)
+│   ├── Features/                # Feature apply/undo logic (e.g. Invoke-Changes.ps1, Replace-StartMenu.ps1)
 │   ├── FileIO/                  # File input/output helpers
 │   ├── GUI/                     # GUI window definitions and logic
 │   ├── Helpers/                 # Shared helper functions
@@ -239,7 +239,7 @@ Windows Registry Editor Version 5.00
 
 #### 1b. Implement the Feature Logic
 
-If your feature requires more than just applying a registry file, add custom logic to the main script in the appropriate section. In most cases this will involve creating a new entry in the `Invoke-FeatureApply` function (in `Scripts/Features/InvokeChanges.ps1`) for your new feature. If your feature also requires custom undo logic (beyond a simple registry file import), add a corresponding entry to the `Invoke-FeatureUndo` function in the same file.
+If your feature requires more than just applying a registry file, add custom logic to the main script in the appropriate section. In most cases this will involve creating a new entry in the `Invoke-FeatureApply` function (in `Scripts/Features/Invoke-Changes.ps1`) for your new feature. If your feature also requires custom undo logic (beyond a simple registry file import), add a corresponding entry to the `Invoke-FeatureUndo` function in the same file.
 
 #### 2. Add Feature to Features.json
 

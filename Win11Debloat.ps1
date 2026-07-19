@@ -317,7 +317,7 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 
 # CLI functions
 . "$PSScriptRoot/Scripts/CLI/Wait-ForKeyPress.ps1"
-. "$PSScriptRoot/Scripts/CLI/Show-CliLastUsedSettings.ps1"  
+. "$PSScriptRoot/Scripts/CLI/Show-CliLastUsedSettings.ps1"
 . "$PSScriptRoot/Scripts/CLI/Show-CliDefaultModeAppRemovalOptions.ps1"
 . "$PSScriptRoot/Scripts/CLI/Show-CliDefaultModeOptions.ps1"
 . "$PSScriptRoot/Scripts/CLI/Show-CliAppRemoval.ps1"

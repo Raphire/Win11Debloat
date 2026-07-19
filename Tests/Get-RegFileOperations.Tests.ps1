@@ -61,6 +61,20 @@ Describe 'Convert-HexStringToByteArray' {
 }
 
 Describe 'Get-RegFileOperations' {
+    It 'warns when it skips malformed registry value data' {
+        $regFilePath = Join-Path $TestDrive 'malformed.reg'
+        @'
+Windows Registry Editor Version 5.00
+
+[HKEY_CURRENT_USER\Software\Example]
+"Broken"=hex:01,,ff
+'@ | Set-Content -LiteralPath $regFilePath -Encoding UTF8
+
+        Mock Write-Warning {}
+        @(Get-RegFileOperations -regFilePath $regFilePath) | Should -BeNullOrEmpty
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -like "Skipping unsupported or malformed registry value 'Broken'*" }
+    }
+
     It 'parses key deletion, value deletion, and continued hex values' {
         $regFilePath = Join-Path $TestDrive 'settings.reg'
         @'

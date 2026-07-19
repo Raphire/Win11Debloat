@@ -23,7 +23,7 @@ function Test-TargetUserName {
         }
     }
 
-    if (-not (CheckIfUserExists -userName $normalizedUserName)) {
+    if (-not (Test-UserProfileExists -userName $normalizedUserName)) {
         return [PSCustomObject]@{
             IsValid = $false
             UserName = $normalizedUserName

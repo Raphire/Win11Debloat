@@ -1,0 +1,23 @@
+{
+  "Version": "1.0",
+  "Deployment": [
+    { "Name": "UserSelectionIndex", "Value": 0 },
+    { "Name": "AppRemovalScopeIndex", "Value": 0 },
+    { "Name": "CreateRestorePoint", "Value": true },
+    { "Name": "RestartExplorer", "Value": false }
+  ],
+  "Tweaks": [
+    { "Name": "DisableSettings365Ads", "Value": true },
+    { "Name": "DisableSnapAssist", "Value": true },
+    { "Name": "EnableDarkMode", "Value": true },
+    { "Name": "ShowSearchBoxTb", "Value": true },
+    { "Name": "DisableTelemetry", "Value": true },
+    { "Name": "DisableWidgets", "Value": true },
+    { "Name": "DisableLockscreenTips", "Value": true },
+    { "Name": "DisableSnapLayouts", "Value": true },
+    { "Name": "DisableAISvcAutoStart", "Value": true },
+    { "Name": "DisableMouseAcceleration", "Value": true },
+    { "Name": "DisableCopilot", "Value": true },
+    { "Name": "DisableRecall", "Value": true }
+  ]
+}

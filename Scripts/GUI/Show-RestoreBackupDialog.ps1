@@ -15,7 +15,7 @@
         Hashtable
         Returns a Hashtable describing the user's choice. Possible shapes:
           RestoreRegistry  - @{ Result='RestoreRegistry'; Backup=<normalizedBackup> }
-          RestoreStartMenu - @{ Result='RestoreStartMenu'; StartMenuScope=<scope>;
+          Restore-StartMenu - @{ Result='Restore-StartMenu'; StartMenuScope=<scope>;
                                UseManualBackupFile=<bool>; BackupFilePath=<path|string> }
           Cancelled        - @{ Result='Cancelled' } (from New-RestoreDialogState)
 #>
@@ -26,7 +26,7 @@ function Show-RestoreBackupDialog {
 
     Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase | Out-Null
 
-    $usesDarkMode = GetSystemUsesDarkMode
+    $usesDarkMode = Get-SystemUsesDarkMode
     $ownerWindow = if ($Owner) { $Owner } else { $script:GuiWindow }
 
     $overlay = $null
@@ -67,7 +67,7 @@ function Show-RestoreBackupDialog {
     }
 
     try {
-        SetWindowThemeResources -window $window -usesDarkMode $usesDarkMode
+        Set-WindowThemeResources -window $window -usesDarkMode $usesDarkMode
     }
     catch { }
 
@@ -129,7 +129,7 @@ function Show-RestoreBackupDialog {
         param([string]$BackupFilePath)
 
         $scopeInfo = & $getStartMenuScopeInfo
-        $backupTargetText.Text = GetFriendlyRegistryBackupTarget -Target $scopeInfo.Target
+        $backupTargetText.Text = Get-FriendlyRegistryBackupTarget -Target $scopeInfo.Target
         $overviewSummaryText.Text = "This will replace the current Start Menu pinned apps layout for $($scopeInfo.SummaryText) with the selected backup."
         $backupFileText.Text = Split-Path -Path $BackupFilePath -Leaf
 
@@ -276,7 +276,7 @@ function Show-RestoreBackupDialog {
 
         $backupFileText.Text = Split-Path $SelectedBackupFilePath -Leaf
         $backupCreatedText.Text = $createdText
-        $backupTargetText.Text = GetFriendlyRegistryBackupTarget -Target ([string]$SelectedBackup.Target)
+        $backupTargetText.Text = Get-FriendlyRegistryBackupTarget -Target ([string]$SelectedBackup.Target)
         $featuresItemsControl.ItemsSource = $revertibleFeaturesList
         $overviewFeaturesSection.Visibility = if ($revertibleFeaturesList.Count -gt 0) { 'Visible' } else { 'Collapsed' }
         $reappliedFeaturesItemsControl.ItemsSource = $reappliedFeaturesList
@@ -318,7 +318,7 @@ function Show-RestoreBackupDialog {
         Write-Host "Backup file selected: $($openDialog.FileName)"
 
         try {
-            $selectedBackup = Load-RegistryBackupFromFile -FilePath $openDialog.FileName
+            $selectedBackup = Import-RegistryBackup -FilePath $openDialog.FileName
 
             if (-not (& $showRegistryOverview -SelectedBackup $selectedBackup -SelectedBackupFilePath $openDialog.FileName)) {
                 return
@@ -366,7 +366,7 @@ function Show-RestoreBackupDialog {
         }
 
         $window.Tag = @{
-            Result = 'RestoreStartMenu'
+            Result = 'Restore-StartMenu'
             StartMenuScope = $scope
             UseManualBackupFile = $useManualBackupFile
             BackupFilePath = $state.SelectedStartMenuBackupFilePath

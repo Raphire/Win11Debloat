@@ -223,7 +223,7 @@ function Update-AppPresetStates {
     $script:UpdatingPresets = $true
     try {
         # Helper: count matching and checked apps, set checkbox state
-        function SetPresetState($CheckBox, [scriptblock]$MatchFilter) {
+        function Set-PresetState($CheckBox, [scriptblock]$MatchFilter) {
             $total = 0; $checked = 0
             foreach ($child in $AppsPanel.Children) {
                 if ($child -is [System.Windows.Controls.CheckBox]) {
@@ -241,15 +241,15 @@ function Update-AppPresetStates {
         $presetDefaultApps = $window.FindName('PresetDefaultApps')
         $presetLastUsed = $window.FindName('PresetLastUsed')
 
-        SetPresetState $presetDefaultApps { param($c) $c.SelectedByDefault -eq $true }
+        Set-PresetState $presetDefaultApps { param($c) $c.SelectedByDefault -eq $true }
         foreach ($jsonCb in $script:JsonPresetCheckboxes) {
             $localIds = $jsonCb.PresetAppIds
-            SetPresetState $jsonCb { param($c) (@($c.AppIds) | Where-Object { $localIds -contains $_ }).Count -gt 0 }.GetNewClosure()
+            Set-PresetState $jsonCb { param($c) (@($c.AppIds) | Where-Object { $localIds -contains $_ }).Count -gt 0 }.GetNewClosure()
         }
 
         # Last used preset: only update if it's visible (has saved apps)
         if ($presetLastUsed.Visibility -ne 'Collapsed' -and $script:SavedAppIds) {
-            SetPresetState $presetLastUsed { param($c) (@($c.AppIds) | Where-Object { $script:SavedAppIds -contains $_ }).Count -gt 0 }
+            Set-PresetState $presetLastUsed { param($c) (@($c.AppIds) | Where-Object { $script:SavedAppIds -contains $_ }).Count -gt 0 }
         }
     }
     finally {
@@ -304,7 +304,29 @@ function Find-ParentScrollViewer {
     return $null
 }
 
-function Load-AppsWithList {
+<#
+    .SYNOPSIS
+        Loads application details and adds their interactive checkboxes to the main window.
+
+    .PARAMETER Window
+        The main application window and resource owner.
+
+    .PARAMETER AppsPanel
+        The panel populated with application checkboxes.
+
+    .PARAMETER OnlyInstalledAppsBox
+        The filter control that determines whether only installed apps are loaded.
+
+    .PARAMETER LoadingAppsIndicator
+        The loading indicator shown while application details are prepared.
+
+    .PARAMETER ImportConfigBtn
+        The optional import control re-enabled after loading completes.
+
+    .PARAMETER ListOfApps
+        An optional pre-fetched list of installed WinGet applications.
+#>
+function Add-AppsToMainWindow {
     param(
         [System.Windows.Window]$Window,
         [System.Windows.Controls.Panel]$AppsPanel,
@@ -335,7 +357,7 @@ function Load-AppsWithList {
             $script:AppsListFilePath = $appsListFilePath
             . $helperScript
             . $loaderScript
-            LoadAppsDetailsFromJson -OnlyInstalled:$onlyInstalled -InstalledList $installedList -InitialCheckedFromJson:$false
+            Import-AppDetailsFromJson -OnlyInstalled:$onlyInstalled -InstalledList $installedList -InitialCheckedFromJson:$false
         } -ArgumentList $loaderScriptPath, $helperScriptPath, $appsFilePath, $ListOfApps, $onlyInstalled
     }
 
@@ -435,7 +457,7 @@ function Load-AppsWithList {
                 -AppRemovalScopeDescription $w.FindName('AppRemovalScopeDescription') `
                 -UserSelectionCombo $w.FindName('UserSelectionCombo')
         })
-        AttachShiftClickBehavior -checkbox $checkbox -appsPanel $AppsPanel `
+        Attach-ShiftClickBehavior -checkbox $checkbox -appsPanel $AppsPanel `
             -lastSelectedCheckboxRef ([ref]$script:MainWindowLastSelectedCheckbox) `
             -updateStatusCallback {
                 $w = $script:MainWindow
@@ -449,7 +471,7 @@ function Load-AppsWithList {
 
         $AppsPanel.Children.Add($checkbox) | Out-Null
 
-        if (($i + 1) % $batchSize -eq 0) { DoEvents }
+        if (($i + 1) % $batchSize -eq 0) { Invoke-DoEvents }
     }
 
     $sortArrowName = $Window.FindName('SortArrowName')
@@ -480,7 +502,26 @@ function Load-AppsWithList {
     }
 }
 
-function Load-AppsIntoMainUI {
+<#
+    .SYNOPSIS
+        Starts asynchronous loading of application checkboxes for the main window.
+
+    .PARAMETER Window
+        The main application window.
+
+    .PARAMETER AppsPanel
+        The panel that receives application checkboxes.
+
+    .PARAMETER OnlyInstalledAppsBox
+        The installed-applications filter control.
+
+    .PARAMETER LoadingAppsIndicator
+        The loading indicator shown until loading completes.
+
+    .PARAMETER ImportConfigBtn
+        The optional import control disabled while loading is in progress.
+#>
+function Initialize-MainWindowApps {
     param(
         [System.Windows.Window]$Window,
         [System.Windows.Controls.Panel]$AppsPanel,
@@ -511,7 +552,7 @@ function Load-AppsIntoMainUI {
     # Force a render so the loading indicator is visible, then schedule the
     # actual loading at Background priority so this call returns immediately.
     # This is critical when called from Add_Loaded: the window must finish
-    # its initialization before we start a nested message pump via DoEvents.
+    # its initialization before we start a nested message pump via Invoke-DoEvents.
     $Window.Dispatcher.Invoke([System.Windows.Threading.DispatcherPriority]::Render, [action] {})
     $Window.Dispatcher.BeginInvoke([System.Windows.Threading.DispatcherPriority]::Background, [action] {
             try {
@@ -519,7 +560,7 @@ function Load-AppsIntoMainUI {
 
                 if ($OnlyInstalledAppsBox.IsChecked -and ($script:WingetInstalled -eq $true)) {
                     Write-Host "Retrieving installed apps via winget..."
-                    $listOfApps = GetInstalledAppsViaWinget -TimeOut 20 -NonBlocking
+                    $listOfApps = Get-WingetInstalledApps -TimeOut 20 -NonBlocking
 
                     if ($null -eq $listOfApps) {
                         Write-Warning "WinGet returned no data (command timed out or failed)"
@@ -528,7 +569,7 @@ function Load-AppsIntoMainUI {
                     }
                 }
 
-                Load-AppsWithList -Window $Window -AppsPanel $AppsPanel -OnlyInstalledAppsBox $OnlyInstalledAppsBox `
+                Add-AppsToMainWindow -Window $Window -AppsPanel $AppsPanel -OnlyInstalledAppsBox $OnlyInstalledAppsBox `
                     -LoadingAppsIndicator $LoadingAppsIndicator -ImportConfigBtn $ImportConfigBtn -ListOfApps $listOfApps
             }
             catch {

@@ -1,4 +1,7 @@
-# Shows a Windows 11 styled custom message box
+<#
+    .SYNOPSIS
+        Shows a themed Windows 11-style message box.
+#>
 function Show-MessageBox {
     param (
         [Parameter(Mandatory=$true)]
@@ -24,7 +27,7 @@ function Show-MessageBox {
     
     Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase | Out-Null
     
-    $usesDarkMode = GetSystemUsesDarkMode
+    $usesDarkMode = Get-SystemUsesDarkMode
     
     # Determine owner window - use provided Owner, or fall back to main GUI window
     $ownerWindow = if ($Owner) { $Owner } else { $script:GuiWindow }
@@ -69,7 +72,7 @@ function Show-MessageBox {
     }
     
     # Apply theme resources
-    SetWindowThemeResources -window $msgWindow -usesDarkMode $usesDarkMode
+    Set-WindowThemeResources -window $msgWindow -usesDarkMode $usesDarkMode
     
     # Get UI elements
     $titleText = $msgWindow.FindName('TitleText')

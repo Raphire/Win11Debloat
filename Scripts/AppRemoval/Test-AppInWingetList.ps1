@@ -12,7 +12,7 @@
     The identifier to search for (e.g. 'Microsoft.Copilot').
 
     .PARAMETER InstalledList
-    An array of PSCustomObject from GetInstalledAppsViaWinget.
+    An array of PSCustomObject from Get-WingetInstalledApps.
 #>
 function Test-AppInWingetList {
     param(

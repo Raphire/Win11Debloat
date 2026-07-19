@@ -74,7 +74,10 @@ function Get-RegFileOperations {
         }
 
         $parsedValue = Convert-RegValueData -valueData $matches.valueData.Trim()
-        if (-not $parsedValue) { continue }
+        if (-not $parsedValue) {
+            Write-Warning "Skipping unsupported or malformed registry value '$valueName' in '$currentKeyPath'."
+            continue
+        }
 
         $operations += [PSCustomObject]@{
             OperationType = $parsedValue.OperationType
@@ -88,6 +91,10 @@ function Get-RegFileOperations {
     return $operations
 }
 
+<#
+    .SYNOPSIS
+        Converts a .reg value literal into an operation type, registry value type, and data.
+#>
 function Convert-RegValueData {
     param(
         [Parameter(Mandatory)]
@@ -121,8 +128,13 @@ function Convert-RegValueData {
     }
 
     if ($valueData -match '^hex(?:\((?<kind>[0-9a-fA-F]+)\))?:(?<bytes>[0-9a-fA-F,\s]+)$') {
-        $bytes = Convert-HexStringToByteArray -hexValue $matches.bytes
+        $parsedBytes = Convert-HexStringToByteArray -hexValue $matches.bytes
+        if ($null -eq $parsedBytes) {
+            return $null
+        }
+        $bytes = [byte[]]@($parsedBytes)
         $valueType = if ($matches.kind) { "Hex$($matches.kind)" } else { 'Binary' }
+
         $value = switch ($matches.kind) {
             '2' { Convert-RegistryByteArrayToString -byteData $bytes }
             '7' { Convert-RegistryByteArrayToMultiString -byteData $bytes }
@@ -150,16 +162,29 @@ function Convert-RegValueData {
     return $null
 }
 
+<#
+    .SYNOPSIS
+        Converts a comma-separated hexadecimal byte string into a byte array.
+#>
 function Convert-HexStringToByteArray {
     param(
         [Parameter(Mandatory)]
         [string]$hexValue
     )
 
-    $parts = $hexValue.Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ }
-    return [System.Linq.Enumerable]::Select($parts, [Func[object, byte]] {
-            param($h) [System.Convert]::ToByte($h, 16)
-        }) -as [byte[]]
+    $parts = @($hexValue.Split(',') | ForEach-Object { $_.Trim() })
+    if ($parts | Where-Object { [string]::IsNullOrWhiteSpace($_) }) {
+        return $null
+    }
+
+    $bytes = New-Object byte[] $parts.Count
+    for ($i = 0; $i -lt $parts.Count; $i++) {
+        if ($parts[$i] -notmatch '^[0-9a-fA-F]{1,2}$') {
+            return $null
+        }
+        $bytes[$i] = [System.Convert]::ToByte($parts[$i], 16)
+    }
+    return ,$bytes
 }
 
 function Convert-RegistryByteArrayToString {

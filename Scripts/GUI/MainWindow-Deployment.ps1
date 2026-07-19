@@ -147,7 +147,20 @@ function Invoke-ShowChangesOverview {
     Show-MessageBox -Message $message -Title 'Selected Changes' -Button 'OK' -Icon 'None' -Width 600
 }
 
-function Build-TweakPresetControlMap {
+<#
+    .SYNOPSIS
+        Builds the control values needed to apply a saved tweak preset.
+
+    .PARAMETER Window
+        The window that owns the visible tweak controls.
+
+    .PARAMETER SettingsJson
+        The saved settings object to translate into control values.
+
+    .OUTPUTS
+        System.Collections.Hashtable. Control metadata keyed by control name.
+#>
+function Get-TweakPresetControlMap {
     param(
         [System.Windows.Window]$Window,
         $SettingsJson
@@ -158,7 +171,7 @@ function Build-TweakPresetControlMap {
         return $presetMap
     }
 
-    # FeatureId -> control metadata, similar to ApplySettingsToUiControls lookup.
+    # FeatureId -> control metadata, similar to Apply-SettingsToUiControls lookup.
     $featureIdIndex = @{}
     foreach ($controlName in $script:UiControlMappings.Keys) {
         $control = $Window.FindName($controlName)
@@ -199,7 +212,20 @@ function Build-TweakPresetControlMap {
     return $presetMap
 }
 
-function Build-CategoryTweakPresetMap {
+<#
+    .SYNOPSIS
+        Builds the enabled state map for visible tweak controls in a category.
+
+    .PARAMETER Window
+        The window that owns the visible tweak controls.
+
+    .PARAMETER Category
+        The category whose mapped controls are included.
+
+    .OUTPUTS
+        System.Collections.Hashtable. Control metadata keyed by control name.
+#>
+function Get-CategoryTweakPresetMap {
     param(
         [System.Windows.Window]$Window,
         [string]$Category
@@ -375,10 +401,10 @@ function Initialize-TweakPresetSources {
         $LastUsedSettingsJson
     )
 
-    $script:DefaultTweakPresetMap = Build-TweakPresetControlMap -Window $Window -SettingsJson $DefaultSettingsJson
-    $script:LastUsedTweakPresetMap = Build-TweakPresetControlMap -Window $Window -SettingsJson $LastUsedSettingsJson
-    $script:PrivacyTweakPresetMap = Build-CategoryTweakPresetMap -Window $Window -Category 'Privacy & Suggested Content'
-    $script:AITweakPresetMap = Build-CategoryTweakPresetMap -Window $Window -Category 'AI'
+    $script:DefaultTweakPresetMap = Get-TweakPresetControlMap -Window $Window -SettingsJson $DefaultSettingsJson
+    $script:LastUsedTweakPresetMap = Get-TweakPresetControlMap -Window $Window -SettingsJson $LastUsedSettingsJson
+    $script:PrivacyTweakPresetMap = Get-CategoryTweakPresetMap -Window $Window -Category 'Privacy & Suggested Content'
+    $script:AITweakPresetMap = Get-CategoryTweakPresetMap -Window $Window -Category 'AI'
 
     $presetLastUsedTweaksBtn = $Window.FindName('PresetLastUsedTweaksBtn')
     if ($presetLastUsedTweaksBtn) {
@@ -421,7 +447,7 @@ function Update-UserSelectionDescription {
 
     switch ($UserSelectionCombo.SelectedIndex) {
         0 {
-            $currentUserName = GetUserName
+            $currentUserName = Get-UserName
             if ([string]::IsNullOrWhiteSpace($currentUserName)) {
                 $UserSelectionDescription.Text = "The currently logged-in user profile"
             }

@@ -1,3 +1,7 @@
+<#
+    .SYNOPSIS
+        Shows the backup-restore dialog and performs the selected restore.
+#>
 function Show-RestoreBackupWindow {
     param(
         [System.Windows.Window]$Owner = $null
@@ -38,7 +42,7 @@ function Show-RestoreBackupWindow {
                 }
             }
         }
-        elseif ($dialogResult.Result -eq 'RestoreStartMenu') {
+        elseif ($dialogResult.Result -eq 'Restore-StartMenu') {
             $scope = $dialogResult.StartMenuScope
             $useManualBackupFile = ($dialogResult.UseManualBackupFile -eq $true)
             $backupFilePath = $null
@@ -54,10 +58,10 @@ function Show-RestoreBackupWindow {
             }
 
             $result = if ($scope -eq 'AllUsers') {
-                RestoreStartMenuForAllUsers -BackupFilePath $backupFilePath
+                Restore-StartMenuForAllUsers -BackupFilePath $backupFilePath
             }
             else {
-                RestoreStartMenu -BackupFilePath $backupFilePath
+                Restore-StartMenu -BackupFilePath $backupFilePath
             }
 
             $resultEntries = @($result)

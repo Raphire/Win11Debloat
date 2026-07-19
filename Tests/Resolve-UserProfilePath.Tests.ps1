@@ -56,10 +56,19 @@ Describe 'Test-ModernStandbySupport' {
         Mock Stop-Process {}
         $script:Params = @{ WhatIf = $true }
         Invoke-RestartExplorer
-        $script:Params = @{ NoRestartExplorer = $true }
+        $script:Params = @{ SkipExplorerRestart = $true }
         Invoke-RestartExplorer
 
         Should -Invoke Stop-Process -Times 0 -Exactly
+    }
+
+    It 'treats NoRestartExplorer as a backward-compatible alias for SkipExplorerRestart' {
+        # Verify the alias is declared on Win11Debloat.ps1's canonical parameter,
+        # so legacy callers using -NoRestartExplorer continue to work without code duplication.
+        $command = Get-Command (Join-Path $PSScriptRoot '..\Win11Debloat.ps1')
+        $skipParam = $command.Parameters['SkipExplorerRestart']
+        $skipParam | Should -Not -BeNullOrEmpty
+        $skipParam.Aliases | Should -Contain 'NoRestartExplorer'
     }
 
     It 'restarts Explorer when allowed and reports reboot-required features' {

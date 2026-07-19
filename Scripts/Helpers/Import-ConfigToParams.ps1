@@ -82,7 +82,7 @@ function Import-ConfigToParams {
         }
 
         if ($deploymentLookup.ContainsKey('RestartExplorer') -and -not [bool]$deploymentLookup['RestartExplorer']) {
-            Add-Parameter 'NoRestartExplorer'
+            Add-Parameter 'SkipExplorerRestart'
             $importedItems++
         }
 

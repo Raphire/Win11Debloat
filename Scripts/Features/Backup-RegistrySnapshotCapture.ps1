@@ -195,6 +195,14 @@ function Get-RegistryKeySnapshot {
     }
 }
 
+<#
+    .SYNOPSIS
+        Converts an open registry key into a backup snapshot.
+
+    .DESCRIPTION
+        Captures all values or selected value names, records missing selected values,
+        and recursively captures subkeys when requested.
+#>
 function Convert-RegistryKeyToSnapshot {
     param(
         [Parameter(Mandatory)]
@@ -253,6 +261,15 @@ function Convert-RegistryKeyToSnapshot {
     }
 }
 
+<#
+    .SYNOPSIS
+        Converts a registry value into a serializable backup snapshot.
+
+    .DESCRIPTION
+        Preserves the value kind and normalizes supported data types for JSON
+        serialization without expanding environment-string values. REG_NONE values
+        are rejected.
+#>
 function Convert-RegistryValueToSnapshot {
     param(
         [Parameter(Mandatory)]
@@ -292,6 +309,14 @@ function Convert-RegistryValueToSnapshot {
     }
 }
 
+<#
+    .SYNOPSIS
+        Describes the user profile targeted by a registry backup.
+
+    .DESCRIPTION
+        Returns DefaultUserProfile for Sysprep, User:<name> for an explicit user,
+        or CurrentUser:<name> otherwise.
+#>
 function Get-RegistryBackupTargetDescription {
     if ($script:Params.ContainsKey('Sysprep')) {
         return 'DefaultUserProfile'

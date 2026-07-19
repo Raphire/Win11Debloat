@@ -248,6 +248,14 @@ function New-RegistryBackupAllowListPlanMap {
     return $planMap
 }
 
+<#
+    .SYNOPSIS
+        Converts registry value names into a case-insensitive set.
+
+    .DESCRIPTION
+        Preserves empty names and prevents PowerShell from enumerating the returned
+        HashSet.
+#>
 function ConvertTo-RegistryValueNameSet {
     param(
         [AllowEmptyCollection()]
@@ -263,6 +271,14 @@ function ConvertTo-RegistryValueNameSet {
     return ,$valueNameSet
 }
 
+<#
+    .SYNOPSIS
+        Validates a registry snapshot against the selected-feature allow list.
+
+    .DESCRIPTION
+        Recursively validates snapshot paths, value names, value kinds, and value
+        data, appending validation errors to the supplied list.
+#>
 function Test-RegistrySnapshotAgainstAllowList {
     param(
         [Parameter(Mandatory)]
@@ -490,6 +506,14 @@ function Get-NormalizedRegistryPathKey {
     return "$normalizedHive\\$normalizedSubKey"
 }
 
+<#
+    .SYNOPSIS
+        Tests whether a registry value-kind name is supported in backups.
+
+    .DESCRIPTION
+        Parses kind names case-insensitively and rejects empty, invalid, Unknown,
+        and None values.
+#>
 function Test-RegistryValueKindNameSupported {
     param(
         [string]$KindName

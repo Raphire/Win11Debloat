@@ -1,3 +1,7 @@
+<#
+    .SYNOPSIS
+        Returns a readable description of the current app-removal target.
+#>
 function Get-FriendlyTargetUserName {
     $target = Get-TargetUserForAppRemoval
 

@@ -1,3 +1,7 @@
+<#
+    .SYNOPSIS
+        Imports valid application, tweak, and deployment selections from a configuration JSON file into active parameters.
+#>
 function Import-ConfigToParams {
     param (
         [Parameter(Mandatory = $true)]

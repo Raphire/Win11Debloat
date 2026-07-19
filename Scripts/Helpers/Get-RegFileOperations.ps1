@@ -88,6 +88,10 @@ function Get-RegFileOperations {
     return $operations
 }
 
+<#
+    .SYNOPSIS
+        Converts a .reg value literal into an operation type, registry value type, and data.
+#>
 function Convert-RegValueData {
     param(
         [Parameter(Mandatory)]
@@ -155,6 +159,10 @@ function Convert-RegValueData {
     return $null
 }
 
+<#
+    .SYNOPSIS
+        Converts a comma-separated hexadecimal byte string into a byte array.
+#>
 function Convert-HexStringToByteArray {
     param(
         [Parameter(Mandatory)]

@@ -81,6 +81,11 @@ function Import-ConfigToParams {
             $importedItems++
         }
 
+        if ($deploymentLookup.ContainsKey('SkipRegistryBackup') -and [bool]$deploymentLookup['SkipRegistryBackup']) {
+            Add-Parameter 'SkipRegistryBackup'
+            $importedItems++
+        }
+
         if ($deploymentLookup.ContainsKey('RestartExplorer') -and -not [bool]$deploymentLookup['RestartExplorer']) {
             Add-Parameter 'SkipExplorerRestart'
             $importedItems++

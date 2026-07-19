@@ -326,7 +326,7 @@ function Invoke-AllChanges {
     foreach ($key in $script:Params.Keys) {
         if ($script:ControlParams -contains $key) { continue }
         if ($key -eq 'Apps') { continue }
-        if ($key -eq 'CreateRestorePoint') { continue }
+        if ($key -in @('CreateRestorePoint', 'SkipRegistryBackup')) { continue }
         $applyIds += $key
     }
     $undoIds = @($script:UndoParams.Keys)
@@ -349,14 +349,14 @@ function Invoke-AllChanges {
 
     # ---- Calculate total progress steps ----
     $totalSteps = $applyIds.Count + $undoIds.Count
-    if ($needsBackup) { $totalSteps++ }
+    if ($needsBackup -and -not $script:Params.ContainsKey('SkipRegistryBackup')) { $totalSteps++ }
     if ($script:Params.ContainsKey("CreateRestorePoint")) { $totalSteps++ }
     $step = 0
 
     # ================================================================
     # Phase 1: Registry backup
     # ================================================================
-    if ($needsBackup) {
+    if ($needsBackup -and -not $script:Params.ContainsKey('SkipRegistryBackup')) {
         if ($script:CancelRequested) { return }
         $step++
         if ($script:ApplyProgressCallback) {

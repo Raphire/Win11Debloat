@@ -702,6 +702,11 @@ function Show-MainWindow {
             Add-Parameter 'CreateRestorePoint'
         }
 
+        $registryBackupCheckBox = $window.FindName('RegistryBackupCheckBox')
+        if ($registryBackupCheckBox -and -not $registryBackupCheckBox.IsChecked) {
+            Add-Parameter 'SkipRegistryBackup'
+        }
+
         switch ($userSelectionCombo.SelectedIndex) {
             0 { Write-Host "Selected user mode: current user ($(Get-UserName))" }
             1 {

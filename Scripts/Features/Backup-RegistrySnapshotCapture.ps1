@@ -241,7 +241,9 @@ function Convert-RegistryKeyToSnapshot {
     if ($IncludeSubKeys) {
         foreach ($subKeyName in @($RegistryKey.GetSubKeyNames())) {
             $childKey = $RegistryKey.OpenSubKey($subKeyName, $false)
-            if ($null -eq $childKey) { continue }
+            if ($null -eq $childKey) {
+                throw "Unable to read registry subkey '$($RegistryKey.Name)\\$subKeyName' while creating a backup snapshot. The backup was not created."
+            }
 
             try {
                 $childPath = if ([string]::IsNullOrWhiteSpace($FullPath)) { $subKeyName } else { "$FullPath\$subKeyName" }

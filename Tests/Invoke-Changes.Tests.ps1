@@ -315,6 +315,16 @@ Describe 'Invoke-AllChanges' {
         Should -Invoke Invoke-SystemRestorePoint -Times 0 -Exactly
     }
 
+    It 'does not create a registry backup when explicitly skipped' {
+        $script:Params['SkipRegistryBackup'] = $true
+
+        Invoke-AllChanges
+
+        Should -Invoke New-RegistrySettingsBackup -Times 0 -Exactly
+        Should -Invoke Invoke-ApplyFeatures -Times 1 -Exactly
+        Should -Invoke Invoke-UndoFeatures -Times 1 -Exactly
+    }
+
     It 'does not run when cancellation was already requested' {
         $script:CancelRequested = $true
         Invoke-AllChanges

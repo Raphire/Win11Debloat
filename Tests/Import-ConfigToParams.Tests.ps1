@@ -31,6 +31,7 @@ Describe 'Import-ConfigToParams' {
             $script:Params[$featureId] | Should -BeTrue
         }
         $script:Params['CreateRestorePoint'] | Should -BeTrue
+        $script:Params.ContainsKey('SkipRegistryBackup') | Should -BeFalse
         $script:Params['SkipExplorerRestart'] | Should -BeTrue
         $script:Params.ContainsKey('User') | Should -BeFalse
         $script:Params.ContainsKey('AppRemovalTarget') | Should -BeFalse

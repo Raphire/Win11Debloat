@@ -1,4 +1,7 @@
-# Saves the current settings, excluding control parameters, to 'LastUsedSettings.json' file
+<#
+    .SYNOPSIS
+        Saves active feature settings, excluding control parameters, unless running in WhatIf mode.
+#>
 function Save-Settings {
     if ($script:Params.ContainsKey("WhatIf")) {
         Write-Host "[WhatIf] Save settings to LastUsedSettings.json" -ForegroundColor Cyan

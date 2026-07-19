@@ -1,4 +1,7 @@
-# Loads settings from a JSON file and adds them to script params
+<#
+    .SYNOPSIS
+        Imports enabled, compatible feature settings from a JSON file into the active parameters.
+#>
 function Import-Settings {
     param (
         [string]$filePath,

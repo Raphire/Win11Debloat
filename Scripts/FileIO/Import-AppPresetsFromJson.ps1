@@ -1,5 +1,7 @@
-# Read Apps.json and return the list of preset objects (Name + AppIds).
-# Returns an empty array if the file cannot be read or contains no presets.
+<#
+    .SYNOPSIS
+        Returns preset names and application IDs from Apps.json, or an empty array when unavailable.
+#>
 function Import-AppPresetsFromJson {
     try {
         $jsonContent = Get-Content -Path $script:AppsListFilePath -Raw | ConvertFrom-Json

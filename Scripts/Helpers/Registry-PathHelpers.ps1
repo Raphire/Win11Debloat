@@ -1,3 +1,7 @@
+<#
+    .SYNOPSIS
+        Normalizes a rooted registry path and returns its hive and subkey components.
+#>
 function Split-RegistryPath {
     param(
         [Parameter(Mandatory)]
@@ -51,6 +55,10 @@ function Split-RegistryPath {
     }
 }
 
+<#
+    .SYNOPSIS
+        Returns the .NET registry root key for a supported registry hive name.
+#>
 function Get-RegistryRootKey {
     param(
         [Parameter(Mandatory)]
@@ -67,6 +75,10 @@ function Get-RegistryRootKey {
     }
 }
 
+<#
+    .SYNOPSIS
+        Deletes a registry subkey tree and ignores a key that has already disappeared.
+#>
 function Remove-RegistrySubKeyTreeIfExists {
     param(
         [Parameter(Mandatory)]
@@ -92,6 +104,10 @@ function Remove-RegistrySubKeyTreeIfExists {
     }
 }
 
+<#
+    .SYNOPSIS
+        Returns a feature's registry-file path, using the Sysprep layout when targeting another profile.
+#>
 function Get-RegistryFilePathForFeature {
     param(
         [Parameter(Mandatory)]

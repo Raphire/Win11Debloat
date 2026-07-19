@@ -1,5 +1,7 @@
-# Loads a JSON file from the specified path and returns the parsed object
-# Returns $null if the file doesn't exist or if parsing fails
+<#
+    .SYNOPSIS
+        Imports a JSON file, optionally validates its version, and returns $null on failure.
+#>
 function Import-JsonFile {
     param (
         [string]$filePath,

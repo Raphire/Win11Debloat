@@ -1,3 +1,10 @@
+<#
+    .SYNOPSIS
+        Displays the themed About dialog for the application.
+
+    .PARAMETER Owner
+        The optional window that owns the dialog and its modal overlay.
+#>
 function Show-AboutDialog {
     param (
         [Parameter(Mandatory=$false)]

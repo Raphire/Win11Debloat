@@ -1,5 +1,19 @@
-# Applies settings from a JSON object to UI controls (checkboxes and comboboxes)
-# Used by LoadDefaultsBtn and LoadLastUsedBtn in the UI
+<#
+    .SYNOPSIS
+        Applies enabled settings from JSON to mapped checkbox and combo-box controls.
+
+    .PARAMETER Window
+        The window that owns the mapped controls.
+
+    .PARAMETER SettingsJson
+        The settings object containing a Settings collection.
+
+    .PARAMETER UiControlMappings
+        The feature-to-control mapping used to locate and update controls.
+
+    .OUTPUTS
+        System.Boolean. $false for invalid settings input; otherwise $true.
+#>
 function Apply-SettingsToUiControls {
     param (
         $window,

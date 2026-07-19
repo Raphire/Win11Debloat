@@ -1,4 +1,10 @@
-# Shows application selection window that allows the user to select what apps they want to remove or keep
+<#
+    .SYNOPSIS
+        Displays the application-selection dialog and records the confirmed selections.
+
+    .OUTPUTS
+        System.Nullable[System.Boolean]. The dialog result; confirmed application IDs are stored in $script:SelectedApps.
+#>
 function Show-AppSelectionWindow {
     Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase | Out-Null
 
@@ -46,7 +52,13 @@ function Show-AppSelectionWindow {
     # Track the last selected checkbox for shift-click range selection
     $script:AppSelectionWindowLastSelectedCheckbox = $null
 
-    # Loads apps into the apps UI
+    <#
+        .SYNOPSIS
+            Reloads the application-selection checkboxes using the current installed-apps filter.
+
+        .NOTES
+            Updates the dialog loading indicator and resets range-selection state.
+    #>
     function Load-Apps {
         # Show loading indicator
         $loadingIndicator.Visibility = 'Visible'

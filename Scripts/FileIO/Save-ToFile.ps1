@@ -1,5 +1,19 @@
-# Saves configuration JSON to a file.
-# Returns $true on success, $false on failure.
+<#
+    .SYNOPSIS
+        Serializes a configuration hashtable to a UTF-8 JSON file.
+
+    .PARAMETER Config
+        The configuration data to serialize.
+
+    .PARAMETER FilePath
+        The destination file path.
+
+    .PARAMETER MaxDepth
+        The maximum object depth passed to ConvertTo-Json.
+
+    .OUTPUTS
+        System.Boolean. $true when the file is written; otherwise $false.
+#>
 function Save-ToFile {
     param (
         [Parameter(Mandatory=$true)]

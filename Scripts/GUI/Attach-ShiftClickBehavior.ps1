@@ -1,9 +1,19 @@
-# Attaches shift-click selection behavior to a checkbox in an apps panel
-# Parameters:
-#   - $checkbox: The checkbox to attach the behavior to
-#   - $appsPanel: The StackPanel containing checkbox items
-#   - $lastSelectedCheckboxRef: A reference to a variable storing the last clicked checkbox
-#   - $updateStatusCallback: Optional callback to update selection status
+<#
+    .SYNOPSIS
+        Attaches shift-click range-selection behavior to an application checkbox.
+
+    .PARAMETER Checkbox
+        The checkbox that receives the mouse event handler.
+
+    .PARAMETER AppsPanel
+        The panel whose visible checkboxes participate in range selection.
+
+    .PARAMETER LastSelectedCheckboxRef
+        A reference that stores the previously clicked checkbox.
+
+    .PARAMETER UpdateStatusCallback
+        An optional callback invoked after a range selection changes.
+#>
 function Attach-ShiftClickBehavior {
     param (
         [System.Windows.Controls.CheckBox]$checkbox,

@@ -1,3 +1,13 @@
+<#
+    .SYNOPSIS
+        Displays the modal progress window while selected changes are applied.
+
+    .PARAMETER Owner
+        The optional window that owns the modal and its overlay.
+
+    .PARAMETER InvokeRestartExplorer
+        Indicates whether the modal should run the Explorer-restart flow after applying changes.
+#>
 function Show-ApplyModal {
     param (
         [Parameter(Mandatory=$false)]

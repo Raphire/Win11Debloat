@@ -1,6 +1,19 @@
 # MainWindow-TweaksBuilder.ps1
 # Dynamic tweaks UI construction from Features.json, tweak state management, selection clear, and search/highlight.
 
+<#
+    .SYNOPSIS
+        Builds the main window's dynamic tweak controls from Features.json.
+
+    .PARAMETER Window
+        The main window whose category columns receive the generated controls.
+
+    .PARAMETER WinVersion
+        The Windows build number used for the category-icon fallback.
+
+    .NOTES
+        Initializes script-scoped control and category mappings used by the tweak UI.
+#>
 function New-DynamicTweakControls {
     param(
         [System.Windows.Window]$Window,
@@ -29,6 +42,25 @@ function New-DynamicTweakControls {
     $script:TweaksCompactMode = $null
     $script:TweaksCardsMovedFromCol2 = @()
 
+    <#
+        .SYNOPSIS
+            Creates and registers a labeled combo box or a checkbox for a tweak.
+
+        .PARAMETER Parent
+            The panel that receives the generated control.
+
+        .PARAMETER LabelText
+            The display and automation label for the tweak.
+
+        .PARAMETER ComboName
+            The name used to register the generated control.
+
+        .PARAMETER Items
+            The available tweak options; two options produce a checkbox.
+
+        .OUTPUTS
+            System.Windows.Controls.Control. The generated checkbox or combo box.
+    #>
     function New-LabeledCombo($parent, $labelText, $comboName, $items) {
         # If only 2 items (No Change + one option), use a checkbox instead
         if ($items.Count -eq 2) {
@@ -96,6 +128,16 @@ function New-DynamicTweakControls {
         return $combo
     }
 
+    <#
+        .SYNOPSIS
+            Returns the Features wiki URL for a tweak category.
+
+        .PARAMETER Category
+            The category name converted to a wiki anchor.
+
+        .OUTPUTS
+            System.String. The category URL, or the Features page for an empty category.
+    #>
     function Get-WikiUrlForCategory($category) {
         if (-not $category) { return 'https://github.com/Raphire/Win11Debloat/wiki/Features' }
 
@@ -107,6 +149,16 @@ function New-DynamicTweakControls {
         return "https://github.com/Raphire/Win11Debloat/wiki/Features#$slug"
     }
 
+    <#
+        .SYNOPSIS
+            Returns the existing category panel or creates and registers a new one.
+
+        .PARAMETER CategoryObj
+            The category definition containing Name and Icon properties.
+
+        .OUTPUTS
+            System.Windows.Controls.StackPanel. The category's content panel.
+    #>
     function Get-OrCreateCategoryCard($categoryObj) {
         $categoryName = $categoryObj.Name
         $categoryIcon = $categoryObj.Icon
@@ -423,6 +475,13 @@ function Update-CurrentTweakSystemState {
     }
 }
 
+<#
+    .SYNOPSIS
+        Updates tweak controls to reflect the current system state.
+
+    .PARAMETER Window
+        The window that owns the generated tweak controls.
+#>
 function Set-CurrentTweakStateInUi {
     param([System.Windows.Window]$Window)
 

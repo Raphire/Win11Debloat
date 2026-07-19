@@ -147,6 +147,19 @@ function Invoke-ShowChangesOverview {
     Show-MessageBox -Message $message -Title 'Selected Changes' -Button 'OK' -Icon 'None' -Width 600
 }
 
+<#
+    .SYNOPSIS
+        Builds the control values needed to apply a saved tweak preset.
+
+    .PARAMETER Window
+        The window that owns the visible tweak controls.
+
+    .PARAMETER SettingsJson
+        The saved settings object to translate into control values.
+
+    .OUTPUTS
+        System.Collections.Hashtable. Control metadata keyed by control name.
+#>
 function Get-TweakPresetControlMap {
     param(
         [System.Windows.Window]$Window,
@@ -199,6 +212,19 @@ function Get-TweakPresetControlMap {
     return $presetMap
 }
 
+<#
+    .SYNOPSIS
+        Builds the enabled state map for visible tweak controls in a category.
+
+    .PARAMETER Window
+        The window that owns the visible tweak controls.
+
+    .PARAMETER Category
+        The category whose mapped controls are included.
+
+    .OUTPUTS
+        System.Collections.Hashtable. Control metadata keyed by control name.
+#>
 function Get-CategoryTweakPresetMap {
     param(
         [System.Windows.Window]$Window,

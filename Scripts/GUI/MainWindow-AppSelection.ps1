@@ -304,6 +304,28 @@ function Find-ParentScrollViewer {
     return $null
 }
 
+<#
+    .SYNOPSIS
+        Loads application details and adds their interactive checkboxes to the main window.
+
+    .PARAMETER Window
+        The main application window and resource owner.
+
+    .PARAMETER AppsPanel
+        The panel populated with application checkboxes.
+
+    .PARAMETER OnlyInstalledAppsBox
+        The filter control that determines whether only installed apps are loaded.
+
+    .PARAMETER LoadingAppsIndicator
+        The loading indicator shown while application details are prepared.
+
+    .PARAMETER ImportConfigBtn
+        The optional import control re-enabled after loading completes.
+
+    .PARAMETER ListOfApps
+        An optional pre-fetched list of installed WinGet applications.
+#>
 function Add-AppsToMainWindow {
     param(
         [System.Windows.Window]$Window,
@@ -480,6 +502,25 @@ function Add-AppsToMainWindow {
     }
 }
 
+<#
+    .SYNOPSIS
+        Starts asynchronous loading of application checkboxes for the main window.
+
+    .PARAMETER Window
+        The main application window.
+
+    .PARAMETER AppsPanel
+        The panel that receives application checkboxes.
+
+    .PARAMETER OnlyInstalledAppsBox
+        The installed-applications filter control.
+
+    .PARAMETER LoadingAppsIndicator
+        The loading indicator shown until loading completes.
+
+    .PARAMETER ImportConfigBtn
+        The optional import control disabled while loading is in progress.
+#>
 function Initialize-MainWindowApps {
     param(
         [System.Windows.Window]$Window,

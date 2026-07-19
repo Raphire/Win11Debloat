@@ -242,7 +242,7 @@ function Convert-RegistryKeyToSnapshot {
         foreach ($subKeyName in @($RegistryKey.GetSubKeyNames())) {
             $childKey = $RegistryKey.OpenSubKey($subKeyName, $false)
             if ($null -eq $childKey) {
-                throw "Unable to read registry subkey '$($RegistryKey.Name)\\$subKeyName' while creating a backup snapshot. The backup was not created."
+                throw "Unable to read registry subkey '$($RegistryKey.Name)\$subKeyName' while creating a backup snapshot. The backup was not created."
             }
 
             try {

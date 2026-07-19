@@ -12,8 +12,8 @@ function Invoke-RestartExplorer {
     }
 
     Write-Host "> Attempting to restart the Windows Explorer process to apply all changes..."
-    
-    if ($script:Params.ContainsKey("NoRestartExplorer")) {
+
+    if ($script:Params.ContainsKey('SkipExplorerRestart')) {
         Write-Host "Explorer process restart was skipped, please manually reboot your PC to apply all changes" -ForegroundColor Yellow
         return
     }

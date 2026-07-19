@@ -7,7 +7,8 @@ param (
     [switch]$Sysprep,
     [string]$LogPath,
     [string]$User,
-    [switch]$NoRestartExplorer,
+    [Alias('NoRestartExplorer')]
+    [switch]$SkipExplorerRestart,
     [switch]$CreateRestorePoint,
     [switch]$RunDefaults,
     [switch]$RunDefaultsLite,

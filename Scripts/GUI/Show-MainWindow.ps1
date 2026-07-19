@@ -777,7 +777,7 @@ function Show-MainWindow {
             }
 
             $restartExplorerCheckBox = $window.FindName('RestartExplorerCheckBox')
-            if ($restartExplorerCheckBox -and $script:Params.ContainsKey("NoRestartExplorer")) {
+            if ($restartExplorerCheckBox -and $script:Params.ContainsKey('SkipExplorerRestart')) {
                 $restartExplorerCheckBox.IsChecked = $false
                 $restartExplorerCheckBox.IsEnabled = $false
             }

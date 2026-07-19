@@ -113,7 +113,7 @@ Describe 'Test-RegistryValueKindNameSupported' {
     }
 }
 
-Describe 'Test-RegistryValueDataSupported' {
+Describe 'Test-RegistryValueDataMatchesKind' {
     It 'accepts <Case>' -ForEach @(
         @{ Case = 'the largest DWord'; Kind = 'DWord'; Data = [uint32]::MaxValue }
         @{ Case = 'the largest QWord'; Kind = 'QWord'; Data = [uint64]::MaxValue }
@@ -121,7 +121,7 @@ Describe 'Test-RegistryValueDataSupported' {
         @{ Case = 'a string array'; Kind = 'MultiString'; Data = @('one', 'two') }
         @{ Case = 'null None data'; Kind = 'None'; Data = $null }
     ) {
-        Test-RegistryValueDataSupported -KindName $Kind -Data $Data | Should -BeTrue
+        Test-RegistryValueDataMatchesKind -KindName $Kind -Data $Data | Should -BeTrue
     }
 
     It 'rejects <Case>' -ForEach @(
@@ -131,7 +131,7 @@ Describe 'Test-RegistryValueDataSupported' {
         @{ Case = 'an object in a MultiString'; Kind = 'MultiString'; Data = @('one', [PSCustomObject]@{}) }
         @{ Case = 'data for a None value'; Kind = 'None'; Data = 1 }
     ) {
-        Test-RegistryValueDataSupported -KindName $Kind -Data $Data | Should -BeFalse
+        Test-RegistryValueDataMatchesKind -KindName $Kind -Data $Data | Should -BeFalse
     }
 }
 

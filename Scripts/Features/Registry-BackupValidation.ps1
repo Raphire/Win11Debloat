@@ -301,7 +301,7 @@ function Test-RegistrySnapshotAgainstAllowList {
             if (-not (Test-RegistryValueKindNameSupported -KindName $kindName)) {
                 $Errors.Add("Backup contains unsupported registry value kind '$kindName' for '$valueReference'.")
             }
-            elseif (-not (Test-RegistryValueDataSupported -KindName $kindName -Data $valueSnapshot.Data)) {
+            elseif (-not (Test-RegistryValueDataMatchesKind -KindName $kindName -Data $valueSnapshot.Data)) {
                 $Errors.Add("Backup contains invalid registry data for kind '$kindName' at '$valueReference'.")
             }
         }
@@ -315,7 +315,26 @@ function Test-RegistrySnapshotAgainstAllowList {
     }
 }
 
-function Test-RegistryValueDataSupported {
+<#
+    .SYNOPSIS
+        Tests whether backed-up registry data is valid for its declared value kind.
+
+    .DESCRIPTION
+        Rejects corrupted or hand-edited backup data that cannot be restored safely,
+        such as a DWord that overflows UInt32 or binary data containing an invalid byte.
+        This validation runs before Restore-RegistryKeySnapshot mutates the live
+        registry, preventing a failed conversion from leaving a partially restored key.
+
+    .PARAMETER KindName
+        The declared registry value kind name, such as DWord, QWord, or Binary.
+
+    .PARAMETER Data
+        The backed-up value data to validate against the declared kind.
+
+    .OUTPUTS
+        System.Boolean
+#>
+function Test-RegistryValueDataMatchesKind {
     param(
         [Parameter(Mandatory)]
         [string]$KindName,

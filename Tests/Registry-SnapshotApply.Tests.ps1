@@ -34,6 +34,8 @@ BeforeAll {
 
 Describe 'Convert-RegistryValueToSnapshot' {
     It 'normalizes <Case> without expanding registry strings' -ForEach @(
+        @{ Case = 'null binary'; Kind = [Microsoft.Win32.RegistryValueKind]::Binary; Data = $null; Expected = @() }
+        @{ Case = 'empty binary'; Kind = [Microsoft.Win32.RegistryValueKind]::Binary; Data = [byte[]]::new(0); Expected = @() }
         @{ Case = 'binary'; Kind = [Microsoft.Win32.RegistryValueKind]::Binary; Data = [byte[]](1, 255); Expected = @(1, 255) }
         @{ Case = 'multi-string'; Kind = [Microsoft.Win32.RegistryValueKind]::MultiString; Data = [string[]]@('one', 'two'); Expected = @('one', 'two') }
         @{ Case = 'unsigned DWord'; Kind = [Microsoft.Win32.RegistryValueKind]::DWord; Data = -1; Expected = [uint32]::MaxValue }
@@ -44,7 +46,62 @@ Describe 'Convert-RegistryValueToSnapshot' {
         $snapshot = Convert-RegistryValueToSnapshot -RegistryKey $key -ValueName 'Value'
         $snapshot.Exists | Should -BeTrue
         $snapshot.Kind | Should -Be $Kind.ToString()
+        if ($Kind -eq [Microsoft.Win32.RegistryValueKind]::Binary) {
+            $snapshot.Data -is [array] | Should -BeTrue
+            $snapshot.Data.Count | Should -Be $Expected.Count
+            if ($Expected.Count -gt 0) {
+                $snapshot.Data | Should -Be $Expected
+            }
+            return
+        }
         $snapshot.Data | Should -Be $Expected
+    }
+
+    It 'rejects REG_NONE values because their data cannot be read reliably through .NET' {
+        $key = New-FakeRegistryKey -Values @{ Value = [byte[]](1) } -Kinds @{ Value = [Microsoft.Win32.RegistryValueKind]::None }
+
+        { Convert-RegistryValueToSnapshot -RegistryKey $key -ValueName 'Value' } |
+            Should -Throw 'REG_NONE registry values are not supported for backup*'
+    }
+}
+
+Describe 'Registry value backup round trip' {
+    BeforeAll {
+        $script:RoundTripRegistrySubKey = "Software\Win11Debloat\Tests\RegistrySnapshotRoundTrip-$([guid]::NewGuid().ToString('N'))"
+        $script:RoundTripRegistryKey = [Microsoft.Win32.Registry]::CurrentUser.CreateSubKey($script:RoundTripRegistrySubKey)
+    }
+
+    AfterAll {
+        if ($script:RoundTripRegistryKey) {
+            $script:RoundTripRegistryKey.Close()
+        }
+        [Microsoft.Win32.Registry]::CurrentUser.DeleteSubKeyTree($script:RoundTripRegistrySubKey, $false)
+    }
+
+    It 'captures, serializes, and restores <Case> values' -ForEach @(
+        @{ Case = 'String'; Kind = [Microsoft.Win32.RegistryValueKind]::String; Data = 'value' }
+        @{ Case = 'ExpandString'; Kind = [Microsoft.Win32.RegistryValueKind]::ExpandString; Data = '%TEMP%\value' }
+        @{ Case = 'Binary'; Kind = [Microsoft.Win32.RegistryValueKind]::Binary; Data = [byte[]](1) }
+        @{ Case = 'DWord'; Kind = [Microsoft.Win32.RegistryValueKind]::DWord; Data = [int]42 }
+        @{ Case = 'MultiString'; Kind = [Microsoft.Win32.RegistryValueKind]::MultiString; Data = [string[]]@('one', 'two') }
+        @{ Case = 'QWord'; Kind = [Microsoft.Win32.RegistryValueKind]::QWord; Data = [int64]42 }
+    ) {
+        $sourceName = "Source-$Case"
+        $restoredName = "Restored-$Case"
+        $script:RoundTripRegistryKey.SetValue($sourceName, $Data, $Kind)
+
+        $snapshot = Convert-RegistryValueToSnapshot -RegistryKey $script:RoundTripRegistryKey -ValueName $sourceName
+        $serializedSnapshot = $snapshot | ConvertTo-Json -Depth 5 | ConvertFrom-Json
+        $serializedSnapshot.Name = $restoredName
+
+        Restore-RegistryValueSnapshot -RegistryKey $script:RoundTripRegistryKey -Snapshot $serializedSnapshot
+        $restoredSnapshot = Convert-RegistryValueToSnapshot -RegistryKey $script:RoundTripRegistryKey -ValueName $restoredName
+
+        $restoredSnapshot.Kind | Should -Be $snapshot.Kind
+        if ($Kind -in @([Microsoft.Win32.RegistryValueKind]::Binary, [Microsoft.Win32.RegistryValueKind]::None, [Microsoft.Win32.RegistryValueKind]::MultiString)) {
+            $restoredSnapshot.Data -is [array] | Should -BeTrue
+        }
+        $restoredSnapshot.Data | Should -Be $snapshot.Data
     }
 }
 

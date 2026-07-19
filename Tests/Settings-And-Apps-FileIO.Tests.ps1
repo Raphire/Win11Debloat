@@ -172,6 +172,7 @@ Describe 'Import-AppDetailsFromJson' {
 
         $presets | Should -HaveCount 1
         $presets[0].Name | Should -Be 'Minimal'
+        $presets[0].AppIds -is [array] | Should -BeTrue
         $presets[0].AppIds | Should -Be 'One.App'
     }
 

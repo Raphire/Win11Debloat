@@ -353,7 +353,7 @@ function Test-RegistryValueDataMatchesKind {
             return [uint64]::TryParse([string]$Data, [System.Globalization.NumberStyles]::Integer, [System.Globalization.CultureInfo]::InvariantCulture, [ref]$parsed)
         }
         ([Microsoft.Win32.RegistryValueKind]::Binary) {
-            if ($null -eq $Data) { return $true }
+            if ($null -eq $Data -or $Data -isnot [array]) { return $false }
             foreach ($item in @($Data)) {
                 if ($item -isnot [ValueType] -and $item -isnot [string]) { return $false }
                 $parsed = 0
@@ -369,7 +369,6 @@ function Test-RegistryValueDataMatchesKind {
             }
             return $true
         }
-        ([Microsoft.Win32.RegistryValueKind]::None) { return ($null -eq $Data) }
         default { return ($null -eq $Data -or $Data -is [string]) }
     }
 }
@@ -502,7 +501,7 @@ function Test-RegistryValueKindNameSupported {
 
     try {
         $kind = [System.Enum]::Parse([Microsoft.Win32.RegistryValueKind], $KindName, $true)
-        return $kind -ne [Microsoft.Win32.RegistryValueKind]::Unknown
+        return $kind -notin @([Microsoft.Win32.RegistryValueKind]::Unknown, [Microsoft.Win32.RegistryValueKind]::None)
     }
     catch {
         return $false

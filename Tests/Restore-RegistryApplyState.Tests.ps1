@@ -32,7 +32,6 @@ Describe 'Convert-RegistryValueDataFromBackup' {
     It 'converts <Case>' -ForEach @(
         @{ Case = 'a multi-string value'; Kind = [Microsoft.Win32.RegistryValueKind]::MultiString; Data = @(1, 'two'); Expected = @('1', 'two'); ExpectNull = $false }
         @{ Case = 'a binary value'; Kind = [Microsoft.Win32.RegistryValueKind]::Binary; Data = @('1', 255); Expected = [byte[]](1, 255); ExpectNull = $false }
-        @{ Case = 'a None value'; Kind = [Microsoft.Win32.RegistryValueKind]::None; Data = 'ignored'; Expected = $null; ExpectNull = $true }
         @{ Case = 'a null string to an empty string'; Kind = [Microsoft.Win32.RegistryValueKind]::String; Data = $null; Expected = ''; ExpectNull = $false }
     ) {
         $result = Convert-RegistryValueDataFromBackup -Kind $Kind -Data $Data
@@ -41,6 +40,9 @@ Describe 'Convert-RegistryValueDataFromBackup' {
         }
         else {
             $result | Should -Be $Expected
+            if ($Kind -eq [Microsoft.Win32.RegistryValueKind]::MultiString) {
+                $result.GetType() | Should -Be ([string[]])
+            }
         }
     }
 
@@ -54,6 +56,7 @@ Describe 'Convert-RegistryValueDataFromBackup' {
         $result | Should -BeNullOrEmpty
         $result.GetType() | Should -Be ([byte[]])
     }
+
 }
 
 Describe 'Convert-BackupDataToByteArray' {

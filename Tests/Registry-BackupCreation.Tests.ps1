@@ -27,12 +27,20 @@ Describe 'Get-SelectedFeatures' {
 }
 
 Describe 'Get-RegistryBackupPayload' {
+    BeforeAll {
+        $script:OriginalComputerName = $env:COMPUTERNAME
+    }
+
     BeforeEach {
         Mock Get-RegistryBackedFeatures { param($Features) @($Features | Where-Object RegistryKey) }
         Mock Get-RegistryBackupCapturePlans { @([PSCustomObject]@{ Path = 'HKEY_CURRENT_USER\Software\Example' }) }
         Mock Get-RegistrySnapshotsForBackup { @([PSCustomObject]@{ Path = 'HKEY_CURRENT_USER\Software\Example'; Exists = $true }) }
         Mock Get-RegistryBackupTargetDescription { 'CurrentUser:Tester' }
         $env:COMPUTERNAME = 'TestComputer'
+    }
+
+    AfterAll {
+        $env:COMPUTERNAME = $script:OriginalComputerName
     }
 
     It 'builds a versioned payload and preserves distinct apply and undo IDs' {

@@ -107,6 +107,7 @@ Describe 'Test-RegistryValueKindNameSupported' {
         @{ Case = 'a null kind name'; KindName = $null }
         @{ Case = 'an empty kind name'; KindName = '' }
         @{ Case = 'the Unknown registry kind'; KindName = 'Unknown' }
+        @{ Case = 'the unsupported None registry kind'; KindName = 'None' }
         @{ Case = 'an invalid registry kind name'; KindName = 'NotARegistryValueKind' }
     ) {
         Test-RegistryValueKindNameSupported -KindName $KindName | Should -BeFalse
@@ -117,9 +118,9 @@ Describe 'Test-RegistryValueDataMatchesKind' {
     It 'accepts <Case>' -ForEach @(
         @{ Case = 'the largest DWord'; Kind = 'DWord'; Data = [uint32]::MaxValue }
         @{ Case = 'the largest QWord'; Kind = 'QWord'; Data = [uint64]::MaxValue }
-        @{ Case = 'valid binary bytes'; Kind = 'Binary'; Data = @(0, 255) }
+        @{ Case = 'non-empty Binary bytes'; Kind = 'Binary'; Data = @(0, 255) }
+        @{ Case = 'empty Binary bytes'; Kind = 'Binary'; Data = [byte[]]::new(0) }
         @{ Case = 'a string array'; Kind = 'MultiString'; Data = @('one', 'two') }
-        @{ Case = 'null None data'; Kind = 'None'; Data = $null }
     ) {
         Test-RegistryValueDataMatchesKind -KindName $Kind -Data $Data | Should -BeTrue
     }
@@ -127,9 +128,9 @@ Describe 'Test-RegistryValueDataMatchesKind' {
     It 'rejects <Case>' -ForEach @(
         @{ Case = 'an overflowing DWord'; Kind = 'DWord'; Data = '4294967296' }
         @{ Case = 'a negative QWord'; Kind = 'QWord'; Data = -1 }
+        @{ Case = 'null Binary data'; Kind = 'Binary'; Data = $null }
         @{ Case = 'an invalid binary byte'; Kind = 'Binary'; Data = @(0, 256) }
         @{ Case = 'an object in a MultiString'; Kind = 'MultiString'; Data = @('one', [PSCustomObject]@{}) }
-        @{ Case = 'data for a None value'; Kind = 'None'; Data = 1 }
     ) {
         Test-RegistryValueDataMatchesKind -KindName $Kind -Data $Data | Should -BeFalse
     }

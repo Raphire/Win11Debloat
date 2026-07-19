@@ -187,7 +187,7 @@ function Convert-RegistryValueDataFromBackup {
             $unsigned = [uint64]$Data
             return [BitConverter]::ToInt64([BitConverter]::GetBytes($unsigned), 0)
         }
-        ([Microsoft.Win32.RegistryValueKind]::MultiString) { return @($Data | ForEach-Object { [string]$_ }) }
+        ([Microsoft.Win32.RegistryValueKind]::MultiString) { return ,([string[]]@($Data | ForEach-Object { [string]$_ })) }
         ([Microsoft.Win32.RegistryValueKind]::Binary) {
             if ($null -eq $Data) {
                 return ,(New-Object byte[] 0)
@@ -201,7 +201,6 @@ function Convert-RegistryValueDataFromBackup {
             # pipeline. RegistryKey.SetValue requires a byte[] for Binary.
             return ,$bytes
         }
-        ([Microsoft.Win32.RegistryValueKind]::None) { return $null }
         default {
             if ($null -ne $Data) {
                 return [string]$Data

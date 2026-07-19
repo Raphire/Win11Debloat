@@ -68,6 +68,7 @@ Describe 'ConvertTo-NormalizedRegistryBackup' {
         $result = ConvertTo-NormalizedRegistryBackup -Backup $backup
 
         $result.Target | Should -Be 'DefaultUserProfile'
+        $result.SelectedFeatures -is [array] | Should -BeTrue
         $result.SelectedFeatures | Should -Be 'Example'
         $result.SelectedUndoFeatures | Should -BeNullOrEmpty
         Should -Invoke Test-RegistryBackupMatchesSelectedFeatures -Times 1 -Exactly

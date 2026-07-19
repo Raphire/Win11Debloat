@@ -1,5 +1,5 @@
 BeforeAll {
-    function Import-RegistryFile { param($Message, $RegistryFile) }
+    function Import-RegistryFile { param($Message, $path) }
     function Remove-SelectedApps { param($Apps) }
     function Disable-TelemetryScheduledTasks {}
     function Enable-TelemetryScheduledTasks {}
@@ -81,7 +81,7 @@ Describe 'Invoke-FeatureApply' {
     It 'imports a registry-backed feature' {
         Invoke-FeatureApply -FeatureId 'RegistryFeature'
 
-        Should -Invoke Import-RegistryFile -Times 1 -Exactly -ParameterFilter { $RegistryFile -eq 'feature.reg' }
+        Should -Invoke Import-RegistryFile -Times 1 -Exactly -ParameterFilter { $path -eq 'feature.reg' }
         Should -Invoke Remove-SelectedApps -Times 0 -Exactly
     }
 
@@ -210,7 +210,7 @@ Describe 'Invoke-UndoFeatures' {
     It 'imports registry undo data and still invokes custom undo side effects' {
         Invoke-UndoFeatures -FeatureIds @('RegistryUndo') -StartStep 1 -TotalSteps 1
 
-        Should -Invoke Import-RegistryFile -Times 1 -Exactly -ParameterFilter { $RegistryFile -eq 'Undo\undo.reg' }
+        Should -Invoke Import-RegistryFile -Times 1 -Exactly -ParameterFilter { $path -eq 'Undo\undo.reg' }
         Should -Invoke Invoke-FeatureUndo -Times 1 -Exactly -ParameterFilter { $FeatureId -eq 'RegistryUndo' }
     }
 

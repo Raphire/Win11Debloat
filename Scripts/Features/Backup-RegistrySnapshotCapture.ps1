@@ -263,10 +263,15 @@ function Convert-RegistryValueToSnapshot {
     )
 
     $valueKind = $RegistryKey.GetValueKind($ValueName)
+    if ($valueKind -eq [Microsoft.Win32.RegistryValueKind]::None) {
+        throw "REG_NONE registry values are not supported for backup. Key='$($RegistryKey.Name)' Name='$ValueName'"
+    }
+
     $value = $RegistryKey.GetValue($ValueName, $null, [Microsoft.Win32.RegistryValueOptions]::DoNotExpandEnvironmentNames)
     try {
         $normalizedValue = switch ($valueKind) {
-            ([Microsoft.Win32.RegistryValueKind]::Binary) { @($value | ForEach-Object { [int]$_ }) }
+            # Prevent an empty byte sequence from being unrolled to $null by the switch pipeline.
+            ([Microsoft.Win32.RegistryValueKind]::Binary) { if ($null -eq $value) { ,@() } else { ,@($value | ForEach-Object { [int]$_ }) } }
             ([Microsoft.Win32.RegistryValueKind]::MultiString) { @($value) }
             ([Microsoft.Win32.RegistryValueKind]::DWord) { [BitConverter]::ToUInt32([BitConverter]::GetBytes([int32]$value), 0) }
             ([Microsoft.Win32.RegistryValueKind]::QWord) { [BitConverter]::ToUInt64([BitConverter]::GetBytes([int64]$value), 0) }

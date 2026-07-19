@@ -1,3 +1,7 @@
+<#
+    .SYNOPSIS
+        Shows the backup-restore dialog and performs the selected restore.
+#>
 function Show-RestoreBackupWindow {
     param(
         [System.Windows.Window]$Owner = $null

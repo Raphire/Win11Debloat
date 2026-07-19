@@ -1,4 +1,7 @@
-# Add parameter to script and write to file
+<#
+    .SYNOPSIS
+        Adds or updates a value in the active parameter collection.
+#>
 function Add-Parameter {
     param (
         $parameterName,

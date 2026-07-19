@@ -1,4 +1,7 @@
-# Shows a Windows 11 styled custom message box
+<#
+    .SYNOPSIS
+        Shows a themed Windows 11-style message box.
+#>
 function Show-MessageBox {
     param (
         [Parameter(Mandatory=$true)]

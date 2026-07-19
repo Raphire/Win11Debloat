@@ -1,6 +1,7 @@
-# Shows confirmation dialogs for apps that require extra caution before removal.
-# Returns $true if the user confirmed all warnings (or if no warnings were triggered),
-# $false if the user declined any warning.
+<#
+    .SYNOPSIS
+        Confirms removal of applications that require an extra safety warning.
+#>
 function Confirm-UnsafeAppRemoval {
     param (
         [string[]]$SelectedApps,

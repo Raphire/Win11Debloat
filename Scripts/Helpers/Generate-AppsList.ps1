@@ -1,4 +1,7 @@
-# Generates a list of apps to remove based on the Apps parameter
+<#
+    .SYNOPSIS
+        Builds the validated application-removal list from the Apps parameter.
+#>
 function Generate-AppsList {
     if (-not ($script:Params["Apps"] -and $script:Params["Apps"] -is [string])) {
         return @()

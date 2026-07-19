@@ -1,3 +1,7 @@
+<#
+    .SYNOPSIS
+        Creates and displays the main Win11Debloat window.
+#>
 function Show-MainWindow {
     Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase,System.Windows.Forms | Out-Null
 

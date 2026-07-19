@@ -1,3 +1,7 @@
+<#
+    .SYNOPSIS
+        Shows a modal category-selection dialog for importing or exporting configuration.
+#>
 function Show-ImportExportConfigWindow {
     param (
         [System.Windows.Window]$Owner,
@@ -308,6 +312,10 @@ function Build-CategoryDetails {
     return $details
 }
 
+<#
+    .SYNOPSIS
+        Applies imported application selections to the application checkboxes.
+#>
 function Set-ImportedApplications {
     param (
         [System.Windows.Controls.Panel]$AppsPanel,
@@ -321,6 +329,10 @@ function Set-ImportedApplications {
     }
 }
 
+<#
+    .SYNOPSIS
+        Applies imported tweak settings to their mapped UI controls.
+#>
 function Set-ImportedTweakSettings {
     param (
         [System.Windows.Window]$Owner,
@@ -332,6 +344,10 @@ function Set-ImportedTweakSettings {
     Apply-SettingsToUiControls -window $Owner -settingsJson $settingsJson -uiControlMappings $UiControlMappings
 }
 
+<#
+    .SYNOPSIS
+        Applies imported deployment settings to the deployment controls.
+#>
 function Set-ImportedDeploymentSettings {
     param (
         [System.Windows.Window]$Owner,
@@ -368,6 +384,10 @@ function Set-ImportedDeploymentSettings {
     }
 }
 
+<#
+    .SYNOPSIS
+        Exports selected application, tweak, and deployment settings to a configuration file.
+#>
 function Export-Configuration {
     param (
         [System.Windows.Window]$Owner,
@@ -437,6 +457,10 @@ function Export-Configuration {
     }
 }
 
+<#
+    .SYNOPSIS
+        Imports selected application, tweak, and deployment settings from a configuration file.
+#>
 function Import-Configuration {
     param (
         [System.Windows.Window]$Owner,

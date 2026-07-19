@@ -1,5 +1,7 @@
-# Forcefully removes Microsoft Edge using its uninstaller
-# Credit: Based on work from loadstring1 & ave9858
+<#
+    .SYNOPSIS
+        Forcefully uninstalls Microsoft Edge and removes its leftover shortcuts and autostart entries.
+#>
 function Invoke-ForceRemoveEdge {
     Write-Host "> Forcefully uninstalling Microsoft Edge..."
 

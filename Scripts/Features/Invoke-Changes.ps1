@@ -326,7 +326,7 @@ function Invoke-AllChanges {
     foreach ($key in $script:Params.Keys) {
         if ($script:ControlParams -contains $key) { continue }
         if ($key -eq 'Apps') { continue }
-        if ($key -in @('CreateRestorePoint', 'SkipRegistryBackup')) { continue }
+        if ($key -eq 'CreateRestorePoint') { continue }
         $applyIds += $key
     }
     $undoIds = @($script:UndoParams.Keys)

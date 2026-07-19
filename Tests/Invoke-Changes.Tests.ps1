@@ -152,12 +152,19 @@ Describe 'Invoke-FeatureApply' {
         Should -Invoke Replace-StartMenu -Times 2 -Exactly
     }
 
-    It 'applies all-user Start templates and Store-search scope correctly' {
-        $script:Params = @{ ReplaceStartAllUsers = 'all-users.bin'; Sysprep = $true }
+    It 'applies all-user Start templates correctly' {
+        $script:Params = @{ ReplaceStartAllUsers = 'all-users.bin' }
         Invoke-FeatureApply -FeatureId 'ClearStartAllUsers'
         Invoke-FeatureApply -FeatureId 'ReplaceStartAllUsers'
-        Invoke-FeatureApply -FeatureId 'DisableStoreSearchSuggestions'
         Should -Invoke Replace-StartMenuForAllUsers -Times 2 -Exactly
+        Should -Invoke Replace-StartMenuForAllUsers -Times 1 -Exactly -ParameterFilter { $null -eq $startMenuTemplate }
+        Should -Invoke Replace-StartMenuForAllUsers -Times 1 -Exactly -ParameterFilter { $startMenuTemplate -eq 'all-users.bin' }
+    }
+
+    It 'applies Store-search scope to all users during Sysprep' {
+        $script:Params = @{ Sysprep = $true }
+        Invoke-FeatureApply -FeatureId 'DisableStoreSearchSuggestions'
+
         Should -Invoke DisableStoreSearchSuggestionsForAllUsers -Times 1 -Exactly
         Should -Invoke Set-StoreSearchSuggestionsDisabled -Times 0 -Exactly
     }
@@ -302,7 +309,7 @@ Describe 'Invoke-AllChanges' {
 
     It 'prevents every mutation when registry backup creation fails' {
         Mock New-RegistrySettingsBackup { throw 'disk full' }
-        { Invoke-AllChanges } | Should -Throw 'Registry backup failed before applying changes. disk full'
+        { Invoke-AllChanges } | Should -Throw 'Registry backup failed before applying changes.*disk full'
         Should -Invoke Invoke-ApplyFeatures -Times 0 -Exactly
         Should -Invoke Invoke-UndoFeatures -Times 0 -Exactly
         Should -Invoke Invoke-SystemRestorePoint -Times 0 -Exactly

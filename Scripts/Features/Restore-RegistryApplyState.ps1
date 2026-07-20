@@ -71,7 +71,10 @@ function Restore-RegistryKeySnapshot {
 
 <#
     .SYNOPSIS
-        Validates all registry values in a snapshot before live registry state is changed.
+        Validates registry values and subkey paths in a snapshot before live registry state is changed.
+
+    .PARAMETER Snapshot
+        The registry key snapshot to validate before it is restored.
 #>
 function Test-RegistryKeySnapshotCanBeRestored {
     param(
@@ -101,6 +104,12 @@ function Test-RegistryKeySnapshotCanBeRestored {
 <#
     .SYNOPSIS
         Returns a snapshot child's name only when it is directly below its parent.
+
+    .PARAMETER ParentPath
+        The registry path of the expected parent snapshot.
+
+    .PARAMETER ChildPath
+        The registry path of the child snapshot to validate.
 #>
 function Get-DirectRegistrySnapshotChildName {
     param(

@@ -201,7 +201,8 @@ function Get-RegistryKeySnapshot {
 
     .DESCRIPTION
         Captures all values or selected value names, records missing selected values,
-        and recursively captures subkeys when requested.
+        and recursively captures subkeys when requested. Throws if a requested subkey
+        cannot be read.
 #>
 function Convert-RegistryKeyToSnapshot {
     param(

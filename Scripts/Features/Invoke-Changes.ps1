@@ -302,8 +302,8 @@ function Invoke-UndoFeatures {
 
     .DESCRIPTION
         Sequenced in four phases:
-        1. Registry backup
-        2. System restore point
+        1. Registry backup (skipped when SkipRegistryBackup is present)
+        2. System restore point (skipped when CreateRestorePoint is absent)
         3. Apply phase - applies all selected features via Invoke-ApplyFeatures
         4. Undo phase - undoes selected features via Invoke-UndoFeatures
 

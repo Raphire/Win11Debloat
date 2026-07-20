@@ -787,6 +787,12 @@ function Show-MainWindow {
                 $restartExplorerCheckBox.IsEnabled = $false
             }
 
+            $registryBackupCheckBox = $window.FindName('RegistryBackupCheckBox')
+            if ($registryBackupCheckBox -and $script:Params.ContainsKey('SkipRegistryBackup')) {
+                $registryBackupCheckBox.IsChecked = $false
+                $registryBackupCheckBox.IsEnabled = $false
+            }
+
             if ($script:Params.ContainsKey("Sysprep")) {
                 $userSelectionCombo.SelectedIndex = 2
                 $userSelectionCombo.IsEnabled = $false

@@ -121,7 +121,7 @@ function Invoke-FeatureApply {
         'DisableStoreSearchSuggestions' {
             if ($script:Params.ContainsKey("Sysprep")) {
                 Write-Host "> Disabling Microsoft Store search suggestions in the start menu for all users..."
-                DisableStoreSearchSuggestionsForAllUsers
+                Set-StoreSearchSuggestionsDisabledForAllUsers
                 Write-Host ""
                 return
             }
@@ -159,7 +159,7 @@ function Invoke-FeatureUndo {
         'DisableStoreSearchSuggestions' {
             if ($script:Params.ContainsKey('Sysprep')) {
                 Write-Host "> Re-enabling Microsoft Store search suggestions in the start menu for all users..."
-                EnableStoreSearchSuggestionsForAllUsers
+                Set-StoreSearchSuggestionsEnabledForAllUsers
                 Write-Host ""
                 return
             }

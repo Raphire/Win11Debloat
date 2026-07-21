@@ -165,6 +165,33 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 - Ability to [apply changes to a different user](https://github.com/Raphire/Win11Debloat/wiki/Advanced-Features#running-as-another-user), instead of the currently logged in user.
 - [Sysprep mode](https://github.com/Raphire/Win11Debloat/wiki/Advanced-Features#sysprep-mode) to apply changes to the Windows Default user profile. Which ensures, all new users will have the changes automatically applied to them.
 
+## Recent Changes
+
+> Latest commits from the [GitHub repository](https://github.com/gaijinworld/Win11Debloat), listed in descending date order.
+
+| Date | Commit | Description |
+|------|--------|-------------|
+| 2026-07-19 | [`a9c1736`](https://github.com/gaijinworld/Win11Debloat/commit/a9c1736) | refactor: rename `NoRestartExplorer` parameter to `SkipExplorerRestart` (#709) |
+| 2026-07-19 | [`9c033db`](https://github.com/gaijinworld/Win11Debloat/commit/9c033db) | Add comprehensive test suite, fix minor issues, rename function and file names to match approved verbs (#708) |
+| 2026-07-18 | [`a7292e4`](https://github.com/gaijinworld/Win11Debloat/commit/a7292e4) | fix(registry-restore): reject Data/Kind mismatches before restore begins (#704) |
+| 2026-07-18 | [`f739a0e`](https://github.com/gaijinworld/Win11Debloat/commit/f739a0e) | fix: escape Windows Terminal path (#702) |
+| 2026-07-17 | [`63b1f61`](https://github.com/gaijinworld/Win11Debloat/commit/63b1f61) | Update README.md |
+| 2026-07-14 | [`de81739`](https://github.com/gaijinworld/Win11Debloat/commit/de81739) | fix: honor cancellation during changes (#700) |
+| 2026-07-14 | [`8fa1332`](https://github.com/gaijinworld/Win11Debloat/commit/8fa1332) | Update download messages for development and stable versions of Win11Debloat |
+| 2026-07-11 | [`ce36b8e`](https://github.com/gaijinworld/Win11Debloat/commit/ce36b8e) | Bump version |
+| 2026-07-11 | [`3b78e8d`](https://github.com/gaijinworld/Win11Debloat/commit/3b78e8d) | Fix: Show reboot warning for undoing features that require it (#699) |
+| 2026-07-10 | [`74dedc0`](https://github.com/gaijinworld/Win11Debloat/commit/74dedc0) | Add tooltip to user selection selectbox |
+| 2026-07-09 | [`5571700`](https://github.com/gaijinworld/Win11Debloat/commit/5571700) | Disabling Window Snapping now warns users that a reboot is required to apply |
+| 2026-07-09 | [`c2ea697`](https://github.com/gaijinworld/Win11Debloat/commit/c2ea697) | Hide irrelevant Settings home page settings in Windows 10 |
+| 2026-07-08 | [`ce8c100`](https://github.com/gaijinworld/Win11Debloat/commit/ce8c100) | Fix issues with domain accounts & fix run.bat breaking when launched from path with certain characters (#693) |
+| 2026-07-08 | [`89a5d50`](https://github.com/gaijinworld/Win11Debloat/commit/89a5d50) | Fix win10 icons by falling back to Segoe MDL2 Assets (#696) |
+| 2026-07-08 | [`e38aafe`](https://github.com/gaijinworld/Win11Debloat/commit/e38aafe) | Update README.md |
+| 2026-07-08 | [`d336f98`](https://github.com/gaijinworld/Win11Debloat/commit/d336f98) | Update feature wording |
+| 2026-07-08 | [`a70a2cc`](https://github.com/gaijinworld/Win11Debloat/commit/a70a2cc) | Update README.md |
+| 2026-07-08 | [`0ef789c`](https://github.com/gaijinworld/Win11Debloat/commit/0ef789c) | Add option to prevent auto install of device apps & add LG monitor app removal (#695) |
+| 2026-07-08 | [`82f50d6`](https://github.com/gaijinworld/Win11Debloat/commit/82f50d6) | fix(startup): refuse to run under PowerShell 7 with a clear message (#676) |
+| 2026-07-06 | [`949515d`](https://github.com/gaijinworld/Win11Debloat/commit/949515d) | Added Feature Disabling Notifications Through Win11Debloat (#690) |
+
 ## Contributing
 
 We welcome contributions of all kinds! Please see our [Contributing Guidelines](https://github.com/Raphire/Win11Debloat/blob/master/.github/CONTRIBUTING.md) for detailed instructions on how to get started and best practices for contributing.

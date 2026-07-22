@@ -11,6 +11,46 @@ BeforeAll {
     function Get-RebootFeatureLabels { @() }
 }
 
+Describe 'Resolve-UserProfilePath helper fallbacks' {
+    BeforeEach {
+        $script:ResolvedUserSidCache = @{}
+        $script:MachineDomainJoinStateKnown = $null
+        $script:MachineIsDomainJoined = $false
+        $script:MachineNetBiosDomain = ''
+    }
+
+    It 'uses strict normalized equality on workgroup machines' {
+        Mock Test-MachineIsDomainJoined { $false }
+
+        (Test-UserNameMatch -UserNameA ' Alice ' -UserNameB 'alice') | Should -BeTrue
+        (Test-UserNameMatch -UserNameA 'alice' -UserNameB 'alice.CONTOSO') | Should -BeFalse
+    }
+
+    It 'matches domain-qualified names to domain-suffixed profile folders' {
+        Mock Test-MachineIsDomainJoined { $true }
+        Mock Get-ProfileFolderDomainSuffix { 'CONTOSO' }
+
+        Test-UserNameMatchesProfileLeaf -UserName 'CONTOSO\alice' -ProfileLeaf 'alice.CONTOSO' | Should -BeTrue
+    }
+
+    It 'returns null for a SID cache miss and does not cache blank SIDs' {
+        Get-CachedResolvedUserSid -Candidates @('missing') | Should -BeNullOrEmpty
+        Set-ResolvedUserSidCache -Candidates @('Alice') -Sid ''
+        $script:ResolvedUserSidCache.Count | Should -Be 0
+    }
+
+    It 'falls back to an exact profile directory when SID resolution is unavailable' {
+        Mock Resolve-UserSid { $null }
+        Mock Test-Path { $true }
+
+        $context = Resolve-UserProfileContext -UserName 'Alice'
+
+        $context.UserName | Should -Be 'Alice'
+        $context.UserSid | Should -BeNullOrEmpty
+        $context.ProfilePath | Should -Match 'Alice$'
+    }
+}
+
 Describe 'Test-UserProfileExists' {
     BeforeEach {
         Mock Resolve-UserProfileContext {

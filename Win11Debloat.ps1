@@ -330,7 +330,7 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 # Features functions
 . "$PSScriptRoot/Scripts/Features/Get-CurrentTweakState.ps1"
 . "$PSScriptRoot/Scripts/Features/Invoke-Changes.ps1"
-. "$PSScriptRoot/Scripts/Features/Ensure-SystemRestorePoint.ps1"
+. "$PSScriptRoot/Scripts/Features/Invoke-SystemRestorePoint.ps1"
 . "$PSScriptRoot/Scripts/Features/Backup-RegistryFeatureSelection.ps1"
 . "$PSScriptRoot/Scripts/Features/Backup-RegistrySnapshotCapture.ps1"
 . "$PSScriptRoot/Scripts/Features/Backup-RegistryState.ps1"

@@ -933,12 +933,14 @@
                                             <StackPanel>
                                                 <TextBlock Text="Options" Style="{StaticResource CategoryHeaderTextBlock}"/>
 
-                                                <!-- Restore Point Option -->
+                                                <StackPanel>
+                                                    <CheckBox x:Name="RegistryBackupCheckBox" Style="{DynamicResource FeatureCheckboxStyle}" IsChecked="True" Content="Create a registry backup (Recommended)" AutomationProperties.Name="Create a registry backup (Recommended)"/>
+                                                </StackPanel>
+
                                                 <StackPanel>
                                                     <CheckBox x:Name="RestorePointCheckBox" Style="{DynamicResource FeatureCheckboxStyle}" IsChecked="True" Content="Create a system restore point (Recommended)" AutomationProperties.Name="Create a system restore point (Recommended)"/>
                                                 </StackPanel>
                                                 
-                                                <!-- Restart Explorer Option -->
                                                 <StackPanel>
                                                     <CheckBox x:Name="RestartExplorerCheckBox" Style="{DynamicResource FeatureCheckboxStyle}" Content="Restart the Windows Explorer process to apply all changes immediately" AutomationProperties.Name="Restart the Windows Explorer process to apply all changes immediately"/>
                                                 </StackPanel>

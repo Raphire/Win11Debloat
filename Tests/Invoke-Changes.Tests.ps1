@@ -5,7 +5,7 @@ BeforeAll {
     function Enable-TelemetryScheduledTasks {}
     function Generate-AppsList { @() }
     function Get-FriendlyTargetUserName { 'current user' }
-    function EnableStoreSearchSuggestionsForAllUsers {}
+    function Set-StoreSearchSuggestionsEnabledForAllUsers {}
     function Set-StoreSearchSuggestionsEnabled { param($StoreAppsDatabase) }
     function Get-StoreAppsDatabasePathForUser { param($UserName) 'store.db' }
     function Get-UserName { 'Alice' }
@@ -16,7 +16,7 @@ BeforeAll {
     function Get-StartMenuBinPathForUser { param($UserName) 'start.bin' }
     function Replace-StartMenu { param($startMenuBinFile, $startMenuTemplate) }
     function Replace-StartMenuForAllUsers { param($startMenuTemplate) }
-    function DisableStoreSearchSuggestionsForAllUsers {}
+    function Set-StoreSearchSuggestionsDisabledForAllUsers {}
     function Set-StoreSearchSuggestionsDisabled { param($StoreAppsDatabase) }
 
     . (Join-Path $PSScriptRoot '..\Scripts\Features\Invoke-Changes.ps1')
@@ -70,11 +70,11 @@ Describe 'Invoke-FeatureApply' {
         Mock Get-UserName { 'Alice' }
         Mock Replace-StartMenu {}
         Mock Replace-StartMenuForAllUsers {}
-        Mock DisableStoreSearchSuggestionsForAllUsers {}
+        Mock Set-StoreSearchSuggestionsDisabledForAllUsers {}
         Mock Set-StoreSearchSuggestionsDisabled {}
         Mock Get-StoreAppsDatabasePathForUser { 'store.db' }
         Mock Get-Process { @() }
-        Mock Stop-Process {}
+        Mock Stop-Process { param($InputObject) }
         Mock Write-Host {}
     }
 
@@ -132,6 +132,15 @@ Describe 'Invoke-FeatureApply' {
         Should -Invoke Stop-Process -Times 0 -Exactly
     }
 
+    It 'stops widget processes before removing widget packages outside WhatIf mode' {
+        $widget = [PSCustomObject]@{ Name = 'WidgetService' }
+        Mock Get-Process { $widget }
+
+        Invoke-FeatureApply -FeatureId 'DisableWidgets'
+
+        Should -Invoke Stop-Process -Times 1 -Exactly
+    }
+
     It 'enables the expected optional Windows features' {
         Invoke-FeatureApply -FeatureId 'EnableWindowsSandbox'
         Invoke-FeatureApply -FeatureId 'EnableWindowsSubsystemForLinux'
@@ -165,7 +174,15 @@ Describe 'Invoke-FeatureApply' {
         $script:Params = @{ Sysprep = $true }
         Invoke-FeatureApply -FeatureId 'DisableStoreSearchSuggestions'
 
-        Should -Invoke DisableStoreSearchSuggestionsForAllUsers -Times 1 -Exactly
+        Should -Invoke Set-StoreSearchSuggestionsDisabledForAllUsers -Times 1 -Exactly
+        Should -Invoke Set-StoreSearchSuggestionsDisabled -Times 0 -Exactly
+    }
+
+    It 'does not update Store search suggestions when the current user database cannot be resolved' {
+        Mock Get-StoreAppsDatabasePathForUser { $null }
+
+        Invoke-FeatureApply -FeatureId 'DisableStoreSearchSuggestions'
+
         Should -Invoke Set-StoreSearchSuggestionsDisabled -Times 0 -Exactly
     }
 }
@@ -227,6 +244,15 @@ Describe 'Invoke-UndoFeatures' {
         Should -Invoke Import-RegistryFile -Times 0 -Exactly
         Should -Invoke Invoke-FeatureUndo -Times 2 -Exactly
     }
+
+    It 'stops before undoing when cancellation is requested' {
+        $script:CancelRequested = $true
+
+        Invoke-UndoFeatures -FeatureIds @('RegistryUndo') -StartStep 1 -TotalSteps 1
+
+        Should -Invoke Import-RegistryFile -Times 0 -Exactly
+        Should -Invoke Invoke-FeatureUndo -Times 0 -Exactly
+    }
 }
 
 Describe 'Invoke-FeatureUndo' {
@@ -238,7 +264,7 @@ Describe 'Invoke-FeatureUndo' {
             DisableTelemetry = [PSCustomObject]@{}
             DisableStoreSearchSuggestions = [PSCustomObject]@{}
         }
-        Mock EnableStoreSearchSuggestionsForAllUsers {}
+        Mock Set-StoreSearchSuggestionsEnabledForAllUsers {}
         Mock Set-StoreSearchSuggestionsEnabled {}
         Mock Get-StoreAppsDatabasePathForUser { 'store.db' }
         Mock Get-UserName { 'Alice' }
@@ -253,7 +279,7 @@ Describe 'Invoke-FeatureUndo' {
     ) {
         $script:Params = $Params
         Invoke-FeatureUndo -FeatureId 'DisableStoreSearchSuggestions'
-        Should -Invoke EnableStoreSearchSuggestionsForAllUsers -Times $AllUsers -Exactly
+        Should -Invoke Set-StoreSearchSuggestionsEnabledForAllUsers -Times $AllUsers -Exactly
         Should -Invoke Set-StoreSearchSuggestionsEnabled -Times $CurrentUser -Exactly -ParameterFilter { $StoreAppsDatabase -eq 'store.db' }
     }
 
@@ -315,6 +341,16 @@ Describe 'Invoke-AllChanges' {
         Should -Invoke Invoke-SystemRestorePoint -Times 0 -Exactly
     }
 
+    It 'does not create a registry backup when explicitly skipped' {
+        $script:Params['SkipRegistryBackup'] = $true
+
+        Invoke-AllChanges
+
+        Should -Invoke New-RegistrySettingsBackup -Times 0 -Exactly
+        Should -Invoke Invoke-ApplyFeatures -Times 1 -Exactly
+        Should -Invoke Invoke-UndoFeatures -Times 1 -Exactly
+    }
+
     It 'does not run when cancellation was already requested' {
         $script:CancelRequested = $true
         Invoke-AllChanges
@@ -354,5 +390,15 @@ Describe 'Invoke-AllChanges' {
         Mock Invoke-ApplyFeatures { $script:order.Add('apply') }
         Invoke-AllChanges
         $script:order | Should -Be @('restore-point', 'apply')
+    }
+
+    It 'reports registry import failures after all requested work completes' {
+        $script:Params = @{ CustomApply = $true }
+        $script:UndoParams = @{}
+        Mock Invoke-ApplyFeatures { $script:RegistryImportFailures = 2 }
+
+        Invoke-AllChanges
+
+        Should -Invoke Write-Host -Times 1 -Exactly -ParameterFilter { $Object -match '2 registry import change' }
     }
 }

@@ -142,3 +142,36 @@ Describe 'Restore-RegistryKeySnapshot - validation' {
             Should -Throw $ExpectedError
     }
 }
+
+Describe 'Invoke-RegistryDeleteValueOperation' {
+    It 'deletes the default value and always closes an opened registry key' {
+        $calls = [System.Collections.Generic.List[string]]::new()
+        $key = [PSCustomObject]@{}
+        $key | Add-Member -MemberType ScriptMethod -Name DeleteValue -Value { param($Name, $ThrowOnMissing) $calls.Add("delete:${Name}:$ThrowOnMissing") }
+        $key | Add-Member -MemberType ScriptMethod -Name Close -Value { $calls.Add('close') }
+
+        Invoke-RegistryDeleteValueOperation -Operation ([PSCustomObject]@{ KeyPath = 'HKCU\Software\Test'; ValueName = $null }) -KeyInfo ([PSCustomObject]@{ Key = $key })
+
+        $calls | Should -Be @('delete::False', 'close')
+    }
+}
+
+Describe 'Invoke-RegistrySetValueOperation' {
+    It 'throws for an unavailable set-value key before attempting conversion' {
+        Mock Convert-RegOperationToValueKind { throw 'conversion should not run' }
+
+        { Invoke-RegistrySetValueOperation -Operation ([PSCustomObject]@{ KeyPath = 'HKCU\Software\Test' }) -KeyInfo ([PSCustomObject]@{ Key = $null }) } |
+            Should -Throw "Unable to open or create registry key*"
+        Should -Invoke Convert-RegOperationToValueKind -Times 0 -Exactly
+    }
+}
+
+Describe 'Write-RegistryOperationAccessDeniedWarning' {
+    It 'formats the default registry value in access-denied warnings' {
+        Mock Write-Warning {}
+
+        Write-RegistryOperationAccessDeniedWarning -Operation ([PSCustomObject]@{ OperationType = 'DeleteValue'; KeyPath = 'HKCU\Software\Test'; ValueName = $null }) -ExceptionMessage 'denied'
+
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -match "value '\(Default\)'" -and $Message -match 'denied' }
+    }
+}

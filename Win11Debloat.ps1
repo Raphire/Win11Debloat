@@ -8,6 +8,7 @@ param (
     [Alias('NoRestartExplorer')]
     [switch]$SkipExplorerRestart,
     [switch]$CreateRestorePoint,
+    [switch]$SkipRegistryBackup,
     [switch]$RunDefaults,
     [switch]$RunDefaultsLite,
     [switch]$RunSavedSettings,
@@ -186,7 +187,7 @@ $script:RestoreBackupWindowSchema = Join-Path $schemasPath 'RestoreBackupWindow.
 $script:LoadAppsDetailsScriptPath = Join-Path (Join-Path $scriptsPath 'FileIO') 'Import-AppDetailsFromJson.ps1'
 $script:TestAppInWingetListScriptPath = Join-Path (Join-Path $scriptsPath 'AppRemoval') 'Test-AppInWingetList.ps1'
 
-$script:ControlParams = 'WhatIf', 'Confirm', 'Verbose', 'Debug', 'LogPath', 'Silent', 'Sysprep', 'User', 'SkipExplorerRestart', 'RunDefaults', 'RunDefaultsLite', 'RunSavedSettings', 'Config', 'CLI', 'AppRemovalTarget'
+$script:ControlParams = 'WhatIf', 'Confirm', 'Verbose', 'Debug', 'LogPath', 'Silent', 'Sysprep', 'User', 'SkipExplorerRestart', 'SkipRegistryBackup', 'RunDefaults', 'RunDefaultsLite', 'RunSavedSettings', 'Config', 'CLI', 'AppRemovalTarget'
 
 # Script-level variables for GUI elements
 $script:GuiWindow = $null
@@ -329,7 +330,7 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 # Features functions
 . "$PSScriptRoot/Scripts/Features/Get-CurrentTweakState.ps1"
 . "$PSScriptRoot/Scripts/Features/Invoke-Changes.ps1"
-. "$PSScriptRoot/Scripts/Features/Ensure-SystemRestorePoint.ps1"
+. "$PSScriptRoot/Scripts/Features/Invoke-SystemRestorePoint.ps1"
 . "$PSScriptRoot/Scripts/Features/Backup-RegistryFeatureSelection.ps1"
 . "$PSScriptRoot/Scripts/Features/Backup-RegistrySnapshotCapture.ps1"
 . "$PSScriptRoot/Scripts/Features/Backup-RegistryState.ps1"

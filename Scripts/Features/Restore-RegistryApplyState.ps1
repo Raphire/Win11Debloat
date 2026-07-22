@@ -65,17 +65,103 @@ function Restore-RegistryKeySnapshot {
         throw "Unsupported root-level registry path in backup: $($Snapshot.Path)"
     }
 
+    Test-RegistryKeySnapshotCanBeRestored -Snapshot $Snapshot
+    Restore-RegistryKeySnapshotAtPath -Snapshot $Snapshot -RootKey $rootKey -SubKeyPath $subKeyPath
+}
+
+<#
+    .SYNOPSIS
+        Validates registry values and subkey paths in a snapshot before live registry state is changed.
+
+    .PARAMETER Snapshot
+        The registry key snapshot to validate before it is restored.
+#>
+function Test-RegistryKeySnapshotCanBeRestored {
+    param(
+        [Parameter(Mandatory)]
+        $Snapshot
+    )
+
+    if (-not [bool]$Snapshot.Exists) { return }
+
+    $childNames = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
+    foreach ($valueSnapshot in @($Snapshot.Values)) {
+        if ([bool]$valueSnapshot.Exists) {
+            $valueKind = Convert-RegistryValueKindFromBackup -KindName $valueSnapshot.Kind
+            $null = Convert-RegistryValueDataFromBackup -Kind $valueKind -Data $valueSnapshot.Data
+        }
+    }
+
+    foreach ($subKeySnapshot in @($Snapshot.SubKeys)) {
+        $childName = Get-DirectRegistrySnapshotChildName -ParentPath $Snapshot.Path -ChildPath $subKeySnapshot.Path
+        if ([string]::IsNullOrWhiteSpace($childName) -or -not $childNames.Add($childName)) {
+            throw "Backup contains duplicate or unsupported registry child path: $($subKeySnapshot.Path)"
+        }
+        Test-RegistryKeySnapshotCanBeRestored -Snapshot $subKeySnapshot
+    }
+}
+
+<#
+    .SYNOPSIS
+        Returns a snapshot child's name only when it is directly below its parent.
+
+    .PARAMETER ParentPath
+        The registry path of the expected parent snapshot.
+
+    .PARAMETER ChildPath
+        The registry path of the child snapshot to validate.
+#>
+function Get-DirectRegistrySnapshotChildName {
+    param(
+        [Parameter(Mandatory)]
+        [string]$ParentPath,
+        [Parameter(Mandatory)]
+        [string]$ChildPath
+    )
+
+    $parentParts = Split-RegistryPath -path $ParentPath
+    $childParts = Split-RegistryPath -path $ChildPath
+    if (-not $parentParts -or -not $childParts -or
+        -not $parentParts.Hive.Equals($childParts.Hive, [System.StringComparison]::OrdinalIgnoreCase) -or
+        [string]::IsNullOrWhiteSpace($parentParts.SubKey) -or
+        [string]::IsNullOrWhiteSpace($childParts.SubKey)) {
+        throw "Unsupported registry child path in backup: $ChildPath"
+    }
+
+    $childName = Split-Path -Path $childParts.SubKey -Leaf
+    $expectedSubKey = "$($parentParts.SubKey)\$childName"
+    if ([string]::IsNullOrWhiteSpace($childName) -or
+        -not $childParts.SubKey.Equals($expectedSubKey, [System.StringComparison]::OrdinalIgnoreCase)) {
+        throw "Registry child path '$ChildPath' is not directly below parent '$ParentPath'."
+    }
+
+    return $childName
+}
+
+<#
+    .SYNOPSIS
+        Restores a snapshot to a specific path below an already resolved registry root.
+
+    .DESCRIPTION
+        Writes only values and descendants represented by the backup. Existing keys are
+        retained so their security descriptors and unrelated data are not destroyed.
+#>
+function Restore-RegistryKeySnapshotAtPath {
+    param(
+        [Parameter(Mandatory)]
+        $Snapshot,
+        [Parameter(Mandatory)]
+        $RootKey,
+        [Parameter(Mandatory)]
+        [string]$SubKeyPath
+    )
+
     if (-not $Snapshot.Exists) {
-        Remove-RegistrySubKeyTreeIfExists -RootKey $rootKey -SubKeyPath $subKeyPath
+        Remove-RegistrySubKeyTreeIfExists -RootKey $RootKey -SubKeyPath $SubKeyPath
         return
     }
 
-    $forceFullTree = @($Snapshot.SubKeys).Count -gt 0
-    if ($forceFullTree) {
-        Remove-RegistrySubKeyTreeIfExists -RootKey $rootKey -SubKeyPath $subKeyPath
-    }
-
-    $key = $rootKey.CreateSubKey($subKeyPath)
+    $key = $RootKey.CreateSubKey($SubKeyPath)
     if ($null -eq $key) {
         throw "Unable to create or open registry key '$($Snapshot.Path)'"
     }
@@ -90,8 +176,11 @@ function Restore-RegistryKeySnapshot {
     }
 
     foreach ($subKeySnapshot in @($Snapshot.SubKeys)) {
-        Restore-RegistryKeySnapshot -Snapshot $subKeySnapshot
+        $childName = Get-DirectRegistrySnapshotChildName -ParentPath $Snapshot.Path -ChildPath $subKeySnapshot.Path
+
+        Restore-RegistryKeySnapshotAtPath -Snapshot $subKeySnapshot -RootKey $RootKey -SubKeyPath "$SubKeyPath\$childName"
     }
+
 }
 
 <#

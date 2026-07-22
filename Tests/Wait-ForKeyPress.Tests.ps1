@@ -4,7 +4,7 @@ Describe 'Wait-ForKeyPress' {
         $command = "function Stop-Transcript {}; `$global:Silent = `$true; . '$scriptPath'; Wait-ForKeyPress"
         $encodedCommand = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($command))
 
-        & (Join-Path $PSHOME 'pwsh.exe') -NoProfile -EncodedCommand $encodedCommand
+        & powershell.exe -NoProfile -EncodedCommand $encodedCommand
 
         $LASTEXITCODE | Should -Be 0
     }

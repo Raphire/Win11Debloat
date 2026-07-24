@@ -11,6 +11,10 @@ function Get-NormalizedRegistryValueName {
     return [string]$ValueName
 }
 
+<#
+    .SYNOPSIS
+        Converts a parsed .reg operation into a Name/Kind/Value set for RegistryKey.SetValue.
+#>
 function Convert-RegOperationToValueKind {
     param(
         [Parameter(Mandatory)]

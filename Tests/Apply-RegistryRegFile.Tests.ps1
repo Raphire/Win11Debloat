@@ -9,8 +9,11 @@ BeforeAll {
 Describe 'Convert-RegOperationToValueKind' {
     It 'converts <Case> to a registry-compatible value' -ForEach @(
         @{ Case = 'an unsigned DWord'; ValueName = $null; ValueType = 'DWord'; ValueData = [uint32]::MaxValue; ExpectedName = ''; ExpectedKind = [Microsoft.Win32.RegistryValueKind]::DWord; ExpectedValue = -1 }
+        @{ Case = 'an unsigned QWord'; ValueName = 'Big'; ValueType = 'QWord'; ValueData = [uint64]::MaxValue; ExpectedName = 'Big'; ExpectedKind = [Microsoft.Win32.RegistryValueKind]::QWord; ExpectedValue = -1L }
         @{ Case = 'a string value'; ValueName = 'Name'; ValueType = 'String'; ValueData = 42; ExpectedName = 'Name'; ExpectedKind = [Microsoft.Win32.RegistryValueKind]::String; ExpectedValue = '42' }
+        @{ Case = 'an expandable string value'; ValueName = 'Path'; ValueType = 'Hex2'; ValueData = 'test%PATH%'; ExpectedName = 'Path'; ExpectedKind = [Microsoft.Win32.RegistryValueKind]::ExpandString; ExpectedValue = 'test%PATH%' }
         @{ Case = 'a binary value'; ValueName = 'Bytes'; ValueType = 'Binary'; ValueData = @(1, 255); ExpectedName = 'Bytes'; ExpectedKind = [Microsoft.Win32.RegistryValueKind]::Binary; ExpectedValue = [byte[]](1, 255) }
+        @{ Case = 'a multi-string value'; ValueName = 'List'; ValueType = 'Hex7'; ValueData = @('a', 'b', 'c'); ExpectedName = 'List'; ExpectedKind = [Microsoft.Win32.RegistryValueKind]::MultiString; ExpectedValue = [string[]]@('a', 'b', 'c') }
     ) {
         $result = Convert-RegOperationToValueKind -Operation ([PSCustomObject]@{
             KeyPath = 'HK'; ValueName = $ValueName; ValueType = $ValueType; ValueData = $ValueData

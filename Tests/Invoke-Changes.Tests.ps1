@@ -11,6 +11,8 @@ BeforeAll {
     function Get-UserName { 'Alice' }
     function Disable-WindowsFeature { param($FeatureName) }
     function New-RegistrySettingsBackup { param($ActionableKeys, $ExtraFeatures) }
+    function Import-RegistryBackup { param($FilePath) }
+    function Restore-RegistryBackupState { param($Backup) }
     function Invoke-SystemRestorePoint {}
     function Enable-WindowsFeature { param($FeatureName) }
     function Get-StartMenuBinPathForUser { param($UserName) 'start.bin' }
@@ -400,13 +402,43 @@ Describe 'Invoke-AllChanges' {
         $script:order | Should -Be @('restore-point', 'apply')
     }
 
-    It 'reports registry import failures after all requested work completes' {
+    It 'throws instead of continuing when registry imports fail during apply' {
         $script:Params = @{ CustomApply = $true }
-        $script:UndoParams = @{}
+        $script:UndoParams = @{ RegistryUndo = $true }
         Mock Invoke-ApplyFeatures { $script:RegistryImportFailures = 2 }
+        Mock Write-Error {}
 
-        Invoke-AllChanges
+        { Invoke-AllChanges } | Should -Throw '*Registry import failed while applying features*'
 
-        Should -Invoke Write-Host -Times 1 -Exactly -ParameterFilter { $Object -match '2 registry import change' }
+        Should -Invoke Invoke-UndoFeatures -Times 0 -Exactly
+    }
+
+    It 'rolls back to the pre-execution backup when a registry import fails' {
+        $backupPath = Join-Path $TestDrive 'regbackup.json'
+        Set-Content -LiteralPath $backupPath -Value '{}'
+        Mock New-RegistrySettingsBackup { $backupPath }
+        Mock Invoke-ApplyFeatures { $script:RegistryImportFailures = 1 }
+        Mock Import-RegistryBackup { @{} }
+        Mock Restore-RegistryBackupState {}
+        Mock Write-Error {}
+        Mock Write-Warning {}
+
+        { Invoke-AllChanges } | Should -Throw '*Registry import failed while applying features*'
+
+        Should -Invoke Import-RegistryBackup -Times 1 -Exactly -ParameterFilter { $FilePath -eq $backupPath }
+        Should -Invoke Restore-RegistryBackupState -Times 1 -Exactly
+    }
+
+    It 'does not attempt a rollback when the registry backup was skipped' {
+        $script:Params['SkipRegistryBackup'] = $true
+        Mock Invoke-ApplyFeatures { $script:RegistryImportFailures = 1 }
+        Mock Import-RegistryBackup {}
+        Mock Restore-RegistryBackupState {}
+        Mock Write-Error {}
+
+        { Invoke-AllChanges } | Should -Throw '*Registry import failed while applying features*'
+
+        Should -Invoke Import-RegistryBackup -Times 0 -Exactly
+        Should -Invoke Restore-RegistryBackupState -Times 0 -Exactly
     }
 }

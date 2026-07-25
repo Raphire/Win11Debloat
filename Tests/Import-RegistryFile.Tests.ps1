@@ -20,11 +20,23 @@ Describe 'Import-RegistryFile' {
         Mock Write-Warning {}
     }
 
-    It 'throws and increments the failure count when the registry file is missing' {
+    It 'records the failure and continues without throwing when the registry file is missing' {
         Mock Get-RegistryFilePathForFeature { Join-Path $TestDrive 'missing.reg' }
-        { Import-RegistryFile -message 'Apply' -path 'missing.reg' } | Should -Throw 'Unable to find registry file:*'
+        { Import-RegistryFile -message 'Apply' -path 'missing.reg' } | Should -Not -Throw
         $script:RegistryImportFailures | Should -Be 1
         Should -Invoke Invoke-NonBlocking -Times 0 -Exactly
+        Should -Invoke Invoke-RegistryOperationsFromRegFile -Times 0 -Exactly
+    }
+
+    It 'still imports subsequent registry files after one is missing' {
+        Mock Get-RegistryFilePathForFeature { Join-Path $TestDrive 'missing.reg' }
+        Import-RegistryFile -message 'Apply' -path 'missing.reg'
+
+        Mock Get-RegistryFilePathForFeature { $script:regPath }
+        Import-RegistryFile -message 'Apply' -path 'feature.reg'
+
+        $script:RegistryImportFailures | Should -Be 1
+        Should -Invoke Invoke-NonBlocking -Times 1 -Exactly
     }
 
     It 'uses the PowerShell writer only in WhatIf mode' {

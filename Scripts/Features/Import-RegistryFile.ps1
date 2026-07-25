@@ -11,11 +11,17 @@ function Import-RegistryFile {
     $regFilePath = Get-RegistryFilePathForFeature -RegistryKey $path
 
     if (-not (Test-Path $regFilePath)) {
-        $errorMessage = "Unable to find registry file: $path ($regFilePath)"
+        # Record the failure and continue with the remaining features instead of
+        # throwing: this precheck sits outside the try/catch below, so a throw here
+        # escapes Invoke-ApplyFeatures/Invoke-UndoFeatures uncaught and aborts the
+        # entire run mid-way (remaining features skipped, no failure summary) when
+        # a single .reg file is missing, e.g. quarantined by antivirus or lost to
+        # an incomplete download. A missing file is already counted and reported
+        # through RegistryImportFailures like any other failed import.
         $script:RegistryImportFailures++
-        Write-Host "Error: $errorMessage" -ForegroundColor Red
+        Write-Host "Error: Unable to find registry file: $path ($regFilePath)" -ForegroundColor Red
         Write-Host ""
-        throw $errorMessage
+        return
     }
 
     $importScript = {

@@ -219,6 +219,11 @@ function Get-DeploymentSettings {
         $deploySettings += @{ Name = 'CreateRestorePoint'; Value = [bool]$restorePointCheckBox.IsChecked }
     }
 
+    $registryBackupCheckBox = $Owner.FindName('RegistryBackupCheckBox')
+    if ($registryBackupCheckBox) {
+        $deploySettings += @{ Name = 'SkipRegistryBackup'; Value = -not [bool]$registryBackupCheckBox.IsChecked }
+    }
+
     $restartExplorerCheckBox = $Owner.FindName('RestartExplorerCheckBox')
     if ($restartExplorerCheckBox) {
         $deploySettings += @{ Name = 'RestartExplorer'; Value = [bool]$restartExplorerCheckBox.IsChecked }
@@ -272,6 +277,7 @@ function Get-DeploymentCategoryDetailString {
 
     $options = @()
     if ($lookup.ContainsKey('CreateRestorePoint') -and [bool]$lookup['CreateRestorePoint']) { $options += 'Restore Point' }
+    if (-not ($lookup.ContainsKey('SkipRegistryBackup') -and [bool]$lookup['SkipRegistryBackup'])) { $options += 'Registry Backup' }
     if ($lookup.ContainsKey('RestartExplorer')    -and [bool]$lookup['RestartExplorer'])    { $options += 'Restart Explorer' }
 
     $lines = @()
@@ -376,6 +382,13 @@ function Set-ImportedDeploymentSettings {
     $restorePointCheckBox = $Owner.FindName('RestorePointCheckBox')
     if ($lookup.ContainsKey('CreateRestorePoint') -and $restorePointCheckBox) {
         $restorePointCheckBox.IsChecked = [bool]$lookup['CreateRestorePoint']
+    }
+
+    $registryBackupCheckBox = $Owner.FindName('RegistryBackupCheckBox')
+    if ($registryBackupCheckBox) {
+        if ($lookup.ContainsKey('SkipRegistryBackup')) {
+            $registryBackupCheckBox.IsChecked = -not [bool]$lookup['SkipRegistryBackup']
+        }
     }
 
     $restartExplorerCheckBox = $Owner.FindName('RestartExplorerCheckBox')

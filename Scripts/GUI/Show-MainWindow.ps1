@@ -702,6 +702,11 @@ function Show-MainWindow {
             Add-Parameter 'CreateRestorePoint'
         }
 
+        $registryBackupCheckBox = $window.FindName('RegistryBackupCheckBox')
+        if ($registryBackupCheckBox -and -not $registryBackupCheckBox.IsChecked) {
+            Add-Parameter 'SkipRegistryBackup'
+        }
+
         switch ($userSelectionCombo.SelectedIndex) {
             0 { Write-Host "Selected user mode: current user ($(Get-UserName))" }
             1 {
@@ -780,6 +785,12 @@ function Show-MainWindow {
             if ($restartExplorerCheckBox -and $script:Params.ContainsKey('SkipExplorerRestart')) {
                 $restartExplorerCheckBox.IsChecked = $false
                 $restartExplorerCheckBox.IsEnabled = $false
+            }
+
+            $registryBackupCheckBox = $window.FindName('RegistryBackupCheckBox')
+            if ($registryBackupCheckBox -and $script:Params.ContainsKey('SkipRegistryBackup')) {
+                $registryBackupCheckBox.IsChecked = $false
+                $registryBackupCheckBox.IsEnabled = $false
             }
 
             if ($script:Params.ContainsKey("Sysprep")) {

@@ -4,6 +4,7 @@
     { "Name": "UserSelectionIndex", "Value": 0 },
     { "Name": "AppRemovalScopeIndex", "Value": 0 },
     { "Name": "CreateRestorePoint", "Value": true },
+    { "Name": "SkipRegistryBackup", "Value": false },
     { "Name": "RestartExplorer", "Value": false }
   ],
   "Tweaks": [

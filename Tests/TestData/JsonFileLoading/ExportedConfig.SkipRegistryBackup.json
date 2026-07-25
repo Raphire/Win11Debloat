@@ -1,0 +1,6 @@
+{
+  "Version": "1.0",
+  "Deployment": [
+    { "Name": "SkipRegistryBackup", "Value": true }
+  ]
+}

@@ -121,7 +121,7 @@ function Invoke-FeatureApply {
         'DisableStoreSearchSuggestions' {
             if ($script:Params.ContainsKey("Sysprep")) {
                 Write-Host "> Disabling Microsoft Store search suggestions in the start menu for all users..."
-                DisableStoreSearchSuggestionsForAllUsers
+                Set-StoreSearchSuggestionsDisabledForAllUsers
                 Write-Host ""
                 return
             }
@@ -159,7 +159,7 @@ function Invoke-FeatureUndo {
         'DisableStoreSearchSuggestions' {
             if ($script:Params.ContainsKey('Sysprep')) {
                 Write-Host "> Re-enabling Microsoft Store search suggestions in the start menu for all users..."
-                EnableStoreSearchSuggestionsForAllUsers
+                Set-StoreSearchSuggestionsEnabledForAllUsers
                 Write-Host ""
                 return
             }
@@ -302,8 +302,8 @@ function Invoke-UndoFeatures {
 
     .DESCRIPTION
         Sequenced in four phases:
-        1. Registry backup
-        2. System restore point
+        1. Registry backup (skipped when SkipRegistryBackup is present)
+        2. System restore point (skipped when CreateRestorePoint is absent)
         3. Apply phase - applies all selected features via Invoke-ApplyFeatures
         4. Undo phase - undoes selected features via Invoke-UndoFeatures
 
@@ -349,14 +349,14 @@ function Invoke-AllChanges {
 
     # ---- Calculate total progress steps ----
     $totalSteps = $applyIds.Count + $undoIds.Count
-    if ($needsBackup) { $totalSteps++ }
+    if ($needsBackup -and -not $script:Params.ContainsKey('SkipRegistryBackup')) { $totalSteps++ }
     if ($script:Params.ContainsKey("CreateRestorePoint")) { $totalSteps++ }
     $step = 0
 
     # ================================================================
     # Phase 1: Registry backup
     # ================================================================
-    if ($needsBackup) {
+    if ($needsBackup -and -not $script:Params.ContainsKey('SkipRegistryBackup')) {
         if ($script:CancelRequested) { return }
         $step++
         if ($script:ApplyProgressCallback) {

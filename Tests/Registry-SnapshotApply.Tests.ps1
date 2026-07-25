@@ -118,6 +118,14 @@ Describe 'Convert-RegistryKeyToSnapshot' {
         $snapshot.SubKeys[0].Values[0].Data | Should -Be 'data'
         $child.Closed | Should -BeTrue
     }
+
+    It 'fails instead of silently omitting an unreadable child key' {
+        $root = New-FakeRegistryKey -Children @{ Locked = $null }
+
+        {
+            Convert-RegistryKeyToSnapshot -RegistryKey $root -FullPath $root.Name -CaptureAllValues:$true -IncludeSubKeys:$true
+        } | Should -Throw '*Unable to read registry subkey*The backup was not created*'
+    }
 }
 
 Describe 'Get-RegistryKeySnapshot' {
@@ -201,5 +209,28 @@ Describe 'Restore-RegistryKeySnapshot - mutation flow' {
 
         $key.SetCalls | Should -HaveCount 1
         $key.Closed | Should -BeTrue
+    }
+}
+
+Describe 'Test-RegistryKeySnapshotCanBeRestored' {
+    It 'rejects invalid value data before the live registry is touched' {
+        $snapshot = [PSCustomObject]@{
+            Path = 'HKEY_CURRENT_USER\Software\Example'; Exists = $true
+            Values = @([PSCustomObject]@{ Name = 'TooLarge'; Exists = $true; Kind = 'DWord'; Data = 4294967296 })
+            SubKeys = @()
+        }
+
+        { Test-RegistryKeySnapshotCanBeRestored -Snapshot $snapshot } |
+            Should -Throw '*Value was either too large or too small*'
+    }
+
+    It 'rejects a descendant that is not directly below its declared parent' {
+        $snapshot = [PSCustomObject]@{
+            Path = 'HKEY_CURRENT_USER\Software\Example'; Exists = $true; Values = @()
+            SubKeys = @([PSCustomObject]@{ Path = 'HKEY_CURRENT_USER\Software\Example\Nested\Child'; Exists = $true; Values = @(); SubKeys = @() })
+        }
+
+        { Test-RegistryKeySnapshotCanBeRestored -Snapshot $snapshot } |
+            Should -Throw "*is not directly below parent*"
     }
 }

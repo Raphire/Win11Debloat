@@ -10,6 +10,7 @@ param (
     [Alias('NoRestartExplorer')]
     [switch]$SkipExplorerRestart,
     [switch]$CreateRestorePoint,
+    [switch]$SkipRegistryBackup,
     [switch]$RunDefaults,
     [switch]$RunDefaultsLite,
     [switch]$RunSavedSettings,

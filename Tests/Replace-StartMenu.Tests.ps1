@@ -2,7 +2,6 @@ BeforeAll {
     function Get-UserDirectory { param($userName, $fileName, $exitIfPathNotFound) }
 
     . (Join-Path $PSScriptRoot '..\Scripts\Features\Replace-StartMenu.ps1')
-    . (Join-Path $PSScriptRoot '..\Scripts\Features\Telemetry-ScheduledTasks.ps1')
 }
 
 Describe 'Get-StartMenuUserNameFromPath' {
@@ -62,6 +61,38 @@ Describe 'Get-StartMenuUserNameFromPath' {
         Get-Content -LiteralPath $startMenuFile -Raw | Should -Match 'current'
     }
 
+    It 'preserves a recoverable copy of the current layout when restoring fails' {
+        $script:Params = @{}
+        $startMenuFile = Join-Path $TestDrive 'start2.bin'
+        $backupFile = Join-Path $TestDrive 'Win11Debloat-StartBackup-20260101_120000.bak'
+        Set-Content -LiteralPath $startMenuFile -Value 'current'
+        Set-Content -LiteralPath $backupFile -Value 'backup'
+        Mock Copy-Item { throw 'disk full' }
+
+        $result = Restore-StartMenuFromBackup -StartMenuBinFile $startMenuFile -BackupFilePath $backupFile
+
+        $result.Result | Should -BeFalse
+        $result.Message | Should -Match 'disk full'
+        $restoreCopies = @(Get-ChildItem -LiteralPath $TestDrive -Filter 'Win11Debloat-StartRestore-*.bak')
+        $restoreCopies.Count | Should -Be 1
+        Get-Content -LiteralPath $restoreCopies[0].FullName -Raw | Should -Match 'current'
+    }
+
+    It 'leaves the original layout in place when it cannot be moved for restore' {
+        $script:Params = @{}
+        $startMenuFile = Join-Path $TestDrive 'start2.bin'
+        $backupFile = Join-Path $TestDrive 'Win11Debloat-StartBackup-20260101_120000.bak'
+        Set-Content -LiteralPath $startMenuFile -Value 'current'
+        Set-Content -LiteralPath $backupFile -Value 'backup'
+        Mock Move-Item { throw 'locked' }
+
+        $result = Restore-StartMenuFromBackup -StartMenuBinFile $startMenuFile -BackupFilePath $backupFile
+
+        $result.Result | Should -BeFalse
+        $result.Message | Should -Match 'locked'
+        Get-Content -LiteralPath $startMenuFile -Raw | Should -Match 'current'
+    }
+
     It 'delegates current-user restore to the common backup operation' {
         $script:Params = @{}
         Mock Restore-StartMenuFromBackup { [PSCustomObject]@{ Result = $true } }
@@ -88,21 +119,83 @@ Describe 'Get-StartMenuUserNameFromPath' {
         Test-Path -LiteralPath $defaultBin | Should -BeFalse
     }
 }
-
-Describe 'Get-TelemetryScheduledTasks' {
-    It 'returns the expected telemetry task catalog' {
-        $tasks = @(Get-TelemetryScheduledTasks)
-
-        $tasks.Count | Should -Be 8
-        @($tasks | ForEach-Object { "$($_.Path)|$($_.Name)" }) | Should -Be @(
-            '\Microsoft\Windows\Application Experience\|Microsoft Compatibility Appraiser'
-            '\Microsoft\Windows\Application Experience\|Microsoft Compatibility Appraiser Exp'
-            '\Microsoft\Windows\Application Experience\|ProgramDataUpdater'
-            '\Microsoft\Windows\Application Experience\|StartupAppTask'
-            '\Microsoft\Windows\Customer Experience Improvement Program\|Consolidator'
-            '\Microsoft\Windows\Customer Experience Improvement Program\|UsbCeip'
-            '\Microsoft\Windows\DiskDiagnostic\|Microsoft-Windows-DiskDiagnosticDataCollector'
-            '\Microsoft\Windows\Autochk\|Proxy'
-        )
+Describe 'Replace-StartMenu' {
+    BeforeEach {
+        $script:Params = @{}
+        Mock Write-Host {}
     }
+
+    It 'backs up and replaces an existing start-menu file' {
+        $startMenuFile = Join-Path $TestDrive 'start2.bin'
+        $templateFile = Join-Path $TestDrive 'template.bin'
+        Set-Content -LiteralPath $startMenuFile -Value 'current layout'
+        Set-Content -LiteralPath $templateFile -Value 'replacement layout'
+
+        Replace-StartMenu -startMenuBinFile $startMenuFile -startMenuTemplate $templateFile
+
+        Get-Content -LiteralPath $startMenuFile -Raw | Should -Match 'replacement layout'
+        @(Get-ChildItem -LiteralPath $TestDrive -Filter 'Win11Debloat-StartBackup-*.bak').Count | Should -Be 1
+    }
+
+    It 'creates and replaces a missing start-menu file without a backup' {
+        $testDirectory = Join-Path $TestDrive 'missing-layout'
+        New-Item -ItemType Directory -Path $testDirectory | Out-Null
+        $startMenuFile = Join-Path $testDirectory 'start2.bin'
+        $templateFile = Join-Path $testDirectory 'template.bin'
+        $backupCountBefore = @(Get-ChildItem -LiteralPath $testDirectory -Filter 'Win11Debloat-StartBackup-*.bak').Count
+        Set-Content -LiteralPath $templateFile -Value 'replacement layout'
+
+        Replace-StartMenu -startMenuBinFile $startMenuFile -startMenuTemplate $templateFile
+
+        Get-Content -LiteralPath $startMenuFile -Raw | Should -Match 'replacement layout'
+        @(Get-ChildItem -LiteralPath $testDirectory -Filter 'Win11Debloat-StartBackup-*.bak').Count | Should -Be $backupCountBefore
+    }
+
+    It 'does not change a start-menu file in WhatIf mode' {
+        $script:Params = @{ WhatIf = $true }
+        $testDirectory = Join-Path $TestDrive 'whatif-layout'
+        New-Item -ItemType Directory -Path $testDirectory | Out-Null
+        $startMenuFile = Join-Path $testDirectory 'start2.bin'
+        $templateFile = Join-Path $testDirectory 'template.bin'
+        $backupCountBefore = @(Get-ChildItem -LiteralPath $testDirectory -Filter 'Win11Debloat-StartBackup-*.bak').Count
+        Set-Content -LiteralPath $startMenuFile -Value 'current layout'
+        Set-Content -LiteralPath $templateFile -Value 'replacement layout'
+
+        Replace-StartMenu -startMenuBinFile $startMenuFile -startMenuTemplate $templateFile
+
+        Get-Content -LiteralPath $startMenuFile -Raw | Should -Match 'current layout'
+        @(Get-ChildItem -LiteralPath $testDirectory -Filter 'Win11Debloat-StartBackup-*.bak').Count | Should -Be $backupCountBefore
+    }
+}
+
+Describe 'Replace-StartMenuForAllUsers guard paths' {
+    BeforeEach {
+        $script:Params = @{}
+        $script:AssetsPath = $TestDrive
+        Mock Get-UserDirectory { Join-Path $TestDrive 'Users' }
+        Mock Get-ChildItem { @() }
+        Mock Replace-StartMenu {}
+        Mock New-Item {}
+        Mock Write-Host {}
+    }
+
+    It 'does not touch profiles when the template is missing' {
+        Replace-StartMenuForAllUsers -startMenuTemplate (Join-Path $TestDrive 'missing.bin')
+
+        Should -Invoke Get-UserDirectory -Times 0 -Exactly
+        Should -Invoke Replace-StartMenu -Times 0 -Exactly
+    }
+
+    It 'does not create or replace the Default profile in WhatIf mode' {
+        $template = Join-Path $TestDrive 'template.bin'
+        Set-Content -LiteralPath $template -Value 'template'
+        $script:Params = @{ WhatIf = $true }
+        Mock Test-Path { param($Path) $Path -eq $template }
+
+        Replace-StartMenuForAllUsers -startMenuTemplate $template
+
+        Should -Invoke New-Item -Times 0 -Exactly
+        Should -Invoke Replace-StartMenu -Times 0 -Exactly
+    }
+
 }

@@ -5,7 +5,7 @@ BeforeAll {
     function Enable-TelemetryScheduledTasks {}
     function Generate-AppsList { @() }
     function Get-FriendlyTargetUserName { 'current user' }
-    function EnableStoreSearchSuggestionsForAllUsers {}
+    function Set-StoreSearchSuggestionsEnabledForAllUsers {}
     function Set-StoreSearchSuggestionsEnabled { param($StoreAppsDatabase) }
     function Get-StoreAppsDatabasePathForUser { param($UserName) 'store.db' }
     function Get-UserName { 'Alice' }
@@ -16,7 +16,7 @@ BeforeAll {
     function Get-StartMenuBinPathForUser { param($UserName) 'start.bin' }
     function Replace-StartMenu { param($startMenuBinFile, $startMenuTemplate) }
     function Replace-StartMenuForAllUsers { param($startMenuTemplate) }
-    function DisableStoreSearchSuggestionsForAllUsers {}
+    function Set-StoreSearchSuggestionsDisabledForAllUsers {}
     function Set-StoreSearchSuggestionsDisabled { param($StoreAppsDatabase) }
 
     . (Join-Path $PSScriptRoot '..\Scripts\Features\Invoke-Changes.ps1')
@@ -70,7 +70,7 @@ Describe 'Invoke-FeatureApply' {
         Mock Get-UserName { 'Alice' }
         Mock Replace-StartMenu {}
         Mock Replace-StartMenuForAllUsers {}
-        Mock DisableStoreSearchSuggestionsForAllUsers {}
+        Mock Set-StoreSearchSuggestionsDisabledForAllUsers {}
         Mock Set-StoreSearchSuggestionsDisabled {}
         Mock Get-StoreAppsDatabasePathForUser { 'store.db' }
         Mock Get-Process { @() }
@@ -173,7 +173,7 @@ Describe 'Invoke-FeatureApply' {
         $script:Params = @{ Sysprep = $true }
         Invoke-FeatureApply -FeatureId 'DisableStoreSearchSuggestions'
 
-        Should -Invoke DisableStoreSearchSuggestionsForAllUsers -Times 1 -Exactly
+        Should -Invoke Set-StoreSearchSuggestionsDisabledForAllUsers -Times 1 -Exactly
         Should -Invoke Set-StoreSearchSuggestionsDisabled -Times 0 -Exactly
     }
 }
@@ -246,7 +246,7 @@ Describe 'Invoke-FeatureUndo' {
             DisableTelemetry = [PSCustomObject]@{}
             DisableStoreSearchSuggestions = [PSCustomObject]@{}
         }
-        Mock EnableStoreSearchSuggestionsForAllUsers {}
+        Mock Set-StoreSearchSuggestionsEnabledForAllUsers {}
         Mock Set-StoreSearchSuggestionsEnabled {}
         Mock Get-StoreAppsDatabasePathForUser { 'store.db' }
         Mock Get-UserName { 'Alice' }
@@ -261,7 +261,7 @@ Describe 'Invoke-FeatureUndo' {
     ) {
         $script:Params = $Params
         Invoke-FeatureUndo -FeatureId 'DisableStoreSearchSuggestions'
-        Should -Invoke EnableStoreSearchSuggestionsForAllUsers -Times $AllUsers -Exactly
+        Should -Invoke Set-StoreSearchSuggestionsEnabledForAllUsers -Times $AllUsers -Exactly
         Should -Invoke Set-StoreSearchSuggestionsEnabled -Times $CurrentUser -Exactly -ParameterFilter { $StoreAppsDatabase -eq 'store.db' }
     }
 

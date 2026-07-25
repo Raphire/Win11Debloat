@@ -9,7 +9,7 @@
     suggestions in the start menu search pane.
 
     .EXAMPLE
-    DisableStoreSearchSuggestionsForAllUsers
+    Set-StoreSearchSuggestionsDisabledForAllUsers
 #>
 function Set-StoreSearchSuggestionsDisabledForAllUsers {
     # Get path to Store app database for all users
@@ -93,7 +93,7 @@ function Set-StoreSearchSuggestionsDisabled {
     where Store search suggestions appear in the start menu.
 
     .EXAMPLE
-    EnableStoreSearchSuggestionsForAllUsers
+    Set-StoreSearchSuggestionsEnabledForAllUsers
 #>
 function Set-StoreSearchSuggestionsEnabledForAllUsers {
     # Get path to Store app database for all users

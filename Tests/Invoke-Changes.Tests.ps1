@@ -132,13 +132,21 @@ Describe 'Invoke-FeatureApply' {
         Should -Invoke Stop-Process -Times 0 -Exactly
     }
 
-    It 'stops widget processes before removing widget packages outside WhatIf mode' {
+    It 'stops widget processes before removing widget packages' {
         $widget = [PSCustomObject]@{ Name = 'WidgetService' }
         Mock Get-Process { $widget }
 
         Invoke-FeatureApply -FeatureId 'DisableWidgets'
 
         Should -Invoke Stop-Process -Times 1 -Exactly
+    }
+
+    It 'stops widget processes without a confirmation prompt' {
+        Mock Get-Process { [PSCustomObject]@{ Name = 'Widgets' } }
+
+        Invoke-FeatureApply -FeatureId 'DisableWidgets'
+
+        Should -Invoke Stop-Process -Times 1 -Exactly -ParameterFilter { $Force -and $ErrorAction -eq 'SilentlyContinue' }
     }
 
     It 'enables the expected optional Windows features' {

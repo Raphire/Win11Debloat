@@ -11,27 +11,44 @@ function Get-NormalizedRegistryValueName {
     return [string]$ValueName
 }
 
+<#
+    .SYNOPSIS
+        Converts a parsed .reg operation into a Name/Kind/Value set for RegistryKey.SetValue.
+#>
 function Convert-RegOperationToValueKind {
     param(
         [Parameter(Mandatory)]
         $Operation
     )
 
-    $valueName = if ([string]::IsNullOrEmpty([string]$Operation.ValueName)) { '' } else { [string]$Operation.ValueName }
+    $valueName = Get-NormalizedRegistryValueName -ValueName $Operation.ValueName
     $valueType = [string]$Operation.ValueType
     $operationKeyPath = [string]$Operation.KeyPath
 
+    # ValueType here is whatever Get-RegFileOperations parsed it as.
+    # Hex2/Hex7 are its names for REG_EXPAND_SZ/REG_MULTI_SZ, already decoded to string/string[].
     switch ($valueType) {
         'DWord' {
             $unsigned = [uint32]$Operation.ValueData
             $value = [BitConverter]::ToInt32([BitConverter]::GetBytes($unsigned), 0)
             return @{ Name = $valueName; Kind = [Microsoft.Win32.RegistryValueKind]::DWord; Value = $value }
         }
+        'QWord' {
+            $unsigned = [uint64]$Operation.ValueData
+            $value = [BitConverter]::ToInt64([BitConverter]::GetBytes($unsigned), 0)
+            return @{ Name = $valueName; Kind = [Microsoft.Win32.RegistryValueKind]::QWord; Value = $value }
+        }
         'String' {
             return @{ Name = $valueName; Kind = [Microsoft.Win32.RegistryValueKind]::String; Value = [string]$Operation.ValueData }
         }
+        'Hex2' {
+            return @{ Name = $valueName; Kind = [Microsoft.Win32.RegistryValueKind]::ExpandString; Value = [string]$Operation.ValueData }
+        }
         'Binary' {
             return @{ Name = $valueName; Kind = [Microsoft.Win32.RegistryValueKind]::Binary; Value = [byte[]]$Operation.ValueData }
+        }
+        'Hex7' {
+            return @{ Name = $valueName; Kind = [Microsoft.Win32.RegistryValueKind]::MultiString; Value = [string[]]@($Operation.ValueData) }
         }
         default {
             throw "Unsupported value type '$valueType' while applying reg operation for '$operationKeyPath'"

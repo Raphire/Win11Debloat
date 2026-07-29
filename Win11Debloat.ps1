@@ -114,12 +114,15 @@ if ($PSVersionTable.PSEdition -eq 'Core') {
     exit 1
 }
 
-# Remove the Mark-of-the-Web (Zone.Identifier) from all files in the script folder so the
-# dot-sourced scripts load without per-file security prompts. The stream is added when the
-# ZIP is downloaded with a browser and extracted with Explorer, and a Group-Policy-scoped
+# Remove the Mark-of-the-Web (Zone.Identifier) from the PowerShell script files so they
+# dot-source without per-file security prompts. The stream is added when the ZIP is
+# downloaded with a browser and extracted with Explorer, and a Group-Policy-scoped
 # execution policy overrides the -ExecutionPolicy Bypass that Run.bat passes, so launcher
-# flags alone cannot prevent the prompts. See issue #720.
-Get-ChildItem -Path $PSScriptRoot -Recurse -File | Unblock-File -ErrorAction SilentlyContinue
+# flags alone cannot prevent the prompts. Only script/module files are unblocked -- other
+# file types are not affected by the mark and keep their zone information. See issue #720.
+Get-ChildItem -Path $PSScriptRoot -Recurse -File |
+    Where-Object { $_.Extension -in '.ps1', '.psm1', '.psd1' } |
+    Unblock-File -ErrorAction SilentlyContinue
 
 # Check if script is running as administrator
 $isAdmin = ([Security.Principal.WindowsPrincipal] `

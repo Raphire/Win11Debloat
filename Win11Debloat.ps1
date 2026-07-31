@@ -118,11 +118,20 @@ if ($PSVersionTable.PSEdition -eq 'Core') {
 # dot-source without per-file security prompts. The stream is added when the ZIP is
 # downloaded with a browser and extracted with Explorer, and a Group-Policy-scoped
 # execution policy overrides the -ExecutionPolicy Bypass that Run.bat passes, so launcher
-# flags alone cannot prevent the prompts. Only script/module files are unblocked -- other
-# file types are not affected by the mark and keep their zone information. See issue #720.
-Get-ChildItem -Path $PSScriptRoot -Recurse -File |
-    Where-Object { $_.Extension -in '.ps1', '.psm1', '.psd1' } |
-    Unblock-File -ErrorAction SilentlyContinue
+# flags alone cannot prevent the prompts. Only run when this file itself is still marked
+# (skips the recursive sweep on every normal launch once the folder is already clean) and
+# never in -WhatIf mode. Only script/module files are unblocked -- other file types are not
+# affected by the mark and keep their zone information. See issue #720.
+if (-not $WhatIfPreference) {
+    $selfBlocked = [bool](Get-Item -LiteralPath $PSCommandPath -Stream * -ErrorAction SilentlyContinue |
+        Where-Object { $_.Stream -eq 'Zone.Identifier' })
+
+    if ($selfBlocked) {
+        Get-ChildItem -Path $PSScriptRoot -Recurse -File |
+            Where-Object { $_.Extension -in '.ps1', '.psm1', '.psd1' } |
+            Unblock-File -ErrorAction SilentlyContinue
+    }
+}
 
 # Check if script is running as administrator
 $isAdmin = ([Security.Principal.WindowsPrincipal] `

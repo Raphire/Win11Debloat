@@ -470,13 +470,13 @@
                                     <Path x:Name="LogoFallback" Data="M0,0 L80,0 L80,80 L0,80 Z M90,0 L170,0 L170,80 L90,80 Z M0,90 L80,90 L80,170 L0,170 Z M90,90 L170,90 L170,170 L90,170 Z" 
                                         Fill="{DynamicResource ButtonBgColor}" Stretch="Uniform" Margin="10"/>
                                     <!-- Sparkle effects -->
-                                    <Canvas HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="50" Height="50" Margin="0,0,2,2">
-                                        <Path Canvas.Left="10" Canvas.Top="16" Data="M12,0 L14,10 L24,12 L14,14 L12,24 L10,14 L0,12 L10,10 Z" 
-                                              Fill="{DynamicResource AppAccentColor}" Width="40" Height="40" Stretch="Uniform"/>
+                                    <Canvas HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="80" Height="80" Margin="0,0,2,2">
+                                        <Path Canvas.Left="12" Canvas.Top="32" Data="M12,0 L14,10 L24,12 L14,14 L12,24 L10,14 L0,12 L10,10 Z" 
+                                              Fill="{DynamicResource AppAccentColor}" Width="60" Height="60" Stretch="Uniform"/>
                                         <Path Canvas.Left="0" Canvas.Top="0" Data="M6,0 L7,5 L12,6 L7,7 L6,12 L5,7 L0,6 L5,5 Z" 
-                                              Fill="{DynamicResource AppAccentColor}" Width="22" Height="22" Stretch="Uniform"/>
-                                        <Path Canvas.Left="35" Canvas.Top="8" Data="M4,0 L5,3 L8,4 L5,5 L4,8 L3,5 L0,4 L3,3 Z" 
-                                              Fill="{DynamicResource AppAccentColor}" Width="17" Height="17" Stretch="Uniform"/>
+                                              Fill="{DynamicResource AppAccentColor}" Width="40" Height="40" Stretch="Uniform"/>
+                                        <Path Canvas.Left="55" Canvas.Top="16" Data="M4,0 L5,3 L8,4 L5,5 L4,8 L3,5 L0,4 L3,3 Z" 
+                                              Fill="{DynamicResource AppAccentColor}" Width="25" Height="25" Stretch="Uniform"/>
                                     </Canvas>
                                 </Grid>
                             </Viewbox>

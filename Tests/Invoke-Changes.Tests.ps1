@@ -413,32 +413,36 @@ Describe 'Invoke-AllChanges' {
         Should -Invoke Invoke-UndoFeatures -Times 0 -Exactly
     }
 
-    It 'rolls back to the pre-execution backup when a registry import fails' {
+    It 'points to the pre-execution backup instead of auto-restoring it when a registry import fails' {
         $backupPath = Join-Path $TestDrive 'regbackup.json'
         Set-Content -LiteralPath $backupPath -Value '{}'
         Mock New-RegistrySettingsBackup { $backupPath }
         Mock Invoke-ApplyFeatures { $script:RegistryImportFailures = 1 }
-        Mock Import-RegistryBackup { @{} }
+        Mock Import-RegistryBackup {}
         Mock Restore-RegistryBackupState {}
         Mock Write-Error {}
         Mock Write-Warning {}
 
         { Invoke-AllChanges } | Should -Throw '*Registry import failed while applying features*'
 
-        Should -Invoke Import-RegistryBackup -Times 1 -Exactly -ParameterFilter { $FilePath -eq $backupPath }
-        Should -Invoke Restore-RegistryBackupState -Times 1 -Exactly
+        Should -Invoke Import-RegistryBackup -Times 0 -Exactly
+        Should -Invoke Restore-RegistryBackupState -Times 0 -Exactly
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -like "*$backupPath*" }
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -like "*Restore Backup*" }
     }
 
-    It 'does not attempt a rollback when the registry backup was skipped' {
+    It 'does not reference a backup location when the registry backup was skipped' {
         $script:Params['SkipRegistryBackup'] = $true
         Mock Invoke-ApplyFeatures { $script:RegistryImportFailures = 1 }
         Mock Import-RegistryBackup {}
         Mock Restore-RegistryBackupState {}
         Mock Write-Error {}
+        Mock Write-Warning {}
 
         { Invoke-AllChanges } | Should -Throw '*Registry import failed while applying features*'
 
         Should -Invoke Import-RegistryBackup -Times 0 -Exactly
         Should -Invoke Restore-RegistryBackupState -Times 0 -Exactly
+        Should -Invoke Write-Warning -Times 0 -Exactly
     }
 }

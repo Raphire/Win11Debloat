@@ -405,8 +405,12 @@ function Invoke-AllChanges {
     }
 
     # ================================================================
-    # Phase 3 & 4: Apply and undo features, with automatic registry
-    # rollback to the pre-execution backup if a registry import fails.
+    # Phase 3 & 4: Apply and undo features. On a registry import failure,
+    # point the user at the pre-execution backup rather than reverting it
+    # automatically -- an unattended rollback can hit the same access
+    # failure that broke the apply in the first place, and reverting
+    # registry state without asking is not a call the script should make
+    # for the user.
     # ================================================================
     $initialFailures = $script:RegistryImportFailures
     try {
@@ -434,15 +438,8 @@ function Invoke-AllChanges {
         Write-Error "Execution failed: $_"
 
         if ($backupFile -and (Test-Path -LiteralPath $backupFile)) {
-            Write-Warning "Attempting automatic registry rollback using backup: $backupFile"
-            try {
-                $backupData = Import-RegistryBackup -FilePath $backupFile
-                Restore-RegistryBackupState -Backup $backupData
-                Write-Host "Registry successfully rolled back to pre-execution state." -ForegroundColor Green
-            }
-            catch {
-                Write-Error "Registry rollback failed: $_"
-            }
+            Write-Warning "A pre-execution registry backup was saved to: $backupFile"
+            Write-Warning "Use the 'Restore Backup' option in the app to revert the changes made in this run."
         }
 
         throw

@@ -2,7 +2,7 @@ BeforeAll {
     function Get-TargetUserForAppRemoval { 'AllUsers' }
     function Get-WingetInstalledApps { param($TimeOut, [switch]$NonBlocking) @() }
     function Test-AppInWingetList { param($appId, $InstalledList) $false }
-    function Invoke-NonBlocking { param($ScriptBlock, $ArgumentList) }
+    function Invoke-NonBlocking { param($ScriptBlock, $ArgumentList, $TimeoutSeconds) }
     function Get-UserName { 'Alice' }
     function Invoke-ForceRemoveEdge {}
     function Show-MessageBox { 'No' }
@@ -108,6 +108,22 @@ Describe 'Remove-WinGetApp' {
         Remove-WinGetApp -app 'One.App'
         Should -Invoke Invoke-NonBlocking -Times 1 -Exactly -ParameterFilter { $ArgumentList -eq 'One.App' }
         Should -Invoke Set-RunOnceWingetTask -Times $Scheduled -Exactly -ParameterFilter { $appId -eq 'One.App' }
+    }
+
+    It 'limits a foreground winget uninstall to two minutes' {
+        Remove-WinGetApp -app 'One.App'
+        Should -Invoke Invoke-NonBlocking -Times 1 -Exactly -ParameterFilter {
+            $ArgumentList -eq 'One.App' -and $TimeoutSeconds -eq 120
+        }
+    }
+
+    It 'reports a timed-out winget uninstall and continues' {
+        Mock Invoke-NonBlocking { throw 'Operation timed out after 120 seconds' }
+
+        { Remove-WinGetApp -app 'One.App' } | Should -Not -Throw
+        Should -Invoke Write-Host -Times 1 -Exactly -ParameterFilter {
+            $Object -like '*did not complete within 120 seconds*' -and $ForegroundColor -eq 'Red'
+        }
     }
 }
 

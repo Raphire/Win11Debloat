@@ -96,24 +96,42 @@ function Remove-SelectedApps {
     Uninstalls an app via WinGet and/or schedules its removal.
 
     .DESCRIPTION
-    Runs winget uninstall for a single app. If the User or Sysprep
-    parameter was passed, also schedules removal for future logins.
+    Runs winget uninstall for a single app, with a bounded execution time.
+    If the User or Sysprep parameter was passed, also schedules removal for
+    future logins.
 
     .PARAMETER app
     The WinGet package ID to uninstall (e.g. 'Microsoft.BingNews').
+
+    .PARAMETER TimeoutSeconds
+    Maximum time to allow the foreground WinGet uninstall to run. Defaults
+    to 120 seconds.
 #>
 function Remove-WinGetApp {
-    param([string]$app)
+    param(
+        [string]$app,
+        [int]$TimeoutSeconds = 120
+    )
 
     if (-not $script:WingetInstalled) {
         Write-Host "ERROR: WinGet is either not installed or is outdated, $app could not be removed" -ForegroundColor Red
         return
     }
 
-    Invoke-NonBlocking -ScriptBlock {
-        param($appId)
-        winget uninstall --accept-source-agreements --disable-interactivity --id $appId
-    } -ArgumentList $app
+    try {
+        Invoke-NonBlocking -ScriptBlock {
+            param($appId)
+            winget uninstall --accept-source-agreements --disable-interactivity --id $appId
+        } -ArgumentList $app -TimeoutSeconds $TimeoutSeconds
+    }
+    catch {
+        if ($_.Exception.Message -like 'Operation timed out after *') {
+            Write-Host "WinGet uninstall for $app did not complete within $TimeoutSeconds seconds: $_" -ForegroundColor Red
+        }
+        else {
+            Write-Host "WinGet uninstall for $app failed: $_" -ForegroundColor Red
+        }
+    }
 
     if ($script:Params.ContainsKey("User")) {
         Write-Host "Adding scheduled task to uninstall $app for user $(Get-UserName)..."

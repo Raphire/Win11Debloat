@@ -243,6 +243,37 @@ else {
     Start-Transcript -Path $script:DefaultLogPath -Append -IncludeInvocationHeader -Force | Out-Null
 }
 
+# When Group Policy overrides Run.bat's Process-scope Bypass, marked PowerShell source files
+# can prompt as they are dot-sourced. Outside -WhatIf, remove Mark-of-the-Web only from marked
+# .ps1, .psm1, and .psd1 files under Scripts; leave all other downloaded files untouched.
+# See issue #720.
+if (-not $WhatIfPreference) {
+    $gpoExecutionPolicySet = (Get-ExecutionPolicy -Scope MachinePolicy) -ne 'Undefined' -or
+        (Get-ExecutionPolicy -Scope UserPolicy) -ne 'Undefined'
+
+    if ($gpoExecutionPolicySet) {
+        $markedScriptFiles = @(Get-ChildItem -LiteralPath $scriptsPath -Recurse -File |
+            Where-Object { $_.Extension -in '.ps1', '.psm1', '.psd1' } |
+            Where-Object {
+                Get-Item -LiteralPath $_.FullName -Stream * -ErrorAction SilentlyContinue |
+                    Where-Object { $_.Stream -eq 'Zone.Identifier' }
+            })
+
+        if ($markedScriptFiles.Count -gt 0) {
+            Write-Host "Unblocking $($markedScriptFiles.Count) PowerShell file(s)..."
+            $unblockErrors = @()
+            $markedScriptFiles | Unblock-File -ErrorAction SilentlyContinue -ErrorVariable +unblockErrors
+
+            if ($unblockErrors.Count -gt 0) {
+                Write-Warning "Failed to unblock $($unblockErrors.Count) PowerShell file(s)."
+            }
+            else {
+                Write-Host "All files were unblocked successfully."
+            }
+        }
+    }
+}
+
 # Check if the device is domain-joined and warn the user (Group Policy may override changes)
 try {
     $computerSystem = Get-CimInstance Win32_ComputerSystem -ErrorAction SilentlyContinue

@@ -114,32 +114,6 @@ if ($PSVersionTable.PSEdition -eq 'Core') {
     exit 1
 }
 
-# Remove the Mark-of-the-Web (Zone.Identifier) from the PowerShell script files so they
-# dot-source without per-file security prompts. The stream is added when the ZIP is
-# downloaded with a browser and extracted with Explorer, and -ExecutionPolicy Bypass (Run.bat)
-# sets only the Process scope, which the MachinePolicy/UserPolicy scopes (Group Policy) outrank
-# -- so this can only matter when one of those two is actually set; for everyone else Bypass
-# already wins and this whole block, including the cheap self-mark check below, is skipped.
-# Never runs in -WhatIf mode. Only run when this file itself is still marked (skips the
-# recursive sweep on every normal launch once the folder is already clean). Only script/module
-# files are unblocked -- other file types are not affected by the mark and keep their zone
-# information. See issue #720.
-if (-not $WhatIfPreference) {
-    $gpoExecutionPolicySet = (Get-ExecutionPolicy -Scope MachinePolicy) -ne 'Undefined' -or
-        (Get-ExecutionPolicy -Scope UserPolicy) -ne 'Undefined'
-
-    if ($gpoExecutionPolicySet) {
-        $selfBlocked = [bool](Get-Item -LiteralPath $PSCommandPath -Stream * -ErrorAction SilentlyContinue |
-            Where-Object { $_.Stream -eq 'Zone.Identifier' })
-
-        if ($selfBlocked) {
-            Get-ChildItem -Path $PSScriptRoot -Recurse -File |
-                Where-Object { $_.Extension -in '.ps1', '.psm1', '.psd1' } |
-                Unblock-File -ErrorAction SilentlyContinue
-        }
-    }
-}
-
 # Check if script is running as administrator
 $isAdmin = ([Security.Principal.WindowsPrincipal] `
     [Security.Principal.WindowsIdentity]::GetCurrent()
@@ -267,6 +241,37 @@ if ($LogPath -and (Test-Path $LogPath)) {
 }
 else {
     Start-Transcript -Path $script:DefaultLogPath -Append -IncludeInvocationHeader -Force | Out-Null
+}
+
+# When Group Policy overrides Run.bat's Process-scope Bypass, marked PowerShell source files
+# can prompt as they are dot-sourced. Outside -WhatIf, remove Mark-of-the-Web only from marked
+# .ps1, .psm1, and .psd1 files under Scripts; leave all other downloaded files untouched.
+# See issue #720.
+if (-not $WhatIfPreference) {
+    $gpoExecutionPolicySet = (Get-ExecutionPolicy -Scope MachinePolicy) -ne 'Undefined' -or
+        (Get-ExecutionPolicy -Scope UserPolicy) -ne 'Undefined'
+
+    if ($gpoExecutionPolicySet) {
+        $markedScriptFiles = @(Get-ChildItem -LiteralPath $scriptsPath -Recurse -File |
+            Where-Object { $_.Extension -in '.ps1', '.psm1', '.psd1' } |
+            Where-Object {
+                Get-Item -LiteralPath $_.FullName -Stream * -ErrorAction SilentlyContinue |
+                    Where-Object { $_.Stream -eq 'Zone.Identifier' }
+            })
+
+        if ($markedScriptFiles.Count -gt 0) {
+            Write-Host "Unblocking $($markedScriptFiles.Count) PowerShell file(s)..."
+            $unblockErrors = @()
+            $markedScriptFiles | Unblock-File -ErrorAction SilentlyContinue -ErrorVariable +unblockErrors
+
+            if ($unblockErrors.Count -gt 0) {
+                Write-Warning "Failed to unblock $($unblockErrors.Count) PowerShell file(s)."
+            }
+            else {
+                Write-Host "All files were unblocked successfully."
+            }
+        }
+    }
 }
 
 # Check if the device is domain-joined and warn the user (Group Policy may override changes)

@@ -105,7 +105,7 @@ param (
     [switch]$HideDriveLetters
 )
 
-# Show error if current powershell environment does not have LanguageMode set to FullLanguage 
+# Show error if current powershell environment does not have LanguageMode set to FullLanguage
 if ($ExecutionContext.SessionState.LanguageMode -ne "FullLanguage") {
    Write-Host "Error: Win11Debloat is unable to run on your system. PowerShell execution is restricted by security policies" -ForegroundColor Red
    Write-Output ""
@@ -119,9 +119,7 @@ Write-Output "------------------------------------------------------------------
 Write-Output " Win11Debloat Script"
 Write-Output "-------------------------------------------------------------------------------------------"
 
-$tempRootPath = $env:TEMP
-$tempWorkPath = Join-Path $tempRootPath 'Win11Debloat'
-$tempArchivePath = Join-Path $tempRootPath 'win11debloat.zip'
+$tempArchivePath = Join-Path $env:TEMP 'win11debloat.zip'
 
 # Download Win11Debloat from GitHub as a zip archive.
 try {
@@ -142,63 +140,16 @@ catch {
     Exit
 }
 
-# Remove old script folder if it exists, but keep configs, logs and backups
-if (Test-Path $tempWorkPath) {
-    Write-Output ""
-    Write-Output "> Cleaning up old script files..."
-
-    Get-ChildItem -Path $tempWorkPath -Exclude Config,Logs,Backups | Remove-Item -Recurse -Force
-}
-
-$configDir = Join-Path $tempWorkPath 'Config'
-$backupDir = Join-Path $tempWorkPath 'ConfigOld'
-
-# Temporarily move existing config files if they exist to prevent them from being overwritten by the new script files, will be moved back after the new script is unpacked
-if (Test-Path "$configDir") {
-    Write-Output ""
-    Write-Output "> Backing up existing config files..."
-
-    New-Item -ItemType Directory -Path "$backupDir" -Force | Out-Null
-
-    $filesToKeep = @(
-        'LastUsedSettings.json'
-    )
-
-    Get-ChildItem -Path "$configDir" -Recurse | Where-Object { $_.Name -in $filesToKeep } | Move-Item -Destination "$backupDir"
-
-    Remove-Item "$configDir" -Recurse -Force
-}
-
-Write-Output ""
-Write-Output "> Unpacking..."
-
-# Unzip archive to Win11Debloat folder
-Expand-Archive $tempArchivePath $tempWorkPath
-
-# Remove archive
-Remove-Item $tempArchivePath
-
-# Move files
-Get-ChildItem -Path (Join-Path $tempWorkPath '*Win11Debloat-*') -Recurse | Move-Item -Destination $tempWorkPath
-
-# Add existing config files back to Config folder
-if (Test-Path "$backupDir") {
-    if (-not (Test-Path "$configDir")) {
-        New-Item -ItemType Directory -Path "$configDir" -Force | Out-Null
-    }
-
-    Write-Output ""
-    Write-Output "> Restoring existing config files..."
-
-    Get-ChildItem -Path "$backupDir" -Recurse | Move-Item -Destination "$configDir"
-    Remove-Item "$backupDir" -Recurse -Force
-}
+# Record the archive hash immediately after download. The hash is passed to the elevated
+# process, which re-verifies the archive after copying it into a protected directory. This
+# prevents a non-elevated process from swapping the files between download and elevated execution.
+$archiveHash = (Get-FileHash -LiteralPath $tempArchivePath -Algorithm SHA256).Hash
 
 # Make list of arguments to pass on to the script (exclude the -Dev switch, which only affects this launcher)
 $arguments = $($PSBoundParameters.GetEnumerator() | Where-Object { $_.Key -ne 'Dev' } | ForEach-Object {
     if ($_.Value -eq $true) {
         "-$($_.Key)"
-    } 
+    }
     else {
          "-$($_.Key) ""$($_.Value)"""
     }
@@ -221,22 +172,147 @@ if ($PSVersionTable.PSVersion.Major -ge 7) {
     $env:PSModulePath = $NewPSModulePath -join ';'
 }
 
-# Run Win11Debloat script with the provided arguments
-$debloatScriptPath = Join-Path $tempWorkPath 'Win11Debloat.ps1'
-$debloatProcess = Start-Process powershell.exe -WindowStyle $windowStyle -PassThru -ArgumentList "-executionpolicy bypass -File `"$debloatScriptPath`" $arguments" -Verb RunAs
-
-# Wait for the process to finish before continuing
-if ($null -ne $debloatProcess) {
-    $debloatProcess.WaitForExit()
+# Escapes a value for embedding inside a single-quoted PowerShell string literal
+function Format-EmbeddedLiteral([string]$Value) {
+    return "'" + ($Value -replace "'", "''") + "'"
 }
 
-# Remove all remaining script files, except for configs, logs and backups
-if (Test-Path $tempWorkPath) {
+# The bootstrap below runs elevated. It stages, verifies and executes the script inside a
+# directory that only Administrators and SYSTEM can write to, so that unpacked script files
+# cannot be tampered with by non-elevated processes before or during elevated execution.
+$bootstrapTemplate = @'
+$ErrorActionPreference = 'Stop'
+$archivePath = __ARCHIVE__
+$expectedHash = __HASH__
+$scriptArgs = __ARGS__
+$debloatWindowStyle = __WINDOWSTYLE__
+
+try {
+    $stagingRoot = Join-Path $env:ProgramData 'Win11Debloat'
+
+    if (-not (Test-Path -LiteralPath $stagingRoot)) {
+        New-Item -ItemType Directory -Path $stagingRoot | Out-Null
+    }
+
+    # Take ownership of the staging directory and restrict it to Administrators and SYSTEM.
+    # This also neutralizes a directory pre-created by a non-elevated process.
+    $adminSid = New-Object System.Security.Principal.SecurityIdentifier([System.Security.Principal.WellKnownSidType]::BuiltinAdministratorsSid, $null)
+    $systemSid = New-Object System.Security.Principal.SecurityIdentifier([System.Security.Principal.WellKnownSidType]::LocalSystemSid, $null)
+    $acl = New-Object System.Security.AccessControl.DirectorySecurity
+    $acl.SetOwner($adminSid)
+    $acl.SetAccessRuleProtection($true, $false)
+    foreach ($sid in @($adminSid, $systemSid)) {
+        $acl.AddAccessRule((New-Object System.Security.AccessControl.FileSystemAccessRule($sid, [System.Security.AccessControl.FileSystemRights]::FullControl, 'ContainerInherit,ObjectInherit', 'None', 'Allow')))
+    }
+    Set-Acl -Path $stagingRoot -AclObject $acl
+
+    # Copy the downloaded archive into the protected directory, then verify its integrity
+    $stagedArchive = Join-Path $stagingRoot 'win11debloat.zip'
+    Copy-Item -LiteralPath $archivePath -Destination $stagedArchive -Force
+
+    $actualHash = (Get-FileHash -LiteralPath $stagedArchive -Algorithm SHA256).Hash
+    if ($actualHash -ne $expectedHash) {
+        Remove-Item -LiteralPath $stagedArchive -Force
+        throw "Integrity check of the downloaded Win11Debloat archive failed. The file was modified after download, aborting for safety. (expected $expectedHash but got $actualHash)"
+    }
+
+    # One-time migration of configs, logs and backups from the old temp folder location
+    $legacyWorkPath = Join-Path $env:TEMP 'Win11Debloat'
+    foreach ($dirName in 'Config', 'Logs', 'Backups') {
+        $legacyDir = Join-Path $legacyWorkPath $dirName
+        $newDir = Join-Path $stagingRoot $dirName
+        if ((Test-Path $legacyDir) -and -not (Test-Path $newDir)) {
+            Copy-Item -Path $legacyDir -Destination $newDir -Recurse -Force
+        }
+    }
+
+    # Remove old script files if they exist, but keep configs, logs and backups
+    Write-Output "> Cleaning up old script files..."
+    Get-ChildItem -Path $stagingRoot -Exclude Config, Logs, Backups, win11debloat.zip | Remove-Item -Recurse -Force
+
+    $configDir = Join-Path $stagingRoot 'Config'
+    $backupDir = Join-Path $stagingRoot 'ConfigOld'
+
+    # Temporarily move existing config files to prevent them from being overwritten by the new script files
+    if (Test-Path $configDir) {
+        Write-Output ""
+        Write-Output "> Backing up existing config files..."
+
+        New-Item -ItemType Directory -Path $backupDir -Force | Out-Null
+
+        $filesToKeep = @(
+            'LastUsedSettings.json'
+        )
+
+        Get-ChildItem -Path $configDir -Recurse | Where-Object { $_.Name -in $filesToKeep } | Move-Item -Destination $backupDir
+        Remove-Item $configDir -Recurse -Force
+    }
+
+    Write-Output ""
+    Write-Output "> Unpacking..."
+
+    Expand-Archive -LiteralPath $stagedArchive -DestinationPath $stagingRoot -Force
+    Remove-Item -LiteralPath $stagedArchive -Force
+
+    # Move the contents of the extracted release folder up into the staging root
+    $extractedRoot = Get-ChildItem -Path $stagingRoot -Directory -Filter '*Win11Debloat-*' | Select-Object -First 1
+    if ($null -eq $extractedRoot) {
+        throw "The downloaded archive did not contain the expected Win11Debloat folder."
+    }
+    Get-ChildItem -Path $extractedRoot.FullName -Force | Move-Item -Destination $stagingRoot -Force
+    Remove-Item -LiteralPath $extractedRoot.FullName -Recurse -Force
+
+    # Add existing config files back to Config folder
+    if (Test-Path $backupDir) {
+        if (-not (Test-Path $configDir)) {
+            New-Item -ItemType Directory -Path $configDir -Force | Out-Null
+        }
+
+        Write-Output ""
+        Write-Output "> Restoring existing config files..."
+
+        Get-ChildItem -Path $backupDir -Recurse | Move-Item -Destination $configDir -Force
+        Remove-Item $backupDir -Recurse -Force
+    }
+
+    Write-Output ""
+    Write-Output "> Launching Win11Debloat..."
+
+    # Run Win11Debloat script with the provided arguments (already elevated)
+    $debloatScriptPath = Join-Path $stagingRoot 'Win11Debloat.ps1'
+    Start-Process powershell.exe -WindowStyle $debloatWindowStyle -Wait -ArgumentList "-executionpolicy bypass -File `"$debloatScriptPath`" $scriptArgs"
+
+    # Remove all remaining script files, except for configs, logs and backups
     Write-Output ""
     Write-Output "> Cleaning up..."
-
-    # Cleanup, remove Win11Debloat directory
-    Get-ChildItem -Path $tempWorkPath -Exclude Config,Logs,Backups | Remove-Item -Recurse -Force
+    Get-ChildItem -Path $stagingRoot -Exclude Config, Logs, Backups | Remove-Item -Recurse -Force
 }
+catch {
+    Write-Host "Error: $($_.Exception.Message)" -ForegroundColor Red
+    Write-Output ""
+    Write-Output "Press enter to exit..."
+    Read-Host | Out-Null
+    Exit 1
+}
+'@
+
+$bootstrap = $bootstrapTemplate.
+    Replace('__ARCHIVE__', (Format-EmbeddedLiteral $tempArchivePath)).
+    Replace('__HASH__', (Format-EmbeddedLiteral $archiveHash)).
+    Replace('__ARGS__', (Format-EmbeddedLiteral ($arguments -join ' '))).
+    Replace('__WINDOWSTYLE__', (Format-EmbeddedLiteral $windowStyle))
+
+$encodedBootstrap = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($bootstrap))
+
+# Elevate and run the bootstrap, which verifies, unpacks and launches Win11Debloat
+$elevatedProcess = Start-Process powershell.exe -PassThru -Verb RunAs -ArgumentList "-NoProfile -ExecutionPolicy Bypass -EncodedCommand $encodedBootstrap"
+
+# Wait for the process to finish before continuing
+if ($null -ne $elevatedProcess) {
+    $elevatedProcess.WaitForExit()
+}
+
+# Remove the downloaded archive from the user temp folder
+Remove-Item -LiteralPath $tempArchivePath -Force -ErrorAction SilentlyContinue
 
 Write-Output ""

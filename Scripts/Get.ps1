@@ -220,8 +220,22 @@ try {
         $programDataPath = [Environment]::GetFolderPath([Environment+SpecialFolder]::CommonApplicationData)
         $stagingRoot = Join-Path $programDataPath 'Win11Debloat'
 
-        # Refuse to follow a reparse point (junction/symlink) planted at the staging path.
-        # Delete the link entry itself without recursing into its target.
+        $adminSid = New-Object System.Security.Principal.SecurityIdentifier([System.Security.Principal.WellKnownSidType]::BuiltinAdministratorsSid, $null)
+        $systemSid = New-Object System.Security.Principal.SecurityIdentifier([System.Security.Principal.WellKnownSidType]::LocalSystemSid, $null)
+        $trustedOwnerSids = @($adminSid.Value, $systemSid.Value)
+
+        # Secure the staging directory against a staging-path swap (TOCTOU) by a non-elevated
+        # process. %ProgramData% is world-writable at the root, so an attacker could pre-plant a
+        # junction or a directory they own at this path. We close that as follows:
+        #   1. Reject and delete any reparse point (junction/symlink) at the path, without
+        #      following it into its target.
+        #   2. Refuse to adopt an existing real directory that is not already owned by
+        #      Administrators or SYSTEM - a non-elevated user's pre-created folder is owned by
+        #      that user, so a non-trusted owner means the directory is hostile.
+        #   3. Create the directory when absent and apply an Administrators/SYSTEM-only ACL.
+        #   4. Re-verify after the ACL is in place: because the ACL now blocks non-elevated
+        #      writers, a directory that is still a non-reparse, admin-owned directory here
+        #      could not have been swapped by an attacker during the securing sequence.
         $existingStaging = Get-Item -LiteralPath $stagingRoot -Force -ErrorAction SilentlyContinue
         if ($existingStaging -and ($existingStaging.Attributes -band [System.IO.FileAttributes]::ReparsePoint)) {
             if ($existingStaging.Attributes -band [System.IO.FileAttributes]::Directory) {
@@ -233,14 +247,17 @@ try {
             $existingStaging = $null
         }
 
-        if (-not $existingStaging) {
+        if ($existingStaging) {
+            $existingOwner = $existingStaging.GetAccessControl().GetOwner([System.Security.Principal.SecurityIdentifier]).Value
+            if ($trustedOwnerSids -notcontains $existingOwner) {
+                throw "Refusing to use staging directory '$stagingRoot': it already exists but is not owned by Administrators or SYSTEM (owner SID: $existingOwner). A non-elevated process may have created it. Remove it manually and re-run."
+            }
+        }
+        else {
             New-Item -ItemType Directory -Path $stagingRoot | Out-Null
         }
 
         # Take ownership of the staging directory and restrict it to Administrators and SYSTEM.
-        # This also neutralizes a directory pre-created by a non-elevated process.
-        $adminSid = New-Object System.Security.Principal.SecurityIdentifier([System.Security.Principal.WellKnownSidType]::BuiltinAdministratorsSid, $null)
-        $systemSid = New-Object System.Security.Principal.SecurityIdentifier([System.Security.Principal.WellKnownSidType]::LocalSystemSid, $null)
         $acl = New-Object System.Security.AccessControl.DirectorySecurity
         $acl.SetOwner($adminSid)
         $acl.SetAccessRuleProtection($true, $false)
@@ -248,6 +265,14 @@ try {
             $acl.AddAccessRule((New-Object System.Security.AccessControl.FileSystemAccessRule($sid, [System.Security.AccessControl.FileSystemRights]::FullControl, 'ContainerInherit,ObjectInherit', 'None', 'Allow')))
         }
         Set-Acl -Path $stagingRoot -AclObject $acl
+
+        # Post-securing verification: confirm the ACL landed on the intended object and not a
+        # reparse point swapped in during the sequence above
+        $securedStaging = Get-Item -LiteralPath $stagingRoot -Force
+        $securedOwner = $securedStaging.GetAccessControl().GetOwner([System.Security.Principal.SecurityIdentifier]).Value
+        if (($securedStaging.Attributes -band [System.IO.FileAttributes]::ReparsePoint) -or ($trustedOwnerSids -notcontains $securedOwner)) {
+            throw "Staging directory '$stagingRoot' failed post-securing verification and may have been tampered with. Aborting for safety."
+        }
 
         # Copy the downloaded archive into the protected directory, then verify its integrity
         $stagedArchive = Join-Path $stagingRoot 'win11debloat.zip'
@@ -367,11 +392,18 @@ $encodedBootstrap = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.Ge
 $elevatedProcess = Start-Process powershell.exe -PassThru -Verb RunAs -ArgumentList "-NoProfile -ExecutionPolicy Bypass -EncodedCommand $encodedBootstrap"
 
 # Wait for the process to finish before continuing
+$bootstrapExitCode = 0
 if ($null -ne $elevatedProcess) {
     $elevatedProcess.WaitForExit()
+    $bootstrapExitCode = $elevatedProcess.ExitCode
 }
 
 # Remove the downloaded archive from the user temp folder
 Remove-Item -LiteralPath $tempArchivePath -Force -ErrorAction SilentlyContinue
 
 Write-Output ""
+
+# Propagate a bootstrap failure (integrity, extraction, or script failure) as a nonzero exit code
+if ($bootstrapExitCode -ne 0) {
+    Exit $bootstrapExitCode
+}

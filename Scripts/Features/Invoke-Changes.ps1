@@ -352,6 +352,7 @@ function Invoke-AllChanges {
     if ($needsBackup -and -not $script:Params.ContainsKey('SkipRegistryBackup')) { $totalSteps++ }
     if ($script:Params.ContainsKey("CreateRestorePoint")) { $totalSteps++ }
     $step = 0
+    $backupFile = $null
 
     # ================================================================
     # Phase 1: Registry backup
@@ -375,7 +376,7 @@ function Invoke-AllChanges {
                         [PSCustomObject]@{ FeatureId = $_; RegistryKey = (Resolve-UndoRegFilePath $f.RegistryUndoKey) }
                     }
                 } | Where-Object { $_ })
-                New-RegistrySettingsBackup -ActionableKeys $applyIds -ExtraFeatures $undoSyntheticFeatures | Out-Null
+                $backupFile = New-RegistrySettingsBackup -ActionableKeys $applyIds -ExtraFeatures $undoSyntheticFeatures
             }
             catch {
                 throw "Registry backup failed before applying changes. $($_.Exception.Message)"
@@ -404,21 +405,44 @@ function Invoke-AllChanges {
     }
 
     # ================================================================
-    # Phase 3: Apply features
+    # Phase 3 & 4: Apply and undo features. On a registry import failure,
+    # point the user at the pre-execution backup rather than reverting it
+    # automatically -- an unattended rollback can hit the same access
+    # failure that broke the apply in the first place, and reverting
+    # registry state without asking is not a call the script should make
+    # for the user.
     # ================================================================
-    if ($applyIds.Count -gt 0) {
-        Invoke-ApplyFeatures -FeatureIds $applyIds -StartStep ($step + 1) -TotalSteps $totalSteps
-        $step += $applyIds.Count
+    $initialFailures = $script:RegistryImportFailures
+    try {
+        if ($applyIds.Count -gt 0) {
+            Invoke-ApplyFeatures -FeatureIds $applyIds -StartStep ($step + 1) -TotalSteps $totalSteps
+            $step += $applyIds.Count
+
+            if ($script:RegistryImportFailures -gt $initialFailures) {
+                throw "Registry import failed while applying features."
+            }
+        }
+
+        if ($script:CancelRequested) { return }
+
+        if ($undoIds.Count -gt 0) {
+            Invoke-UndoFeatures -FeatureIds $undoIds -StartStep ($step + 1) -TotalSteps $totalSteps
+            $step += $undoIds.Count
+
+            if ($script:RegistryImportFailures -gt $initialFailures) {
+                throw "Registry import failed while undoing features."
+            }
+        }
     }
+    catch {
+        Write-Error "Execution failed: $_"
 
-    if ($script:CancelRequested) { return }
+        if ($backupFile -and (Test-Path -LiteralPath $backupFile)) {
+            Write-Warning "A pre-execution registry backup was saved to: $backupFile"
+            Write-Warning "Use the 'Restore Backup' option in the app to revert the changes made in this run."
+        }
 
-    # ================================================================
-    # Phase 4: Undo features
-    # ================================================================
-    if ($undoIds.Count -gt 0) {
-        Invoke-UndoFeatures -FeatureIds $undoIds -StartStep ($step + 1) -TotalSteps $totalSteps
-        $step += $undoIds.Count
+        throw
     }
 
     # ================================================================

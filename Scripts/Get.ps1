@@ -119,32 +119,10 @@ Write-Output "------------------------------------------------------------------
 Write-Output " Win11Debloat Script"
 Write-Output "-------------------------------------------------------------------------------------------"
 
-# Use a unique archive name per invocation so concurrent launcher runs cannot overwrite each other's download
-$tempArchivePath = Join-Path $env:TEMP "win11debloat_$([guid]::NewGuid().ToString('N')).zip"
-
-# Download Win11Debloat from GitHub as a zip archive.
-try {
-    if ($Dev) {
-        Write-Output "> Downloading development version of Win11Debloat..."
-        $sourceUri = "https://github.com/Raphire/Win11Debloat/archive/refs/heads/master.zip"
-    } else {
-        Write-Output "> Downloading Win11Debloat..."
-        $sourceUri = (Invoke-RestMethod https://api.github.com/repos/Raphire/Win11Debloat/releases/latest).zipball_url
-    }
-    Invoke-RestMethod $sourceUri -OutFile $tempArchivePath
-}
-catch {
-    Write-Host "Error: Unable to fetch required files from GitHub. Please check your internet connection and try again." -ForegroundColor Red
-    Write-Output ""
-    Write-Output "Press enter to exit..."
-    Read-Host | Out-Null
-    Exit
-}
-
-# Record the archive hash immediately after download. The hash is passed to the elevated
-# process, which re-verifies the archive after copying it into a protected directory. This
-# prevents a non-elevated process from swapping the files between download and elevated execution.
-$archiveHash = (Get-FileHash -LiteralPath $tempArchivePath -Algorithm SHA256).Hash
+# The archive is downloaded by the elevated bootstrap directly into an Administrators/SYSTEM-only
+# staging directory, never into a location a non-elevated process can modify. A pre-elevation
+# download to %TEMP% would let an attacker swap the archive before use, and hashing it in the
+# non-elevated context would only fingerprint the attacker's file, so both are avoided entirely.
 
 # Make list of arguments to pass on to the script (exclude the -Dev switch, which only affects this launcher)
 $arguments = $($PSBoundParameters.GetEnumerator() | Where-Object { $_.Key -ne 'Dev' } | ForEach-Object {
@@ -191,16 +169,21 @@ function Format-EmbeddedLiteral([string]$Value) {
     return "'" + ($Value -replace "'", "''") + "'"
 }
 
-# The bootstrap below runs elevated. It stages, verifies and executes the script inside a
-# directory that only Administrators and SYSTEM can write to, so that unpacked script files
-# cannot be tampered with by non-elevated processes before or during elevated execution.
-$bootstrapTemplate = @'
-$ErrorActionPreference = 'Stop'
-$archivePath = __ARCHIVE__
-$expectedHash = __HASH__
-$scriptArgs = __ARGS__
-$debloatWindowStyle = __WINDOWSTYLE__
+# The bootstrap below runs elevated. It downloads, unpacks and executes the script inside a
+# directory that only Administrators and SYSTEM can write to, so that the archive and the unpacked
+# script files cannot be tampered with by non-elevated processes before or during elevated execution.
+#
+# Inputs are injected as a header of escaped single-quoted literals (built via Format-EmbeddedLiteral)
+# concatenated ahead of the static body. This avoids placeholder-token substitution, where an input
+# value that happened to contain a token string could be corrupted by a later replacement pass.
+$bootstrapHeader = @"
+`$ErrorActionPreference = 'Stop'
+`$isDev = $(if ($Dev) { '$true' } else { '$false' })
+`$scriptArgs = $(Format-EmbeddedLiteral ($arguments -join ' '))
+`$debloatWindowStyle = $(Format-EmbeddedLiteral $windowStyle)
+"@
 
+$bootstrapBody = @'
 try {
     # Serialize concurrent launcher invocations: the staging directory and the Config,
     # Logs and Backups folders inside it are shared between runs
@@ -274,14 +257,23 @@ try {
             throw "Staging directory '$stagingRoot' failed post-securing verification and may have been tampered with. Aborting for safety."
         }
 
-        # Copy the downloaded archive into the protected directory, then verify its integrity
+        # Download the archive over TLS directly into the protected directory. Because only
+        # Administrators and SYSTEM can write here, the archive cannot be swapped between download
+        # and use, so the TLS-authenticated GitHub download is the integrity boundary.
         $stagedArchive = Join-Path $stagingRoot 'win11debloat.zip'
-        Copy-Item -LiteralPath $archivePath -Destination $stagedArchive -Force
-
-        $actualHash = (Get-FileHash -LiteralPath $stagedArchive -Algorithm SHA256).Hash
-        if ($actualHash -ne $expectedHash) {
-            Remove-Item -LiteralPath $stagedArchive -Force
-            throw "Integrity check of the downloaded Win11Debloat archive failed. The file was modified after download, aborting for safety. (expected $expectedHash but got $actualHash)"
+        try {
+            if ($isDev) {
+                Write-Output "> Downloading development version of Win11Debloat..."
+                $sourceUri = "https://github.com/Raphire/Win11Debloat/archive/refs/heads/master.zip"
+            }
+            else {
+                Write-Output "> Downloading Win11Debloat..."
+                $sourceUri = (Invoke-RestMethod https://api.github.com/repos/Raphire/Win11Debloat/releases/latest).zipball_url
+            }
+            Invoke-RestMethod $sourceUri -OutFile $stagedArchive
+        }
+        catch {
+            throw "Unable to fetch required files from GitHub. Please check your internet connection and try again. ($($_.Exception.Message))"
         }
 
         # One-time migration of configs, logs and backups from the old temp folder location
@@ -380,15 +372,11 @@ catch {
 }
 '@
 
-$bootstrap = $bootstrapTemplate.
-    Replace('__ARCHIVE__', (Format-EmbeddedLiteral $tempArchivePath)).
-    Replace('__HASH__', (Format-EmbeddedLiteral $archiveHash)).
-    Replace('__ARGS__', (Format-EmbeddedLiteral ($arguments -join ' '))).
-    Replace('__WINDOWSTYLE__', (Format-EmbeddedLiteral $windowStyle))
+$bootstrap = $bootstrapHeader + "`n" + $bootstrapBody
 
 $encodedBootstrap = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($bootstrap))
 
-# Elevate and run the bootstrap, which verifies, unpacks and launches Win11Debloat
+# Elevate and run the bootstrap, which downloads, unpacks and launches Win11Debloat
 $elevatedProcess = Start-Process powershell.exe -PassThru -Verb RunAs -ArgumentList "-NoProfile -ExecutionPolicy Bypass -EncodedCommand $encodedBootstrap"
 
 # Wait for the process to finish before continuing
@@ -398,12 +386,9 @@ if ($null -ne $elevatedProcess) {
     $bootstrapExitCode = $elevatedProcess.ExitCode
 }
 
-# Remove the downloaded archive from the user temp folder
-Remove-Item -LiteralPath $tempArchivePath -Force -ErrorAction SilentlyContinue
-
 Write-Output ""
 
-# Propagate a bootstrap failure (integrity, extraction, or script failure) as a nonzero exit code
+# Propagate a bootstrap failure (download, integrity, extraction, or script failure) as a nonzero exit code
 if ($bootstrapExitCode -ne 0) {
     Exit $bootstrapExitCode
 }

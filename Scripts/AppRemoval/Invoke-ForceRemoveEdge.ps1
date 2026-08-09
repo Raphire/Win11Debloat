@@ -49,10 +49,18 @@ function Invoke-ForceRemoveEdge {
 
         $uninstallArgs = ($uninstallArgs + ' --force-uninstall').Trim()
 
-        Invoke-NonBlocking -ScriptBlock {
+        $uninstallExitCode = Invoke-NonBlocking -ScriptBlock {
             param($exe, $arguments)
-            Start-Process -FilePath $exe -ArgumentList $arguments -WindowStyle Hidden -Wait
+            $uninstallProcess = Start-Process -FilePath $exe -ArgumentList $arguments -WindowStyle Hidden -Wait -PassThru
+            return $uninstallProcess.ExitCode
         } -ArgumentList $uninstallExe, $uninstallArgs
+
+        # Don't clean up shortcuts and autostart entries when the uninstaller failed,
+        # Edge is still installed in that case
+        if ($null -ne $uninstallExitCode -and $uninstallExitCode -ne 0) {
+            Write-Host "Unable to forcefully uninstall Microsoft Edge, the uninstaller failed with exit code $uninstallExitCode" -ForegroundColor Red
+            return
+        }
 
         Write-Host "Removing leftover files..."
 

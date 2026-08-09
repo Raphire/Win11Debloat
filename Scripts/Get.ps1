@@ -119,7 +119,8 @@ Write-Output "------------------------------------------------------------------
 Write-Output " Win11Debloat Script"
 Write-Output "-------------------------------------------------------------------------------------------"
 
-$tempArchivePath = Join-Path $env:TEMP 'win11debloat.zip'
+# Use a unique archive name per invocation so concurrent launcher runs cannot overwrite each other's download
+$tempArchivePath = Join-Path $env:TEMP "win11debloat_$([guid]::NewGuid().ToString('N')).zip"
 
 # Download Win11Debloat from GitHub as a zip archive.
 try {
@@ -172,7 +173,20 @@ if ($PSVersionTable.PSVersion.Major -ge 7) {
     $env:PSModulePath = $NewPSModulePath -join ';'
 }
 
-# Escapes a value for embedding inside a single-quoted PowerShell string literal
+<#
+    .SYNOPSIS
+        Escapes a value for safe embedding inside a single-quoted PowerShell string literal.
+
+    .DESCRIPTION
+        Doubles any embedded single quotes and wraps the result in single quotes, so the
+        value is always treated as a literal string when spliced into generated script text.
+
+    .PARAMETER Value
+        The string value to escape and wrap.
+
+    .OUTPUTS
+        System.String. The single-quoted, escaped string literal.
+#>
 function Format-EmbeddedLiteral([string]$Value) {
     return "'" + ($Value -replace "'", "''") + "'"
 }
@@ -188,104 +202,149 @@ $scriptArgs = __ARGS__
 $debloatWindowStyle = __WINDOWSTYLE__
 
 try {
-    $stagingRoot = Join-Path $env:ProgramData 'Win11Debloat'
-
-    if (-not (Test-Path -LiteralPath $stagingRoot)) {
-        New-Item -ItemType Directory -Path $stagingRoot | Out-Null
+    # Serialize concurrent launcher invocations: the staging directory and the Config,
+    # Logs and Backups folders inside it are shared between runs
+    $bootstrapMutex = New-Object System.Threading.Mutex($false, 'Global\Win11DebloatBootstrap')
+    $mutexAcquired = $false
+    try {
+        $mutexAcquired = $bootstrapMutex.WaitOne()
+    }
+    catch [System.Threading.AbandonedMutexException] {
+        # A previous holder exited without releasing; ownership is still acquired
+        $mutexAcquired = $true
     }
 
-    # Take ownership of the staging directory and restrict it to Administrators and SYSTEM.
-    # This also neutralizes a directory pre-created by a non-elevated process.
-    $adminSid = New-Object System.Security.Principal.SecurityIdentifier([System.Security.Principal.WellKnownSidType]::BuiltinAdministratorsSid, $null)
-    $systemSid = New-Object System.Security.Principal.SecurityIdentifier([System.Security.Principal.WellKnownSidType]::LocalSystemSid, $null)
-    $acl = New-Object System.Security.AccessControl.DirectorySecurity
-    $acl.SetOwner($adminSid)
-    $acl.SetAccessRuleProtection($true, $false)
-    foreach ($sid in @($adminSid, $systemSid)) {
-        $acl.AddAccessRule((New-Object System.Security.AccessControl.FileSystemAccessRule($sid, [System.Security.AccessControl.FileSystemRights]::FullControl, 'ContainerInherit,ObjectInherit', 'None', 'Allow')))
-    }
-    Set-Acl -Path $stagingRoot -AclObject $acl
+    try {
+        # Resolve ProgramData through the known-folder API instead of the environment,
+        # which a non-elevated process can override via HKCU\Environment
+        $programDataPath = [Environment]::GetFolderPath([Environment+SpecialFolder]::CommonApplicationData)
+        $stagingRoot = Join-Path $programDataPath 'Win11Debloat'
 
-    # Copy the downloaded archive into the protected directory, then verify its integrity
-    $stagedArchive = Join-Path $stagingRoot 'win11debloat.zip'
-    Copy-Item -LiteralPath $archivePath -Destination $stagedArchive -Force
-
-    $actualHash = (Get-FileHash -LiteralPath $stagedArchive -Algorithm SHA256).Hash
-    if ($actualHash -ne $expectedHash) {
-        Remove-Item -LiteralPath $stagedArchive -Force
-        throw "Integrity check of the downloaded Win11Debloat archive failed. The file was modified after download, aborting for safety. (expected $expectedHash but got $actualHash)"
-    }
-
-    # One-time migration of configs, logs and backups from the old temp folder location
-    $legacyWorkPath = Join-Path $env:TEMP 'Win11Debloat'
-    foreach ($dirName in 'Config', 'Logs', 'Backups') {
-        $legacyDir = Join-Path $legacyWorkPath $dirName
-        $newDir = Join-Path $stagingRoot $dirName
-        if ((Test-Path $legacyDir) -and -not (Test-Path $newDir)) {
-            Copy-Item -Path $legacyDir -Destination $newDir -Recurse -Force
-        }
-    }
-
-    # Remove old script files if they exist, but keep configs, logs and backups
-    Write-Output "> Cleaning up old script files..."
-    Get-ChildItem -Path $stagingRoot -Exclude Config, Logs, Backups, win11debloat.zip | Remove-Item -Recurse -Force
-
-    $configDir = Join-Path $stagingRoot 'Config'
-    $backupDir = Join-Path $stagingRoot 'ConfigOld'
-
-    # Temporarily move existing config files to prevent them from being overwritten by the new script files
-    if (Test-Path $configDir) {
-        Write-Output ""
-        Write-Output "> Backing up existing config files..."
-
-        New-Item -ItemType Directory -Path $backupDir -Force | Out-Null
-
-        $filesToKeep = @(
-            'LastUsedSettings.json'
-        )
-
-        Get-ChildItem -Path $configDir -Recurse | Where-Object { $_.Name -in $filesToKeep } | Move-Item -Destination $backupDir
-        Remove-Item $configDir -Recurse -Force
-    }
-
-    Write-Output ""
-    Write-Output "> Unpacking..."
-
-    Expand-Archive -LiteralPath $stagedArchive -DestinationPath $stagingRoot -Force
-    Remove-Item -LiteralPath $stagedArchive -Force
-
-    # Move the contents of the extracted release folder up into the staging root
-    $extractedRoot = Get-ChildItem -Path $stagingRoot -Directory -Filter '*Win11Debloat-*' | Select-Object -First 1
-    if ($null -eq $extractedRoot) {
-        throw "The downloaded archive did not contain the expected Win11Debloat folder."
-    }
-    Get-ChildItem -Path $extractedRoot.FullName -Force | Move-Item -Destination $stagingRoot -Force
-    Remove-Item -LiteralPath $extractedRoot.FullName -Recurse -Force
-
-    # Add existing config files back to Config folder
-    if (Test-Path $backupDir) {
-        if (-not (Test-Path $configDir)) {
-            New-Item -ItemType Directory -Path $configDir -Force | Out-Null
+        # Refuse to follow a reparse point (junction/symlink) planted at the staging path.
+        # Delete the link entry itself without recursing into its target.
+        $existingStaging = Get-Item -LiteralPath $stagingRoot -Force -ErrorAction SilentlyContinue
+        if ($existingStaging -and ($existingStaging.Attributes -band [System.IO.FileAttributes]::ReparsePoint)) {
+            if ($existingStaging.Attributes -band [System.IO.FileAttributes]::Directory) {
+                [System.IO.Directory]::Delete($stagingRoot, $false)
+            }
+            else {
+                [System.IO.File]::Delete($stagingRoot)
+            }
+            $existingStaging = $null
         }
 
+        if (-not $existingStaging) {
+            New-Item -ItemType Directory -Path $stagingRoot | Out-Null
+        }
+
+        # Take ownership of the staging directory and restrict it to Administrators and SYSTEM.
+        # This also neutralizes a directory pre-created by a non-elevated process.
+        $adminSid = New-Object System.Security.Principal.SecurityIdentifier([System.Security.Principal.WellKnownSidType]::BuiltinAdministratorsSid, $null)
+        $systemSid = New-Object System.Security.Principal.SecurityIdentifier([System.Security.Principal.WellKnownSidType]::LocalSystemSid, $null)
+        $acl = New-Object System.Security.AccessControl.DirectorySecurity
+        $acl.SetOwner($adminSid)
+        $acl.SetAccessRuleProtection($true, $false)
+        foreach ($sid in @($adminSid, $systemSid)) {
+            $acl.AddAccessRule((New-Object System.Security.AccessControl.FileSystemAccessRule($sid, [System.Security.AccessControl.FileSystemRights]::FullControl, 'ContainerInherit,ObjectInherit', 'None', 'Allow')))
+        }
+        Set-Acl -Path $stagingRoot -AclObject $acl
+
+        # Copy the downloaded archive into the protected directory, then verify its integrity
+        $stagedArchive = Join-Path $stagingRoot 'win11debloat.zip'
+        Copy-Item -LiteralPath $archivePath -Destination $stagedArchive -Force
+
+        $actualHash = (Get-FileHash -LiteralPath $stagedArchive -Algorithm SHA256).Hash
+        if ($actualHash -ne $expectedHash) {
+            Remove-Item -LiteralPath $stagedArchive -Force
+            throw "Integrity check of the downloaded Win11Debloat archive failed. The file was modified after download, aborting for safety. (expected $expectedHash but got $actualHash)"
+        }
+
+        # One-time migration of configs, logs and backups from the old temp folder location
+        $legacyWorkPath = Join-Path $env:TEMP 'Win11Debloat'
+        foreach ($dirName in 'Config', 'Logs', 'Backups') {
+            $legacyDir = Join-Path $legacyWorkPath $dirName
+            $newDir = Join-Path $stagingRoot $dirName
+            if ((Test-Path $legacyDir) -and -not (Test-Path $newDir)) {
+                Copy-Item -Path $legacyDir -Destination $newDir -Recurse -Force
+            }
+        }
+
+        # Remove old script files if they exist, but keep configs, logs and backups
+        Write-Output "> Cleaning up old script files..."
+        Get-ChildItem -Path $stagingRoot -Exclude Config, Logs, Backups, win11debloat.zip | Remove-Item -Recurse -Force
+
+        $configDir = Join-Path $stagingRoot 'Config'
+        $backupDir = Join-Path $stagingRoot 'ConfigOld'
+
+        # Temporarily move existing config files to prevent them from being overwritten by the new script files
+        if (Test-Path $configDir) {
+            Write-Output ""
+            Write-Output "> Backing up existing config files..."
+
+            New-Item -ItemType Directory -Path $backupDir -Force | Out-Null
+
+            $filesToKeep = @(
+                'LastUsedSettings.json'
+            )
+
+            Get-ChildItem -Path $configDir -Recurse | Where-Object { $_.Name -in $filesToKeep } | Move-Item -Destination $backupDir
+            Remove-Item $configDir -Recurse -Force
+        }
+
         Write-Output ""
-        Write-Output "> Restoring existing config files..."
+        Write-Output "> Unpacking..."
 
-        Get-ChildItem -Path $backupDir -Recurse | Move-Item -Destination $configDir -Force
-        Remove-Item $backupDir -Recurse -Force
+        # Restore the preserved config files in a finally block, so they are moved back
+        # into the Config folder even when unpacking fails midway
+        try {
+            Expand-Archive -LiteralPath $stagedArchive -DestinationPath $stagingRoot -Force
+            Remove-Item -LiteralPath $stagedArchive -Force
+
+            # Move the contents of the extracted release folder up into the staging root
+            $extractedRoot = Get-ChildItem -Path $stagingRoot -Directory -Filter '*Win11Debloat-*' | Select-Object -First 1
+            if ($null -eq $extractedRoot) {
+                throw "The downloaded archive did not contain the expected Win11Debloat folder."
+            }
+            Get-ChildItem -Path $extractedRoot.FullName -Force | Move-Item -Destination $stagingRoot -Force
+            Remove-Item -LiteralPath $extractedRoot.FullName -Recurse -Force
+        }
+        finally {
+            # Add existing config files back to Config folder
+            if (Test-Path $backupDir) {
+                if (-not (Test-Path $configDir)) {
+                    New-Item -ItemType Directory -Path $configDir -Force | Out-Null
+                }
+
+                Write-Output ""
+                Write-Output "> Restoring existing config files..."
+
+                Get-ChildItem -Path $backupDir -Recurse | Move-Item -Destination $configDir -Force
+                Remove-Item $backupDir -Recurse -Force
+            }
+        }
+
+        Write-Output ""
+        Write-Output "> Launching Win11Debloat..."
+
+        # Run Win11Debloat script with the provided arguments (already elevated)
+        $debloatScriptPath = Join-Path $stagingRoot 'Win11Debloat.ps1'
+        $debloatProcess = Start-Process powershell.exe -WindowStyle $debloatWindowStyle -Wait -PassThru -ArgumentList "-executionpolicy bypass -File `"$debloatScriptPath`" $scriptArgs"
+
+        if ($null -ne $debloatProcess -and $debloatProcess.ExitCode -ne 0) {
+            throw "Win11Debloat.ps1 exited with code $($debloatProcess.ExitCode). Script files were kept in '$stagingRoot' for inspection, logs can be found in '$(Join-Path $stagingRoot 'Logs')'."
+        }
+
+        # Remove all remaining script files, except for configs, logs and backups
+        Write-Output ""
+        Write-Output "> Cleaning up..."
+        Get-ChildItem -Path $stagingRoot -Exclude Config, Logs, Backups | Remove-Item -Recurse -Force
     }
-
-    Write-Output ""
-    Write-Output "> Launching Win11Debloat..."
-
-    # Run Win11Debloat script with the provided arguments (already elevated)
-    $debloatScriptPath = Join-Path $stagingRoot 'Win11Debloat.ps1'
-    Start-Process powershell.exe -WindowStyle $debloatWindowStyle -Wait -ArgumentList "-executionpolicy bypass -File `"$debloatScriptPath`" $scriptArgs"
-
-    # Remove all remaining script files, except for configs, logs and backups
-    Write-Output ""
-    Write-Output "> Cleaning up..."
-    Get-ChildItem -Path $stagingRoot -Exclude Config, Logs, Backups | Remove-Item -Recurse -Force
+    finally {
+        if ($mutexAcquired) {
+            $bootstrapMutex.ReleaseMutex()
+        }
+        $bootstrapMutex.Dispose()
+    }
 }
 catch {
     Write-Host "Error: $($_.Exception.Message)" -ForegroundColor Red

@@ -234,15 +234,20 @@ function Test-AppStillInstalled {
         [object[]]$InstalledList
     )
 
-    # Check Get-AppxPackage in the requested removal scope first.
-    $appxPackage = if ($target -eq 'AllUsers') {
-        Get-AppxPackage -Name $appId -AllUsers -ErrorAction SilentlyContinue
+    try {
+        # Check Get-AppxPackage in the requested removal scope first.
+        $appxPackage = if ($target -eq 'AllUsers') {
+            Get-AppxPackage -Name $appId -AllUsers -ErrorAction SilentlyContinue
+        }
+        elseif ($target -eq 'CurrentUser') {
+            Get-AppxPackage -Name $appId -ErrorAction SilentlyContinue
+        }
+        elseif (-not [string]::IsNullOrWhiteSpace($target)) {
+            Get-AppxPackage -Name $appId -User $target -ErrorAction SilentlyContinue
+        }
     }
-    elseif ($target -eq 'CurrentUser') {
-        Get-AppxPackage -Name $appId -ErrorAction SilentlyContinue
-    }
-    elseif (-not [string]::IsNullOrWhiteSpace($target)) {
-        Get-AppxPackage -Name $appId -User $target -ErrorAction SilentlyContinue
+    catch {
+        Write-Warning "Unable to check if '$appId' is still installed via Get-AppxPackage for '$target': $_"
     }
 
     if ($appxPackage) {

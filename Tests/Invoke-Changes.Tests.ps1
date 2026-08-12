@@ -325,6 +325,7 @@ Describe 'Invoke-AllChanges' {
         Mock Invoke-ApplyFeatures {}
         Mock Invoke-UndoFeatures {}
         Mock Write-Host {}
+        Mock Write-Warning {}
     }
 
     It 'backs up registry work before applying and undoing selected features' {
@@ -407,6 +408,28 @@ Describe 'Invoke-AllChanges' {
 
         Invoke-AllChanges
 
-        Should -Invoke Write-Host -Times 1 -Exactly -ParameterFilter { $Object -match '2 registry import change' }
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -match '2 registry import change' }
     }
+
+    It 'reports app removal failures after all requested work completes' {
+        $script:Params = @{ CustomApply = $true }
+        $script:UndoParams = @{}
+        Mock Invoke-ApplyFeatures { $script:AppRemovalFailures = 2 }
+
+        Invoke-AllChanges
+
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -match '2 app removal\(s\) failed' }
+    }
+
+    It 'warns when app removals could not be verified' {
+        $script:Params = @{ CustomApply = $true }
+        $script:UndoParams = @{}
+        Mock Invoke-ApplyFeatures { $script:AppRemovalVerificationUnavailable = $true }
+        Mock Write-Warning {}
+
+        Invoke-AllChanges
+
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -eq 'Unable to verify if all apps were uninstalled successfully.' }
+    }
+
 }

@@ -105,13 +105,12 @@ param (
     [switch]$HideDriveLetters
 )
 
-# Show error if current powershell environment does not have LanguageMode set to FullLanguage 
+# Check if current PowerShell environment is limited by security policies
 if ($ExecutionContext.SessionState.LanguageMode -ne "FullLanguage") {
-   Write-Host "Error: Win11Debloat is unable to run on your system. PowerShell execution is restricted by security policies" -ForegroundColor Red
-   Write-Output ""
-   Write-Output "Press enter to exit..."
-   Read-Host | Out-Null
-   Exit
+    Write-Error "Win11Debloat is unable to run on your system, PowerShell execution is restricted by security policies"
+    Write-Output "Press any key to exit..."
+    $null = [System.Console]::ReadKey()
+    Exit 1
 }
 
 Clear-Host
@@ -139,7 +138,7 @@ catch {
     Write-Output ""
     Write-Output "Press enter to exit..."
     Read-Host | Out-Null
-    Exit
+    Exit 1
 }
 
 # Remove old script folder if it exists, but keep configs, logs and backups
@@ -207,7 +206,7 @@ $arguments = $($PSBoundParameters.GetEnumerator() | Where-Object { $_.Key -ne 'D
 Write-Output ""
 Write-Output "> Launching Win11Debloat..."
 
-# Minimize the powershell window when no parameters are provided
+# Minimize the PowerShell window when no parameters are provided
 if ($arguments.Count -eq 0) {
     $windowStyle = "Minimized"
 }
@@ -215,7 +214,7 @@ else {
     $windowStyle = "Normal"
 }
 
-# Remove Powershell 7 modules from path to prevent module loading issues in the script
+# Remove PowerShell 7 modules from path to prevent module loading issues in the script
 if ($PSVersionTable.PSVersion.Major -ge 7) {
     $NewPSModulePath = $env:PSModulePath -split ';' | Where-Object -FilterScript { $_ -like '*WindowsPowerShell*' }
     $env:PSModulePath = $NewPSModulePath -join ';'
@@ -223,11 +222,20 @@ if ($PSVersionTable.PSVersion.Major -ge 7) {
 
 # Run Win11Debloat script with the provided arguments
 $debloatScriptPath = Join-Path $tempWorkPath 'Win11Debloat.ps1'
-$debloatProcess = Start-Process powershell.exe -WindowStyle $windowStyle -PassThru -ArgumentList "-executionpolicy bypass -File `"$debloatScriptPath`" $arguments" -Verb RunAs
+$exitCode = 0
+$debloatProcess = $null
+try {
+    $debloatProcess = Start-Process powershell.exe -WindowStyle $windowStyle -PassThru -ArgumentList "-executionpolicy bypass -File `"$debloatScriptPath`" $arguments" -Verb RunAs -ErrorAction Stop
+}
+catch {
+    $exitCode = 1
+    Write-Error "Failed to start Win11Debloat: $_"
+}
 
 # Wait for the process to finish before continuing
 if ($null -ne $debloatProcess) {
     $debloatProcess.WaitForExit()
+    $exitCode = $debloatProcess.ExitCode
 }
 
 # Remove all remaining script files, except for configs, logs and backups
@@ -240,3 +248,4 @@ if (Test-Path $tempWorkPath) {
 }
 
 Write-Output ""
+Exit $exitCode

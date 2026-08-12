@@ -1,6 +1,6 @@
 BeforeAll {
     function Get-TargetUserForAppRemoval { 'AllUsers' }
-    function Get-WingetInstalledApps { param($TimeOut, [switch]$NonBlocking) @() }
+    function Get-WingetInstalledApps { param($TimeOut, [switch]$NonBlocking) return ,@() }
     function Test-AppInWingetList { param($appId, $InstalledList) $false }
     function Invoke-NonBlocking { param($ScriptBlock, $ArgumentList, $TimeoutSeconds) }
     function Get-UserName { 'Alice' }
@@ -8,6 +8,7 @@ BeforeAll {
     function Show-MessageBox { 'No' }
     function Invoke-WithTargetUserHive { param($TargetUserName, $ScriptBlock, $ArgumentObject) }
     function Invoke-RegistryOperation { param($Operation, $RegFilePath) }
+    function Resolve-UserProfileContext { param($UserName) $null }
 
     . (Join-Path $PSScriptRoot '..\Scripts\AppRemoval\Remove-SelectedApps.ps1')
 }
@@ -18,12 +19,14 @@ Describe 'Remove-SelectedApps' {
         $script:CancelRequested = $false
         $script:ApplySubStepCallback = $null
         $script:WingetInstalled = $true
+        $script:AppRemovalFailures = 0
+        $script:AppRemovalVerificationUnavailable = $false
         Mock Get-TargetUserForAppRemoval { 'AllUsers' }
         Mock Get-AppRemovalMethod { 'Appx' }
-        Mock Remove-WinGetApp {}
-        Mock Remove-AppxApp {}
-        Mock Test-AppStillInstalled { $false }
-        Mock Get-WingetInstalledApps { @() }
+        Mock Remove-WinGetApp { $true }
+        Mock Remove-AppxApp { $true }
+        Mock Test-AppInWingetList { $false }
+        Mock Get-WingetInstalledApps { return ,@() }
         Mock Request-EdgeForceRemove {}
         Mock Write-Host {}
     }
@@ -43,6 +46,13 @@ Describe 'Remove-SelectedApps' {
         Should -Invoke Remove-AppxApp -Times 1 -Exactly -ParameterFilter { $app -eq 'Appx.App' -and $targetUser -eq 'AllUsers' }
     }
 
+    It 'verifies WinGet removals against the fetched Winget list' {
+        Mock Get-AppRemovalMethod { 'WinGet' }
+        Mock Get-WingetInstalledApps { return ,@([PSCustomObject]@{ Id = 'Other.App' }) }
+        Remove-SelectedApps -appsList @('Winget.App')
+        Should -Invoke Test-AppInWingetList -Times 1 -Exactly -ParameterFilter { $appId -eq 'Winget.App' -and $InstalledList[0].Id -eq 'Other.App' }
+    }
+
     It 'stops before the first removal when cancellation is requested' {
         $script:CancelRequested = $true
         Remove-SelectedApps -appsList @('One.App')
@@ -50,9 +60,45 @@ Describe 'Remove-SelectedApps' {
         Should -Invoke Remove-AppxApp -Times 0 -Exactly
     }
 
+    It 'counts failed Appx removals and reports them' {
+        Mock Remove-AppxApp { $false }
+
+        Remove-SelectedApps -appsList @('One.App')
+
+        $script:AppRemovalFailures | Should -Be 1
+    }
+
+    It 'counts a failed WinGet removal' {
+        Mock Get-AppRemovalMethod { 'WinGet' }
+        Mock Remove-WinGetApp { $false }
+
+        Remove-SelectedApps -appsList @('One.App')
+
+        $script:AppRemovalFailures | Should -Be 1
+    }
+
+    It 'counts a WinGet removal that remains installed after a successful command' {
+        Mock Get-AppRemovalMethod { 'WinGet' }
+        Mock Test-AppInWingetList { $true }
+
+        Remove-SelectedApps -appsList @('One.App')
+
+        $script:AppRemovalFailures | Should -Be 1
+    }
+
+    It 'records an unavailable WinGet inventory as an unverified removal' {
+        Mock Get-AppRemovalMethod { 'WinGet' }
+        Mock Get-WingetInstalledApps { $null }
+
+        Remove-SelectedApps -appsList @('One.App')
+
+        $script:AppRemovalVerificationUnavailable | Should -BeTrue
+        Should -Invoke Test-AppInWingetList -Times 0 -Exactly
+    }
+
     It 'prompts for forced Edge removal at most once after failed winget removals' {
         Mock Get-AppRemovalMethod { 'WinGet' }
-        Mock Test-AppStillInstalled { $true }
+        Mock Test-AppInWingetList { $true }
         Remove-SelectedApps -appsList @('Microsoft.Edge', 'XPFFTQ037JWMHS')
         Should -Invoke Request-EdgeForceRemove -Times 1 -Exactly
     }
@@ -86,15 +132,16 @@ Describe 'Remove-WinGetApp' {
     BeforeEach {
         $script:Params = @{}
         $script:WingetInstalled = $true
-        Mock Invoke-NonBlocking {}
-        Mock Set-RunOnceWingetTask {}
+        Mock Invoke-NonBlocking { $true }
+        Mock Set-RunOnceWingetTask { $true }
         Mock Get-UserName { 'Alice' }
         Mock Write-Host {}
+        Mock Write-Error {}
     }
 
     It 'reports unavailable winget without invoking or scheduling removal' {
         $script:WingetInstalled = $false
-        Remove-WinGetApp -app 'One.App'
+        Remove-WinGetApp -app 'One.App' | Should -BeFalse
         Should -Invoke Invoke-NonBlocking -Times 0 -Exactly
         Should -Invoke Set-RunOnceWingetTask -Times 0 -Exactly
     }
@@ -130,55 +177,52 @@ Describe 'Remove-WinGetApp' {
 
         { Remove-WinGetApp -app 'One.App' } | Should -Not -Throw
         Should -Invoke Set-RunOnceWingetTask -Times 1 -Exactly
-        Should -Invoke Write-Host -Times 1 -Exactly -ParameterFilter {
-            $Object -like '*did not complete within 120 seconds*' -and $ForegroundColor -eq 'Red'
+        Should -Invoke Write-Error -Times 1 -Exactly -ParameterFilter {
+            $Message -like '*did not complete within 120 seconds*'
         }
     }
+
 }
 
 Describe 'Remove-AppxApp' {
-    BeforeEach { Mock Invoke-NonBlocking {} }
+    BeforeEach { Mock Invoke-NonBlocking { [PSCustomObject]@{ Success = $true } } }
 
     It 'passes the wildcard and target user data for <Target>' -ForEach @(
-        @{ Target = 'AllUsers'; ExpectedArguments = 1 }
-        @{ Target = 'CurrentUser'; ExpectedArguments = 1 }
-        @{ Target = 'Alice'; ExpectedArguments = 2 }
+        @{ Target = 'AllUsers' }
+        @{ Target = 'CurrentUser' }
+        @{ Target = 'Alice' }
     ) {
         Remove-AppxApp -app 'One.App' -targetUser $Target
         Should -Invoke Invoke-NonBlocking -Times 1 -Exactly -ParameterFilter {
-            @($ArgumentList).Count -eq $ExpectedArguments -and @($ArgumentList)[0] -eq '*One.App*' -and
-            ($ExpectedArguments -eq 1 -or @($ArgumentList)[1] -eq 'Alice')
+            @($ArgumentList).Count -eq 2 -and @($ArgumentList)[0] -eq '*One.App*' -and @($ArgumentList)[1] -eq $Target
         }
     }
-}
 
-Describe 'Test-AppStillInstalled' {
-    BeforeEach {
-        $script:WingetInstalled = $true
-        Mock Get-AppxPackage { $null }
-        Mock Test-AppInWingetList { $false }
-        Mock Get-WingetInstalledApps { @() }
-        Mock Write-Warning {}
+    It 'returns false when package discovery reports a non-terminating error' {
+        Mock Invoke-NonBlocking { param($ScriptBlock, $ArgumentList) & $ScriptBlock @ArgumentList }
+        Mock Get-AppxPackage { Write-Error 'access denied' }
+
+        Remove-AppxApp -app 'One.App' -targetUser 'CurrentUser' | Should -BeFalse
     }
 
-    It 'prefers all-user Appx detection and avoids winget lookup' {
-        Mock Get-AppxPackage { [PSCustomObject]@{ Name = 'One.App' } }
-        Test-AppStillInstalled -appId 'One.App' | Should -BeTrue
-        Should -Invoke Get-AppxPackage -Times 1 -Exactly -ParameterFilter { $AllUsers }
-        Should -Invoke Get-WingetInstalledApps -Times 0 -Exactly
+    It 'returns false when package removal reports a non-terminating error' {
+        Mock Invoke-NonBlocking { param($ScriptBlock, $ArgumentList) & $ScriptBlock @ArgumentList }
+        Mock Get-AppxPackage { [PSCustomObject]@{ PackageFullName = 'One.App_1.0' } }
+        Mock Remove-AppxPackage { Write-Error 'access denied' }
+
+        Remove-AppxApp -app 'One.App' -targetUser 'CurrentUser' | Should -BeFalse
     }
 
-    It 'uses a supplied winget list without launching a live query' {
-        Mock Test-AppInWingetList { $true }
-        Test-AppStillInstalled -appId 'One.App' -InstalledList @([PSCustomObject]@{ Id = 'One.App' }) | Should -BeTrue
-        Should -Invoke Get-WingetInstalledApps -Times 0 -Exactly
+    It 'returns false and reports a terminating Appx failure' {
+        Mock Invoke-NonBlocking { throw 'access denied' }
+        Mock Write-Error {}
+
+        Remove-AppxApp -app 'One.App' -targetUser 'CurrentUser' | Should -BeFalse
+        Should -Invoke Write-Error -Times 1 -Exactly -ParameterFilter {
+            $Message -like '*Unable to remove One.App via Appx*access denied*'
+        }
     }
 
-    It 'warns when a non-Appx app cannot be verified without winget' {
-        $script:WingetInstalled = $false
-        Test-AppStillInstalled -appId 'One.App' | Should -BeFalse
-        Should -Invoke Write-Warning -Times 1 -Exactly
-    }
 }
 
 Describe 'Set-RunOnceWingetTask' {

@@ -155,9 +155,18 @@ if (-not $isAdmin) {
             }
         }
 
-        Start-Process powershell -ArgumentList $elevatedArgs -Verb RunAs
+        try {
+            Start-Process powershell -ArgumentList $elevatedArgs -Verb RunAs -ErrorAction Stop
+        }
+        catch {
+            Write-Error "Failed to start Win11Debloat as Administrator: $_"
+            Exit 1
+        }
+
+        Exit 0
     }
-    exit
+
+    Exit 1
 }
 
 # Define script-level variables & paths
@@ -194,13 +203,16 @@ $script:GuiWindow = $null
 $script:CancelRequested = $false
 $script:ApplyProgressCallback = $null
 $script:ApplySubStepCallback = $null
+$script:RegistryImportFailures = 0
+$script:AppRemovalFailures = 0
+$script:AppRemovalVerificationUnavailable = $false
 
-# Check if current powershell environment is limited by security policies
+# Check if current PowerShell environment is limited by security policies
 if ($ExecutionContext.SessionState.LanguageMode -ne "FullLanguage") {
-    Write-Error "Win11Debloat is unable to run on your system, powershell execution is restricted by security policies"
+    Write-Error "Win11Debloat is unable to run on your system, PowerShell execution is restricted by security policies"
     Write-Output "Press any key to exit..."
     $null = [System.Console]::ReadKey()
-    Exit
+    Exit 1
 }
 
 Clear-Host
@@ -286,10 +298,9 @@ catch { }
 # Check if script has all required files
 if (-not ((Test-Path $script:DefaultSettingsFilePath) -and (Test-Path $script:AppsListFilePath) -and (Test-Path $script:RegfilesPath) -and (Test-Path $script:AssetsPath) -and (Test-Path $script:AppSelectionSchema) -and (Test-Path $script:ApplyChangesWindowSchema) -and (Test-Path $script:SharedStylesSchema) -and (Test-Path $script:BubbleHintSchema) -and (Test-Path $script:RestoreBackupWindowSchema) -and (Test-Path $script:FeaturesFilePath))) {
     Write-Error "Win11Debloat is unable to find required files, please ensure all script files are present"
-    Write-Output ""
     Write-Output "Press any key to exit..."
     $null = [System.Console]::ReadKey()
-    Exit
+    Exit 1
 }
 
 # Load feature info from file
@@ -306,10 +317,9 @@ try {
 }
 catch {
     Write-Error "Failed to load feature info from Features.json file"
-    Write-Output ""
     Write-Output "Press any key to exit..."
     $null = [System.Console]::ReadKey()
-    Exit
+    Exit 1
 }
 
 # Check if WinGet is installed & if it is, check if the version is at least v1.4
@@ -482,7 +492,7 @@ if ($script:Params.ContainsKey("Sysprep")) {
     # Exit script if run in Sysprep mode on Windows 10
     if ($WinVersion -lt 22000) {
         Write-Error "Win11Debloat Sysprep mode is not supported on Windows 10"
-        Wait-ForKeyPress
+        Wait-ForKeyPress -ExitCode 1
     }
 }
 
@@ -515,7 +525,7 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
         if (-not (Test-Path $script:SavedSettingsFilePath)) {
             Write-CliHeader 'Custom Mode'
             Write-Error "Unable to find LastUsedSettings.json file, no changes were made"
-            Wait-ForKeyPress
+            Wait-ForKeyPress -ExitCode 1
         }
 
         Show-CliLastUsedSettings
@@ -526,7 +536,7 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
         }
         catch {
             Write-Error "$_"
-            Wait-ForKeyPress
+            Wait-ForKeyPress -ExitCode 1
         }
 
         if (-not $Silent) {

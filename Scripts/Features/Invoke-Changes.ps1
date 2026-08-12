@@ -320,6 +320,8 @@ function Invoke-AllChanges {
     }
 
     $script:RegistryImportFailures = 0
+    $script:AppRemovalFailures = 0
+    $script:AppRemovalVerificationUnavailable = $false
 
     # ---- Gather work items ----
     $applyIds = @()
@@ -422,12 +424,22 @@ function Invoke-AllChanges {
     }
 
     # ================================================================
-    # Final: Report registry import failures
+    # Final: Report registry import and app removal failures
     # ================================================================
     if ($script:RegistryImportFailures -gt 0) {
         Write-Host ""
-        Write-Host "$($script:RegistryImportFailures) registry import change(s) failed. See output above for details." -ForegroundColor Yellow
+        Write-Warning "$($script:RegistryImportFailures) registry import change(s) failed. See output above for details."
     }
+
+    if ($script:AppRemovalFailures -gt 0) {
+        Write-Host ""
+        Write-Warning "$($script:AppRemovalFailures) app removal(s) failed. See output above for details."
+    }
+
+    if ($script:AppRemovalVerificationUnavailable) {
+        Write-Warning "Unable to verify if all apps were uninstalled successfully."
+    }
+
 }
 
 <#

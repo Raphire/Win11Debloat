@@ -39,6 +39,7 @@ function Remove-SelectedApps {
 
     $edgeIds = @('Microsoft.Edge', 'XPFFTQ037JWMHS')
     $wingetRemovedApps = @()
+    $wingetRemovalFailures = @{}
 
     Foreach ($app in $appsList) {
         if ($script:CancelRequested) { return }
@@ -52,11 +53,15 @@ function Remove-SelectedApps {
         Write-Host "Removing $app"
 
         if ((Get-AppRemovalMethod $app) -eq 'WinGet') {
-            Remove-WinGetApp -app $app
+            if (-not (Remove-WinGetApp -app $app)) {
+                $wingetRemovalFailures[$app] = $true
+            }
             $wingetRemovedApps += $app
         }
         else {
-            Remove-AppxApp -app $app -targetUser $targetUser
+            if (-not (Remove-AppxApp -app $app -targetUser $targetUser)) {
+                $script:AppRemovalFailures++
+            }
         }
     }
 
@@ -70,23 +75,31 @@ function Remove-SelectedApps {
         $postRemovalList = if ($script:WingetInstalled) { Get-WingetInstalledApps -TimeOut 10 -NonBlocking } else { $null }
         $edgeForceRemoveRequested = $false
 
-        foreach ($app in $wingetRemovedApps) {
-            if (-not (Test-AppStillInstalled -appId $app -InstalledList $postRemovalList)) {
-                continue
-            }
-
-            if ($edgeIds -contains $app) {
-                Write-Host "Unable to uninstall Microsoft Edge via WinGet" -ForegroundColor Red
-                if (-not $edgeForceRemoveRequested) {
-                    Request-EdgeForceRemove
-                    $edgeForceRemoveRequested = $true
+        if ($null -eq $postRemovalList) {
+            $script:AppRemovalVerificationUnavailable = $true
+        }
+        else {
+            foreach ($app in $wingetRemovedApps) {
+                if (-not (Test-AppInWingetList -appId $app -InstalledList $postRemovalList)) {
+                    continue
                 }
-            }
-            else {
-                Write-Host "Unable to uninstall $app via WinGet" -ForegroundColor Red
+
+                if ($edgeIds -contains $app) {
+                    Write-Host "Unable to uninstall Microsoft Edge via WinGet" -ForegroundColor Red
+                    if (-not $edgeForceRemoveRequested) {
+                        Request-EdgeForceRemove
+                        $edgeForceRemoveRequested = $true
+                    }
+                }
+                else {
+                    Write-Host "Unable to uninstall $app via WinGet" -ForegroundColor Red
+                }
+                $wingetRemovalFailures[$app] = $true
             }
         }
     }
+
+    $script:AppRemovalFailures += $wingetRemovalFailures.Count
 
     Write-Host ""
 }
@@ -114,33 +127,40 @@ function Remove-WinGetApp {
     )
 
     if (-not $script:WingetInstalled) {
-        Write-Host "ERROR: WinGet is either not installed or is outdated, $app could not be removed" -ForegroundColor Red
-        return
+        Write-Error "WinGet is either not installed or is outdated; $app could not be removed"
+        return $false
     }
 
+    $uninstallSucceeded = $true
     try {
-        Invoke-NonBlocking -ScriptBlock {
+        $uninstallSucceeded = Invoke-NonBlocking -ScriptBlock {
             param($appId)
-            winget uninstall --accept-source-agreements --disable-interactivity --id $appId
+            $null = & winget uninstall --accept-source-agreements --disable-interactivity --id $appId 2>&1
+            return $true
         } -ArgumentList $app -TimeoutSeconds $TimeoutSeconds
+        $uninstallSucceeded = [bool]$uninstallSucceeded
     }
     catch {
+        $uninstallSucceeded = $false
         if ($_.Exception.Message -like 'Operation timed out after *') {
-            Write-Host "WinGet uninstall for $app did not complete within $TimeoutSeconds seconds: $_" -ForegroundColor Red
+            Write-Error "WinGet uninstall for $app did not complete within $TimeoutSeconds seconds: $_"
         }
         else {
-            Write-Host "WinGet uninstall for $app failed: $_" -ForegroundColor Red
+            Write-Error "WinGet uninstall for $app failed: $_"
         }
     }
 
+    $scheduleSucceeded = $true
     if ($script:Params.ContainsKey("User")) {
         Write-Host "Adding scheduled task to uninstall $app for user $(Get-UserName)..."
-        Set-RunOnceWingetTask -appId $app
+        $scheduleSucceeded = Set-RunOnceWingetTask -appId $app
     }
     elseif ($script:Params.ContainsKey("Sysprep")) {
         Write-Host "Adding scheduled task to uninstall $app for new users..."
-        Set-RunOnceWingetTask -appId $app
+        $scheduleSucceeded = Set-RunOnceWingetTask -appId $app
     }
+
+    return ($uninstallSucceeded -and $scheduleSucceeded)
 }
 
 <#
@@ -159,80 +179,48 @@ function Remove-AppxApp {
     $appPattern = '*' + $app + '*'
 
     try {
-        switch ($targetUser) {
-            "AllUsers" {
-                Invoke-NonBlocking -ScriptBlock {
-                    param($pattern)
-                    Get-AppxPackage -Name $pattern -AllUsers | Remove-AppxPackage -AllUsers -ErrorAction Continue
-                    Get-AppxProvisionedPackage -Online | Where-Object { $_.PackageName -like $pattern } | ForEach-Object { Remove-ProvisionedAppxPackage -Online -AllUsers -PackageName $_.PackageName }
-                } -ArgumentList $appPattern
-            }
-            "CurrentUser" {
-                Invoke-NonBlocking -ScriptBlock {
-                    param($pattern)
-                    Get-AppxPackage -Name $pattern | Remove-AppxPackage -ErrorAction Continue
-                } -ArgumentList $appPattern
-            }
-            default {
-                Invoke-NonBlocking -ScriptBlock {
-                    param($pattern, $user)
-                    $userAccount = New-Object System.Security.Principal.NTAccount($user)
+        $removalResult = Invoke-NonBlocking -ScriptBlock {
+            param($pattern, $target)
+
+            $removalErrors = @()
+            $getPackageParams = @{ Name = $pattern; ErrorAction = 'Continue'; ErrorVariable = '+removalErrors' }
+            $removePackageParams = @{ ErrorAction = 'Continue'; ErrorVariable = '+removalErrors' }
+
+            switch ($target) {
+                'AllUsers' {
+                    $getPackageParams.AllUsers = $true
+                    $removePackageParams.AllUsers = $true
+                }
+                'CurrentUser' { }
+                default {
+                    $userAccount = New-Object System.Security.Principal.NTAccount($target)
                     $userSid = $userAccount.Translate([System.Security.Principal.SecurityIdentifier]).Value
-                    Get-AppxPackage -Name $pattern -User $userSid | Remove-AppxPackage -User $userSid -ErrorAction Continue
-                } -ArgumentList @($appPattern, $targetUser)
+                    $getPackageParams.User = $userSid
+                    $removePackageParams.User = $userSid
+                }
             }
-        }
+
+            foreach ($package in @(Get-AppxPackage @getPackageParams)) {
+                $removePackageParams.Package = $package.PackageFullName
+                $null = Remove-AppxPackage @removePackageParams
+            }
+
+            if ($target -eq 'AllUsers') {
+                $provisionedPackages = @(Get-AppxProvisionedPackage -Online -ErrorAction Continue -ErrorVariable +removalErrors | Where-Object { $_.PackageName -like $pattern })
+                foreach ($package in $provisionedPackages) {
+                    $null = Remove-ProvisionedAppxPackage -Online -AllUsers -PackageName $package.PackageName -ErrorAction Continue -ErrorVariable +removalErrors
+                }
+            }
+
+            return [PSCustomObject]@{ Success = ($removalErrors.Count -eq 0) }
+        } -ArgumentList @($appPattern, $targetUser)
     }
     catch {
-        Write-Verbose "Something went wrong while trying to remove $($app): $_"
-    }
-}
-
-<#
-    .SYNOPSIS
-    Checks whether an app package is still installed after a removal attempt.
-
-    .DESCRIPTION
-    Checks Get-AppxPackage across all users first (fast, no process launch),
-    then falls back to a pre-fetched or live winget list for non-Appx packages.
-    Uses Test-AppInWingetList which provides exact-match-first with substring
-    fallback against the parsed winget objects.
-    Returns $true if the app is still present, $false otherwise.
-
-    .PARAMETER appId
-    The package identifier to check (e.g. 'Microsoft.BingNews').
-
-    .PARAMETER InstalledList
-    Optional pre-fetched array of winget objects from Get-WingetInstalledApps.
-    When provided, used directly; otherwise a live winget call is made.
-#>
-function Test-AppStillInstalled {
-    param(
-        [string]$appId,
-        [object[]]$InstalledList
-    )
-
-    # Check Get-AppxPackage for all users first (fast, covers all Store apps).
-    if (Get-AppxPackage -Name "$appId" -AllUsers -ErrorAction SilentlyContinue) {
-        return $true
+        Write-Error "Unable to remove $app via Appx: $_"
+        return $false
     }
 
-    # Use the pre-fetched list if provided; otherwise fall back to a live winget call.
-    if ($InstalledList) {
-        return (Test-AppInWingetList -appId $appId -InstalledList $InstalledList)
-    }
-
-    if ($script:WingetInstalled) {
-        $liveList = Get-WingetInstalledApps -TimeOut 10 -NonBlocking
-        if (Test-AppInWingetList -appId $appId -InstalledList $liveList) {
-            return $true
-        }
-    }
-    else {
-        Write-Warning "Unable to verify whether '$appId' is still installed (WinGet is unavailable)"
-    }
-
-    return $false
+    return [bool]($removalResult -and $removalResult.Success)
 }
 
 <#
@@ -352,8 +340,10 @@ function Set-RunOnceWingetTask {
             param($op)
             Invoke-RegistryOperation -Operation $op -RegFilePath '<dynamic>'
         } -ArgumentObject $operation
+        return $true
     }
     catch {
-        Write-Host "Failed to schedule uninstall task for $($appId): $_" -ForegroundColor Red
+        Write-Error "Failed to schedule uninstall task for $($appId): $_"
+        return $false
     }
 }

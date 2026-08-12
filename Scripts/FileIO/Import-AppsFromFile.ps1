@@ -41,6 +41,6 @@ function Import-AppsFromFile {
     } 
     catch {
         Write-Error "Unable to read apps list from file: $appsFilePath"
-        Wait-ForKeyPress
+        Wait-ForKeyPress -ExitCode 1
     }
 }

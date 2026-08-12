@@ -115,6 +115,9 @@ function Show-ApplyModal {
             Invoke-AllChanges
 
             $registryImportFailureCount = [int]$script:RegistryImportFailures
+            $appRemovalFailureCount = [int]$script:AppRemovalFailures
+            $failureCount = $registryImportFailureCount + $appRemovalFailureCount
+            $appRemovalVerificationUnavailable = [bool]$script:AppRemovalVerificationUnavailable
             
             # Restart explorer if requested
             if ($InvokeRestartExplorer -and -not $script:CancelRequested) {
@@ -128,11 +131,6 @@ function Show-ApplyModal {
             }
             
             Write-Host ""
-            if ($script:CancelRequested) {
-                Write-Host "Script execution was cancelled by the user. Some changes may not have been applied."
-            } elseif ($registryImportFailureCount -eq 0) {
-                Write-Host "All changes have been applied successfully!"
-            }
             
             # Show completion state
             $script:ApplyProgressBarEl.Value = 100
@@ -140,16 +138,34 @@ function Show-ApplyModal {
             $script:ApplyCompletionPanel.Visibility = 'Visible'
             
             if ($script:CancelRequested) {
+                Write-Warning "Script execution was cancelled by the user. Any remaining changes were not applied."
+
                 $script:ApplyCompletionIconEl.Text = [char]0xE7BA
                 $script:ApplyCompletionIconEl.Foreground = [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#e8912d"))
                 $script:ApplyCompletionTitleEl.Text = "Cancelled"
                 $script:ApplyCompletionMessageEl.Text = "Script execution was cancelled by the user."
-            } elseif ($registryImportFailureCount -gt 0) {
+            } elseif ($failureCount -gt 0 -or $appRemovalVerificationUnavailable) {
+                if ($failureCount -gt 0) {
+                    Write-Host "Script completed with $failureCount error(s)."
+                }
+
                 $script:ApplyCompletionIconEl.Text = [char]0xE7BA
                 $script:ApplyCompletionIconEl.Foreground = [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#e8912d"))
-                $script:ApplyCompletionTitleEl.Text = "Changes Applied with Errors"
-                $script:ApplyCompletionMessageEl.Text = "$registryImportFailureCount registry change(s) failed. See console for details."
+                if ($failureCount -eq 0 -and $appRemovalVerificationUnavailable) {
+                    $script:ApplyCompletionTitleEl.Text = "Changes Applied"
+                    $script:ApplyCompletionMessageEl.Text = "All changes were applied without errors, but Win11Debloat could not confirm that all selected apps were successfully uninstalled."
+                }
+                else {
+                    $script:ApplyCompletionTitleEl.Text = "Changes Applied with Errors"
+                    $failureMessages = @()
+                    if ($registryImportFailureCount -gt 0) { $failureMessages += "$registryImportFailureCount registry change(s) failed" }
+                    if ($appRemovalFailureCount -gt 0) { $failureMessages += "$appRemovalFailureCount app removal(s) failed" }
+                    if ($appRemovalVerificationUnavailable) { $failureMessages += "Unable to verify if all apps were uninstalled successfully" }
+                    $script:ApplyCompletionMessageEl.Text = "$($failureMessages -join '; '). See console for details."
+                }
             } else {
+                Write-Host "All changes have been applied successfully!"
+
                 $script:ApplyCompletionTitleEl.Text = "Changes Applied"
 
                 # Show completion message with reboot instructions if any applied features require reboot

@@ -66,7 +66,14 @@ function Get-WingetInstalledApps {
                 }
             }
 
-            if ($dataStart -lt 0 -or $dataStart -ge $lines.Count) { return @() }
+            # A missing table separator means the output is malformed or empty
+            if ($dataStart -lt 0) {
+                return $null
+            }
+
+            if ($dataStart -ge $lines.Count) {
+                return ,@()
+            }
 
             $apps = [System.Collections.Generic.List[object]]::new()
 
@@ -94,7 +101,7 @@ function Get-WingetInstalledApps {
                 }
             }
 
-            return @($apps)
+            return ,@($apps)
         }
 
         Remove-Job -Job $job -Force -ErrorAction SilentlyContinue

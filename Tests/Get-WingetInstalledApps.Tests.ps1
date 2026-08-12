@@ -37,14 +37,31 @@ Describe 'Get-WingetInstalledApps' {
         Should -Invoke Invoke-NonBlocking -Times 1 -Exactly
     }
 
-    It 'returns an empty collection when winget output has no table separator' {
+    It 'returns null when winget output has no table separator' {
         $script:WingetTestJob = New-WingetTestJob
         Mock Start-Job { $script:WingetTestJob }
         Mock Wait-Job { $script:WingetTestJob }
         Mock Receive-Job { @('Name  Id', 'No parseable table') }
 
-        @(Get-WingetInstalledApps) | Should -BeNullOrEmpty
+        Get-WingetInstalledApps | Should -BeNullOrEmpty
         Should -Invoke Remove-Job -Times 1 -Exactly -ParameterFilter { -not $Force }
+    }
+
+    It 'returns an empty collection for a valid table with no data rows' {
+        $script:WingetTestJob = New-WingetTestJob
+        Mock Start-Job { $script:WingetTestJob }
+        Mock Wait-Job { $script:WingetTestJob }
+        Mock Receive-Job {
+            @(
+                'Name                              Id                              Version'
+                '-----------------------------------------------------------------------'
+            )
+        }
+
+        $result = @(Get-WingetInstalledApps)
+
+        $result | Should -HaveCount 1
+        @($result[0]).Count | Should -Be 0
     }
 
     It 'parses valid rows and skips malformed rows' {
@@ -61,7 +78,7 @@ Describe 'Get-WingetInstalledApps' {
             )
         }
 
-        $result = @(Get-WingetInstalledApps)
+        $result = @(Get-WingetInstalledApps)[0]
 
         $result | Should -HaveCount 2
         $result.Id | Should -Be @('Contoso.App', 'Fabrikam.Tools')
@@ -80,7 +97,7 @@ Describe 'Get-WingetInstalledApps' {
             )
         }
 
-        $result = @(Get-WingetInstalledApps)
+        $result = @(Get-WingetInstalledApps)[0]
 
         $result | Should -HaveCount 2
         $result[0].Name | Should -Be 'Contoso hulpmiddel voor gegevens'

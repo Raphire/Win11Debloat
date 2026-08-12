@@ -156,8 +156,10 @@ if (-not $isAdmin) {
         }
 
         Start-Process powershell -ArgumentList $elevatedArgs -Verb RunAs
+        Exit 0
     }
-    exit
+
+    Exit 1
 }
 
 # Define script-level variables & paths
@@ -202,7 +204,7 @@ if ($ExecutionContext.SessionState.LanguageMode -ne "FullLanguage") {
     Write-Error "Win11Debloat is unable to run on your system, PowerShell execution is restricted by security policies"
     Write-Output "Press any key to exit..."
     $null = [System.Console]::ReadKey()
-    Exit
+    Exit 1
 }
 
 Clear-Host
@@ -290,7 +292,7 @@ if (-not ((Test-Path $script:DefaultSettingsFilePath) -and (Test-Path $script:Ap
     Write-Error "Win11Debloat is unable to find required files, please ensure all script files are present"
     Write-Output "Press any key to exit..."
     $null = [System.Console]::ReadKey()
-    Exit
+    Exit 1
 }
 
 # Load feature info from file
@@ -309,7 +311,7 @@ catch {
     Write-Error "Failed to load feature info from Features.json file"
     Write-Output "Press any key to exit..."
     $null = [System.Console]::ReadKey()
-    Exit
+    Exit 1
 }
 
 # Check if WinGet is installed & if it is, check if the version is at least v1.4
@@ -482,7 +484,7 @@ if ($script:Params.ContainsKey("Sysprep")) {
     # Exit script if run in Sysprep mode on Windows 10
     if ($WinVersion -lt 22000) {
         Write-Error "Win11Debloat Sysprep mode is not supported on Windows 10"
-        Wait-ForKeyPress
+        Wait-ForKeyPress -ExitCode 1
     }
 }
 
@@ -515,7 +517,7 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
         if (-not (Test-Path $script:SavedSettingsFilePath)) {
             Write-CliHeader 'Custom Mode'
             Write-Error "Unable to find LastUsedSettings.json file, no changes were made"
-            Wait-ForKeyPress
+            Wait-ForKeyPress -ExitCode 1
         }
 
         Show-CliLastUsedSettings
@@ -526,7 +528,7 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
         }
         catch {
             Write-Error "$_"
-            Wait-ForKeyPress
+            Wait-ForKeyPress -ExitCode 1
         }
 
         if (-not $Silent) {

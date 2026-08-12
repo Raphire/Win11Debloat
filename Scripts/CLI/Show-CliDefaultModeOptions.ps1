@@ -39,7 +39,7 @@ function Show-CliDefaultModeOptions {
     }
     catch {
         Write-Error "Failed to load settings from DefaultSettings.json file: $_"
-        Wait-ForKeyPress
+        Wait-ForKeyPress -ExitCode 1
     }
 
     Save-Settings

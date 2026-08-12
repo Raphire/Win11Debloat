@@ -46,9 +46,9 @@ function Get-UserDirectory {
     }
     catch {
         Write-Error "Something went wrong when trying to find the user directory path for user $userName. Please ensure the user exists on this system"
-        Wait-ForKeyPress
+        Wait-ForKeyPress -ExitCode 1
     }
 
     Write-Error "Unable to find user directory path for user $userName"
-    Wait-ForKeyPress
+    Wait-ForKeyPress -ExitCode 1
 }

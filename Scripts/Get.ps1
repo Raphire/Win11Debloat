@@ -110,7 +110,7 @@ if ($ExecutionContext.SessionState.LanguageMode -ne "FullLanguage") {
     Write-Error "Win11Debloat is unable to run on your system, PowerShell execution is restricted by security policies"
     Write-Output "Press any key to exit..."
     $null = [System.Console]::ReadKey()
-    Exit
+    Exit 1
 }
 
 Clear-Host
@@ -138,7 +138,7 @@ catch {
     Write-Output ""
     Write-Output "Press enter to exit..."
     Read-Host | Out-Null
-    Exit
+    Exit 1
 }
 
 # Remove old script folder if it exists, but keep configs, logs and backups
@@ -225,8 +225,10 @@ $debloatScriptPath = Join-Path $tempWorkPath 'Win11Debloat.ps1'
 $debloatProcess = Start-Process powershell.exe -WindowStyle $windowStyle -PassThru -ArgumentList "-executionpolicy bypass -File `"$debloatScriptPath`" $arguments" -Verb RunAs
 
 # Wait for the process to finish before continuing
+$debloatExitCode = 0
 if ($null -ne $debloatProcess) {
     $debloatProcess.WaitForExit()
+    $debloatExitCode = $debloatProcess.ExitCode
 }
 
 # Remove all remaining script files, except for configs, logs and backups
@@ -239,3 +241,4 @@ if (Test-Path $tempWorkPath) {
 }
 
 Write-Output ""
+Exit $debloatExitCode

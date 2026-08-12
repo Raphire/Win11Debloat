@@ -1,6 +1,7 @@
 BeforeAll {
     function Import-RegistryFile { param($Message, $path) }
     function Remove-SelectedApps { param($Apps) }
+    function Invoke-ForceRemoveEdge {}
     function Disable-TelemetryScheduledTasks {}
     function Enable-TelemetryScheduledTasks {}
     function Generate-AppsList { @() }
@@ -51,6 +52,7 @@ Describe 'Invoke-FeatureApply' {
             RemoveApps = [PSCustomObject]@{ ApplyText = 'Remove apps'; RegistryKey = '' }
             RemoveGamingApps = [PSCustomObject]@{ ApplyText = 'Remove gaming'; RegistryKey = '' }
             RemoveHPApps = [PSCustomObject]@{ ApplyText = 'Remove HP'; RegistryKey = '' }
+            ForceRemoveEdge = [PSCustomObject]@{ ApplyText = 'Force remove Edge'; RegistryKey = '' }
             DisableWidgets = [PSCustomObject]@{ ApplyText = 'Disable widgets'; RegistryKey = '' }
             EnableWindowsSandbox = [PSCustomObject]@{ ApplyText = 'Enable Sandbox'; RegistryKey = '' }
             EnableWindowsSubsystemForLinux = [PSCustomObject]@{ ApplyText = 'Enable WSL'; RegistryKey = '' }
@@ -62,6 +64,7 @@ Describe 'Invoke-FeatureApply' {
         }
         Mock Import-RegistryFile {}
         Mock Remove-SelectedApps {}
+        Mock Invoke-ForceRemoveEdge {}
         Mock Disable-TelemetryScheduledTasks {}
         Mock Generate-AppsList { @() }
         Mock Get-FriendlyTargetUserName { 'current user' }
@@ -114,6 +117,14 @@ Describe 'Invoke-FeatureApply' {
         Invoke-FeatureApply -FeatureId $FeatureId
         Should -Invoke Import-RegistryFile -Times 1 -Exactly
         Should -Invoke Remove-SelectedApps -Times 1 -Exactly -ParameterFilter { @($Apps) -join ',' -eq $ExpectedApps -join ',' }
+    }
+
+    It 'forcefully removes Edge when requested' {
+        Invoke-FeatureApply -FeatureId 'ForceRemoveEdge'
+
+        Should -Invoke Invoke-ForceRemoveEdge -Times 1 -Exactly
+        Should -Invoke Import-RegistryFile -Times 0 -Exactly
+        Should -Invoke Remove-SelectedApps -Times 0 -Exactly
     }
 
     It 'uses the expected static app list for <FeatureId>' -ForEach @(

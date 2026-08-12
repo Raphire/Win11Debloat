@@ -27,10 +27,11 @@ function Save-ToFile {
     )
 
     try {
-        $Config | ConvertTo-Json -Depth $MaxDepth | Set-Content -Path $FilePath -Encoding UTF8
+        $Config | ConvertTo-Json -Depth $MaxDepth | Set-Content -Path $FilePath -Encoding UTF8 -ErrorAction Stop
         return $true
     }
     catch {
+        Write-Error "Failed to write '$FilePath': $($_.Exception.Message)"
         return $false
     }
 }

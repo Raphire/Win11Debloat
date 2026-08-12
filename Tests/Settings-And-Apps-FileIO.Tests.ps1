@@ -14,6 +14,19 @@ BeforeAll {
     $script:JsonFixturePath = Join-Path $PSScriptRoot 'TestData\JsonFileLoading'
 }
 
+Describe 'Save-ToFile' {
+    It 'reports the write error and returns false when persistence fails' {
+        Mock Set-Content { throw [System.IO.IOException]::new('Disk is full') }
+        Mock Write-Error {}
+
+        Save-ToFile -Config @{ Setting = $true } -FilePath (Join-Path $TestDrive 'settings.json') | Should -BeFalse
+
+        Should -Invoke Write-Error -Times 1 -Exactly -ParameterFilter {
+            $Message -eq "Failed to write '$TestDrive\settings.json': Disk is full"
+        }
+    }
+}
+
 Describe 'Import-Settings' {
     BeforeEach {
         $script:Params = @{}

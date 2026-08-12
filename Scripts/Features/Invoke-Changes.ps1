@@ -69,6 +69,11 @@ function Invoke-FeatureApply {
             Remove-SelectedApps $appsList
             return
         }
+        'ForceRemoveEdge' {
+            Write-Host "> $applyText..."
+            Invoke-ForceRemoveEdge
+            return
+        }
         'DisableWidgets' {
             Write-Host "> $applyText..."
             # Stop widgets related processes before removing the app packages to prevent potential issues

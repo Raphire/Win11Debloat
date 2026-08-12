@@ -57,7 +57,7 @@ This method supports command-line parameters to customize the behaviour of the s
   3. Temporarily enable PowerShell execution by entering the following command:
 
   ```PowerShell
-  Set-ExecutionPolicy Unrestricted -Scope Process -Force
+  Set-ExecutionPolicy Bypass -Scope Process -Force
   ```
 
   4. In PowerShell, navigate to the directory where the files were extracted. Example: `cd c:\Win11Debloat`

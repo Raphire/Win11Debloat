@@ -146,7 +146,6 @@ function Remove-WinGetApp {
 
     $uninstallSucceeded = $true
     try {
-        throw
         $uninstallSucceeded = Invoke-NonBlocking -ScriptBlock {
             param($appId)
             $null = & winget uninstall --accept-source-agreements --disable-interactivity --id $appId 2>&1

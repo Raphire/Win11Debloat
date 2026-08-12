@@ -510,7 +510,7 @@ if ($script:Params.ContainsKey("AppRemovalTarget")) {
 
 # Remove LastUsedSettings.json file if it exists and is empty
 if ((Test-Path $script:SavedSettingsFilePath) -and ([String]::IsNullOrWhiteSpace((Get-content $script:SavedSettingsFilePath)))) {
-    Remove-Item -Path $script:SavedSettingsFilePath -recurse
+    Remove-Item -Path $script:SavedSettingsFilePath -Force
 }
 
 # Default to CLI mode for deployment-targeted parameters.

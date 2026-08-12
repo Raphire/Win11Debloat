@@ -1,6 +1,6 @@
 BeforeAll {
     function Get-TargetUserForAppRemoval { 'AllUsers' }
-    function Get-WingetInstalledApps { param($TimeOut, [switch]$NonBlocking) Write-Output -NoEnumerate -InputObject @() }
+    function Get-WingetInstalledApps { param($TimeOut, [switch]$NonBlocking) return ,@() }
     function Test-AppInWingetList { param($appId, $InstalledList) $false }
     function Invoke-NonBlocking { param($ScriptBlock, $ArgumentList, $TimeoutSeconds) }
     function Get-UserName { 'Alice' }
@@ -26,7 +26,7 @@ Describe 'Remove-SelectedApps' {
         Mock Remove-WinGetApp { $true }
         Mock Remove-AppxApp { $true }
         Mock Test-AppInWingetList { $false }
-        Mock Get-WingetInstalledApps { Write-Output -NoEnumerate -InputObject @() }
+        Mock Get-WingetInstalledApps { return ,@() }
         Mock Request-EdgeForceRemove {}
         Mock Write-Host {}
     }

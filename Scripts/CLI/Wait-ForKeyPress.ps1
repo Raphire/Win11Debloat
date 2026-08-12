@@ -1,3 +1,10 @@
+<#
+    .SYNOPSIS
+    Waits for user acknowledgement, then exits the script.
+
+    .PARAMETER ExitCode
+    Process exit code to return after acknowledgement. Defaults to 0.
+#>
 function Wait-ForKeyPress {
     param(
         [int]$ExitCode = 0

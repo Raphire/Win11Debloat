@@ -222,13 +222,20 @@ if ($PSVersionTable.PSVersion.Major -ge 7) {
 
 # Run Win11Debloat script with the provided arguments
 $debloatScriptPath = Join-Path $tempWorkPath 'Win11Debloat.ps1'
-$debloatProcess = Start-Process powershell.exe -WindowStyle $windowStyle -PassThru -ArgumentList "-executionpolicy bypass -File `"$debloatScriptPath`" $arguments" -Verb RunAs
+$exitCode = 0
+$debloatProcess = $null
+try {
+    $debloatProcess = Start-Process powershell.exe -WindowStyle $windowStyle -PassThru -ArgumentList "-executionpolicy bypass -File `"$debloatScriptPath`" $arguments" -Verb RunAs -ErrorAction Stop
+}
+catch {
+    $exitCode = 1
+    Write-Error "Failed to start Win11Debloat: $_"
+}
 
 # Wait for the process to finish before continuing
-$debloatExitCode = 0
 if ($null -ne $debloatProcess) {
     $debloatProcess.WaitForExit()
-    $debloatExitCode = $debloatProcess.ExitCode
+    $exitCode = $debloatProcess.ExitCode
 }
 
 # Remove all remaining script files, except for configs, logs and backups
@@ -241,4 +248,4 @@ if (Test-Path $tempWorkPath) {
 }
 
 Write-Output ""
-Exit $debloatExitCode
+Exit $exitCode

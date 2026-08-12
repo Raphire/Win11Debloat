@@ -155,7 +155,14 @@ if (-not $isAdmin) {
             }
         }
 
-        Start-Process powershell -ArgumentList $elevatedArgs -Verb RunAs
+        try {
+            Start-Process powershell -ArgumentList $elevatedArgs -Verb RunAs -ErrorAction Stop
+        }
+        catch {
+            Write-Error "Failed to start Win11Debloat as Administrator: $_"
+            Exit 1
+        }
+
         Exit 0
     }
 

@@ -561,10 +561,11 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
                 Exit
             }
             catch {
-                Write-Warning "Unable to load WPF GUI (not supported in this environment), falling back to CLI mode"
+                Write-Warning "The graphical interface could not start: $($_.Exception.Message)"
+                Write-Verbose "GUI Failure details: $($_.Exception.ToString())"
                 if (-not $Silent) {
                     Write-Host ""
-                    Write-Host "Press any key to continue..."
+                    Write-Host "Press any key to continue in CLI mode..."
                     $null = [System.Console]::ReadKey()
                 }
 

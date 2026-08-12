@@ -7,22 +7,60 @@ function Invoke-ForceRemoveEdge {
 
     $regView = [Microsoft.Win32.RegistryView]::Registry32
     $hklm = [Microsoft.Win32.RegistryKey]::OpenBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, $regView)
+
+    # Locate the uninstaller first, before making any changes to the system
+    $uninstallRegKey = $hklm.OpenSubKey('SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft Edge')
+    $uninstallString = if ($null -ne $uninstallRegKey) { [string]$uninstallRegKey.GetValue('UninstallString') } else { $null }
+
+    if ([string]::IsNullOrWhiteSpace($uninstallString)) {
+        Write-Host "Unable to forcefully uninstall Microsoft Edge, uninstaller could not be found" -ForegroundColor Red
+        return
+    }
+
     $hklm.CreateSubKey('SOFTWARE\Microsoft\EdgeUpdateDev').SetValue('AllowUninstall', '')
 
     # Create stub (This somehow allows uninstalling Edge)
+    # Only create it when the folder doesn't exist yet: on Windows 10 this path is the REAL
+    # legacy Edge (EdgeHTML) system package, which must never be created over or deleted.
+    # The stub is only removed later if this script created it.
     $edgeStub = "$env:SystemRoot\SystemApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe"
-    New-Item $edgeStub -ItemType Directory | Out-Null
-    New-Item "$edgeStub\MicrosoftEdge.exe" | Out-Null
+    $stubCreatedByScript = $false
 
-    # Remove edge
-    $uninstallRegKey = $hklm.OpenSubKey('SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft Edge')
-    if ($null -ne $uninstallRegKey) {
+    if (-not (Test-Path -LiteralPath $edgeStub)) {
+        New-Item $edgeStub -ItemType Directory | Out-Null
+        New-Item "$edgeStub\MicrosoftEdge.exe" | Out-Null
+        $stubCreatedByScript = $true
+    }
+
+    try {
         Write-Host "Running uninstaller..."
-        $uninstallString = $uninstallRegKey.GetValue('UninstallString') + ' --force-uninstall'
-        Invoke-NonBlocking -ScriptBlock {
-            param($cmd)
-            Start-Process cmd.exe "/c $cmd" -WindowStyle Hidden -Wait
-        } -ArgumentList $uninstallString
+
+        # Split the UninstallString into executable and arguments and invoke it directly,
+        # instead of interpolating the raw registry value into a cmd.exe command line
+        if ($uninstallString -match '^\s*"(?<exe>[^"]+)"\s*(?<args>.*)$') {
+            $uninstallExe = $Matches.exe
+            $uninstallArgs = $Matches.args
+        }
+        else {
+            $splitParts = $uninstallString.Trim() -split '\s+', 2
+            $uninstallExe = $splitParts[0]
+            $uninstallArgs = if ($splitParts.Count -gt 1) { $splitParts[1] } else { '' }
+        }
+
+        $uninstallArgs = ($uninstallArgs + ' --force-uninstall').Trim()
+
+        $uninstallExitCode = Invoke-NonBlocking -ScriptBlock {
+            param($exe, $arguments)
+            $uninstallProcess = Start-Process -FilePath $exe -ArgumentList $arguments -WindowStyle Hidden -Wait -PassThru
+            return $uninstallProcess.ExitCode
+        } -ArgumentList $uninstallExe, $uninstallArgs
+
+        # Don't clean up shortcuts and autostart entries when the uninstaller failed,
+        # Edge is still installed in that case
+        if ($null -ne $uninstallExitCode -and $uninstallExitCode -ne 0) {
+            Write-Host "Unable to forcefully uninstall Microsoft Edge, the uninstaller failed with exit code $uninstallExitCode" -ForegroundColor Red
+            return
+        }
 
         Write-Host "Removing leftover files..."
 
@@ -32,8 +70,7 @@ function Invoke-ForceRemoveEdge {
             "$env:APPDATA\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar\Microsoft Edge.lnk",
             "$env:APPDATA\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar\Tombstones\Microsoft Edge.lnk",
             "$env:PUBLIC\Desktop\Microsoft Edge.lnk",
-            "$env:USERPROFILE\Desktop\Microsoft Edge.lnk",
-            "$edgeStub"
+            "$env:USERPROFILE\Desktop\Microsoft Edge.lnk"
         )
 
         foreach ($path in $edgePaths) {
@@ -53,7 +90,11 @@ function Invoke-ForceRemoveEdge {
 
         Write-Host "Microsoft Edge was uninstalled"
     }
-    else {
-        Write-Host "Unable to forcefully uninstall Microsoft Edge, uninstaller could not be found" -ForegroundColor Red
+    finally {
+        # Always remove the stub if this script created it, even when the uninstall failed,
+        # so no fake MicrosoftEdge.exe is left behind in SystemApps
+        if ($stubCreatedByScript -and (Test-Path -LiteralPath $edgeStub)) {
+            Remove-Item -Path $edgeStub -Force -Recurse -ErrorAction SilentlyContinue
+        }
     }
 }

@@ -205,6 +205,7 @@ $script:ApplyProgressCallback = $null
 $script:ApplySubStepCallback = $null
 $script:RegistryImportFailures = 0
 $script:AppRemovalFailures = 0
+$script:AppRemovalVerificationUnavailable = $false
 
 # Check if current PowerShell environment is limited by security policies
 if ($ExecutionContext.SessionState.LanguageMode -ne "FullLanguage") {

@@ -1,6 +1,6 @@
 BeforeAll {
     function Get-TargetUserForAppRemoval { 'AllUsers' }
-    function Get-WingetInstalledApps { param($TimeOut, [switch]$NonBlocking) @() }
+    function Get-WingetInstalledApps { param($TimeOut, [switch]$NonBlocking) Write-Output -NoEnumerate -InputObject @() }
     function Test-AppInWingetList { param($appId, $InstalledList) $false }
     function Invoke-NonBlocking { param($ScriptBlock, $ArgumentList, $TimeoutSeconds) }
     function Get-UserName { 'Alice' }
@@ -20,12 +20,13 @@ Describe 'Remove-SelectedApps' {
         $script:ApplySubStepCallback = $null
         $script:WingetInstalled = $true
         $script:AppRemovalFailures = 0
+        $script:AppRemovalVerificationUnavailable = $false
         Mock Get-TargetUserForAppRemoval { 'AllUsers' }
         Mock Get-AppRemovalMethod { 'Appx' }
         Mock Remove-WinGetApp { $true }
         Mock Remove-AppxApp { $true }
-        Mock Test-AppStillInstalled { $false }
-        Mock Get-WingetInstalledApps { @() }
+        Mock Test-AppInWingetList { $false }
+        Mock Get-WingetInstalledApps { Write-Output -NoEnumerate -InputObject @() }
         Mock Request-EdgeForceRemove {}
         Mock Write-Host {}
     }
@@ -45,31 +46,11 @@ Describe 'Remove-SelectedApps' {
         Should -Invoke Remove-AppxApp -Times 1 -Exactly -ParameterFilter { $app -eq 'Appx.App' -and $targetUser -eq 'AllUsers' }
     }
 
-    It 'verifies WinGet removals in the selected target scope' {
-        Mock Get-TargetUserForAppRemoval { 'CurrentUser' }
+    It 'verifies WinGet removals against the fetched Winget list' {
         Mock Get-AppRemovalMethod { 'WinGet' }
+        Mock Get-WingetInstalledApps { return ,@([PSCustomObject]@{ Id = 'Other.App' }) }
         Remove-SelectedApps -appsList @('Winget.App')
-        Should -Invoke Test-AppStillInstalled -Times 1 -Exactly -ParameterFilter { $appId -eq 'Winget.App' -and $target -eq 'CurrentUser' }
-    }
-
-    It 'resolves a named target SID once for multiple WinGet verification calls' {
-        Mock Get-TargetUserForAppRemoval { 'Alice' }
-        Mock Get-AppRemovalMethod { 'WinGet' }
-        Mock Resolve-UserProfileContext { [PSCustomObject]@{ UserSid = 'S-1-5-21-1000' } }
-
-        Remove-SelectedApps -appsList @('One.App', 'Two.App')
-
-        Should -Invoke Resolve-UserProfileContext -Times 1 -Exactly -ParameterFilter { $UserName -eq 'Alice' }
-        Should -Invoke Test-AppStillInstalled -Times 2 -Exactly -ParameterFilter { $target -eq 'S-1-5-21-1000' }
-    }
-
-    It 'does not resolve a named target SID when no apps use WinGet' {
-        Mock Get-TargetUserForAppRemoval { 'Alice' }
-        Mock Resolve-UserProfileContext { [PSCustomObject]@{ UserSid = 'S-1-5-21-1000' } }
-
-        Remove-SelectedApps -appsList @('Appx.App')
-
-        Should -Invoke Resolve-UserProfileContext -Times 0 -Exactly
+        Should -Invoke Test-AppInWingetList -Times 1 -Exactly -ParameterFilter { $appId -eq 'Winget.App' -and $InstalledList[0].Id -eq 'Other.App' }
     }
 
     It 'stops before the first removal when cancellation is requested' {
@@ -98,16 +79,26 @@ Describe 'Remove-SelectedApps' {
 
     It 'counts a WinGet removal that remains installed after a successful command' {
         Mock Get-AppRemovalMethod { 'WinGet' }
-        Mock Test-AppStillInstalled { $true }
+        Mock Test-AppInWingetList { $true }
 
         Remove-SelectedApps -appsList @('One.App')
 
         $script:AppRemovalFailures | Should -Be 1
     }
 
+    It 'records an unavailable WinGet inventory as an unverified removal' {
+        Mock Get-AppRemovalMethod { 'WinGet' }
+        Mock Get-WingetInstalledApps { $null }
+
+        Remove-SelectedApps -appsList @('One.App')
+
+        $script:AppRemovalVerificationUnavailable | Should -BeTrue
+        Should -Invoke Test-AppInWingetList -Times 0 -Exactly
+    }
+
     It 'prompts for forced Edge removal at most once after failed winget removals' {
         Mock Get-AppRemovalMethod { 'WinGet' }
-        Mock Test-AppStillInstalled { $true }
+        Mock Test-AppInWingetList { $true }
         Remove-SelectedApps -appsList @('Microsoft.Edge', 'XPFFTQ037JWMHS')
         Should -Invoke Request-EdgeForceRemove -Times 1 -Exactly
     }
@@ -232,83 +223,6 @@ Describe 'Remove-AppxApp' {
         }
     }
 
-}
-
-Describe 'Test-AppStillInstalled' {
-    BeforeEach {
-        $script:WingetInstalled = $true
-        Mock Get-AppxPackage { $null }
-        Mock Test-AppInWingetList { $false }
-        Mock Get-WingetInstalledApps { @() }
-        Mock Write-Warning {}
-    }
-
-    It 'prefers all-user Appx detection and avoids winget lookup' {
-        Mock Get-AppxPackage { [PSCustomObject]@{ Name = 'One.App' } }
-        Test-AppStillInstalled -appId 'One.App' | Should -BeTrue
-        Should -Invoke Get-AppxPackage -Times 1 -Exactly -ParameterFilter { $AllUsers }
-        Should -Invoke Get-WingetInstalledApps -Times 0 -Exactly
-    }
-
-    It 'uses the current-user Appx scope without querying all users' {
-        Mock Get-AppxPackage { [PSCustomObject]@{ Name = 'One.App' } }
-        Test-AppStillInstalled -appId 'One.App' -target 'CurrentUser' | Should -BeTrue
-        Should -Invoke Get-AppxPackage -Times 1 -Exactly -ParameterFilter { -not $AllUsers -and -not $User }
-        Should -Invoke Get-AppxPackage -Times 0 -Exactly -ParameterFilter { $AllUsers }
-        Should -Invoke Get-WingetInstalledApps -Times 0 -Exactly
-    }
-
-    It 'uses the resolved SID for named-user Appx detection' {
-        Mock Get-AppxPackage { [PSCustomObject]@{ Name = 'One.App' } }
-
-        Test-AppStillInstalled -appId 'One.App' -target 'S-1-5-21-1000' | Should -BeTrue
-        Should -Invoke Get-AppxPackage -Times 1 -Exactly -ParameterFilter { $User -eq 'S-1-5-21-1000' }
-        Should -Invoke Get-WingetInstalledApps -Times 0 -Exactly
-    }
-
-    It 'falls back to all-user Appx verification when a named-user SID is unavailable' {
-        $script:Params = @{}
-        $script:WingetInstalled = $true
-        Mock Get-TargetUserForAppRemoval { 'Alice' }
-        Mock Get-AppRemovalMethod { 'WinGet' }
-        Mock Resolve-UserProfileContext { [PSCustomObject]@{ UserSid = $null } }
-        Mock Remove-WinGetApp {}
-        Mock Test-AppStillInstalled { $false }
-        Mock Get-WingetInstalledApps { @() }
-        Mock Write-Host {}
-
-        Remove-SelectedApps -appsList @('One.App', 'Two.App')
-        Should -Invoke Test-AppStillInstalled -Times 2 -Exactly -ParameterFilter { $target -eq 'AllUsers' }
-        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -like '*falling back to all-user Appx verification*' }
-    }
-
-    It 'falls back to all-user Appx verification when named-user resolution throws' {
-        $script:Params = @{}
-        $script:WingetInstalled = $true
-        Mock Get-TargetUserForAppRemoval { 'Alice' }
-        Mock Get-AppRemovalMethod { 'WinGet' }
-        Mock Resolve-UserProfileContext { throw 'Directory service unavailable' }
-        Mock Remove-WinGetApp {}
-        Mock Test-AppStillInstalled { $false }
-        Mock Get-WingetInstalledApps { @() }
-        Mock Write-Host {}
-
-        Remove-SelectedApps -appsList @('One.App')
-        Should -Invoke Test-AppStillInstalled -Times 1 -Exactly -ParameterFilter { $target -eq 'AllUsers' }
-        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -like '*falling back to all users*' }
-    }
-
-    It 'uses a supplied winget list without launching a live query' {
-        Mock Test-AppInWingetList { $true }
-        Test-AppStillInstalled -appId 'One.App' -InstalledList @([PSCustomObject]@{ Id = 'One.App' }) | Should -BeTrue
-        Should -Invoke Get-WingetInstalledApps -Times 0 -Exactly
-    }
-
-    It 'warns when a non-Appx app cannot be verified without winget' {
-        $script:WingetInstalled = $false
-        Test-AppStillInstalled -appId 'One.App' | Should -BeFalse
-        Should -Invoke Write-Warning -Times 1 -Exactly
-    }
 }
 
 Describe 'Set-RunOnceWingetTask' {

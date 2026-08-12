@@ -72,43 +72,30 @@ function Remove-SelectedApps {
 
     # Check whether any winget-removed apps are still present, and report errors for each one.
     if ($wingetRemovedApps.Count -gt 0) {
-        $target = $targetUser
-        if ($targetUser -notin @('AllUsers', 'CurrentUser')) {
-            try {
-                $userContext = Resolve-UserProfileContext -UserName $targetUser
-                if ($userContext -and -not [string]::IsNullOrWhiteSpace([string]$userContext.UserSid)) {
-                    $target = $userContext.UserSid
-                }
-                else {
-                    $target = 'AllUsers'
-                    Write-Warning "Unable to resolve a SID for target user '$targetUser'; falling back to all-user Appx verification."
-                }
-            }
-            catch {
-                $target = 'AllUsers'
-                Write-Warning "Unable to resolve target user '$targetUser' for Appx verification; falling back to all users: $_"
-            }
-        }
-
         $postRemovalList = if ($script:WingetInstalled) { Get-WingetInstalledApps -TimeOut 10 -NonBlocking } else { $null }
         $edgeForceRemoveRequested = $false
 
-        foreach ($app in $wingetRemovedApps) {
-            if (-not (Test-AppStillInstalled -appId $app -target $target -InstalledList $postRemovalList)) {
-                continue
-            }
-
-            if ($edgeIds -contains $app) {
-                Write-Host "Unable to uninstall Microsoft Edge via WinGet" -ForegroundColor Red
-                if (-not $edgeForceRemoveRequested) {
-                    Request-EdgeForceRemove
-                    $edgeForceRemoveRequested = $true
+        if ($null -eq $postRemovalList) {
+            $script:AppRemovalVerificationUnavailable = $true
+        }
+        else {
+            foreach ($app in $wingetRemovedApps) {
+                if (-not (Test-AppInWingetList -appId $app -InstalledList $postRemovalList)) {
+                    continue
                 }
+
+                if ($edgeIds -contains $app) {
+                    Write-Host "Unable to uninstall Microsoft Edge via WinGet" -ForegroundColor Red
+                    if (-not $edgeForceRemoveRequested) {
+                        Request-EdgeForceRemove
+                        $edgeForceRemoveRequested = $true
+                    }
+                }
+                else {
+                    Write-Host "Unable to uninstall $app via WinGet" -ForegroundColor Red
+                }
+                $wingetRemovalFailures[$app] = $true
             }
-            else {
-                Write-Host "Unable to uninstall $app via WinGet" -ForegroundColor Red
-            }
-            $wingetRemovalFailures[$app] = $true
         }
     }
 
@@ -234,72 +221,6 @@ function Remove-AppxApp {
     }
 
     return [bool]($removalResult -and $removalResult.Success)
-}
-
-<#
-    .SYNOPSIS
-    Checks whether an app package is still installed after a removal attempt.
-
-    .DESCRIPTION
-    Checks Get-AppxPackage in the requested removal scope first, then falls
-    back to a pre-fetched or live winget list for non-Appx packages.
-    Uses Test-AppInWingetList which provides exact-match-first with substring
-    fallback against the parsed winget objects.
-    Returns $true if the app is still present, $false otherwise.
-
-    .PARAMETER appId
-    The package identifier to check (e.g. 'Microsoft.BingNews').
-
-    .PARAMETER target
-    Appx verification scope: "AllUsers", "CurrentUser", or a resolved user SID.
-
-    .PARAMETER InstalledList
-    Optional pre-fetched array of winget objects from Get-WingetInstalledApps.
-    When provided, used directly; otherwise a live winget call is made.
-#>
-function Test-AppStillInstalled {
-    param(
-        [string]$appId,
-        [string]$target = 'AllUsers',
-        [object[]]$InstalledList
-    )
-
-    try {
-        # Check Get-AppxPackage in the requested removal scope first.
-        $appxPackage = if ($target -eq 'AllUsers') {
-            Get-AppxPackage -Name $appId -AllUsers -ErrorAction SilentlyContinue
-        }
-        elseif ($target -eq 'CurrentUser') {
-            Get-AppxPackage -Name $appId -ErrorAction SilentlyContinue
-        }
-        elseif (-not [string]::IsNullOrWhiteSpace($target)) {
-            Get-AppxPackage -Name $appId -User $target -ErrorAction SilentlyContinue
-        }
-    }
-    catch {
-        Write-Warning "Unable to check if '$appId' is still installed via Get-AppxPackage for '$target': $_"
-    }
-
-    if ($appxPackage) {
-        return $true
-    }
-
-    # Use the pre-fetched list if provided; otherwise fall back to a live winget call.
-    if ($InstalledList) {
-        return (Test-AppInWingetList -appId $appId -InstalledList $InstalledList)
-    }
-
-    if ($script:WingetInstalled) {
-        $liveList = Get-WingetInstalledApps -TimeOut 10 -NonBlocking
-        if (Test-AppInWingetList -appId $appId -InstalledList $liveList) {
-            return $true
-        }
-    }
-    else {
-        Write-Warning "Unable to verify whether '$appId' is still installed (WinGet is unavailable)"
-    }
-
-    return $false
 }
 
 <#

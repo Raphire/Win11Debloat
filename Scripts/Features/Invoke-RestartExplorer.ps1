@@ -23,7 +23,7 @@ function Invoke-RestartExplorer {
         Write-Host "Warning: '$displayLabel' requires a reboot to take full effect" -ForegroundColor Yellow
     }
 
-    # Only restart if the powershell process matches the OS architecture.
+    # Only restart if the PowerShell process matches the OS architecture.
     # Restarting explorer from a 32bit PowerShell window will fail on a 64bit OS
     if ([Environment]::Is64BitProcess -eq [Environment]::Is64BitOperatingSystem) {
         Write-Host "Restarting the Windows Explorer process... (This may cause your screen to flicker)"

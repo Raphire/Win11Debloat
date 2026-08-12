@@ -409,4 +409,15 @@ Describe 'Invoke-AllChanges' {
 
         Should -Invoke Write-Host -Times 1 -Exactly -ParameterFilter { $Object -match '2 registry import change' }
     }
+
+    It 'reports app removal failures after all requested work completes' {
+        $script:Params = @{ CustomApply = $true }
+        $script:UndoParams = @{}
+        Mock Invoke-ApplyFeatures { $script:AppRemovalFailures = 2 }
+
+        Invoke-AllChanges
+
+        Should -Invoke Write-Host -Times 1 -Exactly -ParameterFilter { $Object -match '2 app removal\(s\) failed' }
+    }
+
 }

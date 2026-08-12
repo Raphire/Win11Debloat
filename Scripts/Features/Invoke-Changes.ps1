@@ -320,6 +320,7 @@ function Invoke-AllChanges {
     }
 
     $script:RegistryImportFailures = 0
+    $script:AppRemovalFailures = 0
 
     # ---- Gather work items ----
     $applyIds = @()
@@ -422,12 +423,18 @@ function Invoke-AllChanges {
     }
 
     # ================================================================
-    # Final: Report registry import failures
+    # Final: Report registry import and app removal failures
     # ================================================================
     if ($script:RegistryImportFailures -gt 0) {
         Write-Host ""
         Write-Host "$($script:RegistryImportFailures) registry import change(s) failed. See output above for details." -ForegroundColor Yellow
     }
+
+    if ($script:AppRemovalFailures -gt 0) {
+        Write-Host ""
+        Write-Host "$($script:AppRemovalFailures) app removal(s) failed. See output above for details." -ForegroundColor Yellow
+    }
+
 }
 
 <#

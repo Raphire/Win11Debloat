@@ -19,10 +19,11 @@ Describe 'Remove-SelectedApps' {
         $script:CancelRequested = $false
         $script:ApplySubStepCallback = $null
         $script:WingetInstalled = $true
+        $script:AppRemovalFailures = 0
         Mock Get-TargetUserForAppRemoval { 'AllUsers' }
         Mock Get-AppRemovalMethod { 'Appx' }
-        Mock Remove-WinGetApp {}
-        Mock Remove-AppxApp {}
+        Mock Remove-WinGetApp { $true }
+        Mock Remove-AppxApp { $true }
         Mock Test-AppStillInstalled { $false }
         Mock Get-WingetInstalledApps { @() }
         Mock Request-EdgeForceRemove {}
@@ -78,6 +79,32 @@ Describe 'Remove-SelectedApps' {
         Should -Invoke Remove-AppxApp -Times 0 -Exactly
     }
 
+    It 'counts failed Appx removals and reports them' {
+        Mock Remove-AppxApp { $false }
+
+        Remove-SelectedApps -appsList @('One.App')
+
+        $script:AppRemovalFailures | Should -Be 1
+    }
+
+    It 'counts a failed WinGet removal' {
+        Mock Get-AppRemovalMethod { 'WinGet' }
+        Mock Remove-WinGetApp { $false }
+
+        Remove-SelectedApps -appsList @('One.App')
+
+        $script:AppRemovalFailures | Should -Be 1
+    }
+
+    It 'counts a WinGet removal that remains installed after a successful command' {
+        Mock Get-AppRemovalMethod { 'WinGet' }
+        Mock Test-AppStillInstalled { $true }
+
+        Remove-SelectedApps -appsList @('One.App')
+
+        $script:AppRemovalFailures | Should -Be 1
+    }
+
     It 'prompts for forced Edge removal at most once after failed winget removals' {
         Mock Get-AppRemovalMethod { 'WinGet' }
         Mock Test-AppStillInstalled { $true }
@@ -114,15 +141,16 @@ Describe 'Remove-WinGetApp' {
     BeforeEach {
         $script:Params = @{}
         $script:WingetInstalled = $true
-        Mock Invoke-NonBlocking {}
-        Mock Set-RunOnceWingetTask {}
+        Mock Invoke-NonBlocking { $true }
+        Mock Set-RunOnceWingetTask { $true }
         Mock Get-UserName { 'Alice' }
         Mock Write-Host {}
+        Mock Write-Error {}
     }
 
     It 'reports unavailable winget without invoking or scheduling removal' {
         $script:WingetInstalled = $false
-        Remove-WinGetApp -app 'One.App'
+        Remove-WinGetApp -app 'One.App' | Should -BeFalse
         Should -Invoke Invoke-NonBlocking -Times 0 -Exactly
         Should -Invoke Set-RunOnceWingetTask -Times 0 -Exactly
     }
@@ -158,26 +186,52 @@ Describe 'Remove-WinGetApp' {
 
         { Remove-WinGetApp -app 'One.App' } | Should -Not -Throw
         Should -Invoke Set-RunOnceWingetTask -Times 1 -Exactly
-        Should -Invoke Write-Host -Times 1 -Exactly -ParameterFilter {
-            $Object -like '*did not complete within 120 seconds*' -and $ForegroundColor -eq 'Red'
+        Should -Invoke Write-Error -Times 1 -Exactly -ParameterFilter {
+            $Message -like '*did not complete within 120 seconds*'
         }
     }
+
 }
 
 Describe 'Remove-AppxApp' {
-    BeforeEach { Mock Invoke-NonBlocking {} }
+    BeforeEach { Mock Invoke-NonBlocking { [PSCustomObject]@{ Success = $true } } }
 
     It 'passes the wildcard and target user data for <Target>' -ForEach @(
-        @{ Target = 'AllUsers'; ExpectedArguments = 1 }
-        @{ Target = 'CurrentUser'; ExpectedArguments = 1 }
-        @{ Target = 'Alice'; ExpectedArguments = 2 }
+        @{ Target = 'AllUsers' }
+        @{ Target = 'CurrentUser' }
+        @{ Target = 'Alice' }
     ) {
         Remove-AppxApp -app 'One.App' -targetUser $Target
         Should -Invoke Invoke-NonBlocking -Times 1 -Exactly -ParameterFilter {
-            @($ArgumentList).Count -eq $ExpectedArguments -and @($ArgumentList)[0] -eq '*One.App*' -and
-            ($ExpectedArguments -eq 1 -or @($ArgumentList)[1] -eq 'Alice')
+            @($ArgumentList).Count -eq 2 -and @($ArgumentList)[0] -eq '*One.App*' -and @($ArgumentList)[1] -eq $Target
         }
     }
+
+    It 'returns false when package discovery reports a non-terminating error' {
+        Mock Invoke-NonBlocking { param($ScriptBlock, $ArgumentList) & $ScriptBlock @ArgumentList }
+        Mock Get-AppxPackage { Write-Error 'access denied' }
+
+        Remove-AppxApp -app 'One.App' -targetUser 'CurrentUser' | Should -BeFalse
+    }
+
+    It 'returns false when package removal reports a non-terminating error' {
+        Mock Invoke-NonBlocking { param($ScriptBlock, $ArgumentList) & $ScriptBlock @ArgumentList }
+        Mock Get-AppxPackage { [PSCustomObject]@{ PackageFullName = 'One.App_1.0' } }
+        Mock Remove-AppxPackage { Write-Error 'access denied' }
+
+        Remove-AppxApp -app 'One.App' -targetUser 'CurrentUser' | Should -BeFalse
+    }
+
+    It 'returns false and reports a terminating Appx failure' {
+        Mock Invoke-NonBlocking { throw 'access denied' }
+        Mock Write-Error {}
+
+        Remove-AppxApp -app 'One.App' -targetUser 'CurrentUser' | Should -BeFalse
+        Should -Invoke Write-Error -Times 1 -Exactly -ParameterFilter {
+            $Message -like '*Unable to remove One.App via Appx*access denied*'
+        }
+    }
+
 }
 
 Describe 'Test-AppStillInstalled' {

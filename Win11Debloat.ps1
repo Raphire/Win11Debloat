@@ -194,10 +194,12 @@ $script:GuiWindow = $null
 $script:CancelRequested = $false
 $script:ApplyProgressCallback = $null
 $script:ApplySubStepCallback = $null
+$script:RegistryImportFailures = 0
+$script:AppRemovalFailures = 0
 
-# Check if current powershell environment is limited by security policies
+# Check if current PowerShell environment is limited by security policies
 if ($ExecutionContext.SessionState.LanguageMode -ne "FullLanguage") {
-    Write-Error "Win11Debloat is unable to run on your system, powershell execution is restricted by security policies"
+    Write-Error "Win11Debloat is unable to run on your system, PowerShell execution is restricted by security policies"
     Write-Output "Press any key to exit..."
     $null = [System.Console]::ReadKey()
     Exit
@@ -286,7 +288,6 @@ catch { }
 # Check if script has all required files
 if (-not ((Test-Path $script:DefaultSettingsFilePath) -and (Test-Path $script:AppsListFilePath) -and (Test-Path $script:RegfilesPath) -and (Test-Path $script:AssetsPath) -and (Test-Path $script:AppSelectionSchema) -and (Test-Path $script:ApplyChangesWindowSchema) -and (Test-Path $script:SharedStylesSchema) -and (Test-Path $script:BubbleHintSchema) -and (Test-Path $script:RestoreBackupWindowSchema) -and (Test-Path $script:FeaturesFilePath))) {
     Write-Error "Win11Debloat is unable to find required files, please ensure all script files are present"
-    Write-Output ""
     Write-Output "Press any key to exit..."
     $null = [System.Console]::ReadKey()
     Exit
@@ -306,7 +307,6 @@ try {
 }
 catch {
     Write-Error "Failed to load feature info from Features.json file"
-    Write-Output ""
     Write-Output "Press any key to exit..."
     $null = [System.Console]::ReadKey()
     Exit

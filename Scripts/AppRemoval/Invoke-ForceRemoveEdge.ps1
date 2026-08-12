@@ -3,6 +3,12 @@
         Forcefully uninstalls Microsoft Edge and removes its leftover shortcuts and autostart entries.
 #>
 function Invoke-ForceRemoveEdge {
+    if ($script:Params.ContainsKey("WhatIf")) {
+        Write-Host "[WhatIf] Forcefully uninstall Microsoft Edge" -ForegroundColor Cyan
+        Write-Host ""
+        return
+    }
+
     Write-Host "> Forcefully uninstalling Microsoft Edge..."
 
     $regView = [Microsoft.Win32.RegistryView]::Registry32

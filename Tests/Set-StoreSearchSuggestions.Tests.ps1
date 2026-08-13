@@ -126,17 +126,32 @@ Describe 'Set-StoreSearchSuggestionsDisabled' {
         $acl.AddedRules | Should -HaveCount 1
     }
 
-    It 'surfaces ACL failures instead of reporting the database as disabled' {
+    It 'warns and does not report success when reading the ACL fails' {
         $script:Params = @{}
         Mock Test-Path { $true }
         Mock Get-Acl { throw 'access denied' }
         Mock Set-Acl { throw 'ACL must not be written after a read failure.' }
+        Mock Write-Warning {}
 
-        {
-            Set-StoreSearchSuggestionsDisabled -StoreAppsDatabase 'C:\Users\Alice\AppData\Local\Packages\store.db'
-        } | Should -Throw '*access denied*'
+        Set-StoreSearchSuggestionsDisabled -StoreAppsDatabase 'C:\Users\Alice\AppData\Local\Packages\store.db'
 
+        Should -Invoke Write-Warning -Times 1 -Exactly
+        Should -Invoke Write-Host -Times 0 -Exactly -ParameterFilter { $Object -like 'Disabled Microsoft Store search suggestions*' }
         Should -Invoke Set-Acl -Times 0 -Exactly
+    }
+
+    It 'warns and does not report success when writing the ACL fails' {
+        $script:Params = @{}
+        $acl = New-TestStoreDatabaseAcl
+        Mock Test-Path { $true }
+        Mock Get-Acl { $acl }
+        Mock Set-Acl { throw 'access denied' }
+        Mock Write-Warning {}
+
+        Set-StoreSearchSuggestionsDisabled -StoreAppsDatabase 'C:\Users\Alice\AppData\Local\Packages\store.db'
+
+        Should -Invoke Write-Warning -Times 1 -Exactly
+        Should -Invoke Write-Host -Times 0 -Exactly -ParameterFilter { $Object -like 'Disabled Microsoft Store search suggestions*' }
     }
 }
 

@@ -117,12 +117,25 @@ Describe 'Get-PendingTweakActions' {
         $checkBox = New-Object System.Windows.Controls.CheckBox
         $checkBox.Visibility = 'Visible'
         $window.RegisterName('DisableTelemetryCheckBox', $checkBox)
-        $script:UiControlMappings = @{ DisableTelemetryCheckBox = [PSCustomObject]@{ Category = 'Privacy'; Type = 'feature'; FeatureId = 'DisableTelemetry' } }
+        $script:UiControlMappings = @{ DisableTelemetryCheckBox = [PSCustomObject]@{ Category = 'Privacy & Suggested Content'; CategoryId = 'PrivacySuggestedContent'; Type = 'feature'; FeatureId = 'DisableTelemetry' } }
 
-        $map = Get-CategoryTweakPresetMap -Window $window -Category 'Privacy'
+        $map = Get-CategoryTweakPresetMap -Window $window -CategoryId 'PrivacySuggestedContent'
 
         $map['DisableTelemetryCheckBox'].ControlType | Should -Be 'CheckBox'
         $map['DisableTelemetryCheckBox'].DesiredValue | Should -BeTrue
+    }
+
+    It 'matches a mapping whose CategoryId fell back to its Name, for a category missing CategoryId' {
+        $window = New-TestWindow
+        $checkBox = New-Object System.Windows.Controls.CheckBox
+        $checkBox.Visibility = 'Visible'
+        $window.RegisterName('LegacyCheckBox', $checkBox)
+        # New-DynamicTweakControls falls back to Name when a category has no CategoryId of its own.
+        $script:UiControlMappings = @{ LegacyCheckBox = [PSCustomObject]@{ Category = 'Legacy Category'; CategoryId = 'Legacy Category'; Type = 'feature'; FeatureId = 'SomeFeature' } }
+
+        $map = Get-CategoryTweakPresetMap -Window $window -CategoryId 'Legacy Category'
+
+        $map['LegacyCheckBox'].ControlType | Should -Be 'CheckBox'
     }
 
     It 'updates navigation visibility and progress indicators for an interior tab' {
@@ -139,6 +152,26 @@ Describe 'Get-PendingTweakActions' {
         $window.FindName('NextBtn').Visibility | Should -Be 'Visible'
         $window.FindName('ProgressIndicator1').Fill | Should -Be $window.Resources['ProgressActiveColor']
         $window.FindName('ProgressIndicator3').Fill | Should -Be $window.Resources['ProgressInactiveColor']
+    }
+}
+
+Describe 'Update-AppRemovalScopeDescription' {
+    It 'matches on the ComboBoxItem Name rather than its (translatable) Content for <Name>' -ForEach @(
+        @{ Name = 'AppRemovalScopeAllUsers'; ExpectedText = 'Apps will be removed for all users and from the Windows image to prevent reinstallation for new users.' }
+        @{ Name = 'AppRemovalScopeCurrentUser'; ExpectedText = 'Apps will only be removed for the current user.' }
+        @{ Name = 'AppRemovalScopeTargetUser'; ExpectedText = 'Apps will only be removed for the specified target user.' }
+    ) {
+        $combo = New-Object System.Windows.Controls.ComboBox
+        $item = New-Object System.Windows.Controls.ComboBoxItem
+        $item.Name = $Name
+        $item.Content = 'Texto traducido'
+        $combo.Items.Add($item) | Out-Null
+        $combo.SelectedItem = $item
+        $description = New-Object System.Windows.Controls.TextBlock
+
+        Update-AppRemovalScopeDescription -AppRemovalScopeCombo $combo -AppRemovalScopeDescription $description
+
+        $description.Text | Should -Be $ExpectedText
     }
 }
 

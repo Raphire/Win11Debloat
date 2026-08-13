@@ -219,8 +219,8 @@ function Get-TweakPresetControlMap {
     .PARAMETER Window
         The window that owns the visible tweak controls.
 
-    .PARAMETER Category
-        The category whose mapped controls are included.
+    .PARAMETER CategoryId
+        The stable CategoryId (from Features.json) whose mapped controls are included.
 
     .OUTPUTS
         System.Collections.Hashtable. Control metadata keyed by control name.
@@ -228,7 +228,7 @@ function Get-TweakPresetControlMap {
 function Get-CategoryTweakPresetMap {
     param(
         [System.Windows.Window]$Window,
-        [string]$Category
+        [string]$CategoryId
     )
 
     $presetMap = @{}
@@ -236,7 +236,7 @@ function Get-CategoryTweakPresetMap {
 
     foreach ($controlName in $script:UiControlMappings.Keys) {
         $mapping = $script:UiControlMappings[$controlName]
-        if ($mapping.Category -ne $Category) { continue }
+        if ($mapping.CategoryId -ne $CategoryId) { continue }
 
         $control = $Window.FindName($controlName)
         if (-not $control -or $control.Visibility -ne 'Visible') { continue }
@@ -403,8 +403,8 @@ function Initialize-TweakPresetSources {
 
     $script:DefaultTweakPresetMap = Get-TweakPresetControlMap -Window $Window -SettingsJson $DefaultSettingsJson
     $script:LastUsedTweakPresetMap = Get-TweakPresetControlMap -Window $Window -SettingsJson $LastUsedSettingsJson
-    $script:PrivacyTweakPresetMap = Get-CategoryTweakPresetMap -Window $Window -Category 'Privacy & Suggested Content'
-    $script:AITweakPresetMap = Get-CategoryTweakPresetMap -Window $Window -Category 'AI'
+    $script:PrivacyTweakPresetMap = Get-CategoryTweakPresetMap -Window $Window -CategoryId 'PrivacySuggestedContent'
+    $script:AITweakPresetMap = Get-CategoryTweakPresetMap -Window $Window -CategoryId 'AI'
 
     $presetLastUsedTweaksBtn = $Window.FindName('PresetLastUsedTweaksBtn')
     if ($presetLastUsedTweaksBtn) {

@@ -182,14 +182,15 @@ function Update-AppRemovalScopeDescription {
 
     $selectedItem = $AppRemovalScopeCombo.SelectedItem
     if ($selectedItem) {
-        switch ($selectedItem.Content) {
-            "All users" {
+        # Content is the display text and will change once translated; Name is stable.
+        switch ($selectedItem.Name) {
+            "AppRemovalScopeAllUsers" {
                 $AppRemovalScopeDescription.Text = "Apps will be removed for all users and from the Windows image to prevent reinstallation for new users."
             }
-            "Current user only" {
+            "AppRemovalScopeCurrentUser" {
                 $AppRemovalScopeDescription.Text = "Apps will only be removed for the current user."
             }
-            "Target user only" {
+            "AppRemovalScopeTargetUser" {
                 $AppRemovalScopeDescription.Text = "Apps will only be removed for the specified target user."
             }
         }

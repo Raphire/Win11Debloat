@@ -234,8 +234,17 @@ function New-DynamicTweakControls {
         foreach ($c in $featuresJson.Categories) {
             $categoryName = if ($c -is [string]) { $c } else { $c.Name }
             if ($categoriesPresent.ContainsKey($categoryName)) {
-                # Store the full category object (or create one with default icon for string categories)
-                $categoryObj = if ($c -is [string]) { @{Name = $c; Icon = '&#xE712;' } } else { $c }
+                # Store the full category object (or create one with default icon for string categories).
+                # A category without its own CategoryId falls back to its Name, same as before CategoryId existed.
+                $categoryObj = if ($c -is [string]) {
+                    @{Name = $c; CategoryId = $c; Icon = '&#xE712;' }
+                }
+                elseif (-not $c.CategoryId) {
+                    @{Name = $c.Name; CategoryId = $c.Name; Icon = $c.Icon }
+                }
+                else {
+                    $c
+                }
                 $orderedCategories += $categoryObj
             }
         }
@@ -243,7 +252,7 @@ function New-DynamicTweakControls {
     else {
         # For backward compatibility, create category objects from keys
         foreach ($catName in $categoriesPresent.Keys) {
-            $orderedCategories += @{Name = $catName; Icon = '&#xE712;' }
+            $orderedCategories += @{Name = $catName; CategoryId = $catName; Icon = '&#xE712;' }
         }
     }
 
@@ -255,6 +264,7 @@ function New-DynamicTweakControls {
 
     foreach ($categoryObj in $orderedCategories) {
         $categoryName = $categoryObj.Name
+        $categoryId = $categoryObj.CategoryId
 
         # Card is created lazily on the first rendered item
         $panel = $null
@@ -359,7 +369,7 @@ function New-DynamicTweakControls {
                             try { $lblBorderObj = $Window.FindName("$comboName`_LabelBorder") } catch {}
                             if ($lblBorderObj) { $lblBorderObj.ToolTip = $tipBlock }
                         }
-                        $script:UiControlMappings[$comboName] = @{ Type = 'feature'; FeatureId = $soleFeature.FeatureId; Label = $soleFeature.Label; Category = $categoryName }
+                        $script:UiControlMappings[$comboName] = @{ Type = 'feature'; FeatureId = $soleFeature.FeatureId; Label = $soleFeature.Label; Category = $categoryName; CategoryId = $categoryId }
                     }
                     continue
                 }
@@ -379,7 +389,7 @@ function New-DynamicTweakControls {
                     try { $lblBorderObj = $Window.FindName("$comboName`_LabelBorder") } catch {}
                     if ($lblBorderObj) { $lblBorderObj.ToolTip = $tipBlock }
                 }
-                $script:UiControlMappings[$comboName] = @{ Type = 'group'; Values = $filteredValues; Label = $group.Label; Category = $categoryName }
+                $script:UiControlMappings[$comboName] = @{ Type = 'group'; Values = $filteredValues; Label = $group.Label; Category = $categoryName; CategoryId = $categoryId }
             }
             elseif ($item.Type -eq 'feature') {
                 $feature = $item.Data
@@ -406,7 +416,7 @@ function New-DynamicTweakControls {
                     try { $lblBorderObj = $Window.FindName("$comboName`_LabelBorder") } catch {}
                     if ($lblBorderObj) { $lblBorderObj.ToolTip = $tipBlock }
                 }
-                $script:UiControlMappings[$comboName] = @{ Type = 'feature'; FeatureId = $feature.FeatureId; Label = $feature.Label; Category = $categoryName }
+                $script:UiControlMappings[$comboName] = @{ Type = 'feature'; FeatureId = $feature.FeatureId; Label = $feature.Label; Category = $categoryName; CategoryId = $categoryId }
             }
         }
     }

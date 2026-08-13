@@ -174,6 +174,10 @@ function Update-AppSelectionStatus {
     }
 }
 
+<#
+    .SYNOPSIS
+        Updates the app-removal scope description to match the selected ComboBoxItem.
+#>
 function Update-AppRemovalScopeDescription {
     param(
         [System.Windows.Controls.ComboBox]$AppRemovalScopeCombo,

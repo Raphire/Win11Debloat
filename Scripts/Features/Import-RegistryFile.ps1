@@ -12,19 +12,15 @@ function Import-RegistryFile {
 
     if (-not (Test-Path $regFilePath)) {
         $errorMessage = "Unable to find registry file: $path ($regFilePath)"
-        $script:RegistryImportFailures++
         Write-Host "Error: $errorMessage" -ForegroundColor Red
-        Write-Host ""
-        throw $errorMessage
+        return $false
     }
 
     $importScript = {
         param($targetRegFilePath, $hiveContext)
 
         if ($script:Params.ContainsKey("WhatIf")) {
-            Invoke-RegistryOperationsFromRegFile -RegFilePath $targetRegFilePath
-            Write-Host ""
-            return
+            return (Invoke-RegistryOperationsFromRegFile -RegFilePath $targetRegFilePath)
         }
 
         # When the target user's hive is already loaded under their SID, the .reg file's
@@ -33,10 +29,11 @@ function Import-RegistryFile {
         $usePowerShellFallbackOnly = $hiveContext -and [bool]$hiveContext.WasAlreadyLoaded
 
         if ($usePowerShellFallbackOnly) {
-            Invoke-RegistryOperationsFromRegFile -RegFilePath $targetRegFilePath
-            Write-Host "The operation completed successfully via PowerShell registry writer."
-            Write-Host ""
-            return
+            $fallbackSucceeded = Invoke-RegistryOperationsFromRegFile -RegFilePath $targetRegFilePath
+            if ($fallbackSucceeded) {
+                Write-Host "The operation completed successfully via PowerShell registry writer."
+            }
+            return $fallbackSucceeded
         }
 
         $regResult = Invoke-NonBlocking -ScriptBlock {
@@ -89,26 +86,29 @@ function Import-RegistryFile {
         if (-not $hasSuccess) {
             $details = if ($regResult.Error) { $regResult.Error } else { "Exit code: $($regResult.ExitCode)" }
             Write-Warning "reg import failed for '$path'. Falling back to PowerShell registry writer. Details: $details"
-            Invoke-RegistryOperationsFromRegFile -RegFilePath $targetRegFilePath
-            Write-Host "The operation completed successfully via PowerShell registry writer."
+            $fallbackSucceeded = Invoke-RegistryOperationsFromRegFile -RegFilePath $targetRegFilePath
+            if ($fallbackSucceeded) {
+                Write-Host "The operation completed successfully via PowerShell registry writer."
+            }
+            return $fallbackSucceeded
         }
 
-        Write-Host ""
+        return $true
     }
 
     try {
         if ($usesOfflineHive) {
             # Sysprep targets Default user, User targets the specified user. Logged-in users already have their hive mounted under HKU\<SID>.
             $targetUserName = if ($script:Params.ContainsKey("Sysprep")) { "Default" } else { $script:Params.Item("User") }
-            Invoke-WithTargetUserHive -TargetUserName $targetUserName -ScriptBlock $importScript -ArgumentObject $regFilePath -PassHiveContext
+            $succeeded = Invoke-WithTargetUserHive -TargetUserName $targetUserName -ScriptBlock $importScript -ArgumentObject $regFilePath -PassHiveContext
         }
         else {
-            & $importScript $regFilePath $null
+            $succeeded = & $importScript $regFilePath $null
         }
+        return [bool]$succeeded
     }
     catch {
-        $script:RegistryImportFailures++
         Write-Host $_.Exception.Message -ForegroundColor Red
-        Write-Host ""
+        return $false
     }
 }

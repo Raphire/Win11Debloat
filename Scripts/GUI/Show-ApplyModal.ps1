@@ -114,9 +114,14 @@ function Show-ApplyModal {
         try {
             Invoke-AllChanges
 
-            $registryImportFailureCount = [int]$script:RegistryImportFailures
             $appRemovalFailureCount = [int]$script:AppRemovalFailures
-            $failureCount = $registryImportFailureCount + $appRemovalFailureCount
+            $applyFailureCount = [int]$script:ApplyFeatureFailures
+            $undoFailureCount = [int]$script:UndoFeatureFailures
+            $featureFailureCount = $applyFailureCount + $undoFailureCount
+            $prerequisiteFailureCount = [int]$script:PrerequisiteFailures
+            # App removals are a subset of failed features, so adding both counters
+            # would report each affected feature twice.
+            $failureCount = $featureFailureCount
             $appRemovalVerificationUnavailable = [bool]$script:AppRemovalVerificationUnavailable
             
             # Restart explorer if requested
@@ -144,7 +149,7 @@ function Show-ApplyModal {
                 $script:ApplyCompletionIconEl.Foreground = [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#e8912d"))
                 $script:ApplyCompletionTitleEl.Text = "Cancelled"
                 $script:ApplyCompletionMessageEl.Text = "Script execution was cancelled by the user."
-            } elseif ($failureCount -gt 0 -or $appRemovalVerificationUnavailable) {
+            } elseif ($failureCount -gt 0 -or $prerequisiteFailureCount -gt 0 -or $appRemovalVerificationUnavailable) {
                 if ($failureCount -gt 0) {
                     Write-Host "Script completed with $failureCount error(s)."
                 }
@@ -158,8 +163,10 @@ function Show-ApplyModal {
                 else {
                     $script:ApplyCompletionTitleEl.Text = "Changes Applied with Errors"
                     $failureMessages = @()
-                    if ($registryImportFailureCount -gt 0) { $failureMessages += "$registryImportFailureCount registry change(s) failed" }
                     if ($appRemovalFailureCount -gt 0) { $failureMessages += "$appRemovalFailureCount app removal(s) failed" }
+                    if ($applyFailureCount -gt 0) { $failureMessages += "$applyFailureCount feature change(s) failed to apply" }
+                    if ($undoFailureCount -gt 0) { $failureMessages += "$undoFailureCount feature change(s) failed to undo" }
+                    if ($prerequisiteFailureCount -gt 0) { $failureMessages += "$prerequisiteFailureCount requested prerequisite(s) could not be completed" }
                     if ($appRemovalVerificationUnavailable) { $failureMessages += "Unable to verify if all apps were uninstalled successfully" }
                     $script:ApplyCompletionMessageEl.Text = "$($failureMessages -join '; '). See console for details."
                 }

@@ -203,7 +203,7 @@ function Invoke-RegistryOperationsFromRegFile {
 
     if ($script:Params.ContainsKey("WhatIf")) {
         Write-Host "[WhatIf] Apply $totalOperations registry changes from '$RegFilePath'" -ForegroundColor Cyan
-        return
+        return $true
     }
 
     foreach ($operation in $operations) {
@@ -222,5 +222,8 @@ function Invoke-RegistryOperationsFromRegFile {
 
     if ($accessDeniedCount -gt 0) {
         Write-Warning "Registry fallback import completed with $accessDeniedCount access-restricted operation(s) skipped in '$RegFilePath'."
+        return $false
     }
+
+    return $true
 }

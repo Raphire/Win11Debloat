@@ -23,12 +23,12 @@ BeforeAll {
 Describe 'Enable-WindowsFeature' {
     BeforeEach {
         $script:Params = @{}
-        Mock Invoke-NonBlocking { @() }
+        Mock Invoke-NonBlocking { [PSCustomObject]@{ Success = $true; Output = $null; Error = $null } }
         Mock Write-Host {}
     }
 
     It 'schedules the requested feature with the non-blocking runner' {
-        Enable-WindowsFeature -FeatureName 'Feature.One'
+        Enable-WindowsFeature -FeatureName 'Feature.One' | Should -BeTrue
 
         Should -Invoke Invoke-NonBlocking -Times 1 -Exactly -ParameterFilter { $ArgumentList -eq 'Feature.One' }
     }
@@ -40,7 +40,7 @@ Describe 'Enable-WindowsFeature' {
             $script:optionalFeatureBlock = $ScriptBlock
             $script:optionalFeatureArguments = $ArgumentList
         }
-        Enable-WindowsFeature -FeatureName 'Feature.One'
+        Enable-WindowsFeature -FeatureName 'Feature.One' | Should -BeFalse
         & $script:optionalFeatureBlock $script:optionalFeatureArguments
 
         $global:OptionalFeatureCalls | Should -HaveCount 1
@@ -49,6 +49,27 @@ Describe 'Enable-WindowsFeature' {
         $global:OptionalFeatureCalls[0].FeatureName | Should -Be 'Feature.One'
         $global:OptionalFeatureCalls[0].All | Should -BeTrue
         $global:OptionalFeatureCalls[0].NoRestart | Should -BeTrue
+    }
+
+    It 'writes optional-feature output while returning true' {
+        Mock Invoke-NonBlocking {
+            param($ScriptBlock, $ArgumentList)
+            & $ScriptBlock $ArgumentList
+        }
+        Mock Enable-WindowsOptionalFeature { [PSCustomObject]@{ State = 'Enabled'; RestartNeeded = $false } }
+
+        Enable-WindowsFeature -FeatureName 'Feature.One' | Should -BeTrue
+
+        Should -Invoke Write-Host -Times 1 -Exactly -ParameterFilter { $Object -match 'Enabled' }
+    }
+
+    It 'reports the worker error and returns false' {
+        Mock Invoke-NonBlocking { [PSCustomObject]@{ Success = $false; Output = $null; Error = 'feature servicing failed' } }
+        Mock Write-Warning {}
+
+        Enable-WindowsFeature -FeatureName 'Feature.One' | Should -BeFalse
+
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -match 'feature servicing failed' }
     }
 
     It 'does not schedule changes in WhatIf mode' {
@@ -69,19 +90,19 @@ Describe 'Enable-WindowsFeature' {
 
         Enable-WindowsFeature -FeatureName 'Feature.One'
 
-        { & $script:optionalFeatureBlock $script:optionalFeatureArguments } | Should -Throw 'feature servicing failed'
+        (& $script:optionalFeatureBlock $script:optionalFeatureArguments).Success | Should -BeFalse
     }
 }
 
 Describe 'Disable-WindowsFeature' {
     BeforeEach {
         $script:Params = @{}
-        Mock Invoke-NonBlocking { @() }
+        Mock Invoke-NonBlocking { [PSCustomObject]@{ Success = $true; Output = $null; Error = $null } }
         Mock Write-Host {}
     }
 
     It 'schedules the requested feature with the non-blocking runner' {
-        Disable-WindowsFeature -FeatureName 'Feature.One'
+        Disable-WindowsFeature -FeatureName 'Feature.One' | Should -BeTrue
 
         Should -Invoke Invoke-NonBlocking -Times 1 -Exactly -ParameterFilter { $ArgumentList -eq 'Feature.One' }
     }
@@ -93,7 +114,7 @@ Describe 'Disable-WindowsFeature' {
             $script:optionalFeatureBlock = $ScriptBlock
             $script:optionalFeatureArguments = $ArgumentList
         }
-        Disable-WindowsFeature -FeatureName 'Feature.One'
+        Disable-WindowsFeature -FeatureName 'Feature.One' | Should -BeFalse
         & $script:optionalFeatureBlock $script:optionalFeatureArguments
 
         $global:OptionalFeatureCalls | Should -HaveCount 1
@@ -102,6 +123,27 @@ Describe 'Disable-WindowsFeature' {
         $global:OptionalFeatureCalls[0].FeatureName | Should -Be 'Feature.One'
         $global:OptionalFeatureCalls[0].All | Should -BeFalse
         $global:OptionalFeatureCalls[0].NoRestart | Should -BeTrue
+    }
+
+    It 'writes optional-feature output while returning true' {
+        Mock Invoke-NonBlocking {
+            param($ScriptBlock, $ArgumentList)
+            & $ScriptBlock $ArgumentList
+        }
+        Mock Disable-WindowsOptionalFeature { [PSCustomObject]@{ State = 'Disabled'; RestartNeeded = $false } }
+
+        Disable-WindowsFeature -FeatureName 'Feature.One' | Should -BeTrue
+
+        Should -Invoke Write-Host -Times 1 -Exactly -ParameterFilter { $Object -match 'Disabled' }
+    }
+
+    It 'reports the worker error and returns false' {
+        Mock Invoke-NonBlocking { [PSCustomObject]@{ Success = $false; Output = $null; Error = 'feature servicing failed' } }
+        Mock Write-Warning {}
+
+        Disable-WindowsFeature -FeatureName 'Feature.One' | Should -BeFalse
+
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -match 'feature servicing failed' }
     }
 
     It 'does not schedule changes in WhatIf mode' {
@@ -122,7 +164,7 @@ Describe 'Disable-WindowsFeature' {
 
         Disable-WindowsFeature -FeatureName 'Feature.One'
 
-        { & $script:optionalFeatureBlock $script:optionalFeatureArguments } | Should -Throw 'feature servicing failed'
+        (& $script:optionalFeatureBlock $script:optionalFeatureArguments).Success | Should -BeFalse
     }
 }
 

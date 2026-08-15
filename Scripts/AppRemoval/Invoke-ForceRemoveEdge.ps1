@@ -5,32 +5,42 @@
 function Invoke-ForceRemoveEdge {
     if ($script:Params.ContainsKey("WhatIf")) {
         Write-Host "[WhatIf] Forcefully uninstall Microsoft Edge" -ForegroundColor Cyan
-        Write-Host ""
-        return
+        return $true
     }
 
-    Write-Host "> Forcefully uninstalling Microsoft Edge..."
+    try {
+        Write-Host "> Forcefully uninstalling Microsoft Edge..."
 
-    $regView = [Microsoft.Win32.RegistryView]::Registry32
-    $hklm = [Microsoft.Win32.RegistryKey]::OpenBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, $regView)
-    $hklm.CreateSubKey('SOFTWARE\Microsoft\EdgeUpdateDev').SetValue('AllowUninstall', '')
+        $regView = [Microsoft.Win32.RegistryView]::Registry32
+        $hklm = [Microsoft.Win32.RegistryKey]::OpenBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, $regView)
+        $hklm.CreateSubKey('SOFTWARE\Microsoft\EdgeUpdateDev').SetValue('AllowUninstall', '')
 
-    # Create stub (This somehow allows uninstalling Edge)
-    $edgeStub = "$env:SystemRoot\SystemApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe"
-    New-Item $edgeStub -ItemType Directory | Out-Null
-    New-Item "$edgeStub\MicrosoftEdge.exe" | Out-Null
+        # Create stub (This somehow allows uninstalling Edge)
+        $edgeStub = "$env:SystemRoot\SystemApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe"
+        New-Item $edgeStub -ItemType Directory -Force -ErrorAction Stop | Out-Null
+        New-Item "$edgeStub\MicrosoftEdge.exe" -ItemType File -Force -ErrorAction Stop | Out-Null
 
     # Remove edge
-    $uninstallRegKey = $hklm.OpenSubKey('SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft Edge')
-    if ($null -ne $uninstallRegKey) {
+        $uninstallRegKey = $hklm.OpenSubKey('SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft Edge')
+        if ($null -eq $uninstallRegKey) {
+            Write-Host "Unable to forcefully uninstall Microsoft Edge, uninstaller could not be found" -ForegroundColor Red
+            return $false
+        }
+
         Write-Host "Running uninstaller..."
         $uninstallString = $uninstallRegKey.GetValue('UninstallString') + ' --force-uninstall'
-        Invoke-NonBlocking -ScriptBlock {
+        $exitCode = Invoke-NonBlocking -ScriptBlock {
             param($cmd)
-            Start-Process cmd.exe "/c $cmd" -WindowStyle Hidden -Wait
+            $process = Start-Process cmd.exe "/c $cmd" -WindowStyle Hidden -Wait -PassThru
+            return $process.ExitCode
         } -ArgumentList $uninstallString
+        if ($exitCode -ne 0) {
+            Write-Warning "Microsoft Edge uninstaller failed with exit code $exitCode."
+            return $false
+        }
 
         Write-Host "Removing leftover files..."
+        $cleanupSucceeded = $true
 
         $edgePaths = @(
             "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Microsoft Edge.lnk",
@@ -44,22 +54,81 @@ function Invoke-ForceRemoveEdge {
 
         foreach ($path in $edgePaths) {
             if (Test-Path -Path $path) {
-                Remove-Item -Path $path -Force -Recurse -ErrorAction SilentlyContinue
-                Write-Host "  Removed $path" -ForegroundColor DarkGray
+                try {
+                    Remove-Item -Path $path -Force -Recurse -ErrorAction Stop
+                    Write-Host "  Removed $path" -ForegroundColor DarkGray
+                }
+                catch {
+                    Write-Warning "Failed to remove Edge leftover '$path': $($_.Exception.Message)"
+                    $cleanupSucceeded = $false
+                }
             }
         }
 
         Write-Host "Cleaning up registry..."
+        $registryCleanupSucceeded = $true
 
-        # Remove MS Edge from autostart
-        reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run" /v "MicrosoftEdgeAutoLaunch_A9F6DCE4ABADF4F51CF45CD7129E3C6C" /f *>$null
-        reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run" /v "Microsoft Edge Update" /f *>$null
-        reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run" /v "MicrosoftEdgeAutoLaunch_A9F6DCE4ABADF4F51CF45CD7129E3C6C" /f *>$null
-        reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run" /v "Microsoft Edge Update" /f *>$null
+        # Remove MS Edge from autostart. Missing values are already-clean state,
+        # while failures to inspect or remove an existing value are reported.
+        $autostartValues = @(
+            @{ Path = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run'; Name = 'MicrosoftEdgeAutoLaunch_A9F6DCE4ABADF4F51CF45CD7129E3C6C' },
+            @{ Path = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run'; Name = 'Microsoft Edge Update' },
+            @{ Path = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run'; Name = 'MicrosoftEdgeAutoLaunch_A9F6DCE4ABADF4F51CF45CD7129E3C6C' },
+            @{ Path = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run'; Name = 'Microsoft Edge Update' }
+        )
+        foreach ($autostartValue in $autostartValues) {
+            if (-not (Remove-EdgeAutostartValue -Path $autostartValue.Path -Name $autostartValue.Name)) {
+                $registryCleanupSucceeded = $false
+            }
+        }
+
+        if (-not $cleanupSucceeded -or -not $registryCleanupSucceeded) {
+            Write-Warning "Microsoft Edge was uninstalled, but some leftover files or autostart entries could not be removed."
+            return $false
+        }
 
         Write-Host "Microsoft Edge was uninstalled"
+        return $true
     }
-    else {
-        Write-Host "Unable to forcefully uninstall Microsoft Edge, uninstaller could not be found" -ForegroundColor Red
+    catch {
+        Write-Warning "Failed to forcefully uninstall Microsoft Edge: $($_.Exception.Message)"
+        return $false
+    }
+    finally {
+        if ($uninstallRegKey) { $uninstallRegKey.Dispose() }
+        if ($hklm) { $hklm.Dispose() }
+    }
+}
+
+function Remove-EdgeAutostartValue {
+    param(
+        [Parameter(Mandatory)]
+        [string]$Path,
+        [Parameter(Mandatory)]
+        [string]$Name
+    )
+
+    try {
+        $properties = Get-ItemProperty -Path $Path -ErrorAction Stop
+    }
+    catch [System.Management.Automation.ItemNotFoundException] {
+        return $true
+    }
+    catch {
+        Write-Warning "Failed to inspect Edge autostart entry '$Path\$Name': $($_.Exception.Message)"
+        return $false
+    }
+
+    if (-not $properties.PSObject.Properties[$Name]) {
+        return $true
+    }
+
+    try {
+        Remove-ItemProperty -Path $Path -Name $Name -ErrorAction Stop
+        return $true
+    }
+    catch {
+        Write-Warning "Failed to remove Edge autostart entry '$Path\$Name': $($_.Exception.Message)"
+        return $false
     }
 }

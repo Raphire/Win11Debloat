@@ -6,19 +6,42 @@ function Enable-WindowsFeature {
 
     if ($script:Params.ContainsKey("WhatIf")) {
         Write-Host "[WhatIf] Enable Windows feature: $FeatureName" -ForegroundColor Cyan
-        Write-Host ""
-        return
+        return $true
     }
 
-    $result = Invoke-NonBlocking -ScriptBlock {
-        param($name)
-        Enable-WindowsOptionalFeature -Online -FeatureName $name -All -NoRestart
-    } -ArgumentList $FeatureName
-
-    $dismResult = @($result) | Where-Object { $_ -is [Microsoft.Dism.Commands.ImageObject] }
-    if ($dismResult) {
-        Write-Host ($dismResult | Out-String).Trim()
+    try {
+        $result = Invoke-NonBlocking -ScriptBlock {
+            param($name)
+            try {
+                $output = Enable-WindowsOptionalFeature -Online -FeatureName $name -All -NoRestart -ErrorAction Stop
+                return [PSCustomObject]@{
+                    Success = $true
+                    Output = if ($output) { ($output | Out-String).Trim() } else { $null }
+                    Error = $null
+                }
+            }
+            catch {
+                return [PSCustomObject]@{
+                    Success = $false
+                    Output = $null
+                    Error = $_.Exception.Message
+                }
+            }
+        } -ArgumentList $FeatureName
     }
+    catch {
+        Write-Warning "Failed to enable Windows feature '$FeatureName': $($_.Exception.Message)"
+        return $false
+    }
+
+    if (-not $result -or -not $result.Success) {
+        $details = if ($result -and $result.Error) { ": $($result.Error)" } else { '' }
+        Write-Warning "Failed to enable Windows feature '$FeatureName'$details"
+        return $false
+    }
+
+    if ($result.Output) { Write-Host $result.Output }
+    return $true
 }
 
 # Disables a Windows optional feature and pipes its output to the console
@@ -29,19 +52,42 @@ function Disable-WindowsFeature {
 
     if ($script:Params.ContainsKey("WhatIf")) {
         Write-Host "[WhatIf] Disable Windows feature: $FeatureName" -ForegroundColor Cyan
-        Write-Host ""
-        return
+        return $true
     }
 
-    $result = Invoke-NonBlocking -ScriptBlock {
-        param($name)
-        Disable-WindowsOptionalFeature -Online -FeatureName $name -NoRestart
-    } -ArgumentList $FeatureName
-
-    $dismResult = @($result) | Where-Object { $_ -is [Microsoft.Dism.Commands.ImageObject] }
-    if ($dismResult) {
-        Write-Host ($dismResult | Out-String).Trim()
+    try {
+        $result = Invoke-NonBlocking -ScriptBlock {
+            param($name)
+            try {
+                $output = Disable-WindowsOptionalFeature -Online -FeatureName $name -NoRestart -ErrorAction Stop
+                return [PSCustomObject]@{
+                    Success = $true
+                    Output = if ($output) { ($output | Out-String).Trim() } else { $null }
+                    Error = $null
+                }
+            }
+            catch {
+                return [PSCustomObject]@{
+                    Success = $false
+                    Output = $null
+                    Error = $_.Exception.Message
+                }
+            }
+        } -ArgumentList $FeatureName
     }
+    catch {
+        Write-Warning "Failed to disable Windows feature '$FeatureName': $($_.Exception.Message)"
+        return $false
+    }
+
+    if (-not $result -or -not $result.Success) {
+        $details = if ($result -and $result.Error) { ": $($result.Error)" } else { '' }
+        Write-Warning "Failed to disable Windows feature '$FeatureName'$details"
+        return $false
+    }
+
+    if ($result.Output) { Write-Host $result.Output }
+    return $true
 }
 
 function Test-WindowsOptionalFeatureEnabled {

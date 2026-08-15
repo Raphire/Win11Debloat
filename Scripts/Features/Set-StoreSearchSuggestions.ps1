@@ -12,20 +12,36 @@
     DisableStoreSearchSuggestionsForAllUsers
 #>
 function Set-StoreSearchSuggestionsDisabledForAllUsers {
+    $success = $true
+    $processedProfiles = 0
+
     # Get path to Store app database for all users
     $userPathString = Get-UserDirectory -userName "*" -fileName "AppData\Local\Packages"
     $usersStoreDbPaths = Get-ChildItem -Path $userPathString -ErrorAction SilentlyContinue
 
     # Go through all users and disable start search suggestions
     foreach ($storeDbPath in $usersStoreDbPaths) {
-        Set-StoreSearchSuggestionsDisabled -StoreAppsDatabase ($storeDbPath.FullName + "\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalState\store.db")
+        $processedProfiles++
+        if (-not (Set-StoreSearchSuggestionsDisabled -StoreAppsDatabase ($storeDbPath.FullName + "\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalState\store.db"))) {
+            $success = $false
+        }
     }
 
     # Also disable start search suggestions for the default user profile
     $defaultStoreDbPath = Get-StoreAppsDatabasePathForUser -UserName "Default"
     if ($defaultStoreDbPath) {
-        Set-StoreSearchSuggestionsDisabled -StoreAppsDatabase $defaultStoreDbPath
+        $processedProfiles++
+        if (-not (Set-StoreSearchSuggestionsDisabled -StoreAppsDatabase $defaultStoreDbPath)) {
+            $success = $false
+        }
     }
+
+    if ($processedProfiles -eq 0) {
+        Write-Warning 'Unable to disable Microsoft Store search suggestions because no target user profiles could be resolved.'
+        return $false
+    }
+
+    return $success
 }
 
 
@@ -56,24 +72,22 @@ function Set-StoreSearchSuggestionsDisabled {
 
     if ($script:Params.ContainsKey("WhatIf")) {
         Write-Host "[WhatIf] Disable Microsoft Store search suggestions for user $userName by restricting access to ${StoreAppsDatabase}" -ForegroundColor Cyan
-        return
+        return $true
     }
 
-    # This file doesn't exist in EEA (No Store app suggestions).
-    if (-not (Test-Path -Path $StoreAppsDatabase))
-    {
-        Write-Host "Unable to find Store app database for user $userName, creating it now to prevent Windows from creating it later..." -ForegroundColor Yellow
+    try {
+        # This file doesn't exist in EEA (No Store app suggestions).
+        if (-not (Test-Path -Path $StoreAppsDatabase)) {
+            Write-Host "Unable to find Store app database for user $userName, creating it now to prevent Windows from creating it later..." -ForegroundColor Yellow
 
-        $storeDbDir = Split-Path -Path $StoreAppsDatabase -Parent
+            $storeDbDir = Split-Path -Path $StoreAppsDatabase -Parent
+            if (-not (Test-Path -Path $storeDbDir)) {
+                New-Item -Path $storeDbDir -ItemType Directory -Force -ErrorAction Stop | Out-Null
+            }
 
-        if (-not (Test-Path -Path $storeDbDir)) {
-            New-Item -Path $storeDbDir -ItemType Directory -Force | Out-Null
+            New-Item -Path $StoreAppsDatabase -ItemType File -Force -ErrorAction Stop | Out-Null
         }
 
-        New-Item -Path $StoreAppsDatabase -ItemType File -Force | Out-Null
-    }
-    
-    try {
         $AccountSid = [System.Security.Principal.SecurityIdentifier]::new('S-1-1-0') # 'EVERYONE' group
         $Acl = Get-Acl -Path $StoreAppsDatabase -ErrorAction Stop
         $Ace = [System.Security.AccessControl.FileSystemAccessRule]::new($AccountSid, 'FullControl', 'Deny')
@@ -82,10 +96,11 @@ function Set-StoreSearchSuggestionsDisabled {
     }
     catch {
         Write-Warning "Failed to restrict ACL for store database '$StoreAppsDatabase': $($_.Exception.Message)"
-        return
+        return $false
     }
 
     Write-Host "Disabled Microsoft Store search suggestions for user $userName"
+    return $true
 }
 
 <#
@@ -102,20 +117,36 @@ function Set-StoreSearchSuggestionsDisabled {
     EnableStoreSearchSuggestionsForAllUsers
 #>
 function Set-StoreSearchSuggestionsEnabledForAllUsers {
+    $success = $true
+    $processedProfiles = 0
+
     # Get path to Store app database for all users
     $userPathString = Get-UserDirectory -userName "*" -fileName "AppData\Local\Packages"
     $usersStoreDbPaths = Get-ChildItem -Path $userPathString -ErrorAction SilentlyContinue
 
     # Go through all users and re-enable start search suggestions
     foreach ($storeDbPath in $usersStoreDbPaths) {
-        Set-StoreSearchSuggestionsEnabled -StoreAppsDatabase ($storeDbPath.FullName + "\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalState\store.db")
+        $processedProfiles++
+        if (-not (Set-StoreSearchSuggestionsEnabled -StoreAppsDatabase ($storeDbPath.FullName + "\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalState\store.db"))) {
+            $success = $false
+        }
     }
 
     # Also re-enable for the default user profile
     $defaultStoreDbPath = Get-StoreAppsDatabasePathForUser -UserName "Default"
     if ($defaultStoreDbPath) {
-        Set-StoreSearchSuggestionsEnabled -StoreAppsDatabase $defaultStoreDbPath
+        $processedProfiles++
+        if (-not (Set-StoreSearchSuggestionsEnabled -StoreAppsDatabase $defaultStoreDbPath)) {
+            $success = $false
+        }
     }
+
+    if ($processedProfiles -eq 0) {
+        Write-Warning 'Unable to re-enable Microsoft Store search suggestions because no target user profiles could be resolved.'
+        return $false
+    }
+
+    return $success
 }
 
 <#
@@ -145,23 +176,31 @@ function Set-StoreSearchSuggestionsEnabled {
 
     if ($script:Params.ContainsKey("WhatIf")) {
         Write-Host "[WhatIf] Re-enable Microsoft Store search suggestions for user $userName by restoring access to ${StoreAppsDatabase}" -ForegroundColor Cyan
-        return
+        return $true
     }
 
     if (-not (Test-Path -Path $StoreAppsDatabase)) {
         Write-Host "Store app database not found for user $userName, nothing to undo"
-        return
+        return $true
     }
 
     # Ensure we can modify/delete the file even if restrictive ACLs were set.
     $global:LASTEXITCODE = 0
     takeown /F "$StoreAppsDatabase" /A | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+        Write-Warning "Failed to take ownership of store database '$StoreAppsDatabase' while undoing Microsoft Store search suggestions. Exit code: $LASTEXITCODE"
+        return $false
+    }
     icacls "$StoreAppsDatabase" /grant *S-1-5-32-544:F /C | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+        Write-Warning "Failed to grant Administrators access to store database '$StoreAppsDatabase' while undoing Microsoft Store search suggestions. Exit code: $LASTEXITCODE"
+        return $false
+    }
 
     $everyoneSid = [System.Security.Principal.SecurityIdentifier]::new('S-1-1-0') # 'EVERYONE' group
 
     try {
-        $acl = Get-Acl -Path $StoreAppsDatabase
+        $acl = Get-Acl -Path $StoreAppsDatabase -ErrorAction Stop
         $denyRules = @(
             $acl.Access | Where-Object {
                 if ($_.AccessControlType -ne [System.Security.AccessControl.AccessControlType]::Deny) { return $false }
@@ -179,7 +218,7 @@ function Set-StoreSearchSuggestionsEnabled {
             $null = $acl.RemoveAccessRuleSpecific($denyRule)
         }
 
-        Set-Acl -Path $StoreAppsDatabase -AclObject $acl | Out-Null
+        Set-Acl -Path $StoreAppsDatabase -AclObject $acl -ErrorAction Stop | Out-Null
     }
     catch {
         Write-Warning "Failed to normalize ACL for store database '$StoreAppsDatabase': $($_.Exception.Message)"
@@ -188,9 +227,11 @@ function Set-StoreSearchSuggestionsEnabled {
     try {
         Remove-Item -Path $StoreAppsDatabase -Force -ErrorAction Stop
         Write-Host "Re-enabled Microsoft Store search suggestions for user $userName"
+        return $true
     }
     catch {
-        throw "Failed to remove '$StoreAppsDatabase' while undoing Microsoft Store search suggestions for user $userName. $($_.Exception.Message)"
+        Write-Warning "Failed to remove '$StoreAppsDatabase' while undoing Microsoft Store search suggestions for user $userName. $($_.Exception.Message)"
+        return $false
     }
 }
 

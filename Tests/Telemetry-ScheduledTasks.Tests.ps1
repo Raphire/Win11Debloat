@@ -108,6 +108,15 @@ Describe 'Disable-TelemetryScheduledTasks' {
 
         Should -Invoke Write-Host -Times 1 -Exactly -ParameterFilter { $Object -like "*$Expected*" }
     }
+
+    It 'returns false for an unknown scheduler result' {
+        Mock Get-TelemetryScheduledTasks { @(@{ Path = '\Microsoft\Windows\Test\'; Name = 'Telemetry' }) }
+        Mock Invoke-NonBlocking { $null }
+        Mock Write-Warning {}
+
+        Disable-TelemetryScheduledTasks | Should -BeFalse
+        Should -Invoke Write-Warning -Times 1 -Exactly
+    }
 }
 
 Describe 'Enable-TelemetryScheduledTasks' {
@@ -178,5 +187,14 @@ Describe 'Enable-TelemetryScheduledTasks' {
         Enable-TelemetryScheduledTasks
 
         Should -Invoke Write-Host -Times 1 -Exactly -ParameterFilter { $Object -like "*$Expected*" }
+    }
+
+    It 'returns false when the scheduler throws' {
+        Mock Get-TelemetryScheduledTasks { @(@{ Path = '\Microsoft\Windows\Test\'; Name = 'Telemetry' }) }
+        Mock Invoke-NonBlocking { throw 'scheduler unavailable' }
+        Mock Write-Warning {}
+
+        Enable-TelemetryScheduledTasks | Should -BeFalse
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -match 'scheduler unavailable' }
     }
 }

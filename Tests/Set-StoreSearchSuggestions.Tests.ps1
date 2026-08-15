@@ -37,20 +37,20 @@ Describe 'Store-search suggestion all-user operations' {
             )
         }
         Mock Get-StoreAppsDatabasePathForUser { 'C:\Users\Default\AppData\Local\Packages\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalState\store.db' }
-        Mock Set-StoreSearchSuggestionsDisabled {}
-        Mock Set-StoreSearchSuggestionsEnabled {}
+        Mock Set-StoreSearchSuggestionsDisabled { $true }
+        Mock Set-StoreSearchSuggestionsEnabled { $true }
         Mock Write-Warning {}
     }
 
     It 'disables suggestions for every discovered and Default profile' {
-        Set-StoreSearchSuggestionsDisabledForAllUsers
+        Set-StoreSearchSuggestionsDisabledForAllUsers | Should -BeTrue
 
         Should -Invoke Set-StoreSearchSuggestionsDisabled -Times 3 -Exactly
         Should -Invoke Set-StoreSearchSuggestionsDisabled -Times 1 -Exactly -ParameterFilter { $StoreAppsDatabase -match 'Users\\Default\\' }
     }
 
     It 'enables suggestions for every discovered and Default profile' {
-        Set-StoreSearchSuggestionsEnabledForAllUsers
+        Set-StoreSearchSuggestionsEnabledForAllUsers | Should -BeTrue
 
         Should -Invoke Set-StoreSearchSuggestionsEnabled -Times 3 -Exactly
         Should -Invoke Set-StoreSearchSuggestionsEnabled -Times 1 -Exactly -ParameterFilter { $StoreAppsDatabase -match 'Users\\Default\\' }
@@ -72,6 +72,22 @@ Describe 'Store-search suggestion all-user operations' {
         Should -Invoke Set-StoreSearchSuggestionsEnabled -Times 2 -Exactly
     }
 
+    It 'returns false when any profile cannot be updated' {
+        Mock Set-StoreSearchSuggestionsDisabled { $false } -ParameterFilter { $StoreAppsDatabase -match 'Users\\Bob\\' }
+
+        Set-StoreSearchSuggestionsDisabledForAllUsers | Should -BeFalse
+        Should -Invoke Set-StoreSearchSuggestionsDisabled -Times 3 -Exactly
+    }
+
+    It 'returns false when no target profile can be resolved' {
+        Mock Get-ChildItem { @() }
+        Mock Get-StoreAppsDatabasePathForUser { $null }
+        Mock Write-Warning {}
+
+        Set-StoreSearchSuggestionsDisabledForAllUsers | Should -BeFalse
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -match 'no target user profiles' }
+    }
+
 }
 
 Describe 'Set-StoreSearchSuggestionsDisabled' {
@@ -84,7 +100,7 @@ Describe 'Set-StoreSearchSuggestionsDisabled' {
     }
 
     It 'does not touch the filesystem in WhatIf mode' {
-        Set-StoreSearchSuggestionsDisabled -StoreAppsDatabase 'C:\Users\Alice\AppData\Local\Packages\store.db'
+        Set-StoreSearchSuggestionsDisabled -StoreAppsDatabase 'C:\Users\Alice\AppData\Local\Packages\store.db' | Should -BeTrue
 
         Should -Invoke Test-Path -Times 0 -Exactly
         Should -Invoke Get-Acl -Times 0 -Exactly
@@ -99,7 +115,7 @@ Describe 'Set-StoreSearchSuggestionsDisabled' {
         Mock Get-Acl { $acl }
         Mock Set-Acl {}
 
-        Set-StoreSearchSuggestionsDisabled -StoreAppsDatabase 'C:\Users\Alice\AppData\Local\Packages\store.db'
+        Set-StoreSearchSuggestionsDisabled -StoreAppsDatabase 'C:\Users\Alice\AppData\Local\Packages\store.db' | Should -BeTrue
 
         Should -Invoke New-Item -Times 2 -Exactly
         Should -Invoke New-Item -Times 1 -Exactly -ParameterFilter { $ItemType -eq 'Directory' }
@@ -118,7 +134,7 @@ Describe 'Set-StoreSearchSuggestionsDisabled' {
         Mock Get-Acl { $acl }
         Mock Set-Acl {}
 
-        Set-StoreSearchSuggestionsDisabled -StoreAppsDatabase 'C:\Users\Alice\AppData\Local\Packages\store.db'
+        Set-StoreSearchSuggestionsDisabled -StoreAppsDatabase 'C:\Users\Alice\AppData\Local\Packages\store.db' | Should -BeTrue
 
         Should -Invoke New-Item -Times 0 -Exactly
         Should -Invoke Get-Acl -Times 1 -Exactly
@@ -133,7 +149,7 @@ Describe 'Set-StoreSearchSuggestionsDisabled' {
         Mock Set-Acl { throw 'ACL must not be written after a read failure.' }
         Mock Write-Warning {}
 
-        Set-StoreSearchSuggestionsDisabled -StoreAppsDatabase 'C:\Users\Alice\AppData\Local\Packages\store.db'
+        Set-StoreSearchSuggestionsDisabled -StoreAppsDatabase 'C:\Users\Alice\AppData\Local\Packages\store.db' | Should -BeFalse
 
         Should -Invoke Write-Warning -Times 1 -Exactly
         Should -Invoke Write-Host -Times 0 -Exactly -ParameterFilter { $Object -like 'Disabled Microsoft Store search suggestions*' }
@@ -165,7 +181,7 @@ Describe 'Set-StoreSearchSuggestionsEnabled' {
     }
 
     It 'does nothing when the Store database does not exist' {
-        Set-StoreSearchSuggestionsEnabled -StoreAppsDatabase 'C:\Users\Alice\AppData\Local\Packages\store.db'
+        Set-StoreSearchSuggestionsEnabled -StoreAppsDatabase 'C:\Users\Alice\AppData\Local\Packages\store.db' | Should -BeTrue
 
         Should -Invoke Get-Acl -Times 0 -Exactly
         Should -Invoke Remove-Item -Times 0 -Exactly
@@ -177,7 +193,7 @@ Describe 'Set-StoreSearchSuggestionsEnabled' {
         Mock takeown { throw 'WhatIf should not take ownership.' }
         Mock icacls { throw 'WhatIf should not change ACLs.' }
 
-        Set-StoreSearchSuggestionsEnabled -StoreAppsDatabase 'C:\Users\Alice\AppData\Local\Packages\store.db'
+        Set-StoreSearchSuggestionsEnabled -StoreAppsDatabase 'C:\Users\Alice\AppData\Local\Packages\store.db' | Should -BeTrue
 
         Should -Invoke Test-Path -Times 0 -Exactly
         Should -Invoke takeown -Times 0 -Exactly
@@ -193,7 +209,7 @@ Describe 'Set-StoreSearchSuggestionsEnabled' {
         Mock Set-Acl {}
         Mock Remove-Item {}
 
-        Set-StoreSearchSuggestionsEnabled -StoreAppsDatabase 'C:\Users\Alice\AppData\Local\Packages\store.db'
+        Set-StoreSearchSuggestionsEnabled -StoreAppsDatabase 'C:\Users\Alice\AppData\Local\Packages\store.db' | Should -BeTrue
 
         Should -Invoke takeown -Times 1 -Exactly
         Should -Invoke icacls -Times 1 -Exactly
@@ -211,14 +227,14 @@ Describe 'Set-StoreSearchSuggestionsEnabled' {
         Mock Remove-Item {}
         Mock Write-Warning {}
 
-        Set-StoreSearchSuggestionsEnabled -StoreAppsDatabase 'C:\Users\Alice\AppData\Local\Packages\store.db'
+        Set-StoreSearchSuggestionsEnabled -StoreAppsDatabase 'C:\Users\Alice\AppData\Local\Packages\store.db' | Should -BeTrue
 
         Should -Invoke Write-Warning -Times 1 -Exactly
         Should -Invoke Set-Acl -Times 0 -Exactly
         Should -Invoke Remove-Item -Times 1 -Exactly
     }
 
-    It 'throws a contextual error when the database cannot be removed' {
+    It 'returns false when the database cannot be removed' {
         $acl = New-TestStoreDatabaseAcl
         Mock Test-Path { $true }
         Mock takeown {}
@@ -226,9 +242,9 @@ Describe 'Set-StoreSearchSuggestionsEnabled' {
         Mock Get-Acl { $acl }
         Mock Set-Acl {}
         Mock Remove-Item { throw 'database is locked' }
+        Mock Write-Warning {}
 
-        {
-            Set-StoreSearchSuggestionsEnabled -StoreAppsDatabase 'C:\Users\Alice\AppData\Local\Packages\store.db'
-        } | Should -Throw '*Failed to remove*database is locked*'
+        Set-StoreSearchSuggestionsEnabled -StoreAppsDatabase 'C:\Users\Alice\AppData\Local\Packages\store.db' | Should -BeFalse
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -match 'Failed to remove.*database is locked' }
     }
 }

@@ -272,7 +272,6 @@ function Invoke-ApplyFeatures {
         }
 
         if (-not (Invoke-FeatureApply -FeatureId $featureId)) {
-            $script:ApplyFeatureFailures++
             $script:FeatureFailures++
         }
         Write-Host ""
@@ -315,7 +314,6 @@ function Invoke-UndoFeatures {
         }
 
         if (-not (Invoke-FeatureUndo -FeatureId $featureId)) {
-            $script:UndoFeatureFailures++
             $script:FeatureFailures++
         }
         Write-Host ""
@@ -349,9 +347,6 @@ function Invoke-AllChanges {
 
     $script:AppRemovalFailures = 0
     $script:FeatureFailures = 0
-    $script:ApplyFeatureFailures = 0
-    $script:UndoFeatureFailures = 0
-    $script:PrerequisiteFailures = 0
     $script:AppRemovalVerificationUnavailable = $false
 
     # ---- Gather work items ----
@@ -434,7 +429,7 @@ function Invoke-AllChanges {
             $restorePointSucceeded = Invoke-SystemRestorePoint
             if (-not $restorePointSucceeded) {
                 if ($script:CancelRequested) { return }
-                $script:PrerequisiteFailures++
+                $script:FeatureFailures++
             }
             Write-Host ""
         }
@@ -466,19 +461,9 @@ function Invoke-AllChanges {
         Write-Warning "$($script:AppRemovalFailures) app removal(s) failed. See output above for details."
     }
 
-    if ($script:ApplyFeatureFailures -gt 0) {
+    if ($script:FeatureFailures -gt 0) {
         Write-Host ""
-        Write-Warning "$($script:ApplyFeatureFailures) feature change(s) failed to apply. See output above for details."
-    }
-
-    if ($script:UndoFeatureFailures -gt 0) {
-        Write-Host ""
-        Write-Warning "$($script:UndoFeatureFailures) feature change(s) failed to undo. See output above for details."
-    }
-
-    if ($script:PrerequisiteFailures -gt 0) {
-        Write-Host ""
-        Write-Warning "$($script:PrerequisiteFailures) requested prerequisite(s) could not be completed. Changes continued at your request."
+        Write-Warning "$($script:FeatureFailures) feature change(s) failed. See output above for details."
     }
 
     if ($script:AppRemovalVerificationUnavailable) {

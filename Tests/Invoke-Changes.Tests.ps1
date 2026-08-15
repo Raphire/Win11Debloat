@@ -263,7 +263,6 @@ Describe 'Invoke-ApplyFeatures' {
 
     It 'counts a failed feature application and continues with later features' {
         $script:FeatureFailures = 0
-        $script:ApplyFeatureFailures = 0
         Mock Invoke-FeatureApply {
             param($FeatureId)
             return ($FeatureId -ne 'One')
@@ -272,7 +271,6 @@ Describe 'Invoke-ApplyFeatures' {
         Invoke-ApplyFeatures -FeatureIds @('One', 'Two') -StartStep 1 -TotalSteps 2
 
         $script:FeatureFailures | Should -Be 1
-        $script:ApplyFeatureFailures | Should -Be 1
         Should -Invoke Invoke-FeatureApply -Times 2 -Exactly
     }
 }
@@ -305,13 +303,11 @@ Describe 'Invoke-UndoFeatures' {
 
     It 'counts one failure when a feature undo fails' {
         $script:FeatureFailures = 0
-        $script:UndoFeatureFailures = 0
         Mock Invoke-FeatureUndo { $false }
 
         Invoke-UndoFeatures -FeatureIds @('RegistryUndo') -StartStep 1 -TotalSteps 1
 
         $script:FeatureFailures | Should -Be 1
-        $script:UndoFeatureFailures | Should -Be 1
         Should -Invoke Invoke-FeatureUndo -Times 1 -Exactly
     }
 
@@ -484,15 +480,15 @@ Describe 'Invoke-AllChanges' {
         $script:order | Should -Be @('restore-point', 'apply')
     }
 
-    It 'reports a restore point failure when the user chooses to continue' {
+    It 'counts a restore point failure as a feature failure when the user chooses to continue' {
         $script:Params = @{ CreateRestorePoint = $true; CustomApply = $true }
         $script:UndoParams = @{}
         Mock Invoke-SystemRestorePoint { $false }
 
         Invoke-AllChanges
 
-        $script:PrerequisiteFailures | Should -Be 1
-        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -match 'requested prerequisite' }
+        $script:FeatureFailures | Should -Be 1
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -match '1 feature change\(s\) failed\.' }
     }
 
     It 'reports app removal failures after all requested work completes' {

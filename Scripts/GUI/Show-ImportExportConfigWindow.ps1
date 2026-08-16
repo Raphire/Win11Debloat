@@ -506,19 +506,14 @@ function Import-Configuration {
         return
     }
 
-    if (-not $config.Version) {
-        Write-Error "Invalid configuration file format: '$($openDialog.FileName)'"
-        Show-MessageBox -Message "Invalid configuration file format." -Title 'Invalid Config' -Button 'OK' -Icon 'Error' | Out-Null
+    $consistencyError = Test-ConfigConsistency -Config $config
+    if ($consistencyError) {
+        Write-Error "Invalid configuration file '$($openDialog.FileName)': $consistencyError"
+        Show-MessageBox -Message "Invalid configuration file: $consistencyError" -Title 'Invalid Config' -Button 'OK' -Icon 'Error' | Out-Null
         return
     }
 
     $availableCategories = Get-AvailableImportExportCategories -Config $config
-
-    if ($availableCategories.Count -eq 0) {
-        Write-Warning "Configuration file '$($openDialog.FileName)' contains no importable data."
-        Show-MessageBox -Message "The selected file contains no importable data." -Title 'Invalid Config' -Button 'OK' -Icon 'Error' | Out-Null
-        return
-    }
 
     Write-Host "Available categories in config: $($availableCategories -join ', ')"
 

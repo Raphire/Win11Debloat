@@ -117,7 +117,7 @@ Describe 'Get-PendingTweakActions' {
         $checkBox = New-Object System.Windows.Controls.CheckBox
         $checkBox.Visibility = 'Visible'
         $window.RegisterName('DisableTelemetryCheckBox', $checkBox)
-        $script:UiControlMappings = @{ DisableTelemetryCheckBox = [PSCustomObject]@{ Category = 'Privacy & Suggested Content'; CategoryId = 'PrivacySuggestedContent'; Type = 'feature'; FeatureId = 'DisableTelemetry' } }
+        $script:UiControlMappings = @{ DisableTelemetryCheckBox = [PSCustomObject]@{ CategoryId = 'PrivacySuggestedContent'; Type = 'feature'; FeatureId = 'DisableTelemetry' } }
 
         $map = Get-CategoryTweakPresetMap -Window $window -CategoryId 'PrivacySuggestedContent'
 
@@ -131,7 +131,7 @@ Describe 'Get-PendingTweakActions' {
         $checkBox.Visibility = 'Visible'
         $window.RegisterName('LegacyCheckBox', $checkBox)
         # New-DynamicTweakControls falls back to Name when a category has no CategoryId of its own.
-        $script:UiControlMappings = @{ LegacyCheckBox = [PSCustomObject]@{ Category = 'Legacy Category'; CategoryId = 'Legacy Category'; Type = 'feature'; FeatureId = 'SomeFeature' } }
+        $script:UiControlMappings = @{ LegacyCheckBox = [PSCustomObject]@{ CategoryId = 'Legacy Category'; Type = 'feature'; FeatureId = 'SomeFeature' } }
 
         $map = Get-CategoryTweakPresetMap -Window $window -CategoryId 'Legacy Category'
 
@@ -211,7 +211,7 @@ Describe 'Get-AppRemovalScopeTarget' {
         Get-AppRemovalScopeTarget -AppRemovalScopeCombo $combo -OtherUsernameTextBox $usernameBox | Should -BeNullOrEmpty
     }
 
-    It 'returns null for an unrecognized ComboBoxItem Name' {
+    It 'defaults to AllUsers for an unrecognized ComboBoxItem Name' {
         $combo = New-Object System.Windows.Controls.ComboBox
         $item = New-Object System.Windows.Controls.ComboBoxItem
         $item.Name = 'SomeUnrelatedControl'
@@ -219,7 +219,7 @@ Describe 'Get-AppRemovalScopeTarget' {
         $combo.SelectedItem = $item
         $usernameBox = New-Object System.Windows.Controls.TextBox
 
-        Get-AppRemovalScopeTarget -AppRemovalScopeCombo $combo -OtherUsernameTextBox $usernameBox | Should -BeNullOrEmpty
+        Get-AppRemovalScopeTarget -AppRemovalScopeCombo $combo -OtherUsernameTextBox $usernameBox | Should -Be 'AllUsers'
     }
 
     It 'returns an empty string for the target-user scope when the username is blank' {

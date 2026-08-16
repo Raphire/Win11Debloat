@@ -233,9 +233,11 @@ function Get-AppRemovalScopeTarget {
     switch ($selectedItem.Name) {
         "AppRemovalScopeAllUsers" { return 'AllUsers' }
         "AppRemovalScopeCurrentUser" { return 'CurrentUser' }
+        default {
+            Write-Warning "Unrecognized app-removal scope item '$($selectedItem.Name)'. Defaulting to AllUsers."
+            return 'AllUsers'
+        }
     }
-
-    return $null
 }
 
 function Invoke-AppPreset {

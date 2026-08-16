@@ -201,6 +201,43 @@ function Update-AppRemovalScopeDescription {
     }
 }
 
+<#
+    .SYNOPSIS
+        Tests whether the app-removal scope combo is currently set to "Target user only".
+#>
+function Test-AppRemovalScopeTargetsOtherUser {
+    param(
+        [System.Windows.Controls.ComboBox]$AppRemovalScopeCombo
+    )
+
+    return ($AppRemovalScopeCombo -and $AppRemovalScopeCombo.SelectedItem -and $AppRemovalScopeCombo.SelectedItem.Name -eq 'AppRemovalScopeTargetUser')
+}
+
+<#
+    .SYNOPSIS
+        Resolves the -AppRemovalTarget value for the selected app-removal scope.
+#>
+function Get-AppRemovalScopeTarget {
+    param(
+        [System.Windows.Controls.ComboBox]$AppRemovalScopeCombo,
+        [System.Windows.Controls.TextBox]$OtherUsernameTextBox
+    )
+
+    $selectedItem = $AppRemovalScopeCombo.SelectedItem
+    if (-not $selectedItem) { return $null }
+
+    if (Test-AppRemovalScopeTargetsOtherUser -AppRemovalScopeCombo $AppRemovalScopeCombo) {
+        return $OtherUsernameTextBox.Text.Trim()
+    }
+
+    switch ($selectedItem.Name) {
+        "AppRemovalScopeAllUsers" { return 'AllUsers' }
+        "AppRemovalScopeCurrentUser" { return 'CurrentUser' }
+    }
+
+    return $null
+}
+
 function Invoke-AppPreset {
     param(
         [System.Windows.Controls.Panel]$AppsPanel,

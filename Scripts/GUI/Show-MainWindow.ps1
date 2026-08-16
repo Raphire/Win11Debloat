@@ -577,6 +577,7 @@ function Show-MainWindow {
     # ---- App removal scope combo ----
     $appRemovalScopeCombo.Add_SelectionChanged({
         Update-AppRemovalScopeDescription -AppRemovalScopeCombo $appRemovalScopeCombo -AppRemovalScopeDescription $appRemovalScopeDescription
+        Test-OtherUsername -Window $window -UserSelectionCombo $userSelectionCombo -OtherUsernameTextBox $otherUsernameTextBox -UsernameValidationMessage $usernameValidationMessage -AppRemovalScopeCombo $appRemovalScopeCombo | Out-Null
     })
 
     # ---- Other username text box ----
@@ -588,12 +589,12 @@ function Show-MainWindow {
             $usernameTextBoxPlaceholder.Visibility = 'Collapsed'
         }
         Update-UserSelectionDescription -Window $window -UserSelectionCombo $userSelectionCombo -OtherUsernameTextBox $otherUsernameTextBox -UserSelectionDescription $userSelectionDescription
-        Test-OtherUsername -Window $window -UserSelectionCombo $userSelectionCombo -OtherUsernameTextBox $otherUsernameTextBox -UsernameValidationMessage $usernameValidationMessage | Out-Null
+        Test-OtherUsername -Window $window -UserSelectionCombo $userSelectionCombo -OtherUsernameTextBox $otherUsernameTextBox -UsernameValidationMessage $usernameValidationMessage -AppRemovalScopeCombo $appRemovalScopeCombo | Out-Null
     })
 
     # ---- Validate target user helper ----
     $ensureValidTargetUserOrWarn = {
-        if (-not (Test-OtherUsername -Window $window -UserSelectionCombo $userSelectionCombo -OtherUsernameTextBox $otherUsernameTextBox -UsernameValidationMessage $usernameValidationMessage)) {
+        if (-not (Test-OtherUsername -Window $window -UserSelectionCombo $userSelectionCombo -OtherUsernameTextBox $otherUsernameTextBox -UsernameValidationMessage $usernameValidationMessage -AppRemovalScopeCombo $appRemovalScopeCombo)) {
             $validationMessage = if (-not [string]::IsNullOrWhiteSpace($usernameValidationMessage.Text)) {
                 $usernameValidationMessage.Text
             }
@@ -672,13 +673,9 @@ function Show-MainWindow {
             Add-Parameter 'RemoveApps'
             Add-Parameter 'Apps' ($selectedApps -join ',')
 
-            $selectedScopeItem = $appRemovalScopeCombo.SelectedItem
-            if ($selectedScopeItem) {
-                switch ($selectedScopeItem.Content) {
-                    "All users" { Add-Parameter 'AppRemovalTarget' 'AllUsers' }
-                    "Current user only" { Add-Parameter 'AppRemovalTarget' 'CurrentUser' }
-                    "Target user only" { Add-Parameter 'AppRemovalTarget' ($otherUsernameTextBox.Text.Trim()) }
-                }
+            $scopeTarget = Get-AppRemovalScopeTarget -AppRemovalScopeCombo $appRemovalScopeCombo -OtherUsernameTextBox $otherUsernameTextBox
+            if ($scopeTarget) {
+                Add-Parameter 'AppRemovalTarget' $scopeTarget
             }
         }
 

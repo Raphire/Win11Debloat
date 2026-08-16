@@ -478,11 +478,14 @@ function Test-OtherUsername {
         [System.Windows.Window]$Window,
         [System.Windows.Controls.ComboBox]$UserSelectionCombo,
         [System.Windows.Controls.TextBox]$OtherUsernameTextBox,
-        [System.Windows.Controls.TextBlock]$UsernameValidationMessage
+        [System.Windows.Controls.TextBlock]$UsernameValidationMessage,
+        [System.Windows.Controls.ComboBox]$AppRemovalScopeCombo
     )
 
-    # Only validate if "Other User" is selected
-    if ($UserSelectionCombo.SelectedIndex -ne 1) {
+    # Only validate if "Other User" is the deployment target, or "Target user only" is the app-removal scope
+    $isOtherUserSelected = ($UserSelectionCombo.SelectedIndex -eq 1)
+    $isAppRemovalTargetUserSelected = Test-AppRemovalScopeTargetsOtherUser -AppRemovalScopeCombo $AppRemovalScopeCombo
+    if (-not $isOtherUserSelected -and -not $isAppRemovalTargetUserSelected) {
         return $true
     }
 

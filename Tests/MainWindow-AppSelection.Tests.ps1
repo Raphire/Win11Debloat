@@ -175,6 +175,66 @@ Describe 'Update-AppRemovalScopeDescription' {
     }
 }
 
+Describe 'Get-AppRemovalScopeTarget' {
+    It 'matches on the ComboBoxItem Name rather than its (translatable) Content for <Name>' -ForEach @(
+        @{ Name = 'AppRemovalScopeAllUsers'; ExpectedTarget = 'AllUsers' }
+        @{ Name = 'AppRemovalScopeCurrentUser'; ExpectedTarget = 'CurrentUser' }
+    ) {
+        $combo = New-Object System.Windows.Controls.ComboBox
+        $item = New-Object System.Windows.Controls.ComboBoxItem
+        $item.Name = $Name
+        $item.Content = 'Texto traducido'
+        $combo.Items.Add($item) | Out-Null
+        $combo.SelectedItem = $item
+        $usernameBox = New-Object System.Windows.Controls.TextBox
+
+        Get-AppRemovalScopeTarget -AppRemovalScopeCombo $combo -OtherUsernameTextBox $usernameBox | Should -Be $ExpectedTarget
+    }
+
+    It 'returns the trimmed username for the target-user scope' {
+        $combo = New-Object System.Windows.Controls.ComboBox
+        $item = New-Object System.Windows.Controls.ComboBoxItem
+        $item.Name = 'AppRemovalScopeTargetUser'
+        $item.Content = 'Texto traducido'
+        $combo.Items.Add($item) | Out-Null
+        $combo.SelectedItem = $item
+        $usernameBox = New-Object System.Windows.Controls.TextBox
+        $usernameBox.Text = '  jdoe  '
+
+        Get-AppRemovalScopeTarget -AppRemovalScopeCombo $combo -OtherUsernameTextBox $usernameBox | Should -Be 'jdoe'
+    }
+
+    It 'returns null when nothing is selected' {
+        $combo = New-Object System.Windows.Controls.ComboBox
+        $usernameBox = New-Object System.Windows.Controls.TextBox
+
+        Get-AppRemovalScopeTarget -AppRemovalScopeCombo $combo -OtherUsernameTextBox $usernameBox | Should -BeNullOrEmpty
+    }
+
+    It 'returns null for an unrecognized ComboBoxItem Name' {
+        $combo = New-Object System.Windows.Controls.ComboBox
+        $item = New-Object System.Windows.Controls.ComboBoxItem
+        $item.Name = 'SomeUnrelatedControl'
+        $combo.Items.Add($item) | Out-Null
+        $combo.SelectedItem = $item
+        $usernameBox = New-Object System.Windows.Controls.TextBox
+
+        Get-AppRemovalScopeTarget -AppRemovalScopeCombo $combo -OtherUsernameTextBox $usernameBox | Should -BeNullOrEmpty
+    }
+
+    It 'returns an empty string for the target-user scope when the username is blank' {
+        $combo = New-Object System.Windows.Controls.ComboBox
+        $item = New-Object System.Windows.Controls.ComboBoxItem
+        $item.Name = 'AppRemovalScopeTargetUser'
+        $combo.Items.Add($item) | Out-Null
+        $combo.SelectedItem = $item
+        $usernameBox = New-Object System.Windows.Controls.TextBox
+        $usernameBox.Text = '   '
+
+        Get-AppRemovalScopeTarget -AppRemovalScopeCombo $combo -OtherUsernameTextBox $usernameBox | Should -BeExactly ''
+    }
+}
+
 Describe 'Set-WindowThemeResources' {
     It 'populates themed resources and selects the Windows 11 icon font' {
         $window = New-TestWindow

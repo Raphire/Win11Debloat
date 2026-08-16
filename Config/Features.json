@@ -2,50 +2,62 @@
   "Version": "1.0",
   "Categories": [
     {
+      "CategoryId": "PrivacySuggestedContent",
       "Name": "Privacy & Suggested Content",
       "Icon": "&#xE72E;"
     },
     {
+      "CategoryId": "System",
       "Name": "System",
       "Icon": "&#xe770;"
     },
     {
+      "CategoryId": "StartMenuSearch",
       "Name": "Start Menu & Search",
       "Icon": "&#xe8fc;"
     },
     {
+      "CategoryId": "AI",
       "Name": "AI",
       "Icon": "&#xe794;"
     },
     {
+      "CategoryId": "WindowsUpdate",
       "Name": "Windows Update",
       "Icon": "&#xe895;"
     },
     {
+      "CategoryId": "Taskbar",
       "Name": "Taskbar",
       "Icon": "&#xe75b;"
     },
     {
+      "CategoryId": "Appearance",
       "Name": "Appearance",
       "Icon": "&#xE771;"
     },
     {
+      "CategoryId": "FileExplorer",
       "Name": "File Explorer",
       "Icon": "&#xec50;"
     },
     {
+      "CategoryId": "Gaming",
       "Name": "Gaming",
       "Icon": "&#xE7FC;"
     },
     {
+      "CategoryId": "MultiTasking",
       "Name": "Multi-tasking",
       "Icon": "&#xE7C4;"
     },
     {
+      "CategoryId": "OptionalWindowsFeatures",
       "Name": "Optional Windows Features",
       "Icon": "&#xefda;"
     },
     {
+      "CategoryId": "Other",
       "Name": "Other",
       "Icon": "&#xE713;"
     }

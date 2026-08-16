@@ -174,6 +174,10 @@ function Update-AppSelectionStatus {
     }
 }
 
+<#
+    .SYNOPSIS
+        Updates the app-removal scope description to match the selected ComboBoxItem.
+#>
 function Update-AppRemovalScopeDescription {
     param(
         [System.Windows.Controls.ComboBox]$AppRemovalScopeCombo,
@@ -182,18 +186,56 @@ function Update-AppRemovalScopeDescription {
 
     $selectedItem = $AppRemovalScopeCombo.SelectedItem
     if ($selectedItem) {
-        switch ($selectedItem.Content) {
-            "All users" {
+        # Content is the display text and will change once translated; Name is stable.
+        switch ($selectedItem.Name) {
+            "AppRemovalScopeAllUsers" {
                 $AppRemovalScopeDescription.Text = "Apps will be removed for all users and from the Windows image to prevent reinstallation for new users."
             }
-            "Current user only" {
+            "AppRemovalScopeCurrentUser" {
                 $AppRemovalScopeDescription.Text = "Apps will only be removed for the current user."
             }
-            "Target user only" {
+            "AppRemovalScopeTargetUser" {
                 $AppRemovalScopeDescription.Text = "Apps will only be removed for the specified target user."
             }
         }
     }
+}
+
+<#
+    .SYNOPSIS
+        Tests whether the app-removal scope combo is currently set to "Target user only".
+#>
+function Test-AppRemovalScopeTargetsOtherUser {
+    param(
+        [System.Windows.Controls.ComboBox]$AppRemovalScopeCombo
+    )
+
+    return ($AppRemovalScopeCombo -and $AppRemovalScopeCombo.SelectedItem -and $AppRemovalScopeCombo.SelectedItem.Name -eq 'AppRemovalScopeTargetUser')
+}
+
+<#
+    .SYNOPSIS
+        Resolves the -AppRemovalTarget value for the selected app-removal scope.
+#>
+function Get-AppRemovalScopeTarget {
+    param(
+        [System.Windows.Controls.ComboBox]$AppRemovalScopeCombo,
+        [System.Windows.Controls.TextBox]$OtherUsernameTextBox
+    )
+
+    $selectedItem = $AppRemovalScopeCombo.SelectedItem
+    if (-not $selectedItem) { return $null }
+
+    if (Test-AppRemovalScopeTargetsOtherUser -AppRemovalScopeCombo $AppRemovalScopeCombo) {
+        return $OtherUsernameTextBox.Text.Trim()
+    }
+
+    switch ($selectedItem.Name) {
+        "AppRemovalScopeAllUsers" { return 'AllUsers' }
+        "AppRemovalScopeCurrentUser" { return 'CurrentUser' }
+    }
+
+    return $null
 }
 
 function Invoke-AppPreset {

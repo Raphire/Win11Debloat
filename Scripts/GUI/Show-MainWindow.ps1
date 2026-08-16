@@ -674,7 +674,7 @@ function Show-MainWindow {
             Add-Parameter 'Apps' ($selectedApps -join ',')
 
             $scopeTarget = Get-AppRemovalScopeTarget -AppRemovalScopeCombo $appRemovalScopeCombo -OtherUsernameTextBox $otherUsernameTextBox
-            if ($scopeTarget) {
+            if (-not [string]::IsNullOrWhiteSpace($scopeTarget)) {
                 Add-Parameter 'AppRemovalTarget' $scopeTarget
             }
         }

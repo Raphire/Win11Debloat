@@ -73,11 +73,17 @@ function Set-StoreSearchSuggestionsDisabled {
         New-Item -Path $StoreAppsDatabase -ItemType File -Force | Out-Null
     }
     
-    $AccountSid = [System.Security.Principal.SecurityIdentifier]::new('S-1-1-0') # 'EVERYONE' group
-    $Acl = Get-Acl -Path $StoreAppsDatabase
-    $Ace = [System.Security.AccessControl.FileSystemAccessRule]::new($AccountSid, 'FullControl', 'Deny')
-    $Acl.SetAccessRule($Ace) | Out-Null
-    Set-Acl -Path $StoreAppsDatabase -AclObject $Acl | Out-Null
+    try {
+        $AccountSid = [System.Security.Principal.SecurityIdentifier]::new('S-1-1-0') # 'EVERYONE' group
+        $Acl = Get-Acl -Path $StoreAppsDatabase -ErrorAction Stop
+        $Ace = [System.Security.AccessControl.FileSystemAccessRule]::new($AccountSid, 'FullControl', 'Deny')
+        $Acl.SetAccessRule($Ace) | Out-Null
+        Set-Acl -Path $StoreAppsDatabase -AclObject $Acl -ErrorAction Stop | Out-Null
+    }
+    catch {
+        Write-Warning "Failed to restrict ACL for store database '$StoreAppsDatabase': $($_.Exception.Message)"
+        return
+    }
 
     Write-Host "Disabled Microsoft Store search suggestions for user $userName"
 }

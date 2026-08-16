@@ -369,7 +369,7 @@ function New-DynamicTweakControls {
                             try { $lblBorderObj = $Window.FindName("$comboName`_LabelBorder") } catch {}
                             if ($lblBorderObj) { $lblBorderObj.ToolTip = $tipBlock }
                         }
-                        $script:UiControlMappings[$comboName] = @{ Type = 'feature'; FeatureId = $soleFeature.FeatureId; Label = $soleFeature.Label; Category = $categoryName; CategoryId = $categoryId }
+                        $script:UiControlMappings[$comboName] = @{ Type = 'feature'; FeatureId = $soleFeature.FeatureId; Label = $soleFeature.Label; CategoryId = $categoryId }
                     }
                     continue
                 }
@@ -389,7 +389,7 @@ function New-DynamicTweakControls {
                     try { $lblBorderObj = $Window.FindName("$comboName`_LabelBorder") } catch {}
                     if ($lblBorderObj) { $lblBorderObj.ToolTip = $tipBlock }
                 }
-                $script:UiControlMappings[$comboName] = @{ Type = 'group'; Values = $filteredValues; Label = $group.Label; Category = $categoryName; CategoryId = $categoryId }
+                $script:UiControlMappings[$comboName] = @{ Type = 'group'; Values = $filteredValues; Label = $group.Label; CategoryId = $categoryId }
             }
             elseif ($item.Type -eq 'feature') {
                 $feature = $item.Data
@@ -416,7 +416,7 @@ function New-DynamicTweakControls {
                     try { $lblBorderObj = $Window.FindName("$comboName`_LabelBorder") } catch {}
                     if ($lblBorderObj) { $lblBorderObj.ToolTip = $tipBlock }
                 }
-                $script:UiControlMappings[$comboName] = @{ Type = 'feature'; FeatureId = $feature.FeatureId; Label = $feature.Label; Category = $categoryName; CategoryId = $categoryId }
+                $script:UiControlMappings[$comboName] = @{ Type = 'feature'; FeatureId = $feature.FeatureId; Label = $feature.Label; CategoryId = $categoryId }
             }
         }
     }

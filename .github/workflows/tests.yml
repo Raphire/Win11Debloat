@@ -24,3 +24,42 @@ jobs:
       - name: Run tests
         shell: powershell
         run: ./Scripts/Run-Tests.ps1 -Bootstrap
+
+  psscriptanalyzer:
+    name: PSScriptAnalyzer (Error)
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Run PSScriptAnalyzer
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if (-not (Get-Module -ListAvailable -Name PSScriptAnalyzer)) {
+            Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser -SkipPublisherCheck
+          }
+
+          $results = @(
+            Invoke-ScriptAnalyzer -Path 'Win11Debloat.ps1' -Severity Error
+            Invoke-ScriptAnalyzer -Path 'Scripts' -Recurse -Severity Error
+            Invoke-ScriptAnalyzer -Path 'Tests' -Recurse -Severity Error
+          )
+
+          if ($results.Count -gt 0) {
+            $results | Format-Table -AutoSize Severity, RuleName, ScriptName, Line, Message
+            $repoRoot = (Get-Location).Path.TrimEnd('\')
+            foreach ($result in $results) {
+              $relative = [string]$result.ScriptPath
+              if ($relative.StartsWith($repoRoot, [System.StringComparison]::OrdinalIgnoreCase)) {
+                $relative = $relative.Substring($repoRoot.Length).TrimStart('\')
+              }
+              Write-Output ("::error file={0},line={1},col={2}::{3}: {4}" -f $relative, $result.Line, $result.Column, $result.RuleName, $result.Message)
+            }
+            throw "PSScriptAnalyzer reported $($results.Count) error-severity issue(s)."
+          }
+
+          Write-Output 'PSScriptAnalyzer found no error-severity issues.'

@@ -176,7 +176,9 @@ function ConvertTo-NormalizedRegistryBackup {
 
     .DESCRIPTION
         Applies the registry state described by the supplied backup back to the
-        registry, loading the appropriate user hive when required.
+        registry, loading the appropriate user hive when required. If a root
+        snapshot fails, restoration continues for the remaining snapshots and a
+        summary error is thrown after all snapshots have been processed.
 
     .PARAMETER Backup
         A normalized backup object (as produced by ConvertTo-NormalizedRegistryBackup) whose
@@ -184,8 +186,8 @@ function ConvertTo-NormalizedRegistryBackup {
 
     .OUTPUTS
         PSCustomObject
-        Returns an object with a Result property set to $true when the restore
-        completes successfully.
+        Returns an object with a Result property set to $true only when every
+        snapshot restores successfully.
 #>
 function Restore-RegistryBackupState {
     param(

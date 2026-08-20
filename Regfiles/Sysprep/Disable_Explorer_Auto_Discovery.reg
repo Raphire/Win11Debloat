@@ -1,0 +1,4 @@
+Windows Registry Editor Version 5.00
+
+[hkey_users\default\Software\Classes\Local Settings\Software\Microsoft\Windows\Shell\Bags\AllFolders\Shell]
+"FolderType"="NotSpecified"

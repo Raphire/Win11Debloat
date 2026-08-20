@@ -1275,6 +1275,20 @@
       "MaxVersion": null
     },
     {
+      "FeatureId": "DisableExplorerAutoDiscovery",
+      "Label": "Disable File Explorer folder auto-discovery",
+      "ToolTip": "File Explorer periodically scans folders to guess a view type such as pictures or documents. That scan can slow Explorer in folders with thousands of files. This sets every folder's type to NotSpecified so you choose the view yourself. Explorer is restarted after applying changes unless you skip that step.",
+      "Category": "File Explorer",
+      "Priority": 14,
+      "RegistryKey": "Disable_Explorer_Auto_Discovery.reg",
+      "ApplyText": "Disabling File Explorer folder auto-discovery",
+      "UndoLabel": "Enable File Explorer folder auto-discovery",
+      "ApplyUndoText": "Enabling File Explorer folder auto-discovery",
+      "RegistryUndoKey": "Enable_Explorer_Auto_Discovery.reg",
+      "MinVersion": null,
+      "MaxVersion": null
+    },
+    {
       "FeatureId": "HideDupliDrive",
       "Label": "Hide duplicate removable drive entries",
       "ToolTip": "By default, Windows shows removable drives both under 'This PC' and in the navigation pane with its own entry. Enable this setting to only show removable drives under 'This PC'.",

@@ -48,6 +48,7 @@ param (
     [switch]$DisableSettings365Ads,
     [switch]$DisableSettingsHome,
     [switch]$ShowHiddenFolders,
+    [switch]$DisableExplorerAutoDiscovery,
     [switch]$ShowKnownFileExt,
     [switch]$HideDupliDrive,
     [switch]$EnableDarkMode,

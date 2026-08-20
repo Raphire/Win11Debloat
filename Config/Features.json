@@ -815,6 +815,20 @@
       "MaxVersion": null
     },
     {
+      "FeatureId": "DisableRemoteKeyboardLayout",
+      "Label": "Disable adding keyboard layouts from other devices on the network",
+      "ToolTip": "Windows can automatically add keyboard layouts that it finds on other devices on networks you connect to. These layouts often do not appear in Settings and are hard to remove. This setting prevents Windows from adding those remote layouts. A reboot is required.",
+      "Category": "System",
+      "RegistryKey": "Disable_Remote_Keyboard_Layout.reg",
+      "ApplyText": "Disabling remote keyboard layout auto-add",
+      "UndoLabel": "Allow adding keyboard layouts from other devices on the network",
+      "ApplyUndoText": "Allowing remote keyboard layout auto-add",
+      "RegistryUndoKey": "Enable_Remote_Keyboard_Layout.reg",
+      "RequiresReboot": true,
+      "MinVersion": null,
+      "MaxVersion": null
+    },
+    {
       "FeatureId": "DisableWindowSnapping",
       "Label": "Disable window snapping",
       "ToolTip": "This will turn off the ability to snap windows to the sides or corners of the screen.",

@@ -102,6 +102,7 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 - Restore the old Windows 10 style context menu.
 - Turn off Enhance Pointer Precision (mouse acceleration).
 - Disable the Sticky Keys keyboard shortcut.
+- Prevent Windows from adding keyboard layouts found on other devices on the network.
 - Disable Storage Sense automatic disk cleanup.
 - Disable fast start-up to ensure a full shutdown.
 - Disable BitLocker automatic device encryption.

@@ -80,6 +80,7 @@ param (
     [switch]$DisableDragTray,
     [switch]$DisableMouseAcceleration,
     [switch]$DisableStickyKeys,
+    [switch]$DisableRemoteKeyboardLayout,
     [switch]$DisableWindowSnapping,
     [switch]$DisableSnapAssist,
     [switch]$DisableSnapLayouts,

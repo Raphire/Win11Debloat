@@ -123,6 +123,20 @@ Describe 'Restore-RegistryBackupState' {
         Should -Invoke Invoke-WithLoadedRestoreHive -Times 0 -Exactly
     }
 
+    It 'continues restoring later snapshots when one root snapshot fails' {
+        Mock Restore-RegistryKeySnapshot {
+            param($Snapshot)
+            if ($Snapshot.Path -eq 'HKEY_CURRENT_USER\Software\One') {
+                throw 'access denied'
+            }
+        }
+
+        { Restore-RegistryBackupState -Backup $script:backup } |
+            Should -Throw "Restored remaining registry snapshots, but 1 failed: HKEY_CURRENT_USER\Software\One"
+
+        Should -Invoke Restore-RegistryKeySnapshot -Times 2 -Exactly
+    }
+
     It 'delegates default-profile restores through the loaded hive wrapper' {
         $script:backup.Target = 'DefaultUserProfile'
         Mock Invoke-WithLoadedRestoreHive {

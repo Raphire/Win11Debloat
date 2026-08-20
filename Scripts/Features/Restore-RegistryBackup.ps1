@@ -204,8 +204,23 @@ function Restore-RegistryBackupState {
         param($normalizedBackup)
 
         Write-Host "Applying registry restore from $(@($normalizedBackup.RegistryKeys).Count) root snapshot(s)."
+        $failedSnapshots = New-Object System.Collections.Generic.List[string]
         foreach ($rootSnapshot in @($normalizedBackup.RegistryKeys)) {
-            Restore-RegistryKeySnapshot -Snapshot $rootSnapshot
+            try {
+                Restore-RegistryKeySnapshot -Snapshot $rootSnapshot
+            }
+            catch {
+                $snapshotPath = [string]$rootSnapshot.Path
+                if ([string]::IsNullOrWhiteSpace($snapshotPath)) {
+                    $snapshotPath = '(unknown path)'
+                }
+                Write-Host "Failed to restore registry snapshot '$snapshotPath': $($_.Exception.Message)" -ForegroundColor Yellow
+                $failedSnapshots.Add($snapshotPath)
+            }
+        }
+
+        if ($failedSnapshots.Count -gt 0) {
+            throw "Restored remaining registry snapshots, but $($failedSnapshots.Count) failed: $($failedSnapshots -join '; ')"
         }
     }
 

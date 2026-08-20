@@ -44,6 +44,17 @@ function Disable-WindowsFeature {
     }
 }
 
+<#
+    .SYNOPSIS
+        Returns whether a Windows optional feature is currently enabled.
+
+    .DESCRIPTION
+        Queries Get-WindowsOptionalFeature for the given feature name. Returns
+        $false when the query fails or the feature is not enabled.
+
+    .PARAMETER FeatureName
+        The DISM optional-feature name to inspect.
+#>
 function Test-WindowsOptionalFeatureEnabled {
     param (
         [Parameter(Mandatory)]
@@ -59,6 +70,19 @@ function Test-WindowsOptionalFeatureEnabled {
     }
 }
 
+<#
+    .SYNOPSIS
+        Turns hibernation on or off with powercfg.exe.
+
+    .DESCRIPTION
+        Runs `powercfg /hibernate on` or `powercfg /hibernate off` through the
+        non-blocking runner. Turning hibernation off also disables Fast Start-up
+        and deletes hiberfil.sys. When -WhatIf is set, prints the planned command
+        and does not invoke powercfg.
+
+    .PARAMETER Enabled
+        $true enables hibernation; $false disables it.
+#>
 function Set-WindowsHibernate {
     param(
         [Parameter(Mandatory)]
@@ -84,6 +108,15 @@ function Set-WindowsHibernate {
     } -ArgumentList $state
 }
 
+<#
+    .SYNOPSIS
+        Returns whether hibernation is currently disabled.
+
+    .DESCRIPTION
+        Reads HKLM:\SYSTEM\CurrentControlSet\Control\Power\HibernateEnabled.
+        Returns $true when the value is 0, and $false when the value is missing
+        or any other value.
+#>
 function Test-WindowsHibernateDisabled {
     try {
         $value = Get-ItemPropertyValue -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Power' -Name 'HibernateEnabled' -ErrorAction Stop

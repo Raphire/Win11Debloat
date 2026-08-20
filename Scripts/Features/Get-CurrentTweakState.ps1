@@ -30,7 +30,7 @@ function Get-ExpectedRegistryValueKind {
         Returns $true when ALL operations in the apply .reg file match current system
         state. Returns $false if the feature has no RegistryKey, the reg file is
         missing, or any operation mismatches. Special-cased features (Widgets, Store
-        suggestions, Windows Sandbox, WSL) bypass .reg checking entirely.
+        suggestions, Windows Sandbox, WSL, hibernation) bypass .reg checking entirely.
 
     .PARAMETER FeatureId
         The feature identifier to test.

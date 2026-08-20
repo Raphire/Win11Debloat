@@ -105,6 +105,23 @@ param (
     [switch]$HideDriveLetters
 )
 
+<#
+    .SYNOPSIS
+        Formats the user-facing error shown when the launcher cannot download Win11Debloat.
+
+    .DESCRIPTION
+        Always starts with the generic GitHub download failure message. Appends the
+        exception message when it is present, then appends ErrorDetails.Message when
+        it is present and different from the exception text (for example a GitHub
+        API rate-limit body).
+
+    .PARAMETER ErrorRecord
+        The caught error from the GitHub download attempt.
+
+    .OUTPUTS
+        System.String
+        A newline-separated message suitable for Write-Host.
+#>
 function Get-GitHubDownloadFailureMessage {
     param(
         [Parameter(Mandatory)]

@@ -1037,6 +1037,19 @@
       "MaxVersion": null
     },
     {
+      "FeatureId": "DisableHibernate",
+      "Label": "Disable hibernation and delete hiberfil.sys",
+      "ToolTip": "Turns hibernation off with powercfg /hibernate off. This also disables Fast Start-up, removes Hibernate from the power menu, and deletes hiberfil.sys so it no longer uses a large amount of disk space.",
+      "Category": "System",
+      "RegistryKey": null,
+      "ApplyText": "Disabling hibernation and removing hiberfil.sys",
+      "UndoLabel": "Enable hibernation",
+      "ApplyUndoText": "Enabling hibernation",
+      "RegistryUndoKey": null,
+      "MinVersion": null,
+      "MaxVersion": null
+    },
+    {
       "FeatureId": "DisableBitlockerAutoEncryption",
       "Label": "Disable BitLocker automatic device encryption",
       "ToolTip": "For devices that support it, Windows 11 automatically enables BitLocker device encryption. Disabling this will turn off automatic encryption of the device, but you can still manually enable BitLocker encryption if desired. Drives that are already encrypted with BitLocker will remain encrypted when this setting is applied.",

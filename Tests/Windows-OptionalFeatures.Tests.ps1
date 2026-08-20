@@ -154,3 +154,51 @@ Describe 'Test-WindowsOptionalFeatureEnabled' {
         Test-WindowsOptionalFeatureEnabled -FeatureName 'Feature.One' | Should -BeFalse
     }
 }
+
+Describe 'Set-WindowsHibernate' {
+    BeforeEach {
+        $script:Params = @{}
+        Mock Invoke-NonBlocking { @() }
+        Mock Write-Host {}
+    }
+
+    It 'schedules powercfg hibernate off' {
+        Set-WindowsHibernate -Enabled $false
+
+        Should -Invoke Invoke-NonBlocking -Times 1 -Exactly -ParameterFilter { $ArgumentList -eq 'off' }
+    }
+
+    It 'schedules powercfg hibernate on' {
+        Set-WindowsHibernate -Enabled $true
+
+        Should -Invoke Invoke-NonBlocking -Times 1 -Exactly -ParameterFilter { $ArgumentList -eq 'on' }
+    }
+
+    It 'does not schedule changes in WhatIf mode' {
+        $script:Params = @{ WhatIf = $true }
+
+        Set-WindowsHibernate -Enabled $false
+
+        Should -Invoke Invoke-NonBlocking -Times 0 -Exactly
+    }
+}
+
+Describe 'Test-WindowsHibernateDisabled' {
+    It 'returns true when HibernateEnabled is 0' {
+        Mock Get-ItemPropertyValue { 0 }
+
+        Test-WindowsHibernateDisabled | Should -BeTrue
+    }
+
+    It 'returns false when HibernateEnabled is 1' {
+        Mock Get-ItemPropertyValue { 1 }
+
+        Test-WindowsHibernateDisabled | Should -BeFalse
+    }
+
+    It 'returns false when the registry value cannot be read' {
+        Mock Get-ItemPropertyValue { throw 'missing' }
+
+        Test-WindowsHibernateDisabled | Should -BeFalse
+    }
+}

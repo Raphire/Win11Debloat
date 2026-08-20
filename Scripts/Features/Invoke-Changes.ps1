@@ -139,6 +139,12 @@ function Invoke-FeatureApply {
             Write-Host ""
             return
         }
+        'DisableHibernate' {
+            Write-Host "> $applyText..."
+            Set-WindowsHibernate -Enabled $false
+            Write-Host ""
+            return
+        }
     }
 }
 
@@ -187,6 +193,12 @@ function Invoke-FeatureUndo {
             Write-Host "> $($feature.ApplyUndoText)..."
             Disable-WindowsFeature 'Microsoft-Windows-Subsystem-Linux'
             Disable-WindowsFeature 'VirtualMachinePlatform'
+            Write-Host ""
+            return
+        }
+        'DisableHibernate' {
+            Write-Host "> $($feature.ApplyUndoText)..."
+            Set-WindowsHibernate -Enabled $true
             Write-Host ""
             return
         }

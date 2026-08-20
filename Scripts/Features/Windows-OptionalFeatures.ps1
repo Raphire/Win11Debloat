@@ -52,10 +52,44 @@ function Test-WindowsOptionalFeatureEnabled {
 
     try {
         $feature = Get-WindowsOptionalFeature -Online -FeatureName $FeatureName -ErrorAction Stop
+        return $feature.State -eq 'Enabled'
     }
     catch {
         return $false
     }
+}
 
-    return ($feature.State -eq 'Enabled')
+function Set-WindowsHibernate {
+    param(
+        [Parameter(Mandatory)]
+        [bool]$Enabled
+    )
+
+    $state = if ($Enabled) { 'on' } else { 'off' }
+
+    if ($script:Params.ContainsKey("WhatIf")) {
+        Write-Host "[WhatIf] powercfg /hibernate $state" -ForegroundColor Cyan
+        Write-Host ""
+        return
+    }
+
+    $null = Invoke-NonBlocking -ScriptBlock {
+        param($hibernateState)
+        $powerCfg = Join-Path $env:SystemRoot 'System32\powercfg.exe'
+        $process = Start-Process -FilePath $powerCfg -ArgumentList @('/hibernate', $hibernateState) -Wait -PassThru -WindowStyle Hidden
+        if ($null -eq $process -or $process.ExitCode -ne 0) {
+            $exitCode = if ($process) { $process.ExitCode } else { 'unknown' }
+            throw "powercfg /hibernate $hibernateState failed with exit code $exitCode"
+        }
+    } -ArgumentList $state
+}
+
+function Test-WindowsHibernateDisabled {
+    try {
+        $value = Get-ItemPropertyValue -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Power' -Name 'HibernateEnabled' -ErrorAction Stop
+        return ([int]$value -eq 0)
+    }
+    catch {
+        return $false
+    }
 }

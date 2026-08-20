@@ -37,6 +37,8 @@ Describe 'Test suite safety convention' {
             'Unregister-ScheduledTask'
             'bcdedit'
             'bcdedit.exe'
+            'powercfg'
+            'powercfg.exe'
             'dism'
             'dism.exe'
             'fsutil'

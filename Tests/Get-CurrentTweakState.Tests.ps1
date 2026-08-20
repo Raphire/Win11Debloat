@@ -4,6 +4,7 @@ BeforeAll {
     function Get-StoreAppsDatabasePathForUser { param($UserName) 'store.db' }
     function Get-UserName { 'Alice' }
     function Test-WindowsOptionalFeatureEnabled { param($FeatureName) $false }
+    function Test-WindowsHibernateDisabled { $false }
     function Get-RegFileOperations { param($regFilePath) @() }
     function Split-RegistryPath { param($path) $null }
     function Get-RegistryRootKey { param($hiveName) $null }
@@ -48,6 +49,7 @@ Describe 'Test-FeatureApplied - special features' {
             DisableStoreSearchSuggestions = [PSCustomObject]@{}
             EnableWindowsSandbox = [PSCustomObject]@{}
             EnableWindowsSubsystemForLinux = [PSCustomObject]@{}
+            DisableHibernate = [PSCustomObject]@{}
         }
         Mock Get-AppxPackage { $null }
         Mock Test-StoreSearchSuggestionsDisabledForAllUsers { $true }
@@ -55,6 +57,7 @@ Describe 'Test-FeatureApplied - special features' {
         Mock Get-StoreAppsDatabasePathForUser { 'store.db' }
         Mock Get-UserName { 'Alice' }
         Mock Test-WindowsOptionalFeatureEnabled { $true }
+        Mock Test-WindowsHibernateDisabled { $true }
     }
 
     It '<Case>' -ForEach @(
@@ -88,6 +91,11 @@ Describe 'Test-FeatureApplied - special features' {
     ) {
         Mock Test-WindowsOptionalFeatureEnabled { param($FeatureName) $FeatureName -ne $DisabledFeature }
         Test-FeatureApplied -FeatureId 'EnableWindowsSubsystemForLinux' | Should -Be $Expected
+    }
+
+    It 'treats hibernation as disabled when Test-WindowsHibernateDisabled returns true' {
+        Test-FeatureApplied -FeatureId 'DisableHibernate' | Should -BeTrue
+        Should -Invoke Test-WindowsHibernateDisabled -Times 1 -Exactly
     }
 }
 

@@ -19,6 +19,7 @@ BeforeAll {
     function Replace-StartMenuForAllUsers { param($startMenuTemplate) }
     function Set-StoreSearchSuggestionsDisabledForAllUsers {}
     function Set-StoreSearchSuggestionsDisabled { param($StoreAppsDatabase) }
+    function Set-WindowsHibernate { param($Enabled) }
 
     . (Join-Path $PSScriptRoot '..\Scripts\Features\Invoke-Changes.ps1')
 }
@@ -61,6 +62,7 @@ Describe 'Invoke-FeatureApply' {
             ClearStartAllUsers = [PSCustomObject]@{ ApplyText = 'Clear Start all users'; RegistryKey = '' }
             ReplaceStartAllUsers = [PSCustomObject]@{ ApplyText = 'Replace Start all users'; RegistryKey = '' }
             DisableStoreSearchSuggestions = [PSCustomObject]@{ ApplyText = 'Disable Store suggestions'; RegistryKey = '' }
+            DisableHibernate = [PSCustomObject]@{ ApplyText = 'Disable hibernate'; RegistryKey = '' }
         }
         Mock Import-RegistryFile {}
         Mock Remove-SelectedApps {}
@@ -75,6 +77,7 @@ Describe 'Invoke-FeatureApply' {
         Mock Replace-StartMenuForAllUsers {}
         Mock Set-StoreSearchSuggestionsDisabledForAllUsers {}
         Mock Set-StoreSearchSuggestionsDisabled {}
+        Mock Set-WindowsHibernate {}
         Mock Get-StoreAppsDatabasePathForUser { 'store.db' }
         Mock Get-Process { @() }
         Mock Stop-Process { param($InputObject) }
@@ -166,6 +169,12 @@ Describe 'Invoke-FeatureApply' {
         Should -Invoke Enable-WindowsFeature -Times 1 -Exactly -ParameterFilter { $FeatureName -eq 'Containers-DisposableClientVM' }
         Should -Invoke Enable-WindowsFeature -Times 1 -Exactly -ParameterFilter { $FeatureName -eq 'VirtualMachinePlatform' }
         Should -Invoke Enable-WindowsFeature -Times 1 -Exactly -ParameterFilter { $FeatureName -eq 'Microsoft-Windows-Subsystem-Linux' }
+    }
+
+    It 'turns hibernation off through Set-WindowsHibernate' {
+        Invoke-FeatureApply -FeatureId 'DisableHibernate'
+
+        Should -Invoke Set-WindowsHibernate -Times 1 -Exactly -ParameterFilter { $Enabled -eq $false }
     }
 
     It 'applies current-user Start layouts only when a target path resolves' {
@@ -282,6 +291,7 @@ Describe 'Invoke-FeatureUndo' {
             EnableWindowsSubsystemForLinux = [PSCustomObject]@{ ApplyUndoText = 'Disable WSL' }
             DisableTelemetry = [PSCustomObject]@{}
             DisableStoreSearchSuggestions = [PSCustomObject]@{}
+            DisableHibernate = [PSCustomObject]@{ ApplyUndoText = 'Enable hibernation' }
         }
         Mock Set-StoreSearchSuggestionsEnabledForAllUsers {}
         Mock Set-StoreSearchSuggestionsEnabled {}
@@ -289,6 +299,7 @@ Describe 'Invoke-FeatureUndo' {
         Mock Get-UserName { 'Alice' }
         Mock Disable-WindowsFeature {}
         Mock Enable-TelemetryScheduledTasks {}
+        Mock Set-WindowsHibernate {}
         Mock Write-Host {}
     }
 
@@ -314,6 +325,12 @@ Describe 'Invoke-FeatureUndo' {
         Invoke-FeatureUndo -FeatureId 'DisableTelemetry'
         Should -Invoke Disable-WindowsFeature -Times 1 -Exactly -ParameterFilter { $FeatureName -eq 'Containers-DisposableClientVM' }
         Should -Invoke Enable-TelemetryScheduledTasks -Times 1 -Exactly
+    }
+
+    It 'turns hibernation back on through Set-WindowsHibernate' {
+        Invoke-FeatureUndo -FeatureId 'DisableHibernate'
+
+        Should -Invoke Set-WindowsHibernate -Times 1 -Exactly -ParameterFilter { $Enabled -eq $true }
     }
 }
 

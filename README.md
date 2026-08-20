@@ -104,6 +104,7 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 - Disable the Sticky Keys keyboard shortcut.
 - Disable Storage Sense automatic disk cleanup.
 - Disable fast start-up to ensure a full shutdown.
+- Disable hibernation entirely (also removes hiberfil.sys).
 - Disable BitLocker automatic device encryption.
 - Disable network connectivity during Modern Standby to reduce battery drain.
 

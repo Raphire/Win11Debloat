@@ -78,6 +78,9 @@ function Test-FeatureApplied {
             $vmpEnabled = Test-WindowsOptionalFeatureEnabled -FeatureName 'VirtualMachinePlatform'
             return ($wslEnabled -and $vmpEnabled)
         }
+        'DisableHibernate' {
+            return (Test-WindowsHibernateDisabled)
+        }
     }
 
     if (-not $feature.RegistryKey) { return $false }

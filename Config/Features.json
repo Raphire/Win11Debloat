@@ -64,6 +64,26 @@
   ],
   "UiGroups": [
     {
+      "GroupId": "DesktopSpotlight",
+      "Label": "Windows Spotlight on the desktop",
+      "ToolTip": "Choose whether to keep Windows Spotlight wallpaper, hide only the 'Learn about this picture' desktop icon, or turn Spotlight off entirely. Hiding the icon keeps the rotating wallpaper.",
+      "Category": "Privacy & Suggested Content",
+      "Values": [
+        {
+          "Label": "Hide 'Learn about this picture' icon",
+          "FeatureIds": [
+            "HideDesktopSpotlightIcon"
+          ]
+        },
+        {
+          "Label": "Disable Windows Spotlight",
+          "FeatureIds": [
+            "DisableDesktopSpotlight"
+          ]
+        }
+      ]
+    },
+    {
       "GroupId": "SearchIcon",
       "Label": "Taskbar search style",
       "ToolTip": "This setting allows you to customize the appearance of the search box on the taskbar.",
@@ -475,6 +495,19 @@
       "UndoLabel": "Enable Windows Spotlight for desktop",
       "ApplyUndoText": "Enabling the 'Windows Spotlight' desktop background option",
       "RegistryUndoKey": "Enable_Desktop_Spotlight.reg",
+      "MinVersion": null,
+      "MaxVersion": null
+    },
+    {
+      "FeatureId": "HideDesktopSpotlightIcon",
+      "Label": "Hide the 'Learn about this picture' desktop Spotlight icon",
+      "ToolTip": "This hides the 'Learn about this picture' desktop icon while keeping Windows Spotlight wallpaper rotation. It does not disable Spotlight itself.",
+      "Category": "Privacy & Suggested Content",
+      "RegistryKey": "Hide_Desktop_Spotlight_Icon.reg",
+      "ApplyText": "Hiding the desktop Spotlight 'Learn about this picture' icon",
+      "UndoLabel": "Show the 'Learn about this picture' desktop Spotlight icon",
+      "ApplyUndoText": "Showing the desktop Spotlight 'Learn about this picture' icon",
+      "RegistryUndoKey": "Show_Desktop_Spotlight_Icon.reg",
       "MinVersion": null,
       "MaxVersion": null
     },

@@ -28,6 +28,7 @@ param (
     [switch]$DisableTelemetry,
     [switch]$DisableSearchHistory,
     [switch]$DisableFastStartup,
+    [switch]$DisableStartupDelay,
     [switch]$DisableBitlockerAutoEncryption,
     [switch]$DisableModernStandbyNetworking,
     [switch]$DisableNotifications,

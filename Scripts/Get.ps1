@@ -105,6 +105,34 @@ param (
     [switch]$HideDriveLetters
 )
 
+function Get-GitHubDownloadFailureMessage {
+    param(
+        [Parameter(Mandatory)]
+        [System.Management.Automation.ErrorRecord]$ErrorRecord
+    )
+
+    $lines = New-Object System.Collections.Generic.List[string]
+    [void]$lines.Add('Error: Unable to fetch required files from GitHub. Please check your internet connection and try again.')
+
+    $exceptionMessage = $null
+    if ($ErrorRecord.Exception) {
+        $exceptionMessage = [string]$ErrorRecord.Exception.Message
+    }
+    if (-not [string]::IsNullOrWhiteSpace($exceptionMessage)) {
+        [void]$lines.Add($exceptionMessage)
+    }
+
+    $details = $null
+    if ($ErrorRecord.ErrorDetails) {
+        $details = [string]$ErrorRecord.ErrorDetails.Message
+    }
+    if (-not [string]::IsNullOrWhiteSpace($details) -and $details -ne $exceptionMessage) {
+        [void]$lines.Add($details)
+    }
+
+    return ($lines -join [Environment]::NewLine)
+}
+
 # Check if current PowerShell environment is limited by security policies
 if ($ExecutionContext.SessionState.LanguageMode -ne "FullLanguage") {
     Write-Error "Win11Debloat is unable to run on your system, PowerShell execution is restricted by security policies"
@@ -134,7 +162,7 @@ try {
     Invoke-RestMethod $sourceUri -OutFile $tempArchivePath
 }
 catch {
-    Write-Host "Error: Unable to fetch required files from GitHub. Please check your internet connection and try again." -ForegroundColor Red
+    Write-Host (Get-GitHubDownloadFailureMessage -ErrorRecord $_) -ForegroundColor Red
     Write-Output ""
     Write-Output "Press enter to exit..."
     Read-Host | Out-Null

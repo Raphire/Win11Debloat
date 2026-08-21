@@ -66,9 +66,16 @@
     {
       "GroupId": "DesktopSpotlight",
       "Label": "Windows Spotlight on the desktop",
-      "ToolTip": "Choose whether to keep Windows Spotlight wallpaper, hide only the 'Learn about this picture' desktop icon, or turn Spotlight off entirely. Hiding the icon keeps the rotating wallpaper.",
+      "ToolTip": "Choose whether to keep Windows Spotlight wallpaper and the 'Learn about this picture' icon, hide only the icon, or turn Spotlight off entirely. Hiding the icon keeps the rotating wallpaper.",
       "Category": "Privacy & Suggested Content",
+      "Priority": 7,
       "Values": [
+        {
+          "Label": "Enable + show icon (Default)",
+          "FeatureIds": [
+            "EnableDesktopSpotlight"
+          ]
+        },
         {
           "Label": "Hide 'Learn about this picture' icon",
           "FeatureIds": [
@@ -412,6 +419,7 @@
       "Label": "Disable telemetry, tracking & targeted ads",
       "ToolTip": "This setting disables telemetry, diagnostic data collection, activity history, app-launch tracking, targeted ads and more. It limits the data that is sent to Microsoft about your device and usage. If you are a Windows Insider, updates may be blocked until optional diagnostic data collection is turned back on.",
       "Category": "Privacy & Suggested Content",
+      "Priority": 1,
       "RegistryKey": "Disable_Telemetry.reg",
       "ApplyText": "Disabling telemetry and diagnostic data collection",
       "UndoLabel": "Enable telemetry, tracking & targeted ads",
@@ -425,6 +433,7 @@
       "Label": "Disable tips, tricks & suggested content throughout Windows",
       "ToolTip": "This setting removes many annoying distractions from Windows. This includes things like notifications, reminders and sync provider ads. It also prevents automated installation of suggested apps.",
       "Category": "Privacy & Suggested Content",
+      "Priority": 2,
       "RegistryKey": "Disable_Windows_Suggestions.reg",
       "ApplyText": "Disabling tips, tricks, suggestions and ads throughout Windows",
       "UndoLabel": "Enable tips, tricks & suggested content throughout Windows",
@@ -438,6 +447,7 @@
       "Label": "Disable Windows Notifications (From apps and other senders)",
       "ToolTip": "Disables native Windows notifications from apps and other senders, this includes notifications from apps like Discord, WhatsApp, Teams, and Slack.",
       "Category": "Privacy & Suggested Content",
+      "Priority": 3,
       "RegistryKey": "Disable_Notifications.reg",
       "ApplyText": "Disabling Windows notifications and reminders",
       "UndoLabel": "Enable Windows notifications and reminders",
@@ -451,6 +461,7 @@
       "Label": "Disable Windows location services & app location access",
       "ToolTip": "This will turn off Windows Location Services and deny apps access to your location. This feature uses policies, which will lock down certain settings.",
       "Category": "Privacy & Suggested Content",
+      "Priority": 4,
       "RegistryKey": "Disable_Location_Services.reg",
       "ApplyText": "Disabling Windows location services and app location access",
       "UndoLabel": "Enable Windows location services & app location access",
@@ -464,6 +475,7 @@
       "Label": "Disable Find My Device location tracking",
       "ToolTip": "This will turn off the 'Find My Device' feature, which periodically sends your device's location to Microsoft. This feature uses policies, which will lock down certain settings.",
       "Category": "Privacy & Suggested Content",
+      "Priority": 5,
       "RegistryKey": "Disable_Find_My_Device.reg",
       "ApplyText": "Disabling Find My Device location tracking",
       "UndoLabel": "Enable Find My Device location tracking",
@@ -477,11 +489,25 @@
       "Label": "Disable tips & tricks on the lock screen",
       "ToolTip": "This will turn off the lockscreen spotlight option and disable the tips, tricks and fun facts that appear on the lock screen.",
       "Category": "Privacy & Suggested Content",
+      "Priority": 6,
       "RegistryKey": "Disable_Lockscreen_Tips.reg",
       "ApplyText": "Disabling tips & tricks on the lock screen",
       "UndoLabel": "Enable tips & tricks on the lock screen",
       "ApplyUndoText": "Enabling tips & tricks on the lock screen",
       "RegistryUndoKey": "Enable_Lockscreen_Tips.reg",
+      "MinVersion": null,
+      "MaxVersion": null
+    },
+    {
+      "FeatureId": "EnableDesktopSpotlight",
+      "Label": "Enable Windows Spotlight on the desktop and show the Spotlight icon",
+      "ToolTip": "Restores Windows Spotlight wallpaper rotation and shows the 'Learn about this picture' desktop icon. This is the Windows default.",
+      "Category": "Privacy & Suggested Content",
+      "RegistryKey": "Enable_Desktop_Spotlight.reg",
+      "ApplyText": "Enabling Windows Spotlight on the desktop and showing the Spotlight icon",
+      "UndoLabel": null,
+      "ApplyUndoText": null,
+      "RegistryUndoKey": null,
       "MinVersion": null,
       "MaxVersion": null
     },

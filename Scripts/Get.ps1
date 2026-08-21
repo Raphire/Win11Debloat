@@ -134,7 +134,8 @@ try {
     Invoke-RestMethod $sourceUri -OutFile $tempArchivePath
 }
 catch {
-    Write-Host "Error: Unable to fetch required files from GitHub. Please check your internet connection and try again." -ForegroundColor Red
+    Write-Host "Unable to fetch required files from GitHub. Please check your internet connection and try again." -ForegroundColor Red
+    Write-Error "$_"
     Write-Output ""
     Write-Output "Press enter to exit..."
     Read-Host | Out-Null

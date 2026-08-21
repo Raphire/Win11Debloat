@@ -6,20 +6,20 @@ BeforeAll {
     $script:RegfilesPath = Join-Path $script:RepoRoot 'Regfiles'
     $script:Features = @((Get-Content -LiteralPath $script:FeaturesPath -Raw | ConvertFrom-Json).Features)
     $script:LauncherOnlyParameters = @('Dev', 'Verbose', 'WhatIf')
-}
 
-function Get-ScriptParameterNames {
-    param(
-        [Parameter(Mandatory)]
-        [string]$Path
-    )
+    function Get-ScriptParameterNames {
+        param(
+            [Parameter(Mandatory)]
+            [string]$Path
+        )
 
-    $tokens = $null
-    $parseErrors = $null
-    $ast = [System.Management.Automation.Language.Parser]::ParseFile($Path, [ref]$tokens, [ref]$parseErrors)
-    $parseErrors | Should -BeNullOrEmpty
+        $tokens = $null
+        $parseErrors = $null
+        $ast = [System.Management.Automation.Language.Parser]::ParseFile($Path, [ref]$tokens, [ref]$parseErrors)
+        $parseErrors | Should -BeNullOrEmpty
 
-    @($ast.ParamBlock.Parameters | ForEach-Object { $_.Name.VariablePath.UserPath })
+        @($ast.ParamBlock.Parameters | ForEach-Object { $_.Name.VariablePath.UserPath })
+    }
 }
 
 Describe 'FeatureId parameter contracts' {
@@ -41,12 +41,17 @@ Describe 'FeatureId parameter contracts' {
         $win11DebloatParameters = Get-ScriptParameterNames -Path $script:Win11DebloatPath
         $getParameters = Get-ScriptParameterNames -Path $script:GetScriptPath
         $missingFromGet = @($win11DebloatParameters | Where-Object { $getParameters -notcontains $_ })
+        $missingLauncherOnly = @(
+            $script:LauncherOnlyParameters |
+                Where-Object { $getParameters -notcontains $_ }
+        )
         $unexpectedOnGet = @(
             $getParameters |
                 Where-Object { $win11DebloatParameters -notcontains $_ -and $script:LauncherOnlyParameters -notcontains $_ }
         )
 
         $missingFromGet | Should -HaveCount 0 -Because ($missingFromGet -join ', ')
+        $missingLauncherOnly | Should -HaveCount 0 -Because ($missingLauncherOnly -join ', ')
         $unexpectedOnGet | Should -HaveCount 0 -Because ($unexpectedOnGet -join ', ')
     }
 
@@ -57,10 +62,10 @@ Describe 'FeatureId parameter contracts' {
 
                 $applyPath = Join-Path $script:RegfilesPath $feature.RegistryKey
                 $sysprepPath = Join-Path (Join-Path $script:RegfilesPath 'Sysprep') $feature.RegistryKey
-                if (-not (Test-Path -LiteralPath $applyPath)) {
+                if (-not (Test-Path -LiteralPath $applyPath -PathType Leaf)) {
                     "$($feature.FeatureId) missing Regfiles\$($feature.RegistryKey)"
                 }
-                if (-not (Test-Path -LiteralPath $sysprepPath)) {
+                if (-not (Test-Path -LiteralPath $sysprepPath -PathType Leaf)) {
                     "$($feature.FeatureId) missing Regfiles\Sysprep\$($feature.RegistryKey)"
                 }
             }
@@ -76,7 +81,7 @@ Describe 'FeatureId parameter contracts' {
 
                 $undoPath = Join-Path (Join-Path $script:RegfilesPath 'Undo') $feature.RegistryUndoKey
                 $rootPath = Join-Path $script:RegfilesPath $feature.RegistryUndoKey
-                if (-not ((Test-Path -LiteralPath $undoPath) -or (Test-Path -LiteralPath $rootPath))) {
+                if (-not ((Test-Path -LiteralPath $undoPath -PathType Leaf) -or (Test-Path -LiteralPath $rootPath -PathType Leaf))) {
                     "$($feature.FeatureId) missing undo file $($feature.RegistryUndoKey)"
                 }
             }

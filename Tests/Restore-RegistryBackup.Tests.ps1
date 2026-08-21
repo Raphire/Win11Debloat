@@ -132,9 +132,12 @@ Describe 'Restore-RegistryBackupState' {
         }
 
         { Restore-RegistryBackupState -Backup $script:backup } |
-            Should -Throw "Restored remaining registry snapshots, but 1 failed: HKEY_CURRENT_USER\Software\One"
+            Should -Throw "Processed registry snapshots, but 1 failed: HKEY_CURRENT_USER\Software\One"
 
-        Should -Invoke Restore-RegistryKeySnapshot -Times 2 -Exactly
+        Should -Invoke Restore-RegistryKeySnapshot -Times 1 -Exactly `
+            -ParameterFilter { $Snapshot.Path -eq 'HKEY_CURRENT_USER\Software\One' }
+        Should -Invoke Restore-RegistryKeySnapshot -Times 1 -Exactly `
+            -ParameterFilter { $Snapshot.Path -eq 'HKEY_CURRENT_USER\Software\Two' }
     }
 
     It 'delegates default-profile restores through the loaded hive wrapper' {

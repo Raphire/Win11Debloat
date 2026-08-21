@@ -222,7 +222,7 @@ function Restore-RegistryBackupState {
         }
 
         if ($failedSnapshots.Count -gt 0) {
-            throw "Restored remaining registry snapshots, but $($failedSnapshots.Count) failed: $($failedSnapshots -join '; ')"
+            throw "Processed registry snapshots, but $($failedSnapshots.Count) failed: $($failedSnapshots -join '; ')"
         }
     }
 

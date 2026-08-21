@@ -39,9 +39,12 @@ jobs:
         shell: powershell
         run: |
           $ErrorActionPreference = 'Stop'
-          if (-not (Get-Module -ListAvailable -Name PSScriptAnalyzer)) {
-            Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser -SkipPublisherCheck
+          $analyzerVersion = '1.25.0'
+          if (-not (Get-Module -ListAvailable -Name PSScriptAnalyzer | Where-Object Version -eq $analyzerVersion)) {
+            Install-Module -Name PSScriptAnalyzer -RequiredVersion $analyzerVersion -Force -Scope CurrentUser -SkipPublisherCheck
           }
+          Import-Module -Name PSScriptAnalyzer -RequiredVersion $analyzerVersion -Force
+          . ./Scripts/CI/GitHub-WorkflowCommands.ps1
 
           $results = @(
             Invoke-ScriptAnalyzer -Path 'Win11Debloat.ps1' -Severity Error
@@ -57,7 +60,10 @@ jobs:
               if ($relative.StartsWith($repoRoot, [System.StringComparison]::OrdinalIgnoreCase)) {
                 $relative = $relative.Substring($repoRoot.Length).TrimStart('\')
               }
-              Write-Output ("::error file={0},line={1},col={2}::{3}: {4}" -f $relative, $result.Line, $result.Column, $result.RuleName, $result.Message)
+              $escapedFile = ConvertTo-GitHubWorkflowCommandProperty $relative
+              $escapedRule = ConvertTo-GitHubWorkflowCommandData ([string]$result.RuleName)
+              $escapedMessage = ConvertTo-GitHubWorkflowCommandData ([string]$result.Message)
+              Write-Output ("::error file={0},line={1},col={2}::{3}: {4}" -f $escapedFile, $result.Line, $result.Column, $escapedRule, $escapedMessage)
             }
             throw "PSScriptAnalyzer reported $($results.Count) error-severity issue(s)."
           }

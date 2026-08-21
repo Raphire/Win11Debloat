@@ -135,7 +135,7 @@ try {
 }
 catch {
     Write-Host "Unable to fetch required files from GitHub. Please check your internet connection and try again." -ForegroundColor Red
-    Write-Error "$_"
+    Write-Error -ErrorRecord $_
     Write-Output ""
     Write-Output "Press enter to exit..."
     Read-Host | Out-Null

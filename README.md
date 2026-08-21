@@ -87,7 +87,7 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 
 - Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads.
 - Disable tips, tricks, suggestions & ads across Windows, the lock screen and Microsoft Edge.
-- Hide the desktop Spotlight 'Learn about this picture' icon, or disable Windows Spotlight entirely.
+- Hide the desktop Spotlight 'Learn about this picture' icon while keeping Spotlight wallpaper rotation, or disable Windows Spotlight entirely.
 - Disable Windows location services, app location access and Find My Device location tracking.
 - Hide Microsoft 365 ads on the Settings 'Home' page, or hide the 'Home' page entirely.
 

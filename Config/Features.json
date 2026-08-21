@@ -1277,7 +1277,7 @@
     {
       "FeatureId": "DisableExplorerAutoDiscovery",
       "Label": "Disable File Explorer folder auto-discovery",
-      "ToolTip": "File Explorer periodically scans folders to guess a view type such as pictures or documents. That scan can slow Explorer in folders with thousands of files. This sets every folder's type to NotSpecified so you choose the view yourself. Explorer is restarted after applying changes unless you skip that step.",
+      "ToolTip": "File Explorer periodically scans folders to guess a view type such as pictures or documents. That scan can slow Explorer in folders with thousands of files. This sets every folder's type to NotSpecified so you choose the view yourself. Explorer is restarted after applying changes in normal runs unless you skip that step; User and Sysprep modes take effect when the target profile starts Explorer.",
       "Category": "File Explorer",
       "Priority": 14,
       "RegistryKey": "Disable_Explorer_Auto_Discovery.reg",

@@ -11,6 +11,7 @@ BeforeAll {
     function Resolve-UserProfileContext { param($UserName) $null }
 
     . (Join-Path $PSScriptRoot '..\Scripts\AppRemoval\Remove-SelectedApps.ps1')
+    . (Join-Path $PSScriptRoot '..\Scripts\AppRemoval\Invoke-ForceRemoveEdge.ps1')
 }
 
 Describe 'Remove-SelectedApps' {
@@ -71,8 +72,32 @@ Describe 'Remove-SelectedApps' {
     It 'counts a failed WinGet removal' {
         Mock Get-AppRemovalMethod { 'WinGet' }
         Mock Remove-WinGetApp { $false }
+        Mock Test-AppInWingetList { $true }
+        Mock Write-Host {}
 
         Remove-SelectedApps -appsList @('One.App')
+
+        $script:AppRemovalFailures | Should -Be 1
+        Should -Invoke Write-Host -Times 1 -Exactly -ParameterFilter { $Object -eq 'Unable to uninstall One.App via WinGet' -and $ForegroundColor -eq 'Red' }
+    }
+
+    It 'does not count a non-zero WinGet command when the app is absent after verification' {
+        Mock Get-AppRemovalMethod { 'WinGet' }
+        Mock Remove-WinGetApp { $false }
+        Mock Test-AppInWingetList { $false }
+
+        Remove-SelectedApps -appsList @('One.App') | Should -BeTrue
+
+        $script:AppRemovalFailures | Should -Be 0
+    }
+
+    It 'counts a failed WinGet scheduling result for a target user' {
+        $script:Params = @{ User = 'Alice' }
+        Mock Get-AppRemovalMethod { 'WinGet' }
+        Mock Remove-WinGetApp { $false }
+        Mock Test-AppInWingetList { $false }
+
+        Remove-SelectedApps -appsList @('One.App') | Should -BeFalse
 
         $script:AppRemovalFailures | Should -Be 1
     }
@@ -132,7 +157,7 @@ Describe 'Remove-WinGetApp' {
     BeforeEach {
         $script:Params = @{}
         $script:WingetInstalled = $true
-        Mock Invoke-NonBlocking { $true }
+        Mock Invoke-NonBlocking { [PSCustomObject]@{ Success = $true; ExitCode = 0; Output = @() } }
         Mock Set-RunOnceWingetTask { $true }
         Mock Get-UserName { 'Alice' }
         Mock Write-Host {}
@@ -174,14 +199,89 @@ Describe 'Remove-WinGetApp' {
     It 'reports a timed-out winget uninstall and continues' {
         $script:Params = @{ User = 'Alice' }
         Mock Invoke-NonBlocking { throw 'Operation timed out after 120 seconds' }
+        Mock Write-Verbose {}
 
         { Remove-WinGetApp -app 'One.App' } | Should -Not -Throw
         Should -Invoke Set-RunOnceWingetTask -Times 1 -Exactly
-        Should -Invoke Write-Error -Times 1 -Exactly -ParameterFilter {
+        Should -Invoke Write-Verbose -Times 1 -Exactly -ParameterFilter {
             $Message -like '*did not complete within 120 seconds*'
         }
     }
 
+    It 'returns true and logs WinGet output regardless of exit code' -ForEach @(
+        @{ ExitCode = 0; Output = 'Successfully uninstalled One.App' }
+        @{ ExitCode = 1; Output = 'Package was not found' }
+        @{ ExitCode = -1978335212; Output = 'No installed package found matching input criteria.' }
+    ) {
+        $script:expectedExitCode = $ExitCode
+        $script:expectedOutput = $Output
+        Mock Invoke-NonBlocking { [PSCustomObject]@{ ExitCode = $script:expectedExitCode; Output = @($script:expectedOutput) } }
+        Mock Write-Verbose {}
+
+        Remove-WinGetApp -app 'One.App' | Should -BeTrue
+
+        Should -Invoke Write-Verbose -Times 1 -Exactly -ParameterFilter { $Message -eq $script:expectedOutput }
+        Should -Invoke Write-Verbose -Times 1 -Exactly -ParameterFilter { $Message -eq "WinGet uninstall for One.App returned exit code $script:expectedExitCode." }
+    }
+
+    It 'returns the RunOnce scheduling result for a target user' {
+        $script:Params = @{ User = 'Alice' }
+        Mock Invoke-NonBlocking { [PSCustomObject]@{ ExitCode = 1; Output = @() } }
+        Mock Set-RunOnceWingetTask { $false }
+
+        Remove-WinGetApp -app 'One.App' | Should -BeFalse
+    }
+
+}
+
+Describe 'Remove-EdgeAutostartValue' {
+    BeforeEach {
+        Mock Write-Warning {}
+    }
+
+    It 'treats a missing value as already cleaned up' {
+        Mock Get-ItemProperty { [PSCustomObject]@{} }
+        Mock Remove-ItemProperty {}
+
+        Remove-EdgeAutostartValue -Path 'HKCU:\Software\Example' -Name 'Microsoft Edge Update' | Should -BeTrue
+
+        Should -Invoke Remove-ItemProperty -Times 0 -Exactly
+    }
+
+    It 'treats a missing registry key as already cleaned up' {
+        Mock Get-ItemProperty { throw [System.Management.Automation.ItemNotFoundException]::new('not found') }
+        Mock Remove-ItemProperty {}
+
+        Remove-EdgeAutostartValue -Path 'HKCU:\Software\Example' -Name 'Microsoft Edge Update' | Should -BeTrue
+
+        Should -Invoke Remove-ItemProperty -Times 0 -Exactly
+    }
+
+    It 'removes an existing value' {
+        Mock Get-ItemProperty { [PSCustomObject]@{ 'Microsoft Edge Update' = 'enabled' } }
+        Mock Remove-ItemProperty {}
+
+        Remove-EdgeAutostartValue -Path 'HKCU:\Software\Example' -Name 'Microsoft Edge Update' | Should -BeTrue
+
+        Should -Invoke Remove-ItemProperty -Times 1 -Exactly -ParameterFilter { $Path -eq 'HKCU:\Software\Example' -and $Name -eq 'Microsoft Edge Update' }
+    }
+
+    It 'returns false when an existing value cannot be removed' {
+        Mock Get-ItemProperty { [PSCustomObject]@{ 'Microsoft Edge Update' = 'enabled' } }
+        Mock Remove-ItemProperty { throw 'access denied' }
+
+        Remove-EdgeAutostartValue -Path 'HKCU:\Software\Example' -Name 'Microsoft Edge Update' | Should -BeFalse
+
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -match 'access denied' }
+    }
+
+    It 'returns false when the registry key cannot be inspected' {
+        Mock Get-ItemProperty { throw 'access denied' }
+
+        Remove-EdgeAutostartValue -Path 'HKCU:\Software\Example' -Name 'Microsoft Edge Update' | Should -BeFalse
+
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -match 'access denied' }
+    }
 }
 
 Describe 'Remove-AppxApp' {

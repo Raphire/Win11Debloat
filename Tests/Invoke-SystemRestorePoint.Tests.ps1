@@ -27,6 +27,26 @@ Describe 'Invoke-SystemRestorePoint' {
         $script:CancelRequested | Should -BeFalse
     }
 
+    It 'returns false through the continuation flow when the System Restore state cannot be read' {
+        Mock Get-ItemProperty { throw 'registry access denied' }
+        Mock Read-Host { 'y' }
+
+        Invoke-SystemRestorePoint | Should -BeFalse
+
+        $script:CancelRequested | Should -BeFalse
+        Should -Invoke Invoke-NonBlocking -Times 0 -Exactly
+    }
+
+    It 'returns false without prompting when the System Restore state cannot be read in silent mode' {
+        $script:Silent = $true
+        Mock Get-ItemProperty { throw 'registry access denied' }
+
+        Invoke-SystemRestorePoint | Should -BeFalse
+
+        $script:CancelRequested | Should -BeFalse
+        Should -Invoke Read-Host -Times 0 -Exactly
+    }
+
     It 'is loaded by the main entry point' {
         $entryPoint = Get-Content -LiteralPath (Join-Path $PSScriptRoot '..\Win11Debloat.ps1') -Raw
         $expectedImport = [regex]::Escape('Scripts/Features/Invoke-SystemRestorePoint.ps1')

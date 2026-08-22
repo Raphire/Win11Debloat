@@ -34,23 +34,36 @@ function Get-TelemetryScheduledTasks {
 
     .EXAMPLE
     Disable-TelemetryScheduledTasks
+
+    .OUTPUTS
+    System.Boolean. $true when every task is disabled, absent, already disabled, or previewed; otherwise $false.
 #>
 function Disable-TelemetryScheduledTasks {
     Write-Host "> Disabling telemetry scheduled tasks..."
     $tasks = Get-TelemetryScheduledTasks
 
+    $success = $true
     foreach ($task in $tasks) {
-        if ($script:CancelRequested) { return }
+        if ($script:CancelRequested) { return $false }
 
         if ($script:Params.ContainsKey("WhatIf")) {
             Write-Host "[WhatIf] Disable Scheduled Task: $($task.Path)$($task.Name)" -ForegroundColor Cyan
             continue
         }
 
-        $result = Invoke-NonBlocking -ScriptBlock {
+        try {
+            $result = Invoke-NonBlocking -ScriptBlock {
             param($path, $name)
             Import-Module ScheduledTasks -ErrorAction SilentlyContinue
-            $taskObj = Get-ScheduledTask -TaskPath $path -TaskName $name -ErrorAction SilentlyContinue
+            try {
+                $taskObj = Get-ScheduledTask -TaskPath $path -TaskName $name -ErrorAction Stop
+            }
+            catch {
+                if ($_.CategoryInfo.Category -eq [System.Management.Automation.ErrorCategory]::ObjectNotFound) {
+                    return @{ Success = $true; Status = 'NotFound' }
+                }
+                return @{ Success = $false; Status = 'Error'; Error = $_.Exception.Message }
+            }
             if (-not $taskObj) {
                 return @{ Success = $true; Status = 'NotFound' }
             }
@@ -64,17 +77,24 @@ function Disable-TelemetryScheduledTasks {
                 }
             }
             return @{ Success = $true; Status = 'AlreadyDisabled' }
-        } -ArgumentList @($task.Path, $task.Name)
+            } -ArgumentList @($task.Path, $task.Name)
+        }
+        catch {
+            Write-Warning "Failed to disable Scheduled Task: $($task.Path)$($task.Name) - $($_.Exception.Message)"
+            $success = $false
+            continue
+        }
 
         switch ($result.Status) {
             'Disabled'        { Write-Host "Disabled Scheduled Task: $($task.Path)$($task.Name)" }
             'AlreadyDisabled' { Write-Host "Scheduled Task $($task.Path)$($task.Name) is already disabled" -ForegroundColor DarkGray }
             'NotFound'        { Write-Host "Scheduled Task $($task.Path)$($task.Name) not found" -ForegroundColor DarkGray }
-            'Error'           { Write-Host "Failed to disable Scheduled Task: $($task.Path)$($task.Name) - $($result.Error)" -ForegroundColor Yellow }
+            'Error'           { Write-Host "Failed to disable Scheduled Task: $($task.Path)$($task.Name) - $($result.Error)" -ForegroundColor Yellow; $success = $false }
+            default           { Write-Warning "Unable to determine the result of disabling Scheduled Task: $($task.Path)$($task.Name)."; $success = $false }
         }
     }
 
-    Write-Host ""
+    return $success
 }
 
 <#
@@ -88,23 +108,36 @@ function Disable-TelemetryScheduledTasks {
 
     .EXAMPLE
     Enable-TelemetryScheduledTasks
+
+    .OUTPUTS
+    System.Boolean. $true when every task is enabled, absent, already enabled, or previewed; otherwise $false.
 #>
 function Enable-TelemetryScheduledTasks {
     Write-Host "> Enabling telemetry scheduled tasks..."
     $tasks = Get-TelemetryScheduledTasks
 
+    $success = $true
     foreach ($task in $tasks) {
-        if ($script:CancelRequested) { return }
+        if ($script:CancelRequested) { return $false }
 
         if ($script:Params.ContainsKey("WhatIf")) {
             Write-Host "[WhatIf] Enable Scheduled Task: $($task.Path)$($task.Name)" -ForegroundColor Cyan
             continue
         }
 
-        $result = Invoke-NonBlocking -ScriptBlock {
+        try {
+            $result = Invoke-NonBlocking -ScriptBlock {
             param($path, $name)
             Import-Module ScheduledTasks -ErrorAction SilentlyContinue
-            $taskObj = Get-ScheduledTask -TaskPath $path -TaskName $name -ErrorAction SilentlyContinue
+            try {
+                $taskObj = Get-ScheduledTask -TaskPath $path -TaskName $name -ErrorAction Stop
+            }
+            catch {
+                if ($_.CategoryInfo.Category -eq [System.Management.Automation.ErrorCategory]::ObjectNotFound) {
+                    return @{ Success = $true; Status = 'NotFound' }
+                }
+                return @{ Success = $false; Status = 'Error'; Error = $_.Exception.Message }
+            }
             if (-not $taskObj) {
                 return @{ Success = $true; Status = 'NotFound' }
             }
@@ -118,15 +151,22 @@ function Enable-TelemetryScheduledTasks {
                 }
             }
             return @{ Success = $true; Status = 'AlreadyEnabled' }
-        } -ArgumentList @($task.Path, $task.Name)
+            } -ArgumentList @($task.Path, $task.Name)
+        }
+        catch {
+            Write-Warning "Failed to enable Scheduled Task: $($task.Path)$($task.Name) - $($_.Exception.Message)"
+            $success = $false
+            continue
+        }
 
         switch ($result.Status) {
             'Enabled'        { Write-Host "Enabled Scheduled Task: $($task.Path)$($task.Name)" }
             'AlreadyEnabled' { Write-Host "Scheduled Task $($task.Path)$($task.Name) is already enabled." -ForegroundColor DarkGray }
             'NotFound'       { Write-Host "Scheduled Task $($task.Path)$($task.Name) not found." -ForegroundColor DarkGray }
-            'Error'          { Write-Host "Failed to enable Scheduled Task: $($task.Path)$($task.Name) - $($result.Error)" -ForegroundColor Yellow }
+            'Error'          { Write-Host "Failed to enable Scheduled Task: $($task.Path)$($task.Name) - $($result.Error)" -ForegroundColor Yellow; $success = $false }
+            default          { Write-Warning "Unable to determine the result of enabling Scheduled Task: $($task.Path)$($task.Name)."; $success = $false }
         }
     }
 
-    Write-Host ""
+    return $success
 }

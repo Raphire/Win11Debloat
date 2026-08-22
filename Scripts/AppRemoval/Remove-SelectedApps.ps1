@@ -18,6 +18,9 @@
 
     .EXAMPLE
     Remove-SelectedApps -appsList (Generate-AppsList)
+
+    .OUTPUTS
+    System.Boolean. $true when all removals can be confirmed; otherwise $false.
 #>
 function Remove-SelectedApps {
     param (
@@ -29,10 +32,10 @@ function Remove-SelectedApps {
             Write-Host "[WhatIf] Remove App Package: $app" -ForegroundColor Cyan
         }
 
-        Write-Host ""
-        return
+        return $true
     }
 
+    $failuresBefore = $script:AppRemovalFailures
     $targetUser = Get-TargetUserForAppRemoval
     $appCount = @($appsList).Count
     $appIndex = 0
@@ -42,7 +45,7 @@ function Remove-SelectedApps {
     $wingetRemovalFailures = @{}
 
     Foreach ($app in $appsList) {
-        if ($script:CancelRequested) { return }
+        if ($script:CancelRequested) { return $false }
 
         $appIndex++
 
@@ -53,10 +56,11 @@ function Remove-SelectedApps {
         Write-Host "Removing $app"
 
         if ((Get-AppRemovalMethod $app) -eq 'WinGet') {
-            if (-not (Remove-WinGetApp -app $app)) {
+            $removalSucceeded = Remove-WinGetApp -app $app
+            $wingetRemovedApps += $app
+            if (($script:Params.ContainsKey('User') -or $script:Params.ContainsKey('Sysprep')) -and -not $removalSucceeded) {
                 $wingetRemovalFailures[$app] = $true
             }
-            $wingetRemovedApps += $app
         }
         else {
             if (-not (Remove-AppxApp -app $app -targetUser $targetUser)) {
@@ -66,17 +70,20 @@ function Remove-SelectedApps {
     }
 
     if ($script:CancelRequested) {
-        Write-Host ""
-        return
+        return $false
     }
 
     # Check whether any winget-removed apps are still present, and report errors for each one.
     if ($wingetRemovedApps.Count -gt 0) {
         $postRemovalList = if ($script:WingetInstalled) { Get-WingetInstalledApps -TimeOut 10 -NonBlocking } else { $null }
         $edgeForceRemoveRequested = $false
+        $edgeForceRemoveSucceeded = $false
 
         if ($null -eq $postRemovalList) {
             $script:AppRemovalVerificationUnavailable = $true
+            foreach ($app in $wingetRemovedApps) {
+                $wingetRemovalFailures[$app] = $true
+            }
         }
         else {
             foreach ($app in $wingetRemovedApps) {
@@ -87,8 +94,11 @@ function Remove-SelectedApps {
                 if ($edgeIds -contains $app) {
                     Write-Host "Unable to uninstall Microsoft Edge via WinGet" -ForegroundColor Red
                     if (-not $edgeForceRemoveRequested) {
-                        Request-EdgeForceRemove
                         $edgeForceRemoveRequested = $true
+                        $edgeForceRemoveSucceeded = Request-EdgeForceRemove
+                    }
+                    if ($edgeForceRemoveSucceeded) {
+                        continue
                     }
                 }
                 else {
@@ -101,7 +111,7 @@ function Remove-SelectedApps {
 
     $script:AppRemovalFailures += $wingetRemovalFailures.Count
 
-    Write-Host ""
+    return ($script:AppRemovalFailures -eq $failuresBefore)
 }
 
 <#
@@ -110,8 +120,12 @@ function Remove-SelectedApps {
 
     .DESCRIPTION
     Runs winget uninstall for a single app, with a bounded execution time.
-    If the User or Sysprep parameter was passed, also schedules removal for
-    future logins.
+    WinGet's own exit code/success reporting is unreliable and is only logged
+    for diagnostics; it never causes this function to report failure. Callers
+    verify removal with a post-removal inventory check instead. This function
+    only reports failure when the winget invocation itself throws a terminating
+    error (e.g. it times out or cannot be started). If the User or Sysprep
+    parameter was passed, also schedules removal for future logins.
 
     .PARAMETER app
     The WinGet package ID to uninstall (e.g. 'Microsoft.BingNews').
@@ -119,6 +133,10 @@ function Remove-SelectedApps {
     .PARAMETER TimeoutSeconds
     Maximum time to allow the foreground WinGet uninstall to run. Defaults
     to 120 seconds.
+
+    .OUTPUTS
+    System.Boolean. $true unless the winget invocation threw a terminating error
+    or any required RunOnce scheduling failed; otherwise $false.
 #>
 function Remove-WinGetApp {
     param(
@@ -131,22 +149,28 @@ function Remove-WinGetApp {
         return $false
     }
 
-    $uninstallSucceeded = $true
+    $uninstallCommandSucceeded = $true
+    $exitCode = $null
     try {
-        $uninstallSucceeded = Invoke-NonBlocking -ScriptBlock {
+        $uninstallResult = Invoke-NonBlocking -ScriptBlock {
             param($appId)
-            $null = & winget uninstall --accept-source-agreements --disable-interactivity --id $appId 2>&1
-            return $true
+            $output = @(& winget uninstall --accept-source-agreements --disable-interactivity --id $appId 2>&1)
+            return [PSCustomObject]@{
+                ExitCode = $LASTEXITCODE
+                Output = $output
+            }
         } -ArgumentList $app -TimeoutSeconds $TimeoutSeconds
-        $uninstallSucceeded = [bool]$uninstallSucceeded
+        Write-WinGetUninstallOutput -Output $(if ($uninstallResult) { $uninstallResult.Output } else { $null })
+        $exitCode = if ($uninstallResult) { $uninstallResult.ExitCode } else { 'unknown' }
+        Write-Verbose "WinGet uninstall for $app returned exit code $exitCode."
     }
     catch {
-        $uninstallSucceeded = $false
+        $uninstallCommandSucceeded = $false
         if ($_.Exception.Message -like 'Operation timed out after *') {
-            Write-Error "WinGet uninstall for $app did not complete within $TimeoutSeconds seconds: $_"
+            Write-Verbose "WinGet uninstall for $app did not complete within $TimeoutSeconds seconds: $_"
         }
         else {
-            Write-Error "WinGet uninstall for $app failed: $_"
+            Write-Verbose "WinGet uninstall for $app failed: $_"
         }
     }
 
@@ -160,7 +184,29 @@ function Remove-WinGetApp {
         $scheduleSucceeded = Set-RunOnceWingetTask -appId $app
     }
 
-    return ($uninstallSucceeded -and $scheduleSucceeded)
+    return ($uninstallCommandSucceeded -and $scheduleSucceeded)
+}
+
+<#
+    .SYNOPSIS
+    Writes captured WinGet uninstall output to the verbose stream.
+
+    .OUTPUTS
+    None.
+#>
+function Write-WinGetUninstallOutput {
+    param(
+        [object[]]$Output
+    )
+
+    foreach ($line in @($Output)) {
+        if ($null -eq $line) { continue }
+
+        $lineText = if ($line -is [System.Management.Automation.ErrorRecord]) { $line.Exception.Message } else { $line.ToString() }
+        if ([string]::IsNullOrWhiteSpace($lineText)) { continue }
+
+        Write-Verbose $lineText
+    }
 }
 
 <#
@@ -277,19 +323,24 @@ function Get-AppRemovalMethod {
     following all winget uninstall attempts. In GUI mode, displays a
     warning message box; in CLI mode, prompts via Read-Host. On
     confirmation, performs a force-remove of the Edge package.
+
+    .OUTPUTS
+    System.Boolean. $true when Edge is forcefully removed; otherwise $false.
 #>
 function Request-EdgeForceRemove {
     if ($script:GuiWindow) {
         $result = Show-MessageBox -Message 'Unable to uninstall Microsoft Edge via WinGet. Would you like to forcefully uninstall it? NOT RECOMMENDED!' -Title 'Force Uninstall Microsoft Edge?' -Button 'YesNo' -Icon 'Warning'
         if ($result -eq 'Yes') {
             Write-Host ""
-            Invoke-ForceRemoveEdge
+            return (Invoke-ForceRemoveEdge)
         }
     }
     elseif ($(Read-Host -Prompt "Would you like to forcefully uninstall Microsoft Edge? NOT RECOMMENDED! (y/n)") -eq 'y') {
         Write-Host ""
-        Invoke-ForceRemoveEdge
+        return (Invoke-ForceRemoveEdge)
     }
+
+    return $false
 }
 
 <#

@@ -670,13 +670,15 @@ function Show-MainWindow {
         if ($selectedApps.Count -gt 0) {
             if (-not (Confirm-UnsafeAppRemoval -SelectedApps $selectedApps -Owner $window)) { return }
 
+            $scopeTarget = Get-AppRemovalScopeTarget -AppRemovalScopeCombo $appRemovalScopeCombo -OtherUsernameTextBox $otherUsernameTextBox
+            if ([string]::IsNullOrWhiteSpace($scopeTarget)) {
+                Write-Warning 'App removal was cancelled because the selected removal scope is invalid.'
+                return
+            }
+
             Add-Parameter 'RemoveApps'
             Add-Parameter 'Apps' ($selectedApps -join ',')
-
-            $scopeTarget = Get-AppRemovalScopeTarget -AppRemovalScopeCombo $appRemovalScopeCombo -OtherUsernameTextBox $otherUsernameTextBox
-            if ($scopeTarget) {
-                Add-Parameter 'AppRemovalTarget' $scopeTarget
-            }
+            Add-Parameter 'AppRemovalTarget' $scopeTarget
         }
 
         # Apply dynamic tweaks

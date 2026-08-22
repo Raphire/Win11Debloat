@@ -7,7 +7,9 @@
         - Registry-backed: imports the .reg file via Import-RegistryFile, then runs
         any post-import side effects (e.g., removing companion app packages).
         - Custom logic: app removal, Windows optional features, start menu
-        replacement, and other special-case features.
+        replacement, and other special-case features. Returns $true when the
+        feature completes successfully; otherwise writes a warning and returns
+        $false.
 #>
 function Invoke-FeatureApply {
     param(
@@ -15,30 +17,32 @@ function Invoke-FeatureApply {
         [string]$FeatureId
     )
 
-    # Resolve feature metadata from Features.json
-    $feature = $script:Features[$FeatureId]
-    $applyText = $feature.ApplyText
+    try {
+        # Resolve feature metadata from Features.json
+        $feature = $script:Features[$FeatureId]
+        $applyText = $feature.ApplyText
 
-    # ---- Registry-backed features: import .reg file, then handle side effects ----
+    # ---- Registry-backed features: import .reg file, then handle additional tasks ----
     if ($feature.RegistryKey) {
-        Import-RegistryFile "> $applyText..." $feature.RegistryKey
+        if (-not (Import-RegistryFile "> $applyText..." $feature.RegistryKey)) {
+            return $false
+        }
 
-        # Post-import side effects for specific features
         switch ($FeatureId) {
             'DisableBing' {
                 # Also remove the app package for Bing search
-                Remove-SelectedApps @('Microsoft.BingSearch')
+                return (Remove-SelectedApps @('Microsoft.BingSearch'))
             }
             'DisableCopilot' {
                 # Also remove the app packages for Copilot
-                Remove-SelectedApps @('Microsoft.Copilot', 'XP9CXNGPPJ97XX')
+                return (Remove-SelectedApps @('Microsoft.Copilot', 'XP9CXNGPPJ97XX'))
             }
             'DisableTelemetry' {
                 # Also disable telemetry scheduled tasks
-                Disable-TelemetryScheduledTasks
+                return (Disable-TelemetryScheduledTasks)
             }
         }
-        return
+        return $true
     }
 
     # ---- Custom features (no registry backing, or special handling required) ----
@@ -49,30 +53,25 @@ function Invoke-FeatureApply {
 
             if ($appsList.Count -eq 0) {
                 Write-Host "No valid apps were selected for removal" -ForegroundColor Yellow
-                Write-Host ""
-                return
+                return $true
             }
 
             Write-Host "$($appsList.Count) apps selected for removal"
-            Remove-SelectedApps $appsList
-            return
+            return (Remove-SelectedApps $appsList)
         }
         'RemoveGamingApps' {
             $appsList = @('Microsoft.GamingApp', 'Microsoft.XboxGameOverlay', 'Microsoft.XboxGamingOverlay')
             Write-Host "> $applyText..."
-            Remove-SelectedApps $appsList
-            return
+            return (Remove-SelectedApps $appsList)
         }
         'RemoveHPApps' {
             $appsList = @('AD2F1837.HPAIExperienceCenter', 'AD2F1837.HPJumpStarts', 'AD2F1837.HPPCHardwareDiagnosticsWindows', 'AD2F1837.HPPowerManager', 'AD2F1837.HPPrivacySettings', 'AD2F1837.HPSupportAssistant', 'AD2F1837.HPSureShieldAI', 'AD2F1837.HPSystemInformation', 'AD2F1837.HPQuickDrop', 'AD2F1837.HPWorkWell', 'AD2F1837.myHP', 'AD2F1837.HPDesktopSupportUtilities', 'AD2F1837.HPQuickTouch', 'AD2F1837.HPEasyClean', 'AD2F1837.HPConnectedMusic', 'AD2F1837.HPFileViewer', 'AD2F1837.HPRegistration', 'AD2F1837.HPWelcome', 'AD2F1837.HPConnectedPhotopoweredbySnapfish', 'AD2F1837.HPPrinterControl')
             Write-Host "> $applyText..."
-            Remove-SelectedApps $appsList
-            return
+            return (Remove-SelectedApps $appsList)
         }
         'ForceRemoveEdge' {
             Write-Host "> $applyText..."
-            Invoke-ForceRemoveEdge
-            return
+            return (Invoke-ForceRemoveEdge)
         }
         'DisableWidgets' {
             Write-Host "> $applyText..."
@@ -81,76 +80,75 @@ function Invoke-FeatureApply {
                 Get-Process *Widget* -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
             }
 
-            Remove-SelectedApps @('Microsoft.StartExperiencesApp','MicrosoftWindows.Client.WebExperience','Microsoft.WidgetsPlatformRuntime')
-            return
+            return (Remove-SelectedApps @('Microsoft.StartExperiencesApp','MicrosoftWindows.Client.WebExperience','Microsoft.WidgetsPlatformRuntime'))
         }
         'EnableWindowsSandbox' {
             Write-Host "> $applyText..."
-            Enable-WindowsFeature "Containers-DisposableClientVM"
-            Write-Host ""
-            return
+            return (Enable-WindowsFeature "Containers-DisposableClientVM")
         }
         'EnableWindowsSubsystemForLinux' {
             Write-Host "> $applyText..."
-            Enable-WindowsFeature "VirtualMachinePlatform"
-            Enable-WindowsFeature "Microsoft-Windows-Subsystem-Linux"
-            Write-Host ""
-            return
+            if (-not (Enable-WindowsFeature "VirtualMachinePlatform")) { return $false }
+            return (Enable-WindowsFeature "Microsoft-Windows-Subsystem-Linux")
         }
         'ClearStart' {
             Write-Host "> $applyText for user $(Get-UserName)..."
             $startMenuBinFile = Get-StartMenuBinPathForUser -UserName (Get-UserName)
             if (-not [string]::IsNullOrWhiteSpace($startMenuBinFile)) {
-                Replace-StartMenu -startMenuBinFile $startMenuBinFile
+                return (Replace-StartMenu -startMenuBinFile $startMenuBinFile)
             }
-            Write-Host ""
-            return
+            Write-Warning "Unable to apply '$applyText': the Start menu path for user $(Get-UserName) could not be resolved."
+            return $false
         }
         'ReplaceStart' {
             Write-Host "> $applyText for user $(Get-UserName)..."
             $startMenuBinFile = Get-StartMenuBinPathForUser -UserName (Get-UserName)
             if (-not [string]::IsNullOrWhiteSpace($startMenuBinFile)) {
-                Replace-StartMenu -startMenuBinFile $startMenuBinFile -startMenuTemplate $script:Params.Item("ReplaceStart")
+                return (Replace-StartMenu -startMenuBinFile $startMenuBinFile -startMenuTemplate $script:Params.Item("ReplaceStart"))
             }
-            Write-Host ""
-            return
+            Write-Warning "Unable to apply '$applyText': the Start menu path for user $(Get-UserName) could not be resolved."
+            return $false
         }
         'ClearStartAllUsers' {
-            Replace-StartMenuForAllUsers
-            return
+            return (Replace-StartMenuForAllUsers)
         }
         'ReplaceStartAllUsers' {
-            Replace-StartMenuForAllUsers -startMenuTemplate $script:Params.Item("ReplaceStartAllUsers")
-            return
+            return (Replace-StartMenuForAllUsers -startMenuTemplate $script:Params.Item("ReplaceStartAllUsers"))
         }
         'DisableStoreSearchSuggestions' {
             if ($script:Params.ContainsKey("Sysprep")) {
                 Write-Host "> Disabling Microsoft Store search suggestions in the start menu for all users..."
-                Set-StoreSearchSuggestionsDisabledForAllUsers
-                Write-Host ""
-                return
+                return (Set-StoreSearchSuggestionsDisabledForAllUsers)
             }
 
             Write-Host "> Disabling Microsoft Store search suggestions for user $(Get-UserName)..."
             $storeDb = Get-StoreAppsDatabasePathForUser -UserName (Get-UserName)
             if ($storeDb) {
-                Set-StoreSearchSuggestionsDisabled -StoreAppsDatabase $storeDb
+                return (Set-StoreSearchSuggestionsDisabled -StoreAppsDatabase $storeDb)
             }
-            Write-Host ""
-            return
+            Write-Warning "Unable to disable Microsoft Store search suggestions because the Store database for user $(Get-UserName) could not be resolved."
+            return $false
         }
     }
+    }
+    catch {
+        Write-Warning "Failed to apply '$applyText': $($_.Exception.Message)"
+        return $false
+    }
+
+    Write-Warning "Unknown feature '$FeatureId' could not be applied."
+    return $false
 }
 
 
 <#
     .SYNOPSIS
-        Undoes a single feature that has no RegistryUndoKey.
+        Undoes a single feature.
 
     .DESCRIPTION
-        Handles undo for features that require custom logic rather than a simple
-        .reg file import. Features with a RegistryUndoKey are handled directly
-        via Import-RegistryFile in Invoke-UndoFeatures.
+        Handles registry-backed undo imports and custom undo logic. Returns
+        $true when the requested undo succeeds; otherwise writes a warning and
+        returns $false.
 #>
 function Invoke-FeatureUndo {
     param(
@@ -159,43 +157,65 @@ function Invoke-FeatureUndo {
     )
 
     $feature = if ($script:Features.ContainsKey($FeatureId)) { $script:Features[$FeatureId] } else { $null }
+    if (-not $feature) {
+        Write-Warning "Unknown feature '$FeatureId' could not be undone."
+        return $false
+    }
 
-    switch ($FeatureId) {
-        'DisableStoreSearchSuggestions' {
-            if ($script:Params.ContainsKey('Sysprep')) {
-                Write-Host "> Re-enabling Microsoft Store search suggestions in the start menu for all users..."
-                Set-StoreSearchSuggestionsEnabledForAllUsers
-                Write-Host ""
-                return
+    $undoText = if ($feature.ApplyUndoText) { $feature.ApplyUndoText } elseif ($feature.UndoLabel) { $feature.UndoLabel } else { $FeatureId }
+
+    try {
+        # ---- Registry-backed features: import undo data, then handle additional tasks ----
+        if ($feature.RegistryUndoKey) {
+            if (-not (Import-RegistryFile "> $undoText" (Resolve-UndoRegFilePath $feature.RegistryUndoKey))) {
+                return $false
             }
 
-            Write-Host "> Re-enabling Microsoft Store search suggestions for user $(Get-UserName)..."
-            $storeDb = Get-StoreAppsDatabasePathForUser -UserName (Get-UserName)
-            if ($storeDb) {
-                Set-StoreSearchSuggestionsEnabled -StoreAppsDatabase $storeDb
+            switch ($FeatureId) {
+                'DisableTelemetry' {
+                    # Also re-enable telemetry scheduled tasks.
+                    return (Enable-TelemetryScheduledTasks)
+                }
             }
-            Write-Host ""
-            return
+
+            return $true
         }
-        'EnableWindowsSandbox' {
-            Write-Host "> $($feature.ApplyUndoText)..."
-            Disable-WindowsFeature 'Containers-DisposableClientVM'
-            Write-Host ""
-            return
-        }
-        'EnableWindowsSubsystemForLinux' {
-            Write-Host "> $($feature.ApplyUndoText)..."
-            Disable-WindowsFeature 'Microsoft-Windows-Subsystem-Linux'
-            Disable-WindowsFeature 'VirtualMachinePlatform'
-            Write-Host ""
-            return
-        }
-        'DisableTelemetry' {
-            # Also re-enable telemetry scheduled tasks
-            Enable-TelemetryScheduledTasks
-            return
+
+        # ---- Custom undo features (no registry backing) ----
+        switch ($FeatureId) {
+            'DisableStoreSearchSuggestions' {
+                if ($script:Params.ContainsKey('Sysprep')) {
+                    Write-Host "> Re-enabling Microsoft Store search suggestions in the start menu for all users..."
+                    return (Set-StoreSearchSuggestionsEnabledForAllUsers)
+                }
+
+                Write-Host "> Re-enabling Microsoft Store search suggestions for user $(Get-UserName)..."
+                $storeDb = Get-StoreAppsDatabasePathForUser -UserName (Get-UserName)
+                if ($storeDb) {
+                    return (Set-StoreSearchSuggestionsEnabled -StoreAppsDatabase $storeDb)
+                }
+                Write-Warning "Unable to re-enable Microsoft Store search suggestions because the Store database for user $(Get-UserName) could not be resolved."
+                return $false
+            }
+            'EnableWindowsSandbox' {
+                Write-Host "> $undoText..."
+                return (Disable-WindowsFeature 'Containers-DisposableClientVM')
+            }
+            'EnableWindowsSubsystemForLinux' {
+                Write-Host "> $undoText..."
+                if (-not (Disable-WindowsFeature 'Microsoft-Windows-Subsystem-Linux')) { return $false }
+                return (Disable-WindowsFeature 'VirtualMachinePlatform')
+            }
         }
     }
+
+    catch {
+        Write-Warning "Failed to undo '$undoText': $($_.Exception.Message)"
+        return $false
+    }
+
+    Write-Warning "Feature '$FeatureId' does not support undo."
+    return $false
 }
 
 
@@ -251,7 +271,13 @@ function Invoke-ApplyFeatures {
             & $script:ApplyProgressCallback $step $TotalSteps $displayName
         }
 
-        Invoke-FeatureApply -FeatureId $featureId
+        # Compare app-removal failure counts so a feature that only fails due to
+        # app removal isn't also double-reported as a feature failure.
+        $appRemovalFailuresBefore = $script:AppRemovalFailures
+        if ((-not (Invoke-FeatureApply -FeatureId $featureId)) -and ($script:AppRemovalFailures -eq $appRemovalFailuresBefore)) {
+            $script:FeatureFailures++
+        }
+        Write-Host ""
         $step++
     }
 }
@@ -262,9 +288,8 @@ function Invoke-ApplyFeatures {
         Undoes a list of features, reporting progress for each.
 
     .DESCRIPTION
-        Iterates through the provided feature IDs. Features with a RegistryUndoKey
-        are handled by importing the undo .reg file; all others delegate to
-        Invoke-FeatureUndo for custom undo logic.
+    Iterates through the provided feature IDs and delegates each to
+    Invoke-FeatureUndo, which handles registry-backed and custom undo logic.
         This is called by Invoke-AllChanges during the undo phase.
 #>
 function Invoke-UndoFeatures {
@@ -291,11 +316,10 @@ function Invoke-UndoFeatures {
             & $script:ApplyProgressCallback $step $TotalSteps $undoText
         }
 
-        if ($f -and $f.RegistryUndoKey) {
-            Import-RegistryFile "> $undoText" (Resolve-UndoRegFilePath $f.RegistryUndoKey)
+        if (-not (Invoke-FeatureUndo -FeatureId $featureId)) {
+            $script:FeatureFailures++
         }
-
-        Invoke-FeatureUndo -FeatureId $featureId
+        Write-Host ""
         $step++
     }
 }
@@ -324,8 +348,8 @@ function Invoke-AllChanges {
         throw "Win11Debloat is running as the SYSTEM account. Use the '-User' or '-Sysprep' parameter to target a specific user."
     }
 
-    $script:RegistryImportFailures = 0
     $script:AppRemovalFailures = 0
+    $script:FeatureFailures = 0
     $script:AppRemovalVerificationUnavailable = $false
 
     # ---- Gather work items ----
@@ -405,7 +429,11 @@ function Invoke-AllChanges {
         }
         else {
             Write-Host "> Creating a system restore point..."
-            Invoke-SystemRestorePoint
+            $restorePointSucceeded = Invoke-SystemRestorePoint
+            if (-not $restorePointSucceeded) {
+                if ($script:CancelRequested) { return }
+                $script:FeatureFailures++
+            }
             Write-Host ""
         }
     }
@@ -429,19 +457,20 @@ function Invoke-AllChanges {
     }
 
     # ================================================================
-    # Final: Report registry import and app removal failures
+    # Final: Report failures
     # ================================================================
-    if ($script:RegistryImportFailures -gt 0) {
-        Write-Host ""
-        Write-Warning "$($script:RegistryImportFailures) registry import change(s) failed. See output above for details."
-    }
-
     if ($script:AppRemovalFailures -gt 0) {
         Write-Host ""
         Write-Warning "$($script:AppRemovalFailures) app removal(s) failed. See output above for details."
     }
 
+    if ($script:FeatureFailures -gt 0) {
+        Write-Host ""
+        Write-Warning "$($script:FeatureFailures) feature change(s) failed. See output above for details."
+    }
+
     if ($script:AppRemovalVerificationUnavailable) {
+        Write-Host ""
         Write-Warning "Unable to verify if all apps were uninstalled successfully."
     }
 

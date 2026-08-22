@@ -191,6 +191,13 @@ function Invoke-RegistryOperation {
     }
 }
 
+<#
+    .SYNOPSIS
+    Applies all parsed operations from a registry file.
+
+    .OUTPUTS
+    System.Boolean. $true when all operations complete, including WhatIf; otherwise $false.
+#>
 function Invoke-RegistryOperationsFromRegFile {
     param(
         [Parameter(Mandatory)]
@@ -203,7 +210,7 @@ function Invoke-RegistryOperationsFromRegFile {
 
     if ($script:Params.ContainsKey("WhatIf")) {
         Write-Host "[WhatIf] Apply $totalOperations registry changes from '$RegFilePath'" -ForegroundColor Cyan
-        return
+        return $true
     }
 
     foreach ($operation in $operations) {
@@ -222,5 +229,8 @@ function Invoke-RegistryOperationsFromRegFile {
 
     if ($accessDeniedCount -gt 0) {
         Write-Warning "Registry fallback import completed with $accessDeniedCount access-restricted operation(s) skipped in '$RegFilePath'."
+        return $false
     }
+
+    return $true
 }

@@ -114,9 +114,7 @@ function Show-ApplyModal {
         try {
             Invoke-AllChanges
 
-            $registryImportFailureCount = [int]$script:RegistryImportFailures
-            $appRemovalFailureCount = [int]$script:AppRemovalFailures
-            $failureCount = $registryImportFailureCount + $appRemovalFailureCount
+            $failureCount = [int]$script:FeatureFailures + [int]$script:AppRemovalFailures
             $appRemovalVerificationUnavailable = [bool]$script:AppRemovalVerificationUnavailable
             
             # Restart explorer if requested
@@ -157,11 +155,7 @@ function Show-ApplyModal {
                 }
                 else {
                     $script:ApplyCompletionTitleEl.Text = "Changes Applied with Errors"
-                    $failureMessages = @()
-                    if ($registryImportFailureCount -gt 0) { $failureMessages += "$registryImportFailureCount registry change(s) failed" }
-                    if ($appRemovalFailureCount -gt 0) { $failureMessages += "$appRemovalFailureCount app removal(s) failed" }
-                    if ($appRemovalVerificationUnavailable) { $failureMessages += "Unable to verify if all apps were uninstalled successfully" }
-                    $script:ApplyCompletionMessageEl.Text = "$($failureMessages -join '; '). See console for details."
+                    $script:ApplyCompletionMessageEl.Text = "$failureCount change(s) failed. See console for details."
                 }
             } else {
                 Write-Host "All changes have been applied successfully!"

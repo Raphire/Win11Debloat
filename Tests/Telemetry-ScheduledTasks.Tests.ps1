@@ -95,6 +95,35 @@ Describe 'Disable-TelemetryScheduledTasks' {
         $result.Error | Should -Match 'access denied'
     }
 
+    It 'returns an error when scheduled-task lookup fails' {
+        Mock Invoke-NonBlocking {
+            param($ScriptBlock, $ArgumentList)
+            $script:taskBlock = $ScriptBlock
+            $script:taskArguments = $ArgumentList
+        }
+        Mock Import-Module {}
+        Mock Get-ScheduledTask { throw 'scheduler unavailable' }
+
+        Disable-TelemetryScheduledTasks
+        $result = & $script:taskBlock @script:taskArguments
+
+        $result.Status | Should -Be 'Error'
+        $result.Error | Should -Match 'scheduler unavailable'
+    }
+
+    It 'treats an absent scheduled task as not found' {
+        Mock Invoke-NonBlocking {
+            param($ScriptBlock, $ArgumentList)
+            $script:taskBlock = $ScriptBlock
+            $script:taskArguments = $ArgumentList
+        }
+        Mock Import-Module {}
+        Mock Get-ScheduledTask { $null }
+
+        Disable-TelemetryScheduledTasks
+        (& $script:taskBlock @script:taskArguments).Status | Should -Be 'NotFound'
+    }
+
     It 'reports <Status> task results' -ForEach @(
         @{ Status = 'Disabled'; Expected = 'Disabled Scheduled Task' }
         @{ Status = 'AlreadyDisabled'; Expected = 'already disabled' }
@@ -107,6 +136,15 @@ Describe 'Disable-TelemetryScheduledTasks' {
         Disable-TelemetryScheduledTasks
 
         Should -Invoke Write-Host -Times 1 -Exactly -ParameterFilter { $Object -like "*$Expected*" }
+    }
+
+    It 'returns false for an unknown scheduler result' {
+        Mock Get-TelemetryScheduledTasks { @(@{ Path = '\Microsoft\Windows\Test\'; Name = 'Telemetry' }) }
+        Mock Invoke-NonBlocking { $null }
+        Mock Write-Warning {}
+
+        Disable-TelemetryScheduledTasks | Should -BeFalse
+        Should -Invoke Write-Warning -Times 1 -Exactly
     }
 }
 
@@ -166,6 +204,22 @@ Describe 'Enable-TelemetryScheduledTasks' {
         Should -Invoke Enable-ScheduledTask -Times 1 -Exactly -ParameterFilter { $TaskPath -eq '\Microsoft\Windows\Test\' -and $TaskName -eq 'Second' }
     }
 
+    It 'returns an error when scheduled-task lookup fails' {
+        Mock Invoke-NonBlocking {
+            param($ScriptBlock, $ArgumentList)
+            $script:taskBlock = $ScriptBlock
+            $script:taskArguments = $ArgumentList
+        }
+        Mock Import-Module {}
+        Mock Get-ScheduledTask { throw 'scheduler unavailable' }
+
+        Enable-TelemetryScheduledTasks
+        $result = & $script:taskBlock @script:taskArguments
+
+        $result.Status | Should -Be 'Error'
+        $result.Error | Should -Match 'scheduler unavailable'
+    }
+
     It 'reports <Status> task results' -ForEach @(
         @{ Status = 'Enabled'; Expected = 'Enabled Scheduled Task' }
         @{ Status = 'AlreadyEnabled'; Expected = 'already enabled' }
@@ -178,5 +232,14 @@ Describe 'Enable-TelemetryScheduledTasks' {
         Enable-TelemetryScheduledTasks
 
         Should -Invoke Write-Host -Times 1 -Exactly -ParameterFilter { $Object -like "*$Expected*" }
+    }
+
+    It 'returns false when the scheduler throws' {
+        Mock Get-TelemetryScheduledTasks { @(@{ Path = '\Microsoft\Windows\Test\'; Name = 'Telemetry' }) }
+        Mock Invoke-NonBlocking { throw 'scheduler unavailable' }
+        Mock Write-Warning {}
+
+        Enable-TelemetryScheduledTasks | Should -BeFalse
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -match 'scheduler unavailable' }
     }
 }

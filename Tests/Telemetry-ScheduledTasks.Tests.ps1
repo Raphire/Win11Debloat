@@ -111,6 +111,40 @@ Describe 'Disable-TelemetryScheduledTasks' {
         $result.Error | Should -Match 'scheduler unavailable'
     }
 
+    It 'returns an error when the scheduled-task module cannot load' {
+        Mock Invoke-NonBlocking {
+            param($ScriptBlock, $ArgumentList)
+            $script:taskBlock = $ScriptBlock
+            $script:taskArguments = $ArgumentList
+        }
+        Mock Import-Module { throw 'module unavailable' }
+
+        Disable-TelemetryScheduledTasks
+        $result = & $script:taskBlock @script:taskArguments
+
+        $result.Status | Should -Be 'Error'
+        $result.Error | Should -Match 'module unavailable'
+    }
+
+    It 'returns an error when the scheduled-task command is unavailable' {
+        Mock Invoke-NonBlocking {
+            param($ScriptBlock, $ArgumentList)
+            $script:taskBlock = $ScriptBlock
+            $script:taskArguments = $ArgumentList
+        }
+        Mock Import-Module {}
+        Mock Get-ScheduledTask {
+            throw [System.Management.Automation.ErrorRecord]::new(
+                [System.Management.Automation.CommandNotFoundException]::new('Get-ScheduledTask unavailable'),
+                'CommandNotFoundException',
+                [System.Management.Automation.ErrorCategory]::ObjectNotFound,
+                $null)
+        }
+
+        Disable-TelemetryScheduledTasks
+        (& $script:taskBlock @script:taskArguments).Status | Should -Be 'Error'
+    }
+
     It 'treats an absent scheduled task as not found' {
         Mock Invoke-NonBlocking {
             param($ScriptBlock, $ArgumentList)
@@ -218,6 +252,40 @@ Describe 'Enable-TelemetryScheduledTasks' {
 
         $result.Status | Should -Be 'Error'
         $result.Error | Should -Match 'scheduler unavailable'
+    }
+
+    It 'returns an error when the scheduled-task module cannot load' {
+        Mock Invoke-NonBlocking {
+            param($ScriptBlock, $ArgumentList)
+            $script:taskBlock = $ScriptBlock
+            $script:taskArguments = $ArgumentList
+        }
+        Mock Import-Module { throw 'module unavailable' }
+
+        Enable-TelemetryScheduledTasks
+        $result = & $script:taskBlock @script:taskArguments
+
+        $result.Status | Should -Be 'Error'
+        $result.Error | Should -Match 'module unavailable'
+    }
+
+    It 'returns an error when the scheduled-task command is unavailable' {
+        Mock Invoke-NonBlocking {
+            param($ScriptBlock, $ArgumentList)
+            $script:taskBlock = $ScriptBlock
+            $script:taskArguments = $ArgumentList
+        }
+        Mock Import-Module {}
+        Mock Get-ScheduledTask {
+            throw [System.Management.Automation.ErrorRecord]::new(
+                [System.Management.Automation.CommandNotFoundException]::new('Get-ScheduledTask unavailable'),
+                'CommandNotFoundException',
+                [System.Management.Automation.ErrorCategory]::ObjectNotFound,
+                $null)
+        }
+
+        Enable-TelemetryScheduledTasks
+        (& $script:taskBlock @script:taskArguments).Status | Should -Be 'Error'
     }
 
     It 'reports <Status> task results' -ForEach @(

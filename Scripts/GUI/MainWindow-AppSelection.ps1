@@ -234,8 +234,8 @@ function Get-AppRemovalScopeTarget {
         "AppRemovalScopeAllUsers" { return 'AllUsers' }
         "AppRemovalScopeCurrentUser" { return 'CurrentUser' }
         default {
-            Write-Warning "Unrecognized app-removal scope item '$($selectedItem.Name)'. Defaulting to AllUsers."
-            return 'AllUsers'
+            Write-Warning "Unrecognized app-removal scope item '$($selectedItem.Name)'. Skipping app removal."
+            return $null
         }
     }
 }

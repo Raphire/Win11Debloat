@@ -1,3 +1,10 @@
+<#
+    .SYNOPSIS
+    Creates a system restore point.
+
+    .OUTPUTS
+    System.Boolean. $true when a restore point is created; otherwise $false.
+#>
 function Invoke-SystemRestorePoint {
     $failed = $false
     $isSilent = ($script:Params -and $script:Params.ContainsKey('Silent')) -or $script:Silent

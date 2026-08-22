@@ -1,6 +1,9 @@
 <#
     .SYNOPSIS
         Forcefully uninstalls Microsoft Edge and removes its leftover shortcuts and autostart entries.
+
+    .OUTPUTS
+        System.Boolean. $true when Edge is uninstalled and cleanup succeeds; otherwise $false.
 #>
 function Invoke-ForceRemoveEdge {
     if ($script:Params.ContainsKey("WhatIf")) {
@@ -13,7 +16,8 @@ function Invoke-ForceRemoveEdge {
 
         $regView = [Microsoft.Win32.RegistryView]::Registry32
         $hklm = [Microsoft.Win32.RegistryKey]::OpenBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, $regView)
-        $hklm.CreateSubKey('SOFTWARE\Microsoft\EdgeUpdateDev').SetValue('AllowUninstall', '')
+        $edgeUpdateKey = $hklm.CreateSubKey('SOFTWARE\Microsoft\EdgeUpdateDev')
+        $edgeUpdateKey.SetValue('AllowUninstall', '')
 
         # Create stub (This somehow allows uninstalling Edge)
         $edgeStub = "$env:SystemRoot\SystemApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe"
@@ -95,11 +99,19 @@ function Invoke-ForceRemoveEdge {
         return $false
     }
     finally {
+        if ($edgeUpdateKey) { $edgeUpdateKey.Dispose() }
         if ($uninstallRegKey) { $uninstallRegKey.Dispose() }
         if ($hklm) { $hklm.Dispose() }
     }
 }
 
+<#
+    .SYNOPSIS
+        Removes an Edge autostart registry value when it exists.
+
+    .OUTPUTS
+        System.Boolean. $true when the value is absent or removed; $false when inspection or removal fails.
+#>
 function Remove-EdgeAutostartValue {
     param(
         [Parameter(Mandatory)]

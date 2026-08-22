@@ -18,6 +18,9 @@
 
     .EXAMPLE
     Replace-StartMenuForAllUsers -startMenuTemplate "C:\CustomLayout.bin"
+
+    .OUTPUTS
+    System.Boolean. $true when all resolved profiles are updated or the change is previewed; otherwise $false.
 #>
 function Replace-StartMenuForAllUsers {
     param (
@@ -99,6 +102,9 @@ function Replace-StartMenuForAllUsers {
 
     .EXAMPLE
     Replace-StartMenu -startMenuBinFile "$env:LOCALAPPDATA\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState\start2.bin" -startMenuTemplate "C:\CustomLayout.bin"
+
+    .OUTPUTS
+    System.Boolean. $true when the template is valid and copied, or the change is previewed; otherwise $false.
 #>
 function Replace-StartMenu {
     param (

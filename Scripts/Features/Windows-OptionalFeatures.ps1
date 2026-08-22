@@ -1,4 +1,10 @@
-# Enables a Windows optional feature and pipes its output to the console
+<#
+    .SYNOPSIS
+    Enables a Windows optional feature and pipes its output to the console.
+
+    .OUTPUTS
+    System.Boolean. $true when enabling succeeds or is previewed; otherwise $false.
+#>
 function Enable-WindowsFeature {
     param (
         [string]$FeatureName
@@ -44,7 +50,13 @@ function Enable-WindowsFeature {
     return $true
 }
 
-# Disables a Windows optional feature and pipes its output to the console
+<#
+    .SYNOPSIS
+    Disables a Windows optional feature and pipes its output to the console.
+
+    .OUTPUTS
+    System.Boolean. $true when disabling succeeds or is previewed; otherwise $false.
+#>
 function Disable-WindowsFeature {
     param (
         [string]$FeatureName

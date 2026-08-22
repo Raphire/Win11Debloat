@@ -34,6 +34,9 @@ function Get-TelemetryScheduledTasks {
 
     .EXAMPLE
     Disable-TelemetryScheduledTasks
+
+    .OUTPUTS
+    System.Boolean. $true when every task is disabled, absent, already disabled, or previewed; otherwise $false.
 #>
 function Disable-TelemetryScheduledTasks {
     Write-Host "> Disabling telemetry scheduled tasks..."
@@ -97,6 +100,9 @@ function Disable-TelemetryScheduledTasks {
 
     .EXAMPLE
     Enable-TelemetryScheduledTasks
+
+    .OUTPUTS
+    System.Boolean. $true when every task is enabled, absent, already enabled, or previewed; otherwise $false.
 #>
 function Enable-TelemetryScheduledTasks {
     Write-Host "> Enabling telemetry scheduled tasks..."

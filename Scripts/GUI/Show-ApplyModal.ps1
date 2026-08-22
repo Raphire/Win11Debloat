@@ -114,8 +114,7 @@ function Show-ApplyModal {
         try {
             Invoke-AllChanges
 
-            $featureFailureCount = [int]$script:FeatureFailures
-            $failureCount = $featureFailureCount
+            $failureCount = [int]$script:FeatureFailures + [int]$script:AppRemovalFailures
             $appRemovalVerificationUnavailable = [bool]$script:AppRemovalVerificationUnavailable
             
             # Restart explorer if requested
@@ -156,7 +155,7 @@ function Show-ApplyModal {
                 }
                 else {
                     $script:ApplyCompletionTitleEl.Text = "Changes Applied with Errors"
-                    $script:ApplyCompletionMessageEl.Text = "$featureFailureCount change(s) failed. See console for details."
+                    $script:ApplyCompletionMessageEl.Text = "$failureCount change(s) failed. See console for details."
                 }
             } else {
                 Write-Host "All changes have been applied successfully!"

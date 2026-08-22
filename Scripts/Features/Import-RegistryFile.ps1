@@ -1,4 +1,10 @@
-# Import & execute regfile
+<#
+    .SYNOPSIS
+    Imports and executes a registry file.
+
+    .OUTPUTS
+    System.Boolean. $true when the registry file is applied or previewed successfully; otherwise $false.
+#>
 function Import-RegistryFile {
     param (
         $message,

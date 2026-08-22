@@ -198,11 +198,11 @@ function Invoke-FeatureUndo {
                 return $false
             }
             'EnableWindowsSandbox' {
-                Write-Host "> $($feature.ApplyUndoText)..."
+                Write-Host "> $undoText..."
                 return (Disable-WindowsFeature 'Containers-DisposableClientVM')
             }
             'EnableWindowsSubsystemForLinux' {
-                Write-Host "> $($feature.ApplyUndoText)..."
+                Write-Host "> $undoText..."
                 if (-not (Disable-WindowsFeature 'Microsoft-Windows-Subsystem-Linux')) { return $false }
                 return (Disable-WindowsFeature 'VirtualMachinePlatform')
             }
@@ -271,7 +271,10 @@ function Invoke-ApplyFeatures {
             & $script:ApplyProgressCallback $step $TotalSteps $displayName
         }
 
-        if (-not (Invoke-FeatureApply -FeatureId $featureId)) {
+        # Compare app-removal failure counts so a feature that only fails due to
+        # app removal isn't also double-reported as a feature failure.
+        $appRemovalFailuresBefore = $script:AppRemovalFailures
+        if ((-not (Invoke-FeatureApply -FeatureId $featureId)) -and ($script:AppRemovalFailures -eq $appRemovalFailuresBefore)) {
             $script:FeatureFailures++
         }
         Write-Host ""

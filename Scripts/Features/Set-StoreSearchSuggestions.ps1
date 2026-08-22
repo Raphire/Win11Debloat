@@ -10,6 +10,9 @@
 
     .EXAMPLE
     DisableStoreSearchSuggestionsForAllUsers
+
+    .OUTPUTS
+    System.Boolean. $true when a profile is processed and all ACL changes succeed; otherwise $false.
 #>
 function Set-StoreSearchSuggestionsDisabledForAllUsers {
     $success = $true
@@ -60,6 +63,9 @@ function Set-StoreSearchSuggestionsDisabledForAllUsers {
 
     .EXAMPLE
     DisableStoreSearchSuggestions -StoreAppsDatabase "$env:LOCALAPPDATA\Packages\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalState\store.db"
+
+    .OUTPUTS
+    System.Boolean. $true when the database ACL is restricted or previewed; otherwise $false.
 #>
 function Set-StoreSearchSuggestionsDisabled {
     param (
@@ -115,6 +121,9 @@ function Set-StoreSearchSuggestionsDisabled {
 
     .EXAMPLE
     EnableStoreSearchSuggestionsForAllUsers
+
+    .OUTPUTS
+    System.Boolean. $true when a profile is processed and all ACL changes succeed; otherwise $false.
 #>
 function Set-StoreSearchSuggestionsEnabledForAllUsers {
     $success = $true
@@ -164,6 +173,9 @@ function Set-StoreSearchSuggestionsEnabledForAllUsers {
 
     .EXAMPLE
     EnableStoreSearchSuggestions -StoreAppsDatabase "$env:LOCALAPPDATA\Packages\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalState\store.db"
+
+    .OUTPUTS
+    System.Boolean. $true when the deny ACL is removed, the database is absent, or the change is previewed; otherwise $false.
 #>
 function Set-StoreSearchSuggestionsEnabled {
     param (

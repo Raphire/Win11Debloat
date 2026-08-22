@@ -191,6 +191,13 @@ function Invoke-RegistryOperation {
     }
 }
 
+<#
+    .SYNOPSIS
+    Applies all parsed operations from a registry file.
+
+    .OUTPUTS
+    System.Boolean. $true when all operations complete, including WhatIf; otherwise $false.
+#>
 function Invoke-RegistryOperationsFromRegFile {
     param(
         [Parameter(Mandatory)]

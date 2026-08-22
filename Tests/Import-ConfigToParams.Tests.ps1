@@ -61,6 +61,30 @@ Describe 'Test-ConfigConsistency' {
         Test-ConfigConsistency -Config $config | Should -Match 'no importable data'
     }
 
+    It 'reports an error for invalid app entries' {
+        $config = [PSCustomObject]@{ Version = '1.0'; Apps = 42 }
+
+        Test-ConfigConsistency -Config $config | Should -Match 'Apps entries must be strings'
+    }
+
+    It 'reports an error for nonnumeric deployment indexes' {
+        $config = [PSCustomObject]@{
+            Version = '1.0'
+            Deployment = @(@{ Name = 'AppRemovalScopeIndex'; Value = 'all' })
+        }
+
+        Test-ConfigConsistency -Config $config | Should -Match 'AppRemovalScopeIndex must be a supported numeric value'
+    }
+
+    It 'reports an error for out-of-range deployment indexes' {
+        $config = [PSCustomObject]@{
+            Version = '1.0'
+            Deployment = @(@{ Name = 'UserSelectionIndex'; Value = 3 })
+        }
+
+        Test-ConfigConsistency -Config $config | Should -Match 'UserSelectionIndex must be a supported numeric value'
+    }
+
     It 'returns null for a consistent all-users scope' {
         $config = [PSCustomObject]@{
             Version = '1.0'

@@ -91,6 +91,17 @@ Describe 'Remove-SelectedApps' {
         $script:AppRemovalFailures | Should -Be 0
     }
 
+    It 'counts a failed WinGet scheduling result for a target user' {
+        $script:Params = @{ User = 'Alice' }
+        Mock Get-AppRemovalMethod { 'WinGet' }
+        Mock Remove-WinGetApp { $false }
+        Mock Test-AppInWingetList { $false }
+
+        Remove-SelectedApps -appsList @('One.App') | Should -BeFalse
+
+        $script:AppRemovalFailures | Should -Be 1
+    }
+
     It 'counts a WinGet removal that remains installed after a successful command' {
         Mock Get-AppRemovalMethod { 'WinGet' }
         Mock Test-AppInWingetList { $true }
@@ -197,41 +208,28 @@ Describe 'Remove-WinGetApp' {
         }
     }
 
-    It 'returns false when winget exits unsuccessfully' {
-        Mock Invoke-NonBlocking { [PSCustomObject]@{ Success = $false; ExitCode = 1; Output = @('failure') } }
-        Mock Write-Verbose {}
-
-        Remove-WinGetApp -app 'One.App' | Should -BeFalse
-
-        Should -Invoke Write-Verbose -Times 1 -Exactly -ParameterFilter { $Message -match 'exit code 1' }
-    }
-
-    It 'returns false for a non-zero WinGet exit code without writing an error record' {
-        Mock Invoke-NonBlocking { [PSCustomObject]@{ Success = $false; ExitCode = -1978335212; Output = @('No installed package found matching input criteria.') } }
-        Mock Write-Verbose {}
-
-        Remove-WinGetApp -app 'One.App' | Should -BeFalse
-
-        Should -Invoke Write-Verbose -Times 1 -Exactly -ParameterFilter { $Message -match 'post-removal inventory check' }
-        Should -Invoke Write-Verbose -Times 1 -Exactly -ParameterFilter { $Message -match 'No installed package found' }
-    }
-
-    It 'writes captured winget output to the verbose stream before returning success' {
-        Mock Invoke-NonBlocking { [PSCustomObject]@{ Success = $true; ExitCode = 0; Output = @('Successfully uninstalled One.App') } }
+    It 'returns true and logs WinGet output regardless of exit code' -ForEach @(
+        @{ ExitCode = 0; Output = 'Successfully uninstalled One.App' }
+        @{ ExitCode = 1; Output = 'Package was not found' }
+        @{ ExitCode = -1978335212; Output = 'No installed package found matching input criteria.' }
+    ) {
+        $script:expectedExitCode = $ExitCode
+        $script:expectedOutput = $Output
+        Mock Invoke-NonBlocking { [PSCustomObject]@{ ExitCode = $script:expectedExitCode; Output = @($script:expectedOutput) } }
         Mock Write-Verbose {}
 
         Remove-WinGetApp -app 'One.App' | Should -BeTrue
 
-        Should -Invoke Write-Verbose -Times 1 -Exactly -ParameterFilter { $Message -eq 'Successfully uninstalled One.App' }
+        Should -Invoke Write-Verbose -Times 1 -Exactly -ParameterFilter { $Message -eq $script:expectedOutput }
+        Should -Invoke Write-Verbose -Times 1 -Exactly -ParameterFilter { $Message -eq "WinGet uninstall for One.App returned exit code $script:expectedExitCode." }
     }
 
-    It 'writes captured winget diagnostics to the verbose stream when winget fails' {
-        Mock Invoke-NonBlocking { [PSCustomObject]@{ Success = $false; ExitCode = 1; Output = @('Package was not found') } }
-        Mock Write-Verbose {}
+    It 'returns the RunOnce scheduling result for a target user' {
+        $script:Params = @{ User = 'Alice' }
+        Mock Invoke-NonBlocking { [PSCustomObject]@{ ExitCode = 1; Output = @() } }
+        Mock Set-RunOnceWingetTask { $false }
 
         Remove-WinGetApp -app 'One.App' | Should -BeFalse
-
-        Should -Invoke Write-Verbose -Times 1 -Exactly -ParameterFilter { $Message -eq 'Package was not found' }
     }
 
 }
@@ -243,6 +241,15 @@ Describe 'Remove-EdgeAutostartValue' {
 
     It 'treats a missing value as already cleaned up' {
         Mock Get-ItemProperty { [PSCustomObject]@{} }
+        Mock Remove-ItemProperty {}
+
+        Remove-EdgeAutostartValue -Path 'HKCU:\Software\Example' -Name 'Microsoft Edge Update' | Should -BeTrue
+
+        Should -Invoke Remove-ItemProperty -Times 0 -Exactly
+    }
+
+    It 'treats a missing registry key as already cleaned up' {
+        Mock Get-ItemProperty { throw [System.Management.Automation.ItemNotFoundException]::new('not found') }
         Mock Remove-ItemProperty {}
 
         Remove-EdgeAutostartValue -Path 'HKCU:\Software\Example' -Name 'Microsoft Edge Update' | Should -BeTrue

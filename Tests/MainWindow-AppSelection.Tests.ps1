@@ -211,7 +211,7 @@ Describe 'Get-AppRemovalScopeTarget' {
         Get-AppRemovalScopeTarget -AppRemovalScopeCombo $combo -OtherUsernameTextBox $usernameBox | Should -BeNullOrEmpty
     }
 
-    It 'defaults to AllUsers for an unrecognized ComboBoxItem Name' {
+    It 'returns null for an unrecognized ComboBoxItem Name' {
         $combo = New-Object System.Windows.Controls.ComboBox
         $item = New-Object System.Windows.Controls.ComboBoxItem
         $item.Name = 'SomeUnrelatedControl'
@@ -219,7 +219,7 @@ Describe 'Get-AppRemovalScopeTarget' {
         $combo.SelectedItem = $item
         $usernameBox = New-Object System.Windows.Controls.TextBox
 
-        Get-AppRemovalScopeTarget -AppRemovalScopeCombo $combo -OtherUsernameTextBox $usernameBox | Should -Be 'AllUsers'
+        Get-AppRemovalScopeTarget -AppRemovalScopeCombo $combo -OtherUsernameTextBox $usernameBox | Should -BeNullOrEmpty
     }
 
     It 'returns an empty string for the target-user scope when the username is blank' {

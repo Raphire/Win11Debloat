@@ -38,6 +38,8 @@ param (
     [switch]$DisableStoreSearchSuggestions,
     [switch]$DisableSearchHighlights,
     [switch]$DisableDesktopSpotlight,
+    [switch]$HideDesktopSpotlightIcon,
+    [switch]$EnableDesktopSpotlight,
     [switch]$DisableLockscreenTips,
     [switch]$DisableSuggestions,
     [switch]$DisableLocationServices,

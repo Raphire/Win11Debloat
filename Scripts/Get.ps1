@@ -39,6 +39,8 @@ param (
     [switch]$DisableBing,
     [switch]$DisableStoreSearchSuggestions,
     [switch]$DisableDesktopSpotlight,
+    [switch]$HideDesktopSpotlightIcon,
+    [switch]$EnableDesktopSpotlight,
     [switch]$DisableLockscreenTips,
     [switch]$DisableSuggestions,
     [switch]$DisableLocationServices,

@@ -26,6 +26,13 @@ Describe 'Import-RegistryFile' {
         Should -Invoke Invoke-NonBlocking -Times 0 -Exactly
     }
 
+    It 'returns false when registry file resolution throws' {
+        Mock Get-RegistryFilePathForFeature { throw 'path resolution failed' }
+
+        Import-RegistryFile -message 'Apply' -path 'feature.reg' | Should -BeFalse
+        Should -Invoke Invoke-NonBlocking -Times 0 -Exactly
+    }
+
     It 'uses the PowerShell writer only in WhatIf mode' {
         $script:Params = @{ WhatIf = $true }
         Import-RegistryFile -message 'Apply' -path 'feature.reg' | Should -BeTrue

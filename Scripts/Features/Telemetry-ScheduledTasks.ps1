@@ -55,7 +55,15 @@ function Disable-TelemetryScheduledTasks {
             $result = Invoke-NonBlocking -ScriptBlock {
             param($path, $name)
             Import-Module ScheduledTasks -ErrorAction SilentlyContinue
-            $taskObj = Get-ScheduledTask -TaskPath $path -TaskName $name -ErrorAction SilentlyContinue
+            try {
+                $taskObj = Get-ScheduledTask -TaskPath $path -TaskName $name -ErrorAction Stop
+            }
+            catch {
+                if ($_.CategoryInfo.Category -eq [System.Management.Automation.ErrorCategory]::ObjectNotFound) {
+                    return @{ Success = $true; Status = 'NotFound' }
+                }
+                return @{ Success = $false; Status = 'Error'; Error = $_.Exception.Message }
+            }
             if (-not $taskObj) {
                 return @{ Success = $true; Status = 'NotFound' }
             }
@@ -121,7 +129,15 @@ function Enable-TelemetryScheduledTasks {
             $result = Invoke-NonBlocking -ScriptBlock {
             param($path, $name)
             Import-Module ScheduledTasks -ErrorAction SilentlyContinue
-            $taskObj = Get-ScheduledTask -TaskPath $path -TaskName $name -ErrorAction SilentlyContinue
+            try {
+                $taskObj = Get-ScheduledTask -TaskPath $path -TaskName $name -ErrorAction Stop
+            }
+            catch {
+                if ($_.CategoryInfo.Category -eq [System.Management.Automation.ErrorCategory]::ObjectNotFound) {
+                    return @{ Success = $true; Status = 'NotFound' }
+                }
+                return @{ Success = $false; Status = 'Error'; Error = $_.Exception.Message }
+            }
             if (-not $taskObj) {
                 return @{ Success = $true; Status = 'NotFound' }
             }

@@ -67,6 +67,18 @@ Describe 'Test-ConfigConsistency' {
         Test-ConfigConsistency -Config $config | Should -Match 'Apps entries must be strings'
     }
 
+    It 'reports an error for malformed tweak entries' {
+        $config = [PSCustomObject]@{ Version = '1.0'; Tweaks = @(@{ Value = $true }) }
+
+        Test-ConfigConsistency -Config $config | Should -Match 'Tweaks entries must contain Name and Value properties'
+    }
+
+    It 'reports an error for deployment entries missing a required property' {
+        $config = [PSCustomObject]@{ Version = '1.0'; Deployment = @(@{ Name = 'CreateRestorePoint' }) }
+
+        Test-ConfigConsistency -Config $config | Should -Match 'Deployment entries must contain Name and Value properties'
+    }
+
     It 'reports an error for nonnumeric deployment indexes' {
         $config = [PSCustomObject]@{
             Version = '1.0'

@@ -65,25 +65,25 @@
   "UiGroups": [
     {
       "GroupId": "DesktopSpotlight",
-      "Label": "Windows Spotlight on the desktop",
-      "ToolTip": "Choose whether to keep Windows Spotlight wallpaper and the 'Learn about this picture' icon, hide only the icon, or turn Spotlight off entirely. Hiding the icon keeps the rotating wallpaper.",
-      "Category": "Privacy & Suggested Content",
-      "Priority": 7,
+      "Label": "Windows spotlight on the desktop",
+      "ToolTip": "This setting controls the Windows spotlight desktop background option. Keep the rotating wallpaper with or without the 'Learn about this picture' shortcut, or disable Windows spotlight entirely.",
+      "Category": "Appearance",
+      "Priority": 4,
       "Values": [
         {
-          "Label": "Enable + show icon (Default)",
+          "Label": "Show 'Learn about this picture' shortcut (Default)",
           "FeatureIds": [
             "EnableDesktopSpotlight"
           ]
         },
         {
-          "Label": "Hide 'Learn about this picture' icon",
+          "Label": "Hide 'Learn about this picture' shortcut",
           "FeatureIds": [
             "HideDesktopSpotlightIcon"
           ]
         },
         {
-          "Label": "Disable Windows Spotlight",
+          "Label": "Disable Windows spotlight desktop background",
           "FeatureIds": [
             "DisableDesktopSpotlight"
           ]
@@ -500,11 +500,11 @@
     },
     {
       "FeatureId": "EnableDesktopSpotlight",
-      "Label": "Enable Windows Spotlight on the desktop and show the Spotlight icon",
-      "ToolTip": "Restores Windows Spotlight wallpaper rotation and shows the 'Learn about this picture' desktop icon. This is the Windows default.",
-      "Category": "Privacy & Suggested Content",
+      "Label": "Enable Windows spotlight desktop background and shortcut",
+      "ToolTip": "Restores the Windows spotlight desktop background and the 'Learn about this picture' shortcut.",
+      "Category": "Appearance",
       "RegistryKey": "Enable_Desktop_Spotlight.reg",
-      "ApplyText": "Enabling Windows Spotlight on the desktop and showing the Spotlight icon",
+      "ApplyText": "Restoring the Windows spotlight desktop background and shortcut",
       "UndoLabel": null,
       "ApplyUndoText": null,
       "RegistryUndoKey": null,
@@ -513,26 +513,26 @@
     },
     {
       "FeatureId": "DisableDesktopSpotlight",
-      "Label": "Disable Windows Spotlight for desktop",
-      "ToolTip": "This will turn off the 'Windows Spotlight' feature for the desktop background, which shows different background images and occasionally tips and fun facts on the desktop. This feature uses policies, which will lock down certain settings.",
-      "Category": "Privacy & Suggested Content",
+      "Label": "Disable Windows spotlight desktop background",
+      "ToolTip": "Turns off Windows spotlight for the desktop background, which displays rotating images and may show tips and fun facts. This feature uses policies, which will lock down certain settings.",
+      "Category": "Appearance",
       "RegistryKey": "Disable_Desktop_Spotlight.reg",
-      "ApplyText": "Disabling the 'Windows Spotlight' desktop background option",
-      "UndoLabel": "Enable Windows Spotlight for desktop",
-      "ApplyUndoText": "Enabling the 'Windows Spotlight' desktop background option",
+      "ApplyText": "Disabling the Windows spotlight desktop background",
+      "UndoLabel": "Enable Windows spotlight desktop background",
+      "ApplyUndoText": "Restoring the Windows spotlight desktop background and shortcut",
       "RegistryUndoKey": "Enable_Desktop_Spotlight.reg",
       "MinVersion": null,
       "MaxVersion": null
     },
     {
       "FeatureId": "HideDesktopSpotlightIcon",
-      "Label": "Hide the 'Learn about this picture' desktop Spotlight icon",
-      "ToolTip": "This hides the 'Learn about this picture' desktop icon while keeping Windows Spotlight wallpaper rotation. It does not disable Spotlight itself.",
-      "Category": "Privacy & Suggested Content",
+      "Label": "Hide the 'Learn about this picture' desktop shortcut",
+      "ToolTip": "Hides the 'Learn about this picture' desktop shortcut while keeping Windows spotlight wallpaper rotation enabled. It does not disable Windows spotlight.",
+      "Category": "Appearance",
       "RegistryKey": "Hide_Desktop_Spotlight_Icon.reg",
-      "ApplyText": "Hiding the desktop Spotlight 'Learn about this picture' icon",
-      "UndoLabel": "Show the 'Learn about this picture' desktop Spotlight icon",
-      "ApplyUndoText": "Showing the desktop Spotlight 'Learn about this picture' icon",
+      "ApplyText": "Hiding the Windows spotlight 'Learn about this picture' desktop shortcut",
+      "UndoLabel": "Show the 'Learn about this picture' desktop shortcut",
+      "ApplyUndoText": "Showing the Windows spotlight 'Learn about this picture' desktop shortcut",
       "RegistryUndoKey": "Show_Desktop_Spotlight_Icon.reg",
       "MinVersion": null,
       "MaxVersion": null
@@ -816,6 +816,7 @@
       "UndoLabel": "Disable dark theme for system and apps",
       "ApplyUndoText": "Disabling dark mode for system and apps",
       "RegistryUndoKey": "Enable_Light_Mode.reg",
+      "Priority": 1,
       "MinVersion": null,
       "MaxVersion": null
     },
@@ -1385,6 +1386,7 @@
       "UndoLabel": "Enable transparency effects",
       "ApplyUndoText": "Enabling transparency effects",
       "RegistryUndoKey": "Enable_Transparency.reg",
+      "Priority": 2,
       "MinVersion": null,
       "MaxVersion": null
     },
@@ -1398,6 +1400,7 @@
       "UndoLabel": "Enable animations and visual effects",
       "ApplyUndoText": "Enabling animations and visual effects",
       "RegistryUndoKey": "Enable_Animations.reg",
+      "Priority": 3,
       "RequiresReboot": true,
       "MinVersion": null,
       "MaxVersion": null

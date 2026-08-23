@@ -53,30 +53,30 @@ function Disable-TelemetryScheduledTasks {
 
         try {
             $result = Invoke-NonBlocking -ScriptBlock {
-            param($path, $name)
-            try {
-                Import-Module ScheduledTasks -ErrorAction Stop
-                $taskObj = Get-ScheduledTask -TaskPath $path -TaskName $name -ErrorAction Stop
-            }
-            catch {
-                if ($_.Exception -isnot [System.Management.Automation.CommandNotFoundException] -and $_.CategoryInfo.Category -eq [System.Management.Automation.ErrorCategory]::ObjectNotFound) {
-                    return @{ Success = $true; Status = 'NotFound' }
-                }
-                return @{ Success = $false; Status = 'Error'; Error = $_.Exception.Message }
-            }
-            if (-not $taskObj) {
-                return @{ Success = $true; Status = 'NotFound' }
-            }
-            if ($taskObj.State -ne 'Disabled') {
+                param($path, $name)
                 try {
-                    Disable-ScheduledTask -TaskPath $path -TaskName $name -ErrorAction Stop | Out-Null
-                    return @{ Success = $true; Status = 'Disabled' }
+                    Import-Module ScheduledTasks -ErrorAction Stop
+                    $taskObj = Get-ScheduledTask -TaskPath $path -TaskName $name -ErrorAction Stop
                 }
                 catch {
+                    if ($_.Exception -isnot [System.Management.Automation.CommandNotFoundException] -and $_.CategoryInfo.Category -eq [System.Management.Automation.ErrorCategory]::ObjectNotFound) {
+                        return @{ Success = $true; Status = 'NotFound' }
+                    }
                     return @{ Success = $false; Status = 'Error'; Error = $_.Exception.Message }
                 }
-            }
-            return @{ Success = $true; Status = 'AlreadyDisabled' }
+                if (-not $taskObj) {
+                    return @{ Success = $true; Status = 'NotFound' }
+                }
+                if ($taskObj.State -ne 'Disabled') {
+                    try {
+                        Disable-ScheduledTask -TaskPath $path -TaskName $name -ErrorAction Stop | Out-Null
+                        return @{ Success = $true; Status = 'Disabled' }
+                    }
+                    catch {
+                        return @{ Success = $false; Status = 'Error'; Error = $_.Exception.Message }
+                    }
+                }
+                return @{ Success = $true; Status = 'AlreadyDisabled' }
             } -ArgumentList @($task.Path, $task.Name)
         }
         catch {
@@ -127,29 +127,29 @@ function Enable-TelemetryScheduledTasks {
 
         try {
             $result = Invoke-NonBlocking -ScriptBlock {
-            param($path, $name)
-            try {
-                Import-Module ScheduledTasks -ErrorAction Stop
-                $taskObj = Get-ScheduledTask -TaskPath $path -TaskName $name -ErrorAction Stop
-            }
-            catch {
-                if ($_.Exception -isnot [System.Management.Automation.CommandNotFoundException] -and $_.CategoryInfo.Category -eq [System.Management.Automation.ErrorCategory]::ObjectNotFound) {
-                    return @{ Success = $true; Status = 'NotFound' }
-                }
-                return @{ Success = $false; Status = 'Error'; Error = $_.Exception.Message }
-            }
-            if (-not $taskObj) {
-                return @{ Success = $true; Status = 'NotFound' }
-            }
-            if ($taskObj.State -eq 'Disabled') {
+                param($path, $name)
                 try {
-                    Enable-ScheduledTask -TaskPath $path -TaskName $name -ErrorAction Stop | Out-Null
-                    return @{ Success = $true; Status = 'Enabled' }
+                    Import-Module ScheduledTasks -ErrorAction Stop
+                    $taskObj = Get-ScheduledTask -TaskPath $path -TaskName $name -ErrorAction Stop
                 }
                 catch {
+                    if ($_.Exception -isnot [System.Management.Automation.CommandNotFoundException] -and $_.CategoryInfo.Category -eq [System.Management.Automation.ErrorCategory]::ObjectNotFound) {
+                        return @{ Success = $true; Status = 'NotFound' }
+                    }
                     return @{ Success = $false; Status = 'Error'; Error = $_.Exception.Message }
                 }
-            }
+                if (-not $taskObj) {
+                    return @{ Success = $true; Status = 'NotFound' }
+                }
+                if ($taskObj.State -eq 'Disabled') {
+                    try {
+                        Enable-ScheduledTask -TaskPath $path -TaskName $name -ErrorAction Stop | Out-Null
+                        return @{ Success = $true; Status = 'Enabled' }
+                    }
+                    catch {
+                        return @{ Success = $false; Status = 'Error'; Error = $_.Exception.Message }
+                    }
+                }
             return @{ Success = $true; Status = 'AlreadyEnabled' }
             } -ArgumentList @($task.Path, $task.Name)
         }

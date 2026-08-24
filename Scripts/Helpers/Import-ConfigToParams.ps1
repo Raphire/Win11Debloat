@@ -31,6 +31,11 @@ function Import-ConfigToParams {
         throw "Failed to read config file: $resolvedConfigPath"
     }
 
+    $consistencyError = Test-ConfigConsistency -Config $configJson
+    if ($consistencyError) {
+        throw "Invalid config file '$resolvedConfigPath': $consistencyError"
+    }
+
     $importedItems = 0
 
     if ($configJson.Apps) {

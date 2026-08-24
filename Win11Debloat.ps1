@@ -429,6 +429,7 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 . "$PSScriptRoot/Scripts/Helpers/Get-FriendlyTargetUserName.ps1"
 . "$PSScriptRoot/Scripts/Helpers/Get-RebootFeatureLabels.ps1"
 . "$PSScriptRoot/Scripts/Helpers/Import-ConfigToParams.ps1"
+. "$PSScriptRoot/Scripts/Helpers/Test-ConfigConsistency.ps1"
 . "$PSScriptRoot/Scripts/Helpers/Get-TargetUserForAppRemoval.ps1"
 . "$PSScriptRoot/Scripts/Helpers/Get-RegFileOperations.ps1"
 . "$PSScriptRoot/Scripts/Helpers/Test-TargetUserName.ps1"

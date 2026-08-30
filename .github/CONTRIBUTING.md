@@ -435,10 +435,8 @@ UI Groups allow features to be grouped together in the GUI with a combobox
 }
 ```
 
-Define the referenced features before adding a group. Each `FeatureId` in a
-group's `Values` list must already be defined in `Features.json`. Features
-referenced by a group are shown through that group rather than as standalone
-controls.
+>[!IMPORTANT]
+> Define the referenced features before adding a group. Each `FeatureId` in a group's `Values` list must already be defined in the `"Features"` array in `Features.json`. Features referenced by a group are shown through that group rather than as standalone controls.
 
 ## Submitting a Pull Request
 

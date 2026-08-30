@@ -60,7 +60,7 @@ You can launch the prerelease version of Win11Debloat by running this command:
 
 ### Running Automated Tests
 
-The automated tests use Pester 5 and are found in the Tests/ directory. They cover registry operations, app removal, CLI/GUI logic, and config handling. Some Windows behavior is mocked so the tests can run safely, but they do not replace manual testing on a Windows test environment.
+The automated tests use Pester 5 and are found in the `Tests` directory. They cover registry operations, app removal, CLI/GUI logic, and config handling. Some Windows behavior is mocked so the tests can run safely, but they do not replace manual testing on a Windows test environment.
 
 The bootstrap option can be used to automatically install Pester on your machine and run the full suite of tests:
 
@@ -85,7 +85,7 @@ PowerShell 5.1 for pull requests and pushes to `master`.
 
 ## Architecture & Design
 
-Win11Debloat is a PowerShell script with a WPF (Windows Presentation Foundation) based GUI and command-line interface. The CLI provides an alternative to the GUI, allowing most features and app-removal functionality to be invoked directly through command-line parameters. The project uses a data-driven architecture, separating feature and application definitions from the logic that applies them.
+Win11Debloat is a PowerShell script with a WPF (Windows Presentation Foundation) based GUI and command-line interface. The CLI provides an alternative to the GUI, allowing most features to be invoked directly through command-line parameters. The project uses a data-driven architecture, separating feature and application definitions from the logic that applies them.
 
 ### Entry Points
 
@@ -405,9 +405,6 @@ To add a new category for organizing features:
     "Icon": "&#xE####;"
   }
   ```
-
-  Use a stable, unlocalized `CategoryId`; it is used for category preset
-  mapping.
 
 > [!TIP]
 > Use [Segoe Fluent Icon Assets](https://learn.microsoft.com/en-us/windows/apps/design/iconography/segoe-fluent-icons-font) for icon codes.

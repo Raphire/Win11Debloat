@@ -71,6 +71,7 @@ param (
     [switch]$DisablePaintAI,
     [switch]$DisableNotepadAI,
     [switch]$DisableEdgeAI,
+	[switch]$DisableChromeAI,
     [switch]$DisableSearchHighlights,
     [switch]$DisableWidgets,
     [switch]$HideChat,

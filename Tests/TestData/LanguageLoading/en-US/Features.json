@@ -1,0 +1,13 @@
+{
+  "Features": {
+    "DisableTelemetry": {
+      "Label": "Disable telemetry",
+      "ToolTip": "Disables telemetry collection."
+    }
+  },
+  "UiGroups": {
+    "SearchIcon": {
+      "Label": "Taskbar search style"
+    }
+  }
+}

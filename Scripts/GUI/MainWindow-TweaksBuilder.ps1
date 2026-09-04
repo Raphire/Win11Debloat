@@ -154,7 +154,8 @@ function New-DynamicTweakControls {
             Returns the existing category panel or creates and registers a new one.
 
         .PARAMETER CategoryObj
-            The category definition containing Name and Icon properties.
+            The category definition, with Name and Icon for internal use (the map key, the
+            wiki-link slug) and CategoryId for the translated header shown to the user.
 
         .OUTPUTS
             System.Windows.Controls.StackPanel. The category's content panel.
@@ -162,7 +163,7 @@ function New-DynamicTweakControls {
     function Get-OrCreateCategoryCard($categoryObj) {
         $categoryName = $categoryObj.Name
         $categoryIcon = $categoryObj.Icon
-        $categoryLabel = Get-Translation -Key $categoryObj.CategoryId -Field 'Label'
+        $categoryLabel = Get-Translation -Key $categoryObj.CategoryId -Field 'Label' -Section 'Categories'
 
         if ($script:CategoryCardMap.ContainsKey($categoryName)) { return $script:CategoryCardMap[$categoryName] }
 
@@ -348,7 +349,7 @@ function New-DynamicTweakControls {
 
                     if ($featureMap.ContainsKey($soleFid)) {
                         $soleFeature = $featureMap[$soleFid]
-                        $soleFeatureLabel = Get-Translation -Key $soleFeature.FeatureId -Field 'Label'
+                        $soleFeatureLabel = Get-Translation -Key $soleFeature.FeatureId -Field 'Label' -Section 'Features'
                         $opt = Get-Translation -Key 'TweaksOptionApply'
                         if ($soleFeature.FeatureId -match '^Disable') { $opt = Get-Translation -Key 'TweaksOptionDisable' } elseif ($soleFeature.FeatureId -match '^Enable') { $opt = Get-Translation -Key 'TweaksOptionEnable' }
                         $items = @((Get-Translation -Key 'TweaksOptionNoChange'), $opt)
@@ -357,7 +358,7 @@ function New-DynamicTweakControls {
                         $combo = New-LabeledCombo -parent $panel -labelText $soleFeatureLabel -comboName $comboName -items $items
                         # attach tooltip from Features.json if present
                         if ($soleFeature.ToolTip -or $soleFeature.DisableWhenApplied -eq $true) {
-                            $tooltipText = Get-Translation -Key $soleFeature.FeatureId -Field 'ToolTip'
+                            $tooltipText = Get-Translation -Key $soleFeature.FeatureId -Field 'ToolTip' -Section 'Features'
                             if ($soleFeature.DisableWhenApplied -eq $true) {
                                 $tooltipText = Get-Translation -Key 'TweaksAlreadyAppliedTooltip'
                             }
@@ -376,7 +377,7 @@ function New-DynamicTweakControls {
                     continue
                 }
 
-                $groupLabel = Get-Translation -Key $group.GroupId -Field 'Label'
+                $groupLabel = Get-Translation -Key $group.GroupId -Field 'Label' -Section 'UiGroups'
                 $items = @((Get-Translation -Key 'TweaksOptionNoChange')) + ($filteredValues | ForEach-Object { Get-GroupValueTranslation -GroupId $group.GroupId -FeatureId $_.FeatureIds[0] -FallbackLabel $_.Label })
                 $comboName = 'Group_{0}Combo' -f $group.GroupId
                 if (-not $panel) { $panel = Get-OrCreateCategoryCard -categoryObj $categoryObj }
@@ -384,7 +385,7 @@ function New-DynamicTweakControls {
                 # attach tooltip from UiGroups if present
                 if ($group.ToolTip) {
                     $tipBlock = New-Object System.Windows.Controls.TextBlock
-                    $tipBlock.Text = Get-Translation -Key $group.GroupId -Field 'ToolTip'
+                    $tipBlock.Text = Get-Translation -Key $group.GroupId -Field 'ToolTip' -Section 'UiGroups'
                     $tipBlock.TextWrapping = 'Wrap'
                     $tipBlock.MaxWidth = 420
                     $combo.ToolTip = $tipBlock
@@ -396,7 +397,7 @@ function New-DynamicTweakControls {
             }
             elseif ($item.Type -eq 'feature') {
                 $feature = $item.Data
-                $featureLabel = Get-Translation -Key $feature.FeatureId -Field 'Label'
+                $featureLabel = Get-Translation -Key $feature.FeatureId -Field 'Label' -Section 'Features'
                 $opt = Get-Translation -Key 'TweaksOptionApply'
                 if ($feature.FeatureId -match '^Disable') { $opt = Get-Translation -Key 'TweaksOptionDisable' } elseif ($feature.FeatureId -match '^Enable') { $opt = Get-Translation -Key 'TweaksOptionEnable' }
                 $items = @((Get-Translation -Key 'TweaksOptionNoChange'), $opt)
@@ -405,7 +406,7 @@ function New-DynamicTweakControls {
                 $combo = New-LabeledCombo -parent $panel -labelText $featureLabel -comboName $comboName -items $items
                 # attach tooltip from Features.json if present, and include the disabled-state reason
                 if ($feature.ToolTip -or $feature.DisableWhenApplied -eq $true) {
-                    $tooltipText = Get-Translation -Key $feature.FeatureId -Field 'ToolTip'
+                    $tooltipText = Get-Translation -Key $feature.FeatureId -Field 'ToolTip' -Section 'Features'
                     if ($feature.DisableWhenApplied -eq $true) {
                         $tooltipText = Get-Translation -Key 'TweaksAlreadyAppliedTooltip'
                     }
@@ -429,9 +430,9 @@ function New-DynamicTweakControls {
     $script:FeatureLabelLookup = @{}
     $script:UndoFeatureLabelLookup = @{}
     foreach ($f in $featuresJson.Features) {
-        $script:FeatureLabelLookup[$f.FeatureId] = Get-Translation -Key $f.FeatureId -Field 'Label'
+        $script:FeatureLabelLookup[$f.FeatureId] = Get-Translation -Key $f.FeatureId -Field 'Label' -Section 'Features'
         if ($f.UndoLabel) {
-            $script:UndoFeatureLabelLookup[$f.FeatureId] = Get-Translation -Key $f.FeatureId -Field 'UndoLabel'
+            $script:UndoFeatureLabelLookup[$f.FeatureId] = Get-Translation -Key $f.FeatureId -Field 'UndoLabel' -Section 'Features'
         }
     }
 }

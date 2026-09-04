@@ -52,11 +52,33 @@ Describe 'Import-LanguageFile' {
     It 'warns and falls back to en-US when the requested language folder exists but fails to load' {
         Mock Write-Warning {}
         Mock Write-Error {}
-        $brokenFolder = Join-Path $TestDrive 'xx-XX'
+
+        $languagesPath = Join-Path $TestDrive 'WithWorkingFallback'
+        $brokenFolder = Join-Path $languagesPath 'xx-XX'
         New-Item -ItemType Directory -Path $brokenFolder | Out-Null
         'not valid json' | Out-File (Join-Path $brokenFolder 'Chrome.json')
 
-        $lang = Import-LanguageFile -LanguageCode 'xx-XX' -LanguagesPath $TestDrive
+        $enUsFolder = Join-Path $languagesPath 'en-US'
+        Copy-Item -Path (Join-Path $PSScriptRoot 'TestData\LanguageLoading\en-US') -Destination $enUsFolder -Recurse
+
+        $lang = Import-LanguageFile -LanguageCode 'xx-XX' -LanguagesPath $languagesPath
+
+        $lang.LanguageCode | Should -Be 'en-US'
+        Should -Invoke Write-Warning -ParameterFilter { $Message -match "Failed to load language 'xx-XX'" } -Times 1 -Exactly
+        # The broken xx-XX folder is still expected to report load errors; the fallback en-US load itself must not.
+        Should -Invoke Write-Error -ParameterFilter { $Message -match 'Unable to load the en-US language files' } -Times 0
+    }
+
+    It 'returns null and reports an error when the requested language fails and en-US is unavailable too' {
+        Mock Write-Warning {}
+        Mock Write-Error {}
+
+        $languagesPath = Join-Path $TestDrive 'WithoutFallback'
+        $brokenFolder = Join-Path $languagesPath 'xx-XX'
+        New-Item -ItemType Directory -Path $brokenFolder | Out-Null
+        'not valid json' | Out-File (Join-Path $brokenFolder 'Chrome.json')
+
+        $lang = Import-LanguageFile -LanguageCode 'xx-XX' -LanguagesPath $languagesPath
 
         $lang | Should -BeNullOrEmpty
         Should -Invoke Write-Warning -ParameterFilter { $Message -match "Failed to load language 'xx-XX'" } -Times 1 -Exactly
@@ -104,6 +126,15 @@ Describe 'Get-Translation' {
 
     It 'looks up a Field on a UiGroups entry' {
         Get-Translation -Key 'SearchIcon' -Field 'Label' -Lang $script:EnLang | Should -Be 'Taskbar search style'
+    }
+
+    It 'resolves the correct section for a key that exists as both a FeatureId and a GroupId' {
+        # ClearStart is a real collision in Config/Features.json: a FeatureId ("remove for this
+        # user only") and a GroupId (the combo heading above it) that share the same string.
+        # Mirrored in the TestData fixture above so this test doesn't depend on production content.
+        Get-Translation -Key 'ClearStart' -Field 'Label' -Section 'Features' -Lang $script:EnLang | Should -Be 'Remove for the selected user'
+        Get-Translation -Key 'ClearStart' -Field 'Label' -Section 'UiGroups' -Lang $script:EnLang | Should -Be 'Remove pinned apps from the start menu'
+        Get-Translation -Key 'ClearStart' -Field 'ToolTip' -Section 'UiGroups' -Lang $script:EnLang | Should -Be 'This setting allows you to quickly remove all pinned apps from the start menu.'
     }
 
     It 'returns the key itself when no language has it' {

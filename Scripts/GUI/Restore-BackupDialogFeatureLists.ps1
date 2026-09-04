@@ -103,7 +103,7 @@ function Get-RestoreDialogFeatureDisplayLabel {
 
     $featureDefinition = Get-RestoreDialogFeatureDefinition -FeatureId $FeatureId -Features $Features
     if ($featureDefinition) {
-        return Get-Translation -Key $FeatureId -Field 'Label'
+        return Get-Translation -Key $FeatureId -Field 'Label' -Section 'Features'
     }
 
     return $FeatureId

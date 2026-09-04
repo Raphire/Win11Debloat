@@ -129,19 +129,35 @@ function Get-LanguageFallbackChain {
 <#
     .SYNOPSIS
         Finds the named section object (Chrome, Features, UiGroups, or Categories) that owns a key.
+
+    .DESCRIPTION
+        A FeatureId, GroupId, and CategoryId aren't guaranteed to be disjoint (Config/Features.json
+        can and does reuse the same string as both a GroupId and a FeatureId), so the default search
+        order below is only a fallback for callers who don't know which section their key belongs to.
+        Pass -Section to look in exactly one section instead of guessing from the order.
 #>
 function Find-TranslationSection {
     param(
         [Parameter(Mandatory)]
         [object]$Lang,
         [Parameter(Mandatory)]
-        [string]$Key
+        [string]$Key,
+        [ValidateSet('', 'Chrome', 'Features', 'UiGroups', 'Categories')]
+        [string]$Section = ''
     )
 
+    if ($Section) {
+        $sectionObject = $Lang.$Section
+        if ($sectionObject -and $sectionObject.PSObject.Properties[$Key]) {
+            return $sectionObject
+        }
+        return $null
+    }
+
     foreach ($sectionName in 'Chrome', 'Features', 'UiGroups', 'Categories') {
-        $section = $Lang.$sectionName
-        if ($section -and $section.PSObject.Properties[$Key]) {
-            return $section
+        $sectionObject = $Lang.$sectionName
+        if ($sectionObject -and $sectionObject.PSObject.Properties[$Key]) {
+            return $sectionObject
         }
     }
 
@@ -158,6 +174,10 @@ function Find-TranslationSection {
         (Label, ToolTip, ApplyText, UndoLabel, ApplyUndoText). One generic lookup covers every section
         instead of a separate function per section.
 
+        A FeatureId and a GroupId aren't guaranteed to be distinct strings, so pass -Section
+        ('Features', 'UiGroups', or 'Categories') whenever the caller knows which one it means,
+        rather than relying on Find-TranslationSection's search order to guess correctly.
+
         When -Count is supplied, tries the plural-suffixed key ("$Key`_$category") before the bare key,
         so callers don't need to add a plural variant for every string, only the ones that need one.
     .OUTPUTS
@@ -170,7 +190,9 @@ function Get-Translation {
         [string]$Field = $null,
         [object]$Lang = $script:Lang,
         [Nullable[int]]$Count = $null,
-        [object[]]$FormatArgs = $null
+        [object[]]$FormatArgs = $null,
+        [ValidateSet('', 'Chrome', 'Features', 'UiGroups', 'Categories')]
+        [string]$Section = ''
     )
 
     if (-not $Lang) {
@@ -186,10 +208,10 @@ function Get-Translation {
     $resolved = $Key
     :langLoop foreach ($candidateLang in (Get-LanguageFallbackChain -Lang $Lang)) {
         foreach ($lookupKey in $lookupKeys) {
-            $section = Find-TranslationSection -Lang $candidateLang -Key $lookupKey
-            if (-not $section) { continue }
+            $sectionObject = Find-TranslationSection -Lang $candidateLang -Key $lookupKey -Section $Section
+            if (-not $sectionObject) { continue }
 
-            $entry = $section.$lookupKey
+            $entry = $sectionObject.$lookupKey
             if ($Field) {
                 if ($entry.PSObject.Properties[$Field]) {
                     $resolved = [string]$entry.$Field

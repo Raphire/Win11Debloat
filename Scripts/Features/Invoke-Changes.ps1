@@ -265,7 +265,7 @@ function Invoke-ApplyFeatures {
 
         # Resolve display name for the progress indicator
         $f = $script:Features[$featureId]
-        $displayName = Get-Translation -Key $featureId -Field 'ApplyText'
+        $displayName = Get-Translation -Key $featureId -Field 'ApplyText' -Section 'Features'
 
         if ($script:ApplyProgressCallback) {
             & $script:ApplyProgressCallback $step $TotalSteps $displayName
@@ -309,8 +309,8 @@ function Invoke-UndoFeatures {
         if ($script:CancelRequested) { return }
 
         $f = if ($script:Features.ContainsKey($featureId)) { $script:Features[$featureId] } else { $null }
-        $undoLabel = if ($f -and $f.UndoLabel) { Get-Translation -Key $featureId -Field 'UndoLabel' } else { $featureId }
-        $undoText = if ($f -and $f.ApplyUndoText) { Get-Translation -Key $featureId -Field 'ApplyUndoText' } else { $undoLabel }
+        $undoLabel = if ($f -and $f.UndoLabel) { Get-Translation -Key $featureId -Field 'UndoLabel' -Section 'Features' } else { $featureId }
+        $undoText = if ($f -and $f.ApplyUndoText) { Get-Translation -Key $featureId -Field 'ApplyUndoText' -Section 'Features' } else { $undoLabel }
 
         if ($script:ApplyProgressCallback) {
             & $script:ApplyProgressCallback $step $TotalSteps $undoText

@@ -1,6 +1,6 @@
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="About Win11Debloat" 
+        Title="%LANG:AboutTitle%"
         Width="500"
         SizeToContent="Height"
         ResizeMode="NoResize"
@@ -22,7 +22,7 @@
 
             <!-- Title Bar -->
             <Grid Grid.Row="0" x:Name="TitleBar" Style="{DynamicResource ModalTitleBarStyle}">
-                <TextBlock Text="About Win11Debloat" 
+                <TextBlock Text="%LANG:AboutTitle%"
                            Style="{DynamicResource ModalTitleTextStyle}"/>
             </Grid>
 
@@ -48,7 +48,7 @@
                     
                     <!-- Version -->
                         <TextBlock Grid.Row="0" Grid.Column="0"
-                            Text="Version:"
+                            Text="%LANG:AboutVersionLabel%"
                             Style="{DynamicResource ModalInfoLabelTextStyle}"/>
                     <TextBlock x:Name="VersionText"
                             Grid.Row="0" Grid.Column="1"
@@ -57,7 +57,7 @@
                     
                     <!-- Author -->
                         <TextBlock Grid.Row="1" Grid.Column="0"
-                            Text="Author:"
+                            Text="%LANG:AboutAuthorLabel%"
                             Style="{DynamicResource ModalInfoLabelTextStyle}"/>
                     <TextBlock Grid.Row="1" Grid.Column="1"
                             Text="Raphire"
@@ -65,7 +65,7 @@
                     
                     <!-- Project Link -->
                         <TextBlock Grid.Row="2" Grid.Column="0"
-                            Text="Project:"
+                            Text="%LANG:AboutProjectLabel%"
                             Style="{DynamicResource ModalInfoLabelTextStyle}"
                             Margin="0,0,16,0"/>
                     <TextBlock x:Name="ProjectLink"
@@ -85,7 +85,7 @@
                 <!-- Content -->
                 <StackPanel Grid.Row="2" Margin="20,16,20,16">
                     <!-- Donation Message -->
-                    <TextBlock Text="Win11Debloat is a passion project that I maintain in my free time. If you've found this tool useful, please consider making a small donation to support its development. I really appreciate it!"
+                    <TextBlock Text="%LANG:AboutDonationMessage%"
                             FontSize="14"
                             Foreground="{DynamicResource AppFgColor}"
                             TextWrapping="Wrap"
@@ -117,7 +117,7 @@
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 FontWeight="SemiBold"
-                                Text="Support me on Ko-fi"/>
+                                Text="%LANG:AboutKofiLink%"/>
                     </Grid>
                 </StackPanel>
             </Grid>
@@ -132,7 +132,7 @@
 
                     <Button x:Name="CloseButton"
                             Grid.Column="1"
-                            Content="Close"
+                            Content="%LANG:TitleBarClose%"
                             Style="{DynamicResource ModalSecondaryStretchedButtonStyle}"/>
                 </Grid>
             </Border>

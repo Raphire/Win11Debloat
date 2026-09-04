@@ -10,6 +10,7 @@ function Show-MainWindow {
 
     # ---- Load XAML ----
     $xaml = Get-Content -Path $script:MainWindowSchema -Raw
+    $xaml = ConvertTo-LocalizedXaml -Xaml $xaml
     $reader = [System.Xml.XmlReader]::Create([System.IO.StringReader]::new($xaml))
     try {
         $window = [System.Windows.Markup.XamlReader]::Load($reader)
@@ -97,7 +98,7 @@ function Show-MainWindow {
             Start-Process "explorer.exe" -ArgumentList $logsFolder
         }
         else {
-            Show-MessageBox -Message "No logs folder found at: $logsFolder" -Title "Logs" -Button 'OK' -Icon 'Information'
+            Show-MessageBox -Message (Get-Translation -Key 'LogsFolderNotFoundMessage' -FormatArgs @($logsFolder)) -Title (Get-Translation -Key 'LogsMenuTitle') -Button 'OK' -Icon 'Information'
         }
     })
 
@@ -170,7 +171,7 @@ function Show-MainWindow {
         }
         catch {
             Write-Warning "Export configuration failed: $($_.Exception.Message)"
-            Show-MessageBox -Owner $window -Message "Unable to open export configuration dialog: $($_.Exception.Message)" -Title 'Export Configuration Failed' -Button 'OK' -Icon 'Error' | Out-Null
+            Show-MessageBox -Owner $window -Message (Get-Translation -Key 'ExportConfigFailedMessage' -FormatArgs @($_.Exception.Message)) -Title (Get-Translation -Key 'ExportConfigFailedTitle') -Button 'OK' -Icon 'Error' | Out-Null
         }
     })
 
@@ -180,13 +181,13 @@ function Show-MainWindow {
                 $tabControl.SelectedIndex = 3
                 Update-NavigationButtons -Window $window -TabControl $tabControl
                 $window.Dispatcher.BeginInvoke([System.Windows.Threading.DispatcherPriority]::Loaded, [action]{
-                    Show-Bubble -TargetControl $reviewChangesBtn -Message 'View the selected changes here'
+                    Show-Bubble -TargetControl $reviewChangesBtn -Message (Get-Translation -Key 'BubbleViewChanges')
                 }) | Out-Null
             }
         }
         catch {
             Write-Warning "Import configuration failed: $($_.Exception.Message)"
-            Show-MessageBox -Owner $window -Message "Unable to open import configuration dialog: $($_.Exception.Message)" -Title 'Import Configuration Failed' -Button 'OK' -Icon 'Error' | Out-Null
+            Show-MessageBox -Owner $window -Message (Get-Translation -Key 'ImportConfigFailedMessage' -FormatArgs @($_.Exception.Message)) -Title (Get-Translation -Key 'ImportConfigFailedTitle') -Button 'OK' -Icon 'Error' | Out-Null
         }
     })
 
@@ -206,7 +207,7 @@ function Show-MainWindow {
             }
             catch {
                 Write-Warning "Restore backup action failed: $($_.Exception.Message)"
-                Show-MessageBox -Owner $window -Message "Unable to open restore backup dialog: $($_.Exception.Message)" -Title 'Restore Backup Failed' -Button 'OK' -Icon 'Error' | Out-Null
+                Show-MessageBox -Owner $window -Message (Get-Translation -Key 'RestoreBackupFailedMessage' -FormatArgs @($_.Exception.Message)) -Title (Get-Translation -Key 'RestoreBackupFailedTitle') -Button 'OK' -Icon 'Error' | Out-Null
             }
         })
     }
@@ -232,7 +233,7 @@ function Show-MainWindow {
         $checkbox.Content = $preset.Name
         $checkbox.IsThreeState = $true
         $checkbox.Style = $window.Resources['PresetCheckBoxStyle']
-        $checkbox.ToolTip = "Select $($preset.Name)"
+        $checkbox.ToolTip = Get-Translation -Key 'AppPresetSelectTooltip' -FormatArgs @($preset.Name)
         $checkbox.SetValue([System.Windows.Automation.AutomationProperties]::NameProperty, $preset.Name)
         Add-TriStateClickBehavior -CheckBox $checkbox
         Add-Member -InputObject $checkbox -MemberType NoteProperty -Name 'PresetAppIds' -Value $preset.AppIds
@@ -501,12 +502,11 @@ function Show-MainWindow {
         param($sourceControl, $e)
         if ($e.Key -eq [System.Windows.Input.Key]::F -and
             ([System.Windows.Input.Keyboard]::Modifiers -band [System.Windows.Input.ModifierKeys]::Control)) {
-            $currentTab = $tabControl.SelectedItem
-            if ($currentTab.Header -eq "App Removal" -and $appSearchBox) {
+            if ($tabControl.SelectedIndex -eq 1 -and $appSearchBox) {
                 $appSearchBox.Focus()
                 $e.Handled = $true
             }
-            elseif ($currentTab.Header -eq "Tweaks" -and $tweakSearchBox) {
+            elseif ($tabControl.SelectedIndex -eq 2 -and $tweakSearchBox) {
                 $tweakSearchBox.Focus()
                 $e.Handled = $true
             }
@@ -599,9 +599,9 @@ function Show-MainWindow {
                 $usernameValidationMessage.Text
             }
             else {
-                "Please enter a valid username."
+                Get-Translation -Key 'InvalidUsernameFallbackMessage'
             }
-            Show-MessageBox -Message $validationMessage -Title "Invalid Username" -Button 'OK' -Icon 'Warning' | Out-Null
+            Show-MessageBox -Message $validationMessage -Title (Get-Translation -Key 'InvalidUsernameTitle') -Button 'OK' -Icon 'Warning' | Out-Null
             return $false
         }
         return $true
@@ -638,7 +638,7 @@ function Show-MainWindow {
         Invoke-NavigationUpdate
 
         $window.Dispatcher.BeginInvoke([System.Windows.Threading.DispatcherPriority]::Loaded, [action]{
-            Show-Bubble -TargetControl $reviewChangesBtn -Message 'View the selected changes here'
+            Show-Bubble -TargetControl $reviewChangesBtn -Message (Get-Translation -Key 'BubbleViewChanges')
         }) | Out-Null
     })
 
@@ -692,7 +692,7 @@ function Show-MainWindow {
         }
 
         if (-not $hasAppSelection -and $selectedForwardFeatureIds.Count -eq 0 -and $script:UndoParams.Count -eq 0) {
-            Show-MessageBox -Message 'No changes have been selected, please select at least one option to proceed.' -Title 'No Changes Selected' -Button 'OK' -Icon 'Information'
+            Show-MessageBox -Message (Get-Translation -Key 'NoChangesSelectedMessage') -Title (Get-Translation -Key 'NoChangesSelectedTitle') -Button 'OK' -Icon 'Information'
             return
         }
 
@@ -764,7 +764,7 @@ function Show-MainWindow {
             if ($userSelectionCombo -and $userSelectionCombo.Items.Count -gt 0) {
                 $currentUserItem = $userSelectionCombo.Items[0]
                 if ($currentUserItem -is [System.Windows.Controls.ComboBoxItem]) {
-                    $currentUserItem.Content = "Current User ($(Get-UserName))"
+                    $currentUserItem.Content = Get-Translation -Key 'HomeCurrentUserWithName' -FormatArgs @(Get-UserName)
                 }
             }
 
@@ -810,7 +810,7 @@ function Show-MainWindow {
         catch {
             Write-Warning "Error during GUI initialization: $($_.Exception.Message)"
             Write-Warning "Stack trace: $($_.Exception.StackTrace)"
-            Show-MessageBox -Message "An error occurred during initialization: $($_.Exception.Message)" -Title "Initialization Error" -Button 'OK' -Icon 'Error' | Out-Null
+            Show-MessageBox -Message (Get-Translation -Key 'InitializationErrorMessage' -FormatArgs @($_.Exception.Message)) -Title (Get-Translation -Key 'InitializationErrorTitle') -Button 'OK' -Icon 'Error' | Out-Null
         }
     })
 
@@ -900,7 +900,7 @@ function Show-MainWindow {
     # If WhatIf mode is enabled, notify the user that no changes will be made
     if ($script:Params.ContainsKey("WhatIf")) {
         $window.Dispatcher.BeginInvoke([System.Windows.Threading.DispatcherPriority]::Loaded, [action]{
-            Show-MessageBox -Message "WhatIf mode is enabled. The script will not make any changes to your system in this mode.`n`nYou can observe the actions that would be taken by the script in the console output." -Title 'WhatIf Mode' -Button 'OK' -Icon 'Information' -Owner $window
+            Show-MessageBox -Message (Get-Translation -Key 'WhatIfModeMessage') -Title (Get-Translation -Key 'WhatIfModeTitle') -Button 'OK' -Icon 'Information' -Owner $window
         }) | Out-Null
     }
 

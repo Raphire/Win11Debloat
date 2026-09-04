@@ -21,14 +21,14 @@ function Import-RegistryBackup {
     )
 
     if (-not (Test-Path -LiteralPath $FilePath)) {
-        throw "Backup file was not found: $FilePath"
+        throw (Get-Translation -Key 'BackupFileNotFound' -FormatArgs @($FilePath))
     }
 
     try {
         $rawBackup = Get-Content -LiteralPath $FilePath -Raw -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop
     }
     catch {
-        throw "Failed to read backup file '$FilePath'. The file is not valid JSON."
+        throw (Get-Translation -Key 'BackupFileNotValidJson' -FormatArgs @($FilePath))
     }
 
     return ConvertTo-NormalizedRegistryBackup -Backup $rawBackup
@@ -61,22 +61,22 @@ function ConvertTo-NormalizedRegistryBackup {
     $errors = New-Object System.Collections.Generic.List[string]
 
     if (-not $Backup.PSObject.Properties['Version']) {
-        $errors.Add('Missing property: Version')
+        $errors.Add((Get-Translation -Key 'BackupMissingProperty' -FormatArgs @('Version')))
     }
     elseif ([string]$Backup.Version -ne '1.0') {
-        $errors.Add("Unsupported backup version '$($Backup.Version)'.")
+        $errors.Add((Get-Translation -Key 'BackupUnsupportedVersion' -FormatArgs @($Backup.Version)))
     }
 
     if (-not $Backup.PSObject.Properties['BackupType']) {
-        $errors.Add('Missing property: BackupType')
+        $errors.Add((Get-Translation -Key 'BackupMissingProperty' -FormatArgs @('BackupType')))
     }
     elseif ([string]$Backup.BackupType -ne 'RegistryState') {
-        $errors.Add("Unsupported BackupType '$($Backup.BackupType)'.")
+        $errors.Add((Get-Translation -Key 'BackupUnsupportedType' -FormatArgs @($Backup.BackupType)))
     }
 
     $normalizedTarget = ''
     if (-not $Backup.PSObject.Properties['Target'] -or [string]::IsNullOrWhiteSpace([string]$Backup.Target)) {
-        $errors.Add('Missing property: Target')
+        $errors.Add((Get-Translation -Key 'BackupMissingProperty' -FormatArgs @('Target')))
     }
     else {
         $normalizedTarget = [string]$Backup.Target
@@ -88,27 +88,27 @@ function ConvertTo-NormalizedRegistryBackup {
             $targetUserName = $normalizedTarget.Substring(5)
             $targetValidation = Test-TargetUserName -UserName $targetUserName
             if (-not $targetValidation.IsValid) {
-                $errors.Add("Invalid user '$normalizedTarget'")
+                $errors.Add((Get-Translation -Key 'BackupInvalidUser' -FormatArgs @($normalizedTarget)))
             }
         }
         elseif ($normalizedTarget -like 'CurrentUser:*') {
             $targetCurrentUserName = $normalizedTarget.Substring(12)
             if (Test-RunningAsSystem) {
-                $errors.Add("Backup was made for '$targetCurrentUserName' and is user-scoped. Re-run as that user; SYSTEM cannot restore a CurrentUser backup.")
+                $errors.Add((Get-Translation -Key 'BackupUserScopedWrongContext' -FormatArgs @($targetCurrentUserName)))
             }
             elseif ([string]::IsNullOrWhiteSpace($targetCurrentUserName) -or
                 -not (Test-UserNameMatch -UserNameA $targetCurrentUserName -UserNameB $env:USERNAME)) {
-                 $errors.Add("Backup was made for '$targetCurrentUserName', this does not match current user '$env:USERNAME'.")
+                 $errors.Add((Get-Translation -Key 'BackupUserMismatch' -FormatArgs @($targetCurrentUserName, $env:USERNAME)))
             }
         }
         else {
-            $errors.Add("Unsupported Target '$normalizedTarget'.")
+            $errors.Add((Get-Translation -Key 'BackupUnsupportedTarget' -FormatArgs @($normalizedTarget)))
         }
     }
 
     $registryKeys = @()
     if (-not $Backup.PSObject.Properties['RegistryKeys']) {
-        $errors.Add('Missing property: RegistryKeys')
+        $errors.Add((Get-Translation -Key 'BackupMissingProperty' -FormatArgs @('RegistryKeys')))
     }
     else {
         $registryKeys = @($Backup.RegistryKeys)
@@ -133,7 +133,7 @@ function ConvertTo-NormalizedRegistryBackup {
 
     $allSelectedFeatures = @($selectedFeatures) + @($selectedUndoFeatures)
     if ($allSelectedFeatures.Count -eq 0) {
-        $errors.Add('Backup must contain at least one feature ID in SelectedFeatures or SelectedUndoFeatures.')
+        $errors.Add((Get-Translation -Key 'BackupMissingSelectedFeatures'))
     }
     else {
         try {
@@ -143,17 +143,17 @@ function ConvertTo-NormalizedRegistryBackup {
             }
         }
         catch {
-            $errors.Add("Failed to validate backup: $($_.Exception.Message)")
+            $errors.Add((Get-Translation -Key 'BackupAllowlistValidationFailed' -FormatArgs @($_.Exception.Message)))
         }
     }
 
     if ($errors.Count -gt 0) {
         Write-Error "Backup validation failed: $($errors -join ' ')"
         if ($errors.Count -eq 1) {
-            throw ("Validation failed: $($errors[0])")
+            throw (Get-Translation -Key 'BackupValidationSingleError' -FormatArgs @($errors[0]))
         }
         else {
-            throw ("Validation failed with $($errors.Count) errors. See console output for details.")
+            throw (Get-Translation -Key 'BackupValidationMultipleErrors' -FormatArgs @($errors.Count))
         }
     }
 

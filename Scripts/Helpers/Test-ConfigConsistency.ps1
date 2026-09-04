@@ -14,24 +14,24 @@ function Test-ConfigConsistency {
     param($Config)
 
     if (-not $Config) {
-        return 'Configuration is empty or could not be read.'
+        return Get-Translation -Key 'ConfigEmptyOrUnreadable'
     }
 
     if (-not $Config.Version) {
-        return 'Configuration is missing a Version field.'
+        return Get-Translation -Key 'ConfigMissingVersion'
     }
 
     if (-not $Config.Apps -and -not $Config.Tweaks -and -not $Config.Deployment) {
-        return 'The configuration file contains no importable data.'
+        return Get-Translation -Key 'ConfigNoImportableData'
     }
 
     if ($null -ne $Config.Apps) {
         if ($Config.Apps -isnot [string] -and $Config.Apps -isnot [System.Collections.IEnumerable]) {
-            return 'Configuration Apps entries must be strings.'
+            return Get-Translation -Key 'ConfigAppsMustBeStrings'
         }
         foreach ($app in @($Config.Apps)) {
             if ($app -isnot [string]) {
-                return 'Configuration Apps entries must be strings.'
+                return Get-Translation -Key 'ConfigAppsMustBeStrings'
             }
         }
     }
@@ -41,13 +41,13 @@ function Test-ConfigConsistency {
         if ($null -eq $category) { continue }
 
         if ($category -is [string] -or $category -isnot [System.Collections.IEnumerable]) {
-            return "Configuration $categoryName entries must contain Name and Value properties."
+            return Get-Translation -Key 'ConfigEntriesMustHaveNameAndValue' -FormatArgs @($categoryName)
         }
         foreach ($setting in @($category)) {
             $hasName = if ($setting -is [System.Collections.IDictionary]) { $setting.Contains('Name') } else { $null -ne $setting.PSObject.Properties['Name'] }
             $hasValue = if ($setting -is [System.Collections.IDictionary]) { $setting.Contains('Value') } else { $null -ne $setting.PSObject.Properties['Value'] }
             if (-not $setting -or -not $hasName -or -not $hasValue -or $setting.Name -isnot [string] -or [string]::IsNullOrWhiteSpace($setting.Name)) {
-                return "Configuration $categoryName entries must contain Name and Value properties."
+                return Get-Translation -Key 'ConfigEntriesMustHaveNameAndValue' -FormatArgs @($categoryName)
             }
         }
     }
@@ -65,31 +65,31 @@ function Test-ConfigConsistency {
     $scopeIndex = $null
     if ($hasScope) {
         if (-not [int]::TryParse("$($lookup['AppRemovalScopeIndex'])", [ref]$scopeIndex) -or $scopeIndex -notin @(0, 1, 2)) {
-            return 'AppRemovalScopeIndex must be a supported numeric value (0, 1, or 2).'
+            return Get-Translation -Key 'ConfigInvalidAppRemovalScopeIndex'
         }
     }
 
     $userIndex = $null
     if ($hasUser) {
         if (-not [int]::TryParse("$($lookup['UserSelectionIndex'])", [ref]$userIndex) -or $userIndex -notin @(0, 1, 2)) {
-            return 'UserSelectionIndex must be a supported numeric value (0, 1, or 2).'
+            return Get-Translation -Key 'ConfigInvalidUserSelectionIndex'
         }
     }
 
     # "Current user only" (index 1) is only valid together with "Current User" (index 0)
     if ($hasScope -and $scopeIndex -eq 1) {
         if (-not $hasUser -or $userIndex -ne 0) {
-            return "App removal scope 'Current user only' (AppRemovalScopeIndex 1) requires the deployment target 'Current User' (UserSelectionIndex 0)."
+            return Get-Translation -Key 'ConfigScopeRequiresCurrentUserTarget'
         }
     }
 
     # "Target user only" (index 2) is only valid together with "Other User" (index 1)
     if ($hasScope -and $scopeIndex -eq 2) {
         if (-not $hasUser -or $userIndex -ne 1) {
-            return "App removal scope 'Target user only' (AppRemovalScopeIndex 2) requires the deployment target 'Other User' (UserSelectionIndex 1)."
+            return Get-Translation -Key 'ConfigScopeRequiresOtherUserTarget'
         }
         if (-not $lookup.ContainsKey('OtherUsername') -or [string]::IsNullOrWhiteSpace("$($lookup['OtherUsername'])")) {
-            return "App removal scope 'Target user only' (AppRemovalScopeIndex 2) requires an 'OtherUsername' value."
+            return Get-Translation -Key 'ConfigScopeRequiresOtherUsername'
         }
     }
 

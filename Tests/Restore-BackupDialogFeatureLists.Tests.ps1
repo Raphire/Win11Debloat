@@ -1,5 +1,6 @@
 BeforeAll {
     . (Join-Path $PSScriptRoot '..\Scripts\GUI\Restore-BackupDialogFeatureLists.ps1')
+    . (Join-Path $PSScriptRoot '..\Scripts\FileIO\Import-LanguageFile.ps1')
 }
 
 Describe 'New-RestoreDialogState' {
@@ -8,6 +9,18 @@ Describe 'New-RestoreDialogState' {
             RegistryFeature = [PSCustomObject]@{ Label = 'Registry feature'; Category = 'Privacy'; RegistryKey = 'RegistryFeature.reg' }
             CustomFeature = [PSCustomObject]@{ Label = 'Custom feature'; Category = 'Privacy'; RegistryKey = '' }
             HiddenFeature = [PSCustomObject]@{ Label = 'Hidden feature'; Category = ''; RegistryKey = 'HiddenFeature.reg' }
+        }
+
+        $script:Lang = [PSCustomObject]@{
+            LanguageCode = 'en-US'
+            Chrome       = [PSCustomObject]@{ RestoreUnknownFeature = 'Unknown feature' }
+            Features     = [PSCustomObject]@{
+                RegistryFeature = [PSCustomObject]@{ Label = 'Registry feature' }
+                CustomFeature   = [PSCustomObject]@{ Label = 'Custom feature' }
+                HiddenFeature   = [PSCustomObject]@{ Label = 'Hidden feature' }
+            }
+            UiGroups     = [PSCustomObject]@{}
+            Categories   = [PSCustomObject]@{}
         }
     }
 

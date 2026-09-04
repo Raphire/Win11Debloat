@@ -10,7 +10,7 @@ function Get-NormalizedSelectedFeatureIdsFromBackup {
     $hasInvalidSelectedFeatureId = $false
 
     if (-not $Backup.PSObject.Properties['SelectedFeatures']) {
-        $errors.Add('Missing property: SelectedFeatures')
+        $errors.Add((Get-Translation -Key 'BackupMissingProperty' -FormatArgs @('SelectedFeatures')))
         return [PSCustomObject]@{
             SelectedFeatures = $selectedFeatures.ToArray()
             Errors = $errors.ToArray()
@@ -30,7 +30,7 @@ function Get-NormalizedSelectedFeatureIdsFromBackup {
     }
 
     if ($hasInvalidSelectedFeatureId) {
-        $errors.Add('SelectedFeatures must contain non-empty string feature IDs.')
+        $errors.Add((Get-Translation -Key 'BackupSelectedFeaturesMustBeStrings'))
     }
 
     return [PSCustomObject]@{
@@ -71,7 +71,7 @@ function Get-NormalizedSelectedUndoFeatureIdsFromBackup {
     }
 
     if ($hasInvalidSelectedUndoFeatureId) {
-        $errors.Add('SelectedUndoFeatures must contain non-empty string feature IDs.')
+        $errors.Add((Get-Translation -Key 'BackupSelectedUndoFeaturesMustBeStrings'))
     }
 
     return [PSCustomObject]@{
@@ -87,7 +87,7 @@ function Normalize-RegistryKeySnapshot {
     )
 
     if (-not $Snapshot.PSObject.Properties['Path'] -or [string]::IsNullOrWhiteSpace([string]$Snapshot.Path)) {
-        throw 'Backup validation failed: Registry key snapshot is missing Path.'
+        throw (Get-Translation -Key 'BackupSnapshotMissingPath')
     }
 
     $exists = $false
@@ -145,7 +145,7 @@ function Test-RegistryBackupMatchesSelectedFeatures {
     $errors = New-Object System.Collections.Generic.List[string]
 
     if (-not $script:Features -or $script:Features.Count -eq 0) {
-        $errors.Add('Unable to validate registry backup allowlist because feature definitions are not loaded.')
+        $errors.Add((Get-Translation -Key 'BackupFeatureCatalogNotLoaded'))
         return $errors.ToArray()
     }
 
@@ -161,7 +161,7 @@ function Test-RegistryBackupMatchesSelectedFeatures {
     $planMap = New-RegistryBackupAllowListPlanMap -CapturePlans @($capturePlans)
 
     if ($planMap.Count -eq 0 -and @($RegistryKeys).Count -gt 0) {
-        $errors.Add('Backup contains registry snapshots but no allowed registry paths were derived from the selected features.')
+        $errors.Add((Get-Translation -Key 'BackupNoAllowedRegistryPaths'))
     }
 
     foreach ($rootSnapshot in @($RegistryKeys)) {
@@ -186,11 +186,13 @@ function Get-SelectedRegistryFeaturesForBackupValidation {
     if ($null -eq $Errors -or -not ($Errors -is [System.Collections.IList])) {
         throw 'Get-SelectedRegistryFeaturesForBackupValidation requires Errors to be a mutable list collection.'
     }
+    # Intentionally not localized: this throw signals a programming error (a caller passing the
+    # wrong collection type), not a condition a user's backup file can trigger.
 
     $selectedRegistryFeatures = New-Object System.Collections.Generic.List[object]
     foreach ($featureId in @($SelectedFeatureIds)) {
         if (-not $script:Features.ContainsKey($featureId)) {
-            $Errors.Add("Selected feature '$featureId' was not found in the current feature catalog.")
+            $Errors.Add((Get-Translation -Key 'BackupFeatureNotInCatalog' -FormatArgs @($featureId)))
             continue
         }
 
@@ -293,13 +295,13 @@ function Test-RegistrySnapshotAgainstAllowList {
     $snapshotPath = [string]$Snapshot.Path
     $normalizedPath = Get-NormalizedRegistryPathKey -Path $snapshotPath
     if ([string]::IsNullOrWhiteSpace($normalizedPath)) {
-        $Errors.Add("Backup contains unsupported registry path '$snapshotPath'.")
+        $Errors.Add((Get-Translation -Key 'BackupUnsupportedRegistryPath' -FormatArgs @($snapshotPath)))
         return
     }
 
     $planMatch = Find-RegistryAllowListPlanMatch -NormalizedPath $normalizedPath -PlanMap $PlanMap
     if ($null -eq $planMatch) {
-        $Errors.Add("Backup contains unexpected registry path '$snapshotPath' that is not allowed by SelectedFeatures.")
+        $Errors.Add((Get-Translation -Key 'BackupUnexpectedRegistryPath' -FormatArgs @($snapshotPath)))
         return
     }
 
@@ -308,21 +310,21 @@ function Test-RegistrySnapshotAgainstAllowList {
         $valueExists = [bool]$valueSnapshot.Exists
 
         if (-not (Test-RegistryValueAllowedByPlan -PlanMatch $planMatch -ValueName $valueName)) {
-            $Errors.Add("Backup contains unexpected value '$valueName' under '$snapshotPath'.")
+            $Errors.Add((Get-Translation -Key 'BackupUnexpectedValue' -FormatArgs @($valueName, $snapshotPath)))
         }
 
         $kindName = if ($valueSnapshot.PSObject.Properties['Kind']) { [string]$valueSnapshot.Kind } else { '' }
         $valueReference = Get-RegistryValueReferenceForError -SnapshotPath $snapshotPath -ValueName $valueName
         if ($valueExists) {
             if (-not (Test-RegistryValueKindNameSupported -KindName $kindName)) {
-                $Errors.Add("Backup contains unsupported registry value kind '$kindName' for '$valueReference'.")
+                $Errors.Add((Get-Translation -Key 'BackupUnsupportedValueKind' -FormatArgs @($kindName, $valueReference)))
             }
             elseif (-not (Test-RegistryValueDataMatchesKind -KindName $kindName -Data $valueSnapshot.Data)) {
-                $Errors.Add("Backup contains invalid registry data for kind '$kindName' at '$valueReference'.")
+                $Errors.Add((Get-Translation -Key 'BackupInvalidValueData' -FormatArgs @($kindName, $valueReference)))
             }
         }
         elseif (-not [string]::IsNullOrWhiteSpace($kindName)) {
-            $Errors.Add("Backup value '$valueReference' must not define Kind when Exists is false.")
+            $Errors.Add((Get-Translation -Key 'BackupValueMustNotDefineKind' -FormatArgs @($valueReference)))
         }
     }
 

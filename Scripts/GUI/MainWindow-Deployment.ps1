@@ -114,12 +114,12 @@ function New-Overview {
         }
     }
     if ($selectedAppsCount -gt 0) {
-        $changesList += "Remove $selectedAppsCount application(s)"
+        $changesList += Get-Translation -Key 'DeployChangeRemoveApps' -Count $selectedAppsCount -FormatArgs @($selectedAppsCount)
     }
 
     foreach ($tweakAction in @(Get-PendingTweakActions -Window $Window -ShowAppliedTweaksMode:$showAppliedTweaksMode)) {
         if ($tweakAction.Action -eq 'Undo') {
-            $changesList += "Undo: $($tweakAction.Label)"
+            $changesList += Get-Translation -Key 'DeployChangeUndoPrefix' -FormatArgs @($tweakAction.Label)
         }
         else {
             $changesList += $tweakAction.Label
@@ -139,12 +139,12 @@ function Invoke-ShowChangesOverview {
     $changesList = New-Overview -Window $Window -AppsPanel $AppsPanel -ShowCurrentlyAppliedTweaksCheckBox $ShowCurrentlyAppliedTweaksCheckBox
 
     if ($changesList.Count -eq 0) {
-        Show-MessageBox -Message 'No changes have been selected.' -Title 'Selected Changes' -Button 'OK' -Icon 'Information'
+        Show-MessageBox -Message (Get-Translation -Key 'DeployNoChangesSelectedMessage') -Title (Get-Translation -Key 'DeploySelectedChangesTitle') -Button 'OK' -Icon 'Information'
         return
     }
 
     $message = ($changesList | ForEach-Object { "$([char]0x2022) $_" }) -join "`n"
-    Show-MessageBox -Message $message -Title 'Selected Changes' -Button 'OK' -Icon 'None' -Width 600
+    Show-MessageBox -Message $message -Title (Get-Translation -Key 'DeploySelectedChangesTitle') -Button 'OK' -Icon 'None' -Width 600
 }
 
 <#
@@ -449,23 +449,23 @@ function Update-UserSelectionDescription {
         0 {
             $currentUserName = Get-UserName
             if ([string]::IsNullOrWhiteSpace($currentUserName)) {
-                $UserSelectionDescription.Text = "The currently logged-in user profile"
+                $UserSelectionDescription.Text = Get-Translation -Key 'DeployUserDescriptionCurrentUser'
             }
             else {
-                $UserSelectionDescription.Text = "The currently logged-in user profile: $currentUserName"
+                $UserSelectionDescription.Text = Get-Translation -Key 'DeployUserDescriptionCurrentUserNamed' -FormatArgs @($currentUserName)
             }
         }
         1 {
             $targetUserName = $OtherUsernameTextBox.Text.Trim()
             if ([string]::IsNullOrWhiteSpace($targetUserName)) {
-                $UserSelectionDescription.Text = "A different user profile on this system"
+                $UserSelectionDescription.Text = Get-Translation -Key 'DeployUserDescriptionOtherUser'
             }
             else {
-                $UserSelectionDescription.Text = "A different user profile on this system: $targetUserName"
+                $UserSelectionDescription.Text = Get-Translation -Key 'DeployUserDescriptionOtherUserNamed' -FormatArgs @($targetUserName)
             }
         }
         default {
-            $UserSelectionDescription.Text = "The default user template, affecting all new users created after this point. Useful for Sysprep deployment."
+            $UserSelectionDescription.Text = Get-Translation -Key 'DeployUserDescriptionSysprep'
         }
     }
 

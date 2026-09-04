@@ -1,10 +1,14 @@
 BeforeAll {
     Add-Type -AssemblyName PresentationFramework
+    . (Join-Path $PSScriptRoot '..\Scripts\FileIO\Import-JsonFile.ps1')
+    . (Join-Path $PSScriptRoot '..\Scripts\FileIO\Import-LanguageFile.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\GUI\MainWindow-AppSelection.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\GUI\MainWindow-Deployment.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\GUI\MainWindow-Navigation.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\GUI\MainWindow-TweaksBuilder.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\GUI\Set-WindowThemeResources.ps1')
+    $script:LanguagesPath = Join-Path $PSScriptRoot '..\Config\Languages'
+    $script:Lang = Import-LanguageFile -LanguageCode 'en-US'
 
     function New-TestWindow {
         $window = New-Object System.Windows.Window

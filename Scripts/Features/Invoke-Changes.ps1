@@ -265,7 +265,7 @@ function Invoke-ApplyFeatures {
 
         # Resolve display name for the progress indicator
         $f = $script:Features[$featureId]
-        $displayName = $f.ApplyText
+        $displayName = Get-Translation -Key $featureId -Field 'ApplyText'
 
         if ($script:ApplyProgressCallback) {
             & $script:ApplyProgressCallback $step $TotalSteps $displayName
@@ -309,8 +309,8 @@ function Invoke-UndoFeatures {
         if ($script:CancelRequested) { return }
 
         $f = if ($script:Features.ContainsKey($featureId)) { $script:Features[$featureId] } else { $null }
-        $undoLabel = if ($f -and $f.UndoLabel) { $f.UndoLabel } else { $featureId }
-        $undoText = if ($f -and $f.ApplyUndoText) { $f.ApplyUndoText } else { $undoLabel }
+        $undoLabel = if ($f -and $f.UndoLabel) { Get-Translation -Key $featureId -Field 'UndoLabel' } else { $featureId }
+        $undoText = if ($f -and $f.ApplyUndoText) { Get-Translation -Key $featureId -Field 'ApplyUndoText' } else { $undoLabel }
 
         if ($script:ApplyProgressCallback) {
             & $script:ApplyProgressCallback $step $TotalSteps $undoText
@@ -391,7 +391,7 @@ function Invoke-AllChanges {
         if ($script:CancelRequested) { return }
         $step++
         if ($script:ApplyProgressCallback) {
-            & $script:ApplyProgressCallback $step $totalSteps "Creating registry backup..."
+            & $script:ApplyProgressCallback $step $totalSteps (Get-Translation -Key 'ApplyCreatingRegistryBackup')
         }
 
         if ($script:Params.ContainsKey("WhatIf")) {
@@ -421,7 +421,7 @@ function Invoke-AllChanges {
         if ($script:CancelRequested) { return }
         $step++
         if ($script:ApplyProgressCallback) {
-            & $script:ApplyProgressCallback $step $totalSteps "Creating system restore point, this may take a moment..."
+            & $script:ApplyProgressCallback $step $totalSteps (Get-Translation -Key 'ApplyCreatingRestorePoint')
         }
         if ($script:Params.ContainsKey("WhatIf")) {
             Write-Host "[WhatIf] Create system restore point" -ForegroundColor Cyan

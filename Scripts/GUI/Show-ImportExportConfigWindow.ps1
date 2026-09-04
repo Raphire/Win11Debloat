@@ -1,5 +1,28 @@
 <#
     .SYNOPSIS
+        Maps an internal import/export category ID ('Applications', 'System Tweaks',
+        'Deployment Settings') to its Chrome.json translation key.
+
+    .DESCRIPTION
+        The category strings stay as the stable internal IDs used for -contains checks and
+        hashtable lookups throughout this file; only the label shown to the user is translated.
+#>
+function Get-ImportExportCategoryLabelKey {
+    param(
+        [Parameter(Mandatory)]
+        [string]$Category
+    )
+
+    switch ($Category) {
+        'Applications' { return 'ImportExportCategoryApplications' }
+        'System Tweaks' { return 'ImportExportCategorySystemTweaks' }
+        'Deployment Settings' { return 'ImportExportCategoryDeploymentSettings' }
+        default { return $Category }
+    }
+}
+
+<#
+    .SYNOPSIS
         Shows a modal category-selection dialog for importing or exporting configuration.
 #>
 function Show-ImportExportConfigWindow {
@@ -11,7 +34,7 @@ function Show-ImportExportConfigWindow {
         [string[]]$Categories = @('Applications', 'System Tweaks', 'Deployment Settings'),
         [string[]]$DisabledCategories = @(),
         [hashtable]$CategoryDetails = @(),
-        [string]$ActionLabel = 'OK'
+        [string]$ActionLabel = (Get-Translation -Key 'MessageBoxOk')
     )
 
     # Show overlay on owner window
@@ -32,7 +55,7 @@ function Show-ImportExportConfigWindow {
     $schemaPath = $script:ImportExportConfigSchema
 
     if (-not $schemaPath -or -not (Test-Path $schemaPath)) {
-        Show-MessageBox -Message 'Import/Export window schema file could not be found.' -Title 'Error' -Button 'OK' -Icon 'Error' -Owner $Owner | Out-Null
+        Show-MessageBox -Message (Get-Translation -Key 'ImportExportSchemaMissingMessage') -Title (Get-Translation -Key 'ErrorTitle') -Button 'OK' -Icon 'Error' -Owner $Owner | Out-Null
         if ($overlay -and -not $overlayWasAlreadyVisible) {
             try { $Owner.Dispatcher.Invoke([action]{ $overlay.Visibility = 'Collapsed' }) } catch { }
         }
@@ -40,6 +63,7 @@ function Show-ImportExportConfigWindow {
     }
 
     $xaml = Get-Content -Path $schemaPath -Raw
+    $xaml = ConvertTo-LocalizedXaml -Xaml $xaml
     $reader = [System.Xml.XmlReader]::Create([System.IO.StringReader]::new($xaml))
     try {
         $dlg = [System.Windows.Markup.XamlReader]::Load($reader)
@@ -79,7 +103,7 @@ function Show-ImportExportConfigWindow {
 
         # Create checkbox
         $cb = New-Object System.Windows.Controls.CheckBox
-        $cb.Content = $cat
+        $cb.Content = Get-Translation -Key (Get-ImportExportCategoryLabelKey -Category $cat)
         $cb.IsChecked = $true
         $cb.Margin = [System.Windows.Thickness]::new(0,0,0,4)
         $cb.FontSize = 14
@@ -89,7 +113,7 @@ function Show-ImportExportConfigWindow {
             $cb.IsChecked = $false
             $cb.IsEnabled = $false
             $cb.Opacity = 0.65
-            $cb.ToolTip = 'No selected settings available in this category.'
+            $cb.ToolTip = Get-Translation -Key 'ImportExportCategoryDisabledTooltip'
         }
         
         $container.Children.Add($cb) | Out-Null
@@ -261,31 +285,31 @@ function Get-DeploymentCategoryDetailString {
 
     if ($lookup.ContainsKey('UserSelectionIndex')) {
         switch ([int]$lookup['UserSelectionIndex']) {
-            0 { $line1 += 'User: Current User' }
-            1 { $line1 += "User: $(if ($lookup['OtherUsername']) { $lookup['OtherUsername'] } else { 'Other User' })" }
-            2 { $line1 += 'User: Sysprep' }
+            0 { $line1 += Get-Translation -Key 'ImportExportDeployUserCurrentUser' }
+            1 { $line1 += Get-Translation -Key 'ImportExportDeployUserOther' -FormatArgs @($(if ($lookup['OtherUsername']) { $lookup['OtherUsername'] } else { Get-Translation -Key 'ImportExportDeployUserOtherFallback' })) }
+            2 { $line1 += Get-Translation -Key 'ImportExportDeployUserSysprep' }
         }
     }
 
     if ($lookup.ContainsKey('AppRemovalScopeIndex')) {
         switch ([int]$lookup['AppRemovalScopeIndex']) {
-            0 { $line1 += 'App Removal: All Users' }
-            1 { $line1 += 'App Removal: Current User' }
-            2 { $line1 += "App Removal: $(if ($lookup['OtherUsername']) { $lookup['OtherUsername'] } else { 'Other User' })" }
+            0 { $line1 += Get-Translation -Key 'ImportExportAppRemovalAllUsers' }
+            1 { $line1 += Get-Translation -Key 'ImportExportAppRemovalCurrentUser' }
+            2 { $line1 += Get-Translation -Key 'ImportExportAppRemovalOther' -FormatArgs @($(if ($lookup['OtherUsername']) { $lookup['OtherUsername'] } else { Get-Translation -Key 'ImportExportDeployUserOtherFallback' })) }
         }
     }
 
     $options = @()
-    if ($lookup.ContainsKey('CreateRestorePoint') -and [bool]$lookup['CreateRestorePoint']) { $options += 'Restore Point' }
-    if (-not ($lookup.ContainsKey('SkipRegistryBackup') -and [bool]$lookup['SkipRegistryBackup'])) { $options += 'Registry Backup' }
-    if ($lookup.ContainsKey('RestartExplorer')    -and [bool]$lookup['RestartExplorer'])    { $options += 'Restart Explorer' }
+    if ($lookup.ContainsKey('CreateRestorePoint') -and [bool]$lookup['CreateRestorePoint']) { $options += Get-Translation -Key 'ImportExportOptionRestorePoint' }
+    if (-not ($lookup.ContainsKey('SkipRegistryBackup') -and [bool]$lookup['SkipRegistryBackup'])) { $options += Get-Translation -Key 'ImportExportOptionRegistryBackup' }
+    if ($lookup.ContainsKey('RestartExplorer')    -and [bool]$lookup['RestartExplorer'])    { $options += Get-Translation -Key 'ImportExportOptionRestartExplorer' }
 
     $lines = @()
     if ($line1.Count -gt 0)   { $lines += $line1 -join ', ' }
-    if ($options.Count -gt 0) { $lines += "Options: $($options -join ', ')" }
+    if ($options.Count -gt 0) { $lines += Get-Translation -Key 'ImportExportOptionsPrefix' -FormatArgs @($options -join ', ') }
 
     if ($lines.Count -gt 0) { return $lines -join "`n" }
-    return 'Default deployment settings'
+    return Get-Translation -Key 'ImportExportDefaultDeploymentSettings'
 }
 
 function Build-CategoryDetails {
@@ -298,17 +322,17 @@ function Build-CategoryDetails {
     $details = @{}
 
     if ($AppCount -gt 0) {
-        $details['Applications'] = "$AppCount app$(if ($AppCount -ne 1) { 's' }) selected"
+        $details['Applications'] = Get-Translation -Key 'ImportExportAppsSelected' -Count $AppCount -FormatArgs @($AppCount)
     }
     else {
-        $details['Applications'] = 'No apps selected'
+        $details['Applications'] = Get-Translation -Key 'ImportExportNoAppsSelected'
     }
 
     if ($TweakCount -gt 0) {
-        $details['System Tweaks'] = "$TweakCount tweak$(if ($TweakCount -ne 1) { 's' }) selected"
+        $details['System Tweaks'] = Get-Translation -Key 'ImportExportTweaksSelected' -Count $TweakCount -FormatArgs @($TweakCount)
     }
     else {
-        $details['System Tweaks'] = 'No tweaks selected'
+        $details['System Tweaks'] = Get-Translation -Key 'ImportExportNoTweaksSelected'
     }
 
     if ($DeploymentSettings) {
@@ -422,7 +446,7 @@ function Export-Configuration {
     $deploymentSettings = Get-DeploymentSettings -Owner $Owner -UserSelectionCombo $UserSelectionCombo -OtherUsernameTextBox $OtherUsernameTextBox
     $categoryDetails = Build-CategoryDetails -AppCount $selectedApps.Count -TweakCount $tweakSettings.Count -DeploymentSettings $deploymentSettings
 
-    $categories = Show-ImportExportConfigWindow -Owner $Owner -UsesDarkMode $UsesDarkMode -Title 'Export Configuration' -Prompt 'Create a configuration file based on the currently selected settings. You can choose which settings categories you wish to include in the export.' -DisabledCategories $disabledCategories -CategoryDetails $categoryDetails -ActionLabel 'Export Settings'
+    $categories = Show-ImportExportConfigWindow -Owner $Owner -UsesDarkMode $UsesDarkMode -Title (Get-Translation -Key 'ImportExportExportTitle') -Prompt (Get-Translation -Key 'ImportExportExportPrompt') -DisabledCategories $disabledCategories -CategoryDetails $categoryDetails -ActionLabel (Get-Translation -Key 'ImportExportExportActionLabel')
     if (-not $categories) {
         Write-Host 'Export canceled.'
         return
@@ -442,7 +466,7 @@ function Export-Configuration {
 
     # Show native save-file dialog
     $saveDialog = New-Object Microsoft.Win32.SaveFileDialog
-    $saveDialog.Title = 'Export Configuration'
+    $saveDialog.Title = Get-Translation -Key 'ImportExportSelectExportFileDialogTitle'
     $saveDialog.Filter = 'JSON files (*.json)|*.json|All files (*.*)|*.*'
     $saveDialog.DefaultExt = '.json'
     $saveDialog.FileName = "Win11Debloat-Config-$(Get-Date -Format 'yyyyMMdd').json"
@@ -456,17 +480,17 @@ function Export-Configuration {
 
     if ($script:Params.ContainsKey("WhatIf")) {
         Write-Host "[WhatIf] Export configuration to '$($saveDialog.FileName)'" -ForegroundColor Cyan
-        Show-MessageBox -Message "[WhatIf] Configuration would be exported to this file (no file written)." -Title 'Export Configuration' -Button 'OK' -Icon 'Information' | Out-Null
+        Show-MessageBox -Message (Get-Translation -Key 'ImportExportWhatIfExportMessage') -Title (Get-Translation -Key 'ImportExportExportTitle') -Button 'OK' -Icon 'Information' | Out-Null
         return
     }
 
     if (Save-ToFile -Config $config -FilePath $saveDialog.FileName) {
         Write-Host "Configuration exported successfully: $($saveDialog.FileName)"
-        Show-MessageBox -Message "Configuration exported successfully." -Title 'Export Configuration' -Button 'OK' -Icon 'Information' | Out-Null
+        Show-MessageBox -Message (Get-Translation -Key 'ImportExportExportSuccessMessage') -Title (Get-Translation -Key 'ImportExportExportTitle') -Button 'OK' -Icon 'Information' | Out-Null
     }
     else {
         Write-Error "Failed to export configuration to '$($saveDialog.FileName)'"
-        Show-MessageBox -Message "Failed to export configuration" -Title 'Error' -Button 'OK' -Icon 'Error' | Out-Null
+        Show-MessageBox -Message (Get-Translation -Key 'ImportExportExportFailedMessage') -Title (Get-Translation -Key 'ErrorTitle') -Button 'OK' -Icon 'Error' | Out-Null
     }
 }
 
@@ -488,7 +512,7 @@ function Import-Configuration {
 
     # Show native open-file dialog
     $openDialog = New-Object Microsoft.Win32.OpenFileDialog
-    $openDialog.Title = 'Select Configuration File'
+    $openDialog.Title = Get-Translation -Key 'ImportExportSelectImportFileDialogTitle'
     $openDialog.Filter = 'JSON files (*.json)|*.json|All files (*.*)|*.*'
     $openDialog.DefaultExt = '.json'
 
@@ -502,14 +526,14 @@ function Import-Configuration {
     $config = Import-JsonFile -filePath $openDialog.FileName -expectedVersion '1.0'
     if (-not $config) {
         Write-Error "Failed to read configuration file '$($openDialog.FileName)'"
-        Show-MessageBox -Message "Failed to read configuration file" -Title 'Invalid Config' -Button 'OK' -Icon 'Error' | Out-Null
+        Show-MessageBox -Message (Get-Translation -Key 'ImportExportReadFailedMessage') -Title (Get-Translation -Key 'ImportExportInvalidConfigTitle') -Button 'OK' -Icon 'Error' | Out-Null
         return
     }
 
     $consistencyError = Test-ConfigConsistency -Config $config
     if ($consistencyError) {
         Write-Error "Invalid configuration file '$($openDialog.FileName)': $consistencyError"
-        Show-MessageBox -Message "Invalid configuration file: $consistencyError" -Title 'Invalid Config' -Button 'OK' -Icon 'Error' | Out-Null
+        Show-MessageBox -Message (Get-Translation -Key 'ImportExportInvalidConfigMessage' -FormatArgs @($consistencyError)) -Title (Get-Translation -Key 'ImportExportInvalidConfigTitle') -Button 'OK' -Icon 'Error' | Out-Null
         return
     }
 
@@ -521,7 +545,7 @@ function Import-Configuration {
     $tweakCount = @($config.Tweaks | Where-Object { $_ -and $_.Name -and $_.Value -eq $true }).Count
     $categoryDetails = Build-CategoryDetails -AppCount $appCount -TweakCount $tweakCount -DeploymentSettings @($config.Deployment)
 
-    $categories = Show-ImportExportConfigWindow -Owner $Owner -UsesDarkMode $UsesDarkMode -Title 'Import Configuration' -Prompt 'Choose the settings categories that you wish to import. You can review and modify the imported settings before they are applied.' -Categories $availableCategories -CategoryDetails $categoryDetails -ActionLabel 'Import Settings'
+    $categories = Show-ImportExportConfigWindow -Owner $Owner -UsesDarkMode $UsesDarkMode -Title (Get-Translation -Key 'ImportExportImportTitle') -Prompt (Get-Translation -Key 'ImportExportImportPrompt') -Categories $availableCategories -CategoryDetails $categoryDetails -ActionLabel (Get-Translation -Key 'ImportExportImportActionLabel')
     if (-not $categories) {
         Write-Host 'Import canceled.'
         return
@@ -553,7 +577,7 @@ function Import-Configuration {
     }
 
     Write-Host 'Configuration imported successfully.'
-    Show-MessageBox -Message "Configuration imported successfully." -Title 'Import Configuration' -Button 'OK' -Icon 'Information' | Out-Null
+    Show-MessageBox -Message (Get-Translation -Key 'ImportExportImportSuccessMessage') -Title (Get-Translation -Key 'ImportExportImportTitle') -Button 'OK' -Icon 'Information' | Out-Null
 
     if ($OnImportCompleted) {
         & $OnImportCompleted $categories

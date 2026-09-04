@@ -89,7 +89,7 @@ function Invoke-SystemRestorePoint {
     # Ensure that the user is aware if creating a restore point failed, and give them the option to continue without a restore point or cancel the script
     if ($failed) {
         if ($script:GuiWindow) {
-            $result = Show-MessageBox "Failed to create a system restore point. Do you want to continue without a restore point?" "Restore Point Creation Failed" "YesNo" "Warning"
+            $result = Show-MessageBox (Get-Translation -Key 'RestorePointFailedMessage') (Get-Translation -Key 'RestorePointFailedTitle') "YesNo" "Warning"
 
             if ($result -ne "Yes") {
                 $script:CancelRequested = $true

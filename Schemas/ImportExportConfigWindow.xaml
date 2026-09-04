@@ -1,6 +1,6 @@
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Select Settings to Import/Export"
+        Title="%LANG:ImportExportImportTitle%"
         Width="440"
         SizeToContent="Height"
         MaxHeight="501"
@@ -45,10 +45,10 @@
             <Border Grid.Row="2" Style="{DynamicResource ModalFooterBorderStyle}">
                 <UniformGrid Rows="1">
                     <Button x:Name="OkButton"
-                            Content="OK"
+                            Content="%LANG:MessageBoxOk%"
                             Style="{DynamicResource ModalPrimaryStretchedButtonStyle}"/>
                     <Button x:Name="CancelButton"
-                            Content="Cancel"
+                            Content="%LANG:MessageBoxCancel%"
                             Style="{DynamicResource ModalSecondaryStretchedButtonStyle}"/>
                 </UniformGrid>
             </Border>

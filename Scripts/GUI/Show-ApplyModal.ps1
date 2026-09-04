@@ -37,6 +37,7 @@ function Show-ApplyModal {
     
     # Load XAML from file
     $xaml = Get-Content -Path $script:ApplyChangesWindowSchema -Raw
+    $xaml = ConvertTo-LocalizedXaml -Xaml $xaml
     $reader = [System.Xml.XmlReader]::Create([System.IO.StringReader]::new($xaml))
     try {
         $applyWindow = [System.Windows.Markup.XamlReader]::Load($reader)
@@ -74,8 +75,8 @@ function Show-ApplyModal {
     # Initialize in-progress state
     $script:ApplyInProgressPanel.Visibility = 'Visible'
     $script:ApplyCompletionPanel.Visibility = 'Collapsed'
-    $script:ApplyStepNameEl.Text = "Preparing..."
-    $script:ApplyStepCounterEl.Text = "Preparing..."
+    $script:ApplyStepNameEl.Text = Get-Translation -Key 'ApplyPreparing'
+    $script:ApplyStepCounterEl.Text = Get-Translation -Key 'ApplyPreparing'
     $script:ApplyProgressBarEl.Value = 0
     $script:ApplyModalInErrorState = $false
     
@@ -83,7 +84,7 @@ function Show-ApplyModal {
     $script:ApplyProgressCallback = {
         param($currentStep, $totalSteps, $stepName)
         $script:ApplyStepNameEl.Text = $stepName
-        $script:ApplyStepCounterEl.Text = "Step $currentStep of $totalSteps"
+        $script:ApplyStepCounterEl.Text = Get-Translation -Key 'ApplyStepCounter' -FormatArgs @($currentStep, $totalSteps)
         # Store current step/total in Tag properties for sub-step interpolation
         $script:ApplyStepCounterEl.Tag = $currentStep
         $script:ApplyProgressBarEl.Tag = $totalSteps
@@ -140,8 +141,8 @@ function Show-ApplyModal {
 
                 $script:ApplyCompletionIconEl.Text = [char]0xE7BA
                 $script:ApplyCompletionIconEl.Foreground = [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#e8912d"))
-                $script:ApplyCompletionTitleEl.Text = "Cancelled"
-                $script:ApplyCompletionMessageEl.Text = "Script execution was cancelled by the user."
+                $script:ApplyCompletionTitleEl.Text = Get-Translation -Key 'ApplyCompletionTitleCancelled'
+                $script:ApplyCompletionMessageEl.Text = Get-Translation -Key 'ApplyCompletionMessageCancelled'
             } elseif ($failureCount -gt 0 -or $appRemovalVerificationUnavailable) {
                 if ($failureCount -gt 0) {
                     Write-Host "Script completed with $failureCount error(s)."
@@ -150,17 +151,17 @@ function Show-ApplyModal {
                 $script:ApplyCompletionIconEl.Text = [char]0xE7BA
                 $script:ApplyCompletionIconEl.Foreground = [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#e8912d"))
                 if ($failureCount -eq 0 -and $appRemovalVerificationUnavailable) {
-                    $script:ApplyCompletionTitleEl.Text = "Changes Applied"
-                    $script:ApplyCompletionMessageEl.Text = "All changes were applied without errors, but Win11Debloat could not confirm that all selected apps were successfully uninstalled."
+                    $script:ApplyCompletionTitleEl.Text = Get-Translation -Key 'ApplyCompletionTitleSuccess'
+                    $script:ApplyCompletionMessageEl.Text = Get-Translation -Key 'ApplyCompletionMessageVerificationUnavailable'
                 }
                 else {
-                    $script:ApplyCompletionTitleEl.Text = "Changes Applied with Errors"
-                    $script:ApplyCompletionMessageEl.Text = "$failureCount change(s) failed. See console for details."
+                    $script:ApplyCompletionTitleEl.Text = Get-Translation -Key 'ApplyCompletionTitleErrors'
+                    $script:ApplyCompletionMessageEl.Text = Get-Translation -Key 'ApplyCompletionMessageFailures' -Count $failureCount -FormatArgs @($failureCount)
                 }
             } else {
                 Write-Host "All changes have been applied successfully!"
 
-                $script:ApplyCompletionTitleEl.Text = "Changes Applied"
+                $script:ApplyCompletionTitleEl.Text = Get-Translation -Key 'ApplyCompletionTitleSuccess'
 
                 # Show completion message with reboot instructions if any applied features require reboot
                 if ($InvokeRestartExplorer) {
@@ -179,7 +180,7 @@ function Show-ApplyModal {
                         $applyRebootPanel.Visibility = 'Visible'
                     }
                     else {
-                        $script:ApplyCompletionMessageEl.Text = "Your system is ready. Thanks for using Win11Debloat!"
+                        $script:ApplyCompletionMessageEl.Text = Get-Translation -Key 'ApplyCompletionMessageReady'
                     }
                 }
             }
@@ -191,24 +192,24 @@ function Show-ApplyModal {
             $script:ApplyCompletionPanel.Visibility = 'Visible'
             $script:ApplyCompletionIconEl.Text = [char]0xEA39
             $script:ApplyCompletionIconEl.Foreground = [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#c42b1c"))
-            $script:ApplyCompletionTitleEl.Text = "Error"
-            $script:ApplyCompletionMessageEl.Text = "An error occurred while applying changes: $($_.Exception.Message)"
-            
+            $script:ApplyCompletionTitleEl.Text = Get-Translation -Key 'ApplyCompletionTitleError'
+            $script:ApplyCompletionMessageEl.Text = Get-Translation -Key 'ApplyCompletionMessageError' -FormatArgs @($_.Exception.Message)
+
             # Set error state to change Kofi button to report link
             $script:ApplyModalInErrorState = $true
 
             # Update Kofi button to be a report issue button
             $applyKofiBtn.Content = $null
-            
+
             $reportText = [System.Windows.Controls.TextBlock]::new()
-            $reportText.Text = 'Report a bug'
+            $reportText.Text = Get-Translation -Key 'MenuReportBug'
             $reportText.VerticalAlignment = 'Center'
             $reportText.FontSize = 14
             $reportText.Margin = [System.Windows.Thickness]::new(0, 0, 0, 1)
 
             $applyKofiBtn.Content = $reportText
-            
-            [System.Windows.Automation.AutomationProperties]::SetName($applyKofiBtn, 'Report a bug')
+
+            [System.Windows.Automation.AutomationProperties]::SetName($applyKofiBtn, (Get-Translation -Key 'MenuReportBug'))
             
             $applyWindow.Dispatcher.Invoke([System.Windows.Threading.DispatcherPriority]::Render, [action]{})
         }

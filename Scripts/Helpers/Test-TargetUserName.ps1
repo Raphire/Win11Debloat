@@ -11,7 +11,7 @@ function Test-TargetUserName {
         return [PSCustomObject]@{
             IsValid = $false
             UserName = $normalizedUserName
-            Message = 'Please enter a username'
+            Message = Get-Translation -Key 'UsernameValidationEmpty'
         }
     }
 
@@ -19,7 +19,7 @@ function Test-TargetUserName {
         return [PSCustomObject]@{
             IsValid = $false
             UserName = $normalizedUserName
-            Message = "Cannot enter your own username, use 'Current User' option instead"
+            Message = Get-Translation -Key 'UsernameValidationOwnUsername'
         }
     }
 
@@ -27,13 +27,13 @@ function Test-TargetUserName {
         return [PSCustomObject]@{
             IsValid = $false
             UserName = $normalizedUserName
-            Message = 'User not found, please enter a valid username'
+            Message = Get-Translation -Key 'UsernameValidationNotFound'
         }
     }
 
     return [PSCustomObject]@{
         IsValid = $true
         UserName = $normalizedUserName
-        Message = "User found: $normalizedUserName"
+        Message = Get-Translation -Key 'UsernameValidationFound' -FormatArgs @($normalizedUserName)
     }
 }

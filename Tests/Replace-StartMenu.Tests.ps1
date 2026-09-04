@@ -1,7 +1,11 @@
 BeforeAll {
     function Get-UserDirectory { param($userName, $fileName, $exitIfPathNotFound) }
 
+    . (Join-Path $PSScriptRoot '..\Scripts\FileIO\Import-JsonFile.ps1')
+    . (Join-Path $PSScriptRoot '..\Scripts\FileIO\Import-LanguageFile.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\Features\Replace-StartMenu.ps1')
+    $script:LanguagesPath = Join-Path $PSScriptRoot '..\Config\Languages'
+    $script:Lang = Import-LanguageFile -LanguageCode 'en-US'
 }
 
 Describe 'Get-StartMenuUserNameFromPath' {

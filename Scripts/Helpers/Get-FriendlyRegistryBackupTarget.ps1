@@ -10,37 +10,37 @@ function Get-FriendlyRegistryBackupTarget {
     )
 
     if ([string]::IsNullOrWhiteSpace($Target)) {
-        return 'Unknown'
+        return Get-Translation -Key 'RestoreTargetUnknown'
     }
 
     if ($Target -eq 'DefaultUserProfile') {
-        return 'Default user profile'
+        return Get-Translation -Key 'RestoreTargetDefaultUserProfile'
     }
 
     if ($Target -eq 'CurrentUser') {
-        return 'Current user'
+        return Get-Translation -Key 'RestoreTargetCurrentUser'
     }
 
     if ($Target -eq 'AllUsers') {
-        return 'All users'
+        return Get-Translation -Key 'RestoreTargetAllUsers'
     }
 
     if ($Target -like 'CurrentUser:*') {
         $userName = $Target.Substring(12)
         if ([string]::IsNullOrWhiteSpace($userName)) {
-            return 'Current user'
+            return Get-Translation -Key 'RestoreTargetCurrentUser'
         }
 
-        return "Current user ($userName)"
+        return Get-Translation -Key 'RestoreTargetCurrentUserNamed' -FormatArgs @($userName)
     }
 
     if ($Target -like 'User:*') {
         $userName = $Target.Substring(5)
         if ([string]::IsNullOrWhiteSpace($userName)) {
-            return 'User'
+            return Get-Translation -Key 'RestoreTargetUser'
         }
 
-        return "User ($userName)"
+        return Get-Translation -Key 'RestoreTargetUserNamed' -FormatArgs @($userName)
     }
 
     return $Target

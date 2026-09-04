@@ -1,6 +1,10 @@
 BeforeAll {
     function Show-MessageBox { param($Message, $Title, $Button, $Icon, $Owner) 'Yes' }
+    . (Join-Path $PSScriptRoot '..\Scripts\FileIO\Import-JsonFile.ps1')
+    . (Join-Path $PSScriptRoot '..\Scripts\FileIO\Import-LanguageFile.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\Helpers\Confirm-UnsafeAppRemoval.ps1')
+    $script:LanguagesPath = Join-Path $PSScriptRoot '..\Config\Languages'
+    $script:Lang = Import-LanguageFile -LanguageCode 'en-US'
 }
 
 Describe 'Confirm-UnsafeAppRemoval' {

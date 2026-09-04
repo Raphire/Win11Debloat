@@ -50,6 +50,7 @@ function Show-RestoreBackupDialog {
     }
 
     $xaml = Get-Content -Path $schemaPath -Raw
+    $xaml = ConvertTo-LocalizedXaml -Xaml $xaml
 
     $reader = [System.Xml.XmlReader]::Create([System.IO.StringReader]::new($xaml))
     try {
@@ -107,7 +108,7 @@ function Show-RestoreBackupDialog {
     $getStartMenuScopeInfo = {
         $isAllUsersScope = ($startMenuScopeCombo.SelectedItem.Tag -eq 'AllUsers')
         $scopeValue = if ($isAllUsersScope) { 'AllUsers' } else { 'CurrentUser' }
-        $summaryScopeText = if ($isAllUsersScope) { 'all users' } else { 'the current user' }
+        $summaryScopeText = if ($isAllUsersScope) { Get-Translation -Key 'RestoreStartMenuSummaryScopeAllUsers' } else { Get-Translation -Key 'RestoreStartMenuSummaryScopeCurrentUser' }
 
         return [PSCustomObject]@{
             Scope = $scopeValue
@@ -117,8 +118,8 @@ function Show-RestoreBackupDialog {
     }
 
     $showStartMenuIntroState = {
-        $backupFileText.Text = 'Not selected'
-        $backupCreatedText.Text = 'N/A'
+        $backupFileText.Text = Get-Translation -Key 'RestoreFileNotSelected'
+        $backupCreatedText.Text = Get-Translation -Key 'RestoreCreatedUnavailable'
         $overviewSummaryText.Visibility = 'Collapsed'
         $overviewPanel.Visibility = 'Collapsed'
         $startMenuIntroPanel.Visibility = 'Visible'
@@ -130,10 +131,10 @@ function Show-RestoreBackupDialog {
 
         $scopeInfo = & $getStartMenuScopeInfo
         $backupTargetText.Text = Get-FriendlyRegistryBackupTarget -Target $scopeInfo.Target
-        $overviewSummaryText.Text = "This will replace the current Start Menu pinned apps layout for $($scopeInfo.SummaryText) with the selected backup."
+        $overviewSummaryText.Text = Get-Translation -Key 'RestoreStartMenuSummary' -FormatArgs @($scopeInfo.SummaryText)
         $backupFileText.Text = Split-Path -Path $BackupFilePath -Leaf
 
-        $createdText = 'Unknown'
+        $createdText = Get-Translation -Key 'RestoreCreatedUnknown'
         try {
             $createdText = (Get-Item -LiteralPath $BackupFilePath -ErrorAction Stop).LastWriteTime.ToString('yyyy-MM-dd HH:mm')
         }
@@ -172,10 +173,10 @@ function Show-RestoreBackupDialog {
         $isAutoBackupEnabled = ($startMenuAutoBackupCheck.IsChecked -eq $true)
         $hasSelectedManualFile = -not [string]::IsNullOrWhiteSpace($state.SelectedStartMenuBackupFilePath)
         if ($isAutoBackupEnabled -or $hasSelectedManualFile) {
-            $primaryActionBtn.Content = 'Restore backup'
+            $primaryActionBtn.Content = Get-Translation -Key 'RestorePrimaryActionRestoreBackup'
         }
         else {
-            $primaryActionBtn.Content = 'Select backup file'
+            $primaryActionBtn.Content = Get-Translation -Key 'RestorePrimaryActionSelectBackupFile'
         }
     }
 
@@ -185,35 +186,35 @@ function Show-RestoreBackupDialog {
     }
 
     $enterSelectTypeStep = {
-        $titleText.Text = 'Restore Backup'
+        $titleText.Text = Get-Translation -Key 'RestoreWindowTitle'
         $restoreModeTabs.SelectedIndex = 0
         $backBtn.Visibility = 'Visible'
-        $backBtn.Content = 'Cancel'
+        $backBtn.Content = Get-Translation -Key 'RestoreBackBtnCancel'
         $primaryActionBtn.Visibility = 'Collapsed'
         $chooseRegistryBtn.IsDefault = $true
         $primaryActionBtn.IsDefault = $false
     }
 
     $enterRegistryStep = {
-        $titleText.Text = 'Restore Registry Backup'
+        $titleText.Text = Get-Translation -Key 'RestoreRegistryStepTitle'
         $restoreModeTabs.SelectedIndex = 1
         $introInfoPanel.Visibility = 'Visible'
         $overviewPanel.Visibility = 'Collapsed'
         $overviewFeaturesSection.Visibility = 'Visible'
         $overviewSummaryText.Visibility = 'Collapsed'
         $backBtn.Visibility = 'Visible'
-        $backBtn.Content = 'Back'
+        $backBtn.Content = Get-Translation -Key 'RestoreBackBtnBack'
         $primaryActionBtn.Visibility = 'Visible'
-        $primaryActionBtn.Content = 'Select backup file'
+        $primaryActionBtn.Content = Get-Translation -Key 'RestorePrimaryActionSelectBackupFile'
         $primaryActionBtn.IsDefault = $true
         $chooseRegistryBtn.IsDefault = $false
     }
 
     $enterStartMenuStep = {
-        $titleText.Text = 'Restore Start Menu Backup'
+        $titleText.Text = Get-Translation -Key 'RestoreStartMenuStepTitle'
         $restoreModeTabs.SelectedIndex = 2
         $backBtn.Visibility = 'Visible'
-        $backBtn.Content = 'Back'
+        $backBtn.Content = Get-Translation -Key 'RestoreBackBtnBack'
         $primaryActionBtn.Visibility = 'Visible'
         $primaryActionBtn.IsDefault = $true
         $chooseRegistryBtn.IsDefault = $false
@@ -233,7 +234,7 @@ function Show-RestoreBackupDialog {
         )
 
         $createdText = if ([string]::IsNullOrWhiteSpace($SelectedBackup.CreatedAt)) {
-            'Unknown'
+            Get-Translation -Key 'RestoreCreatedUnknown'
         }
         else {
             try {
@@ -271,7 +272,7 @@ function Show-RestoreBackupDialog {
         Write-Host "Backup overview prepared. Reverted=$($revertibleFeaturesList.Count), ReApplied=$($reappliedFeaturesList.Count), NonRevertible=$($nonRevertibleFeaturesList.Count)"
 
         if ($revertibleFeaturesList.Count -eq 0 -and $reappliedFeaturesList.Count -eq 0) {
-            throw 'The selected backup does not contain any changes that can be restored.'
+            throw (Get-Translation -Key 'RestoreNoRestorableChangesError')
         }
 
         $backupFileText.Text = Split-Path $SelectedBackupFilePath -Leaf
@@ -306,7 +307,7 @@ function Show-RestoreBackupDialog {
         }
 
         $openDialog = New-Object Microsoft.Win32.OpenFileDialog
-        $openDialog.Title = 'Select Registry Backup File'
+        $openDialog.Title = Get-Translation -Key 'RestoreSelectRegistryFileDialogTitle'
         $openDialog.Filter = 'Registry backup (*.json)|*.json'
         $openDialog.DefaultExt = '.json'
         $openDialog.InitialDirectory = $script:RegistryBackupsPath
@@ -325,12 +326,12 @@ function Show-RestoreBackupDialog {
             }
         }
         catch {
-            Show-MessageBox -Owner $window -Title 'Invalid Backup File' -Message "The selected file could not be loaded:`n$($_.Exception.Message)" -Button 'OK' -Icon 'Error' | Out-Null
+            Show-MessageBox -Owner $window -Title (Get-Translation -Key 'RestoreInvalidBackupTitle') -Message (Get-Translation -Key 'RestoreInvalidBackupMessage' -FormatArgs @($_.Exception.Message)) -Button 'OK' -Icon 'Error' | Out-Null
             return
         }
 
         $state.SelectedRegistryBackup = $selectedBackup
-        $primaryActionBtn.Content = 'Restore from backup'
+        $primaryActionBtn.Content = Get-Translation -Key 'RestorePrimaryActionRestoreFromBackup'
     }
 
     $handleStartMenuPrimaryAction = {
@@ -339,7 +340,7 @@ function Show-RestoreBackupDialog {
 
         if ($useManualBackupFile -and [string]::IsNullOrWhiteSpace($state.SelectedStartMenuBackupFilePath)) {
             $openDialog = New-Object Microsoft.Win32.OpenFileDialog
-            $openDialog.Title = 'Select Start Menu Backup File'
+            $openDialog.Title = Get-Translation -Key 'RestoreSelectStartMenuFileDialogTitle'
             $openDialog.Filter = 'Start Menu backup (*.bak)|*.bak'
             $openDialog.InitialDirectory = "$env:LOCALAPPDATA\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState"
             $openDialog.DefaultExt = '.bak'
@@ -359,7 +360,7 @@ function Show-RestoreBackupDialog {
             $autoBackupPath = Get-StartMenuBackupPath -Scope $scopeInfo.Scope
             if ($null -eq $autoBackupPath) {
                 $scopeText = $scopeInfo.SummaryText
-                Show-MessageBox -Owner $window -Title 'No Backup Found' -Message "No Start Menu backup file was found for $scopeText. Uncheck 'Automatically find Start Menu backup' to select a backup file manually." -Button 'OK' -Icon 'Warning' | Out-Null
+                Show-MessageBox -Owner $window -Title (Get-Translation -Key 'RestoreNoBackupFoundTitle') -Message (Get-Translation -Key 'RestoreNoBackupFoundMessage' -FormatArgs @($scopeText)) -Button 'OK' -Icon 'Warning' | Out-Null
                 return
             }
             $state.SelectedStartMenuBackupFilePath = if ($scopeInfo.Scope -eq 'CurrentUser') { $autoBackupPath } else { $null }

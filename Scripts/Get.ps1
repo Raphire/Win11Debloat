@@ -6,6 +6,7 @@ param (
     [switch]$Silent,
     [switch]$Sysprep,
     [string]$LogPath,
+    [string]$Language,
     [string]$User,
     [Alias('NoRestartExplorer')]
     [switch]$SkipExplorerRestart,

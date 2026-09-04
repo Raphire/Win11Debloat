@@ -1,0 +1,744 @@
+{
+  "Features": {
+    "RemoveApps": {
+      "Label": "Remove the apps specified with the 'Apps' parameter",
+      "ApplyText": "Removing selected apps"
+    },
+    "Apps": {
+      "Label": "The selection of apps to remove, specified as a comma separated list. Use 'Default' (or omit) to use the default apps list",
+      "ApplyText": "Removing selected apps"
+    },
+    "RemoveGamingApps": {
+      "Label": "Remove the Xbox App and Xbox Gamebar",
+      "ApplyText": "Removing gaming related apps"
+    },
+    "RemoveHPApps": {
+      "Label": "Remove HP OEM applications",
+      "ApplyText": "Removing HP apps"
+    },
+    "CreateRestorePoint": {
+      "Label": "Create a system restore point",
+      "ApplyText": "Creating system restore point"
+    },
+    "DisableTelemetry": {
+      "Label": "Disable telemetry, tracking & targeted ads",
+      "ToolTip": "This setting disables telemetry, diagnostic data collection, activity history, app-launch tracking, targeted ads and more. It limits the data that is sent to Microsoft about your device and usage. If you are a Windows Insider, updates may be blocked until optional diagnostic data collection is turned back on.",
+      "ApplyText": "Disabling telemetry and diagnostic data collection",
+      "UndoLabel": "Enable telemetry, tracking & targeted ads",
+      "ApplyUndoText": "Enabling telemetry and diagnostic data collection"
+    },
+    "DisableSuggestions": {
+      "Label": "Disable tips, tricks & suggested content throughout Windows",
+      "ToolTip": "This setting removes many annoying distractions from Windows. This includes things like notifications, reminders and sync provider ads. It also prevents automated installation of suggested apps.",
+      "ApplyText": "Disabling tips, tricks, suggestions and ads throughout Windows",
+      "UndoLabel": "Enable tips, tricks & suggested content throughout Windows",
+      "ApplyUndoText": "Enabling tips, tricks, suggestions and ads throughout Windows"
+    },
+    "DisableNotifications": {
+      "Label": "Disable Windows Notifications (From apps and other senders)",
+      "ToolTip": "Disables native Windows notifications from apps and other senders, this includes notifications from apps like Discord, WhatsApp, Teams, and Slack.",
+      "ApplyText": "Disabling Windows notifications and reminders",
+      "UndoLabel": "Enable Windows notifications and reminders",
+      "ApplyUndoText": "Enabling Windows notifications and reminders"
+    },
+    "DisableLocationServices": {
+      "Label": "Disable Windows location services & app location access",
+      "ToolTip": "This will turn off Windows Location Services and deny apps access to your location. This feature uses policies, which will lock down certain settings.",
+      "ApplyText": "Disabling Windows location services and app location access",
+      "UndoLabel": "Enable Windows location services & app location access",
+      "ApplyUndoText": "Enabling Windows location services and app location access"
+    },
+    "DisableFindMyDevice": {
+      "Label": "Disable Find My Device location tracking",
+      "ToolTip": "This will turn off the 'Find My Device' feature, which periodically sends your device's location to Microsoft. This feature uses policies, which will lock down certain settings.",
+      "ApplyText": "Disabling Find My Device location tracking",
+      "UndoLabel": "Enable Find My Device location tracking",
+      "ApplyUndoText": "Enabling Find My Device location tracking"
+    },
+    "DisableLockscreenTips": {
+      "Label": "Disable tips & tricks on the lock screen",
+      "ToolTip": "This will turn off the lockscreen spotlight option and disable the tips, tricks and fun facts that appear on the lock screen.",
+      "ApplyText": "Disabling tips & tricks on the lock screen",
+      "UndoLabel": "Enable tips & tricks on the lock screen",
+      "ApplyUndoText": "Enabling tips & tricks on the lock screen"
+    },
+    "EnableDesktopSpotlight": {
+      "Label": "Enable Windows spotlight desktop background and shortcut",
+      "ToolTip": "Restores the Windows spotlight desktop background and the 'Learn about this picture' shortcut.",
+      "ApplyText": "Restoring the Windows spotlight desktop background and shortcut"
+    },
+    "DisableDesktopSpotlight": {
+      "Label": "Disable Windows spotlight desktop background",
+      "ToolTip": "Turns off Windows spotlight for the desktop background, which displays rotating images and may show tips and fun facts. This feature uses policies, which will lock down certain settings.",
+      "ApplyText": "Disabling the Windows spotlight desktop background",
+      "UndoLabel": "Enable Windows spotlight desktop background",
+      "ApplyUndoText": "Restoring the Windows spotlight desktop background and shortcut"
+    },
+    "HideDesktopSpotlightIcon": {
+      "Label": "Hide the 'Learn about this picture' desktop shortcut",
+      "ToolTip": "Hides the 'Learn about this picture' desktop shortcut while keeping Windows spotlight wallpaper rotation enabled. It does not disable Windows spotlight.",
+      "ApplyText": "Hiding the Windows spotlight 'Learn about this picture' desktop shortcut",
+      "UndoLabel": "Show the 'Learn about this picture' desktop shortcut",
+      "ApplyUndoText": "Showing the Windows spotlight 'Learn about this picture' desktop shortcut"
+    },
+    "DisableEdgeAds": {
+      "Label": "Disable ads, suggestions and newsfeed in Edge",
+      "ToolTip": "This will turn off various distractions from Microsoft Edge such as ads, suggestions and the MSN news feed. This feature uses policies, which will lock down certain settings.",
+      "ApplyText": "Disabling ads, suggestions and the MSN news feed in Microsoft Edge",
+      "UndoLabel": "Enable ads, suggestions and newsfeed in Edge",
+      "ApplyUndoText": "Enabling ads, suggestions and the MSN news feed in Microsoft Edge"
+    },
+    "DisableCopilot": {
+      "Label": "Disable Microsoft Copilot",
+      "ToolTip": "This will disable and uninstall Microsoft Copilot, Windows' built-in AI assistant.",
+      "ApplyText": "Disabling Microsoft Copilot",
+      "UndoLabel": "Enable Microsoft Copilot",
+      "ApplyUndoText": "Enabling Microsoft Copilot"
+    },
+    "DisableRecall": {
+      "Label": "Disable Windows Recall",
+      "ToolTip": "This will disable Windows Recall, an AI-powered feature that provides quick access to recently used files, apps and activities. This feature uses policies, which will lock down certain settings.",
+      "ApplyText": "Disabling Windows Recall",
+      "UndoLabel": "Enable Windows Recall",
+      "ApplyUndoText": "Enabling Windows Recall"
+    },
+    "DisableClickToDo": {
+      "Label": "Disable Click To Do, AI text & image analysis",
+      "ToolTip": "This will disable Click To Do, which provides AI-powered text and image analysis features in Windows. This feature uses policies, which will lock down certain settings.",
+      "ApplyText": "Disabling Click to Do",
+      "UndoLabel": "Enable Click To Do, AI text & image analysis",
+      "ApplyUndoText": "Enabling Click to Do"
+    },
+    "DisableAISvcAutoStart": {
+      "Label": "Prevent AI service from starting automatically",
+      "ToolTip": "This will set the WSAIFabricSvc service to manual startup, preventing the service from starting automatically with Windows.",
+      "ApplyText": "Preventing AI service from starting automatically",
+      "UndoLabel": "Allow AI service to start automatically",
+      "ApplyUndoText": "Allowing AI service to start automatically"
+    },
+    "DisableDVR": {
+      "Label": "Disable Xbox game/screen recording",
+      "ToolTip": "This will disable the Xbox game/screen recording features included with the Game Bar app. This feature uses policies, which will lock down certain settings.",
+      "ApplyText": "Disabling Xbox game/screen recording",
+      "UndoLabel": "Enable Xbox game/screen recording",
+      "ApplyUndoText": "Enabling Xbox game/screen recording"
+    },
+    "DisableGameBarIntegration": {
+      "Label": "Disable Game Bar integration",
+      "ToolTip": "This will disable the Game Bar integration with games and controllers. This stops annoying ms-gamebar popups when launching games or connecting a controller.",
+      "ApplyText": "Disabling Game Bar integration",
+      "UndoLabel": "Enable Game Bar integration",
+      "ApplyUndoText": "Enabling Game Bar integration"
+    },
+    "ClearStart": {
+      "Label": "Remove all pinned apps from the start menu for this user only",
+      "ApplyText": "Removing all pinned apps from the start menu"
+    },
+    "ClearStartAllUsers": {
+      "Label": "Remove all pinned apps from the start menu for all existing and new users",
+      "ApplyText": "Removing all pinned apps from the start menu for all users"
+    },
+    "ReplaceStart": {
+      "Label": "Replace the start menu layout for this user only with the provided template file",
+      "ApplyText": "Replacing the start menu"
+    },
+    "ReplaceStartAllUsers": {
+      "Label": "Replace the start menu layout for all existing and new users with the provided template file",
+      "ApplyText": "Replacing the start menu for all users"
+    },
+    "DisableStartRecommended": {
+      "Label": "Hide recommended section in the start menu",
+      "ToolTip": "This will hide the recommended section in the start menu, which shows recently added apps, recently opened files and app recommendations. This feature uses policies, which will lock down certain settings.",
+      "ApplyText": "Disabling the start menu recommended section",
+      "UndoLabel": "Show recommended section in the start menu",
+      "ApplyUndoText": "Enabling the start menu recommended section"
+    },
+    "DisableStartAllApps": {
+      "Label": "Hide 'All Apps' section in the start menu",
+      "ToolTip": "This will hide the 'All Apps' section in the start menu, which shows all installed apps. WARNING: Hiding this section may make it harder to find installed apps on your system. This feature uses policies, which will lock down certain settings.",
+      "ApplyText": "Disabling the 'All Apps' section in the start menu",
+      "UndoLabel": "Show 'All Apps' section in the start menu",
+      "ApplyUndoText": "Enabling the 'All Apps' section in the start menu"
+    },
+    "DisableStartPhoneLink": {
+      "Label": "Disable Phone Link integration in the start menu",
+      "ToolTip": "This will remove the Phone Link integration in the start menu when you have a mobile device linked to your PC.",
+      "ApplyText": "Disabling the Phone Link mobile devices integration in the start menu",
+      "UndoLabel": "Enable Phone Link integration in the start menu",
+      "ApplyUndoText": "Enabling the Phone Link mobile devices integration in the start menu"
+    },
+    "DisableBing": {
+      "Label": "Disable Bing web search & Copilot integration in search",
+      "ToolTip": "This will turn off Bing web search results and Copilot integration in the Windows search experience. This feature uses policies, which will lock down certain settings.",
+      "ApplyText": "Disabling Bing web search & Copilot integration in Windows search",
+      "UndoLabel": "Enable Bing web search & Copilot integration in search",
+      "ApplyUndoText": "Enabling Bing web search & Copilot integration in Windows search"
+    },
+    "DisableStoreSearchSuggestions": {
+      "Label": "Disable Microsoft Store app suggestions in search",
+      "ToolTip": "This will disable the Microsoft Store app suggestions in Windows search.",
+      "ApplyText": "Disabling Microsoft Store app suggestions in search",
+      "UndoLabel": "Enable Microsoft Store app suggestions in search",
+      "ApplyUndoText": "Enabling Microsoft Store app suggestions in search"
+    },
+    "DisableSettings365Ads": {
+      "Label": "Hide Microsoft 365 Copilot ads in Settings Home",
+      "ToolTip": "This will turn off the Microsoft 365 Copilot ads that appear in the Settings Home page.",
+      "ApplyText": "Disabling Microsoft 365 Copilot ads in Settings Home",
+      "UndoLabel": "Show Microsoft 365 Copilot ads in Settings Home",
+      "ApplyUndoText": "Enabling Microsoft 365 Copilot ads in Settings Home"
+    },
+    "DisableSettingsHome": {
+      "Label": "Hide Settings 'Home' page",
+      "ToolTip": "Removes the 'Home' page from the Settings app.",
+      "ApplyText": "Disabling the Settings Home page",
+      "UndoLabel": "Show Settings 'Home' page",
+      "ApplyUndoText": "Enabling the Settings Home page"
+    },
+    "DisableEdgeAI": {
+      "Label": "Disable AI features in Microsoft Edge",
+      "ToolTip": "This will turn off AI features in Microsoft Edge, such as the AI-powered sidebar and Copilot features. This feature uses policies, which will lock down certain settings.",
+      "ApplyText": "Disabling AI features in Microsoft Edge",
+      "UndoLabel": "Enable AI features in Microsoft Edge",
+      "ApplyUndoText": "Enabling AI features in Microsoft Edge"
+    },
+    "DisablePaintAI": {
+      "Label": "Disable AI features in Paint",
+      "ToolTip": "This will turn off AI features in Paint, such as the AI-powered image generation and editing tools. This feature uses policies, which will lock down certain settings.",
+      "ApplyText": "Disabling AI features in Paint",
+      "UndoLabel": "Enable AI features in Paint",
+      "ApplyUndoText": "Enabling AI features in Paint"
+    },
+    "DisableNotepadAI": {
+      "Label": "Disable AI features in Notepad",
+      "ToolTip": "This will turn off AI features in Notepad, such as the AI-powered writing suggestions. This feature uses policies, which will lock down certain settings.",
+      "ApplyText": "Disabling AI features in Notepad",
+      "UndoLabel": "Enable AI features in Notepad",
+      "ApplyUndoText": "Enabling AI features in Notepad"
+    },
+    "EnableDarkMode": {
+      "Label": "Enable dark theme for system and apps",
+      "ToolTip": "This will set the app and system theme to dark mode.",
+      "ApplyText": "Enabling dark mode for system and apps",
+      "UndoLabel": "Disable dark theme for system and apps",
+      "ApplyUndoText": "Disabling dark mode for system and apps"
+    },
+    "DisableDragTray": {
+      "Label": "Disable 'Drag Tray' for sharing & moving files",
+      "ToolTip": "The Drag Tray is a new feature for sharing & moving files in Windows 11, it appears at the top of the screen when dragging files.",
+      "ApplyText": "Disabling Drag Tray",
+      "UndoLabel": "Enable 'Drag Tray' for sharing & moving files",
+      "ApplyUndoText": "Enabling Drag Tray"
+    },
+    "RevertContextMenu": {
+      "Label": "Use classic Windows 10 context menu style",
+      "ToolTip": "This will restore the classic Windows 10 style context menu, which is normally hidden behind the 'Show more options' entry in the new Windows 11 context menu.",
+      "ApplyText": "Restoring the classic Windows 10 style context menu",
+      "UndoLabel": "Use Windows 11 context menu style",
+      "ApplyUndoText": "Restoring the Windows 11 style context menu"
+    },
+    "DisableMouseAcceleration": {
+      "Label": "Disable Enhance Pointer Precision (mouse acceleration)",
+      "ToolTip": "This will disable mouse acceleration which is enabled by default in Windows. This makes mouse movement more consistent and predictable.",
+      "ApplyText": "Turning off Enhanced Pointer Precision",
+      "UndoLabel": "Enable Enhance Pointer Precision (mouse acceleration)",
+      "ApplyUndoText": "Turning on Enhanced Pointer Precision"
+    },
+    "DisableStickyKeys": {
+      "Label": "Disable Sticky Keys keyboard shortcut (5x shift)",
+      "ToolTip": "This will prevent the Sticky Keys dialog from appearing when you press the Shift key 5 times in a row.",
+      "ApplyText": "Disabling the Sticky Keys keyboard shortcut",
+      "UndoLabel": "Enable Sticky Keys keyboard shortcut (5x shift)",
+      "ApplyUndoText": "Enabling the Sticky Keys keyboard shortcut"
+    },
+    "DisableWindowSnapping": {
+      "Label": "Disable window snapping",
+      "ToolTip": "This will turn off the ability to snap windows to the sides or corners of the screen.",
+      "ApplyText": "Disabling window snapping",
+      "UndoLabel": "Enable window snapping",
+      "ApplyUndoText": "Enabling window snapping"
+    },
+    "DisableSnapAssist": {
+      "Label": "Disable showing app suggestions when snapping windows",
+      "ToolTip": "This will turn off app suggestions when you snap windows to the sides or corners of the screen.",
+      "ApplyText": "Disabling the Snap Assist suggestions",
+      "UndoLabel": "Enable showing app suggestions when snapping windows",
+      "ApplyUndoText": "Enabling the Snap Assist suggestions"
+    },
+    "DisableSnapLayouts": {
+      "Label": "Hide snap layout flyout at top of screen and on maximize button",
+      "ToolTip": "This will turn off the snap layout flyout that appears when you hover over the maximize button or drag windows to the top of the screen.",
+      "ApplyText": "Hiding snap layouts when dragging windows to top of the screen and on maximize button",
+      "UndoLabel": "Show snap layout flyout at top of screen and on maximize button",
+      "ApplyUndoText": "Showing snap layouts when dragging windows to top of the screen and on maximize button"
+    },
+    "HideTabsInAltTab": {
+      "Label": "Hide tabs from apps when snapping or pressing Alt+Tab",
+      "ApplyText": "Disable showing tabs from apps when snapping or pressing Alt+Tab"
+    },
+    "Show3TabsInAltTab": {
+      "Label": "Show 3 tabs from apps when snapping or pressing Alt+Tab",
+      "ApplyText": "Enable showing 3 tabs from apps when snapping or pressing Alt+Tab"
+    },
+    "Show5TabsInAltTab": {
+      "Label": "Show 5 tabs from apps when snapping or pressing Alt+Tab",
+      "ApplyText": "Enable showing 5 tabs from apps when snapping or pressing Alt+Tab"
+    },
+    "Show20TabsInAltTab": {
+      "Label": "Show 20 tabs from apps when snapping or pressing Alt+Tab",
+      "ApplyText": "Enable showing 20 tabs from apps when snapping or pressing Alt+Tab"
+    },
+    "TaskbarAlignLeft": {
+      "Label": "Align taskbar to the left",
+      "ToolTip": "By default, Windows 11 has the taskbar buttons centered. Enabling this setting will move the taskbar buttons to the left, similar to previous versions of Windows.",
+      "ApplyText": "Aligning taskbar buttons to the left",
+      "UndoLabel": "Align taskbar to the center",
+      "ApplyUndoText": "Aligning taskbar buttons to the center"
+    },
+    "HideSearchTb": {
+      "Label": "Hide search icon from the taskbar",
+      "ApplyText": "Hiding the search icon from the taskbar",
+      "UndoLabel": "Show search box on the taskbar",
+      "ApplyUndoText": "Changing taskbar search to search box"
+    },
+    "ShowSearchIconTb": {
+      "Label": "Show search icon on the taskbar",
+      "ApplyText": "Changing taskbar search to icon only",
+      "UndoLabel": "Show search box on the taskbar",
+      "ApplyUndoText": "Changing taskbar search to search box"
+    },
+    "ShowSearchLabelTb": {
+      "Label": "Show search icon with label on the taskbar",
+      "ApplyText": "Changing taskbar search to icon with label",
+      "UndoLabel": "Show search box on the taskbar",
+      "ApplyUndoText": "Changing taskbar search to search box"
+    },
+    "ShowSearchBoxTb": {
+      "Label": "Show search box on the taskbar",
+      "ApplyText": "Changing taskbar search to search box"
+    },
+    "HideTaskview": {
+      "Label": "Hide 'Task view' button on the taskbar",
+      "ToolTip": "This will disable the 'Task view' button on the taskbar, which allows you to see all your open windows and virtual desktops.",
+      "ApplyText": "Hiding the taskview button from the taskbar",
+      "UndoLabel": "Show 'Task view' button on the taskbar",
+      "ApplyUndoText": "Showing the taskview button from the taskbar"
+    },
+    "DisableWidgets": {
+      "Label": "Disable widgets on the taskbar & lock screen",
+      "ToolTip": "This will disable the widgets features in Windows, including the widgets button on the taskbar and the widgets that can appear on the lock screen.",
+      "ApplyText": "Disabling widgets on the taskbar & lock screen"
+    },
+    "HideChat": {
+      "Label": "Hide Chat (meet now) icon on the taskbar",
+      "ToolTip": "This will disable the Chat (meet now) icon on the taskbar.",
+      "ApplyText": "Hiding the chat icon from the taskbar",
+      "UndoLabel": "Show Chat (meet now) icon on the taskbar",
+      "ApplyUndoText": "Showing the chat icon from the taskbar"
+    },
+    "DisableStorageSense": {
+      "Label": "Disable Storage Sense automatic disk cleanup",
+      "ToolTip": "This will disable Storage Sense, which automatically frees up disk space by deleting temporary files, emptying the recycle bin and cleaning up files in the Downloads folder.",
+      "ApplyText": "Disabling Storage Sense automatic disk cleanup",
+      "UndoLabel": "Enable Storage Sense automatic disk cleanup",
+      "ApplyUndoText": "Enabling Storage Sense automatic disk cleanup"
+    },
+    "DisableFastStartup": {
+      "Label": "Disable fast start-up",
+      "ToolTip": "Fast Start-up helps your PC start faster after shutdown by saving a system image to disk. Disabling Fast Start-up can help with certain issues, but may result in slightly longer boot times.",
+      "ApplyText": "Disabling Fast Start-up",
+      "UndoLabel": "Enable fast start-up",
+      "ApplyUndoText": "Enabling Fast Start-up"
+    },
+    "DisableBitlockerAutoEncryption": {
+      "Label": "Disable BitLocker automatic device encryption",
+      "ToolTip": "For devices that support it, Windows 11 automatically enables BitLocker device encryption. Disabling this will turn off automatic encryption of the device, but you can still manually enable BitLocker encryption if desired. Drives that are already encrypted with BitLocker will remain encrypted when this setting is applied.",
+      "ApplyText": "Disabling BitLocker automatic device encryption",
+      "UndoLabel": "Enable BitLocker automatic device encryption",
+      "ApplyUndoText": "Enabling BitLocker automatic device encryption"
+    },
+    "DisableModernStandbyNetworking": {
+      "Label": "Disable Modern Standby network connectivity",
+      "ToolTip": "By default, devices that support Modern Standby maintain network connectivity while in sleep mode. Disabling network connectivity during Modern Standby can help save battery life.",
+      "ApplyText": "Disabling network connectivity during Modern Standby",
+      "UndoLabel": "Enable Modern Standby network connectivity",
+      "ApplyUndoText": "Enabling network connectivity during Modern Standby"
+    },
+    "EnableEndTask": {
+      "Label": "Show 'End Task' option in taskbar context menu",
+      "ToolTip": "When enabled, adds an 'End Task' option to the right-click context menu for apps in the taskbar, allowing you to quickly force close apps.",
+      "ApplyText": "Enabling the 'End Task' option in the taskbar right click menu",
+      "UndoLabel": "Hide 'End Task' option in taskbar context menu",
+      "ApplyUndoText": "Disabling the 'End Task' option in the taskbar right click menu"
+    },
+    "EnableLastActiveClick": {
+      "Label": "Enable 'Last Active Click' behavior for taskbar apps",
+      "ToolTip": "When enabled, clicking on an app in the taskbar will switch to the last active window of that app, instead of only showing the thumbnail preview.",
+      "ApplyText": "Enabling the 'Last Active Click' behavior in the taskbar app area",
+      "UndoLabel": "Disable 'Last Active Click' behavior for taskbar apps",
+      "ApplyUndoText": "Disabling the 'Last Active Click' behavior in the taskbar app area"
+    },
+    "CombineTaskbarAlways": {
+      "Label": "Always combine taskbar buttons and hide labels for the main display",
+      "ApplyText": "Setting the taskbar on the main display to always combine buttons and hide labels"
+    },
+    "CombineMMTaskbarAlways": {
+      "Label": "Always combine taskbar buttons and hide labels for secondary displays",
+      "ApplyText": "Setting the taskbar on secondary displays to always combine buttons and hide labels"
+    },
+    "CombineTaskbarWhenFull": {
+      "Label": "Combine taskbar buttons and hide labels when taskbar is full for the main display",
+      "ApplyText": "Setting the taskbar on the main display to only combine buttons and hide labels when the taskbar is full",
+      "UndoLabel": "Always combine taskbar buttons and hide labels for the main display",
+      "ApplyUndoText": "Setting the taskbar on the main display to always combine buttons and hide labels"
+    },
+    "CombineMMTaskbarWhenFull": {
+      "Label": "Combine taskbar buttons and hide labels when taskbar is full for secondary displays",
+      "ApplyText": "Setting the taskbar on secondary displays to only combine buttons and hide labels when the taskbar is full",
+      "UndoLabel": "Always combine taskbar buttons and hide labels for secondary displays",
+      "ApplyUndoText": "Setting the taskbar on secondary displays to always combine buttons and hide labels"
+    },
+    "CombineTaskbarNever": {
+      "Label": "Never combine taskbar buttons and show labels for the main display",
+      "ApplyText": "Setting the taskbar on the main display to never combine buttons or hide labels",
+      "UndoLabel": "Always combine taskbar buttons and hide labels for the main display",
+      "ApplyUndoText": "Setting the taskbar on the main display to always combine buttons and hide labels"
+    },
+    "CombineMMTaskbarNever": {
+      "Label": "Never combine taskbar buttons and show labels for secondary displays",
+      "ApplyText": "Setting the taskbar on secondary displays to never combine buttons or hide labels",
+      "UndoLabel": "Always combine taskbar buttons and hide labels for secondary displays",
+      "ApplyUndoText": "Setting the taskbar on secondary displays to always combine buttons and hide labels"
+    },
+    "MMTaskbarModeAll": {
+      "Label": "Show app icons on all taskbars",
+      "ApplyText": "Setting the taskbar to show app icons on all taskbars"
+    },
+    "MMTaskbarModeMainActive": {
+      "Label": "Show app icons on main taskbar and on taskbar where the windows is open",
+      "ApplyText": "Setting the taskbar to show app icons on main taskbar and on taskbar where the windows is open",
+      "UndoLabel": "Show app icons on all taskbars",
+      "ApplyUndoText": "Setting the taskbar to show app icons on all taskbars"
+    },
+    "MMTaskbarModeActive": {
+      "Label": "Show app icons only on taskbar where the window is open",
+      "ApplyText": "Setting the taskbar to only show app icons on the taskbar where the window is open",
+      "UndoLabel": "Show app icons on all taskbars",
+      "ApplyUndoText": "Setting the taskbar to show app icons on all taskbars"
+    },
+    "ExplorerToHome": {
+      "Label": "Change the default location that File Explorer opens to 'Home'",
+      "ApplyText": "Changing the default location that File Explorer opens to, to 'Home'"
+    },
+    "ExplorerToThisPC": {
+      "Label": "Change the default location that File Explorer opens to 'This PC'",
+      "ApplyText": "Changing the default location that File Explorer opens to, to 'This PC'",
+      "UndoLabel": "Change the default location that File Explorer opens to 'Home'",
+      "ApplyUndoText": "Changing the default location that File Explorer opens to, to 'Home'"
+    },
+    "ExplorerToDownloads": {
+      "Label": "Change the default location that File Explorer opens to 'Downloads'",
+      "ApplyText": "Changing the default location that File Explorer opens to, to 'Downloads'",
+      "UndoLabel": "Change the default location that File Explorer opens to 'Home'",
+      "ApplyUndoText": "Changing the default location that File Explorer opens to, to 'Home'"
+    },
+    "ExplorerToOneDrive": {
+      "Label": "Change the default location that File Explorer opens to 'OneDrive'",
+      "ApplyText": "Changing the default location that File Explorer opens to, to 'OneDrive'",
+      "UndoLabel": "Change the default location that File Explorer opens to 'Home'",
+      "ApplyUndoText": "Changing the default location that File Explorer opens to, to 'Home'"
+    },
+    "ShowKnownFileExt": {
+      "Label": "Show file extensions for known file types",
+      "ToolTip": "This will show file extensions for known file types. By default, Windows hides file extensions for known file types which can lead to confusion and security risks.",
+      "ApplyText": "Enabling file extensions for known file types",
+      "UndoLabel": "Hide file extensions for known file types",
+      "ApplyUndoText": "Disabling file extensions for known file types"
+    },
+    "ShowHiddenFolders": {
+      "Label": "Show hidden files, folders and drives",
+      "ToolTip": "By default, Windows hides certain files, folders and drives to prevent accidental modification or deletion. Turn this on to show all files in File Explorer.",
+      "ApplyText": "Unhiding hidden files, folders and drives",
+      "UndoLabel": "Hide hidden files, folders and drives",
+      "ApplyUndoText": "Hiding hidden files, folders and drives"
+    },
+    "HideDupliDrive": {
+      "Label": "Hide duplicate removable drive entries",
+      "ToolTip": "By default, Windows shows removable drives both under 'This PC' and in the navigation pane with its own entry. Enable this setting to only show removable drives under 'This PC'.",
+      "ApplyText": "Hiding duplicate removable drive entries from the File Explorer navigation pane",
+      "UndoLabel": "Show duplicate removable drive entries",
+      "ApplyUndoText": "Showing duplicate removable drive entries from the File Explorer navigation pane"
+    },
+    "HideHome": {
+      "Label": "Hide 'Home' from navigation pane",
+      "ToolTip": "Hides the 'Home' section from the File Explorer navigation pane.",
+      "ApplyText": "Hiding the 'Home' section from the File Explorer navigation pane",
+      "UndoLabel": "Show 'Home' from navigation pane",
+      "ApplyUndoText": "Showing the 'Home' section from the File Explorer navigation pane"
+    },
+    "HideGallery": {
+      "Label": "Hide 'Gallery' from navigation pane",
+      "ToolTip": "Hides the 'Gallery' section from the File Explorer navigation pane.",
+      "ApplyText": "Hiding the 'Gallery' section from the File Explorer navigation pane",
+      "UndoLabel": "Show 'Gallery' from navigation pane",
+      "ApplyUndoText": "Showing the 'Gallery' section from the File Explorer navigation pane"
+    },
+    "DisableTransparency": {
+      "Label": "Disable transparency effects",
+      "ToolTip": "This will disable transparency effects on Windows and interfaces. Which can help improve performance on older hardware.",
+      "ApplyText": "Disabling transparency effects",
+      "UndoLabel": "Enable transparency effects",
+      "ApplyUndoText": "Enabling transparency effects"
+    },
+    "DisableAnimations": {
+      "Label": "Disable animations and visual effects",
+      "ToolTip": "This will disable animations and some visual effects in Windows, which can make the interface feel snappier, especially on older hardware.",
+      "ApplyText": "Disabling animations and visual effects",
+      "UndoLabel": "Enable animations and visual effects",
+      "ApplyUndoText": "Enabling animations and visual effects"
+    },
+    "DisableUpdateASAP": {
+      "Label": "Prevent getting updates as soon as they're available",
+      "ToolTip": "This will prevent your PC from being among the first to receive new non-security updates. Your PC will still receive these updates eventually.",
+      "ApplyText": "Preventing Windows from getting updates as soon as they are available",
+      "UndoLabel": "Allow getting updates as soon as they're available",
+      "ApplyUndoText": "Allowing Windows to get updates as soon as they are available"
+    },
+    "PreventUpdateAutoReboot": {
+      "Label": "Prevent automatic restarts after updates while signed in",
+      "ToolTip": "This will prevent your PC from automatically restarting after updates while any user is signed in.",
+      "ApplyText": "Preventing automatic restarts after updates while signed in",
+      "UndoLabel": "Allow automatic restarts after updates while signed in",
+      "ApplyUndoText": "Allowing automatic restarts after updates while signed in"
+    },
+    "DisableDeliveryOptimization": {
+      "Label": "Disable sharing downloaded updates with other PCs",
+      "ToolTip": "This will prevent your PC from sharing downloaded updates with other PCs on the local network or on the internet. This also prevents your PC from downloading updates from other PCs.",
+      "ApplyText": "Disabling sharing of downloaded updates with other PCs",
+      "UndoLabel": "Enable sharing downloaded updates with other PCs",
+      "ApplyUndoText": "Enabling sharing of downloaded updates with other PCs"
+    },
+    "DisableDeviceAutoAppDownload": {
+      "Label": "Prevent Windows from auto-installing device companion apps",
+      "ToolTip": "Stops Windows from silently installing device companion apps via Windows Update when you connect certain devices, like monitors from LG and Alienware. These devices will still work as expected, this only stops Windows Update from automatically installing additional apps without consent.",
+      "ApplyText": "Preventing automatic installation of device companion apps",
+      "UndoLabel": "Allow automatic installation of device companion apps",
+      "ApplyUndoText": "Allowing automatic installation of device companion apps"
+    },
+    "ForceRemoveEdge": {
+      "Label": "Forcefully uninstall Microsoft Edge. NOT RECOMMENDED!",
+      "ApplyText": "Forcefully uninstalling Microsoft Edge"
+    },
+    "HideOnedrive": {
+      "Label": "Hide 'OneDrive' from navigation pane",
+      "ToolTip": "Hides the 'OneDrive' section from the File Explorer navigation pane.",
+      "ApplyText": "Hiding the 'OneDrive' section from the File Explorer navigation pane",
+      "UndoLabel": "Show 'OneDrive' from navigation pane",
+      "ApplyUndoText": "Showing the 'OneDrive' section from the File Explorer navigation pane"
+    },
+    "Hide3dObjects": {
+      "Label": "Hide '3D objects' folder under 'This PC'",
+      "ToolTip": "Hides the '3D objects' folder from the File Explorer navigation pane.",
+      "ApplyText": "Hiding the '3D objects' folder from the File Explorer navigation pane",
+      "UndoLabel": "Show '3D objects' folder under 'This PC'",
+      "ApplyUndoText": "Showing the '3D objects' folder from the File Explorer navigation pane"
+    },
+    "HideMusic": {
+      "Label": "Hide 'Music' folder under 'This PC'",
+      "ToolTip": "Hides the 'Music' folder from the File Explorer navigation pane.",
+      "ApplyText": "Hiding the 'Music' folder from the File Explorer navigation pane",
+      "UndoLabel": "Show 'Music' folder under 'This PC'",
+      "ApplyUndoText": "Showing the 'Music' folder from the File Explorer navigation pane"
+    },
+    "AddFoldersToThisPC": {
+      "Label": "Add common folders back to 'This PC' page",
+      "ToolTip": "This setting will add common folders like Desktop, Documents, Downloads, Music, Pictures and Videos back to the 'This PC' page in File Explorer.",
+      "ApplyText": "Adding all common folders (Desktop, Downloads, etc.) back to 'This PC' in File Explorer",
+      "UndoLabel": "Remove common folders back to 'This PC' page",
+      "ApplyUndoText": "Removing all common folders (Desktop, Downloads, etc.) back to 'This PC' in File Explorer"
+    },
+    "HideIncludeInLibrary": {
+      "Label": "Hide 'Include in library' option in the context menu",
+      "ToolTip": "Hides the 'Include in library' option from the File Explorer context menu.",
+      "ApplyText": "Hiding 'Include in library' in the context menu",
+      "UndoLabel": "Show 'Include in library' option in the context menu",
+      "ApplyUndoText": "Showing 'Include in library' in the context menu"
+    },
+    "HideGiveAccessTo": {
+      "Label": "Hide 'Give access to' option in the context menu",
+      "ToolTip": "Hides the 'Give access to' option from the File Explorer context menu.",
+      "ApplyText": "Hiding 'Give access to' in the context menu",
+      "UndoLabel": "Show 'Give access to' option in the context menu",
+      "ApplyUndoText": "Showing 'Give access to' in the context menu"
+    },
+    "HideShare": {
+      "Label": "Hide 'Share' option in the context menu",
+      "ToolTip": "Hides the 'Share' option from the File Explorer context menu.",
+      "ApplyText": "Hiding 'Share' in the context menu",
+      "UndoLabel": "Show 'Share' option in the context menu",
+      "ApplyUndoText": "Showing 'Share' in the context menu"
+    },
+    "DisableBraveBloat": {
+      "Label": "Disable bloat in Brave browser (AI, Crypto, etc.)",
+      "ToolTip": "This will disable Brave's built-in AI features, Crypto wallet, News, Rewards, Talk and VPN. This feature uses policies, which will lock down certain settings.",
+      "ApplyText": "Disabling Brave AI, Crypto, News, Rewards, Talk and VPN in Brave browser",
+      "UndoLabel": "Enable Brave browser features (AI, Crypto, etc.)",
+      "ApplyUndoText": "Enabling Brave AI, Crypto, News, Rewards, Talk and VPN in Brave browser"
+    },
+    "EnableWindowsSandbox": {
+      "Label": "Enable Windows Sandbox",
+      "ToolTip": "Windows Sandbox is a lightweight desktop environment for safely running applications in isolation. Software installed inside the Windows Sandbox environment remains 'sandboxed' and runs separately from the host machine. Only supported on Windows 11 Pro, Workstation, and Enterprise editions.",
+      "ApplyText": "Enabling Windows Sandbox",
+      "UndoLabel": "Disable Windows Sandbox",
+      "ApplyUndoText": "Disabling Windows Sandbox"
+    },
+    "EnableWindowsSubsystemForLinux": {
+      "Label": "Enable Windows Subsystem for Linux",
+      "ToolTip": "Windows Subsystem for Linux allows you to run a Linux environment directly on Windows without the need for a virtual machine.",
+      "ApplyText": "Enabling Windows Subsystem for Linux",
+      "UndoLabel": "Disable Windows Subsystem for Linux",
+      "ApplyUndoText": "Disabling Windows Subsystem for Linux"
+    },
+    "ShowDriveLettersFirst": {
+      "Label": "Show drive letters before drive label",
+      "ToolTip": "This setting will show drive letters before the drive label in File Explorer.",
+      "ApplyText": "Showing drive letters before drive label",
+      "UndoLabel": "Show drive letters after drive label",
+      "ApplyUndoText": "Showing drive letters after drive label"
+    },
+    "ShowDriveLettersLast": {
+      "Label": "Show drive letters after drive label",
+      "ToolTip": "This setting will show drive letters after the drive label in File Explorer (Default Windows behavior).",
+      "ApplyText": "Showing drive letters after drive label"
+    },
+    "ShowNetworkDriveLettersFirst": {
+      "Label": "Show network drive letters before drive label",
+      "ToolTip": "This setting will show only network drive letters before the drive label in File Explorer.",
+      "ApplyText": "Showing network drive letters before drive label",
+      "UndoLabel": "Show drive letters after drive label",
+      "ApplyUndoText": "Showing drive letters after drive label"
+    },
+    "HideDriveLetters": {
+      "Label": "Hide all drive letters",
+      "ToolTip": "This setting will hide all drive letters from the File Explorer navigation pane and 'This PC'.",
+      "ApplyText": "Hiding all drive letters",
+      "UndoLabel": "Show drive letters after drive label",
+      "ApplyUndoText": "Showing drive letters after drive label"
+    },
+    "StartAllAppsCategory": {
+      "Label": "Show All Apps in Category view (Default)",
+      "ToolTip": "This will set the All Apps section in the start menu to show apps grouped by category.",
+      "ApplyText": "Setting All Apps view to Category"
+    },
+    "StartAllAppsGrid": {
+      "Label": "Show All Apps in Grid view",
+      "ToolTip": "This will set the All Apps section in the start menu to show apps in an alphabetical grid layout.",
+      "ApplyText": "Setting All Apps view to Grid",
+      "UndoLabel": "Show All Apps in Category view",
+      "ApplyUndoText": "Setting All Apps view to Category"
+    },
+    "StartAllAppsList": {
+      "Label": "Show All Apps in List view",
+      "ToolTip": "This will set the All Apps section in the start menu to show apps in an alphabetical list layout.",
+      "ApplyText": "Setting All Apps view to List",
+      "UndoLabel": "Show All Apps in Category view",
+      "ApplyUndoText": "Setting All Apps view to Category"
+    }
+  },
+  "UiGroups": {
+    "DesktopSpotlight": {
+      "Label": "Windows spotlight on the desktop",
+      "ToolTip": "This setting controls the Windows spotlight desktop background option. Keep the rotating wallpaper with or without the 'Learn about this picture' shortcut, or disable Windows spotlight entirely.",
+      "Values": {
+        "EnableDesktopSpotlight": "Show 'Learn about this picture' shortcut (Default)",
+        "HideDesktopSpotlightIcon": "Hide 'Learn about this picture' shortcut",
+        "DisableDesktopSpotlight": "Disable Windows spotlight desktop background"
+      }
+    },
+    "SearchIcon": {
+      "Label": "Taskbar search style",
+      "ToolTip": "This setting allows you to customize the appearance of the search box on the taskbar.",
+      "Values": {
+        "ShowSearchBoxTb": "Show search box (Default)",
+        "ShowSearchLabelTb": "Show search icon and label",
+        "ShowSearchIconTb": "Show search icon only",
+        "HideSearchTb": "Hide"
+      }
+    },
+    "MultiMon": {
+      "Label": "Show taskbar apps on",
+      "ToolTip": "This setting allows you to choose where taskbar app buttons are shown when using multiple monitors.",
+      "Values": {
+        "MMTaskbarModeAll": "All taskbars (Default)",
+        "MMTaskbarModeMainActive": "Main taskbar and taskbar where window is open",
+        "MMTaskbarModeActive": "Taskbar where window is open"
+      }
+    },
+    "CombineButtons": {
+      "Label": "Combine taskbar buttons on the main display",
+      "ToolTip": "This setting allows you to choose how taskbar buttons are combined on the main display.",
+      "Values": {
+        "CombineTaskbarAlways": "Always (Default)",
+        "CombineTaskbarWhenFull": "When taskbar is full",
+        "CombineTaskbarNever": "Never"
+      }
+    },
+    "CombineMMButtons": {
+      "Label": "Combine taskbar buttons on secondary displays",
+      "ToolTip": "This setting allows you to choose how taskbar buttons are combined on secondary displays.",
+      "Values": {
+        "CombineMMTaskbarAlways": "Always (Default)",
+        "CombineMMTaskbarWhenFull": "When taskbar is full",
+        "CombineMMTaskbarNever": "Never"
+      }
+    },
+    "ClearStart": {
+      "Label": "Remove pinned apps from the start menu",
+      "ToolTip": "This setting allows you to quickly remove all pinned apps from the start menu.",
+      "Values": {
+        "ClearStart": "Remove for the selected user",
+        "ClearStartAllUsers": "Remove for all users"
+      }
+    },
+    "ExplorerLocation": {
+      "Label": "Open File Explorer to",
+      "ToolTip": "This setting allows you to choose the default location that File Explorer opens to.",
+      "Values": {
+        "ExplorerToHome": "Home (Default)",
+        "ExplorerToThisPC": "This PC",
+        "ExplorerToDownloads": "Downloads",
+        "ExplorerToOneDrive": "OneDrive"
+      }
+    },
+    "DriveLetterPosition": {
+      "Label": "Drive letter position",
+      "ToolTip": "This setting allows you to choose where drive letters are shown in File Explorer.",
+      "Values": {
+        "ShowDriveLettersLast": "Show drive letters after drive label (Default)",
+        "ShowDriveLettersFirst": "Show drive letters before drive label",
+        "ShowNetworkDriveLettersFirst": "Show network drive letters before drive label",
+        "HideDriveLetters": "Hide all drive letters"
+      }
+    },
+    "ShowTabsInAltTab": {
+      "Label": "Show tabs from apps when snapping or pressing Alt+Tab",
+      "ToolTip": "This setting allows you to choose whether to show tabs from apps (such as Edge browser tabs) when snapping windows or pressing Alt+Tab.",
+      "Values": {
+        "HideTabsInAltTab": "Don't show tabs",
+        "Show3TabsInAltTab": "Show 3 most recent tabs (Default)",
+        "Show5TabsInAltTab": "Show 5 most recent tabs",
+        "Show20TabsInAltTab": "Show 20 most recent tabs"
+      }
+    },
+    "StartAllAppsView": {
+      "Label": "Start menu 'All Apps' view",
+      "ToolTip": "This setting allows you to change the layout of the 'All Apps' section in the start menu, or hide it entirely. Hiding this section may make it harder to find installed apps on your system. This feature uses policies, which will lock down certain settings.",
+      "Values": {
+        "DisableStartAllApps": "Hide",
+        "StartAllAppsCategory": "Category (Default)",
+        "StartAllAppsGrid": "Grid",
+        "StartAllAppsList": "List"
+      }
+    }
+  }
+}

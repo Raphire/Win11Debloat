@@ -44,20 +44,34 @@ function Show-RestoreBackupDialog {
         catch { }
     }
 
-    $schemaPath = $script:RestoreBackupWindowSchema
-    if (-not $schemaPath -or -not (Test-Path $schemaPath)) {
-        throw 'Restore backup window schema file could not be found.'
-    }
-
-    $xaml = Get-Content -Path $schemaPath -Raw
-    $xaml = ConvertTo-LocalizedXaml -Xaml $xaml
-
-    $reader = [System.Xml.XmlReader]::Create([System.IO.StringReader]::new($xaml))
     try {
-        $window = [System.Windows.Markup.XamlReader]::Load($reader)
+        $schemaPath = $script:RestoreBackupWindowSchema
+        if (-not $schemaPath -or -not (Test-Path $schemaPath)) {
+            throw 'Restore backup window schema file could not be found.'
+        }
+
+        $xaml = Get-Content -Path $schemaPath -Raw
+        $xaml = ConvertTo-LocalizedXaml -Xaml $xaml
+
+        $reader = [System.Xml.XmlReader]::Create([System.IO.StringReader]::new($xaml))
+        try {
+            $window = [System.Windows.Markup.XamlReader]::Load($reader)
+        }
+        finally {
+            $reader.Close()
+        }
     }
-    finally {
-        $reader.Close()
+    catch {
+        # The overlay was already made visible above. Nothing past this point runs to hide it
+        # again (that only happens once ShowDialog() finishes), so a failure loading the schema
+        # or building the window would otherwise leave the owner window permanently dimmed.
+        if ($overlay -and -not $overlayWasAlreadyVisible) {
+            try {
+                $ownerWindow.Dispatcher.Invoke([action]{ $overlay.Visibility = 'Collapsed' })
+            }
+            catch { }
+        }
+        throw
     }
 
     if ($ownerWindow) {

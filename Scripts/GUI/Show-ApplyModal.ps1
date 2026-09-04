@@ -76,7 +76,7 @@ function Show-ApplyModal {
     $script:ApplyInProgressPanel.Visibility = 'Visible'
     $script:ApplyCompletionPanel.Visibility = 'Collapsed'
     $script:ApplyStepNameEl.Text = Get-Translation -Key 'ApplyPreparing'
-    $script:ApplyStepCounterEl.Text = Get-Translation -Key 'ApplyPreparing'
+    $script:ApplyStepCounterEl.Text = Get-Translation -Key 'ApplyStepCounter' -FormatArgs @(0, 0)
     $script:ApplyProgressBarEl.Value = 0
     $script:ApplyModalInErrorState = $false
     

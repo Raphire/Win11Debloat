@@ -779,6 +779,18 @@
       "RegistryUndoKey": "Enable_Edge_AI_Features.reg",
       "MinVersion": 22621,
       "MaxVersion": null
+    },{
+      "FeatureId": "DisableChromeAI",
+      "Label": "Disable AI features in Google Chrome",
+      "ToolTip": "This will turn off AI features in Google Chrome, such as AI Mode integrations in the address bar and New Tab page search box. This feature uses policies, which will lock down certain settings.",
+      "Category": "AI",
+      "RegistryKey": "Disable_Chrome_AI_Features.reg",
+      "ApplyText": "Disabling AI features in Google Chrome",
+      "UndoLabel": "Enable AI features in Google Chrome",
+      "ApplyUndoText": "Enabling AI features in Google Chrome",
+      "RegistryUndoKey": "Enable_Chrome_AI_Features.reg",
+      "MinVersion": 22621,
+      "MaxVersion": null
     },
     {
       "FeatureId": "DisablePaintAI",

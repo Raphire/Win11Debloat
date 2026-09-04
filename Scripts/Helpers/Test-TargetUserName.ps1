@@ -1,3 +1,15 @@
+<#
+    .SYNOPSIS
+        Validates a username for the "apply changes to another user" deployment target.
+
+    .DESCRIPTION
+        Rejects an empty name, the current user's own name (that's the "Current User" option
+        instead), and a name with no matching local profile, in that order.
+
+    .OUTPUTS
+        PSCustomObject with IsValid (bool), UserName (the trimmed input), and Message (a
+        translated string describing the validation result, success or failure alike).
+#>
 function Test-TargetUserName {
     param(
         [AllowNull()]

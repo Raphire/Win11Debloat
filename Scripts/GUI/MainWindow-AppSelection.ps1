@@ -142,6 +142,15 @@ function Update-AppsPanelSort {
     }
 }
 
+<#
+    .SYNOPSIS
+        Updates the "N apps selected" status text and shows or hides the app-removal scope section.
+
+    .DESCRIPTION
+        The scope section only makes sense once at least one app is selected, so it's hidden
+        entirely at zero and its description text is refreshed via Update-AppRemovalScopeDescription
+        whenever the selection count changes.
+#>
 function Update-AppSelectionStatus {
     param(
         [System.Windows.Controls.Panel]$AppsPanel,

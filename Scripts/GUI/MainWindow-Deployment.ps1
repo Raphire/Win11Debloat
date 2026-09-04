@@ -96,6 +96,17 @@ function Get-PendingTweakActions {
     return @($actions.ToArray())
 }
 
+<#
+    .SYNOPSIS
+        Builds the plain-text list of pending changes: apps to remove and tweaks to apply or undo.
+
+    .PARAMETER ShowCurrentlyAppliedTweaksCheckBox
+        When checked, pending tweak actions are computed against the system's live applied
+        state instead of the controls' initial values.
+
+    .OUTPUTS
+        System.String[]. One line per pending change, or an empty array if nothing is selected.
+#>
 function New-Overview {
     param(
         [System.Windows.Window]$Window,
@@ -129,6 +140,11 @@ function New-Overview {
     return $changesList
 }
 
+<#
+    .SYNOPSIS
+        Shows the pending-changes list from New-Overview in a message box, or a
+        "no changes selected" message when there's nothing to show.
+#>
 function Invoke-ShowChangesOverview {
     param(
         [System.Windows.Window]$Window,
@@ -437,6 +453,14 @@ function Update-AppliedTweaksUserModeState {
     }
 }
 
+<#
+    .SYNOPSIS
+        Updates the deployment-target description text to match the selected user option.
+
+    .DESCRIPTION
+        Falls back to a generic description (current user, other user, or Sysprep default
+        profile) when a username can't be resolved yet, and to a specific one once it can.
+#>
 function Update-UserSelectionDescription {
     param(
         [System.Windows.Window]$Window,

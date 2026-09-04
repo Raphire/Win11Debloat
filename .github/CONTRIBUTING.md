@@ -85,7 +85,7 @@ PowerShell 5.1 for pull requests and pushes to `master`.
 
 ## Architecture & Design
 
-Win11Debloat is a PowerShell script with a WPF (Windows Presentation Foundation) based GUI and command-line interface. The CLI provides an alternative to the GUI, allowing most features to be invoked directly through command-line parameters. The project uses a data-driven architecture, separating feature and application definitions from the logic that applies them.
+Win11Debloat is a PowerShell script with a WPF (Windows Presentation Foundation)-based GUI and command-line interface. The CLI provides an alternative to the GUI, allowing most features to be invoked directly through command-line parameters. The project uses a data-driven architecture, separating feature and application definitions from the logic that applies them.
 
 ### Entry Points
 

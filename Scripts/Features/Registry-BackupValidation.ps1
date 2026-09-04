@@ -1,3 +1,11 @@
+<#
+    .SYNOPSIS
+        Extracts and deduplicates the SelectedFeatures list from a backup, validating each entry.
+
+    .DESCRIPTION
+        Returns an empty SelectedFeatures array with an error when the property is missing
+        entirely, and flags (without stopping) any entry that isn't a non-empty string.
+#>
 function Get-NormalizedSelectedFeatureIdsFromBackup {
     param(
         [Parameter(Mandatory)]
@@ -39,6 +47,14 @@ function Get-NormalizedSelectedFeatureIdsFromBackup {
     }
 }
 
+<#
+    .SYNOPSIS
+        Extracts and deduplicates the SelectedUndoFeatures list from a backup, validating each entry.
+
+    .DESCRIPTION
+        Unlike SelectedFeatures, this property is optional: a missing property returns an
+        empty array with no error, since not every backup has undone features to restore.
+#>
 function Get-NormalizedSelectedUndoFeatureIdsFromBackup {
     param(
         [Parameter(Mandatory)]
@@ -80,6 +96,15 @@ function Get-NormalizedSelectedUndoFeatureIdsFromBackup {
     }
 }
 
+<#
+    .SYNOPSIS
+        Normalizes a raw registry key snapshot into a consistent shape, recursing into sub-keys.
+
+    .DESCRIPTION
+        Fills in defaults for optional properties (Exists, Values, SubKeys) so downstream
+        validation can read a predictable shape regardless of what the backup file omitted.
+        Throws if Path is missing, since every snapshot must be anchored to a real key.
+#>
 function Normalize-RegistryKeySnapshot {
     param(
         [Parameter(Mandatory)]
@@ -127,6 +152,16 @@ function Normalize-RegistryKeySnapshot {
     }
 }
 
+<#
+    .SYNOPSIS
+        Validates that a backup's registry snapshots only contain paths and values the
+        selected (and undo) features are actually allowed to touch.
+
+    .DESCRIPTION
+        Builds an allow-list from the capture plans of the selected features, then checks
+        every snapshot against it. Returns an array of translated error strings; an empty
+        array means the backup is valid.
+#>
 function Test-RegistryBackupMatchesSelectedFeatures {
     param(
         [Parameter(Mandatory)]
@@ -171,6 +206,15 @@ function Test-RegistryBackupMatchesSelectedFeatures {
     return $errors.ToArray()
 }
 
+<#
+    .SYNOPSIS
+        Resolves selected feature IDs to their catalog entries, keeping only the ones with a
+        registry-backed apply or undo key relevant to the requested direction.
+
+    .DESCRIPTION
+        Appends a translated error to the caller-supplied Errors list for any feature ID that
+        isn't in the current catalog, rather than failing the whole validation outright.
+#>
 function Get-SelectedRegistryFeaturesForBackupValidation {
     param(
         [Parameter(Mandatory)]

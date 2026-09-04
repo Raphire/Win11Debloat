@@ -1,6 +1,15 @@
 <#
     .SYNOPSIS
         Shows a themed Windows 11-style message box.
+
+    .DESCRIPTION
+        Falls back to a plain native MessageBox if the themed dialog's own schema fails to
+        localize (a bad %LANG:% marker in MessageBox.xaml, not a missing app-wide translation),
+        so a broken schema can't take down every error dialog in the app at once.
+
+    .OUTPUTS
+        System.String. One of 'OK', 'Cancel', 'Yes', or 'No', matching the pressed button
+        in both the themed dialog and the native fallback.
 #>
 function Show-MessageBox {
     param (

@@ -269,6 +269,11 @@ function Get-AvailableImportExportCategories {
     return $availableCategories
 }
 
+<#
+    .SYNOPSIS
+        Summarizes a deployment settings array into the short description shown under the
+        "Deployment Settings" checkbox in the import/export category picker.
+#>
 function Get-DeploymentCategoryDetailString {
     param (
         [array]$DeploymentSettings
@@ -312,6 +317,11 @@ function Get-DeploymentCategoryDetailString {
     return Get-Translation -Key 'ImportExportDefaultDeploymentSettings'
 }
 
+<#
+    .SYNOPSIS
+        Builds the per-category description text shown under each checkbox in the
+        import/export category picker.
+#>
 function Build-CategoryDetails {
     param (
         [int]$AppCount = 0,

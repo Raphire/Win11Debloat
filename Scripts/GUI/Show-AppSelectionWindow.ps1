@@ -24,6 +24,7 @@ function Show-AppSelectionWindow {
 
     # Load XAML from file
     $xaml = Get-Content -Path $script:AppSelectionSchema -Raw
+    $xaml = ConvertTo-LocalizedXaml -Xaml $xaml
     $reader = [System.Xml.XmlReader]::Create([System.IO.StringReader]::new($xaml))
     try {
         $window = [System.Windows.Markup.XamlReader]::Load($reader)
@@ -72,7 +73,7 @@ function Show-AppSelectionWindow {
             $listOfApps = Get-WingetInstalledApps -TimeOut 10 -NonBlocking
             if ($null -eq $listOfApps) {
                 # Show error that the script was unable to get list of apps from WinGet
-                Show-MessageBox -Message 'Unable to load list of installed apps via WinGet.' -Title 'Error' -Button 'OK' -Icon 'Error' -Owner $window | Out-Null
+                Show-MessageBox -Message (Get-Translation -Key 'AppSelectionWinGetLoadFailedMessage') -Title (Get-Translation -Key 'ErrorTitle') -Button 'OK' -Icon 'Error' -Owner $window | Out-Null
                 $onlyInstalledBox.IsChecked = $false
             }
         }

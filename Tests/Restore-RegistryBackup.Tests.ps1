@@ -1,5 +1,7 @@
 BeforeAll {
     function Test-RunningAsSystem { $false }
+    . (Join-Path $PSScriptRoot '..\Scripts\FileIO\Import-JsonFile.ps1')
+    . (Join-Path $PSScriptRoot '..\Scripts\FileIO\Import-LanguageFile.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\Helpers\Registry-PathHelpers.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\Helpers\Get-FriendlyRegistryBackupTarget.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\Helpers\Resolve-UserProfilePath.ps1')
@@ -8,6 +10,8 @@ BeforeAll {
     . (Join-Path $PSScriptRoot '..\Scripts\Features\Restore-RegistryApplyState.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\Features\Restore-RegistryBackup.ps1')
     $script:JsonFixturePath = Join-Path $PSScriptRoot 'TestData\JsonFileLoading'
+    $script:LanguagesPath = Join-Path $PSScriptRoot '..\Config\Languages'
+    $script:Lang = Import-LanguageFile -LanguageCode 'en-US'
 }
 
 Describe 'Import-RegistryBackup' {

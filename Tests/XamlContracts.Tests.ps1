@@ -54,9 +54,9 @@ Describe 'XAML UI contracts' {
         $applyWindow = Get-Content -LiteralPath (Join-Path $script:SchemaPath 'ApplyChangesWindow.xaml') -Raw
         $appWindow = Get-Content -LiteralPath (Join-Path $script:SchemaPath 'AppSelectionWindow.xaml') -Raw
 
-        $applyWindow | Should -Match 'AutomationProperties.Name="Cancel"'
-        $applyWindow | Should -Match 'AutomationProperties.Name="Close"'
-        $appWindow | Should -Match 'AutomationProperties.Name="Confirm"'
-        $appWindow | Should -Match 'AutomationProperties.Name="Cancel"'
+        $applyWindow | Should -Match 'AutomationProperties.Name="%LANG:ApplyCancelTooltip%"'
+        $applyWindow | Should -Match 'AutomationProperties.Name="%LANG:TitleBarClose%"'
+        $appWindow | Should -Match 'AutomationProperties.Name="%LANG:AppSelectionWindowConfirm%"'
+        $appWindow | Should -Match 'AutomationProperties.Name="%LANG:AppSelectionWindowCancel%"'
     }
 }

@@ -85,7 +85,7 @@ PowerShell 5.1 for pull requests and pushes to `master`.
 
 ## Architecture & Design
 
-Win11Debloat is a PowerShell script with a WPF (Windows Presentation Foundation) based GUI and command-line interface. The CLI provides an alternative to the GUI, allowing most features to be invoked directly through command-line parameters. The project uses a data-driven architecture, separating feature and application definitions from the logic that applies them.
+Win11Debloat is a PowerShell script with a WPF (Windows Presentation Foundation)-based GUI and command-line interface. The CLI provides an alternative to the GUI, allowing most features to be invoked directly through command-line parameters. The project uses a data-driven architecture, separating feature and application definitions from the logic that applies them.
 
 ### Entry Points
 
@@ -136,7 +136,8 @@ Win11Debloat/
 │   ├── Apps.json                # List of supported apps for removal
 │   ├── DefaultSettings.json     # Default configuration preset
 │   ├── Features.json            # All features with metadata
-│   └── LastUsedSettings.json    # Last used configuration (generated during use)
+│   ├── LastUsedSettings.json    # Last used configuration (generated during use)
+│   └── Languages/               # GUI translation files, one folder per culture code (e.g. en-US/)
 ├── Regfiles/                    # Registry files for all features
 │   ├── Undo/                    # Registry files for reverting features
 │   └── Sysprep/                 # Registry files for Sysprep mode
@@ -194,6 +195,8 @@ Avoid these common mistakes when contributing:
 7. **Missing Category**: Features without a `Category` field (set to `null`) won't appear in the GUI. This is intentional for command-line-only features, make sure this is what you want before submitting.
 
 8. **Hardcoded Paths**: When writing PowerShell logic, use `$PSScriptRoot` and script variables instead of hardcoded paths. This ensures the script works regardless of where it's installed.
+
+9. **Missing Translation Entry**: A new Feature, Category, or UI Group needs a matching entry in `Config/Languages/en-US/` (see [Localizing UI Text](#localizing-ui-text)). Without one, the GUI silently falls back to displaying the raw `FeatureId`/`CategoryId`/`GroupId` instead of your `Label`/`ToolTip` text.
 
 ## Implementing New Features
 
@@ -331,7 +334,11 @@ Add a corresponding parameter to both `Win11Debloat.ps1` AND `Scripts/Get.ps1`, 
 [switch]$YourFeatureId,
 ```
 
-#### 4. Add or Update Tests
+#### 4. Add the English Translation Entry
+
+Add a matching entry for your `FeatureId` to `Config/Languages/en-US/Features.json` (see [Localizing UI Text](#localizing-ui-text)) so the GUI shows your `Label`/`ToolTip`/etc. instead of the raw `FeatureId`.
+
+#### 5. Add or Update Tests
 
 Add or update Pester coverage for the new behavior, then run the full suite.
 
@@ -406,6 +413,8 @@ To add a new category for organizing features:
   }
   ```
 
+  `CategoryId` is the stable identifier used for tweak presets, app-removal scope, and localization lookups. `Name` stays as the English display fallback. Skip `CategoryId` and the category falls back to using its `Name` as the ID, which breaks translation lookups, so always set one.
+
 > [!TIP]
 > Use [Segoe Fluent Icon Assets](https://learn.microsoft.com/en-us/windows/apps/design/iconography/segoe-fluent-icons-font) for icon codes.
 
@@ -437,6 +446,35 @@ UI Groups allow features to be grouped together in the GUI with a combobox
 
 >[!IMPORTANT]
 > Define the referenced features before adding a group. Each `FeatureId` in a group's `Values` list must already be defined in the `"Features"` array in `Features.json`. Features referenced by a group are shown through that group rather than as standalone controls.
+
+Add a matching entry for your `GroupId` to `Config/Languages/en-US/Features.json` (see [Localizing UI Text](#localizing-ui-text)) so the GUI shows your `Label`/`ToolTip`/option text instead of the raw `GroupId`.
+
+### Localizing UI Text
+
+GUI text lives in `Config/Languages/en-US/`, not hardcoded in `Schemas/*.xaml` or `Scripts/GUI/*.ps1`. Adding or changing a Feature, Category, or UI Group means updating the matching English entry, or the GUI falls back to showing the raw ID.
+
+- `Config/Languages/en-US/Features.json`, under `"Features"`, keyed by `FeatureId`. Add `Label`, `ToolTip`, `ApplyText`, `UndoLabel`, and `ApplyUndoText` to match whatever fields you set in `Config/Features.json`.
+- `Config/Languages/en-US/Features.json`, under `"UiGroups"`, keyed by `GroupId`. Add `Label`, `ToolTip`, and a `Values` map of `FeatureId: "Option label"` matching the group's `Values` array.
+- `Config/Languages/en-US/Categories.json`, keyed by `CategoryId`. Add a `Label` for every new category.
+- `Config/Languages/en-US/Chrome.json`, a flat key/value map for static GUI chrome: buttons, dialog titles, tooltips not tied to a specific Feature/Category/UiGroup. Add a key here only for new static text, and reference it from XAML with a `%LANG:YourKey%` marker or from PowerShell with `Get-Translation -Key 'YourKey'`.
+
+Check for an existing `Chrome.json` key with the same English text before adding a new one. Two keys holding identical strings is duplication waiting to drift.
+
+Not everything needs a translation key. A `throw` guarding against a caller passing the wrong argument type, or any other error that signals a bug in the code rather than something the user did, stays as a plain English string. No user will ever see it.
+
+A new language is its own pull request, not something bundled with unrelated changes.
+
+### Adding a New Language
+
+1. **Create the language folder**: copy `Config/Languages/en-US/` to `Config/Languages/<culture-code>/`, using the .NET culture code the GUI should match (`nl-NL`, `es-ES`). This is also the folder matched against the user's Windows display language: exact match first, then a language-only prefix match (`nl-BE` falls back to `nl-NL` if that's the only Dutch folder present), then `en-US` if nothing matches.
+
+2. **Translate the three files** (`Chrome.json`, `Features.json`, `Categories.json`), keeping every key name exactly as it is in `en-US`. Only the values change. Leave a key untranslated and the GUI shows the `en-US` text for it instead of a blank or a crash, so a translation can land incrementally.
+
+3. **Add the language's plural rule**. Strings using the `_one`/`_other` suffix convention (see `AppsSelectedCount_one` in `en-US/Chrome.json`) need a matching `case` in `Get-PluralCategory` (`Scripts/FileIO/Import-LanguageFile.ps1`), keyed by language prefix (`'nl'`). Several languages share English's rule, singular at exactly 1, plural otherwise, and can reuse it as-is. Others need more categories: CLDR defines `zero`/`one`/`two`/`few`/`many`/`other`. Match your key suffixes to whatever categories your language's rule actually uses.
+
+4. **Check your coverage**. Dot-source `Scripts/FileIO/Import-LanguageFile.ps1` and run `Test-LanguageKeyCoverage -LanguageCode '<culture-code>'` to diff your key set against `en-US`. Check `ResolvedLanguageCode` matches the folder you meant to test, `MissingKeys` is the same fallback-eligible gap from step 2, fine to leave for later, and `ExtraKeys` usually means a typo'd key name that nothing will ever look up.
+
+5. **Test it**. Run `.\Win11Debloat.ps1 -Language '<culture-code>'` to launch the GUI in that language regardless of your Windows display language, and click through every tab, dialog, and tooltip.
 
 ## Submitting a Pull Request
 

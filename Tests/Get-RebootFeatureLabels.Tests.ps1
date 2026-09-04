@@ -1,6 +1,29 @@
 BeforeAll {
     $rebootFeatureLabelsScriptPath = Join-Path $PSScriptRoot '..\Scripts\Helpers\Get-RebootFeatureLabels.ps1'
     . $rebootFeatureLabelsScriptPath
+    . (Join-Path $PSScriptRoot '..\Scripts\FileIO\Import-LanguageFile.ps1')
+
+    # Builds a $script:Lang fixture whose Features section mirrors $script:Features exactly,
+    # so Get-Translation resolves the same Label/UndoLabel text the test's fake FeatureIds expect.
+    function Sync-TestLangFeatures {
+        $langFeatures = @{}
+        foreach ($featureId in $script:Features.Keys) {
+            $feature = $script:Features[$featureId]
+            $entry = @{}
+            foreach ($field in 'Label', 'UndoLabel') {
+                if ($null -ne $feature.$field) { $entry[$field] = [string]$feature.$field }
+            }
+            $langFeatures[$featureId] = [PSCustomObject]$entry
+        }
+
+        $script:Lang = [PSCustomObject]@{
+            LanguageCode = 'en-US'
+            Chrome       = [PSCustomObject]@{}
+            Features     = [PSCustomObject]$langFeatures
+            UiGroups     = [PSCustomObject]@{}
+            Categories   = [PSCustomObject]@{}
+        }
+    }
 }
 
 Describe 'Get-RebootFeatureLabels' {
@@ -18,6 +41,7 @@ Describe 'Get-RebootFeatureLabels' {
             UndoFeature = [PSCustomObject]@{ RequiresReboot = $true; Label = 'Undoable feature'; UndoLabel = 'Undo feature' }
             NoRebootFeature = [PSCustomObject]@{ RequiresReboot = $false; Label = 'No reboot'; UndoLabel = 'Undo no reboot' }
         }
+        Sync-TestLangFeatures
     }
 
     It 'includes reboot-required selections once and uses undo labels for undo operations' {
@@ -43,6 +67,7 @@ Describe 'Get-RebootFeatureLabels' {
         $script:Params = @{}
         $script:UndoParams = @{ ApplyFeature = $true }
         $script:Features.ApplyFeature.UndoLabel = $null
+        Sync-TestLangFeatures
 
         $result = @(Get-RebootFeatureLabels)
 
@@ -57,6 +82,7 @@ Describe 'Get-RebootFeatureLabels' {
             RequiresReboot = $true
             Label = 'Feature without undo label'
         }
+        Sync-TestLangFeatures
 
         $result = @(Get-RebootFeatureLabels)
 
@@ -87,6 +113,7 @@ Describe 'Get-RebootFeatureLabels' {
             Label = 'Shared label'
             UndoLabel = 'Undo second shared label'
         }
+        Sync-TestLangFeatures
 
         $result = @(Get-RebootFeatureLabels)
 
@@ -110,6 +137,7 @@ Describe 'Get-RebootFeatureLabels' {
             Label = 'Numeric reboot'
             UndoLabel = 'Undo numeric reboot'
         }
+        Sync-TestLangFeatures
 
         $result = @(Get-RebootFeatureLabels)
 
@@ -130,6 +158,7 @@ Describe 'Get-RebootFeatureLabels' {
             Label = ' '
             UndoLabel = $null
         }
+        Sync-TestLangFeatures
 
         @(Get-RebootFeatureLabels).Count | Should -Be 0
     }

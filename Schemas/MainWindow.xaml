@@ -1,7 +1,7 @@
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
-        Title="Win11Debloat" 
+        Title="%LANG:TitleBarAppName%"
         MinWidth="860" MinHeight="640"
         ResizeMode="CanResize" 
         SnapsToDevicePixels="True"
@@ -346,7 +346,7 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" 
-                                   Text="Win11Debloat" 
+                                   Text="%LANG:TitleBarAppName%"
                                    VerticalAlignment="Center" 
                                    Margin="12,0,0,0"
                                    FontSize="12">
@@ -362,8 +362,8 @@
                             </TextBlock.Style>
                         </TextBlock>
                         <StackPanel Grid.Column="1" Orientation="Horizontal">
-                            <Button x:Name="KofiBtn" shell:WindowChrome.IsHitTestVisibleInChrome="True" Content="&#xEB52;" FontSize="15" Style="{StaticResource TitlebarButton}" ToolTip="Support the creator" AutomationProperties.Name="Support the creator"/>
-                            <Button x:Name="MenuBtn" shell:WindowChrome.IsHitTestVisibleInChrome="True" Content="&#xE700;" FontSize="15" Style="{StaticResource TitlebarButton}" ToolTip="Options" AutomationProperties.Name="Options">
+                            <Button x:Name="KofiBtn" shell:WindowChrome.IsHitTestVisibleInChrome="True" Content="&#xEB52;" FontSize="15" Style="{StaticResource TitlebarButton}" ToolTip="%LANG:TitleBarSupportCreator%" AutomationProperties.Name="%LANG:TitleBarSupportCreator%"/>
+                            <Button x:Name="MenuBtn" shell:WindowChrome.IsHitTestVisibleInChrome="True" Content="&#xE700;" FontSize="15" Style="{StaticResource TitlebarButton}" ToolTip="%LANG:TitleBarOptions%" AutomationProperties.Name="%LANG:TitleBarOptions%">
                                 <Button.ContextMenu>
                                     <ContextMenu x:Name="MainMenu">
                                         <ContextMenu.Resources>
@@ -378,38 +378,38 @@
                                                 </Setter>
                                             </Style>
                                         </ContextMenu.Resources>
-                                        <MenuItem x:Name="ImportConfigBtn" Header="Import config" AutomationProperties.Name="Import configuration">
+                                        <MenuItem x:Name="ImportConfigBtn" Header="%LANG:MenuImportConfig%" AutomationProperties.Name="%LANG:MenuImportConfigTooltip%">
                                             <MenuItem.Icon>
                                                 <TextBlock Text="&#xe838;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="16" Foreground="{DynamicResource AppFgColor}"/>
                                             </MenuItem.Icon>
                                         </MenuItem>
-                                        <MenuItem x:Name="ExportConfigBtn" Header="Export config" AutomationProperties.Name="Export configuration">
+                                        <MenuItem x:Name="ExportConfigBtn" Header="%LANG:MenuExportConfig%" AutomationProperties.Name="%LANG:MenuExportConfigTooltip%">
                                             <MenuItem.Icon>
                                                 <TextBlock Text="&#xe74e;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="16" Foreground="{DynamicResource AppFgColor}"/>
                                             </MenuItem.Icon>
                                         </MenuItem>
-                                        <MenuItem x:Name="RestoreBackupBtn" Header="Restore backup" AutomationProperties.Name="Restore registry backup">
+                                        <MenuItem x:Name="RestoreBackupBtn" Header="%LANG:MenuRestoreBackup%" AutomationProperties.Name="%LANG:MenuRestoreBackupTooltip%">
                                             <MenuItem.Icon>
                                                 <TextBlock Text="&#xe81c;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="16" Foreground="{DynamicResource AppFgColor}"/>
                                             </MenuItem.Icon>
                                         </MenuItem>
                                         <Separator />
-                                        <MenuItem x:Name="MenuDocumentation" Header="Documentation" AutomationProperties.Name="Documentation">
+                                        <MenuItem x:Name="MenuDocumentation" Header="%LANG:MenuDocumentation%" AutomationProperties.Name="%LANG:MenuDocumentation%">
                                             <MenuItem.Icon>
                                                 <TextBlock Text="&#xe736;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="16" Foreground="{DynamicResource AppFgColor}"/>
                                             </MenuItem.Icon>
                                         </MenuItem>
-                                        <MenuItem x:Name="MenuReportBug" Header="Report a bug" AutomationProperties.Name="Report a bug">
+                                        <MenuItem x:Name="MenuReportBug" Header="%LANG:MenuReportBug%" AutomationProperties.Name="%LANG:MenuReportBug%">
                                             <MenuItem.Icon>
                                                 <TextBlock Text="&#xEBE8;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="16" Foreground="{DynamicResource AppFgColor}"/>
                                             </MenuItem.Icon>
                                         </MenuItem>
-                                        <MenuItem x:Name="MenuLogs" Header="Logs" AutomationProperties.Name="Logs">
+                                        <MenuItem x:Name="MenuLogs" Header="%LANG:MenuLogs%" AutomationProperties.Name="%LANG:MenuLogs%">
                                             <MenuItem.Icon>
                                                 <TextBlock Text="&#xf000;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="16" Foreground="{DynamicResource AppFgColor}"/>
                                             </MenuItem.Icon>
                                         </MenuItem>
-                                        <MenuItem x:Name="MenuAbout" Header="About" AutomationProperties.Name="About">
+                                        <MenuItem x:Name="MenuAbout" Header="%LANG:MenuAbout%" AutomationProperties.Name="%LANG:MenuAbout%">
                                             <MenuItem.Icon>
                                                 <TextBlock Text="&#xE946;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="16" Foreground="{DynamicResource AppFgColor}"/>
                                             </MenuItem.Icon>
@@ -417,7 +417,7 @@
                                     </ContextMenu>
                                 </Button.ContextMenu>
                             </Button>
-                            <Button x:Name="CloseBtn" shell:WindowChrome.IsHitTestVisibleInChrome="True" Content="&#xE8BB;" Style="{StaticResource CloseButton}" ToolTip="Close" AutomationProperties.Name="Close"/>
+                            <Button x:Name="CloseBtn" shell:WindowChrome.IsHitTestVisibleInChrome="True" Content="&#xE8BB;" Style="{StaticResource CloseButton}" ToolTip="%LANG:TitleBarClose%" AutomationProperties.Name="%LANG:TitleBarClose%"/>
                         </StackPanel>
                     </Grid>
                 </Border>
@@ -460,7 +460,7 @@
                 </TabControl.ItemContainerStyle>
 
                 <!-- Home Tab -->
-                <TabItem Header="Home" x:Name="HomeTab">
+                <TabItem Header="%LANG:HomeTabHeader%" x:Name="HomeTab">
                     <Grid>
                         <StackPanel x:Name="HomeContentPanel" HorizontalAlignment="Center" VerticalAlignment="Top">
                             <!-- Logo -->
@@ -482,18 +482,18 @@
                             </Viewbox>
                             
                             <!-- Title -->
-                            <TextBlock Text="Welcome to Win11Debloat" FontSize="40" FontWeight="SemiBold" Foreground="{DynamicResource AppFgColor}" HorizontalAlignment="Center"/>
+                            <TextBlock Text="%LANG:HomeTitle%" FontSize="40" FontWeight="SemiBold" Foreground="{DynamicResource AppFgColor}" HorizontalAlignment="Center"/>
                             <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource AppFgColor}" FontSize="20" HorizontalAlignment="Center" Margin="0,4,0,48">
-                                <Run Text="Your clean Windows experience is just a few clicks away!"/>
+                                <Run Text="%LANG:HomeSubtitle%"/>
                             </TextBlock>
 
                             <Border HorizontalAlignment="Center" BorderBrush="{DynamicResource AppBorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="16,12" Width="500">
                                 <StackPanel>
-                                    <TextBlock Text="What user do you want to apply changes to?" Style="{StaticResource CategoryHeaderTextBlock}"/>
-                                    <ComboBox x:Name="UserSelectionCombo" Margin="0,0,0,6" AutomationProperties.Name="Apply Changes To" ToolTip="The currently logged-in user profile">
-                                        <ComboBoxItem Content="Current User" IsSelected="True"/>
-                                        <ComboBoxItem Content="Other User"/>
-                                        <ComboBoxItem Content="Windows Default User (Sysprep)"/>
+                                    <TextBlock Text="%LANG:HomeUserQuestion%" Style="{StaticResource CategoryHeaderTextBlock}"/>
+                                    <ComboBox x:Name="UserSelectionCombo" Margin="0,0,0,6" AutomationProperties.Name="%LANG:HomeUserSelectionAutomationName%" ToolTip="%LANG:DeployUserDescriptionCurrentUser%">
+                                        <ComboBoxItem Content="%LANG:HomeUserOptionCurrentUser%" IsSelected="True"/>
+                                        <ComboBoxItem Content="%LANG:HomeUserOptionOtherUser%"/>
+                                        <ComboBoxItem Content="%LANG:HomeUserOptionSysprep%"/>
                                     </ComboBox>
                                     <StackPanel x:Name="OtherUserPanel" Visibility="Collapsed" Margin="0,0,0,6">
                                         <TextBlock x:Name="UsernameValidationMessage" Text="" FontStyle="Italic" Foreground="{DynamicResource TitleBarCloseHoverColor}" FontSize="11" Margin="3,0,0,4" TextWrapping="Wrap"/>
@@ -504,8 +504,8 @@
                                                         <ColumnDefinition Width="*"/>
                                                         <ColumnDefinition Width="Auto"/>
                                                     </Grid.ColumnDefinitions>
-                                                    <TextBlock x:Name="UsernameTextBoxPlaceholder" Grid.Column="0" Text="Enter username" Foreground="{DynamicResource AppFgColor}" Opacity="0.7" FontSize="13" Margin="3,0,0,1" VerticalAlignment="Center" IsHitTestVisible="False"/>
-                                                    <TextBox x:Name="OtherUsernameTextBox" Grid.Column="0" Style="{DynamicResource TextBoxInputStyle}" Text="" AutomationProperties.Name="Enter username"/>
+                                                    <TextBlock x:Name="UsernameTextBoxPlaceholder" Grid.Column="0" Text="%LANG:HomeUsernamePlaceholder%" Foreground="{DynamicResource AppFgColor}" Opacity="0.7" FontSize="13" Margin="3,0,0,1" VerticalAlignment="Center" IsHitTestVisible="False"/>
+                                                    <TextBox x:Name="OtherUsernameTextBox" Grid.Column="0" Style="{DynamicResource TextBoxInputStyle}" Text="" AutomationProperties.Name="%LANG:HomeUsernamePlaceholder%"/>
                                                     <TextBlock Grid.Column="1" Text="&#xE77B;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="14" VerticalAlignment="Center" Margin="8,0,4,0" Foreground="{DynamicResource AppFgColor}" Opacity="0.7"/>
                                                 </Grid>
                                             </Border>
@@ -515,16 +515,16 @@
                                     <Separator Margin="0,10,0,8" Background="{DynamicResource AppBorderColor}"/>
 
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,8,0,4">
-                                        <Button x:Name="HomeDefaultModeBtn" Width="227" Height="50" Style="{DynamicResource PrimaryButtonStyle}" Margin="0,0,12,0" AutomationProperties.Name="Default Mode">
+                                        <Button x:Name="HomeDefaultModeBtn" Width="227" Height="50" Style="{DynamicResource PrimaryButtonStyle}" Margin="0,0,12,0" AutomationProperties.Name="%LANG:HomeDefaultModeBtn%">
                                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                                 <TextBlock Text="&#xe735;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="16" VerticalAlignment="Center" Margin="0,0,8,-1"/>
-                                                <TextBlock Text="Default Mode" ToolTip="Quickly select the recommended settings" FontWeight="SemiBold" VerticalAlignment="Center" FontSize="17" Margin="0,0,0,1"/>
+                                                <TextBlock Text="%LANG:HomeDefaultModeBtn%" ToolTip="%LANG:HomeDefaultModeBtnTooltip%" FontWeight="SemiBold" VerticalAlignment="Center" FontSize="17" Margin="0,0,0,1"/>
                                             </StackPanel>
                                         </Button>
-                                        <Button x:Name="HomeStartBtn" Width="227" Height="50" Style="{DynamicResource SecondaryButtonStyle}" AutomationProperties.Name="Custom Setup">
+                                        <Button x:Name="HomeStartBtn" Width="227" Height="50" Style="{DynamicResource SecondaryButtonStyle}" AutomationProperties.Name="%LANG:HomeCustomSetupBtn%">
                                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                                 <TextBlock Text="&#xe90f;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="14" VerticalAlignment="Center" Margin="0,0,8,-1"/>
-                                                <TextBlock Text="Custom Setup" ToolTip="Manually select your preferred settings" FontWeight="SemiBold" VerticalAlignment="Center" FontSize="17" Margin="0,0,0,1"/>
+                                                <TextBlock Text="%LANG:HomeCustomSetupBtn%" ToolTip="%LANG:HomeCustomSetupBtnTooltip%" FontWeight="SemiBold" VerticalAlignment="Center" FontSize="17" Margin="0,0,0,1"/>
                                             </StackPanel>
                                         </Button>
                                     </StackPanel>
@@ -535,12 +535,12 @@
                 </TabItem>
 
                 <!-- App Removal Tab -->
-                <TabItem Header="App Removal">
+                <TabItem Header="%LANG:AppRemovalTabHeader%">
                     <DockPanel>
                         <Border DockPanel.Dock="Top" Padding="20,4,20,0">
                             <StackPanel>
-                                <TextBlock Text="App Removal" FontWeight="SemiBold" FontSize="24" Foreground="{DynamicResource AppFgColor}"/>
-                                <TextBlock Text="Select which apps you want to remove" FontSize="14" Margin="0,5,0,20" Foreground="{DynamicResource AppFgColor}" TextWrapping="Wrap"/>
+                                <TextBlock Text="%LANG:AppRemovalTitle%" FontWeight="SemiBold" FontSize="24" Foreground="{DynamicResource AppFgColor}"/>
+                                <TextBlock Text="%LANG:AppRemovalSubtitle%" FontSize="14" Margin="0,5,0,20" Foreground="{DynamicResource AppFgColor}" TextWrapping="Wrap"/>
 
                                 <!-- Filter Options -->
                                 <Grid Margin="0,0,0,12">
@@ -553,7 +553,7 @@
                                     </Grid.ColumnDefinitions>
                                     
                                     <StackPanel Orientation="Horizontal" Grid.Column="0">
-                                        <ToggleButton x:Name="PresetsBtn" Height="32" Padding="10,0" Margin="0,0,10,0" AutomationProperties.Name="App Presets">
+                                        <ToggleButton x:Name="PresetsBtn" Height="32" Padding="10,0" Margin="0,0,10,0" AutomationProperties.Name="%LANG:AppQuickSelectAutomationName%">
                                             <ToggleButton.Style>
                                                 <Style TargetType="ToggleButton">
                                                     <Setter Property="Background" Value="{DynamicResource SecondaryButtonBgColor}"/>
@@ -586,7 +586,7 @@
                                             </ToggleButton.Style>
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock Text="&#xE735;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="14" VerticalAlignment="Center" Margin="0,1,6,0"/>
-                                                <TextBlock Text="Quick Select" FontSize="13" VerticalAlignment="Center" Margin="0,0,6,1"/>
+                                                <TextBlock Text="%LANG:AppQuickSelect%" FontSize="13" VerticalAlignment="Center" Margin="0,0,6,1"/>
                                                 <TextBlock x:Name="PresetsArrow" Text="&#xE70D;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="10" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
                                                     <TextBlock.RenderTransform>
                                                         <RotateTransform x:Name="PresetsArrowRotation" Angle="0"/>
@@ -594,10 +594,10 @@
                                                 </TextBlock>
                                             </StackPanel>
                                         </ToggleButton>
-                                        <Button x:Name="ClearAppSelectionBtn" ToolTip="Clear all selected apps" Style="{DynamicResource SecondaryButtonStyle}" Height="32"  Padding="10,0" Margin="0,0,10,0" AutomationProperties.Name="Clear Selection">
+                                        <Button x:Name="ClearAppSelectionBtn" ToolTip="%LANG:AppClearSelectionTooltip%" Style="{DynamicResource SecondaryButtonStyle}" Height="32"  Padding="10,0" Margin="0,0,10,0" AutomationProperties.Name="%LANG:AppClearSelection%">
                                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                                 <TextBlock Text="&#xE711;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="15" VerticalAlignment="Center" Margin="0,3,6,0"/>
-                                                <TextBlock Text="Clear Selection" FontSize="13" VerticalAlignment="Center" Margin="0,0,0,1"/>
+                                                <TextBlock Text="%LANG:AppClearSelection%" FontSize="13" VerticalAlignment="Center" Margin="0,0,0,1"/>
                                             </StackPanel>
                                         </Button>
                                         <Popup x:Name="PresetsPopup" PlacementTarget="{Binding ElementName=PresetsBtn}" Placement="Bottom" StaysOpen="True" AllowsTransparency="True" VerticalOffset="2">
@@ -606,8 +606,8 @@
                                                     <DropShadowEffect BlurRadius="12" Opacity="0.25" ShadowDepth="4"/>
                                                 </Border.Effect>
                                                 <StackPanel x:Name="PresetsPanel" MinWidth="220">
-                                                    <CheckBox x:Name="PresetDefaultApps" Content="Default apps" IsThreeState="True" ToolTip="Select the apps that are safe to remove for most users" Foreground="{DynamicResource AppFgColor}" Margin="8,4" AutomationProperties.Name="Default selection"/>
-                                                    <CheckBox x:Name="PresetLastUsed" Content="Previously selected apps" IsThreeState="True" ToolTip="Select the apps that were removed the last time Win11Debloat was run" Foreground="{DynamicResource AppFgColor}" Margin="8,4" AutomationProperties.Name="Previously selected apps"/>
+                                                    <CheckBox x:Name="PresetDefaultApps" Content="%LANG:AppPresetDefaultApps%" IsThreeState="True" ToolTip="%LANG:AppPresetDefaultAppsTooltip%" Foreground="{DynamicResource AppFgColor}" Margin="8,4" AutomationProperties.Name="%LANG:AppPresetDefaultAppsAutomationName%"/>
+                                                    <CheckBox x:Name="PresetLastUsed" Content="%LANG:AppPresetLastUsed%" IsThreeState="True" ToolTip="%LANG:AppPresetLastUsedTooltip%" Foreground="{DynamicResource AppFgColor}" Margin="8,4" AutomationProperties.Name="%LANG:AppPresetLastUsed%"/>
                                                     <Separator Margin="4,6" Background="{DynamicResource AppBorderColor}"/>
                                                     <StackPanel x:Name="JsonPresetsPanel"/>
                                                 </StackPanel>
@@ -615,7 +615,7 @@
                                         </Popup>
                                     </StackPanel>
                                     
-                                    <CheckBox x:Name="OnlyInstalledAppsBox" Grid.Column="2" Content="Only show installed apps" ToolTip="Only show applications that are currently installed on this system" IsChecked="False" Foreground="{DynamicResource AppFgColor}" VerticalAlignment="Center" AutomationProperties.Name="Only show installed apps"/>
+                                    <CheckBox x:Name="OnlyInstalledAppsBox" Grid.Column="2" Content="%LANG:AppOnlyInstalledCheckbox%" ToolTip="%LANG:AppOnlyInstalledCheckboxTooltip%" IsChecked="False" Foreground="{DynamicResource AppFgColor}" VerticalAlignment="Center" AutomationProperties.Name="%LANG:AppOnlyInstalledCheckbox%"/>
 
                                     <Border x:Name="AppSearchBorder" Grid.Column="4" Width="300">
                                         <Border Style="{DynamicResource TextBoxBorderStyle}">
@@ -625,8 +625,8 @@
                                                         <ColumnDefinition Width="*"/>
                                                         <ColumnDefinition Width="Auto"/>
                                                     </Grid.ColumnDefinitions>
-                                                    <TextBlock x:Name="AppSearchPlaceholder" Grid.Column="0" Text="Search apps..." Foreground="{DynamicResource AppFgColor}" Opacity="0.7" FontSize="13" Margin="3,0,0,1" VerticalAlignment="Center" IsHitTestVisible="False"/>
-                                                    <TextBox x:Name="AppSearchBox" Grid.Column="0" Style="{DynamicResource TextBoxInputStyle}" Text="" AutomationProperties.Name="Search app"/>
+                                                    <TextBlock x:Name="AppSearchPlaceholder" Grid.Column="0" Text="%LANG:AppSearchPlaceholder%" Foreground="{DynamicResource AppFgColor}" Opacity="0.7" FontSize="13" Margin="3,0,0,1" VerticalAlignment="Center" IsHitTestVisible="False"/>
+                                                    <TextBox x:Name="AppSearchBox" Grid.Column="0" Style="{DynamicResource TextBoxInputStyle}" Text="" AutomationProperties.Name="%LANG:AppSearchAutomationName%"/>
                                                     <TextBlock Grid.Column="1" Text="&#xE721;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="14" VerticalAlignment="Center" Margin="8,0,4,0" Foreground="{DynamicResource AppFgColor}"  Opacity="0.7"/>
                                                 </Grid>
                                             </Border>
@@ -657,19 +657,19 @@
                                             <ColumnDefinition Width="{StaticResource AppTableIdColWidth}"/>
                                         </Grid.ColumnDefinitions>
                                         <StackPanel x:Name="HeaderNameBtn" Grid.Column="1" Orientation="Horizontal" Cursor="Hand" VerticalAlignment="Center" Style="{StaticResource SortHeaderBtnStyle}">
-                                            <TextBlock Text="Name" FontWeight="SemiBold" FontSize="16" Foreground="{DynamicResource AppFgColor}"/>
+                                            <TextBlock Text="%LANG:AppTableHeaderName%" FontWeight="SemiBold" FontSize="16" Foreground="{DynamicResource AppFgColor}"/>
                                             <TextBlock x:Name="SortArrowName" Text="&#xE70E;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="11" Foreground="{DynamicResource AppFgColor}" VerticalAlignment="Center" Margin="5,1,0,0" Opacity="0.3" RenderTransformOrigin="0.5,0.5">
                                                 <TextBlock.RenderTransform><RotateTransform Angle="0"/></TextBlock.RenderTransform>
                                             </TextBlock>
                                         </StackPanel>
                                         <StackPanel x:Name="HeaderDescriptionBtn" Grid.Column="2" Orientation="Horizontal" Cursor="Hand" VerticalAlignment="Center" Margin="8,0,0,0" Style="{StaticResource SortHeaderBtnStyle}">
-                                            <TextBlock Text="Description" FontWeight="SemiBold" FontSize="16" Foreground="{DynamicResource AppFgColor}"/>
+                                            <TextBlock Text="%LANG:AppTableHeaderDescription%" FontWeight="SemiBold" FontSize="16" Foreground="{DynamicResource AppFgColor}"/>
                                             <TextBlock x:Name="SortArrowDescription" Text="&#xE70E;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="11" Foreground="{DynamicResource AppFgColor}" VerticalAlignment="Center" Margin="5,1,0,0" Opacity="0.3" RenderTransformOrigin="0.5,0.5">
                                                 <TextBlock.RenderTransform><RotateTransform Angle="0"/></TextBlock.RenderTransform>
                                             </TextBlock>
                                         </StackPanel>
                                         <StackPanel x:Name="HeaderAppIdBtn" Grid.Column="3" Orientation="Horizontal" Cursor="Hand" VerticalAlignment="Center" Style="{StaticResource SortHeaderBtnStyle}">
-                                            <TextBlock Text="App ID" FontWeight="SemiBold" FontSize="16" Foreground="{DynamicResource AppFgColor}"/>
+                                            <TextBlock Text="%LANG:AppTableHeaderAppId%" FontWeight="SemiBold" FontSize="16" Foreground="{DynamicResource AppFgColor}"/>
                                             <TextBlock x:Name="SortArrowAppId" Text="&#xE70E;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="11" Foreground="{DynamicResource AppFgColor}" VerticalAlignment="Center" Margin="5,1,0,0" Opacity="0.3" RenderTransformOrigin="0.5,0.5">
                                                 <TextBlock.RenderTransform><RotateTransform Angle="0"/></TextBlock.RenderTransform>
                                             </TextBlock>
@@ -701,7 +701,7 @@
                                                         </EventTrigger>
                                                     </TextBlock.Triggers>
                                                 </TextBlock>
-                                                <TextBlock Text="Loading apps..." FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource AppFgColor}" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="%LANG:AppLoadingIndicator%" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource AppFgColor}" HorizontalAlignment="Center"/>
                                             </StackPanel>
                                         </Border>
                                     </Grid>
@@ -716,21 +716,21 @@
                                 </Grid.ColumnDefinitions>
                                 <TextBlock x:Name="AppSelectionStatus" Grid.Column="0" Text="" Foreground="{DynamicResource AppFgColor}" Margin="10,0,0,5" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
                                 <StackPanel x:Name="AppColorLegend" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,5">
-                                    <TextBlock Text="Legend:" Foreground="{DynamicResource AppFgColor}" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,10,0" Opacity="0.8"/>
+                                    <TextBlock Text="%LANG:AppLegendTitle%" Foreground="{DynamicResource AppFgColor}" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,10,0" Opacity="0.8"/>
                                     <!-- Recommended (safe) -->
-                                    <StackPanel Orientation="Horizontal" Margin="0,0,16,0" ToolTip="[Recommended] Safe to remove for most users">
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,16,0" ToolTip="%LANG:AppLegendRecommendedTooltip%">
                                         <Ellipse Width="9" Height="9" Fill="{DynamicResource AppRecommendationSafeColor}" VerticalAlignment="Center" Margin="0,0,6,0"/>
-                                        <TextBlock Text="Recommended" Foreground="{DynamicResource AppFgColor}" FontSize="12" VerticalAlignment="Center" Opacity="0.8"/>
+                                        <TextBlock Text="%LANG:AppLegendRecommended%" Foreground="{DynamicResource AppFgColor}" FontSize="12" VerticalAlignment="Center" Opacity="0.8"/>
                                     </StackPanel>
                                     <!-- Optional (default) -->
-                                    <StackPanel Orientation="Horizontal" Margin="0,0,16,0" ToolTip="[Optional] Can be safely removed if you don't need this app">
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,16,0" ToolTip="%LANG:AppLegendOptionalTooltip%">
                                         <Ellipse Width="9" Height="9" Fill="{DynamicResource AppRecommendationOptionalColor}" VerticalAlignment="Center" Margin="0,0,6,0"/>
-                                        <TextBlock Text="Optional" Foreground="{DynamicResource AppFgColor}" FontSize="12" VerticalAlignment="Center" Opacity="0.8"/>
+                                        <TextBlock Text="%LANG:AppLegendOptional%" Foreground="{DynamicResource AppFgColor}" FontSize="12" VerticalAlignment="Center" Opacity="0.8"/>
                                     </StackPanel>
                                     <!-- Not Recommended (unsafe) -->
-                                    <StackPanel Orientation="Horizontal" ToolTip="[Not Recommended] Only remove if you know what you are doing">
+                                    <StackPanel Orientation="Horizontal" ToolTip="%LANG:AppLegendNotRecommendedTooltip%">
                                         <Ellipse Width="9" Height="9" Fill="{DynamicResource AppRecommendationUnsafeColor}" VerticalAlignment="Center" Margin="0,0,6,0"/>
-                                        <TextBlock Text="Not Recommended" Foreground="{DynamicResource AppFgColor}" FontSize="12" VerticalAlignment="Center" Opacity="0.8"/>
+                                        <TextBlock Text="%LANG:AppLegendNotRecommended%" Foreground="{DynamicResource AppFgColor}" FontSize="12" VerticalAlignment="Center" Opacity="0.8"/>
                                     </StackPanel>
                                 </StackPanel>
                             </Grid>
@@ -739,12 +739,12 @@
                 </TabItem>
 
                 <!-- Tweaks Tab -->
-                <TabItem Header="Tweaks">
+                <TabItem Header="%LANG:TweaksTabHeader%">
                     <DockPanel>
                         <Border DockPanel.Dock="Top" Padding="20,4,20,0" Background="{DynamicResource AppBgColor}">
                             <StackPanel>
-                                <TextBlock Text="System Tweaks" FontWeight="SemiBold" FontSize="24" Foreground="{DynamicResource AppFgColor}"/>
-                                <TextBlock Text="Select what changes you want to make, you can hover over settings for more information" FontSize="14" Margin="0,5,0,20" Foreground="{DynamicResource AppFgColor}" TextWrapping="Wrap"/>
+                                <TextBlock Text="%LANG:TweaksTitle%" FontWeight="SemiBold" FontSize="24" Foreground="{DynamicResource AppFgColor}"/>
+                                <TextBlock Text="%LANG:TweaksSubtitle%" FontSize="14" Margin="0,5,0,20" Foreground="{DynamicResource AppFgColor}" TextWrapping="Wrap"/>
                             
                                 <!-- Filter Options -->
                                 <Grid Margin="0,0,0,12">
@@ -757,7 +757,7 @@
                                     </Grid.ColumnDefinitions>
                                     
                                     <StackPanel Grid.Column="0" Orientation="Horizontal">
-                                        <ToggleButton x:Name="TweaksPresetsBtn" Height="32" Padding="10,0" Margin="0,0,10,0" AutomationProperties.Name="Tweak Presets">
+                                        <ToggleButton x:Name="TweaksPresetsBtn" Height="32" Padding="10,0" Margin="0,0,10,0" AutomationProperties.Name="%LANG:TweaksQuickSelectAutomationName%">
                                             <ToggleButton.Style>
                                                 <Style TargetType="ToggleButton">
                                                     <Setter Property="Background" Value="{DynamicResource SecondaryButtonBgColor}"/>
@@ -790,7 +790,7 @@
                                             </ToggleButton.Style>
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock Text="&#xE735;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="14" VerticalAlignment="Center" Margin="0,1,6,0"/>
-                                                <TextBlock Text="Quick Select" FontSize="13" VerticalAlignment="Center" Margin="0,0,6,1"/>
+                                                <TextBlock Text="%LANG:TweaksQuickSelect%" FontSize="13" VerticalAlignment="Center" Margin="0,0,6,1"/>
                                                 <TextBlock x:Name="TweaksPresetsArrow" Text="&#xE70D;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="10" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
                                                     <TextBlock.RenderTransform>
                                                         <RotateTransform Angle="0"/>
@@ -798,10 +798,10 @@
                                                 </TextBlock>
                                             </StackPanel>
                                         </ToggleButton>
-                                        <Button x:Name="ClearAllTweaksBtn" ToolTip="Clear all selected tweaks" Style="{DynamicResource SecondaryButtonStyle}" Padding="10,0" Height="32" Margin="0,0,10,0" AutomationProperties.Name="Clear Selection">
+                                        <Button x:Name="ClearAllTweaksBtn" ToolTip="%LANG:TweaksClearSelectionTooltip%" Style="{DynamicResource SecondaryButtonStyle}" Padding="10,0" Height="32" Margin="0,0,10,0" AutomationProperties.Name="%LANG:TweaksClearSelection%">
                                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                                 <TextBlock Text="&#xE711;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="15" VerticalAlignment="Center" Margin="0,3,6,0"/>
-                                                <TextBlock Text="Clear Selection" FontSize="13" VerticalAlignment="Center" Margin="0,0,0,1"/>
+                                                <TextBlock Text="%LANG:TweaksClearSelection%" FontSize="13" VerticalAlignment="Center" Margin="0,0,0,1"/>
                                             </StackPanel>
                                         </Button>
                                         <Popup x:Name="TweaksPresetsPopup" PlacementTarget="{Binding ElementName=TweaksPresetsBtn}" Placement="Bottom" StaysOpen="True" AllowsTransparency="True" VerticalOffset="2">
@@ -810,17 +810,17 @@
                                                     <DropShadowEffect BlurRadius="12" Opacity="0.25" ShadowDepth="4"/>
                                                 </Border.Effect>
                                                 <StackPanel MinWidth="220">
-                                                    <CheckBox x:Name="PresetDefaultTweaksBtn" Content="Default settings" IsThreeState="True" ToolTip="Select the settings that are recommended for most people" Foreground="{DynamicResource AppFgColor}" Style="{DynamicResource PresetCheckBoxStyle}" AutomationProperties.Name="Default settings"/>
-                                                    <CheckBox x:Name="PresetLastUsedTweaksBtn" Content="Previously selected settings" IsThreeState="True" ToolTip="Select the settings that were applied the last time Win11Debloat was run" Foreground="{DynamicResource AppFgColor}" Style="{DynamicResource PresetCheckBoxStyle}" AutomationProperties.Name="Previously selected settings"/>
+                                                    <CheckBox x:Name="PresetDefaultTweaksBtn" Content="%LANG:TweaksPresetDefault%" IsThreeState="True" ToolTip="%LANG:TweaksPresetDefaultTooltip%" Foreground="{DynamicResource AppFgColor}" Style="{DynamicResource PresetCheckBoxStyle}" AutomationProperties.Name="%LANG:TweaksPresetDefault%"/>
+                                                    <CheckBox x:Name="PresetLastUsedTweaksBtn" Content="%LANG:TweaksPresetLastUsed%" IsThreeState="True" ToolTip="%LANG:TweaksPresetLastUsedTooltip%" Foreground="{DynamicResource AppFgColor}" Style="{DynamicResource PresetCheckBoxStyle}" AutomationProperties.Name="%LANG:TweaksPresetLastUsed%"/>
                                                     <Separator Margin="4,6" Background="{DynamicResource AppBorderColor}"/>
-                                                    <CheckBox x:Name="PresetPrivacyTweaksBtn" Content="Privacy &amp; suggested content" IsThreeState="True" ToolTip="Select all tweaks related to privacy &amp; suggested content" Foreground="{DynamicResource AppFgColor}" Style="{DynamicResource PresetCheckBoxStyle}" AutomationProperties.Name="All Privacy and Suggested Content"/>
-                                                    <CheckBox x:Name="PresetAITweaksBtn" Content="AI features" IsThreeState="True" ToolTip="Select all AI related tweaks" Foreground="{DynamicResource AppFgColor}" Style="{DynamicResource PresetCheckBoxStyle}" AutomationProperties.Name="All AI features"/>
+                                                    <CheckBox x:Name="PresetPrivacyTweaksBtn" Content="%LANG:TweaksPresetPrivacy%" IsThreeState="True" ToolTip="%LANG:TweaksPresetPrivacyTooltip%" Foreground="{DynamicResource AppFgColor}" Style="{DynamicResource PresetCheckBoxStyle}" AutomationProperties.Name="%LANG:TweaksPresetPrivacyAutomationName%"/>
+                                                    <CheckBox x:Name="PresetAITweaksBtn" Content="%LANG:TweaksPresetAI%" IsThreeState="True" ToolTip="%LANG:TweaksPresetAITooltip%" Foreground="{DynamicResource AppFgColor}" Style="{DynamicResource PresetCheckBoxStyle}" AutomationProperties.Name="%LANG:TweaksPresetAIAutomationName%"/>
                                                 </StackPanel>
                                             </Border>
                                         </Popup>
                                     </StackPanel>
 
-                                    <CheckBox x:Name="ShowCurrentlyAppliedTweaksCheckBox" Grid.Column="2" Content="Detect applied tweaks" IsChecked="True" Foreground="{DynamicResource AppFgColor}" VerticalAlignment="Center" AutomationProperties.Name="Detect applied tweaks" ToolTip="Detect all tweaks currently applied for the current user"/>
+                                    <CheckBox x:Name="ShowCurrentlyAppliedTweaksCheckBox" Grid.Column="2" Content="%LANG:TweaksDetectApplied%" IsChecked="True" Foreground="{DynamicResource AppFgColor}" VerticalAlignment="Center" AutomationProperties.Name="%LANG:TweaksDetectApplied%" ToolTip="%LANG:TweaksDetectAppliedTooltip%"/>
 
                                     <Border x:Name="TweakSearchBorder" Grid.Column="4" Width="300">
                                         <Border Style="{DynamicResource TextBoxBorderStyle}">
@@ -830,8 +830,8 @@
                                                         <ColumnDefinition Width="*"/>
                                                         <ColumnDefinition Width="Auto"/>
                                                     </Grid.ColumnDefinitions>
-                                                    <TextBlock x:Name="TweakSearchPlaceholder" Grid.Column="0" Text="Search tweaks..." Foreground="{DynamicResource AppFgColor}" Opacity="0.7" FontSize="13" Margin="3,0,0,1" VerticalAlignment="Center" IsHitTestVisible="False"/>
-                                                    <TextBox x:Name="TweakSearchBox" Grid.Column="0" Style="{DynamicResource TextBoxInputStyle}" Text="" AutomationProperties.Name="Search tweaks"/>
+                                                    <TextBlock x:Name="TweakSearchPlaceholder" Grid.Column="0" Text="%LANG:TweaksSearchPlaceholder%" Foreground="{DynamicResource AppFgColor}" Opacity="0.7" FontSize="13" Margin="3,0,0,1" VerticalAlignment="Center" IsHitTestVisible="False"/>
+                                                    <TextBox x:Name="TweakSearchBox" Grid.Column="0" Style="{DynamicResource TextBoxInputStyle}" Text="" AutomationProperties.Name="%LANG:TweaksSearchAutomationName%"/>
                                                     <TextBlock Grid.Column="1" Text="&#xE721;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="14" VerticalAlignment="Center" Margin="8,0,4,0" Foreground="{DynamicResource AppFgColor}" Opacity="0.7"/>
                                                 </Grid>
                                             </Border>
@@ -883,12 +883,12 @@
                 </TabItem>
 
                 <!-- Deployment Settings Tab -->
-                <TabItem Header="Deployment Settings" x:Name="DeploymentSettingsTab">
+                <TabItem Header="%LANG:DeployTabHeader%" x:Name="DeploymentSettingsTab">
                     <DockPanel>
                         <Border DockPanel.Dock="Top" Padding="20,4,20,0">
                             <StackPanel>
-                                <TextBlock Text="Deployment Settings" FontWeight="SemiBold" FontSize="24" Foreground="{DynamicResource AppFgColor}"/>
-                                <TextBlock Text="Configure how the selected changes will be applied to your system" FontSize="14" Margin="0,5,0,20" Foreground="{DynamicResource AppFgColor}" TextWrapping="Wrap"/>
+                                <TextBlock Text="%LANG:DeployTitle%" FontWeight="SemiBold" FontSize="24" Foreground="{DynamicResource AppFgColor}"/>
+                                <TextBlock Text="%LANG:DeploySubtitle%" FontSize="14" Margin="0,5,0,20" Foreground="{DynamicResource AppFgColor}" TextWrapping="Wrap"/>
                             </StackPanel>
                         </Border>
 
@@ -910,39 +910,39 @@
                                         <!-- Apply Changes To -->
                                         <Border Grid.Row="0" BorderBrush="{DynamicResource AppBorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="16,12" Margin="0,0,0,16">
                                             <StackPanel>
-                                                <TextBlock Text="Changes will be applied to" Style="{StaticResource CategoryHeaderTextBlock}"/>
-                                                <TextBlock x:Name="UserSelectionDescription" Text="The currently logged-in user profile." Foreground="{DynamicResource AppFgColor}" FontSize="13" TextWrapping="Wrap" Margin="0,-2,0,3"/>
+                                                <TextBlock Text="%LANG:DeployApplyToTitle%" Style="{StaticResource CategoryHeaderTextBlock}"/>
+                                                <TextBlock x:Name="UserSelectionDescription" Text="%LANG:DeployUserSelectionDescription%" Foreground="{DynamicResource AppFgColor}" FontSize="13" TextWrapping="Wrap" Margin="0,-2,0,3"/>
                                             </StackPanel>
                                         </Border>
 
                                         <!-- App Removal Scope -->
                                         <Border Grid.Row="1" x:Name="AppRemovalScopeSection" BorderBrush="{DynamicResource AppBorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="16,12" Margin="0,0,0,16">
                                             <StackPanel>
-                                                <TextBlock Text="Apps will be removed for" Style="{StaticResource CategoryHeaderTextBlock}"/>
-                                                <ComboBox x:Name="AppRemovalScopeCombo" Margin="0,0,0,6" AutomationProperties.Name="App Removal Scope">
-                                                    <ComboBoxItem x:Name="AppRemovalScopeAllUsers" Content="All users" IsSelected="True"/>
-                                                    <ComboBoxItem x:Name="AppRemovalScopeCurrentUser" Content="Current user only"/>
-                                                    <ComboBoxItem x:Name="AppRemovalScopeTargetUser" Content="Target user only" Visibility="Collapsed"/>
+                                                <TextBlock Text="%LANG:DeployAppRemovalScopeTitle%" Style="{StaticResource CategoryHeaderTextBlock}"/>
+                                                <ComboBox x:Name="AppRemovalScopeCombo" Margin="0,0,0,6" AutomationProperties.Name="%LANG:DeployAppRemovalScopeAutomationName%">
+                                                    <ComboBoxItem x:Name="AppRemovalScopeAllUsers" Content="%LANG:DeployAppRemovalScopeAllUsers%" IsSelected="True"/>
+                                                    <ComboBoxItem x:Name="AppRemovalScopeCurrentUser" Content="%LANG:DeployAppRemovalScopeCurrentUser%"/>
+                                                    <ComboBoxItem x:Name="AppRemovalScopeTargetUser" Content="%LANG:DeployAppRemovalScopeTargetUser%" Visibility="Collapsed"/>
                                                 </ComboBox>
-                                                <TextBlock x:Name="AppRemovalScopeDescription" Text="Apps will be removed for all users and from the Windows image to prevent reinstallation for new users." Foreground="{DynamicResource AppFgColor}" FontSize="13" TextWrapping="Wrap" Margin="0,6,0,3"/>
+                                                <TextBlock x:Name="AppRemovalScopeDescription" Text="%LANG:AppRemovalScopeDescriptionAllUsers%" Foreground="{DynamicResource AppFgColor}" FontSize="13" TextWrapping="Wrap" Margin="0,6,0,3"/>
                                             </StackPanel>
                                         </Border>
 
                                         <!-- Options -->
                                         <Border Grid.Row="2" BorderBrush="{DynamicResource AppBorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="16,12,16,3" Margin="0,0,0,16">
                                             <StackPanel>
-                                                <TextBlock Text="Options" Style="{StaticResource CategoryHeaderTextBlock}"/>
+                                                <TextBlock Text="%LANG:DeployOptionsTitle%" Style="{StaticResource CategoryHeaderTextBlock}"/>
 
                                                 <StackPanel>
-                                                    <CheckBox x:Name="RegistryBackupCheckBox" Style="{DynamicResource FeatureCheckboxStyle}" IsChecked="True" Content="Create a registry backup (Recommended)" AutomationProperties.Name="Create a registry backup (Recommended)"/>
+                                                    <CheckBox x:Name="RegistryBackupCheckBox" Style="{DynamicResource FeatureCheckboxStyle}" IsChecked="True" Content="%LANG:DeployOptionRegistryBackup%" AutomationProperties.Name="%LANG:DeployOptionRegistryBackup%"/>
                                                 </StackPanel>
 
                                                 <StackPanel>
-                                                    <CheckBox x:Name="RestorePointCheckBox" Style="{DynamicResource FeatureCheckboxStyle}" IsChecked="True" Content="Create a system restore point (Recommended)" AutomationProperties.Name="Create a system restore point (Recommended)"/>
+                                                    <CheckBox x:Name="RestorePointCheckBox" Style="{DynamicResource FeatureCheckboxStyle}" IsChecked="True" Content="%LANG:DeployOptionRestorePoint%" AutomationProperties.Name="%LANG:DeployOptionRestorePoint%"/>
                                                 </StackPanel>
                                                 
                                                 <StackPanel>
-                                                    <CheckBox x:Name="RestartExplorerCheckBox" Style="{DynamicResource FeatureCheckboxStyle}" Content="Restart the Windows Explorer process to apply all changes immediately" AutomationProperties.Name="Restart the Windows Explorer process to apply all changes immediately"/>
+                                                    <CheckBox x:Name="RestartExplorerCheckBox" Style="{DynamicResource FeatureCheckboxStyle}" Content="%LANG:DeployOptionRestartExplorer%" AutomationProperties.Name="%LANG:DeployOptionRestartExplorer%"/>
                                                 </StackPanel>
                                             </StackPanel>
                                         </Border>
@@ -971,10 +971,10 @@
 
                             <!-- Review & Apply Section -->
                             <StackPanel Grid.Row="1" HorizontalAlignment="Stretch" Background="{DynamicResource AppBgColor}">
-                                <Button x:Name="ReviewChangesBtn" Background="Transparent" BorderThickness="0" Cursor="Hand" HorizontalAlignment="Center" Margin="0,4,0,10" AutomationProperties.Name="Review selected changes">
+                                <Button x:Name="ReviewChangesBtn" Background="Transparent" BorderThickness="0" Cursor="Hand" HorizontalAlignment="Center" Margin="0,4,0,10" AutomationProperties.Name="%LANG:DeployReviewChanges%">
                                     <Button.Template>
                                         <ControlTemplate TargetType="Button">
-                                            <TextBlock x:Name="LinkText" Text="Review selected changes" FontSize="16" Foreground="{DynamicResource ButtonBgColor}" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+                                            <TextBlock x:Name="LinkText" Text="%LANG:DeployReviewChanges%" FontSize="16" Foreground="{DynamicResource ButtonBgColor}" FontWeight="SemiBold" HorizontalAlignment="Center"/>
                                             <ControlTemplate.Triggers>
                                                 <Trigger Property="IsMouseOver" Value="True">
                                                     <Setter TargetName="LinkText" Property="Foreground" Value="{DynamicResource ButtonHoverColor}"/>
@@ -986,10 +986,10 @@
                                         </ControlTemplate>
                                     </Button.Template>
                                 </Button>
-                                <Button x:Name="DeploymentApplyBtn" Style="{DynamicResource PrimaryButtonStyle}" Width="200" Height="44" HorizontalAlignment="Center" AutomationProperties.Name="Apply Changes">
+                                <Button x:Name="DeploymentApplyBtn" Style="{DynamicResource PrimaryButtonStyle}" Width="200" Height="44" HorizontalAlignment="Center" AutomationProperties.Name="%LANG:DeployApplyChanges%">
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                         <TextBlock Text="&#xE73E;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="20" FontWeight="SemiBold" VerticalAlignment="Center"/>
-                                        <TextBlock Text="Apply Changes" VerticalAlignment="Center" FontSize="18" FontWeight="SemiBold" Margin="8,0,0,4"/>
+                                        <TextBlock Text="%LANG:DeployApplyChanges%" VerticalAlignment="Center" FontSize="18" FontWeight="SemiBold" Margin="8,0,0,4"/>
                                     </StackPanel>
                                 </Button>
                             </StackPanel>
@@ -1006,17 +1006,17 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <Button x:Name="PreviousBtn" Grid.Column="0" Width="120" Height="36" Style="{DynamicResource SecondaryButtonStyle}" Visibility="Collapsed" AutomationProperties.Name="Back">
+                    <Button x:Name="PreviousBtn" Grid.Column="0" Width="120" Height="36" Style="{DynamicResource SecondaryButtonStyle}" Visibility="Collapsed" AutomationProperties.Name="%LANG:NavBack%">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <TextBlock Text="&#xE72B;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="12" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                            <TextBlock Text="Back" VerticalAlignment="Center" FontSize="14" Margin="0,0,0,3"/>
+                            <TextBlock Text="%LANG:NavBack%" VerticalAlignment="Center" FontSize="14" Margin="0,0,0,3"/>
                         </StackPanel>
                     </Button>
                     
                     <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Button x:Name="NextBtn" Width="120" Height="36" Style="{DynamicResource PrimaryButtonStyle}" AutomationProperties.Name="Next">
+                        <Button x:Name="NextBtn" Width="120" Height="36" Style="{DynamicResource PrimaryButtonStyle}" AutomationProperties.Name="%LANG:NavNext%">
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                <TextBlock Text="Next" VerticalAlignment="Center" FontSize="14" Margin="0,0,0,3"/>
+                                <TextBlock Text="%LANG:NavNext%" VerticalAlignment="Center" FontSize="14" Margin="0,0,0,3"/>
                                 <TextBlock Text="&#xE72A;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="12" Margin="8,0,0,0" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
@@ -1025,9 +1025,9 @@
                 
                 <!-- Progress Indicators - Centered independently -->
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <Ellipse x:Name="ProgressIndicator1" Width="10" Height="10" Margin="4,0" Fill="#808080" ToolTip="App Removal"/>
-                    <Ellipse x:Name="ProgressIndicator2" Width="10" Height="10" Margin="4,0" Fill="#808080" ToolTip="System Tweaks"/>
-                    <Ellipse x:Name="ProgressIndicator3" Width="10" Height="10" Margin="4,0" Fill="#808080" ToolTip="Deployment Settings"/>
+                    <Ellipse x:Name="ProgressIndicator1" Width="10" Height="10" Margin="4,0" Fill="#808080" ToolTip="%LANG:NavProgressAppRemoval%"/>
+                    <Ellipse x:Name="ProgressIndicator2" Width="10" Height="10" Margin="4,0" Fill="#808080" ToolTip="%LANG:NavProgressSystemTweaks%"/>
+                    <Ellipse x:Name="ProgressIndicator3" Width="10" Height="10" Margin="4,0" Fill="#808080" ToolTip="%LANG:NavProgressDeploymentSettings%"/>
                 </StackPanel>
                 </Grid>
             </Grid>

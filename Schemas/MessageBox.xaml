@@ -1,6 +1,6 @@
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MessageBox" 
+        Title="%LANG:TitleBarAppName%"
         Width="440"
         SizeToContent="Height"
         MaxHeight="501"
@@ -34,8 +34,8 @@
 
             <!-- Title Bar -->
             <Grid Grid.Row="0" x:Name="TitleBar" Style="{DynamicResource ModalTitleBarStyle}">
-                <TextBlock x:Name="TitleText" 
-                           Text="Message" 
+                <TextBlock x:Name="TitleText"
+                           Text="%LANG:TitleBarAppName%"
                            Style="{DynamicResource ModalTitleTextStyle}"/>
             </Grid>
 
@@ -84,11 +84,11 @@
 
                     <Button x:Name="Button1"
                             Grid.Column="0"
-                            Content="OK"
+                            Content="%LANG:MessageBoxOk%"
                             Style="{DynamicResource ModalPrimaryStretchedButtonStyle}"/>
                     <Button x:Name="Button2"
                             Grid.Column="1"
-                            Content="Cancel"
+                            Content="%LANG:MessageBoxCancel%"
                             Style="{DynamicResource ModalSecondaryStretchedButtonStyle}"
                             Visibility="Collapsed"/>
                 </Grid>

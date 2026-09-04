@@ -319,7 +319,7 @@ function Restore-StartMenuFromBackup {
         return [PSCustomObject]@{
             UserName = $userName
             Result = $false
-            Message = "No start menu backup file found for user $userName."
+            Message = Get-Translation -Key 'StartMenuNoBackupFoundForUser' -FormatArgs @($userName)
         }
     }
 
@@ -328,7 +328,7 @@ function Restore-StartMenuFromBackup {
         return [PSCustomObject]@{
             UserName = $userName
             Result = $true
-            Message = "[WhatIf] Restored start menu for user $userName."
+            Message = Get-Translation -Key 'StartMenuWhatIfRestoredForUser' -FormatArgs @($userName)
         }
     }
 
@@ -336,7 +336,7 @@ function Restore-StartMenuFromBackup {
         return [PSCustomObject]@{
             UserName = $userName
             Result = $false
-            Message = "No start menu backup file found for user $userName."
+            Message = Get-Translation -Key 'StartMenuNoBackupFoundForUser' -FormatArgs @($userName)
         }
     }
 
@@ -349,14 +349,14 @@ function Restore-StartMenuFromBackup {
         return [PSCustomObject]@{
             UserName = $userName
             Result = $true
-            Message = "Restored start menu for user $userName."
+            Message = Get-Translation -Key 'StartMenuRestoredForUser' -FormatArgs @($userName)
         }
     }
     catch {
         return [PSCustomObject]@{
             UserName = $userName
             Result = $false
-            Message = "Failed to restore start menu for user $userName. $($_.Exception.Message)"
+            Message = Get-Translation -Key 'StartMenuRestoreFailedForUser' -FormatArgs @($userName, $_.Exception.Message)
         }
     }
 }
@@ -440,7 +440,7 @@ function Restore-StartMenuForAllUsers {
                 $results += [PSCustomObject]@{
                     UserName = 'Default'
                     Result   = $true
-                    Message  = '[WhatIf] Removed start2.bin for the default user profile.'
+                    Message  = Get-Translation -Key 'StartMenuWhatIfRemovedDefaultProfile'
                 }
             }
             else {
@@ -449,14 +449,14 @@ function Restore-StartMenuForAllUsers {
                     $results += [PSCustomObject]@{
                         UserName = 'Default'
                         Result   = $true
-                        Message  = 'Removed start2.bin for the default user profile.'
+                        Message  = Get-Translation -Key 'StartMenuRemovedDefaultProfile'
                     }
                 }
                 catch {
                     $results += [PSCustomObject]@{
                         UserName = 'Default'
                         Result   = $false
-                        Message  = "Failed to remove start2.bin for the default user profile. $($_.Exception.Message)"
+                        Message  = Get-Translation -Key 'StartMenuRemoveFailedDefaultProfile' -FormatArgs @($_.Exception.Message)
                     }
                 }
             }
@@ -467,7 +467,7 @@ function Restore-StartMenuForAllUsers {
         $results += [PSCustomObject]@{
             UserName = 'unknown'
             Result = $false
-            Message = 'No user start menu locations were found.'
+            Message = Get-Translation -Key 'StartMenuNoUserLocationsFound'
         }
     }
 

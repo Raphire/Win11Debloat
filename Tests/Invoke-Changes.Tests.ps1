@@ -20,7 +20,31 @@ BeforeAll {
     function Set-StoreSearchSuggestionsDisabledForAllUsers { $true }
     function Set-StoreSearchSuggestionsDisabled { param($StoreAppsDatabase) $true }
 
+    . (Join-Path $PSScriptRoot '..\Scripts\FileIO\Import-LanguageFile.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\Features\Invoke-Changes.ps1')
+
+    # Builds a $script:Lang fixture whose Features section mirrors $script:Features exactly,
+    # so Get-Translation resolves the same ApplyText/UndoLabel/ApplyUndoText text the fake
+    # FeatureIds in this file's fixtures expect, without duplicating per-test lookup data.
+    function Sync-TestLangFeatures {
+        $langFeatures = @{}
+        foreach ($featureId in $script:Features.Keys) {
+            $feature = $script:Features[$featureId]
+            $entry = @{}
+            foreach ($field in 'ApplyText', 'UndoLabel', 'ApplyUndoText') {
+                if ($null -ne $feature.$field) { $entry[$field] = [string]$feature.$field }
+            }
+            $langFeatures[$featureId] = [PSCustomObject]$entry
+        }
+
+        $script:Lang = [PSCustomObject]@{
+            LanguageCode = 'en-US'
+            Chrome       = [PSCustomObject]@{}
+            Features     = [PSCustomObject]$langFeatures
+            UiGroups     = [PSCustomObject]@{}
+            Categories   = [PSCustomObject]@{}
+        }
+    }
 }
 
 Describe 'Resolve-UndoRegFilePath' {
@@ -62,6 +86,7 @@ Describe 'Invoke-FeatureApply' {
             ReplaceStartAllUsers = [PSCustomObject]@{ ApplyText = 'Replace Start all users'; RegistryKey = '' }
             DisableStoreSearchSuggestions = [PSCustomObject]@{ ApplyText = 'Disable Store suggestions'; RegistryKey = '' }
         }
+        Sync-TestLangFeatures
         Mock Import-RegistryFile { $true }
         Mock Remove-SelectedApps { $true }
         Mock Invoke-ForceRemoveEdge { $true }
@@ -238,6 +263,7 @@ Describe 'Invoke-ApplyFeatures' {
             One = [PSCustomObject]@{ ApplyText = 'Apply one' }
             Two = [PSCustomObject]@{ ApplyText = 'Apply two' }
         }
+        Sync-TestLangFeatures
         $script:progressCalls = New-Object System.Collections.Generic.List[object]
         $script:ApplyProgressCallback = { param($Step, $Total, $Text) $script:progressCalls.Add(@($Step, $Total, $Text)) }
         Mock Invoke-FeatureApply { $true }
@@ -283,6 +309,7 @@ Describe 'Invoke-UndoFeatures' {
             RegistryUndo = [PSCustomObject]@{ UndoLabel = 'Undo registry'; ApplyUndoText = 'Restoring registry'; RegistryUndoKey = 'undo.reg' }
             CustomUndo = [PSCustomObject]@{ UndoLabel = 'Undo custom'; ApplyUndoText = ''; RegistryUndoKey = '' }
         }
+        Sync-TestLangFeatures
         Mock Resolve-UndoRegFilePath { param($FileName) "Undo\$FileName" }
         Mock Import-RegistryFile { $true }
         Mock Invoke-FeatureUndo { $true }

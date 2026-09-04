@@ -50,7 +50,7 @@ function Remove-SelectedApps {
         $appIndex++
 
         if ($script:ApplySubStepCallback -and $appCount -gt 1) {
-            & $script:ApplySubStepCallback "Removing apps ($appIndex/$appCount)" $appIndex $appCount
+            & $script:ApplySubStepCallback (Get-Translation -Key 'RemovingAppsSubStep' -FormatArgs @($appIndex, $appCount)) $appIndex $appCount
         }
 
         Write-Host "Removing $app"
@@ -329,7 +329,7 @@ function Get-AppRemovalMethod {
 #>
 function Request-EdgeForceRemove {
     if ($script:GuiWindow) {
-        $result = Show-MessageBox -Message 'Unable to uninstall Microsoft Edge via WinGet. Would you like to forcefully uninstall it? NOT RECOMMENDED!' -Title 'Force Uninstall Microsoft Edge?' -Button 'YesNo' -Icon 'Warning'
+        $result = Show-MessageBox -Message (Get-Translation -Key 'ForceRemoveEdgeMessage') -Title (Get-Translation -Key 'ForceRemoveEdgeTitle') -Button 'YesNo' -Icon 'Warning'
         if ($result -eq 'Yes') {
             Write-Host ""
             return (Invoke-ForceRemoveEdge)

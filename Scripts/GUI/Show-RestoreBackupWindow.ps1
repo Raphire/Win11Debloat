@@ -35,10 +35,10 @@ function Show-RestoreBackupWindow {
             if ($restoreOpResult -and $restoreOpResult.Result) {
                 $restoreResult.RestoredRegistry = $true
                 if ($script:Params.ContainsKey("WhatIf")) {
-                    $successMessage = '[WhatIf] Registry backup would be restored (no changes made).'
+                    $successMessage = Get-Translation -Key 'RestoreRegistryWhatIfMessage'
                 }
                 else {
-                    $successMessage = 'Registry backup restored successfully. Some changes may require a restart to take effect.'
+                    $successMessage = Get-Translation -Key 'RestoreRegistrySuccessMessage'
                 }
             }
         }
@@ -70,22 +70,22 @@ function Show-RestoreBackupWindow {
 
             if ($successCount -eq 0) {
                 $errorSummary = ($resultEntries | ForEach-Object { $_.Message }) -join [Environment]::NewLine
-                throw "Failed to restore the Start Menu backup.`n$errorSummary"
+                throw (Get-Translation -Key 'RestoreStartMenuFailedMessage' -FormatArgs @($errorSummary))
             }
 
             if ($failedEntries.Count -gt 0) {
                 $failureSummary = ($failedEntries | ForEach-Object { $_.Message }) -join [Environment]::NewLine
-                $warningMessage = "The Start Menu backup was successfully restored for $successCount user(s).`nSome users could not be restored:`n$failureSummary"
+                $warningMessage = Get-Translation -Key 'RestoreStartMenuPartialSuccessMessage' -FormatArgs @($successCount, $failureSummary)
             }
             else {
                 if ($script:Params.ContainsKey("WhatIf")) {
-                    $successMessage = '[WhatIf] Start Menu backup would be restored (no changes made).'
+                    $successMessage = Get-Translation -Key 'RestoreStartMenuWhatIfMessage'
                 }
                 elseif ($scope -eq 'AllUsers') {
-                    $successMessage = "The Start Menu backup was successfully restored for all users. The changes will apply the next time users sign in."
+                    $successMessage = Get-Translation -Key 'RestoreStartMenuAllUsersSuccessMessage'
                 }
                 else {
-                    $successMessage = "The Start Menu backup was successfully restored for the current user. The changes will apply the next time you sign in."
+                    $successMessage = Get-Translation -Key 'RestoreStartMenuCurrentUserSuccessMessage'
                 }
             }
 
@@ -94,19 +94,19 @@ function Show-RestoreBackupWindow {
 
         if ($warningMessage) {
             Write-Host "$warningMessage"
-            Show-MessageBox -Title 'Backup Restored' -Message $warningMessage -Icon Warning
+            Show-MessageBox -Title (Get-Translation -Key 'RestoreBackupRestoredTitle') -Message $warningMessage -Icon Warning
         }
         elseif ($successMessage) {
             Write-Host "$successMessage"
-            Show-MessageBox -Title 'Backup Restored' -Message $successMessage -Icon Success
+            Show-MessageBox -Title (Get-Translation -Key 'RestoreBackupRestoredTitle') -Message $successMessage -Icon Success
         }
 
         return $restoreResult
     }
     catch {
-        $errorMessage = if ($_.Exception.Message) { $_.Exception.Message } else { 'An unexpected error occurred.' }
+        $errorMessage = if ($_.Exception.Message) { $_.Exception.Message } else { Get-Translation -Key 'RestoreUnexpectedError' }
         Write-Error "Restore operation failed: $errorMessage"
-        Show-MessageBox -Title 'Error' -Message "Restore failed: $errorMessage" -Icon Error
+        Show-MessageBox -Title (Get-Translation -Key 'ErrorTitle') -Message (Get-Translation -Key 'RestoreOperationFailedMessage' -FormatArgs @($errorMessage)) -Icon Error
         return [PSCustomObject]@{
             RestoredRegistry = $false
             RestoredStartMenu = $false

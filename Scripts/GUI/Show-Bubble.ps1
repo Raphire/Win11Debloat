@@ -72,8 +72,8 @@ function Hide-Bubble {
     parameter is mandatory.
 
 .PARAMETER Message
-    The text message to display inside the bubble. Defaults to
-    'View the selected changes here'.
+    The text message to display inside the bubble. Defaults to the
+    translated "view the selected changes" prompt.
 
 .PARAMETER DurationSeconds
     The number of seconds the bubble remains visible before auto-hiding.
@@ -91,7 +91,7 @@ function Show-Bubble {
         [System.Windows.Controls.Control]$TargetControl,
 
         [Parameter(Mandatory=$false)]
-        [string]$Message = 'View the selected changes here',
+        [string]$Message = (Get-Translation -Key 'BubbleViewChanges'),
 
         [Parameter(Mandatory=$false)]
         [int]$DurationSeconds = 5
@@ -104,6 +104,7 @@ function Show-Bubble {
     Hide-Bubble -Immediate
 
     $xaml = Get-Content -Path $script:BubbleHintSchema -Raw
+    $xaml = ConvertTo-LocalizedXaml -Xaml $xaml
     $reader = [System.Xml.XmlReader]::Create([System.IO.StringReader]::new($xaml))
     try {
         $bubblePanel = [System.Windows.Markup.XamlReader]::Load($reader)

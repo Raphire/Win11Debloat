@@ -1,6 +1,6 @@
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Win11Debloat Application Selection" 
+        Title="%LANG:AppSelectionWindowTitle%"
         Width="450" Height="580" 
         ResizeMode="NoResize" 
         WindowStartupLocation="CenterScreen"
@@ -64,14 +64,14 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" 
-                                   Text="Win11Debloat Application Selection" 
+                        <TextBlock Grid.Column="0"
+                                   Text="%LANG:AppSelectionWindowTitle%"
                                    Foreground="{DynamicResource AppFgColor}"
-                                   VerticalAlignment="Center" 
+                                   VerticalAlignment="Center"
                                    Margin="12,0,0,0"
                                    FontSize="12"/>
                         <StackPanel Grid.Column="1" Orientation="Horizontal">
-                            <Button x:Name="CloseBtn" Content="&#xE8BB;" Style="{StaticResource CloseButton}" ToolTip="Close" IsCancel="True" AutomationProperties.Name="Close"/>
+                            <Button x:Name="CloseBtn" Content="&#xE8BB;" Style="{StaticResource CloseButton}" ToolTip="%LANG:TitleBarClose%" IsCancel="True" AutomationProperties.Name="%LANG:TitleBarClose%"/>
                         </StackPanel>
                     </Grid>
                 </Border>
@@ -87,14 +87,14 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0" 
-                            Text="Check apps that you wish to remove, uncheck apps that you wish to keep" 
+                    <TextBlock Grid.Row="0"
+                            Text="%LANG:AppSelectionWindowInstructions%"
                             TextWrapping="Wrap"
                             Foreground="{DynamicResource AppFgColor}"
                             Margin="0,0,0,10"/>
 
                     <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,8">
-                        <CheckBox x:Name="CheckAllBox" Content="Check/Uncheck all" Margin="8,0,15,0" Foreground="{DynamicResource AppFgColor}" AutomationProperties.Name="Check or Uncheck all"/>
+                        <CheckBox x:Name="CheckAllBox" Content="%LANG:AppSelectionWindowCheckAll%" Margin="8,0,15,0" Foreground="{DynamicResource AppFgColor}" AutomationProperties.Name="%LANG:AppSelectionWindowCheckAllAutomationName%"/>
                     </StackPanel>
 
                     <Border Grid.Row="2" BorderBrush="{DynamicResource AppBorderColor}" CornerRadius="4" BorderThickness="1" Margin="0,0,0,10" Background="{DynamicResource CardBgColor}">
@@ -103,17 +103,17 @@
                                 <StackPanel x:Name="AppsPanel" Margin="5"/>
                             </ScrollViewer>
                             <Border x:Name="LoadingAppsIndicator" CornerRadius="4" Background="{DynamicResource ScrollBarThumbColor}" Opacity="0.8" Visibility="Collapsed">
-                                <TextBlock Text="Loading apps..." FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource AppFgColor}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <TextBlock Text="%LANG:AppLoadingIndicator%" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource AppFgColor}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </Border>
                         </Grid>
                     </Border>
 
                     <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
                         <Grid Margin="0,8,10,10">
-                            <CheckBox x:Name="OnlyInstalledBox" Content="Only show installed apps" Foreground="{DynamicResource AppFgColor}" AutomationProperties.Name="Only show installed apps"/>
+                            <CheckBox x:Name="OnlyInstalledBox" Content="%LANG:AppOnlyInstalledCheckbox%" Foreground="{DynamicResource AppFgColor}" AutomationProperties.Name="%LANG:AppOnlyInstalledCheckbox%"/>
                         </Grid>
-                        <Button x:Name="ConfirmBtn" Width="80" Height="32" Margin="0,0,10,0" Content="Confirm" Style="{DynamicResource PrimaryButtonStyle}" AutomationProperties.Name="Confirm"/>
-                        <Button x:Name="CancelBtn" Width="80" Height="32" Content="Cancel" Style="{DynamicResource SecondaryButtonStyle}" IsCancel="True" AutomationProperties.Name="Cancel"/>
+                        <Button x:Name="ConfirmBtn" Width="80" Height="32" Margin="0,0,10,0" Content="%LANG:AppSelectionWindowConfirm%" Style="{DynamicResource PrimaryButtonStyle}" AutomationProperties.Name="%LANG:AppSelectionWindowConfirm%"/>
+                        <Button x:Name="CancelBtn" Width="80" Height="32" Content="%LANG:AppSelectionWindowCancel%" Style="{DynamicResource SecondaryButtonStyle}" IsCancel="True" AutomationProperties.Name="%LANG:AppSelectionWindowCancel%"/>
                     </StackPanel>
                 </Grid>
             </Grid>

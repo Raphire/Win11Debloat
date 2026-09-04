@@ -142,6 +142,15 @@ function Update-AppsPanelSort {
     }
 }
 
+<#
+    .SYNOPSIS
+        Updates the "N apps selected" status text and shows or hides the app-removal scope section.
+
+    .DESCRIPTION
+        The scope section only makes sense once at least one app is selected, so it's hidden
+        entirely at zero and its description text is refreshed via Update-AppRemovalScopeDescription
+        whenever the selection count changes.
+#>
 function Update-AppSelectionStatus {
     param(
         [System.Windows.Controls.Panel]$AppsPanel,
@@ -158,7 +167,7 @@ function Update-AppSelectionStatus {
             $selectedCount++
         }
     }
-    $AppSelectionStatus.Text = "$selectedCount app(s) selected for removal"
+    $AppSelectionStatus.Text = Get-Translation -Key 'AppSelectionStatusSelected' -Count $selectedCount -FormatArgs @($selectedCount)
 
     if ($AppRemovalScopeCombo -and $AppRemovalScopeSection -and $AppRemovalScopeDescription) {
         if ($selectedCount -gt 0) {
@@ -189,13 +198,13 @@ function Update-AppRemovalScopeDescription {
         # Content is the display text and will change once translated; Name is stable.
         switch ($selectedItem.Name) {
             "AppRemovalScopeAllUsers" {
-                $AppRemovalScopeDescription.Text = "Apps will be removed for all users and from the Windows image to prevent reinstallation for new users."
+                $AppRemovalScopeDescription.Text = Get-Translation -Key 'AppRemovalScopeDescriptionAllUsers'
             }
             "AppRemovalScopeCurrentUser" {
-                $AppRemovalScopeDescription.Text = "Apps will only be removed for the current user."
+                $AppRemovalScopeDescription.Text = Get-Translation -Key 'AppRemovalScopeDescriptionCurrentUser'
             }
             "AppRemovalScopeTargetUser" {
-                $AppRemovalScopeDescription.Text = "Apps will only be removed for the specified target user."
+                $AppRemovalScopeDescription.Text = Get-Translation -Key 'AppRemovalScopeDescriptionTargetUser'
             }
         }
     }
@@ -448,9 +457,9 @@ function Add-AppsToMainWindow {
         $dot.Style = $Window.Resources['AppRecommendationDotStyle']
         $dot.Fill = switch ($app.Recommendation) { 'safe' { $brushSafe } 'unsafe' { $brushUnsafe } default { $brushDefault } }
         $dot.ToolTip = switch ($app.Recommendation) {
-            'safe'   { '[Recommended] Safe to remove for most users' }
-            'unsafe' { '[Not Recommended] Only remove if you know what you are doing' }
-            default  { "[Optional] Can be safely removed if you don't need this app" }
+            'safe'   { Get-Translation -Key 'AppLegendRecommendedTooltip' }
+            'unsafe' { Get-Translation -Key 'AppLegendNotRecommendedTooltip' }
+            default  { Get-Translation -Key 'AppLegendOptionalTooltip' }
         }
         [System.Windows.Controls.Grid]::SetColumn($dot, 0)
 
@@ -608,7 +617,7 @@ function Initialize-MainWindowApps {
 
                     if ($null -eq $listOfApps) {
                         Write-Warning "WinGet returned no data (command timed out or failed)"
-                        Show-MessageBox -Message 'Unable to load list of installed apps via WinGet.' -Title 'Error' -Button 'OK' -Icon 'Error' | Out-Null
+                        Show-MessageBox -Message (Get-Translation -Key 'AppSelectionWinGetLoadFailedMessage') -Title (Get-Translation -Key 'ErrorTitle') -Button 'OK' -Icon 'Error' | Out-Null
                         $OnlyInstalledAppsBox.IsChecked = $false
                     }
                 }

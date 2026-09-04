@@ -1,10 +1,13 @@
 BeforeAll {
     . (Join-Path $PSScriptRoot '..\Scripts\FileIO\Import-JsonFile.ps1')
+    . (Join-Path $PSScriptRoot '..\Scripts\FileIO\Import-LanguageFile.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\Helpers\Add-Parameter.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\Helpers\Import-ConfigToParams.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\Helpers\Test-ConfigConsistency.ps1')
     $script:ConfigFixturePath = Join-Path $PSScriptRoot 'TestData\JsonFileLoading\ExportedConfig.WithSettings.json'
     $script:SkipRegistryBackupFixturePath = Join-Path $PSScriptRoot 'TestData\JsonFileLoading\ExportedConfig.SkipRegistryBackup.json'
+    $script:LanguagesPath = Join-Path $PSScriptRoot '..\Config\Languages'
+    $script:Lang = Import-LanguageFile -LanguageCode 'en-US'
 }
 
 Describe 'Import-ConfigToParams' {

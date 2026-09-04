@@ -1,0 +1,7 @@
+{
+  "TitleBarClose": "Close",
+  "TitleBarOptions": "Options",
+  "AppsSelectedCount_one": "{0} app selected",
+  "AppsSelectedCount_other": "{0} apps selected",
+  "TooManyPlaceholders": "Value is {0} and {1}"
+}

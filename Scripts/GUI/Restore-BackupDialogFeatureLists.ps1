@@ -81,8 +81,9 @@ function Test-RestoreDialogFeatureCanAutoRevert {
         Resolves a human-readable label for a feature shown in the restore dialog.
 
     .DESCRIPTION
-        Returns the feature's Label from Features.json when found, falling back
-        to the raw FeatureId string. For null/empty FeatureIds returns 'Unknown feature'.
+        Returns the feature's translated Label when found, falling back to the
+        raw FeatureId string. For null/empty FeatureIds returns the translated
+        "unknown feature" placeholder.
 
     .PARAMETER FeatureId
         The feature identifier to resolve a label for.
@@ -97,12 +98,12 @@ function Get-RestoreDialogFeatureDisplayLabel {
     )
 
     if ([string]::IsNullOrWhiteSpace($FeatureId)) {
-        return 'Unknown feature'
+        return Get-Translation -Key 'RestoreUnknownFeature'
     }
 
     $featureDefinition = Get-RestoreDialogFeatureDefinition -FeatureId $FeatureId -Features $Features
     if ($featureDefinition) {
-        return [string]$featureDefinition.Label
+        return Get-Translation -Key $FeatureId -Field 'Label' -Section 'Features'
     }
 
     return $FeatureId

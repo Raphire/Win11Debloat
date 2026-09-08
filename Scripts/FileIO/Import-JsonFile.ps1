@@ -17,7 +17,7 @@ function Import-JsonFile {
     }
     
     try {
-        $jsonContent = Get-Content -Path $filePath -Raw | ConvertFrom-Json
+        $jsonContent = Get-Content -Path $filePath -Raw -Encoding UTF8 | ConvertFrom-Json
         
         # Validate version if specified
         if ($expectedVersion -and $jsonContent.Version -and $jsonContent.Version -ne $expectedVersion) {

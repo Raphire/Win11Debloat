@@ -1,0 +1,744 @@
+{
+  "Features": {
+    "RemoveApps": {
+      "Label": "Remover os apps especificados com o parâmetro 'Apps'",
+      "ApplyText": "Removendo apps selecionados"
+    },
+    "Apps": {
+      "Label": "A seleção de apps para remover, especificada como uma lista separada por vírgulas. Use 'Default' (ou omita) para usar a lista de apps padrão",
+      "ApplyText": "Removendo apps selecionados"
+    },
+    "RemoveGamingApps": {
+      "Label": "Remover o App Xbox e o Xbox Gamebar",
+      "ApplyText": "Removendo apps relacionados a jogos"
+    },
+    "RemoveHPApps": {
+      "Label": "Remover aplicativos OEM da HP",
+      "ApplyText": "Removendo apps da HP"
+    },
+    "CreateRestorePoint": {
+      "Label": "Criar um ponto de restauração do sistema",
+      "ApplyText": "Criando ponto de restauração do sistema"
+    },
+    "DisableTelemetry": {
+      "Label": "Desabilitar telemetria, rastreamento e anúncios direcionados",
+      "ToolTip": "Esta configuração desabilita telemetria, coleta de dados de diagnóstico, histórico de atividades, rastreamento de inicialização de apps, anúncios direcionados e mais. Limita os dados enviados à Microsoft sobre seu dispositivo e uso. Se você for um Windows Insider, as atualizações podem ser bloqueadas até que a coleta opcional de dados de diagnóstico seja reativada.",
+      "ApplyText": "Desabilitando telemetria e coleta de dados de diagnóstico",
+      "UndoLabel": "Habilitar telemetria, rastreamento e anúncios direcionados",
+      "ApplyUndoText": "Habilitando telemetria e coleta de dados de diagnóstico"
+    },
+    "DisableSuggestions": {
+      "Label": "Desabilitar dicas, truques e conteúdo sugerido em todo o Windows",
+      "ToolTip": "Esta configuração remove muitas distrações irritantes do Windows. Isso inclui coisas como notificações, lembretes e anúncios de provedor de sincronização. Também impede a instalação automática de apps sugeridos.",
+      "ApplyText": "Desabilitando dicas, truques, sugestões e anúncios em todo o Windows",
+      "UndoLabel": "Habilitar dicas, truques e conteúdo sugerido em todo o Windows",
+      "ApplyUndoText": "Habilitando dicas, truques, sugestões e anúncios em todo o Windows"
+    },
+    "DisableNotifications": {
+      "Label": "Desabilitar notificações do Windows (de apps e outros remetentes)",
+      "ToolTip": "Desabilita notificações nativas do Windows de apps e outros remetentes, incluindo notificações de apps como Discord, WhatsApp, Teams e Slack.",
+      "ApplyText": "Desabilitando notificações e lembretes do Windows",
+      "UndoLabel": "Habilitar notificações e lembretes do Windows",
+      "ApplyUndoText": "Habilitando notificações e lembretes do Windows"
+    },
+    "DisableLocationServices": {
+      "Label": "Desabilitar serviços de localização do Windows e acesso à localização de apps",
+      "ToolTip": "Isto desabilitará os serviços de localização do Windows e negará o acesso dos apps à sua localização. Esta funcionalidade usa políticas, que bloqueiam certas configurações.",
+      "ApplyText": "Desabilitando serviços de localização do Windows e acesso à localização de apps",
+      "UndoLabel": "Habilitar serviços de localização do Windows e acesso à localização de apps",
+      "ApplyUndoText": "Habilitando serviços de localização do Windows e acesso à localização de apps"
+    },
+    "DisableFindMyDevice": {
+      "Label": "Desabilitar rastreamento de localização do Encontrar Meu Dispositivo",
+      "ToolTip": "Isto desabilitará a funcionalidade 'Encontrar Meu Dispositivo', que periodicamente envia a localização do seu dispositivo para a Microsoft. Esta funcionalidade usa políticas, que bloqueiam certas configurações.",
+      "ApplyText": "Desabilitando rastreamento de localização do Encontrar Meu Dispositivo",
+      "UndoLabel": "Habilitar rastreamento de localização do Encontrar Meu Dispositivo",
+      "ApplyUndoText": "Habilitando rastreamento de localização do Encontrar Meu Dispositivo"
+    },
+    "DisableLockscreenTips": {
+      "Label": "Desabilitar dicas e truques na tela de bloqueio",
+      "ToolTip": "Isto desabilitará a opção de destaque da tela de bloqueio e desabilitará as dicas, truques e fatos divertidos que aparecem na tela de bloqueio.",
+      "ApplyText": "Desabilitando dicas e truques na tela de bloqueio",
+      "UndoLabel": "Habilitar dicas e truques na tela de bloqueio",
+      "ApplyUndoText": "Habilitando dicas e truques na tela de bloqueio"
+    },
+    "EnableDesktopSpotlight": {
+      "Label": "Habilitar papel de parede e atalho do destaque do Windows na área de trabalho",
+      "ToolTip": "Restaura o papel de parede do destaque do Windows e o atalho 'Saiba mais sobre esta imagem'.",
+      "ApplyText": "Restaurando o papel de parede e atalho do destaque do Windows na área de trabalho"
+    },
+    "DisableDesktopSpotlight": {
+      "Label": "Desabilitar papel de parede do destaque do Windows na área de trabalho",
+      "ToolTip": "Desabilita o destaque do Windows para o papel de parede da área de trabalho, que exibe imagens rotativas e pode mostrar dicas e fatos divertidos. Esta funcionalidade usa políticas, que bloqueiam certas configurações.",
+      "ApplyText": "Desabilitando o papel de parede do destaque do Windows na área de trabalho",
+      "UndoLabel": "Habilitar papel de parede do destaque do Windows na área de trabalho",
+      "ApplyUndoText": "Restaurando o papel de parede e atalho do destaque do Windows na área de trabalho"
+    },
+    "HideDesktopSpotlightIcon": {
+      "Label": "Ocultar o atalho de área de trabalho 'Saiba mais sobre esta imagem'",
+      "ToolTip": "Oculta o atalho de área de trabalho 'Saiba mais sobre esta imagem' enquanto mantém a rotação de papel de parede do destaque do Windows habilitada. Não desabilita o destaque do Windows.",
+      "ApplyText": "Ocultando o atalho de área de trabalho 'Saiba mais sobre esta imagem' do destaque do Windows",
+      "UndoLabel": "Mostrar o atalho de área de trabalho 'Saiba mais sobre esta imagem'",
+      "ApplyUndoText": "Mostrando o atalho de área de trabalho 'Saiba mais sobre esta imagem' do destaque do Windows"
+    },
+    "DisableEdgeAds": {
+      "Label": "Desabilitar anúncios, sugestões e feed de notícias no Edge",
+      "ToolTip": "Isto desabilitará várias distrações do Microsoft Edge, como anúncios, sugestões e o feed de notícias MSN. Esta funcionalidade usa políticas, que bloqueiam certas configurações.",
+      "ApplyText": "Desabilitando anúncios, sugestões e o feed de notícias MSN no Microsoft Edge",
+      "UndoLabel": "Habilitar anúncios, sugestões e feed de notícias no Edge",
+      "ApplyUndoText": "Habilitando anúncios, sugestões e o feed de notícias MSN no Microsoft Edge"
+    },
+    "DisableCopilot": {
+      "Label": "Desabilitar Microsoft Copilot",
+      "ToolTip": "Isto desabilitará e desinstalará o Microsoft Copilot, o assistente de IA integrado do Windows.",
+      "ApplyText": "Desabilitando Microsoft Copilot",
+      "UndoLabel": "Habilitar Microsoft Copilot",
+      "ApplyUndoText": "Habilitando Microsoft Copilot"
+    },
+    "DisableRecall": {
+      "Label": "Desabilitar Windows Recall",
+      "ToolTip": "Isto desabilitará o Windows Recall, uma funcionalidade de IA que fornece acesso rápido a arquivos, apps e atividades recentemente usados. Esta funcionalidade usa políticas, que bloqueiam certas configurações.",
+      "ApplyText": "Desabilitando Windows Recall",
+      "UndoLabel": "Habilitar Windows Recall",
+      "ApplyUndoText": "Habilitando Windows Recall"
+    },
+    "DisableClickToDo": {
+      "Label": "Desabilitar Click To Do, análise de IA de texto e imagem",
+      "ToolTip": "Isto desabilitará o Click To Do, que fornece funcionalidades de análise de IA de texto e imagem no Windows. Esta funcionalidade usa políticas, que bloqueiam certas configurações.",
+      "ApplyText": "Desabilitando Click to Do",
+      "UndoLabel": "Habilitar Click To Do, análise de IA de texto e imagem",
+      "ApplyUndoText": "Habilitando Click to Do"
+    },
+    "DisableAISvcAutoStart": {
+      "Label": "Impedir que o serviço de IA inicie automaticamente",
+      "ToolTip": "Isto definirá o serviço WSAIFabricSvc para inicialização manual, impedindo que o serviço inicie automaticamente com o Windows.",
+      "ApplyText": "Impedindo que o serviço de IA inicie automaticamente",
+      "UndoLabel": "Permitir que o serviço de IA inicie automaticamente",
+      "ApplyUndoText": "Permitindo que o serviço de IA inicie automaticamente"
+    },
+    "DisableDVR": {
+      "Label": "Desabilitar gravação de tela/jogos do Xbox",
+      "ToolTip": "Isto desabilitará as funcionalidades de gravação de tela/jogos do Xbox incluídas com o app Game Bar. Esta funcionalidade usa políticas, que bloqueiam certas configurações.",
+      "ApplyText": "Desabilitando gravação de tela/jogos do Xbox",
+      "UndoLabel": "Habilitar gravação de tela/jogos do Xbox",
+      "ApplyUndoText": "Habilitando gravação de tela/jogos do Xbox"
+    },
+    "DisableGameBarIntegration": {
+      "Label": "Desabilitar integração do Game Bar",
+      "ToolTip": "Isto desabilitará a integração do Game Bar com jogos e controles. Isso impede os popups irritantes do ms-gamebar ao iniciar jogos ou conectar um controle.",
+      "ApplyText": "Desabilitando integração do Game Bar",
+      "UndoLabel": "Habilitar integração do Game Bar",
+      "ApplyUndoText": "Habilitando integração do Game Bar"
+    },
+    "ClearStart": {
+      "Label": "Remover todos os apps fixados do Menu Iniciar para este usuário apenas",
+      "ApplyText": "Removendo todos os apps fixados do Menu Iniciar"
+    },
+    "ClearStartAllUsers": {
+      "Label": "Remover todos os apps fixados do Menu Iniciar para todos os usuários existentes e novos",
+      "ApplyText": "Removendo todos os apps fixados do Menu Iniciar para todos os usuários"
+    },
+    "ReplaceStart": {
+      "Label": "Substituir o layout do Menu Iniciar para este usuário apenas com o arquivo de modelo fornecido",
+      "ApplyText": "Substituindo o Menu Iniciar"
+    },
+    "ReplaceStartAllUsers": {
+      "Label": "Substituir o layout do Menu Iniciar para todos os usuários existentes e novos com o arquivo de modelo fornecido",
+      "ApplyText": "Substituindo o Menu Iniciar para todos os usuários"
+    },
+    "DisableStartRecommended": {
+      "Label": "Ocultar seção de recomendações no Menu Iniciar",
+      "ToolTip": "Isto ocultará a seção de recomendações no Menu Iniciar, que mostra apps adicionados recentemente, arquivos abertos recentemente e recomendações de apps. Esta funcionalidade usa políticas, que bloqueiam certas configurações.",
+      "ApplyText": "Desabilitando a seção de recomendações do Menu Iniciar",
+      "UndoLabel": "Mostrar seção de recomendações no Menu Iniciar",
+      "ApplyUndoText": "Habilitando a seção de recomendações do Menu Iniciar"
+    },
+    "DisableStartAllApps": {
+      "Label": "Ocultar seção 'Todos os Apps' no Menu Iniciar",
+      "ToolTip": "Isto ocultará a seção 'Todos os Apps' no Menu Iniciar, que mostra todos os apps instalados. ATENÇÃO: Ocultar esta seção pode dificultar a localização de apps instalados no seu sistema. Esta funcionalidade usa políticas, que bloqueiam certas configurações.",
+      "ApplyText": "Desabilitando a seção 'Todos os Apps' no Menu Iniciar",
+      "UndoLabel": "Mostrar seção 'Todos os Apps' no Menu Iniciar",
+      "ApplyUndoText": "Habilitando a seção 'Todos os Apps' no Menu Iniciar"
+    },
+    "DisableStartPhoneLink": {
+      "Label": "Desabilitar integração do Phone Link no Menu Iniciar",
+      "ToolTip": "Isto removerá a integração do Phone Link no Menu Iniciar quando você tiver um dispositivo móvel conectado ao seu PC.",
+      "ApplyText": "Desabilitando a integração de dispositivos móveis do Phone Link no Menu Iniciar",
+      "UndoLabel": "Habilitar integração do Phone Link no Menu Iniciar",
+      "ApplyUndoText": "Habilitando a integração de dispositivos móveis do Phone Link no Menu Iniciar"
+    },
+    "DisableBing": {
+      "Label": "Desabilitar pesquisa web do Bing e integração do Copilot na pesquisa",
+      "ToolTip": "Isto desabilitará os resultados da pesquisa web do Bing e a integração do Copilot na experiência de pesquisa do Windows. Esta funcionalidade usa políticas, que bloqueiam certas configurações.",
+      "ApplyText": "Desabilitando pesquisa web do Bing e integração do Copilot na pesquisa do Windows",
+      "UndoLabel": "Habilitar pesquisa web do Bing e integração do Copilot na pesquisa",
+      "ApplyUndoText": "Habilitando pesquisa web do Bing e integração do Copilot na pesquisa do Windows"
+    },
+    "DisableStoreSearchSuggestions": {
+      "Label": "Desabilitar sugestões de apps da Microsoft Store na pesquisa",
+      "ToolTip": "Isto desabilitará as sugestões de apps da Microsoft Store na pesquisa do Windows.",
+      "ApplyText": "Desabilitando sugestões de apps da Microsoft Store na pesquisa",
+      "UndoLabel": "Habilitar sugestões de apps da Microsoft Store na pesquisa",
+      "ApplyUndoText": "Habilitando sugestões de apps da Microsoft Store na pesquisa"
+    },
+    "DisableSettings365Ads": {
+      "Label": "Ocultar anúncios do Microsoft 365 Copilot na Página Inicial do Configurações",
+      "ToolTip": "Isto desabilitará os anúncios do Microsoft 365 Copilot que aparecem na página inicial do Configurações.",
+      "ApplyText": "Desabilitando anúncios do Microsoft 365 Copilot na Página Inicial do Configurações",
+      "UndoLabel": "Mostrar anúncios do Microsoft 365 Copilot na Página Inicial do Configurações",
+      "ApplyUndoText": "Habilitando anúncios do Microsoft 365 Copilot na Página Inicial do Configurações"
+    },
+    "DisableSettingsHome": {
+      "Label": "Ocultar página 'Inicial' do Configurações",
+      "ToolTip": "Remove a página 'Inicial' do app Configurações.",
+      "ApplyText": "Desabilitando a Página Inicial do Configurações",
+      "UndoLabel": "Mostrar página 'Inicial' do Configurações",
+      "ApplyUndoText": "Habilitando a Página Inicial do Configurações"
+    },
+    "DisableEdgeAI": {
+      "Label": "Desabilitar funcionalidades de IA no Microsoft Edge",
+      "ToolTip": "Isto desabilitará funcionalidades de IA no Microsoft Edge, como a barra lateral com IA e funcionalidades do Copilot. Esta funcionalidade usa políticas, que bloqueiam certas configurações.",
+      "ApplyText": "Desabilitando funcionalidades de IA no Microsoft Edge",
+      "UndoLabel": "Habilitar funcionalidades de IA no Microsoft Edge",
+      "ApplyUndoText": "Habilitando funcionalidades de IA no Microsoft Edge"
+    },
+    "DisablePaintAI": {
+      "Label": "Desabilitar funcionalidades de IA no Paint",
+      "ToolTip": "Isto desabilitará funcionalidades de IA no Paint, como a geração e edição de imagens com IA. Esta funcionalidade usa políticas, que bloqueiam certas configurações.",
+      "ApplyText": "Desabilitando funcionalidades de IA no Paint",
+      "UndoLabel": "Habilitar funcionalidades de IA no Paint",
+      "ApplyUndoText": "Habilitando funcionalidades de IA no Paint"
+    },
+    "DisableNotepadAI": {
+      "Label": "Desabilitar funcionalidades de IA no Notepad",
+      "ToolTip": "Isto desabilitará funcionalidades de IA no Notepad, como as sugestões de escrita com IA. Esta funcionalidade usa políticas, que bloqueiam certas configurações.",
+      "ApplyText": "Desabilitando funcionalidades de IA no Notepad",
+      "UndoLabel": "Habilitar funcionalidades de IA no Notepad",
+      "ApplyUndoText": "Habilitando funcionalidades de IA no Notepad"
+    },
+    "EnableDarkMode": {
+      "Label": "Habilitar tema escuro para o sistema e apps",
+      "ToolTip": "Isto definirá o tema do app e do sistema para o modo escuro.",
+      "ApplyText": "Habilitando modo escuro para o sistema e apps",
+      "UndoLabel": "Desabilitar tema escuro para o sistema e apps",
+      "ApplyUndoText": "Desabilitando modo escuro para o sistema e apps"
+    },
+    "DisableDragTray": {
+      "Label": "Desabilitar 'Drag Tray' para compartilhar e mover arquivos",
+      "ToolTip": "O Drag Tray é uma nova funcionalidade para compartilhar e mover arquivos no Windows 11, aparece no topo da tela ao arrastar arquivos.",
+      "ApplyText": "Desabilitando Drag Tray",
+      "UndoLabel": "Habilitar 'Drag Tray' para compartilhar e mover arquivos",
+      "ApplyUndoText": "Habilitando Drag Tray"
+    },
+    "RevertContextMenu": {
+      "Label": "Usar estilo clássico de menu de contexto do Windows 10",
+      "ToolTip": "Isto restaurará o estilo clássico do menu de contexto do Windows 10, que normalmente fica oculto atrás da entrada 'Mostrar mais opções' no novo menu de contexto do Windows 11.",
+      "ApplyText": "Restaurando o estilo clássico de menu de contexto do Windows 10",
+      "UndoLabel": "Usar estilo de menu de contexto do Windows 11",
+      "ApplyUndoText": "Restaurando o estilo de menu de contexto do Windows 11"
+    },
+    "DisableMouseAcceleration": {
+      "Label": "Desabilitar Melhorar Precisão do Ponteiro (aceleração do mouse)",
+      "ToolTip": "Isto desabilitará a aceleração do mouse que é habilitada por padrão no Windows. Isso torna o movimento do mouse mais consistente e previsível.",
+      "ApplyText": "Desabilitando Melhorar Precisão do Ponteiro",
+      "UndoLabel": "Habilitar Melhorar Precisão do Ponteiro (aceleração do mouse)",
+      "ApplyUndoText": "Habilitando Melhorar Precisão do Ponteiro"
+    },
+    "DisableStickyKeys": {
+      "Label": "Desabilitar atalho de teclado das Teclas de Aderência (5x shift)",
+      "ToolTip": "Isto impedirá que o diálogo das Teclas de Aderência apareça quando você pressionar a tecla Shift 5 vezes seguidas.",
+      "ApplyText": "Desabilitando o atalho de teclado das Teclas de Aderência",
+      "UndoLabel": "Habilitar atalho de teclado das Teclas de Aderência (5x shift)",
+      "ApplyUndoText": "Habilitando o atalho de teclado das Teclas de Aderência"
+    },
+    "DisableWindowSnapping": {
+      "Label": "Desabilitar snapping de janelas",
+      "ToolTip": "Isto desabilitará a capacidade de encaixar janelas nas laterais ou cantos da tela.",
+      "ApplyText": "Desabilitando snapping de janelas",
+      "UndoLabel": "Habilitar snapping de janelas",
+      "ApplyUndoText": "Habilitando snapping de janelas"
+    },
+    "DisableSnapAssist": {
+      "Label": "Desabilitar sugestões de apps ao encaixar janelas",
+      "ToolTip": "Isto desabilitará as sugestões de apps quando você encaixar janelas nas laterais ou cantos da tela.",
+      "ApplyText": "Desabilitando as sugestões do Snap Assist",
+      "UndoLabel": "Habilitar sugestões de apps ao encaixar janelas",
+      "ApplyUndoText": "Habilitando as sugestões do Snap Assist"
+    },
+    "DisableSnapLayouts": {
+      "Label": "Ocultar painel de layouts de snap no topo da tela e no botão de maximizar",
+      "ToolTip": "Isto desabilitará o painel de layouts de snap que aparece quando você passa o mouse sobre o botão de maximizar ou arrasta janelas para o topo da tela.",
+      "ApplyText": "Ocultando layouts de snap ao arrastar janelas para o topo da tela e no botão de maximizar",
+      "UndoLabel": "Mostrar painel de layouts de snap no topo da tela e no botão de maximizar",
+      "ApplyUndoText": "Mostrando layouts de snap ao arrastar janelas para o topo da tela e no botão de maximizar"
+    },
+    "HideTabsInAltTab": {
+      "Label": "Ocultar abas de apps ao encaixar ou pressionar Alt+Tab",
+      "ApplyText": "Desabilitar exibição de abas de apps ao encaixar ou pressionar Alt+Tab"
+    },
+    "Show3TabsInAltTab": {
+      "Label": "Mostrar 3 abas de apps ao encaixar ou pressionar Alt+Tab",
+      "ApplyText": "Habilitar exibição de 3 abas de apps ao encaixar ou pressionar Alt+Tab"
+    },
+    "Show5TabsInAltTab": {
+      "Label": "Mostrar 5 abas de apps ao encaixar ou pressionar Alt+Tab",
+      "ApplyText": "Habilitar exibição de 5 abas de apps ao encaixar ou pressionar Alt+Tab"
+    },
+    "Show20TabsInAltTab": {
+      "Label": "Mostrar 20 abas de apps ao encaixar ou pressionar Alt+Tab",
+      "ApplyText": "Habilitar exibição de 20 abas de apps ao encaixar ou pressionar Alt+Tab"
+    },
+    "TaskbarAlignLeft": {
+      "Label": "Alinhar a barra de tarefas à esquerda",
+      "ToolTip": "Por padrão, o Windows 11 tem os botões da barra de tarefas centralizados. Habilitar esta configuração moverá os botões da barra de tarefas para a esquerda, semelhante a versões anteriores do Windows.",
+      "ApplyText": "Alinhando botões da barra de tarefas à esquerda",
+      "UndoLabel": "Alinhar a barra de tarefas ao centro",
+      "ApplyUndoText": "Alinhando botões da barra de tarefas ao centro"
+    },
+    "HideSearchTb": {
+      "Label": "Ocultar ícone de pesquisa da barra de tarefas",
+      "ApplyText": "Ocultando o ícone de pesquisa da barra de tarefas",
+      "UndoLabel": "Mostrar caixa de pesquisa na barra de tarefas",
+      "ApplyUndoText": "Alterando pesquisa da barra de tarefas para caixa de pesquisa"
+    },
+    "ShowSearchIconTb": {
+      "Label": "Mostrar ícone de pesquisa na barra de tarefas",
+      "ApplyText": "Alterando pesquisa da barra de tarefas para apenas ícone",
+      "UndoLabel": "Mostrar caixa de pesquisa na barra de tarefas",
+      "ApplyUndoText": "Alterando pesquisa da barra de tarefas para caixa de pesquisa"
+    },
+    "ShowSearchLabelTb": {
+      "Label": "Mostrar ícone de pesquisa com rótulo na barra de tarefas",
+      "ApplyText": "Alterando pesquisa da barra de tarefas para ícone com rótulo",
+      "UndoLabel": "Mostrar caixa de pesquisa na barra de tarefas",
+      "ApplyUndoText": "Alterando pesquisa da barra de tarefas para caixa de pesquisa"
+    },
+    "ShowSearchBoxTb": {
+      "Label": "Mostrar caixa de pesquisa na barra de tarefas",
+      "ApplyText": "Alterando pesquisa da barra de tarefas para caixa de pesquisa"
+    },
+    "HideTaskview": {
+      "Label": "Ocultar botão 'Visualização de tarefas' na barra de tarefas",
+      "ToolTip": "Isto desabilitará o botão 'Visualização de tarefas' na barra de tarefas, que permite ver todas as suas janelas abertas e áreas de trabalho virtuais.",
+      "ApplyText": "Ocultando o botão de visualização de tarefas da barra de tarefas",
+      "UndoLabel": "Mostrar botão 'Visualização de tarefas' na barra de tarefas",
+      "ApplyUndoText": "Mostrando o botão de visualização de tarefas da barra de tarefas"
+    },
+    "DisableWidgets": {
+      "Label": "Desabilitar widgets na barra de tarefas e tela de bloqueio",
+      "ToolTip": "Isto desabilitará as funcionalidades de widgets no Windows, incluindo o botão de widgets na barra de tarefas e os widgets que podem aparecer na tela de bloqueio.",
+      "ApplyText": "Desabilitando widgets na barra de tarefas e tela de bloqueio"
+    },
+    "HideChat": {
+      "Label": "Ocultar ícone do Chat (meet now) na barra de tarefas",
+      "ToolTip": "Isto desabilitará o ícone do Chat (meet now) na barra de tarefas.",
+      "ApplyText": "Ocultando o ícone do chat da barra de tarefas",
+      "UndoLabel": "Mostrar ícone do Chat (meet now) na barra de tarefas",
+      "ApplyUndoText": "Mostrando o ícone do chat da barra de tarefas"
+    },
+    "DisableStorageSense": {
+      "Label": "Desabilitar limpeza automática de disco do Storage Sense",
+      "ToolTip": "Isto desabilitará o Storage Sense, que automaticamente libera espaço em disco deletando arquivos temporários, esvaziando a lixeira e limpando arquivos na pasta de Downloads.",
+      "ApplyText": "Desabilitando limpeza automática de disco do Storage Sense",
+      "UndoLabel": "Habilitar limpeza automática de disco do Storage Sense",
+      "ApplyUndoText": "Habilitando limpeza automática de disco do Storage Sense"
+    },
+    "DisableFastStartup": {
+      "Label": "Desabilitar inicialização rápida",
+      "ToolTip": "A inicialização rápida ajuda seu PC a iniciar mais rapidamente após o desligamento, salvando uma imagem do sistema em disco. Desabilitar a inicialização rápida pode ajudar com certos problemas, mas pode resultar em tempos de inicialização um pouco mais longos.",
+      "ApplyText": "Desabilitando inicialização rápida",
+      "UndoLabel": "Habilitar inicialização rápida",
+      "ApplyUndoText": "Habilitando inicialização rápida"
+    },
+    "DisableBitlockerAutoEncryption": {
+      "Label": "Desabilitar criptografia automática de dispositivos do BitLocker",
+      "ToolTip": "Para dispositivos que suportam, o Windows 11 habilita automaticamente a criptografia de dispositivos BitLocker. Desabilitar isso desligará a criptografia automática do dispositivo, mas você ainda pode habilitar manualmente a criptografia BitLocker se desejar. Unidades que já estão criptografadas com BitLocker permanecerão criptografadas quando esta configuração for aplicada.",
+      "ApplyText": "Desabilitando criptografia automática de dispositivos do BitLocker",
+      "UndoLabel": "Habilitar criptografia automática de dispositivos do BitLocker",
+      "ApplyUndoText": "Habilitando criptografia automática de dispositivos do BitLocker"
+    },
+    "DisableModernStandbyNetworking": {
+      "Label": "Desabilitar conectividade de rede do Modern Standby",
+      "ToolTip": "Por padrão, dispositivos que suportam Modern Standby mantêm conectividade de rede durante o modo de suspensão. Desabilitar a conectividade de rede durante o Modern Standby pode ajudar a economizar bateria.",
+      "ApplyText": "Desabilitando conectividade de rede durante o Modern Standby",
+      "UndoLabel": "Habilitar conectividade de rede do Modern Standby",
+      "ApplyUndoText": "Habilitando conectividade de rede durante o Modern Standby"
+    },
+    "EnableEndTask": {
+      "Label": "Mostrar opção 'Finalizar tarefa' no menu de contexto da barra de tarefas",
+      "ToolTip": "Quando habilitado, adiciona uma opção 'Finalizar tarefa' ao menu de contexto de clique direito para apps na barra de tarefas, permitindo que você feche apps forçadamente rapidamente.",
+      "ApplyText": "Habilitando a opção 'Finalizar tarefa' no menu de contexto de clique direito da barra de tarefas",
+      "UndoLabel": "Ocultar opção 'Finalizar tarefa' no menu de contexto da barra de tarefas",
+      "ApplyUndoText": "Desabilitando a opção 'Finalizar tarefa' no menu de contexto de clique direito da barra de tarefas"
+    },
+    "EnableLastActiveClick": {
+      "Label": "Habilitar comportamento 'Último clique ativo' para apps da barra de tarefas",
+      "ToolTip": "Quando habilitado, clicar em um app na barra de tarefas mudará para a última janela ativa desse app, em vez de mostrar apenas a visualização em miniatura.",
+      "ApplyText": "Habilitando o comportamento 'Último clique ativo' na área de apps da barra de tarefas",
+      "UndoLabel": "Desabilitar comportamento 'Último clique ativo' para apps da barra de tarefas",
+      "ApplyUndoText": "Desabilitando o comportamento 'Último clique ativo' na área de apps da barra de tarefas"
+    },
+    "CombineTaskbarAlways": {
+      "Label": "Sempre combinar botões da barra de tarefas e ocultar rótulos na tela principal",
+      "ApplyText": "Definindo a barra de tarefas na tela principal para sempre combinar botões e ocultar rótulos"
+    },
+    "CombineMMTaskbarAlways": {
+      "Label": "Sempre combinar botões da barra de tarefas e ocultar rótulos em telas secundárias",
+      "ApplyText": "Definindo a barra de tarefas em telas secundárias para sempre combinar botões e ocultar rótulos"
+    },
+    "CombineTaskbarWhenFull": {
+      "Label": "Combinar botões da barra de tarefas e ocultar rótulos quando a barra estiver cheia na tela principal",
+      "ApplyText": "Definindo a barra de tarefas na tela principal para combinar botões e ocultar rótulos apenas quando a barra estiver cheia",
+      "UndoLabel": "Sempre combinar botões da barra de tarefas e ocultar rótulos na tela principal",
+      "ApplyUndoText": "Definindo a barra de tarefas na tela principal para sempre combinar botões e ocultar rótulos"
+    },
+    "CombineMMTaskbarWhenFull": {
+      "Label": "Combinar botões da barra de tarefas e ocultar rótulos quando a barra estiver cheia em telas secundárias",
+      "ApplyText": "Definindo a barra de tarefas em telas secundárias para combinar botões e ocultar rótulos apenas quando a barra estiver cheia",
+      "UndoLabel": "Sempre combinar botões da barra de tarefas e ocultar rótulos em telas secundárias",
+      "ApplyUndoText": "Definindo a barra de tarefas em telas secundárias para sempre combinar botões e ocultar rótulos"
+    },
+    "CombineTaskbarNever": {
+      "Label": "Nunca combinar botões da barra de tarefas e mostrar rótulos na tela principal",
+      "ApplyText": "Definindo a barra de tarefas na tela principal para nunca combinar botões ou ocultar rótulos",
+      "UndoLabel": "Sempre combinar botões da barra de tarefas e ocultar rótulos na tela principal",
+      "ApplyUndoText": "Definindo a barra de tarefas na tela principal para sempre combinar botões e ocultar rótulos"
+    },
+    "CombineMMTaskbarNever": {
+      "Label": "Nunca combinar botões da barra de tarefas e mostrar rótulos em telas secundárias",
+      "ApplyText": "Definindo a barra de tarefas em telas secundárias para nunca combinar botões ou ocultar rótulos",
+      "UndoLabel": "Sempre combinar botões da barra de tarefas e ocultar rótulos em telas secundárias",
+      "ApplyUndoText": "Definindo a barra de tarefas em telas secundárias para sempre combinar botões e ocultar rótulos"
+    },
+    "MMTaskbarModeAll": {
+      "Label": "Mostrar ícones de apps em todas as barras de tarefas",
+      "ApplyText": "Definindo a barra de tarefas para mostrar ícones de apps em todas as barras de tarefas"
+    },
+    "MMTaskbarModeMainActive": {
+      "Label": "Mostrar ícones de apps na barra principal e na barra onde a janela está aberta",
+      "ApplyText": "Definindo a barra de tarefas para mostrar ícones de apps na barra principal e na barra onde a janela está aberta",
+      "UndoLabel": "Mostrar ícones de apps em todas as barras de tarefas",
+      "ApplyUndoText": "Definindo a barra de tarefas para mostrar ícones de apps em todas as barras de tarefas"
+    },
+    "MMTaskbarModeActive": {
+      "Label": "Mostrar ícones de apps apenas na barra de tarefas onde a janela está aberta",
+      "ApplyText": "Definindo a barra de tarefas para mostrar ícones de apps apenas na barra de tarefas onde a janela está aberta",
+      "UndoLabel": "Mostrar ícones de apps em todas as barras de tarefas",
+      "ApplyUndoText": "Definindo a barra de tarefas para mostrar ícones de apps em todas as barras de tarefas"
+    },
+    "ExplorerToHome": {
+      "Label": "Alterar a localização padrão que o Explorador de Arquivos abre para 'Inicial'",
+      "ApplyText": "Alterando a localização padrão que o Explorador de Arquivos abre para, para 'Inicial'"
+    },
+    "ExplorerToThisPC": {
+      "Label": "Alterar a localização padrão que o Explorador de Arquivos abre para 'Este Computador'",
+      "ApplyText": "Alterando a localização padrão que o Explorador de Arquivos abre para, para 'Este Computador'",
+      "UndoLabel": "Alterar a localização padrão que o Explorador de Arquivos abre para 'Inicial'",
+      "ApplyUndoText": "Alterando a localização padrão que o Explorador de Arquivos abre para, para 'Inicial'"
+    },
+    "ExplorerToDownloads": {
+      "Label": "Alterar a localização padrão que o Explorador de Arquivos abre para 'Downloads'",
+      "ApplyText": "Alterando a localização padrão que o Explorador de Arquivos abre para, para 'Downloads'",
+      "UndoLabel": "Alterar a localização padrão que o Explorador de Arquivos abre para 'Inicial'",
+      "ApplyUndoText": "Alterando a localização padrão que o Explorador de Arquivos abre para, para 'Inicial'"
+    },
+    "ExplorerToOneDrive": {
+      "Label": "Alterar a localização padrão que o Explorador de Arquivos abre para 'OneDrive'",
+      "ApplyText": "Alterando a localização padrão que o Explorador de Arquivos abre para, para 'OneDrive'",
+      "UndoLabel": "Alterar a localização padrão que o Explorador de Arquivos abre para 'Inicial'",
+      "ApplyUndoText": "Alterando a localização padrão que o Explorador de Arquivos abre para, para 'Inicial'"
+    },
+    "ShowKnownFileExt": {
+      "Label": "Mostrar extensões de arquivo para tipos de arquivo conhecidos",
+      "ToolTip": "Isto mostrará extensões de arquivo para tipos de arquivo conhecidos. Por padrão, o Windows oculta extensões de arquivo para tipos de arquivo conhecidos, o que pode levar a confusão e riscos de segurança.",
+      "ApplyText": "Habilitando extensões de arquivo para tipos de arquivo conhecidos",
+      "UndoLabel": "Ocultar extensões de arquivo para tipos de arquivo conhecidos",
+      "ApplyUndoText": "Desabilitando extensões de arquivo para tipos de arquivo conhecidos"
+    },
+    "ShowHiddenFolders": {
+      "Label": "Mostrar arquivos, pastas e unidades ocultos",
+      "ToolTip": "Por padrão, o Windows oculta certos arquivos, pastas e unidades para evitar modificação ou exclusão acidental. Habilite isso para mostrar todos os arquivos no Explorador de Arquivos.",
+      "ApplyText": "Mostrando arquivos, pastas e unidades ocultos",
+      "UndoLabel": "Ocultar arquivos, pastas e unidades ocultos",
+      "ApplyUndoText": "Ocultando arquivos, pastas e unidades ocultos"
+    },
+    "HideDupliDrive": {
+      "Label": "Ocultar entradas duplicadas de unidades removíveis",
+      "ToolTip": "Por padrão, o Windows mostra unidades removíveis tanto em 'Este Computador' quanto no painel de navegação com sua própria entrada. Habilite esta configuração para mostrar unidades removíveis apenas em 'Este Computador'.",
+      "ApplyText": "Ocultando entradas duplicadas de unidades removíveis do painel de navegação do Explorador de Arquivos",
+      "UndoLabel": "Mostrar entradas duplicadas de unidades removíveis",
+      "ApplyUndoText": "Mostrando entradas duplicadas de unidades removíveis do painel de navegação do Explorador de Arquivos"
+    },
+    "HideHome": {
+      "Label": "Ocultar 'Inicial' do painel de navegação",
+      "ToolTip": "Oculta a seção 'Inicial' do painel de navegação do Explorador de Arquivos.",
+      "ApplyText": "Ocultando a seção 'Inicial' do painel de navegação do Explorador de Arquivos",
+      "UndoLabel": "Mostrar 'Inicial' do painel de navegação",
+      "ApplyUndoText": "Mostrando a seção 'Inicial' do painel de navegação do Explorador de Arquivos"
+    },
+    "HideGallery": {
+      "Label": "Ocultar 'Galeria' do painel de navegação",
+      "ToolTip": "Oculta a seção 'Galeria' do painel de navegação do Explorador de Arquivos.",
+      "ApplyText": "Ocultando a seção 'Galeria' do painel de navegação do Explorador de Arquivos",
+      "UndoLabel": "Mostrar 'Galeria' do painel de navegação",
+      "ApplyUndoText": "Mostrando a seção 'Galeria' do painel de navegação do Explorador de Arquivos"
+    },
+    "DisableTransparency": {
+      "Label": "Desabilitar efeitos de transparência",
+      "ToolTip": "Isto desabilitará os efeitos de transparência no Windows e nas interfaces. Isso pode ajudar a melhorar o desempenho em hardware mais antigo.",
+      "ApplyText": "Desabilitando efeitos de transparência",
+      "UndoLabel": "Habilitar efeitos de transparência",
+      "ApplyUndoText": "Habilitando efeitos de transparência"
+    },
+    "DisableAnimations": {
+      "Label": "Desabilitar animações e efeitos visuais",
+      "ToolTip": "Isto desabilitará animações e alguns efeitos visuais no Windows, o que pode fazer a interface parecer mais responsiva, especialmente em hardware mais antigo.",
+      "ApplyText": "Desabilitando animações e efeitos visuais",
+      "UndoLabel": "Habilitar animações e efeitos visuais",
+      "ApplyUndoText": "Habilitando animações e efeitos visuais"
+    },
+    "DisableUpdateASAP": {
+      "Label": "Impedir que receba atualizações assim que estiverem disponíveis",
+      "ToolTip": "Isto impedirá que seu PC esteja entre os primeiros a receber novas atualizações que não sejam de segurança. Seu PC ainda receberá essas atualizações eventualmente.",
+      "ApplyText": "Impedindo o Windows de receber atualizações assim que estiverem disponíveis",
+      "UndoLabel": "Permitir receber atualizações assim que estiverem disponíveis",
+      "ApplyUndoText": "Permitindo o Windows de receber atualizações assim que estiverem disponíveis"
+    },
+    "PreventUpdateAutoReboot": {
+      "Label": "Impedir reinicializações automáticas após atualizações enquanto conectado",
+      "ToolTip": "Isto impedirá que seu PC reinicie automaticamente após atualizações enquanto qualquer usuário estiver conectado.",
+      "ApplyText": "Impedindo reinicializações automáticas após atualizações enquanto conectado",
+      "UndoLabel": "Permitir reinicializações automáticas após atualizações enquanto conectado",
+      "ApplyUndoText": "Permitindo reinicializações automáticas após atualizações enquanto conectado"
+    },
+    "DisableDeliveryOptimization": {
+      "Label": "Desabilitar compartilhamento de atualizações baixadas com outros PCs",
+      "ToolTip": "Isto impedirá que seu PC compartilhe atualizações baixadas com outros PCs na rede local ou na internet. Isso também impede que seu PC baixe atualizações de outros PCs.",
+      "ApplyText": "Desabilitando compartilhamento de atualizações baixadas com outros PCs",
+      "UndoLabel": "Habilitar compartilhamento de atualizações baixadas com outros PCs",
+      "ApplyUndoText": "Habilitando compartilhamento de atualizações baixadas com outros PCs"
+    },
+    "DisableDeviceAutoAppDownload": {
+      "Label": "Impedir que o Windows instale automaticamente apps complementares de dispositivos",
+      "ToolTip": "Impede que o Windows instale silenciosamente apps complementares de dispositivos via Windows Update quando você conectar certos dispositivos, como monitores da LG e Alienware. Esses dispositivos ainda funcionarão normalmente, isso apenas impede que o Windows Update instale automaticamente apps adicionais sem consentimento.",
+      "ApplyText": "Impedindo instalação automática de apps complementares de dispositivos",
+      "UndoLabel": "Permitir instalação automática de apps complementares de dispositivos",
+      "ApplyUndoText": "Permitindo instalação automática de apps complementares de dispositivos"
+    },
+    "ForceRemoveEdge": {
+      "Label": "Desinstalar Microsoft Edge forçadamente. NÃO RECOMENDADO!",
+      "ApplyText": "Desinstalando Microsoft Edge forçadamente"
+    },
+    "HideOnedrive": {
+      "Label": "Ocultar 'OneDrive' do painel de navegação",
+      "ToolTip": "Oculta a seção 'OneDrive' do painel de navegação do Explorador de Arquivos.",
+      "ApplyText": "Ocultando a seção 'OneDrive' do painel de navegação do Explorador de Arquivos",
+      "UndoLabel": "Mostrar 'OneDrive' do painel de navegação",
+      "ApplyUndoText": "Mostrando a seção 'OneDrive' do painel de navegação do Explorador de Arquivos"
+    },
+    "Hide3dObjects": {
+      "Label": "Ocultar pasta 'Objetos 3D' em 'Este Computador'",
+      "ToolTip": "Oculta a pasta 'Objetos 3D' do painel de navegação do Explorador de Arquivos.",
+      "ApplyText": "Ocultando a pasta 'Objetos 3D' do painel de navegação do Explorador de Arquivos",
+      "UndoLabel": "Mostrar pasta 'Objetos 3D' em 'Este Computador'",
+      "ApplyUndoText": "Mostrando a pasta 'Objetos 3D' do painel de navegação do Explorador de Arquivos"
+    },
+    "HideMusic": {
+      "Label": "Ocultar pasta 'Músicas' em 'Este Computador'",
+      "ToolTip": "Oculta a pasta 'Músicas' do painel de navegação do Explorador de Arquivos.",
+      "ApplyText": "Ocultando a pasta 'Músicas' do painel de navegação do Explorador de Arquivos",
+      "UndoLabel": "Mostrar pasta 'Músicas' em 'Este Computador'",
+      "ApplyUndoText": "Mostrando a pasta 'Músicas' do painel de navegação do Explorador de Arquivos"
+    },
+    "AddFoldersToThisPC": {
+      "Label": "Adicionar pastas comuns de volta à página 'Este Computador'",
+      "ToolTip": "Esta configuração adicionará pastas comuns como Área de Trabalho, Documentos, Downloads, Músicas, Imagens e Vídeos de volta à página 'Este Computador' no Explorador de Arquivos.",
+      "ApplyText": "Adicionando todas as pastas comuns (Área de Trabalho, Downloads, etc.) de volta ao 'Este Computador' no Explorador de Arquivos",
+      "UndoLabel": "Remover pastas comuns da página 'Este Computador'",
+      "ApplyUndoText": "Removendo todas as pastas comuns (Área de Trabalho, Downloads, etc.) de volta ao 'Este Computador' no Explorador de Arquivos"
+    },
+    "HideIncludeInLibrary": {
+      "Label": "Ocultar opção 'Incluir na biblioteca' no menu de contexto",
+      "ToolTip": "Oculta a opção 'Incluir na biblioteca' do menu de contexto do Explorador de Arquivos.",
+      "ApplyText": "Ocultando 'Incluir na biblioteca' no menu de contexto",
+      "UndoLabel": "Mostrar opção 'Incluir na biblioteca' no menu de contexto",
+      "ApplyUndoText": "Mostrando 'Incluir na biblioteca' no menu de contexto"
+    },
+    "HideGiveAccessTo": {
+      "Label": "Ocultar opção 'Dar acesso a' no menu de contexto",
+      "ToolTip": "Oculta a opção 'Dar acesso a' do menu de contexto do Explorador de Arquivos.",
+      "ApplyText": "Ocultando 'Dar acesso a' no menu de contexto",
+      "UndoLabel": "Mostrar opção 'Dar acesso a' no menu de contexto",
+      "ApplyUndoText": "Mostrando 'Dar acesso a' no menu de contexto"
+    },
+    "HideShare": {
+      "Label": "Ocultar opção 'Compartilhar' no menu de contexto",
+      "ToolTip": "Oculta a opção 'Compartilhar' do menu de contexto do Explorador de Arquivos.",
+      "ApplyText": "Ocultando 'Compartilhar' no menu de contexto",
+      "UndoLabel": "Mostrar opção 'Compartilhar' no menu de contexto",
+      "ApplyUndoText": "Mostrando 'Compartilhar' no menu de contexto"
+    },
+    "DisableBraveBloat": {
+      "Label": "Desabilitar bloat no navegador Brave (IA, Crypto, etc.)",
+      "ToolTip": "Isto desabilitará as funcionalidades de IA integradas do Brave, carteira Crypto, Notícias, Rewards, Talk e VPN. Esta funcionalidade usa políticas, que bloqueiam certas configurações.",
+      "ApplyText": "Desabilitando IA, Crypto, Notícias, Rewards, Talk e VPN no navegador Brave",
+      "UndoLabel": "Habilitar funcionalidades do navegador Brave (IA, Crypto, etc.)",
+      "ApplyUndoText": "Habilitando IA, Crypto, Notícias, Rewards, Talk e VPN no navegador Brave"
+    },
+    "EnableWindowsSandbox": {
+      "Label": "Habilitar Windows Sandbox",
+      "ToolTip": "O Windows Sandbox é um ambiente de área de trabalho leve para executar aplicativos com segurança em isolamento. O software instalado dentro do ambiente Windows Sandbox permanece 'em sandbox' e é executado separadamente da máquina host. Suportado apenas nas edições Windows 11 Pro, Workstation e Enterprise.",
+      "ApplyText": "Habilitando Windows Sandbox",
+      "UndoLabel": "Desabilitar Windows Sandbox",
+      "ApplyUndoText": "Desabilitando Windows Sandbox"
+    },
+    "EnableWindowsSubsystemForLinux": {
+      "Label": "Habilitar Windows Subsystem for Linux",
+      "ToolTip": "O Windows Subsystem for Linux permite que você execute um ambiente Linux diretamente no Windows sem a necessidade de uma máquina virtual.",
+      "ApplyText": "Habilitando Windows Subsystem for Linux",
+      "UndoLabel": "Desabilitar Windows Subsystem for Linux",
+      "ApplyUndoText": "Desabilitando Windows Subsystem for Linux"
+    },
+    "ShowDriveLettersFirst": {
+      "Label": "Mostrar letras de unidade antes da etiqueta da unidade",
+      "ToolTip": "Esta configuração mostrará as letras de unidade antes da etiqueta da unidade no Explorador de Arquivos.",
+      "ApplyText": "Mostrando letras de unidade antes da etiqueta da unidade",
+      "UndoLabel": "Mostrar letras de unidade após a etiqueta da unidade",
+      "ApplyUndoText": "Mostrando letras de unidade após a etiqueta da unidade"
+    },
+    "ShowDriveLettersLast": {
+      "Label": "Mostrar letras de unidade após a etiqueta da unidade",
+      "ToolTip": "Esta configuração mostrará as letras de unidade após a etiqueta da unidade no Explorador de Arquivos (comportamento padrão do Windows).",
+      "ApplyText": "Mostrando letras de unidade após a etiqueta da unidade"
+    },
+    "ShowNetworkDriveLettersFirst": {
+      "Label": "Mostrar letras de unidade de rede antes da etiqueta da unidade",
+      "ToolTip": "Esta configuração mostrará apenas as letras de unidade de rede antes da etiqueta da unidade no Explorador de Arquivos.",
+      "ApplyText": "Mostrando letras de unidade de rede antes da etiqueta da unidade",
+      "UndoLabel": "Mostrar letras de unidade após a etiqueta da unidade",
+      "ApplyUndoText": "Mostrando letras de unidade após a etiqueta da unidade"
+    },
+    "HideDriveLetters": {
+      "Label": "Ocultar todas as letras de unidade",
+      "ToolTip": "Esta configuração ocultará todas as letras de unidade do painel de navegação do Explorador de Arquivos e 'Este Computador'.",
+      "ApplyText": "Ocultando todas as letras de unidade",
+      "UndoLabel": "Mostrar letras de unidade após a etiqueta da unidade",
+      "ApplyUndoText": "Mostrando letras de unidade após a etiqueta da unidade"
+    },
+    "StartAllAppsCategory": {
+      "Label": "Mostrar Todos os Apps em visualização por categoria (Padrão)",
+      "ToolTip": "Isto definirá a seção Todos os Apps no Menu Iniciar para mostrar apps agrupados por categoria.",
+      "ApplyText": "Definindo visualização Todos os Apps para Categoria"
+    },
+    "StartAllAppsGrid": {
+      "Label": "Mostrar Todos os Apps em visualização em grade",
+      "ToolTip": "Isto definirá a seção Todos os Apps no Menu Iniciar para mostrar apps em um layout de grade alfabética.",
+      "ApplyText": "Definindo visualização Todos os Apps para Grade",
+      "UndoLabel": "Mostrar Todos os Apps em visualização por categoria",
+      "ApplyUndoText": "Definindo visualização Todos os Apps para Categoria"
+    },
+    "StartAllAppsList": {
+      "Label": "Mostrar Todos os Apps em visualização em lista",
+      "ToolTip": "Isto definirá a seção Todos os Apps no Menu Iniciar para mostrar apps em um layout de lista alfabética.",
+      "ApplyText": "Definindo visualização Todos os Apps para Lista",
+      "UndoLabel": "Mostrar Todos os Apps em visualização por categoria",
+      "ApplyUndoText": "Definindo visualização Todos os Apps para Categoria"
+    }
+  },
+  "UiGroups": {
+    "DesktopSpotlight": {
+      "Label": "Destaque do Windows na área de trabalho",
+      "ToolTip": "Esta configuração controla a opção de papel de parede do destaque do Windows. Mantenha o papel de parede rotativo com ou sem o atalho 'Saiba mais sobre esta imagem', ou desabilite o destaque do Windows completamente.",
+      "Values": {
+        "EnableDesktopSpotlight": "Mostrar atalho 'Saiba mais sobre esta imagem' (Padrão)",
+        "HideDesktopSpotlightIcon": "Ocultar atalho 'Saiba mais sobre esta imagem'",
+        "DisableDesktopSpotlight": "Desabilitar papel de parede do destaque do Windows"
+      }
+    },
+    "SearchIcon": {
+      "Label": "Estilo de pesquisa da barra de tarefas",
+      "ToolTip": "Esta configuração permite que você personalize a aparência da caixa de pesquisa na barra de tarefas.",
+      "Values": {
+        "ShowSearchBoxTb": "Mostrar caixa de pesquisa (Padrão)",
+        "ShowSearchLabelTb": "Mostrar ícone de pesquisa e rótulo",
+        "ShowSearchIconTb": "Mostrar apenas ícone de pesquisa",
+        "HideSearchTb": "Ocultar"
+      }
+    },
+    "MultiMon": {
+      "Label": "Mostrar apps da barra de tarefas em",
+      "ToolTip": "Esta configuração permite que você escolha onde os botões de apps da barra de tarefas são exibidos ao usar múltiplos monitores.",
+      "Values": {
+        "MMTaskbarModeAll": "Todas as barras de tarefas (Padrão)",
+        "MMTaskbarModeMainActive": "Barra principal e barra onde a janela está aberta",
+        "MMTaskbarModeActive": "Barra de tarefas onde a janela está aberta"
+      }
+    },
+    "CombineButtons": {
+      "Label": "Combinar botões da barra de tarefas na tela principal",
+      "ToolTip": "Esta configuração permite que você escolha como os botões da barra de tarefas são combinados na tela principal.",
+      "Values": {
+        "CombineTaskbarAlways": "Sempre (Padrão)",
+        "CombineTaskbarWhenFull": "Quando a barra de tarefas estiver cheia",
+        "CombineTaskbarNever": "Nunca"
+      }
+    },
+    "CombineMMButtons": {
+      "Label": "Combinar botões da barra de tarefas em telas secundárias",
+      "ToolTip": "Esta configuração permite que você escolha como os botões da barra de tarefas são combinados em telas secundárias.",
+      "Values": {
+        "CombineMMTaskbarAlways": "Sempre (Padrão)",
+        "CombineMMTaskbarWhenFull": "Quando a barra de tarefas estiver cheia",
+        "CombineMMTaskbarNever": "Nunca"
+      }
+    },
+    "ClearStart": {
+      "Label": "Remover apps fixados do Menu Iniciar",
+      "ToolTip": "Esta configuração permite que você remova rapidamente todos os apps fixados do Menu Iniciar.",
+      "Values": {
+        "ClearStart": "Remover para o usuário selecionado",
+        "ClearStartAllUsers": "Remover para todos os usuários"
+      }
+    },
+    "ExplorerLocation": {
+      "Label": "Abrir Explorador de Arquivos em",
+      "ToolTip": "Esta configuração permite que você escolha a localização padrão que o Explorador de Arquivos abre.",
+      "Values": {
+        "ExplorerToHome": "Inicial (Padrão)",
+        "ExplorerToThisPC": "Este Computador",
+        "ExplorerToDownloads": "Downloads",
+        "ExplorerToOneDrive": "OneDrive"
+      }
+    },
+    "DriveLetterPosition": {
+      "Label": "Posição da letra de unidade",
+      "ToolTip": "Esta configuração permite que você escolha onde as letras de unidade são exibidas no Explorador de Arquivos.",
+      "Values": {
+        "ShowDriveLettersLast": "Mostrar letras de unidade após a etiqueta da unidade (Padrão)",
+        "ShowDriveLettersFirst": "Mostrar letras de unidade antes da etiqueta da unidade",
+        "ShowNetworkDriveLettersFirst": "Mostrar letras de unidade de rede antes da etiqueta da unidade",
+        "HideDriveLetters": "Ocultar todas as letras de unidade"
+      }
+    },
+    "ShowTabsInAltTab": {
+      "Label": "Mostrar abas de apps ao encaixar ou pressionar Alt+Tab",
+      "ToolTip": "Esta configuração permite que você escolha se deseja mostrar abas de apps (como abas do navegador Edge) ao encaixar janelas ou pressionar Alt+Tab.",
+      "Values": {
+        "HideTabsInAltTab": "Não mostrar abas",
+        "Show3TabsInAltTab": "Mostrar 3 abas mais recentes (Padrão)",
+        "Show5TabsInAltTab": "Mostrar 5 abas mais recentes",
+        "Show20TabsInAltTab": "Mostrar 20 abas mais recentes"
+      }
+    },
+    "StartAllAppsView": {
+      "Label": "Visualização 'Todos os Apps' do Menu Iniciar",
+      "ToolTip": "Esta configuração permite que você altere o layout da seção 'Todos os Apps' no Menu Iniciar, ou oculte completamente. Ocultar esta seção pode dificultar a localização de apps instalados no seu sistema. Esta funcionalidade usa políticas, que bloqueiam certas configurações.",
+      "Values": {
+        "DisableStartAllApps": "Ocultar",
+        "StartAllAppsCategory": "Categoria (Padrão)",
+        "StartAllAppsGrid": "Grade",
+        "StartAllAppsList": "Lista"
+      }
+    }
+  }
+}

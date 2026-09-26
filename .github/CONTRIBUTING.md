@@ -196,7 +196,7 @@ Avoid these common mistakes when contributing:
 
 8. **Hardcoded Paths**: When writing PowerShell logic, use `$PSScriptRoot` and script variables instead of hardcoded paths. This ensures the script works regardless of where it's installed.
 
-9. **Missing Translation Entry**: A new Feature, Category, or UI Group needs a matching entry in `Config/Languages/en-US/` (see [Localizing UI Text](#localizing-ui-text)). Without one, the GUI silently falls back to displaying the raw `FeatureId`/`CategoryId`/`GroupId` instead of your `Label`/`ToolTip` text.
+9. **Missing Translation Entry**: A new Feature, Category, UI Group, or App needs a matching entry in `Config/Languages/en-US/` (see [Localizing UI Text](#localizing-ui-text)). Without one, the GUI silently falls back to displaying the raw `FeatureId`/`CategoryId`/`GroupId`/`AppId` instead of your `Label`/`ToolTip`/`FriendlyName`/`Description` text.
 
 ## Implementing New Features
 
@@ -244,7 +244,9 @@ To add a new app that can be removed via Win11Debloat:
      - `Appx` — remove as a standard Appx package via `Remove-AppxPackage` (most apps)
      - `WinGet` — remove via WinGet (`winget uninstall`). Use for non-Appx apps such as Microsoft Copilot.
 
-3. **Follow the Guidelines**:
+3. **Add the English Translation Entry**: Add a matching entry for your `AppId` to `Config/Languages/en-US/Apps.json` (see [Localizing UI Text](#localizing-ui-text)) with `FriendlyName` and `Description` matching what you set above, so the GUI shows them instead of the raw `AppId`.
+
+4. **Follow the Guidelines**:
 
    - Use clear, user-friendly names for `FriendlyName`
    - Provide a concise description explaining what the app does
@@ -451,11 +453,12 @@ Add a matching entry for your `GroupId` to `Config/Languages/en-US/Features.json
 
 ### Localizing UI Text
 
-GUI text lives in `Config/Languages/en-US/`, not hardcoded in `Schemas/*.xaml` or `Scripts/GUI/*.ps1`. Adding or changing a Feature, Category, or UI Group means updating the matching English entry, or the GUI falls back to showing the raw ID.
+GUI text lives in `Config/Languages/en-US/`, not hardcoded in `Schemas/*.xaml` or `Scripts/GUI/*.ps1`. Adding or changing a Feature, Category, UI Group, or App means updating the matching English entry, or the GUI falls back to showing the raw ID.
 
 - `Config/Languages/en-US/Features.json`, under `"Features"`, keyed by `FeatureId`. Add `Label`, `ToolTip`, `ApplyText`, `UndoLabel`, and `ApplyUndoText` to match whatever fields you set in `Config/Features.json`.
 - `Config/Languages/en-US/Features.json`, under `"UiGroups"`, keyed by `GroupId`. Add `Label`, `ToolTip`, and a `Values` map of `FeatureId: "Option label"` matching the group's `Values` array.
 - `Config/Languages/en-US/Categories.json`, keyed by `CategoryId`. Add a `Label` for every new category.
+- `Config/Languages/en-US/Apps.json`, keyed by `AppId`. Add `FriendlyName` and `Description` for every new app.
 - `Config/Languages/en-US/Chrome.json`, a flat key/value map for static GUI chrome: buttons, dialog titles, tooltips not tied to a specific Feature/Category/UiGroup. Add a key here only for new static text, and reference it from XAML with a `%LANG:YourKey%` marker or from PowerShell with `Get-Translation -Key 'YourKey'`.
 
 Check for an existing `Chrome.json` key with the same English text before adding a new one. Two keys holding identical strings is duplication waiting to drift.
@@ -468,7 +471,7 @@ A new language is its own pull request, not something bundled with unrelated cha
 
 1. **Create the language folder**: copy `Config/Languages/en-US/` to `Config/Languages/<culture-code>/`, using the .NET culture code the GUI should match (`nl-NL`, `es-ES`). This is also the folder matched against the user's Windows display language: exact match first, then a language-only prefix match (`nl-BE` falls back to `nl-NL` if that's the only Dutch folder present), then `en-US` if nothing matches.
 
-2. **Translate the three files** (`Chrome.json`, `Features.json`, `Categories.json`), keeping every key name exactly as it is in `en-US`. Only the values change. Leave a key untranslated and the GUI shows the `en-US` text for it instead of a blank or a crash, so a translation can land incrementally.
+2. **Translate the four files** (`Chrome.json`, `Features.json`, `Categories.json`, `Apps.json`), keeping every key name exactly as it is in `en-US`. Only the values change. Leave a key untranslated and the GUI shows the `en-US` text for it instead of a blank or a crash, so a translation can land incrementally.
 
 3. **Add the language's plural rule**. Strings using the `_one`/`_other` suffix convention (see `AppsSelectedCount_one` in `en-US/Chrome.json`) need a matching `case` in `Get-PluralCategory` (`Scripts/FileIO/Import-LanguageFile.ps1`), keyed by language prefix (`'nl'`). Several languages share English's rule, singular at exactly 1, plural otherwise, and can reuse it as-is. Others need more categories: CLDR defines `zero`/`one`/`two`/`few`/`many`/`other`. Match your key suffixes to whatever categories your language's rule actually uses.
 

@@ -25,7 +25,7 @@ function Resolve-LanguageFolder {
 
 <#
     .SYNOPSIS
-        Loads Chrome/Features/Categories JSON for a language folder, or returns $null on failure.
+        Loads Chrome/Features/Categories/Apps JSON for a language folder, or returns $null on failure.
 #>
 function Import-LanguageContent {
     param(
@@ -38,8 +38,9 @@ function Import-LanguageContent {
     $chrome = Import-JsonFile -filePath (Join-Path $folderPath 'Chrome.json')
     $features = Import-JsonFile -filePath (Join-Path $folderPath 'Features.json')
     $categories = Import-JsonFile -filePath (Join-Path $folderPath 'Categories.json')
+    $apps = Import-JsonFile -filePath (Join-Path $folderPath 'Apps.json')
 
-    if (-not $chrome -or -not $features -or -not $categories) {
+    if (-not $chrome -or -not $features -or -not $categories -or -not $apps) {
         return $null
     }
 
@@ -49,6 +50,7 @@ function Import-LanguageContent {
         Features     = $features.Features
         UiGroups     = $features.UiGroups
         Categories   = $categories
+        Apps         = $apps
     }
 }
 
@@ -142,7 +144,7 @@ function Find-TranslationSection {
         [object]$Lang,
         [Parameter(Mandatory)]
         [string]$Key,
-        [ValidateSet('', 'Chrome', 'Features', 'UiGroups', 'Categories')]
+        [ValidateSet('', 'Chrome', 'Features', 'UiGroups', 'Categories', 'Apps')]
         [string]$Section = ''
     )
 
@@ -154,7 +156,7 @@ function Find-TranslationSection {
         return $null
     }
 
-    foreach ($sectionName in 'Chrome', 'Features', 'UiGroups', 'Categories') {
+    foreach ($sectionName in 'Chrome', 'Features', 'UiGroups', 'Categories', 'Apps') {
         $sectionObject = $Lang.$sectionName
         if ($sectionObject -and $sectionObject.PSObject.Properties[$Key]) {
             return $sectionObject
@@ -191,7 +193,7 @@ function Get-Translation {
         [object]$Lang = $script:Lang,
         [Nullable[int]]$Count = $null,
         [object[]]$FormatArgs = $null,
-        [ValidateSet('', 'Chrome', 'Features', 'UiGroups', 'Categories')]
+        [ValidateSet('', 'Chrome', 'Features', 'UiGroups', 'Categories', 'Apps')]
         [string]$Section = ''
     )
 
@@ -282,7 +284,7 @@ function Get-GroupValueTranslation {
         Flattens a loaded language object into a sorted set of dotted key paths.
 
     .DESCRIPTION
-        Chrome.json keys are already flat and are used as-is. Features/UiGroups/Categories
+        Chrome.json keys are already flat and are used as-is. Features/UiGroups/Categories/Apps
         keys are one level deeper (EntryId -> {Field: value}), so each field becomes its own
         "Section.EntryId.Field" path (e.g. "Features.DisableTelemetry.Label"). UiGroups' nested
         Values map becomes "UiGroups.GroupId.Values.FeatureId". Used by Test-LanguageKeyCoverage
@@ -301,7 +303,7 @@ function Get-LanguageKeyPaths {
         $paths.Add($chromeKey)
     }
 
-    foreach ($sectionName in 'Features', 'Categories') {
+    foreach ($sectionName in 'Features', 'Categories', 'Apps') {
         $section = $Lang.$sectionName
         if (-not $section) { continue }
 

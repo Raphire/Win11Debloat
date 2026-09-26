@@ -16,13 +16,14 @@ Describe 'Resolve-LanguageFolder' {
 }
 
 Describe 'Import-LanguageFile' {
-    It 'loads all three JSON files for the resolved language' {
+    It 'loads all four JSON files for the resolved language' {
         $lang = Import-LanguageFile -LanguageCode 'en-US'
 
         $lang.LanguageCode | Should -Be 'en-US'
         $lang.Chrome.TitleBarClose | Should -Be 'Close'
         $lang.Features.DisableTelemetry.Label | Should -Be 'Disable telemetry'
         $lang.Categories.PrivacySuggestedContent.Label | Should -Be 'Privacy & Suggested Content'
+        $lang.Apps.'TestApp.One'.FriendlyName | Should -Be 'Test App'
     }
 
     It 'attaches an en-US Fallback when a non-en-US language is loaded' {
@@ -124,6 +125,11 @@ Describe 'Get-Translation' {
         Get-Translation -Key 'PrivacySuggestedContent' -Field 'Label' -Lang $script:EnLang | Should -Be 'Privacy & Suggested Content'
     }
 
+    It 'looks up a Field on an Apps entry' {
+        Get-Translation -Key 'TestApp.One' -Field 'FriendlyName' -Section 'Apps' -Lang $script:EnLang | Should -Be 'Test App'
+        Get-Translation -Key 'TestApp.One' -Field 'Description' -Section 'Apps' -Lang $script:EnLang | Should -Be 'A test app.'
+    }
+
     It 'looks up a Field on a UiGroups entry' {
         Get-Translation -Key 'SearchIcon' -Field 'Label' -Lang $script:EnLang | Should -Be 'Taskbar search style'
     }
@@ -199,6 +205,8 @@ Describe 'Test-LanguageKeyCoverage' {
         $coverage.MissingKeys | Should -Contain 'Features.DisableTelemetry.ToolTip'
         $coverage.MissingKeys | Should -Contain 'UiGroups.SearchIcon.Label'
         $coverage.MissingKeys | Should -Contain 'Categories.PrivacySuggestedContent.Label'
+        $coverage.MissingKeys | Should -Contain 'Apps.TestApp.One.FriendlyName'
+        $coverage.MissingKeys | Should -Contain 'Apps.TestApp.One.Description'
         $coverage.ExtraKeys | Should -BeNullOrEmpty
     }
 

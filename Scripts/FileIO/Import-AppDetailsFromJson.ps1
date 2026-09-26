@@ -70,8 +70,8 @@ function Import-AppDetailsFromJson {
         # Use first AppId for fallback names, join all for display
         $primaryAppId = $appIdArray[0]
         $appIdDisplay = $appIdArray -join ', '
-        $friendlyName = if ($appData.FriendlyName) { $appData.FriendlyName } else { $primaryAppId }
-        $displayName = if ($appData.FriendlyName) { "$($appData.FriendlyName) ($appIdDisplay)" } else { $appIdDisplay }
+        $friendlyName = Get-Translation -Key $primaryAppId -Field 'FriendlyName' -Section 'Apps'
+        $displayName = "$friendlyName ($appIdDisplay)"
         $isChecked = if ($InitialCheckedFromJson) { $appData.SelectedByDefault } else { $false }
 
         $apps += [PSCustomObject]@{
@@ -80,7 +80,7 @@ function Import-AppDetailsFromJson {
             FriendlyName = $friendlyName
             DisplayName = $displayName
             IsChecked = $isChecked
-            Description = $appData.Description
+            Description = Get-Translation -Key $primaryAppId -Field 'Description' -Section 'Apps'
             SelectedByDefault = $appData.SelectedByDefault
             Recommendation = $appData.Recommendation
             RemovalMethod = if ($appData.RemovalMethod -and $appData.RemovalMethod -eq 'WinGet') { 'WinGet' } else { 'Appx' }

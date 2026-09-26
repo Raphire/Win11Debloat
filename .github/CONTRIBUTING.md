@@ -233,7 +233,8 @@ To add a new app that can be removed via Win11Debloat:
    - `FriendlyName`: Display name shown in the GUI.
    - `AppId`: The package name from `Get-AppxPackage` or the `Id` from
      `winget list`, depending on removal method. Use an array when one app
-     requires multiple identifiers.
+     requires multiple identifiers. The GUI looks up the translation entry by
+     the first ID in the array, key `Apps.json` by that one.
    - `Description`: Brief description of the app shown in the GUI.
    - `SelectedByDefault`: Set to `true` only for apps that are largely considered bloatware, otherwise set to `false`.
    - `Recommendation`: Indicates how strongly the app is recommended for removal. One of:

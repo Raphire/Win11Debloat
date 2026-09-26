@@ -130,7 +130,7 @@ function Get-LanguageFallbackChain {
 
 <#
     .SYNOPSIS
-        Finds the named section object (Chrome, Features, UiGroups, or Categories) that owns a key.
+        Finds the named section object (Chrome, Features, UiGroups, Categories, or Apps) that owns a key.
 
     .DESCRIPTION
         A FeatureId, GroupId, and CategoryId aren't guaranteed to be disjoint (Config/Features.json
@@ -171,14 +171,15 @@ function Find-TranslationSection {
         Looks up a translated value from the active language, falling back to en-US, then to the key itself.
 
     .DESCRIPTION
-        Chrome.json keys are flat strings, so -Field is omitted for those. Features/UiGroups/Categories
-        keys (FeatureId/GroupId/CategoryId) resolve to an object, so -Field picks the property on it
-        (Label, ToolTip, ApplyText, UndoLabel, ApplyUndoText). One generic lookup covers every section
-        instead of a separate function per section.
+        Chrome.json keys are flat strings, so -Field is omitted for those. Features/UiGroups/Categories/Apps
+        keys (FeatureId/GroupId/CategoryId/AppId) resolve to an object, so -Field picks the property on it
+        (Label, ToolTip, ApplyText, UndoLabel, ApplyUndoText for Features/UiGroups/Categories;
+        FriendlyName, Description for Apps). One generic lookup covers every section instead of a
+        separate function per section.
 
         A FeatureId and a GroupId aren't guaranteed to be distinct strings, so pass -Section
-        ('Features', 'UiGroups', or 'Categories') whenever the caller knows which one it means,
-        rather than relying on Find-TranslationSection's search order to guess correctly.
+        ('Features', 'UiGroups', 'Categories', or 'Apps') whenever the caller knows which one it
+        means, rather than relying on Find-TranslationSection's search order to guess correctly.
 
         When -Count is supplied, tries the plural-suffixed key ("$Key`_$category") before the bare key,
         so callers don't need to add a plural variant for every string, only the ones that need one.

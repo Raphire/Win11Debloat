@@ -1,6 +1,24 @@
-# Runs a scriptblock in a background PowerShell runspace while keeping the UI responsive.
-# In GUI mode, the work executes on a separate thread and the UI thread pumps messages (~60fps).
-# In CLI mode, the scriptblock runs directly in the current session.
+﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
+
+<#
+    .SYNOPSIS
+        执行脚本块，并在图形界面模式保持窗口响应。
+    .DESCRIPTION
+        命令行模式且未设置超时时在当前会话执行；图形界面模式或设置超时时
+        使用独立后台会话，加载控制台翻译并传入当前控制台语言或界面语言，
+        未设置语言时使用 en-US。图形界面等待期间持续处理窗口事件。
+        超时会停止后台任务并抛出异常；后台非终止错误转发至调用方错误流，
+        独立会话在 finally 中释放。
+    .PARAMETER ScriptBlock
+        要执行的脚本块；后台执行时需要显式传入所需参数或自行加载依赖。
+    .PARAMETER ArgumentList
+        按位置传入脚本块的参数数组。
+    .PARAMETER TimeoutSeconds
+        超时秒数，0 表示不设置超时；设置超时时应使用正整数。
+    .OUTPUTS
+        System.Object。脚本块结果；后台无输出时为 null，单个结果直接返回，
+        多个结果作为集合返回。
+#>
 function Invoke-NonBlocking {
     param(
         [scriptblock]$ScriptBlock,
@@ -15,10 +33,16 @@ function Invoke-NonBlocking {
 
     $ps = [powershell]::Create()
     try {
-        $null = $ps.AddScript($ScriptBlock.ToString())
-        foreach ($arg in $ArgumentList) {
-            $null = $ps.AddArgument($arg)
+        # 后台线程使用独立会话，需要显式传入语言和翻译函数。
+        $translationScript = Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1'
+        $languageCode = if ($script:ConsoleLanguageCode) { $script:ConsoleLanguageCode } elseif ($script:Lang) { $script:Lang.LanguageCode } else { 'en-US' }
+        $worker = {
+            param($translationScript, $languageCode, $body, $arguments)
+            . $translationScript
+            $script:ConsoleLanguageCode = $languageCode
+            & ([scriptblock]::Create($body)) @arguments
         }
+        $null = $ps.AddScript($worker.ToString()).AddArgument($translationScript).AddArgument($languageCode).AddArgument($ScriptBlock.ToString()).AddArgument($ArgumentList)
 
         $handle = $ps.BeginInvoke()
 
@@ -29,7 +53,7 @@ function Invoke-NonBlocking {
             while (-not $handle.IsCompleted) {
                 if ($stopwatch -and $stopwatch.Elapsed.TotalSeconds -ge $TimeoutSeconds) {
                     $ps.Stop()
-                    throw "Operation timed out after $TimeoutSeconds seconds"
+                    throw (Get-ConsoleTranslation -Text 'Operation timed out after {0} seconds' -FormatArgs @($TimeoutSeconds))
                 }
                 Invoke-DoEvents
                 Start-Sleep -Milliseconds 16
@@ -39,7 +63,7 @@ function Invoke-NonBlocking {
             # CLI mode with timeout: block until completion or timeout
             if (-not $handle.AsyncWaitHandle.WaitOne($TimeoutSeconds * 1000)) {
                 $ps.Stop()
-                throw "Operation timed out after $TimeoutSeconds seconds"
+                throw (Get-ConsoleTranslation -Text 'Operation timed out after {0} seconds' -FormatArgs @($TimeoutSeconds))
             }
         }
 

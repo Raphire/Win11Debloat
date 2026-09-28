@@ -1,3 +1,5 @@
+﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
+
 function New-TargetUserHiveContext {
     param(
         [Parameter(Mandatory)]
@@ -25,6 +27,18 @@ function New-TargetUserHiveContext {
     }
 }
 
+<#
+    .SYNOPSIS
+        解析目标用户的注册表配置单元上下文，不执行加载操作。
+    .DESCRIPTION
+        规范化用户名，解析配置文件并确认 NTUSER.DAT 存在；缺失时抛出异常。
+        普通用户的 SID 配置单元已加载时复用该挂载点，否则返回 Default 挂载名。
+    .PARAMETER TargetUserName
+        目标用户名，包括 Default 配置文件。
+    .OUTPUTS
+        System.Management.Automation.PSCustomObject。包含用户名、SID、配置文件路径、
+        HiveDatPath、MountName、WasAlreadyLoaded 和 WasLoadedByScript。
+#>
 function Resolve-TargetUserHiveContext {
     param(
         [Parameter(Mandatory)]
@@ -33,17 +47,17 @@ function Resolve-TargetUserHiveContext {
 
     $normalizedTargetUserName = Normalize-UserLookupValue -Value $TargetUserName
     if ([string]::IsNullOrWhiteSpace($normalizedTargetUserName)) {
-        throw 'Target user name for registry hive resolution is empty.'
+        throw (Get-ConsoleTranslation -Text 'Target user name for registry hive resolution is empty.')
     }
 
     $userContext = Resolve-UserProfileContext -UserName $normalizedTargetUserName
     if (-not $userContext -or [string]::IsNullOrWhiteSpace([string]$userContext.ProfilePath)) {
-        throw "Unable to resolve profile path for target user '$normalizedTargetUserName'."
+        throw (Get-ConsoleTranslation -Text 'Unable to resolve profile path for target user ''{0}''.' -FormatArgs @($normalizedTargetUserName))
     }
 
     $hiveDatPath = Join-Path $userContext.ProfilePath 'NTUSER.DAT'
     if (-not (Test-Path -LiteralPath $hiveDatPath)) {
-        throw "Unable to find target user hive at '$hiveDatPath'."
+        throw (Get-ConsoleTranslation -Text 'Unable to find target user hive at ''{0}''.' -FormatArgs @($hiveDatPath))
     }
 
     $isDefaultProfile = $normalizedTargetUserName.Equals('Default', [System.StringComparison]::OrdinalIgnoreCase)
@@ -96,6 +110,24 @@ function Resolve-LoadedTargetUserHiveContext {
         -WasLoadedByScript $false)
 }
 
+<#
+    .SYNOPSIS
+        在目标用户的注册表配置单元上下文中执行脚本块。
+    .DESCRIPTION
+        复用已加载的配置单元，否则调用 reg load；加载失败时再检查 SID 挂载点，
+        仍不可用则抛出异常。执行期间设置脚本的目标挂载名，结束时恢复原值。
+        finally 中只卸载本函数加载的配置单元，卸载失败发出警告。
+    .PARAMETER TargetUserName
+        要操作其注册表配置单元的目标用户名。
+    .PARAMETER ScriptBlock
+        配置单元就绪后执行的脚本块，异常向上传递。
+    .PARAMETER ArgumentObject
+        作为脚本块第一个位置参数传入的对象。
+    .PARAMETER PassHiveContext
+        将配置单元上下文作为第二个位置参数传入脚本块。
+    .OUTPUTS
+        System.Object。脚本块产生的输出。
+#>
 function Invoke-WithTargetUserHive {
     param(
         [Parameter(Mandatory)]
@@ -121,7 +153,7 @@ function Invoke-WithTargetUserHive {
                     $hiveContext = $loadedSidContext
                 }
                 else {
-                    throw "Failed to load target user hive '$($hiveContext.HiveDatPath)' (exit code: $loadExitCode)."
+                    throw (Get-ConsoleTranslation -Text 'Failed to load target user hive ''{0}'' (exit code: {1}).' -FormatArgs @($($hiveContext.HiveDatPath), $loadExitCode))
                 }
             }
             else {
@@ -145,7 +177,7 @@ function Invoke-WithTargetUserHive {
             reg unload "HKU\$($hiveContext.MountName)" | Out-Null
             $unloadExitCode = $LASTEXITCODE
             if ($unloadExitCode -ne 0) {
-                Write-Warning "Failed to unload registry hive 'HKU\$($hiveContext.MountName)' (exit code: $unloadExitCode)"
+                Write-Warning (Get-ConsoleTranslation -Text 'Failed to unload registry hive ''HKU\{0}'' (exit code: {1})' -FormatArgs @($($hiveContext.MountName), $unloadExitCode))
             }
         }
     }

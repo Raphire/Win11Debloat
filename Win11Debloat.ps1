@@ -1,4 +1,4 @@
-[CmdletBinding(SupportsShouldProcess)]
+﻿[CmdletBinding(SupportsShouldProcess)]
 param (
     [switch]$CLI,
     [switch]$Silent,
@@ -106,14 +106,24 @@ param (
     [switch]$HideDriveLetters
 )
 
+# 控制台在图形界面前启动，先选定本次运行的语言。
+$script:ConsoleLanguageCode = if ($Language) { $Language } else { $PSUICulture }
+$consoleTranslationScript = Join-Path $PSScriptRoot 'Scripts/FileIO/获取控制台翻译.ps1'
+if (-not $WhatIfPreference -and ((Get-ExecutionPolicy -Scope MachinePolicy) -ne 'Undefined' -or (Get-ExecutionPolicy -Scope UserPolicy) -ne 'Undefined')) {
+    if (Get-Item -LiteralPath $consoleTranslationScript -Stream Zone.Identifier -ErrorAction SilentlyContinue) {
+        Unblock-File -LiteralPath $consoleTranslationScript -ErrorAction SilentlyContinue
+    }
+}
+. $consoleTranslationScript
+
 # Win11Debloat depends on Windows PowerShell 5.1 cmdlets (the Appx module's Get-AppxPackage /
 # Remove-AppxPackage, and Get-ComputerRestorePoint) that do not load in PowerShell 7 (pwsh), where the
 # Appx module fails with "Operation is not supported on this platform" (0x80131539). Without this guard
 # the run continues and silently fails to remove any apps while still reporting success. See issue #675.
 if ($PSVersionTable.PSEdition -eq 'Core') {
-    Write-Host "Win11Debloat requires Windows PowerShell 5.1, but it is running under PowerShell $($PSVersionTable.PSVersion) (pwsh / Core edition)." -ForegroundColor Red
-    Write-Host "App removal and system restore points rely on modules that are not available in PowerShell 7, so the run cannot complete correctly here." -ForegroundColor Red
-    Write-Host "Please re-run this script with Windows PowerShell instead (powershell.exe)." -ForegroundColor Yellow
+    Write-Host (Get-ConsoleTranslation -Text 'Win11Debloat requires Windows PowerShell 5.1, but it is running under PowerShell {0} (pwsh / Core edition).' -FormatArgs @($($PSVersionTable.PSVersion))) -ForegroundColor Red
+    Write-Host (Get-ConsoleTranslation -Text 'App removal and system restore points rely on modules that are not available in PowerShell 7, so the run cannot complete correctly here.') -ForegroundColor Red
+    Write-Host (Get-ConsoleTranslation -Text 'Please re-run this script with Windows PowerShell instead (powershell.exe).') -ForegroundColor Yellow
     exit 1
 }
 
@@ -124,9 +134,9 @@ $isAdmin = ([Security.Principal.WindowsPrincipal] `
 
 # If script is not running as administrator ask user if they want to allow it
 if (-not $isAdmin) {
-    Write-Host "Win11Debloat must be run as Administrator." -ForegroundColor Red
+    Write-Host (Get-ConsoleTranslation -Text 'Win11Debloat must be run as Administrator.') -ForegroundColor Red
 
-    $choice = Read-Host "Restart as Administrator? (y/n)"
+    $choice = Read-Host (Get-ConsoleTranslation -Text 'Restart as Administrator? (y/n)')
 
     if ($choice -match '^[Yy]$') {
         # Win32-safe escaping for arguments to pass to elevated process
@@ -162,7 +172,7 @@ if (-not $isAdmin) {
             Start-Process powershell -ArgumentList $elevatedArgs -Verb RunAs -ErrorAction Stop
         }
         catch {
-            Write-Error "Failed to start Win11Debloat as Administrator: $_"
+            Write-Error (Get-ConsoleTranslation -Text 'Failed to start Win11Debloat as Administrator: {0}' -FormatArgs @($_))
             Exit 1
         }
 
@@ -200,6 +210,7 @@ $script:ImportExportConfigSchema = Join-Path $schemasPath 'ImportExportConfigWin
 $script:RestoreBackupWindowSchema = Join-Path $schemasPath 'RestoreBackupWindow.xaml'
 $script:LoadAppsDetailsScriptPath = Join-Path (Join-Path $scriptsPath 'FileIO') 'Import-AppDetailsFromJson.ps1'
 $script:TestAppInWingetListScriptPath = Join-Path (Join-Path $scriptsPath 'AppRemoval') 'Test-AppInWingetList.ps1'
+$script:ImportLanguageFileScriptPath = Join-Path (Join-Path $scriptsPath 'FileIO') 'Import-LanguageFile.ps1'
 
 $script:ControlParams = 'WhatIf', 'Confirm', 'Verbose', 'Debug', 'LogPath', 'Language', 'Silent', 'Sysprep', 'User', 'SkipExplorerRestart', 'SkipRegistryBackup', 'RunDefaults', 'RunDefaultsLite', 'RunSavedSettings', 'Config', 'CLI', 'AppRemovalTarget'
 
@@ -214,8 +225,8 @@ $script:AppRemovalVerificationUnavailable = $false
 
 # Check if current PowerShell environment is limited by security policies
 if ($ExecutionContext.SessionState.LanguageMode -ne "FullLanguage") {
-    Write-Error "Win11Debloat is unable to run on your system, PowerShell execution is restricted by security policies"
-    Write-Output "Press any key to exit..."
+    Write-Error (Get-ConsoleTranslation -Text 'Win11Debloat is unable to run on your system, PowerShell execution is restricted by security policies')
+    Write-Output (Get-ConsoleTranslation -Text 'Press any key to exit...')
     $null = [System.Console]::ReadKey()
     Exit 1
 }
@@ -226,7 +237,7 @@ Clear-Host
 $system32Path = "$env:SystemRoot\System32"
 if ($env:PATH -notmatch "(?i)(^|;)$([regex]::Escape($system32Path))(?=;|$)") {
     $env:PATH = "$env:SystemRoot\System32;$env:SystemRoot;" + $env:PATH
-    Write-Warning "System32 path was missing from PATH environment variable, it has been added for this session."
+    Write-Warning (Get-ConsoleTranslation -Text 'System32 path was missing from PATH environment variable, it has been added for this session.')
 }
 
 # Display ASCII art launch logo in CLI
@@ -247,8 +258,8 @@ Write-Host "                   " -NoNewline; Write-Host "  |  " -ForegroundColor
 Write-Host "                   " -NoNewline; Write-Host "    (" -ForegroundColor Yellow -NoNewline; Write-Host "'''" -ForegroundColor Red -NoNewline; Write-Host ") " -ForegroundColor Yellow -NoNewline; Write-Host "   *  *" -ForegroundColor DarkYellow
 Write-Host "                   " -NoNewline; Write-Host "    ( " -ForegroundColor DarkYellow -NoNewline; Write-Host "'" -ForegroundColor Red -NoNewline; Write-Host " )   " -ForegroundColor DarkYellow -NoNewline; Write-Host "*" -ForegroundColor Yellow
 Write-Host ""
-Write-Host "             Win11Debloat is launching..." -ForegroundColor White
-Write-Host "                Keep this window open" -ForegroundColor DarkGray
+Write-Host (Get-ConsoleTranslation -Text '             Win11Debloat is launching...') -ForegroundColor White
+Write-Host (Get-ConsoleTranslation -Text '                Keep this window open') -ForegroundColor DarkGray
 Write-Host ""
 Write-Host ""
 
@@ -277,15 +288,15 @@ if (-not $WhatIfPreference) {
             })
 
         if ($markedScriptFiles.Count -gt 0) {
-            Write-Host "Unblocking $($markedScriptFiles.Count) PowerShell file(s)..."
+            Write-Host (Get-ConsoleTranslation -Text 'Unblocking {0} PowerShell file(s)...' -FormatArgs @($($markedScriptFiles.Count)))
             $unblockErrors = @()
             $markedScriptFiles | Unblock-File -ErrorAction SilentlyContinue -ErrorVariable +unblockErrors
 
             if ($unblockErrors.Count -gt 0) {
-                Write-Warning "Failed to unblock $($unblockErrors.Count) PowerShell file(s)."
+                Write-Warning (Get-ConsoleTranslation -Text 'Failed to unblock {0} PowerShell file(s).' -FormatArgs @($($unblockErrors.Count)))
             }
             else {
-                Write-Host "All files were unblocked successfully."
+                Write-Host (Get-ConsoleTranslation -Text 'All files were unblocked successfully.')
             }
         }
     }
@@ -295,15 +306,15 @@ if (-not $WhatIfPreference) {
 try {
     $computerSystem = Get-CimInstance Win32_ComputerSystem -ErrorAction SilentlyContinue
     if ($null -ne $computerSystem -and $computerSystem.PartOfDomain) {
-        Write-Warning "This machine is domain-joined. Group Policy may override changes made by Win11Debloat."
+        Write-Warning (Get-ConsoleTranslation -Text 'This machine is domain-joined. Group Policy may override changes made by Win11Debloat.')
     }
 }
 catch { }
 
 # Check if script has all required files
 if (-not ((Test-Path $script:DefaultSettingsFilePath) -and (Test-Path $script:AppsListFilePath) -and (Test-Path $script:RegfilesPath) -and (Test-Path $script:AssetsPath) -and (Test-Path $script:AppSelectionSchema) -and (Test-Path $script:ApplyChangesWindowSchema) -and (Test-Path $script:SharedStylesSchema) -and (Test-Path $script:BubbleHintSchema) -and (Test-Path $script:RestoreBackupWindowSchema) -and (Test-Path $script:FeaturesFilePath) -and (Test-Path $script:DefaultLanguagePath))) {
-    Write-Error "Win11Debloat is unable to find required files, please ensure all script files are present"
-    Write-Output "Press any key to exit..."
+    Write-Error (Get-ConsoleTranslation -Text 'Win11Debloat is unable to find required files, please ensure all script files are present')
+    Write-Output (Get-ConsoleTranslation -Text 'Press any key to exit...')
     $null = [System.Console]::ReadKey()
     Exit 1
 }
@@ -314,15 +325,15 @@ try {
     $featuresData = Get-Content -Path $script:FeaturesFilePath -Raw | ConvertFrom-Json
     foreach ($feature in $featuresData.Features) {
         if ([string]::IsNullOrWhiteSpace([string]$feature.FeatureId) -or [string]::IsNullOrWhiteSpace([string]$feature.Label) -or [string]::IsNullOrWhiteSpace([string]$feature.ApplyText)) {
-            Write-Warning "Feature '$($feature.FeatureId)' is missing a FeatureId, Label, or ApplyText in Features.json and will be skipped."
+            Write-Warning (Get-ConsoleTranslation -Text 'Feature ''{0}'' is missing a FeatureId, Label, or ApplyText in Features.json and will be skipped.' -FormatArgs @($($feature.FeatureId)))
             continue
         }
         $script:Features[$feature.FeatureId] = $feature
     }
 }
 catch {
-    Write-Error "Failed to load feature info from Features.json file"
-    Write-Output "Press any key to exit..."
+    Write-Error (Get-ConsoleTranslation -Text 'Failed to load feature info from Features.json file')
+    Write-Output (Get-ConsoleTranslation -Text 'Press any key to exit...')
     $null = [System.Console]::ReadKey()
     Exit 1
 }
@@ -337,15 +348,15 @@ try {
     }
 }
 catch {
-    Write-Error "Unable to determine if WinGet is installed, winget command failed: $_"
+    Write-Error (Get-ConsoleTranslation -Text 'Unable to determine if WinGet is installed, winget command failed: {0}' -FormatArgs @($_))
     $script:WingetInstalled = $false
 }
 
 # Show WinGet warning that requires user confirmation, Suppress confirmation if Silent parameter was passed
 if (-not $script:WingetInstalled -and -not $Silent) {
-    Write-Warning "WinGet is not installed or outdated, this may prevent Win11Debloat from removing certain apps"
+    Write-Warning (Get-ConsoleTranslation -Text 'WinGet is not installed or outdated, this may prevent Win11Debloat from removing certain apps')
     Write-Output ""
-    Write-Output "Press any key to continue anyway..."
+    Write-Output (Get-ConsoleTranslation -Text 'Press any key to continue anyway...')
     $null = [System.Console]::ReadKey()
 }
 
@@ -467,6 +478,14 @@ $script:ModernStandbySupported = Test-ModernStandbySupport
 # falling back to en-US either way if the requested language isn't available.
 $script:Lang = if ($Language) { Import-LanguageFile -LanguageCode $Language } else { Import-LanguageFile }
 
+# 命令行摘要与图形界面共用功能标签；应用标识与执行参数保持原值。
+foreach ($featureId in @($script:Features.Keys)) {
+    foreach ($field in @('Label', 'ApplyText', 'UndoLabel', 'ApplyUndoText')) {
+        $label = Get-Translation -Key $featureId -Field $field -Section 'Features'
+        if ($label -ne $featureId -and $script:Features[$featureId].PSObject.Properties[$field]) { $script:Features[$featureId].$field = $label }
+    }
+}
+
 $script:Params = $PSBoundParameters
 $script:UndoParams = @{}
 
@@ -489,9 +508,9 @@ if (-not ($script:Params.ContainsKey("Verbose"))) {
     $ProgressPreference = 'SilentlyContinue'
 }
 else {
-    Write-Host "Verbose mode is enabled"
+    Write-Host (Get-ConsoleTranslation -Text 'Verbose mode is enabled')
     Write-Output ""
-    Write-Output "Press any key to continue..."
+    Write-Output (Get-ConsoleTranslation -Text 'Press any key to continue...')
     $null = [System.Console]::ReadKey()
 
     $ProgressPreference = 'Continue'
@@ -502,7 +521,7 @@ if ($script:Params.ContainsKey("Sysprep")) {
 
     # Exit script if run in Sysprep mode on Windows 10
     if ($WinVersion -lt 22000) {
-        Write-Error "Win11Debloat Sysprep mode is not supported on Windows 10"
+        Write-Error (Get-ConsoleTranslation -Text 'Win11Debloat Sysprep mode is not supported on Windows 10')
         Wait-ForKeyPress -ExitCode 1
     }
 }
@@ -534,8 +553,8 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
     }
     elseif ($RunSavedSettings) {
         if (-not (Test-Path $script:SavedSettingsFilePath)) {
-            Write-CliHeader 'Custom Mode'
-            Write-Error "Unable to find LastUsedSettings.json file, no changes were made"
+            Write-CliHeader (Get-ConsoleTranslation -Text 'Custom Mode')
+            Write-Error (Get-ConsoleTranslation -Text 'Unable to find LastUsedSettings.json file, no changes were made')
             Wait-ForKeyPress -ExitCode 1
         }
 
@@ -551,9 +570,9 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
         }
 
         if (-not $Silent) {
-            Write-CliHeader 'Custom Mode'
+            Write-CliHeader (Get-ConsoleTranslation -Text 'Custom Mode')
             Write-PendingChanges
-            Write-CliHeader 'Custom Mode'
+            Write-CliHeader (Get-ConsoleTranslation -Text 'Custom Mode')
         }
     }
     else {
@@ -572,11 +591,11 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
                 Exit
             }
             catch {
-                Write-Warning "The graphical interface could not start: $($_.Exception.Message)"
-                Write-Verbose "GUI Failure details: $($_.Exception.ToString())"
+                Write-Warning (Get-ConsoleTranslation -Text 'The graphical interface could not start: {0}' -FormatArgs @($($_.Exception.Message)))
+                Write-Verbose (Get-ConsoleTranslation -Text 'GUI Failure details: {0}' -FormatArgs @($($_.Exception.ToString())))
                 if (-not $Silent) {
                     Write-Host ""
-                    Write-Host "Press any key to continue in CLI mode..."
+                    Write-Host (Get-ConsoleTranslation -Text 'Press any key to continue in CLI mode...')
                     $null = [System.Console]::ReadKey()
                 }
 
@@ -604,13 +623,13 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
     }
 }
 else {
-    Write-CliHeader 'Configuration'
+    Write-CliHeader (Get-ConsoleTranslation -Text 'Configuration')
 }
 
 # If the number of keys in ControlParams equals the number of keys in Params then no modifications/changes were selected
 #  or added by the user, and the script can exit without making any changes.
 if (($controlParamsCount -eq $script:Params.Keys.Count) -or ($script:Params.Keys.Count -eq 1 -and ($script:Params.Keys -contains 'CreateRestorePoint' -or $script:Params.Keys -contains 'Apps'))) {
-    Write-Output "The script completed without making any changes."
+    Write-Output (Get-ConsoleTranslation -Text 'The script completed without making any changes.')
     Wait-ForKeyPress
 }
 
@@ -619,7 +638,7 @@ if (($controlParamsCount -eq $script:Params.Keys.Count) -or ($script:Params.Keys
 Invoke-AllChanges
 
 if ($script:CancelRequested) {
-    Write-Warning "Script execution was cancelled by the user. Any remaining changes were not applied."
+    Write-Warning (Get-ConsoleTranslation -Text 'Script execution was cancelled by the user. Any remaining changes were not applied.')
     Wait-ForKeyPress
 }
 
@@ -631,6 +650,6 @@ if (-not ($script:Params.ContainsKey("Sysprep") -or $script:Params.ContainsKey("
 Write-Output ""
 Write-Output ""
 Write-Output ""
-Write-Output "Script completed! Please check above for any errors."
+Write-Output (Get-ConsoleTranslation -Text 'Script completed! Please check above for any errors.')
 
 Wait-ForKeyPress

@@ -1,3 +1,5 @@
+﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
+
 <#
     .SYNOPSIS
         Shows the backup-restore dialog and performs the selected restore.
@@ -8,7 +10,7 @@ function Show-RestoreBackupWindow {
     )
 
     try {
-        Write-Host 'Opening restore backup dialog.'
+        Write-Host (Get-ConsoleTranslation -Text 'Opening restore backup dialog.')
 
         $restoreResult = [PSCustomObject]@{
             RestoredRegistry = $false
@@ -17,7 +19,7 @@ function Show-RestoreBackupWindow {
 
         $dialogResult = Show-RestoreBackupDialog -Owner $Owner
         if (-not $dialogResult -or $dialogResult.Result -eq 'Cancel') {
-            Write-Host 'Restore canceled by user.'
+            Write-Host (Get-ConsoleTranslation -Text 'Restore canceled by user.')
             return $restoreResult
         }
 
@@ -27,10 +29,10 @@ function Show-RestoreBackupWindow {
         if ($dialogResult.Result -eq 'RestoreRegistry') {
             $backup = $dialogResult.Backup
             if (-not $backup) {
-                throw 'Registry backup restore requested without a selected backup.'
+                throw (Get-ConsoleTranslation -Text 'Registry backup restore requested without a selected backup.')
             }
 
-            Write-Host "User confirmed registry restore for $($backup.Target)."
+            Write-Host (Get-ConsoleTranslation -Text 'User confirmed registry restore for {0}.' -FormatArgs @($($backup.Target)))
             $restoreOpResult = Restore-RegistryBackupState -Backup $backup
             if ($restoreOpResult -and $restoreOpResult.Result) {
                 $restoreResult.RestoredRegistry = $true
@@ -54,7 +56,7 @@ function Show-RestoreBackupWindow {
             }
 
             if ($useManualBackupFile -and [string]::IsNullOrWhiteSpace($backupFilePath)) {
-                throw 'Start Menu restore canceled: no backup file selected.'
+                throw (Get-ConsoleTranslation -Text 'Start Menu restore canceled: no backup file selected.')
             }
 
             $result = if ($scope -eq 'AllUsers') {
@@ -105,7 +107,7 @@ function Show-RestoreBackupWindow {
     }
     catch {
         $errorMessage = if ($_.Exception.Message) { $_.Exception.Message } else { Get-Translation -Key 'RestoreUnexpectedError' }
-        Write-Error "Restore operation failed: $errorMessage"
+        Write-Error (Get-ConsoleTranslation -Text 'Restore operation failed: {0}' -FormatArgs @($errorMessage))
         Show-MessageBox -Title (Get-Translation -Key 'ErrorTitle') -Message (Get-Translation -Key 'RestoreOperationFailedMessage' -FormatArgs @($errorMessage)) -Icon Error
         return [PSCustomObject]@{
             RestoredRegistry = $false

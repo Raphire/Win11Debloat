@@ -1,3 +1,5 @@
+﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
+
 <#
     .SYNOPSIS
         Loads a registry backup from a JSON file and normalizes its contents.
@@ -148,7 +150,7 @@ function ConvertTo-NormalizedRegistryBackup {
     }
 
     if ($errors.Count -gt 0) {
-        Write-Error "Backup validation failed: $($errors -join ' ')"
+        Write-Error (Get-ConsoleTranslation -Text 'Backup validation failed: {0}' -FormatArgs @($($errors -join ' ')))
         if ($errors.Count -eq 1) {
             throw (Get-Translation -Key 'BackupValidationSingleError' -FormatArgs @($errors[0]))
         }
@@ -196,29 +198,29 @@ function Restore-RegistryBackupState {
     $friendlyTarget = Get-FriendlyRegistryBackupTarget -Target ([string]$Backup.Target)
 
     if ($script:Params.ContainsKey("WhatIf")) {
-        Write-Host "[WhatIf] Restore registry backup for $friendlyTarget" -ForegroundColor Cyan
+        Write-Host (Get-ConsoleTranslation -Text '[WhatIf] Restore registry backup for {0}' -FormatArgs @($friendlyTarget)) -ForegroundColor Cyan
         return [PSCustomObject]@{ Result = $true }
     }
 
     $restoreAction = {
         param($normalizedBackup)
 
-        Write-Host "Applying registry restore from $(@($normalizedBackup.RegistryKeys).Count) root snapshot(s)."
+        Write-Host (Get-ConsoleTranslation -Text 'Applying registry restore from {0} root snapshot(s).' -FormatArgs @($(@($normalizedBackup.RegistryKeys).Count)))
         foreach ($rootSnapshot in @($normalizedBackup.RegistryKeys)) {
             Restore-RegistryKeySnapshot -Snapshot $rootSnapshot
         }
     }
 
-    Write-Host "Starting restore for $friendlyTarget."
+    Write-Host (Get-ConsoleTranslation -Text 'Starting restore for {0}.' -FormatArgs @($friendlyTarget))
 
     if ($Backup.Target -eq 'DefaultUserProfile' -or $Backup.Target -like 'User:*') {
-        Write-Host "Restore requires loading target user hive."
+        Write-Host (Get-ConsoleTranslation -Text 'Restore requires loading target user hive.')
         Invoke-WithLoadedRestoreHive -Target $Backup.Target -ScriptBlock $restoreAction -ArgumentObject $Backup
-        Write-Host "Restore completed for $friendlyTarget."
+        Write-Host (Get-ConsoleTranslation -Text 'Restore completed for {0}.' -FormatArgs @($friendlyTarget))
         return [PSCustomObject]@{ Result = $true }
     }
 
     & $restoreAction $Backup
-    Write-Host "Restore completed for $friendlyTarget."
+    Write-Host (Get-ConsoleTranslation -Text 'Restore completed for {0}.' -FormatArgs @($friendlyTarget))
     return [PSCustomObject]@{ Result = $true }
 }

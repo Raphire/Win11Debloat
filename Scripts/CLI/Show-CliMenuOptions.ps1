@@ -1,18 +1,27 @@
-# Shows the CLI menu options and prompts the user to select one. Loops until a valid option is selected.
+﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
+
+<#
+    .SYNOPSIS
+        显示命令行模式菜单，循环读取有效选项。
+    .DESCRIPTION
+        1 为默认模式，2 为应用卸载模式；仅存在已保存设置时提供并接受选项 3。
+    .OUTPUTS
+        System.String。返回用户选择的 1、2 或 3。
+#>
 function Show-CliMenuOptions {
-    Do { 
-        $ModeSelectionMessage = "Please select an option (1/2)" 
+    Do {
+        $ModeSelectionMessage = (Get-ConsoleTranslation -Text 'Please select an option (1/2)')
 
-        Write-CliHeader 'Menu'
+        Write-CliHeader (Get-ConsoleTranslation -Text 'Menu')
 
-        Write-Host "(1) Default mode: Quickly apply the recommended changes"
-        Write-Host "(2) App removal mode: Select & remove apps, without making other changes"
+        Write-Host (Get-ConsoleTranslation -Text '(1) Default mode: Quickly apply the recommended changes')
+        Write-Host (Get-ConsoleTranslation -Text '(2) App removal mode: Select & remove apps, without making other changes')
 
         # Only show this option if SavedSettings file exists
         if (Test-Path $script:SavedSettingsFilePath) {
-            Write-Host "(3) Quickly apply your last used settings"
-            
-            $ModeSelectionMessage = "Please select an option (1/2/3)" 
+            Write-Host (Get-ConsoleTranslation -Text '(3) Quickly apply your last used settings')
+
+            $ModeSelectionMessage = (Get-ConsoleTranslation -Text 'Please select an option (1/2/3)')
         }
 
         Write-Host ""

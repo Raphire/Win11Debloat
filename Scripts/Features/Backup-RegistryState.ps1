@@ -1,3 +1,5 @@
+﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
+
 <#
     .SYNOPSIS
         Creates a timestamped JSON backup of registry state for selected features.
@@ -38,10 +40,10 @@ function New-RegistrySettingsBackup {
 
     $backupConfig = Get-RegistryBackupPayload -SelectedFeatures $selectedFeatures -UndoFeatures $undoFeatures -CreatedAt $timestamp
     if (-not (Save-ToFile -Config $backupConfig -FilePath $backupFilePath -MaxDepth 25)) {
-        throw "Failed to save registry backup to '$backupFilePath'"
+        throw (Get-ConsoleTranslation -Text 'Failed to save registry backup to ''{0}''' -FormatArgs @($backupFilePath))
     }
 
-    Write-Host "Backup successfully created: $backupFilePath"
+    Write-Host (Get-ConsoleTranslation -Text 'Backup successfully created: {0}' -FormatArgs @($backupFilePath))
     Write-Host ""
 
     return $backupFilePath

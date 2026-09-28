@@ -1,3 +1,5 @@
+﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
+
 <#
     .SYNOPSIS
     Creates a system restore point.
@@ -13,13 +15,13 @@ function Invoke-SystemRestorePoint {
         $SysRestore = Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SystemRestore" -Name "RPSessionInterval" -ErrorAction Stop
     }
     catch {
-        Write-Host "Error: Unable to determine whether System Restore is enabled: $($_.Exception.Message)" -ForegroundColor Red
+        Write-Host (Get-ConsoleTranslation -Text 'Error: Unable to determine whether System Restore is enabled: {0}' -FormatArgs @($($_.Exception.Message))) -ForegroundColor Red
         $failed = $true
     }
 
     if (-not $failed -and $SysRestore.RPSessionInterval -eq 0) {
         # In GUI mode, skip the prompt and just try to enable it
-        if ($script:GuiWindow -or $isSilent -or $( Read-Host -Prompt "System restore is disabled, would you like to enable it and create a restore point? (y/n)") -eq 'y') {
+        if ($script:GuiWindow -or $isSilent -or $( Read-Host -Prompt (Get-ConsoleTranslation -Text 'System restore is disabled, would you like to enable it and create a restore point? (y/n)')) -eq 'y') {
             try {
                 $enableResult = Invoke-NonBlocking -TimeoutSeconds 90 -ScriptBlock {
                     try {
@@ -27,12 +29,12 @@ function Invoke-SystemRestorePoint {
                         return $null
                     }
                     catch {
-                        return "Error: Failed to enable System Restore: $_"
+                        return (Get-ConsoleTranslation -Text 'Error: Failed to enable System Restore: {0}' -FormatArgs @($_))
                     }
                 }
             }
             catch {
-                $enableResult = "Error: Failed to enable System Restore: $_"
+                $enableResult = (Get-ConsoleTranslation -Text 'Error: Failed to enable System Restore: {0}' -FormatArgs @($_))
             }
 
             if ($enableResult) {
@@ -52,25 +54,25 @@ function Invoke-SystemRestorePoint {
                     $recentRestorePoints = Get-ComputerRestorePoint | Where-Object { (Get-Date) - [System.Management.ManagementDateTimeConverter]::ToDateTime($_.CreationTime) -le (New-TimeSpan -Hours 24) }
                 }
                 catch {
-                    return [PSCustomObject]@{ Success = $false; Message = "Error: Unable to retrieve existing restore points: $_" }
+                    return [PSCustomObject]@{ Success = $false; Message = (Get-ConsoleTranslation -Text 'Error: Unable to retrieve existing restore points: {0}' -FormatArgs @($_)) }
                 }
 
                 if ($recentRestorePoints.Count -eq 0) {
                     try {
-                        Checkpoint-Computer -Description "Restore point created by Win11Debloat" -RestorePointType "MODIFY_SETTINGS"
-                        return [PSCustomObject]@{ Success = $true; Message = "System restore point created successfully" }
+                        Checkpoint-Computer -Description (Get-ConsoleTranslation -Text 'Restore point created by Win11Debloat') -RestorePointType "MODIFY_SETTINGS"
+                        return [PSCustomObject]@{ Success = $true; Message = (Get-ConsoleTranslation -Text 'System restore point created successfully') }
                     }
                     catch {
-                        return [PSCustomObject]@{ Success = $false; Message = "Error: Unable to create restore point: $_" }
+                        return [PSCustomObject]@{ Success = $false; Message = (Get-ConsoleTranslation -Text 'Error: Unable to create restore point: {0}' -FormatArgs @($_)) }
                     }
                 }
                 else {
-                    return [PSCustomObject]@{ Success = $true; Message = "A recent restore point already exists, no new restore point was created" }
+                    return [PSCustomObject]@{ Success = $true; Message = (Get-ConsoleTranslation -Text 'A recent restore point already exists, no new restore point was created') }
                 }
             }
         }
         catch {
-            $result = [PSCustomObject]@{ Success = $false; Message = "Error: Failed to create system restore point: $_" }
+            $result = [PSCustomObject]@{ Success = $false; Message = (Get-ConsoleTranslation -Text 'Error: Failed to create system restore point: {0}' -FormatArgs @($_)) }
         }
 
         if ($result -and $result.Success) {
@@ -81,7 +83,7 @@ function Invoke-SystemRestorePoint {
             $failed = $true
         }
         else {
-            Write-Host "Error: Failed to create system restore point" -ForegroundColor Red
+            Write-Host (Get-ConsoleTranslation -Text 'Error: Failed to create system restore point') -ForegroundColor Red
             $failed = $true
         }
     }
@@ -97,14 +99,14 @@ function Invoke-SystemRestorePoint {
             }
         }
         elseif (-not $isSilent) {
-            Write-Host "Failed to create a system restore point. Do you want to continue without a restore point? (y/n)" -ForegroundColor Yellow
+            Write-Host (Get-ConsoleTranslation -Text 'Failed to create a system restore point. Do you want to continue without a restore point? (y/n)') -ForegroundColor Yellow
             if ($( Read-Host ) -ne 'y') {
                 $script:CancelRequested = $true
                 return $false
             }
         }
 
-        Write-Host "Warning: Continuing without restore point" -ForegroundColor Yellow
+        Write-Host (Get-ConsoleTranslation -Text 'Warning: Continuing without restore point') -ForegroundColor Yellow
         return $false
     }
 

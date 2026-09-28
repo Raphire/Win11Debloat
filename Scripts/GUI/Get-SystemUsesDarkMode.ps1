@@ -1,3 +1,5 @@
+﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
+
 <#
     .SYNOPSIS
         Returns whether Windows apps are configured to use dark mode.
@@ -10,7 +12,7 @@ function Get-SystemUsesDarkMode {
         $personalizeKey = Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize'
 
         if ($null -eq $personalizeKey) {
-            Write-Host "WARNING: Unable to retrieve personalization settings." -ForegroundColor Yellow
+            Write-Host (Get-ConsoleTranslation -Text 'WARNING: Unable to retrieve personalization settings.') -ForegroundColor Yellow
             return $false
         }
 

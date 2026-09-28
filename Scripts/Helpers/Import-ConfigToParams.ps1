@@ -1,3 +1,5 @@
+﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
+
 <#
     .SYNOPSIS
         Imports valid application, tweak, and deployment selections from a configuration JSON file into active parameters.
@@ -15,25 +17,25 @@ function Import-ConfigToParams {
         $resolvedConfigPath = (Resolve-Path -LiteralPath $ConfigPath -ErrorAction Stop).Path
     }
     catch {
-        throw "Unable to find config file at path: $ConfigPath"
+        throw (Get-ConsoleTranslation -Text 'Unable to find config file at path: {0}' -FormatArgs @($ConfigPath))
     }
 
     if (-not (Test-Path -LiteralPath $resolvedConfigPath -PathType Leaf)) {
-        throw "Provided config path is not a file: $resolvedConfigPath"
+        throw (Get-ConsoleTranslation -Text 'Provided config path is not a file: {0}' -FormatArgs @($resolvedConfigPath))
     }
 
     if ([System.IO.Path]::GetExtension($resolvedConfigPath) -ne '.json') {
-        throw "Provided config file must be a .json file: $resolvedConfigPath"
+        throw (Get-ConsoleTranslation -Text 'Provided config file must be a .json file: {0}' -FormatArgs @($resolvedConfigPath))
     }
 
     $configJson = Import-JsonFile -filePath $resolvedConfigPath -expectedVersion $ExpectedVersion
     if ($null -eq $configJson) {
-        throw "Failed to read config file: $resolvedConfigPath"
+        throw (Get-ConsoleTranslation -Text 'Failed to read config file: {0}' -FormatArgs @($resolvedConfigPath))
     }
 
     $consistencyError = Test-ConfigConsistency -Config $configJson
     if ($consistencyError) {
-        throw "Invalid config file '$resolvedConfigPath': $consistencyError"
+        throw (Get-ConsoleTranslation -Text 'Invalid config file ''{0}'': {1}' -FormatArgs @($resolvedConfigPath, $consistencyError))
     }
 
     $importedItems = 0
@@ -134,7 +136,7 @@ function Import-ConfigToParams {
     }
 
     if ($importedItems -eq 0) {
-        throw "The config file contains no importable data: $resolvedConfigPath"
+        throw (Get-ConsoleTranslation -Text 'The config file contains no importable data: {0}' -FormatArgs @($resolvedConfigPath))
     }
 
     return $resolvedConfigPath

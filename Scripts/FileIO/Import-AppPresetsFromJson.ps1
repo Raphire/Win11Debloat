@@ -1,3 +1,5 @@
+﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
+
 <#
     .SYNOPSIS
         Returns preset names and application IDs from Apps.json, or an empty array when unavailable.
@@ -7,7 +9,7 @@ function Import-AppPresetsFromJson {
         $jsonContent = Get-Content -Path $script:AppsListFilePath -Raw | ConvertFrom-Json
     }
     catch {
-        Write-Warning "Failed to read Apps.json: $_"
+        Write-Warning (Get-ConsoleTranslation -Text 'Failed to read Apps.json: {0}' -FormatArgs @($_))
         return @()
     }
 
@@ -17,7 +19,7 @@ function Import-AppPresetsFromJson {
 
     return @($jsonContent.Presets | ForEach-Object {
         [PSCustomObject]@{
-            Name   = $_.Name
+            Name   = Get-ConsoleTranslation -Text $_.Name
             AppIds = @($_.AppIds)
         }
     })

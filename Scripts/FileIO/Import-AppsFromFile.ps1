@@ -1,3 +1,5 @@
+﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
+
 <#
     .SYNOPSIS
         Returns a list of app IDs from the specified JSON file.
@@ -40,7 +42,7 @@ function Import-AppsFromFile {
         return $appsList
     } 
     catch {
-        Write-Error "Unable to read apps list from file: $appsFilePath"
+        Write-Error (Get-ConsoleTranslation -Text 'Unable to read apps list from file: {0}' -FormatArgs @($appsFilePath))
         Wait-ForKeyPress -ExitCode 1
     }
 }

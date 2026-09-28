@@ -1,3 +1,5 @@
+﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
+
 <#
     .SYNOPSIS
     Removes one or more Windows app packages based on the target scope.
@@ -29,7 +31,7 @@ function Remove-SelectedApps {
 
     if ($script:Params.ContainsKey("WhatIf")) {
         foreach ($app in $appslist) {
-            Write-Host "[WhatIf] Remove App Package: $app" -ForegroundColor Cyan
+            Write-Host (Get-ConsoleTranslation -Text '[WhatIf] Remove App Package: {0}' -FormatArgs @($app)) -ForegroundColor Cyan
         }
 
         return $true
@@ -53,7 +55,7 @@ function Remove-SelectedApps {
             & $script:ApplySubStepCallback (Get-Translation -Key 'RemovingAppsSubStep' -FormatArgs @($appIndex, $appCount)) $appIndex $appCount
         }
 
-        Write-Host "Removing $app"
+        Write-Host (Get-ConsoleTranslation -Text 'Removing {0}' -FormatArgs @($app))
 
         if ((Get-AppRemovalMethod $app) -eq 'WinGet') {
             $removalSucceeded = Remove-WinGetApp -app $app
@@ -92,7 +94,7 @@ function Remove-SelectedApps {
                 }
 
                 if ($edgeIds -contains $app) {
-                    Write-Host "Unable to uninstall Microsoft Edge via WinGet" -ForegroundColor Red
+                    Write-Host (Get-ConsoleTranslation -Text 'Unable to uninstall Microsoft Edge via WinGet') -ForegroundColor Red
                     if (-not $edgeForceRemoveRequested) {
                         $edgeForceRemoveRequested = $true
                         $edgeForceRemoveSucceeded = Request-EdgeForceRemove
@@ -102,7 +104,7 @@ function Remove-SelectedApps {
                     }
                 }
                 else {
-                    Write-Host "Unable to uninstall $app via WinGet" -ForegroundColor Red
+                    Write-Host (Get-ConsoleTranslation -Text 'Unable to uninstall {0} via WinGet' -FormatArgs @($app)) -ForegroundColor Red
                 }
                 $wingetRemovalFailures[$app] = $true
             }
@@ -145,7 +147,7 @@ function Remove-WinGetApp {
     )
 
     if (-not $script:WingetInstalled) {
-        Write-Error "WinGet is either not installed or is outdated; $app could not be removed"
+        Write-Error (Get-ConsoleTranslation -Text 'WinGet is either not installed or is outdated; {0} could not be removed' -FormatArgs @($app))
         return $false
     }
 
@@ -162,25 +164,25 @@ function Remove-WinGetApp {
         } -ArgumentList $app -TimeoutSeconds $TimeoutSeconds
         Write-WinGetUninstallOutput -Output $(if ($uninstallResult) { $uninstallResult.Output } else { $null })
         $exitCode = if ($uninstallResult) { $uninstallResult.ExitCode } else { 'unknown' }
-        Write-Verbose "WinGet uninstall for $app returned exit code $exitCode."
+        Write-Verbose (Get-ConsoleTranslation -Text 'WinGet uninstall for {0} returned exit code {1}.' -FormatArgs @($app, $exitCode))
     }
     catch {
         $uninstallCommandSucceeded = $false
-        if ($_.Exception.Message -like 'Operation timed out after *') {
-            Write-Verbose "WinGet uninstall for $app did not complete within $TimeoutSeconds seconds: $_"
+        if ($_.Exception.Message -like (Get-ConsoleTranslation -Text 'Operation timed out after *')) {
+            Write-Verbose (Get-ConsoleTranslation -Text 'WinGet uninstall for {0} did not complete within {1} seconds: {2}' -FormatArgs @($app, $TimeoutSeconds, $_))
         }
         else {
-            Write-Verbose "WinGet uninstall for $app failed: $_"
+            Write-Verbose (Get-ConsoleTranslation -Text 'WinGet uninstall for {0} failed: {1}' -FormatArgs @($app, $_))
         }
     }
 
     $scheduleSucceeded = $true
     if ($script:Params.ContainsKey("User")) {
-        Write-Host "Adding scheduled task to uninstall $app for user $(Get-UserName)..."
+        Write-Host (Get-ConsoleTranslation -Text 'Adding scheduled task to uninstall {0} for user {1}...' -FormatArgs @($app, $(Get-UserName)))
         $scheduleSucceeded = Set-RunOnceWingetTask -appId $app
     }
     elseif ($script:Params.ContainsKey("Sysprep")) {
-        Write-Host "Adding scheduled task to uninstall $app for new users..."
+        Write-Host (Get-ConsoleTranslation -Text 'Adding scheduled task to uninstall {0} for new users...' -FormatArgs @($app))
         $scheduleSucceeded = Set-RunOnceWingetTask -appId $app
     }
 
@@ -262,7 +264,7 @@ function Remove-AppxApp {
         } -ArgumentList @($appPattern, $targetUser)
     }
     catch {
-        Write-Error "Unable to remove $app via Appx: $_"
+        Write-Error (Get-ConsoleTranslation -Text 'Unable to remove {0} via Appx: {1}' -FormatArgs @($app, $_))
         return $false
     }
 
@@ -304,7 +306,7 @@ function Get-AppRemovalMethod {
             }
         }
         catch {
-            Write-Warning "Failed to load app removal methods from '$script:AppsListFilePath'. Defaulting unknown apps to Appx. Error: $_"
+            Write-Warning (Get-ConsoleTranslation -Text 'Failed to load app removal methods from ''{0}''. Defaulting unknown apps to Appx. Error: {1}' -FormatArgs @($script:AppsListFilePath, $_))
         }
     }
 
@@ -335,7 +337,7 @@ function Request-EdgeForceRemove {
             return (Invoke-ForceRemoveEdge)
         }
     }
-    elseif ($(Read-Host -Prompt "Would you like to forcefully uninstall Microsoft Edge? NOT RECOMMENDED! (y/n)") -eq 'y') {
+    elseif ($(Read-Host -Prompt (Get-ConsoleTranslation -Text 'Would you like to forcefully uninstall Microsoft Edge? NOT RECOMMENDED! (y/n)')) -eq 'y') {
         Write-Host ""
         return (Invoke-ForceRemoveEdge)
     }
@@ -394,7 +396,7 @@ function Set-RunOnceWingetTask {
         return $true
     }
     catch {
-        Write-Error "Failed to schedule uninstall task for $($appId): $_"
+        Write-Error (Get-ConsoleTranslation -Text 'Failed to schedule uninstall task for {0}: {1}' -FormatArgs @($($appId), $_))
         return $false
     }
 }

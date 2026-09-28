@@ -1,3 +1,5 @@
+﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
+
 <#
     .SYNOPSIS
         Displays the modal progress window while selected changes are applied.
@@ -137,7 +139,7 @@ function Show-ApplyModal {
             $script:ApplyCompletionPanel.Visibility = 'Visible'
             
             if ($script:CancelRequested) {
-                Write-Warning "Script execution was cancelled by the user. Any remaining changes were not applied."
+                Write-Warning (Get-ConsoleTranslation -Text 'Script execution was cancelled by the user. Any remaining changes were not applied.')
 
                 $script:ApplyCompletionIconEl.Text = [char]0xE7BA
                 $script:ApplyCompletionIconEl.Foreground = [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#e8912d"))
@@ -145,7 +147,7 @@ function Show-ApplyModal {
                 $script:ApplyCompletionMessageEl.Text = Get-Translation -Key 'ApplyCompletionMessageCancelled'
             } elseif ($failureCount -gt 0 -or $appRemovalVerificationUnavailable) {
                 if ($failureCount -gt 0) {
-                    Write-Host "Script completed with $failureCount error(s)."
+                    Write-Host (Get-ConsoleTranslation -Text 'Script completed with {0} error(s).' -FormatArgs @($failureCount))
                 }
 
                 $script:ApplyCompletionIconEl.Text = [char]0xE7BA
@@ -159,7 +161,7 @@ function Show-ApplyModal {
                     $script:ApplyCompletionMessageEl.Text = Get-Translation -Key 'ApplyCompletionMessageFailures' -Count $failureCount -FormatArgs @($failureCount)
                 }
             } else {
-                Write-Host "All changes have been applied successfully!"
+                Write-Host (Get-ConsoleTranslation -Text 'All changes have been applied successfully!')
 
                 $script:ApplyCompletionTitleEl.Text = Get-Translation -Key 'ApplyCompletionTitleSuccess'
 
@@ -187,7 +189,7 @@ function Show-ApplyModal {
             $applyWindow.Dispatcher.Invoke([System.Windows.Threading.DispatcherPriority]::Render, [action]{})
         }
         catch {
-            Write-Host "Error: $($_.Exception.Message)"
+            Write-Host (Get-ConsoleTranslation -Text 'Error: {0}' -FormatArgs @($($_.Exception.Message)))
             $script:ApplyInProgressPanel.Visibility = 'Collapsed'
             $script:ApplyCompletionPanel.Visibility = 'Visible'
             $script:ApplyCompletionIconEl.Text = [char]0xEA39

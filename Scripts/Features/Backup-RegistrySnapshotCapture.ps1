@@ -1,3 +1,21 @@
+﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
+
+<#
+    .SYNOPSIS
+        将所选应用及撤销功能的注册表操作合并为备份捕获计划。
+    .DESCRIPTION
+        解析功能对应的注册表文件并合并同一路径的捕获范围。
+        撤销功能无法解析文件路径时跳过；已解析出的应用或撤销文件不存在时抛出异常。
+    .PARAMETER SelectedRegistryFeatures
+        要应用的功能对象数组，通过 RegistryKey 查找文件。
+    .PARAMETER UndoRegistryFeatures
+        要撤销的功能对象数组，通过撤销文件解析函数查找文件。
+    .PARAMETER UseSysprepRegFiles
+        对要应用的功能使用 Sysprep 版本的注册表文件。
+    .OUTPUTS
+        System.Management.Automation.PSCustomObject。每项包含 Path、IncludeSubKeys、
+        CaptureAllValues 和 ValueNames。
+#>
 function Get-RegistryBackupCapturePlans {
     param(
         [object[]]$SelectedRegistryFeatures = @(),
@@ -10,7 +28,7 @@ function Get-RegistryBackupCapturePlans {
     foreach ($feature in $SelectedRegistryFeatures) {
         $regFilePath = Get-RegistryFilePathForFeature -RegistryKey $feature.RegistryKey -UseSysprepRegFiles:$UseSysprepRegFiles
         if (-not (Test-Path $regFilePath)) {
-            throw "Unable to find registry file for backup: $($feature.RegistryKey) ($regFilePath)"
+            throw (Get-ConsoleTranslation -Text 'Unable to find registry file for backup: {0} ({1})' -FormatArgs @($($feature.RegistryKey), $regFilePath))
         }
 
         foreach ($operation in @(Get-RegFileOperations -regFilePath $regFilePath)) {
@@ -33,7 +51,7 @@ function Get-RegistryBackupCapturePlans {
                 [string]$feature.RegistryKey
             }
 
-            throw "Unable to find registry undo file for backup: $undoKeyDescription ($regFilePath)"
+            throw (Get-ConsoleTranslation -Text 'Unable to find registry undo file for backup: {0} ({1})' -FormatArgs @($undoKeyDescription, $regFilePath))
         }
 
         foreach ($operation in @(Get-RegFileOperations -regFilePath $regFilePath)) {
@@ -157,6 +175,23 @@ function Invoke-WithLoadedBackupHive {
     return Invoke-WithTargetUserHive -TargetUserName $targetUserName -ScriptBlock $ScriptBlock -ArgumentObject $ArgumentObject
 }
 
+<#
+    .SYNOPSIS
+        只读捕获指定注册表键的值及可选子键快照。
+    .DESCRIPTION
+        不支持的路径或根键抛出异常；目标键不存在时返回 Exists 为假的空快照。
+        存在时按参数捕获内容，并在 finally 中关闭已打开的键。
+    .PARAMETER KeyPath
+        要捕获的完整注册表键路径。
+    .PARAMETER CaptureAllValues
+        是否捕获该键的全部值。
+    .PARAMETER ValueNames
+        未要求捕获全部值时，要捕获的值名列表。
+    .PARAMETER IncludeSubKeys
+        是否递归捕获子键。
+    .OUTPUTS
+        System.Collections.Hashtable。包含 Path、Exists、Values 和 SubKeys 的快照。
+#>
 function Get-RegistryKeySnapshot {
     param(
         [Parameter(Mandatory)]
@@ -168,12 +203,12 @@ function Get-RegistryKeySnapshot {
 
     $registryParts = Split-RegistryPath -path $KeyPath
     if (-not $registryParts) {
-        throw "Unsupported registry path in backup: $KeyPath"
+        throw (Get-ConsoleTranslation -Text 'Unsupported registry path in backup: {0}' -FormatArgs @($KeyPath))
     }
 
     $rootKey = Get-RegistryRootKey -hiveName $registryParts.Hive
     if (-not $rootKey) {
-        throw "Unsupported registry hive in backup: $($registryParts.Hive)"
+        throw (Get-ConsoleTranslation -Text 'Unsupported registry hive in backup: {0}' -FormatArgs @($($registryParts.Hive)))
     }
 
     $subKeyPath = $registryParts.SubKey
@@ -243,7 +278,7 @@ function Convert-RegistryKeyToSnapshot {
         foreach ($subKeyName in @($RegistryKey.GetSubKeyNames())) {
             $childKey = $RegistryKey.OpenSubKey($subKeyName, $false)
             if ($null -eq $childKey) {
-                throw "Unable to read registry subkey '$($RegistryKey.Name)\$subKeyName' while creating a backup snapshot. The backup was not created."
+                throw (Get-ConsoleTranslation -Text 'Unable to read registry subkey ''{0}\{1}'' while creating a backup snapshot. The backup was not created.' -FormatArgs @($($RegistryKey.Name), $subKeyName))
             }
 
             try {
@@ -284,7 +319,7 @@ function Convert-RegistryValueToSnapshot {
 
     $valueKind = $RegistryKey.GetValueKind($ValueName)
     if ($valueKind -eq [Microsoft.Win32.RegistryValueKind]::None) {
-        throw "REG_NONE registry values are not supported for backup. Key='$($RegistryKey.Name)' Name='$ValueName'"
+        throw (Get-ConsoleTranslation -Text 'REG_NONE registry values are not supported for backup. Key=''{0}'' Name=''{1}''' -FormatArgs @($($RegistryKey.Name), $ValueName))
     }
 
     $value = $RegistryKey.GetValue($ValueName, $null, [Microsoft.Win32.RegistryValueOptions]::DoNotExpandEnvironmentNames)
@@ -301,7 +336,7 @@ function Convert-RegistryValueToSnapshot {
     catch {
         $valueType = if ($null -ne $value) { $value.GetType().FullName } else { '<null>' }
         $valueForLog = if ($null -eq $value) { '<null>' } elseif ($value -is [array]) { ($value -join ',') } else { [string]$value }
-        throw "Failed to normalize registry value for backup. Key='$($RegistryKey.Name)' Name='$ValueName' Kind='$valueKind' RawType='$valueType' RawValue='$valueForLog'. InnerError: $($_.Exception.Message)"
+        throw (Get-ConsoleTranslation -Text 'Failed to normalize registry value for backup. Key=''{0}'' Name=''{1}'' Kind=''{2}'' RawType=''{3}'' RawValue=''{4}''. InnerError: {5}' -FormatArgs @($($RegistryKey.Name), $ValueName, $valueKind, $valueType, $valueForLog, $($_.Exception.Message)))
     }
 
     return @{

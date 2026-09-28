@@ -1,8 +1,23 @@
+﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
+
 # Operation type constants, used to indicate the type of operation for each registry entry
 $script:OpType_RemoveKey = 'DeleteKey'
 $script:OpType_RemoveValue = 'DeleteValue'
 $script:OpType_Store = 'SetValue'
 
+<#
+    .SYNOPSIS
+        读取注册表文件并返回可执行的操作列表。
+    .DESCRIPTION
+        合并反斜杠续行，跳过注释、空行和文件头，识别删除键、删除值及写入值。
+        不支持或格式错误的值发出警告后跳过；文件读取失败时抛出异常。
+        本函数只解析文件，不修改注册表。
+    .PARAMETER regFilePath
+        要读取的 .reg 文件路径。
+    .OUTPUTS
+        System.Management.Automation.PSCustomObject。包含 OperationType、KeyPath，
+        值操作还包含 ValueName、ValueType 和 ValueData。
+#>
 function Get-RegFileOperations {
     param(
         [Parameter(Mandatory)]
@@ -75,7 +90,7 @@ function Get-RegFileOperations {
 
         $parsedValue = Convert-RegValueData -valueData $matches.valueData.Trim()
         if (-not $parsedValue) {
-            Write-Warning "Skipping unsupported or malformed registry value '$valueName' in '$currentKeyPath'."
+            Write-Warning (Get-ConsoleTranslation -Text 'Skipping unsupported or malformed registry value ''{0}'' in ''{1}''.' -FormatArgs @($valueName, $currentKeyPath))
             continue
         }
 

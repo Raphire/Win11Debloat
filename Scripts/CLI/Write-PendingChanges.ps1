@@ -1,3 +1,5 @@
+﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
+
 <#
     .SYNOPSIS
         Prints a summary of all pending changes to the console for the user to review.
@@ -13,7 +15,7 @@
         Enter, giving them an opportunity to review and cancel via Ctrl+C.
 #>
 function Write-PendingChanges {
-    Write-Output "Win11Debloat will make the following changes:"
+    Write-Output (Get-ConsoleTranslation -Text 'Win11Debloat will make the following changes:')
 
     if ($script:Params['CreateRestorePoint']) {
         Write-Output "- $($script:Features['CreateRestorePoint'].Label)"
@@ -35,12 +37,12 @@ function Write-PendingChanges {
                 $appsList = Generate-AppsList
 
                 if ($appsList.Count -eq 0) {
-                    Write-Host "No valid apps were selected for removal" -ForegroundColor Yellow
+                    Write-Host (Get-ConsoleTranslation -Text 'No valid apps were selected for removal') -ForegroundColor Yellow
                     Write-Output ""
                     continue
                 }
 
-                Write-Output "- Remove $($appsList.Count) apps:"
+                Write-Output (Get-ConsoleTranslation -Text '- Remove {0} apps:' -FormatArgs @($($appsList.Count)))
                 Write-Host $appsList -ForegroundColor DarkGray
                 continue
             }
@@ -54,6 +56,6 @@ function Write-PendingChanges {
 
     Write-Output ""
     Write-Output ""
-    Write-Output "Press enter to execute the script or press CTRL+C to quit..."
+    Write-Output (Get-ConsoleTranslation -Text 'Press enter to execute the script or press CTRL+C to quit...')
     Read-Host | Out-Null
 }

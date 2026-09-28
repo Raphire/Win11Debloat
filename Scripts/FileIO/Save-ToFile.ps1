@@ -1,3 +1,5 @@
+﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
+
 <#
     .SYNOPSIS
         Serializes a configuration hashtable to a UTF-8 JSON file.
@@ -31,7 +33,7 @@ function Save-ToFile {
         return $true
     }
     catch {
-        Write-Error "Failed to write '$FilePath': $($_.Exception.Message)"
+        Write-Error (Get-ConsoleTranslation -Text 'Failed to write ''{0}'': {1}' -FormatArgs @($FilePath, $($_.Exception.Message)))
         return $false
     }
 }

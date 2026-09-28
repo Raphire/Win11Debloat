@@ -1,3 +1,5 @@
+﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
+
 function Get-NormalizedRegistryValueName {
     param(
         [AllowNull()]
@@ -51,11 +53,26 @@ function Convert-RegOperationToValueKind {
             return @{ Name = $valueName; Kind = [Microsoft.Win32.RegistryValueKind]::MultiString; Value = [string[]]@($Operation.ValueData) }
         }
         default {
-            throw "Unsupported value type '$valueType' while applying reg operation for '$operationKeyPath'"
+            throw (Get-ConsoleTranslation -Text 'Unsupported value type ''{0}'' while applying reg operation for ''{1}''' -FormatArgs @($valueType, $operationKeyPath))
         }
     }
 }
 
+<#
+    .SYNOPSIS
+        解析注册表路径并按需打开或创建目标键。
+    .DESCRIPTION
+        不支持的路径或根键抛出异常；路径只指向根键时直接返回根键对象。
+        子键不存在且未要求创建时，返回对象的 Key 可以为空。
+    .PARAMETER RegistryPath
+        要解析的完整注册表路径。
+    .PARAMETER CreateIfMissing
+        打开子键时允许创建缺失的键。
+    .PARAMETER OpenKey
+        默认打开可写子键；为假时仅解析路径，不打开子键。
+    .OUTPUTS
+        System.Management.Automation.PSCustomObject。包含 RootKey、SubKeyPath 和 Key。
+#>
 function Get-RegistryKeyForOperation {
     param(
         [Parameter(Mandatory)]
@@ -66,12 +83,12 @@ function Get-RegistryKeyForOperation {
 
     $parts = Split-RegistryPath -path $RegistryPath
     if (-not $parts) {
-        throw "Unsupported registry path: $RegistryPath"
+        throw (Get-ConsoleTranslation -Text 'Unsupported registry path: {0}' -FormatArgs @($RegistryPath))
     }
 
     $rootKey = Get-RegistryRootKey -hiveName $parts.Hive
     if (-not $rootKey) {
-        throw "Unsupported registry hive '$($parts.Hive)' in path '$RegistryPath'"
+        throw (Get-ConsoleTranslation -Text 'Unsupported registry hive ''{0}'' in path ''{1}''' -FormatArgs @($($parts.Hive), $RegistryPath))
     }
 
     $subKeyPath = $parts.SubKey
@@ -93,6 +110,17 @@ function Get-RegistryKeyForOperation {
     return [PSCustomObject]@{ RootKey = $rootKey; SubKeyPath = $subKeyPath; Key = $key }
 }
 
+<#
+    .SYNOPSIS
+        执行删除注册表值的操作，并关闭已打开的键。
+    .DESCRIPTION
+        目标键不存在时输出详细提示并返回；值不存在时忽略。其他删除错误向上传递，
+        但仍会关闭键。空值名表示默认值。
+    .PARAMETER Operation
+        包含 KeyPath 和 ValueName 的删除操作。
+    .PARAMETER KeyInfo
+        包含已打开键 Key 的路径解析结果。
+#>
 function Invoke-RegistryDeleteValueOperation {
     param(
         [Parameter(Mandatory)]
@@ -103,8 +131,8 @@ function Invoke-RegistryDeleteValueOperation {
 
     if ($null -eq $KeyInfo.Key) {
         $valueName = Get-NormalizedRegistryValueName -ValueName $Operation.ValueName
-        $displayValueName = if ([string]::IsNullOrEmpty($valueName)) { '(Default)' } else { $valueName }
-        Write-Verbose "Unable to find or open key '$($Operation.KeyPath)' and value '$displayValueName'"
+        $displayValueName = if ([string]::IsNullOrEmpty($valueName)) { (Get-ConsoleTranslation -Text '(Default)') } else { $valueName }
+        Write-Verbose (Get-ConsoleTranslation -Text 'Unable to find or open key ''{0}'' and value ''{1}''' -FormatArgs @($($Operation.KeyPath), $displayValueName))
         return
     }
 
@@ -117,6 +145,17 @@ function Invoke-RegistryDeleteValueOperation {
     }
 }
 
+<#
+    .SYNOPSIS
+        将解析后的注册表值写入目标键。
+    .DESCRIPTION
+        先转换值名、数据和类型，再写入并在 finally 中关闭键。
+        Key 为空时抛出访问被拒绝异常；其他转换或写入错误向上传递。
+    .PARAMETER Operation
+        包含 KeyPath、ValueName、ValueType 和 ValueData 的写入操作。
+    .PARAMETER KeyInfo
+        包含已打开可写键 Key 的路径解析结果。
+#>
 function Invoke-RegistrySetValueOperation {
     param(
         [Parameter(Mandatory)]
@@ -126,7 +165,7 @@ function Invoke-RegistrySetValueOperation {
     )
 
     if ($null -eq $KeyInfo.Key) {
-        throw [System.UnauthorizedAccessException]::new("Unable to open or create registry key '$($Operation.KeyPath)'")
+        throw [System.UnauthorizedAccessException]::new((Get-ConsoleTranslation -Text 'Unable to open or create registry key ''{0}''' -FormatArgs @($($Operation.KeyPath))))
     }
 
     try {
@@ -138,6 +177,16 @@ function Invoke-RegistrySetValueOperation {
     }
 }
 
+<#
+    .SYNOPSIS
+        显示因访问权限不足而跳过注册表操作的本地化警告。
+    .DESCRIPTION
+        警告包含操作类型、键路径及异常消息；值操作还包含值名，空值名显示为默认值。
+    .PARAMETER Operation
+        包含 OperationType、KeyPath 及可选 ValueName 的操作。
+    .PARAMETER ExceptionMessage
+        访问权限异常的原始消息。
+#>
 function Write-RegistryOperationAccessDeniedWarning {
     param(
         [Parameter(Mandatory)]
@@ -151,14 +200,25 @@ function Write-RegistryOperationAccessDeniedWarning {
 
     if ($operationType -eq 'SetValue' -or $operationType -eq 'DeleteValue') {
         $valueName = Get-NormalizedRegistryValueName -ValueName $Operation.ValueName
-        $displayValueName = if ([string]::IsNullOrEmpty($valueName)) { '(Default)' } else { $valueName }
-        Write-Warning "Skipping operation '$operationType' on key '$keyPath' value '$displayValueName' due to access restrictions: $ExceptionMessage"
+        $displayValueName = if ([string]::IsNullOrEmpty($valueName)) { (Get-ConsoleTranslation -Text '(Default)') } else { $valueName }
+        Write-Warning (Get-ConsoleTranslation -Text 'Skipping operation ''{0}'' on key ''{1}'' value ''{2}'' due to access restrictions: {3}' -FormatArgs @($operationType, $keyPath, $displayValueName, $ExceptionMessage))
         return
     }
 
-    Write-Warning "Skipping operation '$operationType' on key '$keyPath' due to access restrictions: $ExceptionMessage"
+    Write-Warning (Get-ConsoleTranslation -Text 'Skipping operation ''{0}'' on key ''{1}'' due to access restrictions: {2}' -FormatArgs @($operationType, $keyPath, $ExceptionMessage))
 }
 
+<#
+    .SYNOPSIS
+        分派单项注册表删除键、删除值或写入值操作。
+    .DESCRIPTION
+        写值时允许创建目标键，删除键时只解析路径；不删除整个根键。
+        不支持的操作类型抛出包含来源文件路径的异常，底层操作错误向上传递。
+    .PARAMETER Operation
+        Get-RegFileOperations 返回的操作对象。
+    .PARAMETER RegFilePath
+        来源注册表文件路径，用于不支持的操作类型提示。
+#>
 function Invoke-RegistryOperation {
     param(
         [Parameter(Mandatory)]
@@ -186,7 +246,7 @@ function Invoke-RegistryOperation {
             Invoke-RegistrySetValueOperation -Operation $Operation -KeyInfo $keyInfo
         }
         default {
-            throw "Unsupported reg operation type '$($Operation.OperationType)' in '$RegFilePath'"
+            throw (Get-ConsoleTranslation -Text 'Unsupported reg operation type ''{0}'' in ''{1}''' -FormatArgs @($($Operation.OperationType), $RegFilePath))
         }
     }
 }
@@ -209,7 +269,7 @@ function Invoke-RegistryOperationsFromRegFile {
     $totalOperations = $operations.Count
 
     if ($script:Params.ContainsKey("WhatIf")) {
-        Write-Host "[WhatIf] Apply $totalOperations registry changes from '$RegFilePath'" -ForegroundColor Cyan
+        Write-Host (Get-ConsoleTranslation -Text '[WhatIf] Apply {0} registry changes from ''{1}''' -FormatArgs @($totalOperations, $RegFilePath)) -ForegroundColor Cyan
         return $true
     }
 
@@ -224,11 +284,11 @@ function Invoke-RegistryOperationsFromRegFile {
     }
 
     if ($totalOperations -gt 0 -and $accessDeniedCount -eq $totalOperations) {
-        throw "Registry fallback import could not apply any operations in '$RegFilePath' because all $accessDeniedCount operation(s) were blocked by access restrictions."
+        throw (Get-ConsoleTranslation -Text 'Registry fallback import could not apply any operations in ''{0}'' because all {1} operation(s) were blocked by access restrictions.' -FormatArgs @($RegFilePath, $accessDeniedCount))
     }
 
     if ($accessDeniedCount -gt 0) {
-        Write-Warning "Registry fallback import completed with $accessDeniedCount access-restricted operation(s) skipped in '$RegFilePath'."
+        Write-Warning (Get-ConsoleTranslation -Text 'Registry fallback import completed with {0} access-restricted operation(s) skipped in ''{1}''.' -FormatArgs @($accessDeniedCount, $RegFilePath))
         return $false
     }
 

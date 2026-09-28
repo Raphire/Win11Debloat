@@ -1,3 +1,5 @@
+﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
+
 <#
     .SYNOPSIS
     Waits for user acknowledgement, then exits the script.
@@ -13,7 +15,7 @@ function Wait-ForKeyPress {
     # Suppress prompt if Silent parameter was passed
     if (-not $Silent) {
         Write-Output ""
-        Write-Output "Press any key to exit..."
+        Write-Output (Get-ConsoleTranslation -Text 'Press any key to exit...')
         $null = [System.Console]::ReadKey()
     }
 

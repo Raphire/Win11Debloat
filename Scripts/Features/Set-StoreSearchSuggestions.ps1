@@ -1,4 +1,6 @@
-﻿<#
+﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
+
+<#
     .SYNOPSIS
     Disables Microsoft Store search suggestions in the start menu for all user profiles.
 
@@ -40,7 +42,7 @@ function Set-StoreSearchSuggestionsDisabledForAllUsers {
     }
 
     if ($processedProfiles -eq 0) {
-        Write-Warning '未找到目标用户配置文件，无法禁用 Microsoft Store 搜索建议。'
+        Write-Warning (Get-ConsoleTranslation -Text 'Unable to disable Microsoft Store search suggestions because no target user profiles could be resolved.')
         return $false
     }
 
@@ -77,14 +79,14 @@ function Set-StoreSearchSuggestionsDisabled {
     if (-not $userName) { $userName = '<unknown>' }
 
     if ($script:Params.ContainsKey("WhatIf")) {
-        Write-Host "[模拟运行] 将限制对 ${StoreAppsDatabase} 的访问，为用户 $userName 禁用 Microsoft Store 搜索建议。" -ForegroundColor Cyan
+        Write-Host (Get-ConsoleTranslation -Text '[WhatIf] Disable Microsoft Store search suggestions for user {0} by restricting access to {1}' -FormatArgs @($userName, ${StoreAppsDatabase})) -ForegroundColor Cyan
         return $true
     }
 
     try {
         # This file doesn't exist in EEA (No Store app suggestions).
         if (-not (Test-Path -Path $StoreAppsDatabase)) {
-            Write-Host "未找到用户 $userName 的商店应用数据库，正在创建该文件以防止 Windows 稍后自行创建……" -ForegroundColor Yellow
+            Write-Host (Get-ConsoleTranslation -Text 'Unable to find Store app database for user {0}, creating it now to prevent Windows from creating it later...' -FormatArgs @($userName)) -ForegroundColor Yellow
 
             $storeDbDir = Split-Path -Path $StoreAppsDatabase -Parent
             if (-not (Test-Path -Path $storeDbDir)) {
@@ -101,11 +103,11 @@ function Set-StoreSearchSuggestionsDisabled {
         Set-Acl -Path $StoreAppsDatabase -AclObject $Acl -ErrorAction Stop | Out-Null
     }
     catch {
-        Write-Warning "限制商店数据库 '$StoreAppsDatabase' 的访问权限失败：$($_.Exception.Message)"
+        Write-Warning (Get-ConsoleTranslation -Text 'Failed to restrict ACL for store database ''{0}'': {1}' -FormatArgs @($StoreAppsDatabase, $($_.Exception.Message)))
         return $false
     }
 
-    Write-Host "已为用户 $userName 禁用 Microsoft Store 搜索建议。"
+    Write-Host (Get-ConsoleTranslation -Text 'Disabled Microsoft Store search suggestions for user {0}' -FormatArgs @($userName))
     return $true
 }
 
@@ -151,7 +153,7 @@ function Set-StoreSearchSuggestionsEnabledForAllUsers {
     }
 
     if ($processedProfiles -eq 0) {
-        Write-Warning '未找到目标用户配置文件，无法重新启用 Microsoft Store 搜索建议。'
+        Write-Warning (Get-ConsoleTranslation -Text 'Unable to re-enable Microsoft Store search suggestions because no target user profiles could be resolved.')
         return $false
     }
 
@@ -187,12 +189,12 @@ function Set-StoreSearchSuggestionsEnabled {
     if (-not $userName) { $userName = '<unknown>' }
 
     if ($script:Params.ContainsKey("WhatIf")) {
-        Write-Host "[模拟运行] 将恢复对 ${StoreAppsDatabase} 的访问，为用户 $userName 重新启用 Microsoft Store 搜索建议。" -ForegroundColor Cyan
+        Write-Host (Get-ConsoleTranslation -Text '[WhatIf] Re-enable Microsoft Store search suggestions for user {0} by restoring access to {1}' -FormatArgs @($userName, ${StoreAppsDatabase})) -ForegroundColor Cyan
         return $true
     }
 
     if (-not (Test-Path -Path $StoreAppsDatabase)) {
-        Write-Host "未找到用户 $userName 的商店应用数据库，无需撤销。"
+        Write-Host (Get-ConsoleTranslation -Text 'Store app database not found for user {0}, nothing to undo' -FormatArgs @($userName))
         return $true
     }
 
@@ -200,12 +202,12 @@ function Set-StoreSearchSuggestionsEnabled {
     $global:LASTEXITCODE = 0
     takeown /F "$StoreAppsDatabase" /A | Out-Null
     if ($LASTEXITCODE -ne 0) {
-        Write-Warning "恢复 Microsoft Store 搜索建议时，无法取得商店数据库 '$StoreAppsDatabase' 的所有权。退出代码：$LASTEXITCODE"
+        Write-Warning (Get-ConsoleTranslation -Text 'Failed to take ownership of store database ''{0}'' while undoing Microsoft Store search suggestions. Exit code: {1}' -FormatArgs @($StoreAppsDatabase, $LASTEXITCODE))
         return $false
     }
     icacls "$StoreAppsDatabase" /grant *S-1-5-32-544:F /C | Out-Null
     if ($LASTEXITCODE -ne 0) {
-        Write-Warning "恢复 Microsoft Store 搜索建议时，无法授予管理员组对商店数据库 '$StoreAppsDatabase' 的访问权限。退出代码：$LASTEXITCODE"
+        Write-Warning (Get-ConsoleTranslation -Text 'Failed to grant Administrators access to store database ''{0}'' while undoing Microsoft Store search suggestions. Exit code: {1}' -FormatArgs @($StoreAppsDatabase, $LASTEXITCODE))
         return $false
     }
 
@@ -233,16 +235,16 @@ function Set-StoreSearchSuggestionsEnabled {
         Set-Acl -Path $StoreAppsDatabase -AclObject $acl -ErrorAction Stop | Out-Null
     }
     catch {
-        Write-Warning "恢复商店数据库 '$StoreAppsDatabase' 的访问权限失败：$($_.Exception.Message)"
+        Write-Warning (Get-ConsoleTranslation -Text 'Failed to normalize ACL for store database ''{0}'': {1}' -FormatArgs @($StoreAppsDatabase, $($_.Exception.Message)))
     }
 
     try {
         Remove-Item -Path $StoreAppsDatabase -Force -ErrorAction Stop
-        Write-Host "已为用户 $userName 重新启用 Microsoft Store 搜索建议。"
+        Write-Host (Get-ConsoleTranslation -Text 'Re-enabled Microsoft Store search suggestions for user {0}' -FormatArgs @($userName))
         return $true
     }
     catch {
-        Write-Warning "为用户 $userName 恢复 Microsoft Store 搜索建议时，移除 '$StoreAppsDatabase' 失败。$($_.Exception.Message)"
+        Write-Warning (Get-ConsoleTranslation -Text 'Failed to remove ''{0}'' while undoing Microsoft Store search suggestions for user {1}. {2}' -FormatArgs @($StoreAppsDatabase, $userName, $($_.Exception.Message)))
         return $false
     }
 }

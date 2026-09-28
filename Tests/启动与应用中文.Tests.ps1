@@ -19,11 +19,12 @@ Describe '本地中文版完整性' {
         $tokens=$null; $errors=$null
         $ast=[System.Management.Automation.Language.Parser]::ParseFile("$script:RepoRoot/Win11Debloat.ps1",[ref]$tokens,[ref]$errors)
         $errors | Should -BeNullOrEmpty
-        foreach($message in @('正在启动 Win11Debloat','请保持此窗口打开','WinGet 未安装或版本过旧','按任意键仍然继续')) {
+        foreach($pair in @(@('Win11Debloat is launching','正在启动 Win11Debloat'),@('Keep this window open','请保持此窗口打开'),@('WinGet is not installed or outdated','WinGet 未安装或版本过旧'),@('Press any key to continue anyway','按任意键仍然继续'))) {
+            $message=$pair[0]
             $commands=@($ast.FindAll({param($n) $n -is [System.Management.Automation.Language.CommandAst] -and $n.GetCommandName() -in @('Write-Host','Write-Warning','Write-Output') -and $n.Extent.Text.Contains($message)},$true))
             $commands.Count | Should -Be 1
             $output=& ([scriptblock]::Create($commands[0].Extent.Text)) *>&1 | Out-String
-            $output | Should -Match ([regex]::Escape($message))
+            $output | Should -Match ([regex]::Escape($pair[1]))
         }
     }
 

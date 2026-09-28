@@ -1,4 +1,4 @@
-﻿BeforeAll {
+BeforeAll {
     function Invoke-NonBlocking { param($ScriptBlock, $ArgumentList, $TimeoutSeconds) }
     function Show-MessageBox { param($Message, $Title, $Button, $Icon) }
     function Enable-ComputerRestore { param($Drive) }
@@ -17,7 +17,7 @@ Describe 'Invoke-SystemRestorePoint' {
         $script:CancelRequested = $false
         $script:Silent = $false
         Mock Get-ItemProperty { [PSCustomObject]@{ RPSessionInterval = 1 } }
-        Mock Invoke-NonBlocking { [PSCustomObject]@{ Success = $true; Message = '系统还原点已成功创建。' } }
+        Mock Invoke-NonBlocking { [PSCustomObject]@{ Success = $true; Message = 'System restore point created successfully' } }
         Mock Read-Host { 'y' }
         Mock Show-MessageBox { 'Yes' }
         Mock Write-Host {}
@@ -66,7 +66,7 @@ Describe 'Invoke-SystemRestorePoint' {
         Mock Invoke-NonBlocking {
             $script:nonBlockingCalls++
             if ($script:nonBlockingCalls -eq 1) { return $null }
-            return [PSCustomObject]@{ Success = $true; Message = '系统还原点已成功创建。' }
+            return [PSCustomObject]@{ Success = $true; Message = 'System restore point created successfully' }
         }
 
         Invoke-SystemRestorePoint
@@ -86,7 +86,7 @@ Describe 'Invoke-SystemRestorePoint' {
                 $script:enableRestoreBlock = $ScriptBlock
                 return $null
             }
-            return [PSCustomObject]@{ Success = $true; Message = '系统还原点已成功创建。' }
+            return [PSCustomObject]@{ Success = $true; Message = 'System restore point created successfully' }
         }
         Mock Enable-ComputerRestore {}
 
@@ -101,7 +101,7 @@ Describe 'Invoke-SystemRestorePoint' {
         Mock Invoke-NonBlocking {
             param($ScriptBlock)
             $script:restorePointBlock = $ScriptBlock
-            return [PSCustomObject]@{ Success = $true; Message = '系统还原点已成功创建。' }
+            return [PSCustomObject]@{ Success = $true; Message = 'System restore point created successfully' }
         }
         Mock Get-ComputerRestorePoint { @() }
         Mock Checkpoint-Computer {}
@@ -110,7 +110,7 @@ Describe 'Invoke-SystemRestorePoint' {
         & $script:restorePointBlock
 
         Should -Invoke Checkpoint-Computer -Times 1 -Exactly -ParameterFilter {
-            $Description -eq 'Win11Debloat 创建的系统还原点' -and $RestorePointType -eq 'MODIFY_SETTINGS'
+            $Description -eq 'Restore point created by Win11Debloat' -and $RestorePointType -eq 'MODIFY_SETTINGS'
         }
     }
 

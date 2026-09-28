@@ -1,4 +1,6 @@
-﻿function Test-UserProfileExists {
+﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
+
+function Test-UserProfileExists {
     param (
         [string]$userName
     )
@@ -35,7 +37,7 @@
 
     }
     catch {
-        Write-Error "查找用户 $lookupName 的目录时发生错误，请确认该用户存在于此系统中。"
+        Write-Error (Get-ConsoleTranslation -Text 'Something went wrong when trying to find the user directory path for user {0}. Please ensure the user exists on this system' -FormatArgs @($lookupName))
     }
 
     return $false

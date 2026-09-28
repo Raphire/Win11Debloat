@@ -1,21 +1,18 @@
-﻿# Prints the header for the script
+﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
+
+# Prints the header for the script
 function Write-CliHeader {
     param (
         $title
     )
 
-    $title = switch ($title) {
-        'Menu' { '菜单' }
-        'Configuration' { '配置' }
-        default { $title }
-    }
-    $fullTitle = " Win11Debloat - $title"
+    $fullTitle = (Get-ConsoleTranslation -Text ' Win11Debloat Script - {0}' -FormatArgs @($title))
 
     if ($script:Params.ContainsKey("Sysprep")) {
-        $fullTitle = "$fullTitle（Sysprep 系统部署模式）"
+        $fullTitle = (Get-ConsoleTranslation -Text '{0} (Sysprep mode)' -FormatArgs @($fullTitle))
     }
     else {
-        $fullTitle = "$fullTitle（用户：$(Get-UserName)）"
+        $fullTitle = (Get-ConsoleTranslation -Text '{0} (User: {1})' -FormatArgs @($fullTitle, $(Get-UserName)))
     }
 
     Clear-Host

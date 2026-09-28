@@ -1,4 +1,6 @@
-﻿<#
+﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
+
+<#
     .SYNOPSIS
         Resolves a language code to an available Config/Languages folder, or falls back to en-US.
 #>
@@ -68,12 +70,12 @@ function Import-LanguageFile {
     $content = Import-LanguageContent -LanguageFolder $resolvedFolder -LanguagesPath $LanguagesPath
 
     if (-not $content -and $resolvedFolder -ne 'en-US') {
-        Write-Warning "加载语言 '$resolvedFolder' 失败，将回退到英语（en-US）。"
+        Write-Warning (Get-ConsoleTranslation -Text 'Failed to load language ''{0}'', falling back to en-US.' -FormatArgs @($resolvedFolder))
         $content = Import-LanguageContent -LanguageFolder 'en-US' -LanguagesPath $LanguagesPath
     }
 
     if (-not $content) {
-        Write-Error "无法加载英语（en-US）语言文件，图形界面无法继续运行。"
+        Write-Error (Get-ConsoleTranslation -Text 'Unable to load the en-US language files. The GUI cannot continue without them.')
         return $null
     }
 
@@ -234,7 +236,7 @@ function Get-Translation {
             return $resolved -f $FormatArgs
         }
         catch {
-            Write-Warning "翻译条目 '$Key' 的占位符与格式参数不匹配：$($_.Exception.Message)"
+            Write-Warning (Get-ConsoleTranslation -Text 'Translation ''{0}'' has a placeholder mismatch with its format arguments: {1}' -FormatArgs @($Key, $($_.Exception.Message)))
             return $resolved
         }
     }
@@ -367,7 +369,7 @@ function Test-LanguageKeyCoverage {
     $target = Import-LanguageContent -LanguageFolder $resolvedLanguageCode -LanguagesPath $LanguagesPath
 
     if (-not $baseline -or -not $target) {
-        Write-Error "无法加载语言内容进行完整性比较（'$BaselineLanguageCode' 与 '$resolvedLanguageCode'）。"
+        Write-Error (Get-ConsoleTranslation -Text 'Unable to load language content for coverage comparison (''{0}'' vs ''{1}'').' -FormatArgs @($BaselineLanguageCode, $resolvedLanguageCode))
         return $null
     }
 
@@ -421,7 +423,7 @@ function ConvertTo-LocalizedXaml {
     $result = [System.Text.RegularExpressions.Regex]::Replace($Xaml, '%LANG:([A-Za-z0-9_]+)%', $evaluator)
 
     if ($missingKeys.Count -gt 0) {
-        throw "XAML 中存在未解析的语言标记，所有语言中均未找到以下键：$($missingKeys -join ', ')"
+        throw (Get-ConsoleTranslation -Text 'Unresolved localization marker(s) in XAML, key(s) not found in any language: {0}' -FormatArgs @($($missingKeys -join ', ')))
     }
 
     return $result

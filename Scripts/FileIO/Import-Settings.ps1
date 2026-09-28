@@ -1,4 +1,6 @@
-﻿<#
+﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
+
+<#
     .SYNOPSIS
         Imports enabled, compatible feature settings from a JSON file into the active parameters.
 #>
@@ -11,7 +13,7 @@ function Import-Settings {
     $settingsJson = Import-JsonFile -filePath $filePath -expectedVersion $expectedVersion
     
     if (-not $settingsJson -or -not $settingsJson.Settings) {
-        throw "无法从 $(Split-Path $filePath -Leaf) 加载设置。"
+        throw (Get-ConsoleTranslation -Text 'Failed to load settings from {0}' -FormatArgs @($(Split-Path $filePath -Leaf)))
     }
 
     # Get current Windows build version

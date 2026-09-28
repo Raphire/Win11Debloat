@@ -1,4 +1,6 @@
-﻿<#
+﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
+
+<#
     .SYNOPSIS
         Applies a single feature/debloat operation.
 
@@ -48,15 +50,15 @@ function Invoke-FeatureApply {
     # ---- Custom features (no registry backing, or special handling required) ----
     switch ($FeatureId) {
         'RemoveApps' {
-            Write-Host "> 为 $(Get-FriendlyTargetUserName) 执行：$applyText……"
+            Write-Host (Get-ConsoleTranslation -Text '> {0} for {1}...' -FormatArgs @($applyText, $(Get-FriendlyTargetUserName)))
             $appsList = Generate-AppsList
 
             if ($appsList.Count -eq 0) {
-                Write-Host "未选择任何可移除的有效应用。" -ForegroundColor Yellow
+                Write-Host (Get-ConsoleTranslation -Text 'No valid apps were selected for removal') -ForegroundColor Yellow
                 return $true
             }
 
-            Write-Host "已选择移除 $($appsList.Count) 个应用。"
+            Write-Host (Get-ConsoleTranslation -Text '{0} apps selected for removal' -FormatArgs @($($appsList.Count)))
             return (Remove-SelectedApps $appsList)
         }
         'RemoveGamingApps' {
@@ -92,21 +94,21 @@ function Invoke-FeatureApply {
             return (Enable-WindowsFeature "Microsoft-Windows-Subsystem-Linux")
         }
         'ClearStart' {
-            Write-Host "> 为用户 $(Get-UserName) 执行：$applyText……"
+            Write-Host (Get-ConsoleTranslation -Text '> {0} for user {1}...' -FormatArgs @($applyText, $(Get-UserName)))
             $startMenuBinFile = Get-StartMenuBinPathForUser -UserName (Get-UserName)
             if (-not [string]::IsNullOrWhiteSpace($startMenuBinFile)) {
                 return (Replace-StartMenu -startMenuBinFile $startMenuBinFile)
             }
-            Write-Warning "无法应用 '$applyText'：未找到用户 $(Get-UserName) 的开始菜单路径。"
+            Write-Warning (Get-ConsoleTranslation -Text 'Unable to apply ''{0}'': the Start menu path for user {1} could not be resolved.' -FormatArgs @($applyText, $(Get-UserName)))
             return $false
         }
         'ReplaceStart' {
-            Write-Host "> 为用户 $(Get-UserName) 执行：$applyText……"
+            Write-Host (Get-ConsoleTranslation -Text '> {0} for user {1}...' -FormatArgs @($applyText, $(Get-UserName)))
             $startMenuBinFile = Get-StartMenuBinPathForUser -UserName (Get-UserName)
             if (-not [string]::IsNullOrWhiteSpace($startMenuBinFile)) {
                 return (Replace-StartMenu -startMenuBinFile $startMenuBinFile -startMenuTemplate $script:Params.Item("ReplaceStart"))
             }
-            Write-Warning "无法应用 '$applyText'：未找到用户 $(Get-UserName) 的开始菜单路径。"
+            Write-Warning (Get-ConsoleTranslation -Text 'Unable to apply ''{0}'': the Start menu path for user {1} could not be resolved.' -FormatArgs @($applyText, $(Get-UserName)))
             return $false
         }
         'ClearStartAllUsers' {
@@ -117,26 +119,26 @@ function Invoke-FeatureApply {
         }
         'DisableStoreSearchSuggestions' {
             if ($script:Params.ContainsKey("Sysprep")) {
-                Write-Host "> 正在为所有用户禁用开始菜单中的 Microsoft Store 搜索建议……"
+                Write-Host (Get-ConsoleTranslation -Text '> Disabling Microsoft Store search suggestions in the start menu for all users...')
                 return (Set-StoreSearchSuggestionsDisabledForAllUsers)
             }
 
-            Write-Host "> 正在为用户 $(Get-UserName) 禁用 Microsoft Store 搜索建议……"
+            Write-Host (Get-ConsoleTranslation -Text '> Disabling Microsoft Store search suggestions for user {0}...' -FormatArgs @($(Get-UserName)))
             $storeDb = Get-StoreAppsDatabasePathForUser -UserName (Get-UserName)
             if ($storeDb) {
                 return (Set-StoreSearchSuggestionsDisabled -StoreAppsDatabase $storeDb)
             }
-            Write-Warning "未找到用户 $(Get-UserName) 的商店数据库，无法禁用 Microsoft Store 搜索建议。"
+            Write-Warning (Get-ConsoleTranslation -Text 'Unable to disable Microsoft Store search suggestions because the Store database for user {0} could not be resolved.' -FormatArgs @($(Get-UserName)))
             return $false
         }
     }
     }
     catch {
-        Write-Warning "应用 '$applyText' 失败：$($_.Exception.Message)"
+        Write-Warning (Get-ConsoleTranslation -Text 'Failed to apply ''{0}'': {1}' -FormatArgs @($applyText, $($_.Exception.Message)))
         return $false
     }
 
-    Write-Warning "无法应用未知功能 '$FeatureId'。"
+    Write-Warning (Get-ConsoleTranslation -Text 'Unknown feature ''{0}'' could not be applied.' -FormatArgs @($FeatureId))
     return $false
 }
 
@@ -158,7 +160,7 @@ function Invoke-FeatureUndo {
 
     $feature = if ($script:Features.ContainsKey($FeatureId)) { $script:Features[$FeatureId] } else { $null }
     if (-not $feature) {
-        Write-Warning "无法撤销未知功能 '$FeatureId'。"
+        Write-Warning (Get-ConsoleTranslation -Text 'Unknown feature ''{0}'' could not be undone.' -FormatArgs @($FeatureId))
         return $false
     }
 
@@ -185,16 +187,16 @@ function Invoke-FeatureUndo {
         switch ($FeatureId) {
             'DisableStoreSearchSuggestions' {
                 if ($script:Params.ContainsKey('Sysprep')) {
-                    Write-Host "> 正在为所有用户重新启用开始菜单中的 Microsoft Store 搜索建议……"
+                    Write-Host (Get-ConsoleTranslation -Text '> Re-enabling Microsoft Store search suggestions in the start menu for all users...')
                     return (Set-StoreSearchSuggestionsEnabledForAllUsers)
                 }
 
-                Write-Host "> 正在为用户 $(Get-UserName) 重新启用 Microsoft Store 搜索建议……"
+                Write-Host (Get-ConsoleTranslation -Text '> Re-enabling Microsoft Store search suggestions for user {0}...' -FormatArgs @($(Get-UserName)))
                 $storeDb = Get-StoreAppsDatabasePathForUser -UserName (Get-UserName)
                 if ($storeDb) {
                     return (Set-StoreSearchSuggestionsEnabled -StoreAppsDatabase $storeDb)
                 }
-                Write-Warning "未找到用户 $(Get-UserName) 的商店数据库，无法重新启用 Microsoft Store 搜索建议。"
+                Write-Warning (Get-ConsoleTranslation -Text 'Unable to re-enable Microsoft Store search suggestions because the Store database for user {0} could not be resolved.' -FormatArgs @($(Get-UserName)))
                 return $false
             }
             'EnableWindowsSandbox' {
@@ -210,11 +212,11 @@ function Invoke-FeatureUndo {
     }
 
     catch {
-        Write-Warning "撤销 '$undoText' 失败：$($_.Exception.Message)"
+        Write-Warning (Get-ConsoleTranslation -Text 'Failed to undo ''{0}'': {1}' -FormatArgs @($undoText, $($_.Exception.Message)))
         return $false
     }
 
-    Write-Warning "功能 '$FeatureId' 不支持撤销。"
+    Write-Warning (Get-ConsoleTranslation -Text 'Feature ''{0}'' does not support undo.' -FormatArgs @($FeatureId))
     return $false
 }
 
@@ -345,7 +347,7 @@ function Invoke-AllChanges {
     # Guard: prevent running as SYSTEM account without explicit target user
     $isSystem = Test-RunningAsSystem
     if ($isSystem -and -not $script:Params.ContainsKey("User") -and -not $script:Params.ContainsKey("Sysprep")) {
-        throw "Win11Debloat 正以 SYSTEM 账户运行，请使用 '-User' 或 '-Sysprep' 参数指定目标用户。"
+        throw (Get-ConsoleTranslation -Text 'Win11Debloat is running as the SYSTEM account. Use the ''-User'' or ''-Sysprep'' parameter to target a specific user.')
     }
 
     $script:AppRemovalFailures = 0
@@ -395,10 +397,10 @@ function Invoke-AllChanges {
         }
 
         if ($script:Params.ContainsKey("WhatIf")) {
-            Write-Host "[模拟运行] 将创建注册表备份。" -ForegroundColor Cyan
+            Write-Host (Get-ConsoleTranslation -Text '[WhatIf] Create registry backup') -ForegroundColor Cyan
         }
         else {
-            Write-Host "> 正在创建注册表备份……"
+            Write-Host (Get-ConsoleTranslation -Text '> Creating registry backup...')
             try {
                 $undoSyntheticFeatures = @($undoIds | ForEach-Object {
                     $f = if ($script:Features.ContainsKey($_)) { $script:Features[$_] } else { $null }
@@ -409,7 +411,7 @@ function Invoke-AllChanges {
                 New-RegistrySettingsBackup -ActionableKeys $applyIds -ExtraFeatures $undoSyntheticFeatures | Out-Null
             }
             catch {
-                throw "应用更改前，注册表备份失败。$($_.Exception.Message)"
+                throw (Get-ConsoleTranslation -Text 'Registry backup failed before applying changes. {0}' -FormatArgs @($($_.Exception.Message)))
             }
         }
     }
@@ -424,11 +426,11 @@ function Invoke-AllChanges {
             & $script:ApplyProgressCallback $step $totalSteps (Get-Translation -Key 'ApplyCreatingRestorePoint')
         }
         if ($script:Params.ContainsKey("WhatIf")) {
-            Write-Host "[模拟运行] 将创建系统还原点。" -ForegroundColor Cyan
+            Write-Host (Get-ConsoleTranslation -Text '[WhatIf] Create system restore point') -ForegroundColor Cyan
             Write-Host ""
         }
         else {
-            Write-Host "> 正在创建系统还原点……"
+            Write-Host (Get-ConsoleTranslation -Text '> Creating a system restore point...')
             $restorePointSucceeded = Invoke-SystemRestorePoint
             if (-not $restorePointSucceeded) {
                 if ($script:CancelRequested) { return }
@@ -461,17 +463,17 @@ function Invoke-AllChanges {
     # ================================================================
     if ($script:AppRemovalFailures -gt 0) {
         Write-Host ""
-        Write-Warning "有 $($script:AppRemovalFailures) 个应用移除失败，详情请查看上方输出。"
+        Write-Warning (Get-ConsoleTranslation -Text '{0} app removal(s) failed. See output above for details.' -FormatArgs @($($script:AppRemovalFailures)))
     }
 
     if ($script:FeatureFailures -gt 0) {
         Write-Host ""
-        Write-Warning "有 $($script:FeatureFailures) 项功能更改失败，详情请查看上方输出。"
+        Write-Warning (Get-ConsoleTranslation -Text '{0} feature change(s) failed. See output above for details.' -FormatArgs @($($script:FeatureFailures)))
     }
 
     if ($script:AppRemovalVerificationUnavailable) {
         Write-Host ""
-        Write-Warning "无法确认所有应用是否均已成功卸载。"
+        Write-Warning (Get-ConsoleTranslation -Text 'Unable to verify if all apps were uninstalled successfully.')
     }
 
 }

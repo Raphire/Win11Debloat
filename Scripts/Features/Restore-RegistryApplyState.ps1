@@ -1,4 +1,6 @@
-﻿<#
+﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
+
+<#
     .SYNOPSIS
         Runs a script block against the registry hive for a backup target.
 
@@ -26,12 +28,12 @@ function Invoke-WithLoadedRestoreHive {
     elseif ($Target -like 'User:*') {
         $userName = $Target.Substring(5)
         if ([string]::IsNullOrWhiteSpace($userName)) {
-            throw '用户恢复的备份目标格式无效。'
+            throw (Get-ConsoleTranslation -Text 'Invalid backup target format for user restore.')
         }
         $userName
     }
     else {
-        throw "不支持的备份目标：'$Target'。"
+        throw (Get-ConsoleTranslation -Text 'Unsupported backup target ''{0}''.' -FormatArgs @($Target))
     }
 
     Invoke-WithTargetUserHive -TargetUserName $targetUserName -ScriptBlock $ScriptBlock -ArgumentObject $ArgumentObject
@@ -52,17 +54,17 @@ function Restore-RegistryKeySnapshot {
 
     $registryParts = Split-RegistryPath -path $Snapshot.Path
     if (-not $registryParts) {
-        throw "备份中的注册表路径不受支持：$($Snapshot.Path)"
+        throw (Get-ConsoleTranslation -Text 'Unsupported registry path in backup: {0}' -FormatArgs @($($Snapshot.Path)))
     }
 
     $rootKey = Get-RegistryRootKey -hiveName $registryParts.Hive
     if (-not $rootKey) {
-        throw "备份中的注册表配置单元不受支持：$($registryParts.Hive)"
+        throw (Get-ConsoleTranslation -Text 'Unsupported registry hive in backup: {0}' -FormatArgs @($($registryParts.Hive)))
     }
 
     $subKeyPath = $registryParts.SubKey
     if ([string]::IsNullOrWhiteSpace($subKeyPath)) {
-        throw "备份中的根级注册表路径不受支持：$($Snapshot.Path)"
+        throw (Get-ConsoleTranslation -Text 'Unsupported root-level registry path in backup: {0}' -FormatArgs @($($Snapshot.Path)))
     }
 
     Test-RegistryKeySnapshotCanBeRestored -Snapshot $Snapshot
@@ -95,7 +97,7 @@ function Test-RegistryKeySnapshotCanBeRestored {
     foreach ($subKeySnapshot in @($Snapshot.SubKeys)) {
         $childName = Get-DirectRegistrySnapshotChildName -ParentPath $Snapshot.Path -ChildPath $subKeySnapshot.Path
         if ([string]::IsNullOrWhiteSpace($childName) -or -not $childNames.Add($childName)) {
-            throw "备份中存在重复或不受支持的注册表子路径：$($subKeySnapshot.Path)"
+            throw (Get-ConsoleTranslation -Text 'Backup contains duplicate or unsupported registry child path: {0}' -FormatArgs @($($subKeySnapshot.Path)))
         }
         Test-RegistryKeySnapshotCanBeRestored -Snapshot $subKeySnapshot
     }
@@ -125,14 +127,14 @@ function Get-DirectRegistrySnapshotChildName {
         -not $parentParts.Hive.Equals($childParts.Hive, [System.StringComparison]::OrdinalIgnoreCase) -or
         [string]::IsNullOrWhiteSpace($parentParts.SubKey) -or
         [string]::IsNullOrWhiteSpace($childParts.SubKey)) {
-        throw "备份中的注册表子路径不受支持：$ChildPath"
+        throw (Get-ConsoleTranslation -Text 'Unsupported registry child path in backup: {0}' -FormatArgs @($ChildPath))
     }
 
     $childName = Split-Path -Path $childParts.SubKey -Leaf
     $expectedSubKey = "$($parentParts.SubKey)\$childName"
     if ([string]::IsNullOrWhiteSpace($childName) -or
         -not $childParts.SubKey.Equals($expectedSubKey, [System.StringComparison]::OrdinalIgnoreCase)) {
-        throw "注册表子路径 '$ChildPath' 不是父路径 '$ParentPath' 的直接下级。"
+        throw (Get-ConsoleTranslation -Text 'Registry child path ''{0}'' is not directly below parent ''{1}''.' -FormatArgs @($ChildPath, $ParentPath))
     }
 
     return $childName
@@ -163,7 +165,7 @@ function Restore-RegistryKeySnapshotAtPath {
 
     $key = $RootKey.CreateSubKey($SubKeyPath)
     if ($null -eq $key) {
-        throw "无法创建或打开注册表项 '$($Snapshot.Path)'。"
+        throw (Get-ConsoleTranslation -Text 'Unable to create or open registry key ''{0}''' -FormatArgs @($($Snapshot.Path)))
     }
 
     try {
@@ -208,7 +210,7 @@ function Restore-RegistryValueSnapshot {
             $RegistryKey.DeleteValue($valueName, $false)
         }
         catch {
-            throw "删除注册表项 '$($RegistryKey.Name)' 中的值 '$valueName' 失败：$($_.Exception.Message)"
+            throw (Get-ConsoleTranslation -Text 'Failed deleting registry value ''{0}'' in ''{1}'': {2}' -FormatArgs @($valueName, $($RegistryKey.Name), $($_.Exception.Message)))
         }
         return
     }
@@ -220,7 +222,7 @@ function Restore-RegistryValueSnapshot {
         $RegistryKey.SetValue($valueName, $normalizedData, $valueKind)
     }
     catch {
-        throw "设置注册表项 '$($RegistryKey.Name)' 中的值 '$valueName' 失败：$($_.Exception.Message)"
+        throw (Get-ConsoleTranslation -Text 'Failed setting registry value ''{0}'' in ''{1}'': {2}' -FormatArgs @($valueName, $($RegistryKey.Name), $($_.Exception.Message)))
     }
 }
 
@@ -247,7 +249,7 @@ function Convert-RegistryValueKindFromBackup {
         return [System.Enum]::Parse([Microsoft.Win32.RegistryValueKind], $KindName, $true)
     }
     catch {
-        throw "备份中的注册表值类型不受支持：$KindName"
+        throw (Get-ConsoleTranslation -Text 'Unsupported registry value kind in backup: {0}' -FormatArgs @($KindName))
     }
 }
 
@@ -284,7 +286,7 @@ function Convert-RegistryValueDataFromBackup {
 
             $bytes = Convert-BackupDataToByteArray -Data $Data
             if ($null -eq $bytes) {
-                throw '备份中的二进制注册表数据无效，字节值必须在 0 至 255 之间。'
+                throw (Get-ConsoleTranslation -Text 'Invalid binary registry data in backup. Expected byte values from 0 through 255.')
             }
             # Keep the byte array intact instead of writing each byte to the
             # pipeline. RegistryKey.SetValue requires a byte[] for Binary.

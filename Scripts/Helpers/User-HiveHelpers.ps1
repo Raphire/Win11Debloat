@@ -1,4 +1,6 @@
-﻿function New-TargetUserHiveContext {
+﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
+
+function New-TargetUserHiveContext {
     param(
         [Parameter(Mandatory)]
         [string]$TargetUserName,
@@ -33,17 +35,17 @@ function Resolve-TargetUserHiveContext {
 
     $normalizedTargetUserName = Normalize-UserLookupValue -Value $TargetUserName
     if ([string]::IsNullOrWhiteSpace($normalizedTargetUserName)) {
-        throw '用于查找注册表配置单元的目标用户名为空。'
+        throw (Get-ConsoleTranslation -Text 'Target user name for registry hive resolution is empty.')
     }
 
     $userContext = Resolve-UserProfileContext -UserName $normalizedTargetUserName
     if (-not $userContext -or [string]::IsNullOrWhiteSpace([string]$userContext.ProfilePath)) {
-        throw "无法找到目标用户 '$normalizedTargetUserName' 的配置文件路径。"
+        throw (Get-ConsoleTranslation -Text 'Unable to resolve profile path for target user ''{0}''.' -FormatArgs @($normalizedTargetUserName))
     }
 
     $hiveDatPath = Join-Path $userContext.ProfilePath 'NTUSER.DAT'
     if (-not (Test-Path -LiteralPath $hiveDatPath)) {
-        throw "未找到目标用户的注册表配置单元：'$hiveDatPath'。"
+        throw (Get-ConsoleTranslation -Text 'Unable to find target user hive at ''{0}''.' -FormatArgs @($hiveDatPath))
     }
 
     $isDefaultProfile = $normalizedTargetUserName.Equals('Default', [System.StringComparison]::OrdinalIgnoreCase)
@@ -121,7 +123,7 @@ function Invoke-WithTargetUserHive {
                     $hiveContext = $loadedSidContext
                 }
                 else {
-                    throw "加载目标用户的注册表配置单元 '$($hiveContext.HiveDatPath)' 失败（退出代码：$loadExitCode）。"
+                    throw (Get-ConsoleTranslation -Text 'Failed to load target user hive ''{0}'' (exit code: {1}).' -FormatArgs @($($hiveContext.HiveDatPath), $loadExitCode))
                 }
             }
             else {
@@ -145,7 +147,7 @@ function Invoke-WithTargetUserHive {
             reg unload "HKU\$($hiveContext.MountName)" | Out-Null
             $unloadExitCode = $LASTEXITCODE
             if ($unloadExitCode -ne 0) {
-                Write-Warning "卸载注册表配置单元 'HKU\$($hiveContext.MountName)' 失败（退出代码：$unloadExitCode）。"
+                Write-Warning (Get-ConsoleTranslation -Text 'Failed to unload registry hive ''HKU\{0}'' (exit code: {1})' -FormatArgs @($($hiveContext.MountName), $unloadExitCode))
             }
         }
     }

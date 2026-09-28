@@ -1,4 +1,4 @@
-﻿BeforeAll {
+BeforeAll {
     function Get-TargetUserForAppRemoval { 'AllUsers' }
     function Get-WingetInstalledApps { param($TimeOut, [switch]$NonBlocking) return ,@() }
     function Test-AppInWingetList { param($appId, $InstalledList) $false }
@@ -37,7 +37,7 @@ Describe 'Remove-SelectedApps' {
         Remove-SelectedApps -appsList @('One.App', 'Two.App')
         Should -Invoke Remove-WinGetApp -Times 0 -Exactly
         Should -Invoke Remove-AppxApp -Times 0 -Exactly
-        Should -Invoke Write-Host -Times 2 -Exactly -ParameterFilter { $Object -like '*模拟运行*移除应用包*' }
+        Should -Invoke Write-Host -Times 2 -Exactly -ParameterFilter { $Object -like '*WhatIf*Remove App*' }
     }
 
     It 'dispatches each app to its configured backend and target scope' {
@@ -78,7 +78,7 @@ Describe 'Remove-SelectedApps' {
         Remove-SelectedApps -appsList @('One.App')
 
         $script:AppRemovalFailures | Should -Be 1
-        Should -Invoke Write-Host -Times 1 -Exactly -ParameterFilter { $Object -eq '无法通过 WinGet 卸载 One.App' -and $ForegroundColor -eq 'Red' }
+        Should -Invoke Write-Host -Times 1 -Exactly -ParameterFilter { $Object -eq 'Unable to uninstall One.App via WinGet' -and $ForegroundColor -eq 'Red' }
     }
 
     It 'does not count a non-zero WinGet command when the app is absent after verification' {
@@ -198,13 +198,13 @@ Describe 'Remove-WinGetApp' {
 
     It 'reports a timed-out winget uninstall and continues' {
         $script:Params = @{ User = 'Alice' }
-        Mock Invoke-NonBlocking { throw '操作已超时，等待时间为 120 秒。' }
+        Mock Invoke-NonBlocking { throw 'Operation timed out after 120 seconds' }
         Mock Write-Verbose {}
 
         { Remove-WinGetApp -app 'One.App' } | Should -Not -Throw
         Should -Invoke Set-RunOnceWingetTask -Times 1 -Exactly
         Should -Invoke Write-Verbose -Times 1 -Exactly -ParameterFilter {
-            $Message -like '*未能在 120 秒内完成*'
+            $Message -like '*did not complete within 120 seconds*'
         }
     }
 
@@ -221,7 +221,7 @@ Describe 'Remove-WinGetApp' {
         Remove-WinGetApp -app 'One.App' | Should -BeTrue
 
         Should -Invoke Write-Verbose -Times 1 -Exactly -ParameterFilter { $Message -eq $script:expectedOutput }
-        Should -Invoke Write-Verbose -Times 1 -Exactly -ParameterFilter { $Message -eq "WinGet 卸载 One.App 时返回了退出代码 $script:expectedExitCode。" }
+        Should -Invoke Write-Verbose -Times 1 -Exactly -ParameterFilter { $Message -eq "WinGet uninstall for One.App returned exit code $script:expectedExitCode." }
     }
 
     It 'returns the RunOnce scheduling result for a target user' {
@@ -249,7 +249,7 @@ Describe 'Remove-EdgeAutostartValue' {
     }
 
     It 'treats a missing registry key as already cleaned up' {
-        Mock Get-ItemProperty { throw [System.Management.Automation.ItemNotFoundException]::new('未找到计划任务') }
+        Mock Get-ItemProperty { throw [System.Management.Automation.ItemNotFoundException]::new('not found') }
         Mock Remove-ItemProperty {}
 
         Remove-EdgeAutostartValue -Path 'HKCU:\Software\Example' -Name 'Microsoft Edge Update' | Should -BeTrue
@@ -319,7 +319,7 @@ Describe 'Remove-AppxApp' {
 
         Remove-AppxApp -app 'One.App' -targetUser 'CurrentUser' | Should -BeFalse
         Should -Invoke Write-Error -Times 1 -Exactly -ParameterFilter {
-            $Message -like '*无法通过 Appx 移除 One.App*access denied*'
+            $Message -like '*Unable to remove One.App via Appx*access denied*'
         }
     }
 

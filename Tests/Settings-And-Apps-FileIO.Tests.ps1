@@ -1,4 +1,4 @@
-﻿BeforeAll {
+BeforeAll {
     function Wait-ForKeyPress {}
     function Test-AppInWingetList { param($appId, $InstalledList) $false }
 
@@ -25,7 +25,7 @@ Describe 'Save-ToFile' {
         Save-ToFile -Config @{ Setting = $true } -FilePath (Join-Path $TestDrive 'settings.json') | Should -BeFalse
 
         Should -Invoke Write-Error -Times 1 -Exactly -ParameterFilter {
-            $Message -eq "写入 '$TestDrive\settings.json' 失败：Disk is full"
+            $Message -eq "Failed to write '$TestDrive\settings.json': Disk is full"
         }
     }
 }
@@ -61,7 +61,7 @@ Describe 'Import-Settings' {
                 $ErrorActionPreference = 'Continue'
                 Import-Settings -filePath $path
             }
-        } | Should -Throw "无法从 $FileName 加载设置。"
+        } | Should -Throw "Failed to load settings from $FileName"
         Should -Invoke Add-Parameter -Times 0 -Exactly
         Should -Invoke Write-Error -Times $WriteErrorCalls -Exactly
     }
@@ -103,7 +103,7 @@ Describe 'Save-Settings' {
         Mock Save-ToFile { $false }
 
         { Save-Settings } | Should -Not -Throw
-        Should -Invoke Write-Host -Times 1 -Exactly -ParameterFilter { $Object -like '错误：*' }
+        Should -Invoke Write-Host -Times 1 -Exactly -ParameterFilter { $Object -like 'Error:*' }
     }
 }
 

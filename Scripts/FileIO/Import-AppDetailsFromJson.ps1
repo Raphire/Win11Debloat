@@ -1,4 +1,6 @@
-﻿<#
+﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
+
+<#
     .SYNOPSIS
         Loads application details from Apps.json.
 
@@ -33,7 +35,7 @@ function Import-AppDetailsFromJson {
         $jsonContent = Get-Content -Path $script:AppsListFilePath -Raw | ConvertFrom-Json
     }
     catch {
-        Write-Error "读取 Apps.json 失败：$_"
+        Write-Error (Get-ConsoleTranslation -Text 'Failed to read Apps.json: {0}' -FormatArgs @($_))
         return $apps
     }
 

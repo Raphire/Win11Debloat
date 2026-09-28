@@ -1,4 +1,6 @@
-﻿# Show CLI default mode options for removing apps, or set selection if RunDefaults or RunDefaultsLite parameter was passed
+﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
+
+# Show CLI default mode options for removing apps, or set selection if RunDefaults or RunDefaultsLite parameter was passed
 function Show-CliDefaultModeOptions {
     if ($RunDefaults) {
         $RemoveAppsInput = '1'
@@ -10,12 +12,12 @@ function Show-CliDefaultModeOptions {
         $RemoveAppsInput = Show-CliDefaultModeAppRemovalOptions
 
         if ($RemoveAppsInput -eq '2' -and ($script:SelectedApps.contains('Microsoft.XboxGameOverlay') -or $script:SelectedApps.contains('Microsoft.XboxGamingOverlay')) -and 
-          $( Read-Host -Prompt "是否禁用游戏栏集成和游戏／屏幕录制？这也会阻止 ms-gamingoverlay 和 ms-gamebar 弹窗。（输入 y 确认，n 取消）" ) -eq 'y') {
+          $( Read-Host -Prompt (Get-ConsoleTranslation -Text 'Disable Game Bar integration and game/screen recording? This also stops ms-gamingoverlay and ms-gamebar popups (y/n)') ) -eq 'y') {
             $DisableGameBarIntegrationInput = $true;
         }
     }
 
-    Write-CliHeader '默认模式'
+    Write-CliHeader (Get-ConsoleTranslation -Text 'Default Mode')
 
     try {
         # Select app removal options based on user input
@@ -38,7 +40,7 @@ function Show-CliDefaultModeOptions {
         Import-Settings -filePath $script:DefaultSettingsFilePath -expectedVersion "1.0"
     }
     catch {
-        Write-Error "无法从 DefaultSettings.json 文件加载设置：$_"
+        Write-Error (Get-ConsoleTranslation -Text 'Failed to load settings from DefaultSettings.json file: {0}' -FormatArgs @($_))
         Wait-ForKeyPress -ExitCode 1
     }
 
@@ -50,5 +52,5 @@ function Show-CliDefaultModeOptions {
     }
 
     Write-PendingChanges
-    Write-CliHeader '默认模式'
+    Write-CliHeader (Get-ConsoleTranslation -Text 'Default Mode')
 }

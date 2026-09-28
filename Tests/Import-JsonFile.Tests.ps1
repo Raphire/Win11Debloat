@@ -1,4 +1,4 @@
-﻿BeforeAll {
+BeforeAll {
     $importJsonFileScriptPath = Join-Path $PSScriptRoot '..\Scripts\FileIO\Import-JsonFile.ps1'
     $script:FixturePath = Join-Path $PSScriptRoot 'TestData\JsonFileLoading'
     . $importJsonFileScriptPath
@@ -26,8 +26,8 @@ Describe 'Import-JsonFile' {
     }
 
     It 'returns null and reports an error for <Case>' -ForEach @(
-        @{ Case = 'a version mismatch'; FileName = 'Config.VersionMismatch.json'; ExpectedVersion = '1.0'; Optional = $false; Error = '版本不匹配' }
-        @{ Case = 'invalid JSON'; FileName = 'Config.Invalid.json'; ExpectedVersion = $null; Optional = $false; Error = '解析 JSON 文件失败' }
+        @{ Case = 'a version mismatch'; FileName = 'Config.VersionMismatch.json'; ExpectedVersion = '1.0'; Optional = $false; Error = 'version mismatch' }
+        @{ Case = 'invalid JSON'; FileName = 'Config.Invalid.json'; ExpectedVersion = $null; Optional = $false; Error = 'Failed to parse JSON file' }
     ) {
         $filePath = Join-Path $script:FixturePath $FileName
         $result = Import-JsonFile -filePath $filePath -expectedVersion $ExpectedVersion -optionalFile:$Optional

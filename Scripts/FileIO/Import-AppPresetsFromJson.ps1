@@ -1,4 +1,6 @@
-﻿<#
+﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
+
+<#
     .SYNOPSIS
         Returns preset names and application IDs from Apps.json, or an empty array when unavailable.
 #>
@@ -7,7 +9,7 @@ function Import-AppPresetsFromJson {
         $jsonContent = Get-Content -Path $script:AppsListFilePath -Raw | ConvertFrom-Json
     }
     catch {
-        Write-Warning "读取 Apps.json 失败：$_"
+        Write-Warning (Get-ConsoleTranslation -Text 'Failed to read Apps.json: {0}' -FormatArgs @($_))
         return @()
     }
 
@@ -17,11 +19,7 @@ function Import-AppPresetsFromJson {
 
     return @($jsonContent.Presets | ForEach-Object {
         [PSCustomObject]@{
-            Name   = switch ($_.Name) {
-                'Xbox gaming apps' { 'Xbox 游戏应用' }
-                'OEM software (Dell, HP, Lenovo, LG)' { '厂商预装软件（戴尔、惠普、联想、LG）' }
-                default { $_ }
-            }
+            Name   = Get-ConsoleTranslation -Text $_.Name
             AppIds = @($_.AppIds)
         }
     })

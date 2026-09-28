@@ -1,4 +1,6 @@
-﻿# MainWindow-AppSelection.ps1
+﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
+
+# MainWindow-AppSelection.ps1
 # App-selection panel functions: tri-state helpers, sorting, search/highlight, app loading, preset management, and removal scope.
 
 function Add-TriStateClickBehavior {
@@ -243,7 +245,7 @@ function Get-AppRemovalScopeTarget {
         "AppRemovalScopeAllUsers" { return 'AllUsers' }
         "AppRemovalScopeCurrentUser" { return 'CurrentUser' }
         default {
-            Write-Warning "无法识别应用移除范围 '$($selectedItem.Name)'，将跳过应用移除。"
+            Write-Warning (Get-ConsoleTranslation -Text 'Unrecognized app-removal scope item ''{0}''. Skipping app removal.' -FormatArgs @($($selectedItem.Name)))
             return $null
         }
     }
@@ -600,11 +602,11 @@ function Initialize-MainWindowApps {
                 $listOfApps = $null
 
                 if ($OnlyInstalledAppsBox.IsChecked -and ($script:WingetInstalled -eq $true)) {
-                    Write-Host "正在通过 WinGet 查询已安装的应用……"
+                    Write-Host (Get-ConsoleTranslation -Text 'Retrieving installed apps via winget...')
                     $listOfApps = Get-WingetInstalledApps -TimeOut 20 -NonBlocking
 
                     if ($null -eq $listOfApps) {
-                        Write-Warning "WinGet 未返回数据，命令可能已超时或执行失败。"
+                        Write-Warning (Get-ConsoleTranslation -Text 'WinGet returned no data (command timed out or failed)')
                         Show-MessageBox -Message (Get-Translation -Key 'AppSelectionWinGetLoadFailedMessage') -Title (Get-Translation -Key 'ErrorTitle') -Button 'OK' -Icon 'Error' | Out-Null
                         $OnlyInstalledAppsBox.IsChecked = $false
                     }
@@ -614,7 +616,7 @@ function Initialize-MainWindowApps {
                     -LoadingAppsIndicator $LoadingAppsIndicator -ImportConfigBtn $ImportConfigBtn -ListOfApps $listOfApps
             }
             catch {
-                Write-Warning "加载应用列表失败：$($_.Exception.Message)"
+                Write-Warning (Get-ConsoleTranslation -Text 'Failed to load apps list: {0}' -FormatArgs @($($_.Exception.Message)))
                 $LoadingAppsIndicator.Visibility = 'Collapsed'
                 $OnlyInstalledAppsBox.IsHitTestVisible = $true
                 $Window.FindName('DeploymentApplyBtn').IsEnabled = $true

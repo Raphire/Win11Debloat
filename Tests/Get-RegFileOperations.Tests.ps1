@@ -1,4 +1,4 @@
-﻿BeforeAll {
+BeforeAll {
     $regFileOperationsScriptPath = Join-Path $PSScriptRoot '..\Scripts\Helpers\Get-RegFileOperations.ps1'
     . $regFileOperationsScriptPath
 }
@@ -72,7 +72,7 @@ Windows Registry Editor Version 5.00
 
         Mock Write-Warning {}
         @(Get-RegFileOperations -regFilePath $regFilePath) | Should -BeNullOrEmpty
-        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -like "跳过*不受支持或格式错误的注册表值 'Broken'*" }
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -like "Skipping unsupported or malformed registry value 'Broken'*" }
     }
 
     It 'parses key deletion, value deletion, and continued hex values' {

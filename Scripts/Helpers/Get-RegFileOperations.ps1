@@ -1,4 +1,6 @@
-﻿# Operation type constants, used to indicate the type of operation for each registry entry
+﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
+
+# Operation type constants, used to indicate the type of operation for each registry entry
 $script:OpType_RemoveKey = 'DeleteKey'
 $script:OpType_RemoveValue = 'DeleteValue'
 $script:OpType_Store = 'SetValue'
@@ -75,7 +77,7 @@ function Get-RegFileOperations {
 
         $parsedValue = Convert-RegValueData -valueData $matches.valueData.Trim()
         if (-not $parsedValue) {
-            Write-Warning "跳过 '$currentKeyPath' 中不受支持或格式错误的注册表值 '$valueName'。"
+            Write-Warning (Get-ConsoleTranslation -Text 'Skipping unsupported or malformed registry value ''{0}'' in ''{1}''.' -FormatArgs @($valueName, $currentKeyPath))
             continue
         }
 

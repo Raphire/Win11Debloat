@@ -512,3 +512,18 @@ If you have questions about contributing, feel free to:
 - Open a [discussion](https://github.com/Raphire/Win11Debloat/discussions)
 - Comment on an existing issue
 - Ask in your pull request
+
+
+### 控制台与启动提示的翻译
+
+`Config/Languages/<culture-code>/Console.json` 是可选的控制台语言文件。
+键为源代码中的英文提示模板，值为译文；`{0}`、`{1}` 等占位符必须保持一致。
+使用 `Get-ConsoleTranslation -Text 'Removing {0}' -FormatArgs @($app)` 显示动态提示，
+不要翻译应用标识、注册表路径、参数名或配置中的内部编号。
+
+主程序的 `-Language` 同时控制界面和控制台语言，未指定时使用 Windows 显示语言。
+后台任务继承该语言。资源缺失、损坏或没有对应键时保留英文提示。
+`Run.bat` 的启动提示使用 Windows 显示语言；通过网络单独执行 `Scripts/Get.ps1`
+且尚未下载语言文件时，下载阶段保留英文，下载后的主程序正常切换语言。
+
+运行 `Scripts/Run-Tests.ps1` 检查语言键、占位符、启动提示及后台会话。

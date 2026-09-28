@@ -1,4 +1,4 @@
-﻿BeforeAll {
+BeforeAll {
     function Invoke-DoEvents {}
     . (Join-Path $PSScriptRoot '..\Scripts\Threading\Invoke-NonBlocking.ps1')
 }
@@ -17,7 +17,7 @@ Describe 'Invoke-NonBlocking' {
 
     It 'stops a timed CLI operation and reports a timeout' {
         { Invoke-NonBlocking -ScriptBlock { Start-Sleep -Seconds 3 } -TimeoutSeconds 1 } |
-            Should -Throw '操作已超时，等待时间为 1 秒。'
+            Should -Throw 'Operation timed out after 1 seconds'
     }
 
     It 'stops a timed GUI operation and reports a timeout' {
@@ -25,7 +25,7 @@ Describe 'Invoke-NonBlocking' {
         Mock Invoke-DoEvents {}
 
         { Invoke-NonBlocking -ScriptBlock { Start-Sleep -Seconds 3 } -TimeoutSeconds 1 } |
-            Should -Throw '操作已超时，等待时间为 1 秒。'
+            Should -Throw 'Operation timed out after 1 seconds'
     }
 
     It 'uses a runspace and pumps UI events when a GUI window is present' {
@@ -49,7 +49,7 @@ Describe 'Invoke-NonBlocking' {
 
     It 'remains usable after a timed operation is stopped' {
         { Invoke-NonBlocking -ScriptBlock { Start-Sleep -Seconds 3 } -TimeoutSeconds 1 } |
-            Should -Throw '操作已超时，等待时间为 1 秒。'
+            Should -Throw 'Operation timed out after 1 seconds'
 
         Invoke-NonBlocking -ScriptBlock { 'next operation' } | Should -Be 'next operation'
     }

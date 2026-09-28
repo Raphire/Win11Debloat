@@ -1,4 +1,4 @@
-﻿BeforeAll {
+BeforeAll {
     function Normalize-UserLookupValue { param($Value) ([string]$Value).Trim() }
     function Resolve-UserProfileContext { param($UserName) $null }
     function reg { param($Action, $Mount, $Path) $global:LASTEXITCODE = 0 }
@@ -45,9 +45,9 @@ Describe 'Resolve-TargetUserHiveContext' {
     }
 
     It 'rejects <Case>' -ForEach @(
-        @{ Case = 'an empty user name'; UserName = ' '; Setup = 'None'; ExpectedError = '用于查找注册表配置单元的目标用户名为空。' }
-        @{ Case = 'an unresolved profile'; UserName = 'Missing'; Setup = 'MissingProfile'; ExpectedError = "无法找到目标用户 'Missing' 的配置文件路径。" }
-        @{ Case = 'a missing hive file'; UserName = 'Alice'; Setup = 'MissingHive'; ExpectedError = '未找到目标用户的注册表配置单元：*' }
+        @{ Case = 'an empty user name'; UserName = ' '; Setup = 'None'; ExpectedError = 'Target user name for registry hive resolution is empty.' }
+        @{ Case = 'an unresolved profile'; UserName = 'Missing'; Setup = 'MissingProfile'; ExpectedError = "Unable to resolve profile path for target user 'Missing'." }
+        @{ Case = 'a missing hive file'; UserName = 'Alice'; Setup = 'MissingHive'; ExpectedError = 'Unable to find target user hive at *' }
     ) {
         if ($Setup -eq 'MissingProfile') {
             Mock Resolve-UserProfileContext { $null }
@@ -123,7 +123,7 @@ Describe 'Invoke-WithTargetUserHive' {
         Mock reg { if ($Action -eq 'load') { $global:LASTEXITCODE = 5 } }
 
         { Invoke-WithTargetUserHive -TargetUserName 'Alice' -ScriptBlock { 'never' } } |
-            Should -Throw "加载目标用户的注册表配置单元 'C:\Users\Alice\NTUSER.DAT' 失败（退出代码：5）。"
+            Should -Throw "Failed to load target user hive 'C:\Users\Alice\NTUSER.DAT' (exit code: 5)."
         Should -Invoke reg -Times 0 -Exactly -ParameterFilter { $Action -eq 'unload' }
     }
 
@@ -144,6 +144,6 @@ Describe 'Invoke-WithTargetUserHive' {
         }
 
         Invoke-WithTargetUserHive -TargetUserName 'Alice' -ScriptBlock { 'result' } | Should -Be 'result'
-        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -like "卸载注册表配置单元*失败*" }
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -like "Failed to unload registry hive*" }
     }
 }

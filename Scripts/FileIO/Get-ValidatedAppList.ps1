@@ -1,4 +1,6 @@
-﻿# Returns a validated list of apps based on the provided appsList and the supported apps from Apps.json
+﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
+
+# Returns a validated list of apps based on the provided appsList and the supported apps from Apps.json
 function Get-ValidatedAppList {
     param (
         $appsList
@@ -13,7 +15,7 @@ function Get-ValidatedAppList {
         $appString = $app.Trim('*')
 
         if ($supportedAppsList -notcontains $appString) {
-            Write-Host "不支持移除应用 '$appString'，将跳过该应用。" -ForegroundColor Yellow
+            Write-Host (Get-ConsoleTranslation -Text 'Removal of app ''{0}'' is not supported and will be skipped' -FormatArgs @($appString)) -ForegroundColor Yellow
             continue
         }
 

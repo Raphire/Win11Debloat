@@ -1,4 +1,4 @@
-﻿BeforeAll {
+BeforeAll {
     $restoreApplyStateScriptPath = Join-Path $PSScriptRoot '..\Scripts\Features\Restore-RegistryApplyState.ps1'
     . $restoreApplyStateScriptPath
 }
@@ -10,7 +10,7 @@ Describe 'Convert-RegistryValueKindFromBackup' {
 
     It '<Case>' -ForEach @(
         @{ Case = 'parses registry kinds case-insensitively'; KindName = 'dword'; Expected = [Microsoft.Win32.RegistryValueKind]::DWord; ExpectedError = $null }
-        @{ Case = 'rejects an invalid registry kind'; KindName = 'NotARegistryValueKind'; Expected = $null; ExpectedError = '备份中的注册表值类型不受支持：NotARegistryValueKind' }
+        @{ Case = 'rejects an invalid registry kind'; KindName = 'NotARegistryValueKind'; Expected = $null; ExpectedError = 'Unsupported registry value kind in backup: NotARegistryValueKind' }
     ) {
         if ($ExpectedError) {
             { Convert-RegistryValueKindFromBackup -KindName $KindName } | Should -Throw $ExpectedError
@@ -48,7 +48,7 @@ Describe 'Convert-RegistryValueDataFromBackup' {
 
     It 'rejects binary backup data that cannot be represented as bytes' {
         { Convert-RegistryValueDataFromBackup -Kind ([Microsoft.Win32.RegistryValueKind]::Binary) -Data @(-1, 256, 'invalid') } |
-            Should -Throw '备份中的二进制注册表数据无效*'
+            Should -Throw 'Invalid binary registry data in backup*'
     }
 
     It 'preserves an empty binary value as a byte array' {

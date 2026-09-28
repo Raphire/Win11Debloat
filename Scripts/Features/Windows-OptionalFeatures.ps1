@@ -1,4 +1,6 @@
-﻿<#
+﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
+
+<#
     .SYNOPSIS
     Enables a Windows optional feature and pipes its output to the console.
 
@@ -11,7 +13,7 @@ function Enable-WindowsFeature {
     )
 
     if ($script:Params.ContainsKey("WhatIf")) {
-        Write-Host "[模拟运行] 将启用 Windows 功能：$FeatureName" -ForegroundColor Cyan
+        Write-Host (Get-ConsoleTranslation -Text '[WhatIf] Enable Windows feature: {0}' -FormatArgs @($FeatureName)) -ForegroundColor Cyan
         return $true
     }
 
@@ -36,13 +38,13 @@ function Enable-WindowsFeature {
         } -ArgumentList $FeatureName
     }
     catch {
-        Write-Warning "启用 Windows 功能 '$FeatureName' 失败：$($_.Exception.Message)"
+        Write-Warning (Get-ConsoleTranslation -Text 'Failed to enable Windows feature ''{0}'': {1}' -FormatArgs @($FeatureName, $($_.Exception.Message)))
         return $false
     }
 
     if (-not $result -or -not $result.Success) {
         $details = if ($result -and $result.Error) { ": $($result.Error)" } else { '' }
-        Write-Warning "启用 Windows 功能 '$FeatureName' 失败。$details"
+        Write-Warning (Get-ConsoleTranslation -Text 'Failed to enable Windows feature ''{0}''{1}' -FormatArgs @($FeatureName, $details))
         return $false
     }
 
@@ -63,7 +65,7 @@ function Disable-WindowsFeature {
     )
 
     if ($script:Params.ContainsKey("WhatIf")) {
-        Write-Host "[模拟运行] 将禁用 Windows 功能：$FeatureName" -ForegroundColor Cyan
+        Write-Host (Get-ConsoleTranslation -Text '[WhatIf] Disable Windows feature: {0}' -FormatArgs @($FeatureName)) -ForegroundColor Cyan
         return $true
     }
 
@@ -88,13 +90,13 @@ function Disable-WindowsFeature {
         } -ArgumentList $FeatureName
     }
     catch {
-        Write-Warning "禁用 Windows 功能 '$FeatureName' 失败：$($_.Exception.Message)"
+        Write-Warning (Get-ConsoleTranslation -Text 'Failed to disable Windows feature ''{0}'': {1}' -FormatArgs @($FeatureName, $($_.Exception.Message)))
         return $false
     }
 
     if (-not $result -or -not $result.Success) {
         $details = if ($result -and $result.Error) { ": $($result.Error)" } else { '' }
-        Write-Warning "禁用 Windows 功能 '$FeatureName' 失败。$details"
+        Write-Warning (Get-ConsoleTranslation -Text 'Failed to disable Windows feature ''{0}''{1}' -FormatArgs @($FeatureName, $details))
         return $false
     }
 

@@ -1,4 +1,6 @@
-﻿<#
+﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
+
+<#
     .SYNOPSIS
         Imports valid application, tweak, and deployment selections from a configuration JSON file into active parameters.
 #>
@@ -15,25 +17,25 @@ function Import-ConfigToParams {
         $resolvedConfigPath = (Resolve-Path -LiteralPath $ConfigPath -ErrorAction Stop).Path
     }
     catch {
-        throw "未找到配置文件：$ConfigPath"
+        throw (Get-ConsoleTranslation -Text 'Unable to find config file at path: {0}' -FormatArgs @($ConfigPath))
     }
 
     if (-not (Test-Path -LiteralPath $resolvedConfigPath -PathType Leaf)) {
-        throw "指定的配置路径不是文件：$resolvedConfigPath"
+        throw (Get-ConsoleTranslation -Text 'Provided config path is not a file: {0}' -FormatArgs @($resolvedConfigPath))
     }
 
     if ([System.IO.Path]::GetExtension($resolvedConfigPath) -ne '.json') {
-        throw "配置文件必须为 .json 文件：$resolvedConfigPath"
+        throw (Get-ConsoleTranslation -Text 'Provided config file must be a .json file: {0}' -FormatArgs @($resolvedConfigPath))
     }
 
     $configJson = Import-JsonFile -filePath $resolvedConfigPath -expectedVersion $ExpectedVersion
     if ($null -eq $configJson) {
-        throw "读取配置文件失败：$resolvedConfigPath"
+        throw (Get-ConsoleTranslation -Text 'Failed to read config file: {0}' -FormatArgs @($resolvedConfigPath))
     }
 
     $consistencyError = Test-ConfigConsistency -Config $configJson
     if ($consistencyError) {
-        throw "配置文件 '$resolvedConfigPath' 无效：$consistencyError"
+        throw (Get-ConsoleTranslation -Text 'Invalid config file ''{0}'': {1}' -FormatArgs @($resolvedConfigPath, $consistencyError))
     }
 
     $importedItems = 0
@@ -134,7 +136,7 @@ function Import-ConfigToParams {
     }
 
     if ($importedItems -eq 0) {
-        throw "配置文件中没有可导入的数据：$resolvedConfigPath"
+        throw (Get-ConsoleTranslation -Text 'The config file contains no importable data: {0}' -FormatArgs @($resolvedConfigPath))
     }
 
     return $resolvedConfigPath

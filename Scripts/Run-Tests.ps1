@@ -1,4 +1,4 @@
-﻿<#
+<#
     .SYNOPSIS
         Runs the Win11Debloat Pester test suite locally.
 
@@ -17,7 +17,7 @@ $testPath = Join-Path $repositoryRoot 'Tests'
 
 if (-not (Get-Module -ListAvailable -Name Pester | Where-Object { $_.Version.Major -eq 5 })) {
     if (-not $Bootstrap) {
-        Write-Error '需要 Pester 5。安装方法：.\Scripts\Run-Tests.ps1 -Bootstrap'
+        Write-Error 'Pester 5 is required. Install it with: .\Scripts\Run-Tests.ps1 -Bootstrap'
         exit 1
     }
 
@@ -31,12 +31,12 @@ if (-not (Get-Module -ListAvailable -Name Pester | Where-Object { $_.Version.Maj
         Install-Module -Name Pester -RequiredVersion 5.9.0 -Scope CurrentUser -Force -AllowClobber -Confirm:$false
     }
     catch {
-        Write-Error "无法安装 Pester 5：$($_.Exception.Message)"
+        Write-Error "Unable to install Pester 5: $($_.Exception.Message)"
         exit 1
     }
 
     if (-not (Get-Module -ListAvailable -Name Pester | Where-Object { $_.Version.Major -eq 5 })) {
-        Write-Error 'Pester 5 未安装成功。请更新 PowerShellGet 或手动安装 Pester 5 后重新测试。'
+        Write-Error 'Pester 5 was not installed. Update PowerShellGet or install Pester 5 manually, then run the tests again.'
         exit 1
     }
 }

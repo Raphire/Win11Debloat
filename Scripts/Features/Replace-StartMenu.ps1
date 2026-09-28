@@ -1,4 +1,6 @@
-﻿<#
+﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
+
+<#
     .SYNOPSIS
     Replaces the start menu layout for all user profiles.
 
@@ -27,11 +29,11 @@ function Replace-StartMenuForAllUsers {
         [string]$startMenuTemplate = "$script:AssetsPath\Start\start2.bin"
     )
 
-    Write-Host "> 正在为所有用户移除开始菜单中的全部固定应用……"
+    Write-Host (Get-ConsoleTranslation -Text '> Removing all pinned apps from the start menu for all users...')
 
     # Check if template bin file exists
     if (-not (Test-Path $startMenuTemplate)) {
-        Write-Host "错误：程序文件夹中缺少 start2.bin，无法清空开始菜单。" -ForegroundColor Red
+        Write-Host (Get-ConsoleTranslation -Text 'Error: Unable to clear start menu, start2.bin file missing from script folder') -ForegroundColor Red
         return $false
     }
 
@@ -51,7 +53,7 @@ function Replace-StartMenuForAllUsers {
     $defaultStartMenuPath = Get-UserDirectory -userName "Default" -fileName "AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState" -exitIfPathNotFound $false
 
     if ($script:Params.ContainsKey("WhatIf")) {
-        Write-Host "[模拟运行] 将使用模板 $startMenuTemplate 替换默认用户配置文件的开始菜单。" -ForegroundColor Cyan
+        Write-Host (Get-ConsoleTranslation -Text '[WhatIf] Replace Start Menu for Default user profile with template {0}' -FormatArgs @($startMenuTemplate)) -ForegroundColor Cyan
         return $true
     }
 
@@ -59,10 +61,10 @@ function Replace-StartMenuForAllUsers {
     if (-not (Test-Path $defaultStartMenuPath)) {
         try {
             New-Item $defaultStartMenuPath -ItemType Directory -Force -ErrorAction Stop | Out-Null
-            Write-Host "已为默认用户配置文件创建 LocalState 文件夹。"
+            Write-Host (Get-ConsoleTranslation -Text 'Created LocalState folder for default user profile')
         }
         catch {
-            Write-Warning "创建默认用户配置文件的开始菜单目录失败：$($_.Exception.Message)"
+            Write-Warning (Get-ConsoleTranslation -Text 'Failed to create the Default profile Start Menu directory: {0}' -FormatArgs @($($_.Exception.Message)))
             return $false
         }
     }
@@ -72,7 +74,7 @@ function Replace-StartMenuForAllUsers {
         $success = $false
     }
     else {
-        Write-Host "已替换默认用户配置文件的开始菜单。"
+        Write-Host (Get-ConsoleTranslation -Text 'Replaced start menu for the default user profile')
     }
     return $success
 }
@@ -115,19 +117,19 @@ function Replace-StartMenu {
 
     # Check if template bin file exists
     if (-not (Test-Path $startMenuTemplate)) {
-        Write-Host "错误：未找到模板文件，无法替换开始菜单。" -ForegroundColor Red
+        Write-Host (Get-ConsoleTranslation -Text 'Error: Unable to replace start menu, template file not found') -ForegroundColor Red
         return $false
     }
 
     if ([IO.Path]::GetExtension($startMenuTemplate) -ne ".bin") {
-        Write-Host "错误：模板不是有效的 .bin 文件，无法替换开始菜单。" -ForegroundColor Red
+        Write-Host (Get-ConsoleTranslation -Text 'Error: Unable to replace start menu, template file is not a valid .bin file') -ForegroundColor Red
         return $false
     }
 
     $userName = Get-StartMenuUserNameFromPath -StartMenuBinFile $startMenuBinFile
 
     if ($script:Params.ContainsKey("WhatIf")) {
-        Write-Host "[模拟运行] 将使用模板 $startMenuTemplate 替换用户 $userName 的开始菜单。" -ForegroundColor Cyan
+        Write-Host (Get-ConsoleTranslation -Text '[WhatIf] Replace Start Menu for user {0} with template {1}' -FormatArgs @($userName, $startMenuTemplate)) -ForegroundColor Cyan
         return $true
     }
 
@@ -140,10 +142,10 @@ function Replace-StartMenu {
         if (Test-Path $startMenuBinFile) {
             # Backup current start menu file
             Copy-Item -Path $startMenuBinFile -Destination $backupBinFile -Force -ErrorAction Stop
-            Write-Verbose "用户 $userName 的开始菜单备份已保存到 $backupFileName"
+            Write-Verbose (Get-ConsoleTranslation -Text 'Start menu backup for user {0} saved to {1}' -FormatArgs @($userName, $backupFileName))
         }
         else {
-            Write-Host "未找到用户 $userName 原有的 start2.bin 文件，未为该用户创建备份。" -ForegroundColor Yellow
+            Write-Host (Get-ConsoleTranslation -Text 'Unable to find original start2.bin file for user {0}, no backup was created for this user' -FormatArgs @($userName)) -ForegroundColor Yellow
             New-Item -ItemType File -Path $startMenuBinFile -Force -ErrorAction Stop | Out-Null
         }
 
@@ -151,11 +153,11 @@ function Replace-StartMenu {
         Copy-Item -Path $startMenuTemplate -Destination $startMenuBinFile -Force -ErrorAction Stop
     }
     catch {
-        Write-Warning "替换用户 ${userName} 的开始菜单失败：$($_.Exception.Message)"
+        Write-Warning (Get-ConsoleTranslation -Text 'Failed to replace Start Menu for user {0}: {1}' -FormatArgs @(${userName}, $($_.Exception.Message)))
         return $false
     }
 
-    Write-Host "已替换用户 $userName 的开始菜单。"
+    Write-Host (Get-ConsoleTranslation -Text 'Replaced start menu for user {0}' -FormatArgs @($userName))
     return $true
 }
 
@@ -324,7 +326,7 @@ function Restore-StartMenuFromBackup {
     }
 
     if ($script:Params.ContainsKey("WhatIf")) {
-        Write-Host "[模拟运行] 将从备份 $backupBinFile 恢复用户 $userName 的开始菜单。" -ForegroundColor Cyan
+        Write-Host (Get-ConsoleTranslation -Text '[WhatIf] Restore start menu for user {0} from backup {1}' -FormatArgs @($userName, $backupBinFile)) -ForegroundColor Cyan
         return [PSCustomObject]@{
             UserName = $userName
             Result = $true
@@ -387,7 +389,7 @@ function Restore-StartMenu {
     $targetUserName = $env:USERNAME
     $startMenuBinFile = "$env:LOCALAPPDATA\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState\start2.bin"
 
-    Write-Host "正在从备份恢复用户 $targetUserName 的开始菜单……"
+    Write-Host (Get-ConsoleTranslation -Text 'Restoring start menu for user {0} from backup...' -FormatArgs @($targetUserName))
 
     return Restore-StartMenuFromBackup -StartMenuBinFile $startMenuBinFile -BackupFilePath $BackupFilePath
 }
@@ -423,7 +425,7 @@ function Restore-StartMenuForAllUsers {
     $usersStartMenuPaths = Get-ChildItem -Path $userPathString -ErrorAction SilentlyContinue
     $results = @()
 
-    Write-Host "正在从备份恢复所有用户的开始菜单……"
+    Write-Host (Get-ConsoleTranslation -Text 'Restoring start menu for all users from backup...')
 
     foreach ($startMenuPath in $usersStartMenuPaths) {
         $startMenuBinFile = Join-Path $startMenuPath.FullName 'start2.bin'
@@ -436,7 +438,7 @@ function Restore-StartMenuForAllUsers {
         $defaultStartMenuBinFile = Join-Path $defaultStartMenuPath 'start2.bin'
         if (Test-Path -LiteralPath $defaultStartMenuBinFile) {
             if ($script:Params.ContainsKey("WhatIf")) {
-                Write-Host "[模拟运行] 将移除默认用户配置文件中的 start2.bin。" -ForegroundColor Cyan
+                Write-Host (Get-ConsoleTranslation -Text '[WhatIf] Remove start2.bin for the default user profile') -ForegroundColor Cyan
                 $results += [PSCustomObject]@{
                     UserName = 'Default'
                     Result   = $true

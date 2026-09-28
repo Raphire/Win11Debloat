@@ -106,14 +106,24 @@ param (
     [switch]$HideDriveLetters
 )
 
+# 控制台在图形界面前启动，先选定本次运行的语言。
+$script:ConsoleLanguageCode = if ($Language) { $Language } else { $PSUICulture }
+$consoleTranslationScript = Join-Path $PSScriptRoot 'Scripts/FileIO/获取控制台翻译.ps1'
+if (-not $WhatIfPreference -and ((Get-ExecutionPolicy -Scope MachinePolicy) -ne 'Undefined' -or (Get-ExecutionPolicy -Scope UserPolicy) -ne 'Undefined')) {
+    if (Get-Item -LiteralPath $consoleTranslationScript -Stream Zone.Identifier -ErrorAction SilentlyContinue) {
+        Unblock-File -LiteralPath $consoleTranslationScript -ErrorAction SilentlyContinue
+    }
+}
+. $consoleTranslationScript
+
 # Win11Debloat depends on Windows PowerShell 5.1 cmdlets (the Appx module's Get-AppxPackage /
 # Remove-AppxPackage, and Get-ComputerRestorePoint) that do not load in PowerShell 7 (pwsh), where the
 # Appx module fails with "Operation is not supported on this platform" (0x80131539). Without this guard
 # the run continues and silently fails to remove any apps while still reporting success. See issue #675.
 if ($PSVersionTable.PSEdition -eq 'Core') {
-    Write-Host "Win11Debloat 需要 Windows PowerShell 5.1，当前使用的是 PowerShell $($PSVersionTable.PSVersion)（pwsh／Core 版）。" -ForegroundColor Red
-    Write-Host "应用卸载和系统还原点功能依赖 PowerShell 7 中不可用的模块，因此无法在当前环境中正常运行。" -ForegroundColor Red
-    Write-Host "请使用 Windows PowerShell（powershell.exe）重新运行此脚本。" -ForegroundColor Yellow
+    Write-Host (Get-ConsoleTranslation -Text 'Win11Debloat requires Windows PowerShell 5.1, but it is running under PowerShell {0} (pwsh / Core edition).' -FormatArgs @($($PSVersionTable.PSVersion))) -ForegroundColor Red
+    Write-Host (Get-ConsoleTranslation -Text 'App removal and system restore points rely on modules that are not available in PowerShell 7, so the run cannot complete correctly here.') -ForegroundColor Red
+    Write-Host (Get-ConsoleTranslation -Text 'Please re-run this script with Windows PowerShell instead (powershell.exe).') -ForegroundColor Yellow
     exit 1
 }
 
@@ -124,9 +134,9 @@ $isAdmin = ([Security.Principal.WindowsPrincipal] `
 
 # If script is not running as administrator ask user if they want to allow it
 if (-not $isAdmin) {
-    Write-Host "Win11Debloat 必须以管理员身份运行。" -ForegroundColor Red
+    Write-Host (Get-ConsoleTranslation -Text 'Win11Debloat must be run as Administrator.') -ForegroundColor Red
 
-    $choice = Read-Host "是否以管理员身份重新启动？（输入 y 确认，n 取消）"
+    $choice = Read-Host (Get-ConsoleTranslation -Text 'Restart as Administrator? (y/n)')
 
     if ($choice -match '^[Yy]$') {
         # Win32-safe escaping for arguments to pass to elevated process
@@ -162,7 +172,7 @@ if (-not $isAdmin) {
             Start-Process powershell -ArgumentList $elevatedArgs -Verb RunAs -ErrorAction Stop
         }
         catch {
-            Write-Error "无法以管理员身份启动 Win11Debloat：$_"
+            Write-Error (Get-ConsoleTranslation -Text 'Failed to start Win11Debloat as Administrator: {0}' -FormatArgs @($_))
             Exit 1
         }
 
@@ -215,8 +225,8 @@ $script:AppRemovalVerificationUnavailable = $false
 
 # Check if current PowerShell environment is limited by security policies
 if ($ExecutionContext.SessionState.LanguageMode -ne "FullLanguage") {
-    Write-Error "安全策略限制了 PowerShell 的执行，Win11Debloat 无法在此系统上运行。"
-    Write-Output "按任意键退出……"
+    Write-Error (Get-ConsoleTranslation -Text 'Win11Debloat is unable to run on your system, PowerShell execution is restricted by security policies')
+    Write-Output (Get-ConsoleTranslation -Text 'Press any key to exit...')
     $null = [System.Console]::ReadKey()
     Exit 1
 }
@@ -227,7 +237,7 @@ Clear-Host
 $system32Path = "$env:SystemRoot\System32"
 if ($env:PATH -notmatch "(?i)(^|;)$([regex]::Escape($system32Path))(?=;|$)") {
     $env:PATH = "$env:SystemRoot\System32;$env:SystemRoot;" + $env:PATH
-    Write-Warning "PATH 环境变量中缺少 System32 路径，已为本次运行补上。"
+    Write-Warning (Get-ConsoleTranslation -Text 'System32 path was missing from PATH environment variable, it has been added for this session.')
 }
 
 # Display ASCII art launch logo in CLI
@@ -248,8 +258,8 @@ Write-Host "                   " -NoNewline; Write-Host "  |  " -ForegroundColor
 Write-Host "                   " -NoNewline; Write-Host "    (" -ForegroundColor Yellow -NoNewline; Write-Host "'''" -ForegroundColor Red -NoNewline; Write-Host ") " -ForegroundColor Yellow -NoNewline; Write-Host "   *  *" -ForegroundColor DarkYellow
 Write-Host "                   " -NoNewline; Write-Host "    ( " -ForegroundColor DarkYellow -NoNewline; Write-Host "'" -ForegroundColor Red -NoNewline; Write-Host " )   " -ForegroundColor DarkYellow -NoNewline; Write-Host "*" -ForegroundColor Yellow
 Write-Host ""
-Write-Host "             正在启动 Win11Debloat……" -ForegroundColor White
-Write-Host "                请保持此窗口打开" -ForegroundColor DarkGray
+Write-Host (Get-ConsoleTranslation -Text '             Win11Debloat is launching...') -ForegroundColor White
+Write-Host (Get-ConsoleTranslation -Text '                Keep this window open') -ForegroundColor DarkGray
 Write-Host ""
 Write-Host ""
 
@@ -278,15 +288,15 @@ if (-not $WhatIfPreference) {
             })
 
         if ($markedScriptFiles.Count -gt 0) {
-            Write-Host "正在解除 $($markedScriptFiles.Count) 个 PowerShell 文件的下载锁定……"
+            Write-Host (Get-ConsoleTranslation -Text 'Unblocking {0} PowerShell file(s)...' -FormatArgs @($($markedScriptFiles.Count)))
             $unblockErrors = @()
             $markedScriptFiles | Unblock-File -ErrorAction SilentlyContinue -ErrorVariable +unblockErrors
 
             if ($unblockErrors.Count -gt 0) {
-                Write-Warning "有 $($unblockErrors.Count) 个 PowerShell 文件未能解除下载锁定。"
+                Write-Warning (Get-ConsoleTranslation -Text 'Failed to unblock {0} PowerShell file(s).' -FormatArgs @($($unblockErrors.Count)))
             }
             else {
-                Write-Host "已成功解除所有文件的下载锁定。"
+                Write-Host (Get-ConsoleTranslation -Text 'All files were unblocked successfully.')
             }
         }
     }
@@ -296,15 +306,15 @@ if (-not $WhatIfPreference) {
 try {
     $computerSystem = Get-CimInstance Win32_ComputerSystem -ErrorAction SilentlyContinue
     if ($null -ne $computerSystem -and $computerSystem.PartOfDomain) {
-        Write-Warning "此电脑已加入域，组策略可能会覆盖 Win11Debloat 所做的更改。"
+        Write-Warning (Get-ConsoleTranslation -Text 'This machine is domain-joined. Group Policy may override changes made by Win11Debloat.')
     }
 }
 catch { }
 
 # Check if script has all required files
 if (-not ((Test-Path $script:DefaultSettingsFilePath) -and (Test-Path $script:AppsListFilePath) -and (Test-Path $script:RegfilesPath) -and (Test-Path $script:AssetsPath) -and (Test-Path $script:AppSelectionSchema) -and (Test-Path $script:ApplyChangesWindowSchema) -and (Test-Path $script:SharedStylesSchema) -and (Test-Path $script:BubbleHintSchema) -and (Test-Path $script:RestoreBackupWindowSchema) -and (Test-Path $script:FeaturesFilePath) -and (Test-Path $script:DefaultLanguagePath))) {
-    Write-Error "Win11Debloat 未找到所需文件，请确认程序文件完整。"
-    Write-Output "按任意键退出……"
+    Write-Error (Get-ConsoleTranslation -Text 'Win11Debloat is unable to find required files, please ensure all script files are present')
+    Write-Output (Get-ConsoleTranslation -Text 'Press any key to exit...')
     $null = [System.Console]::ReadKey()
     Exit 1
 }
@@ -315,15 +325,15 @@ try {
     $featuresData = Get-Content -Path $script:FeaturesFilePath -Raw | ConvertFrom-Json
     foreach ($feature in $featuresData.Features) {
         if ([string]::IsNullOrWhiteSpace([string]$feature.FeatureId) -or [string]::IsNullOrWhiteSpace([string]$feature.Label) -or [string]::IsNullOrWhiteSpace([string]$feature.ApplyText)) {
-            Write-Warning "Features.json 中的功能 '$($feature.FeatureId)' 缺少 FeatureId、Label 或 ApplyText，将跳过该功能。"
+            Write-Warning (Get-ConsoleTranslation -Text 'Feature ''{0}'' is missing a FeatureId, Label, or ApplyText in Features.json and will be skipped.' -FormatArgs @($($feature.FeatureId)))
             continue
         }
         $script:Features[$feature.FeatureId] = $feature
     }
 }
 catch {
-    Write-Error "无法从 Features.json 文件加载功能信息。"
-    Write-Output "按任意键退出……"
+    Write-Error (Get-ConsoleTranslation -Text 'Failed to load feature info from Features.json file')
+    Write-Output (Get-ConsoleTranslation -Text 'Press any key to exit...')
     $null = [System.Console]::ReadKey()
     Exit 1
 }
@@ -338,15 +348,15 @@ try {
     }
 }
 catch {
-    Write-Error "无法判断 WinGet 是否已安装，winget 命令执行失败：$_"
+    Write-Error (Get-ConsoleTranslation -Text 'Unable to determine if WinGet is installed, winget command failed: {0}' -FormatArgs @($_))
     $script:WingetInstalled = $false
 }
 
 # Show WinGet warning that requires user confirmation, Suppress confirmation if Silent parameter was passed
 if (-not $script:WingetInstalled -and -not $Silent) {
-    Write-Warning "WinGet 未安装或版本过旧，这可能导致 Win11Debloat 无法移除部分应用。"
+    Write-Warning (Get-ConsoleTranslation -Text 'WinGet is not installed or outdated, this may prevent Win11Debloat from removing certain apps')
     Write-Output ""
-    Write-Output "按任意键仍然继续……"
+    Write-Output (Get-ConsoleTranslation -Text 'Press any key to continue anyway...')
     $null = [System.Console]::ReadKey()
 }
 
@@ -468,9 +478,12 @@ $script:ModernStandbySupported = Test-ModernStandbySupport
 # falling back to en-US either way if the requested language isn't available.
 $script:Lang = if ($Language) { Import-LanguageFile -LanguageCode $Language } else { Import-LanguageFile }
 
-# 命令行摘要也使用语言包中的功能名称。
-foreach ($feature in $script:Features.Values) {
-    $feature.Label = Get-Translation -Key $feature.FeatureId -Field 'Label' -Section 'Features'
+# 命令行摘要与图形界面共用功能标签；应用标识与执行参数保持原值。
+foreach ($featureId in @($script:Features.Keys)) {
+    foreach ($field in @('Label', 'ApplyText', 'UndoLabel', 'ApplyUndoText')) {
+        $label = Get-Translation -Key $featureId -Field $field -Section 'Features'
+        if ($label -ne $featureId -and $script:Features[$featureId].PSObject.Properties[$field]) { $script:Features[$featureId].$field = $label }
+    }
 }
 
 $script:Params = $PSBoundParameters
@@ -495,9 +508,9 @@ if (-not ($script:Params.ContainsKey("Verbose"))) {
     $ProgressPreference = 'SilentlyContinue'
 }
 else {
-    Write-Host "已启用详细输出模式。"
+    Write-Host (Get-ConsoleTranslation -Text 'Verbose mode is enabled')
     Write-Output ""
-    Write-Output "按任意键继续……"
+    Write-Output (Get-ConsoleTranslation -Text 'Press any key to continue...')
     $null = [System.Console]::ReadKey()
 
     $ProgressPreference = 'Continue'
@@ -508,7 +521,7 @@ if ($script:Params.ContainsKey("Sysprep")) {
 
     # Exit script if run in Sysprep mode on Windows 10
     if ($WinVersion -lt 22000) {
-        Write-Error "Windows 10 不支持 Win11Debloat 的 Sysprep 系统部署模式。"
+        Write-Error (Get-ConsoleTranslation -Text 'Win11Debloat Sysprep mode is not supported on Windows 10')
         Wait-ForKeyPress -ExitCode 1
     }
 }
@@ -540,8 +553,8 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
     }
     elseif ($RunSavedSettings) {
         if (-not (Test-Path $script:SavedSettingsFilePath)) {
-            Write-CliHeader '自定义模式'
-            Write-Error "未找到 LastUsedSettings.json 文件，未进行任何更改。"
+            Write-CliHeader (Get-ConsoleTranslation -Text 'Custom Mode')
+            Write-Error (Get-ConsoleTranslation -Text 'Unable to find LastUsedSettings.json file, no changes were made')
             Wait-ForKeyPress -ExitCode 1
         }
 
@@ -557,9 +570,9 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
         }
 
         if (-not $Silent) {
-            Write-CliHeader '自定义模式'
+            Write-CliHeader (Get-ConsoleTranslation -Text 'Custom Mode')
             Write-PendingChanges
-            Write-CliHeader '自定义模式'
+            Write-CliHeader (Get-ConsoleTranslation -Text 'Custom Mode')
         }
     }
     else {
@@ -578,11 +591,11 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
                 Exit
             }
             catch {
-                Write-Warning "图形界面无法启动：$($_.Exception.Message)"
-                Write-Verbose "图形界面故障详情：$($_.Exception.ToString())"
+                Write-Warning (Get-ConsoleTranslation -Text 'The graphical interface could not start: {0}' -FormatArgs @($($_.Exception.Message)))
+                Write-Verbose (Get-ConsoleTranslation -Text 'GUI Failure details: {0}' -FormatArgs @($($_.Exception.ToString())))
                 if (-not $Silent) {
                     Write-Host ""
-                    Write-Host "按任意键继续使用命令行模式……"
+                    Write-Host (Get-ConsoleTranslation -Text 'Press any key to continue in CLI mode...')
                     $null = [System.Console]::ReadKey()
                 }
 
@@ -610,13 +623,13 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
     }
 }
 else {
-    Write-CliHeader 'Configuration'
+    Write-CliHeader (Get-ConsoleTranslation -Text 'Configuration')
 }
 
 # If the number of keys in ControlParams equals the number of keys in Params then no modifications/changes were selected
 #  or added by the user, and the script can exit without making any changes.
 if (($controlParamsCount -eq $script:Params.Keys.Count) -or ($script:Params.Keys.Count -eq 1 -and ($script:Params.Keys -contains 'CreateRestorePoint' -or $script:Params.Keys -contains 'Apps'))) {
-    Write-Output "脚本已结束，未进行任何更改。"
+    Write-Output (Get-ConsoleTranslation -Text 'The script completed without making any changes.')
     Wait-ForKeyPress
 }
 
@@ -625,7 +638,7 @@ if (($controlParamsCount -eq $script:Params.Keys.Count) -or ($script:Params.Keys
 Invoke-AllChanges
 
 if ($script:CancelRequested) {
-    Write-Warning "用户已取消操作，其余更改均未执行。"
+    Write-Warning (Get-ConsoleTranslation -Text 'Script execution was cancelled by the user. Any remaining changes were not applied.')
     Wait-ForKeyPress
 }
 
@@ -637,6 +650,6 @@ if (-not ($script:Params.ContainsKey("Sysprep") -or $script:Params.ContainsKey("
 Write-Output ""
 Write-Output ""
 Write-Output ""
-Write-Output "脚本已执行完毕！请检查上方是否有错误提示。"
+Write-Output (Get-ConsoleTranslation -Text 'Script completed! Please check above for any errors.')
 
 Wait-ForKeyPress

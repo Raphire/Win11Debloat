@@ -1,4 +1,6 @@
-﻿# Runs a scriptblock in a background PowerShell runspace while keeping the UI responsive.
+﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
+
+# Runs a scriptblock in a background PowerShell runspace while keeping the UI responsive.
 # In GUI mode, the work executes on a separate thread and the UI thread pumps messages (~60fps).
 # In CLI mode, the scriptblock runs directly in the current session.
 function Invoke-NonBlocking {
@@ -15,10 +17,16 @@ function Invoke-NonBlocking {
 
     $ps = [powershell]::Create()
     try {
-        $null = $ps.AddScript($ScriptBlock.ToString())
-        foreach ($arg in $ArgumentList) {
-            $null = $ps.AddArgument($arg)
+        # 后台线程使用独立会话，需要显式传入语言和翻译函数。
+        $translationScript = Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1'
+        $languageCode = if ($script:ConsoleLanguageCode) { $script:ConsoleLanguageCode } elseif ($script:Lang) { $script:Lang.LanguageCode } else { 'en-US' }
+        $worker = {
+            param($translationScript, $languageCode, $body, $arguments)
+            . $translationScript
+            $script:ConsoleLanguageCode = $languageCode
+            & ([scriptblock]::Create($body)) @arguments
         }
+        $null = $ps.AddScript($worker.ToString()).AddArgument($translationScript).AddArgument($languageCode).AddArgument($ScriptBlock.ToString()).AddArgument($ArgumentList)
 
         $handle = $ps.BeginInvoke()
 
@@ -29,7 +37,7 @@ function Invoke-NonBlocking {
             while (-not $handle.IsCompleted) {
                 if ($stopwatch -and $stopwatch.Elapsed.TotalSeconds -ge $TimeoutSeconds) {
                     $ps.Stop()
-                    throw "操作已超时，等待时间为 $TimeoutSeconds 秒。"
+                    throw (Get-ConsoleTranslation -Text 'Operation timed out after {0} seconds' -FormatArgs @($TimeoutSeconds))
                 }
                 Invoke-DoEvents
                 Start-Sleep -Milliseconds 16
@@ -39,7 +47,7 @@ function Invoke-NonBlocking {
             # CLI mode with timeout: block until completion or timeout
             if (-not $handle.AsyncWaitHandle.WaitOne($TimeoutSeconds * 1000)) {
                 $ps.Stop()
-                throw "操作已超时，等待时间为 $TimeoutSeconds 秒。"
+                throw (Get-ConsoleTranslation -Text 'Operation timed out after {0} seconds' -FormatArgs @($TimeoutSeconds))
             }
         }
 

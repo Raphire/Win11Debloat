@@ -1,4 +1,4 @@
-﻿BeforeAll {
+BeforeAll {
     function Import-RegistryFile { param($Message, $path) }
     function Remove-SelectedApps { param($Apps) $true }
     function Invoke-ForceRemoveEdge { $true }
@@ -166,7 +166,7 @@ Describe 'Invoke-FeatureApply' {
 
         Invoke-FeatureApply -FeatureId 'ForceRemoveEdge' | Should -BeFalse
 
-        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -match "应用 'Force remove Edge' 失败.*access denied" }
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -match "Failed to apply 'Force remove Edge'.*access denied" }
     }
 
     It 'returns false for an unknown feature' {
@@ -174,7 +174,7 @@ Describe 'Invoke-FeatureApply' {
 
         Invoke-FeatureApply -FeatureId 'Unknown' | Should -BeFalse
 
-        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -match "无法应用未知功能 'Unknown'" }
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -match "Unknown feature 'Unknown'.*could not be applied" }
     }
 
     It 'uses the expected static app list for <FeatureId>' -ForEach @(
@@ -408,7 +408,7 @@ Describe 'Invoke-FeatureUndo' {
 
         Invoke-FeatureUndo -FeatureId 'Unknown' | Should -BeFalse
 
-        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -match "无法撤销未知功能 'Unknown'" }
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -match "Unknown feature 'Unknown'.*could not be undone" }
     }
 }
 
@@ -450,7 +450,7 @@ Describe 'Invoke-AllChanges' {
 
     It 'prevents every mutation when registry backup creation fails' {
         Mock New-RegistrySettingsBackup { throw 'disk full' }
-        { Invoke-AllChanges } | Should -Throw '应用更改前，注册表备份失败。*disk full'
+        { Invoke-AllChanges } | Should -Throw 'Registry backup failed before applying changes.*disk full'
         Should -Invoke Invoke-ApplyFeatures -Times 0 -Exactly
         Should -Invoke Invoke-UndoFeatures -Times 0 -Exactly
         Should -Invoke Invoke-SystemRestorePoint -Times 0 -Exactly
@@ -483,7 +483,7 @@ Describe 'Invoke-AllChanges' {
 
     It 'rejects SYSTEM execution without an explicit user target' {
         Mock Test-RunningAsSystem { $true }
-        { Invoke-AllChanges } | Should -Throw "Win11Debloat 正以 SYSTEM 账户运行*"
+        { Invoke-AllChanges } | Should -Throw "Win11Debloat is running as the SYSTEM account*"
         Should -Invoke New-RegistrySettingsBackup -Times 0 -Exactly
     }
 
@@ -515,7 +515,7 @@ Describe 'Invoke-AllChanges' {
         Invoke-AllChanges
 
         $script:FeatureFailures | Should -Be 1
-        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -match '1 项功能更改失败' }
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -match '1 feature change\(s\) failed\.' }
     }
 
     It 'reports app removal failures after all requested work completes' {
@@ -525,7 +525,7 @@ Describe 'Invoke-AllChanges' {
 
         Invoke-AllChanges
 
-        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -match '2 个应用移除失败' }
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -match '2 app removal\(s\) failed' }
     }
 
     It 'warns when app removals could not be verified' {
@@ -536,7 +536,7 @@ Describe 'Invoke-AllChanges' {
 
         Invoke-AllChanges
 
-        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -eq '无法确认所有应用是否均已成功卸载。' }
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -eq 'Unable to verify if all apps were uninstalled successfully.' }
     }
 
 }

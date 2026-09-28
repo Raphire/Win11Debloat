@@ -1,4 +1,6 @@
-﻿<#
+﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
+
+<#
     .SYNOPSIS
         Imports a JSON file, optionally validates its version, and returns $null on failure.
 #>
@@ -11,7 +13,7 @@ function Import-JsonFile {
     
     if (-not (Test-Path $filePath)) {
         if (-not $optionalFile) {
-            Write-Error "未找到文件：$filePath"
+            Write-Error (Get-ConsoleTranslation -Text 'File not found: {0}' -FormatArgs @($filePath))
         }
         return $null
     }
@@ -21,14 +23,14 @@ function Import-JsonFile {
         
         # Validate version if specified
         if ($expectedVersion -and $jsonContent.Version -and $jsonContent.Version -ne $expectedVersion) {
-            Write-Error "$(Split-Path $filePath -Leaf) 版本不匹配（需要 $expectedVersion，实际为 $($jsonContent.Version)）。"
+            Write-Error (Get-ConsoleTranslation -Text '{0} version mismatch (expected {1}, found {2})' -FormatArgs @($(Split-Path $filePath -Leaf), $expectedVersion, $($jsonContent.Version)))
             return $null
         }
         
         return $jsonContent
     }
     catch {
-        Write-Error "解析 JSON 文件失败：$filePath"
+        Write-Error (Get-ConsoleTranslation -Text 'Failed to parse JSON file: {0}' -FormatArgs @($filePath))
         return $null
     }
 }

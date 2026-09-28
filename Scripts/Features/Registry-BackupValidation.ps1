@@ -1,4 +1,6 @@
-﻿<#
+﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
+
+<#
     .SYNOPSIS
         Extracts and deduplicates the SelectedFeatures list from a backup, validating each entry.
 
@@ -228,7 +230,7 @@ function Get-SelectedRegistryFeaturesForBackupValidation {
     )
 
     if ($null -eq $Errors -or -not ($Errors -is [System.Collections.IList])) {
-        throw 'Get-SelectedRegistryFeaturesForBackupValidation 的 Errors 参数必须是可修改的列表集合。'
+        throw (Get-ConsoleTranslation -Text 'Get-SelectedRegistryFeaturesForBackupValidation requires Errors to be a mutable list collection.')
     }
     # Intentionally not localized: this throw signals a programming error (a caller passing the
     # wrong collection type), not a condition a user's backup file can trigger.

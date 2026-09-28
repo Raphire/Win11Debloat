@@ -1,4 +1,6 @@
-﻿<#
+﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
+
+<#
     .SYNOPSIS
         Shows the backup-restore dialog and performs the selected restore.
 #>
@@ -8,7 +10,7 @@ function Show-RestoreBackupWindow {
     )
 
     try {
-        Write-Host '正在打开备份恢复窗口。'
+        Write-Host (Get-ConsoleTranslation -Text 'Opening restore backup dialog.')
 
         $restoreResult = [PSCustomObject]@{
             RestoredRegistry = $false
@@ -17,7 +19,7 @@ function Show-RestoreBackupWindow {
 
         $dialogResult = Show-RestoreBackupDialog -Owner $Owner
         if (-not $dialogResult -or $dialogResult.Result -eq 'Cancel') {
-            Write-Host '用户已取消恢复。'
+            Write-Host (Get-ConsoleTranslation -Text 'Restore canceled by user.')
             return $restoreResult
         }
 
@@ -27,10 +29,10 @@ function Show-RestoreBackupWindow {
         if ($dialogResult.Result -eq 'RestoreRegistry') {
             $backup = $dialogResult.Backup
             if (-not $backup) {
-                throw '未选择备份文件，无法恢复注册表备份。'
+                throw (Get-ConsoleTranslation -Text 'Registry backup restore requested without a selected backup.')
             }
 
-            Write-Host "用户已确认恢复 $($backup.Target) 的注册表备份。"
+            Write-Host (Get-ConsoleTranslation -Text 'User confirmed registry restore for {0}.' -FormatArgs @($($backup.Target)))
             $restoreOpResult = Restore-RegistryBackupState -Backup $backup
             if ($restoreOpResult -and $restoreOpResult.Result) {
                 $restoreResult.RestoredRegistry = $true
@@ -54,7 +56,7 @@ function Show-RestoreBackupWindow {
             }
 
             if ($useManualBackupFile -and [string]::IsNullOrWhiteSpace($backupFilePath)) {
-                throw '未选择备份文件，已取消开始菜单恢复。'
+                throw (Get-ConsoleTranslation -Text 'Start Menu restore canceled: no backup file selected.')
             }
 
             $result = if ($scope -eq 'AllUsers') {
@@ -105,7 +107,7 @@ function Show-RestoreBackupWindow {
     }
     catch {
         $errorMessage = if ($_.Exception.Message) { $_.Exception.Message } else { Get-Translation -Key 'RestoreUnexpectedError' }
-        Write-Error "恢复操作失败：$errorMessage"
+        Write-Error (Get-ConsoleTranslation -Text 'Restore operation failed: {0}' -FormatArgs @($errorMessage))
         Show-MessageBox -Title (Get-Translation -Key 'ErrorTitle') -Message (Get-Translation -Key 'RestoreOperationFailedMessage' -FormatArgs @($errorMessage)) -Icon Error
         return [PSCustomObject]@{
             RestoredRegistry = $false

@@ -1,4 +1,6 @@
-﻿# MainWindow-TweaksBuilder.ps1
+﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
+
+# MainWindow-TweaksBuilder.ps1
 # Dynamic tweaks UI construction from Features.json, tweak state management, selection clear, and search/highlight.
 
 <#
@@ -23,7 +25,7 @@ function New-DynamicTweakControls {
     $featuresJson = Import-JsonFile -filePath $script:FeaturesFilePath -expectedVersion "1.0"
 
     if (-not $featuresJson) {
-        throw "无法加载 Features.json，缺少功能定义，图形界面无法继续运行。"
+        throw (Get-ConsoleTranslation -Text 'Unable to load Features.json file. The GUI cannot continue without feature definitions.')
     }
 
     # Column containers

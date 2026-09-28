@@ -1,12 +1,14 @@
-﻿# Shows the CLI last used settings from LastUsedSettings.json file, displays pending changes and prompts the user to apply them.
+﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
+
+# Shows the CLI last used settings from LastUsedSettings.json file, displays pending changes and prompts the user to apply them.
 function Show-CliLastUsedSettings {
-    Write-CliHeader '自定义模式'
+    Write-CliHeader (Get-ConsoleTranslation -Text 'Custom Mode')
 
     try {
         Import-Settings -filePath $script:SavedSettingsFilePath -expectedVersion "1.0"
     }
     catch {
-        Write-Error "无法从 LastUsedSettings.json 文件加载设置：$_"
+        Write-Error (Get-ConsoleTranslation -Text 'Failed to load settings from LastUsedSettings.json file: {0}' -FormatArgs @($_))
         Wait-ForKeyPress -ExitCode 1
     }
 
@@ -16,5 +18,5 @@ function Show-CliLastUsedSettings {
     }
 
     Write-PendingChanges
-    Write-CliHeader '自定义模式'
+    Write-CliHeader (Get-ConsoleTranslation -Text 'Custom Mode')
 }

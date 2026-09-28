@@ -1,4 +1,4 @@
-﻿BeforeAll {
+BeforeAll {
     function Get-RegistryFilePathForFeature { param($RegistryKey) $RegistryKey }
     function Invoke-RegistryOperationsFromRegFile { param($RegFilePath) }
     function Invoke-WithTargetUserHive { param($TargetUserName, $ScriptBlock, $ArgumentObject, [switch]$PassHiveContext) }
@@ -60,7 +60,7 @@ Describe 'Import-RegistryFile' {
         Import-RegistryFile -message 'Apply' -path 'feature.reg' | Should -BeTrue
 
         Should -Invoke Invoke-RegistryOperationsFromRegFile -Times 1 -Exactly
-        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -like "reg import 导入*失败*" }
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -like "reg import failed*" }
     }
 
     It 'returns false when the fallback cannot apply every registry operation' {

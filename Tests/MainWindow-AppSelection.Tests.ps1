@@ -1,7 +1,10 @@
 BeforeAll {
     Add-Type -AssemblyName PresentationFramework
+    function Invoke-DoEvents {}
     . (Join-Path $PSScriptRoot '..\Scripts\FileIO\Import-JsonFile.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\FileIO\Import-LanguageFile.ps1')
+    . (Join-Path $PSScriptRoot '..\Scripts\FileIO\Import-AppDetailsFromJson.ps1')
+    . (Join-Path $PSScriptRoot '..\Scripts\Threading\Invoke-NonBlocking.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\GUI\MainWindow-AppSelection.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\GUI\MainWindow-Deployment.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\GUI\MainWindow-Navigation.ps1')
@@ -9,6 +12,10 @@ BeforeAll {
     . (Join-Path $PSScriptRoot '..\Scripts\GUI\Set-WindowThemeResources.ps1')
     $script:LanguagesPath = Join-Path $PSScriptRoot '..\Config\Languages'
     $script:Lang = Import-LanguageFile -LanguageCode 'en-US'
+    $script:LoadAppsDetailsScriptPath = Join-Path $PSScriptRoot '..\Scripts\FileIO\Import-AppDetailsFromJson.ps1'
+    $script:TestAppInWingetListScriptPath = Join-Path $PSScriptRoot '..\Scripts\AppRemoval\Test-AppInWingetList.ps1'
+    $script:ImportLanguageFileScriptPath = Join-Path $PSScriptRoot '..\Scripts\FileIO\Import-LanguageFile.ps1'
+    $script:AppsListFilePath = Join-Path $PSScriptRoot '..\Config\Apps.json'
 
     function New-TestWindow {
         $window = New-Object System.Windows.Window
@@ -16,6 +23,25 @@ BeforeAll {
         $window.Resources['ProgressActiveColor'] = [System.Windows.Media.Brushes]::Green
         $window.Resources['ProgressInactiveColor'] = [System.Windows.Media.Brushes]::Gray
         return $window
+    }
+}
+
+Describe 'Invoke-AppDetailsFromJsonAsync' {
+    BeforeEach { $script:GuiWindow = [PSCustomObject]@{} }
+
+    It 'resolves translated FriendlyName and Description inside the background runspace' {
+        $result = @(Invoke-AppDetailsFromJsonAsync -OnlyInstalled:$false)
+
+        $result.Count | Should -Be 141
+        $clipchamp = $result | Where-Object { $_.AppId -contains 'Clipchamp.Clipchamp' }
+        $clipchamp.FriendlyName | Should -Be 'Clipchamp'
+        $clipchamp.Description | Should -Be 'Video editor from Microsoft'
+    }
+
+    It 'does not return null entries when OnlyInstalled filters the runspace results' {
+        $result = @(Invoke-AppDetailsFromJsonAsync -OnlyInstalled:$true -InstalledList @())
+
+        @($result | Where-Object { -not $_ }).Count | Should -Be 0
     }
 }
 

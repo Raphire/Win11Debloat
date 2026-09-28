@@ -70,8 +70,8 @@ function Import-AppDetailsFromJson {
         # Use first AppId for fallback names, join all for display
         $primaryAppId = $appIdArray[0]
         $appIdDisplay = $appIdArray -join ', '
-        $friendlyName = if ($appData.FriendlyName) { $appData.FriendlyName } else { $primaryAppId }
-        $displayName = if ($appData.FriendlyName) { "$($appData.FriendlyName) ($appIdDisplay)" } else { $appIdDisplay }
+        $friendlyName = Get-Translation -Key $primaryAppId -Field 'FriendlyName' -Section 'Apps'
+        $displayName = "$friendlyName ($appIdDisplay)"
         $isChecked = if ($InitialCheckedFromJson) { $appData.SelectedByDefault } else { $false }
 
         $apps += [PSCustomObject]@{
@@ -80,7 +80,7 @@ function Import-AppDetailsFromJson {
             FriendlyName = $friendlyName
             DisplayName = $displayName
             IsChecked = $isChecked
-            Description = $appData.Description
+            Description = Get-Translation -Key $primaryAppId -Field 'Description' -Section 'Apps'
             SelectedByDefault = $appData.SelectedByDefault
             Recommendation = $appData.Recommendation
             RemovalMethod = if ($appData.RemovalMethod -and $appData.RemovalMethod -eq 'WinGet') { 'WinGet' } else { 'Appx' }
@@ -88,4 +88,52 @@ function Import-AppDetailsFromJson {
     }
 
     return $apps
+}
+
+<#
+    .SYNOPSIS
+        Runs Import-AppDetailsFromJson in a background runspace via Invoke-NonBlocking.
+
+    .DESCRIPTION
+        The runspace inherits neither dot-sourced functions nor script-scoped variables, so
+        this dot-sources the app loader, its winget helper, and the language loader inside the
+        scriptblock, and passes $Lang through to be reassigned to $script:Lang there.
+
+    .PARAMETER OnlyInstalled
+        Filters the results to applications detected through Appx or the supplied
+        winget installation list.
+
+    .PARAMETER InstalledList
+        A pre-fetched winget installation list used when filtering installed apps.
+
+    .PARAMETER InitialCheckedFromJson
+        Sets each returned app's IsChecked value from its SelectedByDefault setting.
+
+    .PARAMETER Lang
+        The loaded language object ($script:Lang) to make available inside the runspace.
+#>
+function Invoke-AppDetailsFromJsonAsync {
+    param (
+        [string]$LoaderScriptPath = $script:LoadAppsDetailsScriptPath,
+        [string]$HelperScriptPath = $script:TestAppInWingetListScriptPath,
+        [string]$LanguageFileScriptPath = $script:ImportLanguageFileScriptPath,
+        [string]$AppsFilePath = $script:AppsListFilePath,
+        [object[]]$InstalledList = $null,
+        [switch]$OnlyInstalled,
+        [switch]$InitialCheckedFromJson,
+        [object]$Lang = $script:Lang
+    )
+
+    $onlyInstalledValue = [bool]$OnlyInstalled
+    $initialCheckedFromJsonValue = [bool]$InitialCheckedFromJson
+
+    return Invoke-NonBlocking -ScriptBlock {
+        param($loaderScript, $helperScript, $languageFileScript, $appsListFilePath, $installedList, $onlyInstalled, $initialCheckedFromJson, $Lang)
+        $script:AppsListFilePath = $appsListFilePath
+        $script:Lang = $Lang
+        . $helperScript
+        . $languageFileScript
+        . $loaderScript
+        Import-AppDetailsFromJson -OnlyInstalled:$onlyInstalled -InstalledList $installedList -InitialCheckedFromJson:$initialCheckedFromJson
+    } -ArgumentList $LoaderScriptPath, $HelperScriptPath, $LanguageFileScriptPath, $AppsFilePath, $InstalledList, $onlyInstalledValue, $initialCheckedFromJsonValue, $Lang
 }

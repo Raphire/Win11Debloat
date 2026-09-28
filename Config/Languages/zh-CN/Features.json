@@ -1,0 +1,744 @@
+{
+  "Features": {
+    "RemoveApps": {
+      "Label": "卸载通过 Apps 参数指定的应用",
+      "ApplyText": "正在卸载所选应用"
+    },
+    "Apps": {
+      "Label": "要卸载的应用，以逗号分隔。使用 Default（或省略此参数）以采用默认应用列表",
+      "ApplyText": "正在卸载所选应用"
+    },
+    "RemoveGamingApps": {
+      "Label": "卸载 Xbox 应用和 Xbox Game Bar",
+      "ApplyText": "正在卸载游戏相关应用"
+    },
+    "RemoveHPApps": {
+      "Label": "卸载 HP 预装应用",
+      "ApplyText": "正在卸载 HP 应用"
+    },
+    "CreateRestorePoint": {
+      "Label": "创建系统还原点",
+      "ApplyText": "正在创建系统还原点"
+    },
+    "DisableTelemetry": {
+      "Label": "禁用遥测、跟踪和个性化广告",
+      "ToolTip": "禁用遥测、诊断数据收集、活动历史记录、应用启动跟踪、个性化广告等功能，减少发送给 Microsoft 的设备和使用数据。如果你参加了 Windows 预览体验计划，可能需要重新开启可选诊断数据收集才能继续获取更新。",
+      "ApplyText": "正在禁用遥测和诊断数据收集",
+      "UndoLabel": "启用遥测、跟踪和个性化广告",
+      "ApplyUndoText": "正在启用遥测和诊断数据收集"
+    },
+    "DisableSuggestions": {
+      "Label": "禁用 Windows 中的提示、技巧和推荐内容",
+      "ToolTip": "移除 Windows 中的多种干扰内容，包括通知、提醒和同步提供商广告，同时阻止自动安装推荐应用。",
+      "ApplyText": "正在禁用 Windows 中的提示、技巧、推荐内容和广告",
+      "UndoLabel": "启用 Windows 中的提示、技巧和推荐内容",
+      "ApplyUndoText": "正在启用 Windows 中的提示、技巧、推荐内容和广告"
+    },
+    "DisableNotifications": {
+      "Label": "禁用 Windows 通知（来自应用和其他发送者）",
+      "ToolTip": "禁用来自应用和其他发送者的 Windows 原生通知，包括 Discord、WhatsApp、Teams 和 Slack 等应用的通知。",
+      "ApplyText": "正在禁用 Windows 通知和提醒",
+      "UndoLabel": "启用 Windows 通知和提醒",
+      "ApplyUndoText": "正在启用 Windows 通知和提醒"
+    },
+    "DisableLocationServices": {
+      "Label": "禁用 Windows 定位服务及应用的位置访问权限",
+      "ToolTip": "关闭 Windows 定位服务，并拒绝应用访问你的位置信息。此功能通过策略实现，会锁定部分设置。",
+      "ApplyText": "正在禁用 Windows 定位服务及应用的位置访问权限",
+      "UndoLabel": "启用 Windows 定位服务及应用的位置访问权限",
+      "ApplyUndoText": "正在启用 Windows 定位服务及应用的位置访问权限"
+    },
+    "DisableFindMyDevice": {
+      "Label": "禁用“查找我的设备”的位置跟踪",
+      "ToolTip": "关闭“查找我的设备”功能。该功能会定期将设备位置发送给 Microsoft。此功能通过策略实现，会锁定部分设置。",
+      "ApplyText": "正在禁用“查找我的设备”的位置跟踪",
+      "UndoLabel": "启用“查找我的设备”的位置跟踪",
+      "ApplyUndoText": "正在启用“查找我的设备”的位置跟踪"
+    },
+    "DisableLockscreenTips": {
+      "Label": "禁用锁屏上的提示和技巧",
+      "ToolTip": "关闭锁屏的 Windows 聚焦选项，并禁用锁屏上的提示、技巧和趣闻。",
+      "ApplyText": "正在禁用锁屏上的提示和技巧",
+      "UndoLabel": "启用锁屏上的提示和技巧",
+      "ApplyUndoText": "正在启用锁屏上的提示和技巧"
+    },
+    "EnableDesktopSpotlight": {
+      "Label": "启用 Windows 聚焦桌面背景和快捷方式",
+      "ToolTip": "恢复 Windows 聚焦桌面背景及“了解此图片”快捷方式。",
+      "ApplyText": "正在恢复 Windows 聚焦桌面背景和快捷方式"
+    },
+    "DisableDesktopSpotlight": {
+      "Label": "禁用 Windows 聚焦桌面背景",
+      "ToolTip": "关闭桌面背景的 Windows 聚焦功能。该功能会轮换显示图片，也可能显示提示和趣闻。此功能通过策略实现，会锁定部分设置。",
+      "ApplyText": "正在禁用 Windows 聚焦桌面背景",
+      "UndoLabel": "启用 Windows 聚焦桌面背景",
+      "ApplyUndoText": "正在恢复 Windows 聚焦桌面背景和快捷方式"
+    },
+    "HideDesktopSpotlightIcon": {
+      "Label": "隐藏“了解此图片”桌面快捷方式",
+      "ToolTip": "隐藏“了解此图片”桌面快捷方式，同时保留 Windows 聚焦壁纸轮换。不会禁用 Windows 聚焦。",
+      "ApplyText": "正在隐藏 Windows 聚焦的“了解此图片”桌面快捷方式",
+      "UndoLabel": "显示“了解此图片”桌面快捷方式",
+      "ApplyUndoText": "正在显示 Windows 聚焦的“了解此图片”桌面快捷方式"
+    },
+    "DisableEdgeAds": {
+      "Label": "禁用 Edge 中的广告、推荐内容和资讯流",
+      "ToolTip": "关闭 Microsoft Edge 中的广告、推荐内容和 MSN 资讯流等干扰内容。此功能通过策略实现，会锁定部分设置。",
+      "ApplyText": "正在禁用 Microsoft Edge 中的广告、推荐内容和 MSN 资讯流",
+      "UndoLabel": "启用 Edge 中的广告、推荐内容和资讯流",
+      "ApplyUndoText": "正在启用 Microsoft Edge 中的广告、推荐内容和 MSN 资讯流"
+    },
+    "DisableCopilot": {
+      "Label": "禁用 Microsoft Copilot",
+      "ToolTip": "禁用并卸载 Windows 内置的 AI 助手 Microsoft Copilot。",
+      "ApplyText": "正在禁用 Microsoft Copilot",
+      "UndoLabel": "启用 Microsoft Copilot",
+      "ApplyUndoText": "正在启用 Microsoft Copilot"
+    },
+    "DisableRecall": {
+      "Label": "禁用 Windows 回顾（Recall）",
+      "ToolTip": "禁用 Windows 回顾（Recall）。该 AI 功能可快速访问最近使用的文件、应用和活动。此功能通过策略实现，会锁定部分设置。",
+      "ApplyText": "正在禁用 Windows 回顾（Recall）",
+      "UndoLabel": "启用 Windows 回顾（Recall）",
+      "ApplyUndoText": "正在启用 Windows 回顾（Recall）"
+    },
+    "DisableClickToDo": {
+      "Label": "禁用“单击以执行”的 AI 文本与图像分析",
+      "ToolTip": "禁用“单击以执行”（Click to Do）。该功能在 Windows 中提供 AI 文本与图像分析。此功能通过策略实现，会锁定部分设置。",
+      "ApplyText": "正在禁用“单击以执行”",
+      "UndoLabel": "启用“单击以执行”的 AI 文本与图像分析",
+      "ApplyUndoText": "正在启用“单击以执行”"
+    },
+    "DisableAISvcAutoStart": {
+      "Label": "阻止 AI 服务自动启动",
+      "ToolTip": "将 WSAIFabricSvc 服务设为手动启动，阻止它随 Windows 自动启动。",
+      "ApplyText": "正在阻止 AI 服务自动启动",
+      "UndoLabel": "允许 AI 服务自动启动",
+      "ApplyUndoText": "正在允许 AI 服务自动启动"
+    },
+    "DisableDVR": {
+      "Label": "禁用 Xbox 游戏和屏幕录制",
+      "ToolTip": "禁用 Game Bar 应用提供的 Xbox 游戏和屏幕录制功能。此功能通过策略实现，会锁定部分设置。",
+      "ApplyText": "正在禁用 Xbox 游戏和屏幕录制",
+      "UndoLabel": "启用 Xbox 游戏和屏幕录制",
+      "ApplyUndoText": "正在启用 Xbox 游戏和屏幕录制"
+    },
+    "DisableGameBarIntegration": {
+      "Label": "禁用 Game Bar 集成",
+      "ToolTip": "禁用 Game Bar 与游戏及控制器的集成，阻止启动游戏或连接控制器时出现 ms-gamebar 弹窗。",
+      "ApplyText": "正在禁用 Game Bar 集成",
+      "UndoLabel": "启用 Game Bar 集成",
+      "ApplyUndoText": "正在启用 Game Bar 集成"
+    },
+    "ClearStart": {
+      "Label": "仅移除当前用户开始菜单中的所有固定应用",
+      "ApplyText": "正在移除开始菜单中的所有固定应用"
+    },
+    "ClearStartAllUsers": {
+      "Label": "移除所有现有用户和新用户开始菜单中的所有固定应用",
+      "ApplyText": "正在移除所有用户开始菜单中的所有固定应用"
+    },
+    "ReplaceStart": {
+      "Label": "仅使用提供的模板文件替换当前用户的开始菜单布局",
+      "ApplyText": "正在替换开始菜单布局"
+    },
+    "ReplaceStartAllUsers": {
+      "Label": "使用提供的模板文件替换所有现有用户和新用户的开始菜单布局",
+      "ApplyText": "正在替换所有用户的开始菜单布局"
+    },
+    "DisableStartRecommended": {
+      "Label": "隐藏开始菜单的“推荐的项目”区域",
+      "ToolTip": "隐藏开始菜单中显示最近添加的应用、最近打开的文件和应用推荐的区域。此功能通过策略实现，会锁定部分设置。",
+      "ApplyText": "正在禁用开始菜单的“推荐的项目”区域",
+      "UndoLabel": "显示开始菜单的“推荐的项目”区域",
+      "ApplyUndoText": "正在启用开始菜单的“推荐的项目”区域"
+    },
+    "DisableStartAllApps": {
+      "Label": "隐藏开始菜单的“所有应用”区域",
+      "ToolTip": "隐藏开始菜单中列出所有已安装应用的“所有应用”区域。警告：隐藏后可能更难找到已安装的应用。此功能通过策略实现，会锁定部分设置。",
+      "ApplyText": "正在禁用开始菜单的“所有应用”区域",
+      "UndoLabel": "显示开始菜单的“所有应用”区域",
+      "ApplyUndoText": "正在启用开始菜单的“所有应用”区域"
+    },
+    "DisableStartPhoneLink": {
+      "Label": "禁用开始菜单中的手机连接集成",
+      "ToolTip": "当电脑关联了移动设备时，移除开始菜单中的手机连接集成。",
+      "ApplyText": "正在禁用开始菜单中的手机连接移动设备集成",
+      "UndoLabel": "启用开始菜单中的手机连接集成",
+      "ApplyUndoText": "正在启用开始菜单中的手机连接移动设备集成"
+    },
+    "DisableBing": {
+      "Label": "禁用搜索中的必应网络搜索和 Copilot 集成",
+      "ToolTip": "关闭 Windows 搜索中的必应网络搜索结果和 Copilot 集成。此功能通过策略实现，会锁定部分设置。",
+      "ApplyText": "正在禁用 Windows 搜索中的必应网络搜索和 Copilot 集成",
+      "UndoLabel": "启用搜索中的必应网络搜索和 Copilot 集成",
+      "ApplyUndoText": "正在启用 Windows 搜索中的必应网络搜索和 Copilot 集成"
+    },
+    "DisableStoreSearchSuggestions": {
+      "Label": "禁用搜索中的 Microsoft Store 应用推荐",
+      "ToolTip": "禁用 Windows 搜索中的 Microsoft Store 应用推荐。",
+      "ApplyText": "正在禁用搜索中的 Microsoft Store 应用推荐",
+      "UndoLabel": "启用搜索中的 Microsoft Store 应用推荐",
+      "ApplyUndoText": "正在启用搜索中的 Microsoft Store 应用推荐"
+    },
+    "DisableSettings365Ads": {
+      "Label": "隐藏“设置”主页的 Microsoft 365 Copilot 广告",
+      "ToolTip": "关闭“设置”主页中的 Microsoft 365 Copilot 广告。",
+      "ApplyText": "正在禁用“设置”主页的 Microsoft 365 Copilot 广告",
+      "UndoLabel": "显示“设置”主页的 Microsoft 365 Copilot 广告",
+      "ApplyUndoText": "正在启用“设置”主页的 Microsoft 365 Copilot 广告"
+    },
+    "DisableSettingsHome": {
+      "Label": "隐藏“设置”的“主页”页面",
+      "ToolTip": "移除“设置”应用中的“主页”页面。",
+      "ApplyText": "正在禁用“设置”主页",
+      "UndoLabel": "显示“设置”的“主页”页面",
+      "ApplyUndoText": "正在启用“设置”主页"
+    },
+    "DisableEdgeAI": {
+      "Label": "禁用 Microsoft Edge 中的 AI 功能",
+      "ToolTip": "关闭 Microsoft Edge 中的 AI 功能，例如 AI 侧边栏和 Copilot。此功能通过策略实现，会锁定部分设置。",
+      "ApplyText": "正在禁用 Microsoft Edge 中的 AI 功能",
+      "UndoLabel": "启用 Microsoft Edge 中的 AI 功能",
+      "ApplyUndoText": "正在启用 Microsoft Edge 中的 AI 功能"
+    },
+    "DisablePaintAI": {
+      "Label": "禁用画图中的 AI 功能",
+      "ToolTip": "关闭画图中的 AI 功能，例如 AI 图像生成和编辑工具。此功能通过策略实现，会锁定部分设置。",
+      "ApplyText": "正在禁用画图中的 AI 功能",
+      "UndoLabel": "启用画图中的 AI 功能",
+      "ApplyUndoText": "正在启用画图中的 AI 功能"
+    },
+    "DisableNotepadAI": {
+      "Label": "禁用记事本中的 AI 功能",
+      "ToolTip": "关闭记事本中的 AI 功能，例如 AI 写作建议。此功能通过策略实现，会锁定部分设置。",
+      "ApplyText": "正在禁用记事本中的 AI 功能",
+      "UndoLabel": "启用记事本中的 AI 功能",
+      "ApplyUndoText": "正在启用记事本中的 AI 功能"
+    },
+    "EnableDarkMode": {
+      "Label": "为系统和应用启用深色主题",
+      "ToolTip": "将应用和系统主题设为深色模式。",
+      "ApplyText": "正在为系统和应用启用深色模式",
+      "UndoLabel": "禁用系统和应用的深色主题",
+      "ApplyUndoText": "正在禁用系统和应用的深色模式"
+    },
+    "DisableDragTray": {
+      "Label": "禁用用于共享和移动文件的拖放托盘",
+      "ToolTip": "拖放托盘是 Windows 11 用于共享和移动文件的新功能，会在拖动文件时出现在屏幕顶部。",
+      "ApplyText": "正在禁用拖放托盘",
+      "UndoLabel": "启用用于共享和移动文件的拖放托盘",
+      "ApplyUndoText": "正在启用拖放托盘"
+    },
+    "RevertContextMenu": {
+      "Label": "使用经典 Windows 10 右键菜单样式",
+      "ToolTip": "恢复经典 Windows 10 风格的右键菜单。在 Windows 11 中，通常需要点击“显示更多选项”才能打开此菜单。",
+      "ApplyText": "正在恢复经典 Windows 10 右键菜单样式",
+      "UndoLabel": "使用 Windows 11 右键菜单样式",
+      "ApplyUndoText": "正在恢复 Windows 11 右键菜单样式"
+    },
+    "DisableMouseAcceleration": {
+      "Label": "禁用“提高指针精确度”（鼠标加速）",
+      "ToolTip": "禁用 Windows 默认开启的鼠标加速，使鼠标移动更一致、更可预测。",
+      "ApplyText": "正在关闭“提高指针精确度”",
+      "UndoLabel": "启用“提高指针精确度”（鼠标加速）",
+      "ApplyUndoText": "正在开启“提高指针精确度”"
+    },
+    "DisableStickyKeys": {
+      "Label": "禁用粘滞键快捷键（连按 5 次 Shift）",
+      "ToolTip": "阻止连续按 5 次 Shift 键时弹出粘滞键对话框。",
+      "ApplyText": "正在禁用粘滞键快捷键",
+      "UndoLabel": "启用粘滞键快捷键（连按 5 次 Shift）",
+      "ApplyUndoText": "正在启用粘滞键快捷键"
+    },
+    "DisableWindowSnapping": {
+      "Label": "禁用窗口贴靠",
+      "ToolTip": "关闭将窗口贴靠到屏幕边缘或角落的功能。",
+      "ApplyText": "正在禁用窗口贴靠",
+      "UndoLabel": "启用窗口贴靠",
+      "ApplyUndoText": "正在启用窗口贴靠"
+    },
+    "DisableSnapAssist": {
+      "Label": "禁用窗口贴靠时的应用建议",
+      "ToolTip": "关闭将窗口贴靠到屏幕边缘或角落时显示的应用建议。",
+      "ApplyText": "正在禁用贴靠助手建议",
+      "UndoLabel": "启用窗口贴靠时的应用建议",
+      "ApplyUndoText": "正在启用贴靠助手建议"
+    },
+    "DisableSnapLayouts": {
+      "Label": "隐藏屏幕顶部和最大化按钮上的贴靠布局",
+      "ToolTip": "关闭将鼠标悬停在最大化按钮上，或将窗口拖到屏幕顶部时出现的贴靠布局浮窗。",
+      "ApplyText": "正在隐藏屏幕顶部和最大化按钮上的贴靠布局",
+      "UndoLabel": "显示屏幕顶部和最大化按钮上的贴靠布局",
+      "ApplyUndoText": "正在显示屏幕顶部和最大化按钮上的贴靠布局"
+    },
+    "HideTabsInAltTab": {
+      "Label": "贴靠窗口或按 Alt+Tab 时隐藏应用标签页",
+      "ApplyText": "正在禁用贴靠窗口或按 Alt+Tab 时显示应用标签页"
+    },
+    "Show3TabsInAltTab": {
+      "Label": "贴靠窗口或按 Alt+Tab 时显示 3 个应用标签页",
+      "ApplyText": "正在启用贴靠窗口或按 Alt+Tab 时显示 3 个应用标签页"
+    },
+    "Show5TabsInAltTab": {
+      "Label": "贴靠窗口或按 Alt+Tab 时显示 5 个应用标签页",
+      "ApplyText": "正在启用贴靠窗口或按 Alt+Tab 时显示 5 个应用标签页"
+    },
+    "Show20TabsInAltTab": {
+      "Label": "贴靠窗口或按 Alt+Tab 时显示 20 个应用标签页",
+      "ApplyText": "正在启用贴靠窗口或按 Alt+Tab 时显示 20 个应用标签页"
+    },
+    "TaskbarAlignLeft": {
+      "Label": "任务栏左对齐",
+      "ToolTip": "Windows 11 默认将任务栏按钮居中。启用此设置后，按钮将移到左侧，与旧版 Windows 类似。",
+      "ApplyText": "正在将任务栏按钮设为左对齐",
+      "UndoLabel": "任务栏居中对齐",
+      "ApplyUndoText": "正在将任务栏按钮设为居中对齐"
+    },
+    "HideSearchTb": {
+      "Label": "隐藏任务栏上的搜索图标",
+      "ApplyText": "正在隐藏任务栏上的搜索图标",
+      "UndoLabel": "在任务栏上显示搜索框",
+      "ApplyUndoText": "正在将任务栏搜索设为搜索框"
+    },
+    "ShowSearchIconTb": {
+      "Label": "在任务栏上显示搜索图标",
+      "ApplyText": "正在将任务栏搜索设为仅显示图标",
+      "UndoLabel": "在任务栏上显示搜索框",
+      "ApplyUndoText": "正在将任务栏搜索设为搜索框"
+    },
+    "ShowSearchLabelTb": {
+      "Label": "在任务栏上显示搜索图标和标签",
+      "ApplyText": "正在将任务栏搜索设为图标和标签",
+      "UndoLabel": "在任务栏上显示搜索框",
+      "ApplyUndoText": "正在将任务栏搜索设为搜索框"
+    },
+    "ShowSearchBoxTb": {
+      "Label": "在任务栏上显示搜索框",
+      "ApplyText": "正在将任务栏搜索设为搜索框"
+    },
+    "HideTaskview": {
+      "Label": "隐藏任务栏上的“任务视图”按钮",
+      "ToolTip": "禁用任务栏上的“任务视图”按钮。该按钮用于查看所有已打开的窗口和虚拟桌面。",
+      "ApplyText": "正在隐藏任务栏上的“任务视图”按钮",
+      "UndoLabel": "显示任务栏上的“任务视图”按钮",
+      "ApplyUndoText": "正在显示任务栏上的“任务视图”按钮"
+    },
+    "DisableWidgets": {
+      "Label": "禁用任务栏和锁屏上的小组件",
+      "ToolTip": "禁用 Windows 小组件功能，包括任务栏上的小组件按钮和锁屏上可能出现的小组件。",
+      "ApplyText": "正在禁用任务栏和锁屏上的小组件"
+    },
+    "HideChat": {
+      "Label": "隐藏任务栏上的聊天（立即开会）图标",
+      "ToolTip": "禁用任务栏上的聊天（立即开会）图标。",
+      "ApplyText": "正在隐藏任务栏上的聊天图标",
+      "UndoLabel": "显示任务栏上的聊天（立即开会）图标",
+      "ApplyUndoText": "正在显示任务栏上的聊天图标"
+    },
+    "DisableStorageSense": {
+      "Label": "禁用存储感知自动磁盘清理",
+      "ToolTip": "禁用存储感知。该功能通过删除临时文件、清空回收站和清理“下载”文件夹中的文件来自动释放磁盘空间。",
+      "ApplyText": "正在禁用存储感知自动磁盘清理",
+      "UndoLabel": "启用存储感知自动磁盘清理",
+      "ApplyUndoText": "正在启用存储感知自动磁盘清理"
+    },
+    "DisableFastStartup": {
+      "Label": "禁用快速启动",
+      "ToolTip": "快速启动会将系统映像保存到磁盘，以加快关机后的启动速度。禁用后可能解决某些问题，但开机时间可能略有增加。",
+      "ApplyText": "正在禁用快速启动",
+      "UndoLabel": "启用快速启动",
+      "ApplyUndoText": "正在启用快速启动"
+    },
+    "DisableBitlockerAutoEncryption": {
+      "Label": "禁用 BitLocker 自动设备加密",
+      "ToolTip": "Windows 11 会在支持的设备上自动启用 BitLocker 设备加密。禁用后将停止自动加密，但仍可按需手动启用 BitLocker。已使用 BitLocker 加密的驱动器会保持加密状态。",
+      "ApplyText": "正在禁用 BitLocker 自动设备加密",
+      "UndoLabel": "启用 BitLocker 自动设备加密",
+      "ApplyUndoText": "正在启用 BitLocker 自动设备加密"
+    },
+    "DisableModernStandbyNetworking": {
+      "Label": "禁用现代待机期间的网络连接",
+      "ToolTip": "支持现代待机的设备默认在睡眠期间保持网络连接。禁用现代待机期间的网络连接有助于节省电量。",
+      "ApplyText": "正在禁用现代待机期间的网络连接",
+      "UndoLabel": "启用现代待机期间的网络连接",
+      "ApplyUndoText": "正在启用现代待机期间的网络连接"
+    },
+    "EnableEndTask": {
+      "Label": "在任务栏右键菜单中显示“结束任务”",
+      "ToolTip": "在任务栏应用的右键菜单中添加“结束任务”选项，方便快速强制关闭应用。",
+      "ApplyText": "正在启用任务栏右键菜单中的“结束任务”选项",
+      "UndoLabel": "隐藏任务栏右键菜单中的“结束任务”",
+      "ApplyUndoText": "正在禁用任务栏右键菜单中的“结束任务”选项"
+    },
+    "EnableLastActiveClick": {
+      "Label": "点击任务栏应用时切换到上次活动窗口",
+      "ToolTip": "启用后，点击任务栏上的应用会切换到该应用上次活动的窗口，而不只是显示缩略图预览。",
+      "ApplyText": "正在启用点击任务栏应用时切换到上次活动窗口",
+      "UndoLabel": "禁用点击任务栏应用时切换到上次活动窗口",
+      "ApplyUndoText": "正在禁用点击任务栏应用时切换到上次活动窗口"
+    },
+    "CombineTaskbarAlways": {
+      "Label": "始终合并主显示器的任务栏按钮并隐藏标签",
+      "ApplyText": "正在将主显示器的任务栏设为始终合并按钮并隐藏标签"
+    },
+    "CombineMMTaskbarAlways": {
+      "Label": "始终合并其他显示器的任务栏按钮并隐藏标签",
+      "ApplyText": "正在将其他显示器的任务栏设为始终合并按钮并隐藏标签"
+    },
+    "CombineTaskbarWhenFull": {
+      "Label": "主显示器的任务栏已满时合并按钮并隐藏标签",
+      "ApplyText": "正在将主显示器的任务栏设为仅在已满时合并按钮并隐藏标签",
+      "UndoLabel": "始终合并主显示器的任务栏按钮并隐藏标签",
+      "ApplyUndoText": "正在将主显示器的任务栏设为始终合并按钮并隐藏标签"
+    },
+    "CombineMMTaskbarWhenFull": {
+      "Label": "其他显示器的任务栏已满时合并按钮并隐藏标签",
+      "ApplyText": "正在将其他显示器的任务栏设为仅在已满时合并按钮并隐藏标签",
+      "UndoLabel": "始终合并其他显示器的任务栏按钮并隐藏标签",
+      "ApplyUndoText": "正在将其他显示器的任务栏设为始终合并按钮并隐藏标签"
+    },
+    "CombineTaskbarNever": {
+      "Label": "从不合并主显示器的任务栏按钮，并显示标签",
+      "ApplyText": "正在将主显示器的任务栏设为从不合并按钮，也不隐藏标签",
+      "UndoLabel": "始终合并主显示器的任务栏按钮并隐藏标签",
+      "ApplyUndoText": "正在将主显示器的任务栏设为始终合并按钮并隐藏标签"
+    },
+    "CombineMMTaskbarNever": {
+      "Label": "从不合并其他显示器的任务栏按钮，并显示标签",
+      "ApplyText": "正在将其他显示器的任务栏设为从不合并按钮，也不隐藏标签",
+      "UndoLabel": "始终合并其他显示器的任务栏按钮并隐藏标签",
+      "ApplyUndoText": "正在将其他显示器的任务栏设为始终合并按钮并隐藏标签"
+    },
+    "MMTaskbarModeAll": {
+      "Label": "在所有任务栏上显示应用图标",
+      "ApplyText": "正在设置为在所有任务栏上显示应用图标"
+    },
+    "MMTaskbarModeMainActive": {
+      "Label": "在主任务栏和窗口所在的任务栏上显示应用图标",
+      "ApplyText": "正在设置为在主任务栏和窗口所在的任务栏上显示应用图标",
+      "UndoLabel": "在所有任务栏上显示应用图标",
+      "ApplyUndoText": "正在设置为在所有任务栏上显示应用图标"
+    },
+    "MMTaskbarModeActive": {
+      "Label": "仅在窗口所在的任务栏上显示应用图标",
+      "ApplyText": "正在设置为仅在窗口所在的任务栏上显示应用图标",
+      "UndoLabel": "在所有任务栏上显示应用图标",
+      "ApplyUndoText": "正在设置为在所有任务栏上显示应用图标"
+    },
+    "ExplorerToHome": {
+      "Label": "将文件资源管理器的默认打开位置设为“主页”",
+      "ApplyText": "正在将文件资源管理器的默认打开位置设为“主页”"
+    },
+    "ExplorerToThisPC": {
+      "Label": "将文件资源管理器的默认打开位置设为“此电脑”",
+      "ApplyText": "正在将文件资源管理器的默认打开位置设为“此电脑”",
+      "UndoLabel": "将文件资源管理器的默认打开位置设为“主页”",
+      "ApplyUndoText": "正在将文件资源管理器的默认打开位置设为“主页”"
+    },
+    "ExplorerToDownloads": {
+      "Label": "将文件资源管理器的默认打开位置设为“下载”",
+      "ApplyText": "正在将文件资源管理器的默认打开位置设为“下载”",
+      "UndoLabel": "将文件资源管理器的默认打开位置设为“主页”",
+      "ApplyUndoText": "正在将文件资源管理器的默认打开位置设为“主页”"
+    },
+    "ExplorerToOneDrive": {
+      "Label": "将文件资源管理器的默认打开位置设为 OneDrive",
+      "ApplyText": "正在将文件资源管理器的默认打开位置设为 OneDrive",
+      "UndoLabel": "将文件资源管理器的默认打开位置设为“主页”",
+      "ApplyUndoText": "正在将文件资源管理器的默认打开位置设为“主页”"
+    },
+    "ShowKnownFileExt": {
+      "Label": "显示已知文件类型的扩展名",
+      "ToolTip": "显示已知文件类型的扩展名。Windows 默认会隐藏这些扩展名，可能导致混淆和安全风险。",
+      "ApplyText": "正在启用显示已知文件类型的扩展名",
+      "UndoLabel": "隐藏已知文件类型的扩展名",
+      "ApplyUndoText": "正在禁用显示已知文件类型的扩展名"
+    },
+    "ShowHiddenFolders": {
+      "Label": "显示隐藏的文件、文件夹和驱动器",
+      "ToolTip": "Windows 默认会隐藏某些文件、文件夹和驱动器，以防误改或误删。启用后可在文件资源管理器中显示所有文件。",
+      "ApplyText": "正在显示隐藏的文件、文件夹和驱动器",
+      "UndoLabel": "隐藏已设为隐藏的文件、文件夹和驱动器",
+      "ApplyUndoText": "正在隐藏已设为隐藏的文件、文件夹和驱动器"
+    },
+    "HideDupliDrive": {
+      "Label": "隐藏重复的可移动驱动器条目",
+      "ToolTip": "Windows 默认会在“此电脑”下和导航窗格的独立条目中同时显示可移动驱动器。启用后仅在“此电脑”下显示。",
+      "ApplyText": "正在隐藏文件资源管理器导航窗格中重复的可移动驱动器条目",
+      "UndoLabel": "显示重复的可移动驱动器条目",
+      "ApplyUndoText": "正在显示文件资源管理器导航窗格中重复的可移动驱动器条目"
+    },
+    "HideHome": {
+      "Label": "隐藏导航窗格中的“主页”",
+      "ToolTip": "隐藏文件资源管理器导航窗格中的“主页”。",
+      "ApplyText": "正在隐藏文件资源管理器导航窗格中的“主页”",
+      "UndoLabel": "显示导航窗格中的“主页”",
+      "ApplyUndoText": "正在显示文件资源管理器导航窗格中的“主页”"
+    },
+    "HideGallery": {
+      "Label": "隐藏导航窗格中的“图库”",
+      "ToolTip": "隐藏文件资源管理器导航窗格中的“图库”。",
+      "ApplyText": "正在隐藏文件资源管理器导航窗格中的“图库”",
+      "UndoLabel": "显示导航窗格中的“图库”",
+      "ApplyUndoText": "正在显示文件资源管理器导航窗格中的“图库”"
+    },
+    "DisableTransparency": {
+      "Label": "禁用透明效果",
+      "ToolTip": "禁用 Windows 窗口和界面的透明效果，有助于改善旧硬件上的性能。",
+      "ApplyText": "正在禁用透明效果",
+      "UndoLabel": "启用透明效果",
+      "ApplyUndoText": "正在启用透明效果"
+    },
+    "DisableAnimations": {
+      "Label": "禁用动画和视觉效果",
+      "ToolTip": "禁用 Windows 中的动画和部分视觉效果，让界面响应感觉更快，尤其是在旧硬件上。",
+      "ApplyText": "正在禁用动画和视觉效果",
+      "UndoLabel": "启用动画和视觉效果",
+      "ApplyUndoText": "正在启用动画和视觉效果"
+    },
+    "DisableUpdateASAP": {
+      "Label": "关闭“在最新更新可用后立即获取”",
+      "ToolTip": "避免让你的电脑成为首批接收非安全更新的设备。电脑之后仍会收到这些更新。",
+      "ApplyText": "正在阻止 Windows 在最新更新可用后立即获取",
+      "UndoLabel": "允许在最新更新可用后立即获取",
+      "ApplyUndoText": "正在允许 Windows 在最新更新可用后立即获取"
+    },
+    "PreventUpdateAutoReboot": {
+      "Label": "用户已登录时阻止更新后自动重启",
+      "ToolTip": "只要有用户处于登录状态，就阻止电脑在更新后自动重启。",
+      "ApplyText": "正在阻止用户已登录时更新后自动重启",
+      "UndoLabel": "用户已登录时允许更新后自动重启",
+      "ApplyUndoText": "正在允许用户已登录时更新后自动重启"
+    },
+    "DisableDeliveryOptimization": {
+      "Label": "禁用与其他电脑共享已下载的更新",
+      "ToolTip": "阻止电脑向局域网或 Internet 上的其他电脑共享已下载的更新，同时阻止从其他电脑下载更新。",
+      "ApplyText": "正在禁用与其他电脑共享已下载的更新",
+      "UndoLabel": "启用与其他电脑共享已下载的更新",
+      "ApplyUndoText": "正在启用与其他电脑共享已下载的更新"
+    },
+    "DisableDeviceAutoAppDownload": {
+      "Label": "阻止 Windows 自动安装设备配套应用",
+      "ToolTip": "连接 LG、Alienware 等品牌的显示器或某些设备时，阻止 Windows 通过 Windows 更新静默安装设备配套应用。设备仍可正常工作；此设置仅阻止未经同意自动安装附加应用。",
+      "ApplyText": "正在阻止自动安装设备配套应用",
+      "UndoLabel": "允许自动安装设备配套应用",
+      "ApplyUndoText": "正在允许自动安装设备配套应用"
+    },
+    "ForceRemoveEdge": {
+      "Label": "强制卸载 Microsoft Edge。不推荐！",
+      "ApplyText": "正在强制卸载 Microsoft Edge"
+    },
+    "HideOnedrive": {
+      "Label": "隐藏导航窗格中的 OneDrive",
+      "ToolTip": "隐藏文件资源管理器导航窗格中的 OneDrive。",
+      "ApplyText": "正在隐藏文件资源管理器导航窗格中的 OneDrive",
+      "UndoLabel": "显示导航窗格中的 OneDrive",
+      "ApplyUndoText": "正在显示文件资源管理器导航窗格中的 OneDrive"
+    },
+    "Hide3dObjects": {
+      "Label": "隐藏“此电脑”下的“3D 对象”文件夹",
+      "ToolTip": "隐藏文件资源管理器导航窗格中的“3D 对象”文件夹。",
+      "ApplyText": "正在隐藏文件资源管理器导航窗格中的“3D 对象”文件夹",
+      "UndoLabel": "显示“此电脑”下的“3D 对象”文件夹",
+      "ApplyUndoText": "正在显示文件资源管理器导航窗格中的“3D 对象”文件夹"
+    },
+    "HideMusic": {
+      "Label": "隐藏“此电脑”下的“音乐”文件夹",
+      "ToolTip": "隐藏文件资源管理器导航窗格中的“音乐”文件夹。",
+      "ApplyText": "正在隐藏文件资源管理器导航窗格中的“音乐”文件夹",
+      "UndoLabel": "显示“此电脑”下的“音乐”文件夹",
+      "ApplyUndoText": "正在显示文件资源管理器导航窗格中的“音乐”文件夹"
+    },
+    "AddFoldersToThisPC": {
+      "Label": "将常用文件夹添加回“此电脑”",
+      "ToolTip": "将桌面、文档、下载、音乐、图片和视频等常用文件夹添加回文件资源管理器的“此电脑”页面。",
+      "ApplyText": "正在将桌面、下载等所有常用文件夹添加回文件资源管理器的“此电脑”",
+      "UndoLabel": "从“此电脑”移除常用文件夹",
+      "ApplyUndoText": "正在从文件资源管理器的“此电脑”移除桌面、下载等所有常用文件夹"
+    },
+    "HideIncludeInLibrary": {
+      "Label": "隐藏右键菜单中的“包含到库中”",
+      "ToolTip": "隐藏文件资源管理器右键菜单中的“包含到库中”选项。",
+      "ApplyText": "正在隐藏右键菜单中的“包含到库中”",
+      "UndoLabel": "显示右键菜单中的“包含到库中”",
+      "ApplyUndoText": "正在显示右键菜单中的“包含到库中”"
+    },
+    "HideGiveAccessTo": {
+      "Label": "隐藏右键菜单中的“授予访问权限”",
+      "ToolTip": "隐藏文件资源管理器右键菜单中的“授予访问权限”选项。",
+      "ApplyText": "正在隐藏右键菜单中的“授予访问权限”",
+      "UndoLabel": "显示右键菜单中的“授予访问权限”",
+      "ApplyUndoText": "正在显示右键菜单中的“授予访问权限”"
+    },
+    "HideShare": {
+      "Label": "隐藏右键菜单中的“共享”",
+      "ToolTip": "隐藏文件资源管理器右键菜单中的“共享”选项。",
+      "ApplyText": "正在隐藏右键菜单中的“共享”",
+      "UndoLabel": "显示右键菜单中的“共享”",
+      "ApplyUndoText": "正在显示右键菜单中的“共享”"
+    },
+    "DisableBraveBloat": {
+      "Label": "禁用 Brave 浏览器中的附加功能（AI、加密货币等）",
+      "ToolTip": "禁用 Brave 内置的 AI、加密货币钱包、新闻、Rewards、Talk 和 VPN 功能。此功能通过策略实现，会锁定部分设置。",
+      "ApplyText": "正在禁用 Brave 浏览器中的 AI、加密货币、新闻、Rewards、Talk 和 VPN",
+      "UndoLabel": "启用 Brave 浏览器功能（AI、加密货币等）",
+      "ApplyUndoText": "正在启用 Brave 浏览器中的 AI、加密货币、新闻、Rewards、Talk 和 VPN"
+    },
+    "EnableWindowsSandbox": {
+      "Label": "启用 Windows 沙盒",
+      "ToolTip": "Windows 沙盒是轻量级桌面环境，可在隔离环境中安全运行应用。安装在其中的软件与主机相互隔离。仅支持 Windows 11 专业版、专业工作站版和企业版。",
+      "ApplyText": "正在启用 Windows 沙盒",
+      "UndoLabel": "禁用 Windows 沙盒",
+      "ApplyUndoText": "正在禁用 Windows 沙盒"
+    },
+    "EnableWindowsSubsystemForLinux": {
+      "Label": "启用适用于 Linux 的 Windows 子系统",
+      "ToolTip": "适用于 Linux 的 Windows 子系统（WSL）可直接在 Windows 上运行 Linux 环境，无需另建虚拟机。",
+      "ApplyText": "正在启用适用于 Linux 的 Windows 子系统",
+      "UndoLabel": "禁用适用于 Linux 的 Windows 子系统",
+      "ApplyUndoText": "正在禁用适用于 Linux 的 Windows 子系统"
+    },
+    "ShowDriveLettersFirst": {
+      "Label": "在驱动器名称前显示盘符",
+      "ToolTip": "在文件资源管理器中，将盘符显示在驱动器名称前。",
+      "ApplyText": "正在将盘符显示在驱动器名称前",
+      "UndoLabel": "在驱动器名称后显示盘符",
+      "ApplyUndoText": "正在将盘符显示在驱动器名称后"
+    },
+    "ShowDriveLettersLast": {
+      "Label": "在驱动器名称后显示盘符",
+      "ToolTip": "在文件资源管理器中，将盘符显示在驱动器名称后（Windows 默认行为）。",
+      "ApplyText": "正在将盘符显示在驱动器名称后"
+    },
+    "ShowNetworkDriveLettersFirst": {
+      "Label": "仅将网络驱动器的盘符显示在名称前",
+      "ToolTip": "在文件资源管理器中，仅将网络驱动器的盘符显示在驱动器名称前。",
+      "ApplyText": "正在将网络驱动器的盘符显示在名称前",
+      "UndoLabel": "在驱动器名称后显示盘符",
+      "ApplyUndoText": "正在将盘符显示在驱动器名称后"
+    },
+    "HideDriveLetters": {
+      "Label": "隐藏所有盘符",
+      "ToolTip": "隐藏文件资源管理器导航窗格和“此电脑”中的所有盘符。",
+      "ApplyText": "正在隐藏所有盘符",
+      "UndoLabel": "在驱动器名称后显示盘符",
+      "ApplyUndoText": "正在将盘符显示在驱动器名称后"
+    },
+    "StartAllAppsCategory": {
+      "Label": "以类别视图显示所有应用（默认）",
+      "ToolTip": "将开始菜单的“所有应用”区域设为按类别分组显示。",
+      "ApplyText": "正在将“所有应用”设为类别视图"
+    },
+    "StartAllAppsGrid": {
+      "Label": "以网格视图显示所有应用",
+      "ToolTip": "将开始菜单的“所有应用”区域设为按字母顺序排列的网格布局。",
+      "ApplyText": "正在将“所有应用”设为网格视图",
+      "UndoLabel": "以类别视图显示所有应用",
+      "ApplyUndoText": "正在将“所有应用”设为类别视图"
+    },
+    "StartAllAppsList": {
+      "Label": "以列表视图显示所有应用",
+      "ToolTip": "将开始菜单的“所有应用”区域设为按字母顺序排列的列表布局。",
+      "ApplyText": "正在将“所有应用”设为列表视图",
+      "UndoLabel": "以类别视图显示所有应用",
+      "ApplyUndoText": "正在将“所有应用”设为类别视图"
+    }
+  },
+  "UiGroups": {
+    "DesktopSpotlight": {
+      "Label": "Windows 聚焦桌面背景",
+      "ToolTip": "设置 Windows 聚焦桌面背景。可以保留轮换壁纸并选择是否显示“了解此图片”快捷方式，也可以完全禁用 Windows 聚焦。",
+      "Values": {
+        "EnableDesktopSpotlight": "显示“了解此图片”快捷方式（默认）",
+        "HideDesktopSpotlightIcon": "隐藏“了解此图片”快捷方式",
+        "DisableDesktopSpotlight": "禁用 Windows 聚焦桌面背景"
+      }
+    },
+    "SearchIcon": {
+      "Label": "任务栏搜索样式",
+      "ToolTip": "自定义任务栏搜索框的显示样式。",
+      "Values": {
+        "ShowSearchBoxTb": "显示搜索框（默认）",
+        "ShowSearchLabelTb": "显示搜索图标和标签",
+        "ShowSearchIconTb": "仅显示搜索图标",
+        "HideSearchTb": "隐藏"
+      }
+    },
+    "MultiMon": {
+      "Label": "任务栏应用的显示位置",
+      "ToolTip": "使用多台显示器时，选择在哪些任务栏上显示应用按钮。",
+      "Values": {
+        "MMTaskbarModeAll": "所有任务栏（默认）",
+        "MMTaskbarModeMainActive": "主任务栏和窗口所在的任务栏",
+        "MMTaskbarModeActive": "窗口所在的任务栏"
+      }
+    },
+    "CombineButtons": {
+      "Label": "合并主显示器的任务栏按钮",
+      "ToolTip": "选择主显示器上任务栏按钮的合并方式。",
+      "Values": {
+        "CombineTaskbarAlways": "始终（默认）",
+        "CombineTaskbarWhenFull": "任务栏已满时",
+        "CombineTaskbarNever": "从不"
+      }
+    },
+    "CombineMMButtons": {
+      "Label": "合并其他显示器的任务栏按钮",
+      "ToolTip": "选择其他显示器上任务栏按钮的合并方式。",
+      "Values": {
+        "CombineMMTaskbarAlways": "始终（默认）",
+        "CombineMMTaskbarWhenFull": "任务栏已满时",
+        "CombineMMTaskbarNever": "从不"
+      }
+    },
+    "ClearStart": {
+      "Label": "移除开始菜单中的固定应用",
+      "ToolTip": "快速移除开始菜单中的所有固定应用。",
+      "Values": {
+        "ClearStart": "为所选用户移除",
+        "ClearStartAllUsers": "为所有用户移除"
+      }
+    },
+    "ExplorerLocation": {
+      "Label": "打开文件资源管理器时显示",
+      "ToolTip": "选择文件资源管理器的默认打开位置。",
+      "Values": {
+        "ExplorerToHome": "主页（默认）",
+        "ExplorerToThisPC": "此电脑",
+        "ExplorerToDownloads": "下载",
+        "ExplorerToOneDrive": "OneDrive"
+      }
+    },
+    "DriveLetterPosition": {
+      "Label": "盘符位置",
+      "ToolTip": "选择盘符在文件资源管理器中的显示位置。",
+      "Values": {
+        "ShowDriveLettersLast": "在驱动器名称后显示盘符（默认）",
+        "ShowDriveLettersFirst": "在驱动器名称前显示盘符",
+        "ShowNetworkDriveLettersFirst": "仅将网络驱动器的盘符显示在名称前",
+        "HideDriveLetters": "隐藏所有盘符"
+      }
+    },
+    "ShowTabsInAltTab": {
+      "Label": "贴靠窗口或按 Alt+Tab 时显示应用标签页",
+      "ToolTip": "选择贴靠窗口或按 Alt+Tab 时是否显示应用标签页，例如 Edge 浏览器标签页。",
+      "Values": {
+        "HideTabsInAltTab": "不显示标签页",
+        "Show3TabsInAltTab": "显示最近的 3 个标签页（默认）",
+        "Show5TabsInAltTab": "显示最近的 5 个标签页",
+        "Show20TabsInAltTab": "显示最近的 20 个标签页"
+      }
+    },
+    "StartAllAppsView": {
+      "Label": "开始菜单的“所有应用”视图",
+      "ToolTip": "更改开始菜单中“所有应用”区域的布局，或将其完全隐藏。隐藏后可能更难找到已安装的应用。此功能通过策略实现，会锁定部分设置。",
+      "Values": {
+        "DisableStartAllApps": "隐藏",
+        "StartAllAppsCategory": "类别（默认）",
+        "StartAllAppsGrid": "网格",
+        "StartAllAppsList": "列表"
+      }
+    }
+  }
+}

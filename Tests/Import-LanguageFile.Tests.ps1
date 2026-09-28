@@ -95,6 +95,15 @@ Describe 'Import-LanguageFile' {
 }
 
 Describe 'Get-PluralCategory' {
+    It 'uses the other category for Chinese count <Count>' -ForEach @(
+        @{ Count = 0 }
+        @{ Count = 1 }
+        @{ Count = 2 }
+        @{ Count = 100 }
+    ) {
+        Get-PluralCategory -LanguageCode 'zh-CN' -Count $Count | Should -Be 'other'
+    }
+
     It 'returns <Expected> for a count of <Count>' -ForEach @(
         @{ Count = 0; Expected = 'other' }
         @{ Count = 1; Expected = 'one' }

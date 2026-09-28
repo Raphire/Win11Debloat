@@ -103,6 +103,7 @@ function Get-PluralCategory {
     $languagePrefix = ($LanguageCode -split '-')[0].ToLowerInvariant()
 
     switch ($languagePrefix) {
+        'zh' { return 'other' }
         # English CLDR rule: singular only for exactly 1, plural otherwise. Also correct for Dutch/German.
         default {
             if ($Count -eq 1) {

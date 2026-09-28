@@ -1,4 +1,4 @@
-BeforeAll {
+﻿BeforeAll {
     . (Join-Path $PSScriptRoot '..\Scripts\Helpers\Registry-PathHelpers.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\Features\Backup-RegistrySnapshotCapture.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\Features\Restore-RegistryApplyState.ps1')
@@ -61,7 +61,7 @@ Describe 'Convert-RegistryValueToSnapshot' {
         $key = New-FakeRegistryKey -Values @{ Value = [byte[]](1) } -Kinds @{ Value = [Microsoft.Win32.RegistryValueKind]::None }
 
         { Convert-RegistryValueToSnapshot -RegistryKey $key -ValueName 'Value' } |
-            Should -Throw 'REG_NONE registry values are not supported for backup*'
+            Should -Throw '不支持备份 REG_NONE 类型的注册表值*'
     }
 }
 
@@ -124,7 +124,7 @@ Describe 'Convert-RegistryKeyToSnapshot' {
 
         {
             Convert-RegistryKeyToSnapshot -RegistryKey $root -FullPath $root.Name -CaptureAllValues:$true -IncludeSubKeys:$true
-        } | Should -Throw '*Unable to read registry subkey*The backup was not created*'
+        } | Should -Throw '*无法读取注册表子项*备份未创建*'
     }
 }
 
@@ -231,6 +231,6 @@ Describe 'Test-RegistryKeySnapshotCanBeRestored' {
         }
 
         { Test-RegistryKeySnapshotCanBeRestored -Snapshot $snapshot } |
-            Should -Throw "*is not directly below parent*"
+            Should -Throw "*不是父路径*的直接下级*"
     }
 }

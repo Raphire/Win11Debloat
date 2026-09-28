@@ -1,4 +1,4 @@
-BeforeAll {
+﻿BeforeAll {
     . (Join-Path $PSScriptRoot '..\Scripts\FileIO\Import-JsonFile.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\FileIO\Import-LanguageFile.ps1')
     $script:LanguagesPath = Join-Path $PSScriptRoot 'TestData\LanguageLoading'
@@ -65,9 +65,9 @@ Describe 'Import-LanguageFile' {
         $lang = Import-LanguageFile -LanguageCode 'xx-XX' -LanguagesPath $languagesPath
 
         $lang.LanguageCode | Should -Be 'en-US'
-        Should -Invoke Write-Warning -ParameterFilter { $Message -match "Failed to load language 'xx-XX'" } -Times 1 -Exactly
+        Should -Invoke Write-Warning -ParameterFilter { $Message -match "加载语言 'xx-XX' 失败" } -Times 1 -Exactly
         # The broken xx-XX folder is still expected to report load errors; the fallback en-US load itself must not.
-        Should -Invoke Write-Error -ParameterFilter { $Message -match 'Unable to load the en-US language files' } -Times 0
+        Should -Invoke Write-Error -ParameterFilter { $Message -match '无法加载英语（en-US）语言文件' } -Times 0
     }
 
     It 'returns null and reports an error when the requested language fails and en-US is unavailable too' {
@@ -82,7 +82,7 @@ Describe 'Import-LanguageFile' {
         $lang = Import-LanguageFile -LanguageCode 'xx-XX' -LanguagesPath $languagesPath
 
         $lang | Should -BeNullOrEmpty
-        Should -Invoke Write-Warning -ParameterFilter { $Message -match "Failed to load language 'xx-XX'" } -Times 1 -Exactly
+        Should -Invoke Write-Warning -ParameterFilter { $Message -match "加载语言 'xx-XX' 失败" } -Times 1 -Exactly
     }
 
     It 'reports an error and returns null when en-US itself cannot be loaded' {
@@ -91,7 +91,7 @@ Describe 'Import-LanguageFile' {
         $lang = Import-LanguageFile -LanguageCode 'en-US' -LanguagesPath $TestDrive
 
         $lang | Should -BeNullOrEmpty
-        Should -Invoke Write-Error -ParameterFilter { $Message -match 'Unable to load the en-US language files' } -Times 1 -Exactly
+        Should -Invoke Write-Error -ParameterFilter { $Message -match '无法加载英语（en-US）语言文件' } -Times 1 -Exactly
     }
 }
 

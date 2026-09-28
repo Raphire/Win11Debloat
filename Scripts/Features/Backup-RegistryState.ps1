@@ -1,4 +1,4 @@
-<#
+﻿<#
     .SYNOPSIS
         Creates a timestamped JSON backup of registry state for selected features.
 
@@ -38,10 +38,10 @@ function New-RegistrySettingsBackup {
 
     $backupConfig = Get-RegistryBackupPayload -SelectedFeatures $selectedFeatures -UndoFeatures $undoFeatures -CreatedAt $timestamp
     if (-not (Save-ToFile -Config $backupConfig -FilePath $backupFilePath -MaxDepth 25)) {
-        throw "Failed to save registry backup to '$backupFilePath'"
+        throw "无法将注册表备份保存到 '$backupFilePath'。"
     }
 
-    Write-Host "Backup successfully created: $backupFilePath"
+    Write-Host "备份已成功创建：$backupFilePath"
     Write-Host ""
 
     return $backupFilePath

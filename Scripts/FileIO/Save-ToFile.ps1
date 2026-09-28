@@ -1,4 +1,4 @@
-<#
+﻿<#
     .SYNOPSIS
         Serializes a configuration hashtable to a UTF-8 JSON file.
 
@@ -31,7 +31,7 @@ function Save-ToFile {
         return $true
     }
     catch {
-        Write-Error "Failed to write '$FilePath': $($_.Exception.Message)"
+        Write-Error "写入 '$FilePath' 失败：$($_.Exception.Message)"
         return $false
     }
 }

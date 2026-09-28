@@ -1,4 +1,4 @@
-function Get-RegistryBackupCapturePlans {
+﻿function Get-RegistryBackupCapturePlans {
     param(
         [object[]]$SelectedRegistryFeatures = @(),
         [object[]]$UndoRegistryFeatures = @(),
@@ -10,7 +10,7 @@ function Get-RegistryBackupCapturePlans {
     foreach ($feature in $SelectedRegistryFeatures) {
         $regFilePath = Get-RegistryFilePathForFeature -RegistryKey $feature.RegistryKey -UseSysprepRegFiles:$UseSysprepRegFiles
         if (-not (Test-Path $regFilePath)) {
-            throw "Unable to find registry file for backup: $($feature.RegistryKey) ($regFilePath)"
+            throw "未找到备份所需的注册表文件：$($feature.RegistryKey)（$regFilePath）"
         }
 
         foreach ($operation in @(Get-RegFileOperations -regFilePath $regFilePath)) {
@@ -33,7 +33,7 @@ function Get-RegistryBackupCapturePlans {
                 [string]$feature.RegistryKey
             }
 
-            throw "Unable to find registry undo file for backup: $undoKeyDescription ($regFilePath)"
+            throw "未找到备份所需的注册表撤销文件：$undoKeyDescription（$regFilePath）"
         }
 
         foreach ($operation in @(Get-RegFileOperations -regFilePath $regFilePath)) {
@@ -168,12 +168,12 @@ function Get-RegistryKeySnapshot {
 
     $registryParts = Split-RegistryPath -path $KeyPath
     if (-not $registryParts) {
-        throw "Unsupported registry path in backup: $KeyPath"
+        throw "备份中的注册表路径不受支持：$KeyPath"
     }
 
     $rootKey = Get-RegistryRootKey -hiveName $registryParts.Hive
     if (-not $rootKey) {
-        throw "Unsupported registry hive in backup: $($registryParts.Hive)"
+        throw "备份中的注册表配置单元不受支持：$($registryParts.Hive)"
     }
 
     $subKeyPath = $registryParts.SubKey
@@ -243,7 +243,7 @@ function Convert-RegistryKeyToSnapshot {
         foreach ($subKeyName in @($RegistryKey.GetSubKeyNames())) {
             $childKey = $RegistryKey.OpenSubKey($subKeyName, $false)
             if ($null -eq $childKey) {
-                throw "Unable to read registry subkey '$($RegistryKey.Name)\$subKeyName' while creating a backup snapshot. The backup was not created."
+                throw "创建备份快照时无法读取注册表子项 '$($RegistryKey.Name)\$subKeyName'，备份未创建。"
             }
 
             try {
@@ -284,7 +284,7 @@ function Convert-RegistryValueToSnapshot {
 
     $valueKind = $RegistryKey.GetValueKind($ValueName)
     if ($valueKind -eq [Microsoft.Win32.RegistryValueKind]::None) {
-        throw "REG_NONE registry values are not supported for backup. Key='$($RegistryKey.Name)' Name='$ValueName'"
+        throw "不支持备份 REG_NONE 类型的注册表值。注册表项='$($RegistryKey.Name)'，值名称='$ValueName'"
     }
 
     $value = $RegistryKey.GetValue($ValueName, $null, [Microsoft.Win32.RegistryValueOptions]::DoNotExpandEnvironmentNames)
@@ -301,7 +301,7 @@ function Convert-RegistryValueToSnapshot {
     catch {
         $valueType = if ($null -ne $value) { $value.GetType().FullName } else { '<null>' }
         $valueForLog = if ($null -eq $value) { '<null>' } elseif ($value -is [array]) { ($value -join ',') } else { [string]$value }
-        throw "Failed to normalize registry value for backup. Key='$($RegistryKey.Name)' Name='$ValueName' Kind='$valueKind' RawType='$valueType' RawValue='$valueForLog'. InnerError: $($_.Exception.Message)"
+        throw "无法将注册表值转换为备份格式。注册表项='$($RegistryKey.Name)'，值名称='$ValueName'，值类型='$valueKind'，原始类型='$valueType'，原始值='$valueForLog'。内部错误：$($_.Exception.Message)"
     }
 
     return @{

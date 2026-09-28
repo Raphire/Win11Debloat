@@ -1,4 +1,4 @@
-<#
+﻿<#
     .SYNOPSIS
         Returns a list of app IDs from the specified JSON file.
 
@@ -40,7 +40,7 @@ function Import-AppsFromFile {
         return $appsList
     } 
     catch {
-        Write-Error "Unable to read apps list from file: $appsFilePath"
+        Write-Error "无法从文件读取应用列表：$appsFilePath"
         Wait-ForKeyPress -ExitCode 1
     }
 }

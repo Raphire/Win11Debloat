@@ -1,4 +1,4 @@
-<#
+﻿<#
     .SYNOPSIS
         Extracts and deduplicates the SelectedFeatures list from a backup, validating each entry.
 
@@ -228,7 +228,7 @@ function Get-SelectedRegistryFeaturesForBackupValidation {
     )
 
     if ($null -eq $Errors -or -not ($Errors -is [System.Collections.IList])) {
-        throw 'Get-SelectedRegistryFeaturesForBackupValidation requires Errors to be a mutable list collection.'
+        throw 'Get-SelectedRegistryFeaturesForBackupValidation 的 Errors 参数必须是可修改的列表集合。'
     }
     # Intentionally not localized: this throw signals a programming error (a caller passing the
     # wrong collection type), not a condition a user's backup file can trigger.

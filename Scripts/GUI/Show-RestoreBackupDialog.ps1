@@ -1,4 +1,4 @@
-<#
+﻿<#
     .SYNOPSIS
         Displays the Restore Backup wizard dialog.
 
@@ -51,7 +51,7 @@ function Show-RestoreBackupDialog {
     try {
         $schemaPath = $script:RestoreBackupWindowSchema
         if (-not $schemaPath -or -not (Test-Path $schemaPath)) {
-            throw 'Restore backup window schema file could not be found.'
+            throw '未找到备份恢复窗口的界面文件。'
         }
 
         $xaml = Get-Content -Path $schemaPath -Raw
@@ -274,7 +274,7 @@ function Show-RestoreBackupDialog {
             $revertibleFeaturesList = @($forwardFeatureLists.Revertible)
             $reappliedFeaturesList = @($undoFeatureLists.Revertible)
             $nonRevertibleFeaturesList = @($combinedFeatureLists.NonRevertible)
-            Write-Host "Backup overview prepared. Reverted=$($revertibleFeaturesList.Count), ReApplied=$($reappliedFeaturesList.Count), NonRevertible=$($nonRevertibleFeaturesList.Count)"
+            Write-Host "备份概览已准备好。可恢复=$($revertibleFeaturesList.Count)，需重新应用=$($reappliedFeaturesList.Count)，不可恢复=$($nonRevertibleFeaturesList.Count)"
 
             if ($revertibleFeaturesList.Count -eq 0 -and $reappliedFeaturesList.Count -eq 0) {
                 throw (Get-Translation -Key 'RestoreNoRestorableChangesError')
@@ -313,7 +313,7 @@ function Show-RestoreBackupDialog {
 
             $openDialog = New-Object Microsoft.Win32.OpenFileDialog
             $openDialog.Title = Get-Translation -Key 'RestoreSelectRegistryFileDialogTitle'
-            $openDialog.Filter = 'Registry backup (*.json)|*.json'
+            $openDialog.Filter = '注册表备份 (*.json)|*.json'
             $openDialog.DefaultExt = '.json'
             $openDialog.InitialDirectory = $script:RegistryBackupsPath
 
@@ -321,7 +321,7 @@ function Show-RestoreBackupDialog {
                 return
             }
 
-            Write-Host "Backup file selected: $($openDialog.FileName)"
+            Write-Host "已选择备份文件：$($openDialog.FileName)"
 
             try {
                 $selectedBackup = Import-RegistryBackup -FilePath $openDialog.FileName
@@ -346,7 +346,7 @@ function Show-RestoreBackupDialog {
             if ($useManualBackupFile -and [string]::IsNullOrWhiteSpace($state.SelectedStartMenuBackupFilePath)) {
                 $openDialog = New-Object Microsoft.Win32.OpenFileDialog
                 $openDialog.Title = Get-Translation -Key 'RestoreSelectStartMenuFileDialogTitle'
-                $openDialog.Filter = 'Start Menu backup (*.bak)|*.bak'
+                $openDialog.Filter = '开始菜单备份 (*.bak)|*.bak'
                 $openDialog.InitialDirectory = "$env:LOCALAPPDATA\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState"
                 $openDialog.DefaultExt = '.bak'
 
@@ -355,7 +355,7 @@ function Show-RestoreBackupDialog {
                 }
 
                 $state.SelectedStartMenuBackupFilePath = $openDialog.FileName
-                Write-Host "Selected Start Menu backup file: $($state.SelectedStartMenuBackupFilePath)"
+                Write-Host "已选择开始菜单备份文件：$($state.SelectedStartMenuBackupFilePath)"
                 & $refreshStartMenuUi
                 return
             }
@@ -465,7 +465,7 @@ function Show-RestoreBackupDialog {
         }
         catch {
             $innerMessage = if ($_.Exception.InnerException) { $_.Exception.InnerException.Message } else { 'None' }
-            throw "Failed to show restore backup dialog. Error: $($_.Exception.Message) Inner: $innerMessage"
+            throw "无法显示备份恢复窗口。错误：$($_.Exception.Message)；内部错误：$innerMessage"
         }
     }
     finally {

@@ -1,4 +1,4 @@
-function New-TargetUserHiveContext {
+﻿function New-TargetUserHiveContext {
     param(
         [Parameter(Mandatory)]
         [string]$TargetUserName,
@@ -33,17 +33,17 @@ function Resolve-TargetUserHiveContext {
 
     $normalizedTargetUserName = Normalize-UserLookupValue -Value $TargetUserName
     if ([string]::IsNullOrWhiteSpace($normalizedTargetUserName)) {
-        throw 'Target user name for registry hive resolution is empty.'
+        throw '用于查找注册表配置单元的目标用户名为空。'
     }
 
     $userContext = Resolve-UserProfileContext -UserName $normalizedTargetUserName
     if (-not $userContext -or [string]::IsNullOrWhiteSpace([string]$userContext.ProfilePath)) {
-        throw "Unable to resolve profile path for target user '$normalizedTargetUserName'."
+        throw "无法找到目标用户 '$normalizedTargetUserName' 的配置文件路径。"
     }
 
     $hiveDatPath = Join-Path $userContext.ProfilePath 'NTUSER.DAT'
     if (-not (Test-Path -LiteralPath $hiveDatPath)) {
-        throw "Unable to find target user hive at '$hiveDatPath'."
+        throw "未找到目标用户的注册表配置单元：'$hiveDatPath'。"
     }
 
     $isDefaultProfile = $normalizedTargetUserName.Equals('Default', [System.StringComparison]::OrdinalIgnoreCase)
@@ -121,7 +121,7 @@ function Invoke-WithTargetUserHive {
                     $hiveContext = $loadedSidContext
                 }
                 else {
-                    throw "Failed to load target user hive '$($hiveContext.HiveDatPath)' (exit code: $loadExitCode)."
+                    throw "加载目标用户的注册表配置单元 '$($hiveContext.HiveDatPath)' 失败（退出代码：$loadExitCode）。"
                 }
             }
             else {
@@ -145,7 +145,7 @@ function Invoke-WithTargetUserHive {
             reg unload "HKU\$($hiveContext.MountName)" | Out-Null
             $unloadExitCode = $LASTEXITCODE
             if ($unloadExitCode -ne 0) {
-                Write-Warning "Failed to unload registry hive 'HKU\$($hiveContext.MountName)' (exit code: $unloadExitCode)"
+                Write-Warning "卸载注册表配置单元 'HKU\$($hiveContext.MountName)' 失败（退出代码：$unloadExitCode）。"
             }
         }
     }

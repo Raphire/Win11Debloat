@@ -1,4 +1,4 @@
-<#
+﻿<#
     .SYNOPSIS
         Forcefully uninstalls Microsoft Edge and removes its leftover shortcuts and autostart entries.
 
@@ -7,12 +7,12 @@
 #>
 function Invoke-ForceRemoveEdge {
     if ($script:Params.ContainsKey("WhatIf")) {
-        Write-Host "[WhatIf] Forcefully uninstall Microsoft Edge" -ForegroundColor Cyan
+        Write-Host "[模拟运行] 将强制卸载 Microsoft Edge。" -ForegroundColor Cyan
         return $true
     }
 
     try {
-        Write-Host "> Forcefully uninstalling Microsoft Edge..."
+        Write-Host "> 正在强制卸载 Microsoft Edge……"
 
         $regView = [Microsoft.Win32.RegistryView]::Registry32
         $hklm = [Microsoft.Win32.RegistryKey]::OpenBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, $regView)
@@ -27,11 +27,11 @@ function Invoke-ForceRemoveEdge {
     # Remove edge
         $uninstallRegKey = $hklm.OpenSubKey('SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft Edge')
         if ($null -eq $uninstallRegKey) {
-            Write-Host "Unable to forcefully uninstall Microsoft Edge, uninstaller could not be found" -ForegroundColor Red
+            Write-Host "未找到卸载程序，无法强制卸载 Microsoft Edge。" -ForegroundColor Red
             return $false
         }
 
-        Write-Host "Running uninstaller..."
+        Write-Host "正在运行卸载程序……"
         $uninstallString = $uninstallRegKey.GetValue('UninstallString') + ' --force-uninstall'
         $exitCode = Invoke-NonBlocking -ScriptBlock {
             param($cmd)
@@ -39,11 +39,11 @@ function Invoke-ForceRemoveEdge {
             return $process.ExitCode
         } -ArgumentList $uninstallString
         if ($exitCode -ne 0) {
-            Write-Warning "Microsoft Edge uninstaller failed with exit code $exitCode."
+            Write-Warning "Microsoft Edge 卸载程序运行失败，退出代码为 $exitCode。"
             return $false
         }
 
-        Write-Host "Removing leftover files..."
+        Write-Host "正在移除残留文件……"
         $cleanupSucceeded = $true
 
         $edgePaths = @(
@@ -60,16 +60,16 @@ function Invoke-ForceRemoveEdge {
             if (Test-Path -Path $path) {
                 try {
                     Remove-Item -Path $path -Force -Recurse -ErrorAction Stop
-                    Write-Host "  Removed $path" -ForegroundColor DarkGray
+                    Write-Host "  已移除 $path" -ForegroundColor DarkGray
                 }
                 catch {
-                    Write-Warning "Failed to remove Edge leftover '$path': $($_.Exception.Message)"
+                    Write-Warning "移除 Edge 残留文件 '$path' 失败：$($_.Exception.Message)"
                     $cleanupSucceeded = $false
                 }
             }
         }
 
-        Write-Host "Cleaning up registry..."
+        Write-Host "正在清理注册表……"
         $registryCleanupSucceeded = $true
 
         # Remove MS Edge from autostart. Missing values are already-clean state,
@@ -87,15 +87,15 @@ function Invoke-ForceRemoveEdge {
         }
 
         if (-not $cleanupSucceeded -or -not $registryCleanupSucceeded) {
-            Write-Warning "Microsoft Edge was uninstalled, but some leftover files or autostart entries could not be removed."
+            Write-Warning "Microsoft Edge 已卸载，但部分残留文件或自动启动项无法移除。"
             return $false
         }
 
-        Write-Host "Microsoft Edge was uninstalled"
+        Write-Host "Microsoft Edge 已卸载。"
         return $true
     }
     catch {
-        Write-Warning "Failed to forcefully uninstall Microsoft Edge: $($_.Exception.Message)"
+        Write-Warning "强制卸载 Microsoft Edge 失败：$($_.Exception.Message)"
         return $false
     }
     finally {
@@ -127,7 +127,7 @@ function Remove-EdgeAutostartValue {
         return $true
     }
     catch {
-        Write-Warning "Failed to inspect Edge autostart entry '$Path\$Name': $($_.Exception.Message)"
+        Write-Warning "检查 Edge 自动启动项 '$Path\$Name' 失败：$($_.Exception.Message)"
         return $false
     }
 
@@ -140,7 +140,7 @@ function Remove-EdgeAutostartValue {
         return $true
     }
     catch {
-        Write-Warning "Failed to remove Edge autostart entry '$Path\$Name': $($_.Exception.Message)"
+        Write-Warning "移除 Edge 自动启动项 '$Path\$Name' 失败：$($_.Exception.Message)"
         return $false
     }
 }

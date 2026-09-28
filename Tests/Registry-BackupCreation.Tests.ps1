@@ -1,4 +1,4 @@
-BeforeAll {
+﻿BeforeAll {
     . (Join-Path $PSScriptRoot '..\Scripts\Helpers\Registry-PathHelpers.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\Helpers\Get-RegFileOperations.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\Helpers\User-HiveHelpers.ps1')
@@ -91,7 +91,7 @@ Describe 'New-RegistrySettingsBackup' {
     It 'throws when persistence reports failure' {
         Mock Save-ToFile { $false }
 
-        { New-RegistrySettingsBackup -ActionableKeys @('Feature') } | Should -Throw 'Failed to save registry backup to *'
+        { New-RegistrySettingsBackup -ActionableKeys @('Feature') } | Should -Throw '无法将注册表备份保存到 *'
     }
 }
 
@@ -167,7 +167,7 @@ Describe 'Get-RegistryBackupCapturePlans' {
         Mock Get-RegistryFilePathForFeature { Join-Path $TestDrive 'missing.reg' }
 
         { Get-RegistryBackupCapturePlans -SelectedRegistryFeatures @([PSCustomObject]@{ RegistryKey = 'missing.reg' }) } |
-            Should -Throw 'Unable to find registry file for backup: missing.reg*'
+            Should -Throw '未找到备份所需的注册表文件：missing.reg*'
         Should -Invoke Get-RegFileOperations -Times 0 -Exactly
     }
 
@@ -175,7 +175,7 @@ Describe 'Get-RegistryBackupCapturePlans' {
         Mock Resolve-RegistryBackupUndoFilePath { Join-Path $TestDrive 'missing-undo.reg' }
 
         { Get-RegistryBackupCapturePlans -UndoRegistryFeatures @([PSCustomObject]@{ RegistryUndoKey = 'missing-undo.reg' }) } |
-            Should -Throw 'Unable to find registry undo file for backup: missing-undo.reg*'
+            Should -Throw '未找到备份所需的注册表撤销文件：missing-undo.reg*'
     }
 
     It 'skips undo features that do not resolve to a registry file' {

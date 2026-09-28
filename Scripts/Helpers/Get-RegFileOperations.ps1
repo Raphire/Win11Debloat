@@ -1,4 +1,4 @@
-# Operation type constants, used to indicate the type of operation for each registry entry
+﻿# Operation type constants, used to indicate the type of operation for each registry entry
 $script:OpType_RemoveKey = 'DeleteKey'
 $script:OpType_RemoveValue = 'DeleteValue'
 $script:OpType_Store = 'SetValue'
@@ -75,7 +75,7 @@ function Get-RegFileOperations {
 
         $parsedValue = Convert-RegValueData -valueData $matches.valueData.Trim()
         if (-not $parsedValue) {
-            Write-Warning "Skipping unsupported or malformed registry value '$valueName' in '$currentKeyPath'."
+            Write-Warning "跳过 '$currentKeyPath' 中不受支持或格式错误的注册表值 '$valueName'。"
             continue
         }
 

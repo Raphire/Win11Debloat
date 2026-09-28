@@ -1,4 +1,4 @@
-BeforeAll {
+﻿BeforeAll {
     function Invoke-WithTargetUserHive { param($TargetUserName, $ScriptBlock, $ArgumentObject) }
     . (Join-Path $PSScriptRoot '..\Scripts\Helpers\Registry-PathHelpers.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\Helpers\Get-RegFileOperations.ps1')
@@ -26,14 +26,14 @@ Describe 'Convert-RegOperationToValueKind' {
 
     It 'throws for unsupported value types' {
         { Convert-RegOperationToValueKind -Operation ([PSCustomObject]@{ KeyPath = 'HKCU\X'; ValueType = 'Hex9'; ValueData = 1 }) } |
-            Should -Throw "Unsupported value type 'Hex9' while applying reg operation for 'HKCU\X'"
+            Should -Throw "对 'HKCU\X' 应用注册表操作时遇到不受支持的值类型 'Hex9'。"
     }
 }
 
 Describe 'Get-RegistryKeyForOperation' {
     It 'rejects <Case>' -ForEach @(
-        @{ Case = 'an unsupported path format'; RegistryPath = 'HKCU\Software\Example'; ExpectedError = 'Unsupported registry path:*' }
-        @{ Case = 'an unsupported registry hive'; RegistryPath = 'HKEY_UNKNOWN\Software\Example'; ExpectedError = "Unsupported registry hive 'HKEY_UNKNOWN'*" }
+        @{ Case = 'an unsupported path format'; RegistryPath = 'HKCU\Software\Example'; ExpectedError = '不支持的注册表路径：*' }
+        @{ Case = 'an unsupported registry hive'; RegistryPath = 'HKEY_UNKNOWN\Software\Example'; ExpectedError = "*注册表配置单元 'HKEY_UNKNOWN' 不受支持。*" }
     ) {
         { Get-RegistryKeyForOperation -RegistryPath $RegistryPath } | Should -Throw $ExpectedError
     }
@@ -76,7 +76,7 @@ Describe 'Invoke-RegistryOperation' {
     It 'rejects unknown operation types with file context' {
         $operation = [PSCustomObject]@{ OperationType = 'Unknown'; KeyPath = 'HKEY_CURRENT_USER\Software\Example' }
         { Invoke-RegistryOperation -Operation $operation -RegFilePath 'feature.reg' } |
-            Should -Throw "Unsupported reg operation type 'Unknown' in 'feature.reg'"
+            Should -Throw "'feature.reg' 中的注册表操作类型 'Unknown' 不受支持。"
     }
 }
 
@@ -114,7 +114,7 @@ Describe 'Invoke-RegistryOperationsFromRegFile' {
         Mock Invoke-RegistryOperation { throw [System.Security.SecurityException]::new('blocked') }
 
         { Invoke-RegistryOperationsFromRegFile -RegFilePath 'feature.reg' } |
-            Should -Throw "Registry fallback import could not apply any operations in 'feature.reg' because all 2 operation(s) were blocked*"
+            Should -Throw "备用导入方式也无法应用 'feature.reg' 中的任何操作，全部 2 项操作均被访问权限限制阻止。*"
     }
 }
 
@@ -129,8 +129,8 @@ Describe 'Invoke-WithLoadedRestoreHive' {
     }
 
     It 'rejects <Case>' -ForEach @(
-        @{ Case = 'an empty user target'; Target = 'User:'; ExpectedError = 'Invalid backup target format for user restore.' }
-        @{ Case = 'a current-user target'; Target = 'CurrentUser:Alice'; ExpectedError = "Unsupported backup target 'CurrentUser:Alice'." }
+        @{ Case = 'an empty user target'; Target = 'User:'; ExpectedError = '用户恢复的备份目标格式无效。' }
+        @{ Case = 'a current-user target'; Target = 'CurrentUser:Alice'; ExpectedError = "不支持的备份目标：'CurrentUser:Alice'。" }
     ) {
         { Invoke-WithLoadedRestoreHive -Target $Target -ScriptBlock {} } | Should -Throw $ExpectedError
     }
@@ -138,8 +138,8 @@ Describe 'Invoke-WithLoadedRestoreHive' {
 
 Describe 'Restore-RegistryKeySnapshot - validation' {
     It 'rejects <Case> before registry mutation' -ForEach @(
-        @{ Case = 'an unsupported snapshot path'; Path = 'HKCU\Software'; ExpectedError = 'Unsupported registry path in backup:*' }
-        @{ Case = 'a root-level snapshot path'; Path = 'HKEY_CURRENT_USER'; ExpectedError = 'Unsupported root-level registry path in backup:*' }
+        @{ Case = 'an unsupported snapshot path'; Path = 'HKCU\Software'; ExpectedError = '备份中的注册表路径不受支持：*' }
+        @{ Case = 'a root-level snapshot path'; Path = 'HKEY_CURRENT_USER'; ExpectedError = '备份中的根级注册表路径不受支持：*' }
     ) {
         { Restore-RegistryKeySnapshot -Snapshot ([PSCustomObject]@{ Path = $Path; Exists = $true }) } |
             Should -Throw $ExpectedError
@@ -164,7 +164,7 @@ Describe 'Invoke-RegistrySetValueOperation' {
         Mock Convert-RegOperationToValueKind { throw 'conversion should not run' }
 
         { Invoke-RegistrySetValueOperation -Operation ([PSCustomObject]@{ KeyPath = 'HKCU\Software\Test' }) -KeyInfo ([PSCustomObject]@{ Key = $null }) } |
-            Should -Throw "Unable to open or create registry key*"
+            Should -Throw "无法打开或创建注册表项*"
         Should -Invoke Convert-RegOperationToValueKind -Times 0 -Exactly
     }
 }
@@ -175,6 +175,6 @@ Describe 'Write-RegistryOperationAccessDeniedWarning' {
 
         Write-RegistryOperationAccessDeniedWarning -Operation ([PSCustomObject]@{ OperationType = 'DeleteValue'; KeyPath = 'HKCU\Software\Test'; ValueName = $null }) -ExceptionMessage 'denied'
 
-        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -match "value '\(Default\)'" -and $Message -match 'denied' }
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -match "值 '（默认）'" -and $Message -match 'denied' }
     }
 }

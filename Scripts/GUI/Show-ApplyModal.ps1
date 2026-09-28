@@ -1,4 +1,4 @@
-<#
+﻿<#
     .SYNOPSIS
         Displays the modal progress window while selected changes are applied.
 
@@ -137,7 +137,7 @@ function Show-ApplyModal {
             $script:ApplyCompletionPanel.Visibility = 'Visible'
             
             if ($script:CancelRequested) {
-                Write-Warning "Script execution was cancelled by the user. Any remaining changes were not applied."
+                Write-Warning "用户已取消操作，其余更改均未执行。"
 
                 $script:ApplyCompletionIconEl.Text = [char]0xE7BA
                 $script:ApplyCompletionIconEl.Foreground = [System.Windows.Media.SolidColorBrush]::new([System.Windows.Media.ColorConverter]::ConvertFromString("#e8912d"))
@@ -145,7 +145,7 @@ function Show-ApplyModal {
                 $script:ApplyCompletionMessageEl.Text = Get-Translation -Key 'ApplyCompletionMessageCancelled'
             } elseif ($failureCount -gt 0 -or $appRemovalVerificationUnavailable) {
                 if ($failureCount -gt 0) {
-                    Write-Host "Script completed with $failureCount error(s)."
+                    Write-Host "脚本已结束，共有 $failureCount 个错误。"
                 }
 
                 $script:ApplyCompletionIconEl.Text = [char]0xE7BA
@@ -159,7 +159,7 @@ function Show-ApplyModal {
                     $script:ApplyCompletionMessageEl.Text = Get-Translation -Key 'ApplyCompletionMessageFailures' -Count $failureCount -FormatArgs @($failureCount)
                 }
             } else {
-                Write-Host "All changes have been applied successfully!"
+                Write-Host "所有更改均已成功应用！"
 
                 $script:ApplyCompletionTitleEl.Text = Get-Translation -Key 'ApplyCompletionTitleSuccess'
 
@@ -187,7 +187,7 @@ function Show-ApplyModal {
             $applyWindow.Dispatcher.Invoke([System.Windows.Threading.DispatcherPriority]::Render, [action]{})
         }
         catch {
-            Write-Host "Error: $($_.Exception.Message)"
+            Write-Host "错误：$($_.Exception.Message)"
             $script:ApplyInProgressPanel.Visibility = 'Collapsed'
             $script:ApplyCompletionPanel.Visibility = 'Visible'
             $script:ApplyCompletionIconEl.Text = [char]0xEA39

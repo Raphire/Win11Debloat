@@ -1,4 +1,4 @@
-<#
+﻿<#
     .SYNOPSIS
         Maps an internal import/export category ID ('Applications', 'System Tweaks',
         'Deployment Settings') to its Chrome.json translation key.
@@ -458,7 +458,7 @@ function Export-Configuration {
 
     $categories = Show-ImportExportConfigWindow -Owner $Owner -UsesDarkMode $UsesDarkMode -Title (Get-Translation -Key 'ImportExportExportTitle') -Prompt (Get-Translation -Key 'ImportExportExportPrompt') -DisabledCategories $disabledCategories -CategoryDetails $categoryDetails -ActionLabel (Get-Translation -Key 'ImportExportExportActionLabel')
     if (-not $categories) {
-        Write-Host 'Export canceled.'
+        Write-Host '已取消导出。'
         return
     }
 
@@ -477,29 +477,29 @@ function Export-Configuration {
     # Show native save-file dialog
     $saveDialog = New-Object Microsoft.Win32.SaveFileDialog
     $saveDialog.Title = Get-Translation -Key 'ImportExportSelectExportFileDialogTitle'
-    $saveDialog.Filter = 'JSON files (*.json)|*.json|All files (*.*)|*.*'
+    $saveDialog.Filter = 'JSON 文件 (*.json)|*.json|所有文件 (*.*)|*.*'
     $saveDialog.DefaultExt = '.json'
     $saveDialog.FileName = "Win11Debloat-Config-$(Get-Date -Format 'yyyyMMdd').json"
 
     if ($saveDialog.ShowDialog($Owner) -ne $true) {
-        Write-Host 'Export save dialog canceled.'
+        Write-Host '已取消导出文件的保存。'
         return
     }
 
-    Write-Host "Exporting configuration to '$($saveDialog.FileName)'... (Categories: $($categories -join ', '))"
+    Write-Host "正在将配置导出到 '$($saveDialog.FileName)'……（类别：$(($categories | ForEach-Object { Get-Translation -Key (Get-ImportExportCategoryLabelKey -Category $_) }) -join '、')）"
 
     if ($script:Params.ContainsKey("WhatIf")) {
-        Write-Host "[WhatIf] Export configuration to '$($saveDialog.FileName)'" -ForegroundColor Cyan
+        Write-Host "[模拟运行] 将配置导出到 '$($saveDialog.FileName)'。" -ForegroundColor Cyan
         Show-MessageBox -Message (Get-Translation -Key 'ImportExportWhatIfExportMessage') -Title (Get-Translation -Key 'ImportExportExportTitle') -Button 'OK' -Icon 'Information' | Out-Null
         return
     }
 
     if (Save-ToFile -Config $config -FilePath $saveDialog.FileName) {
-        Write-Host "Configuration exported successfully: $($saveDialog.FileName)"
+        Write-Host "配置已成功导出：$($saveDialog.FileName)"
         Show-MessageBox -Message (Get-Translation -Key 'ImportExportExportSuccessMessage') -Title (Get-Translation -Key 'ImportExportExportTitle') -Button 'OK' -Icon 'Information' | Out-Null
     }
     else {
-        Write-Error "Failed to export configuration to '$($saveDialog.FileName)'"
+        Write-Error "无法将配置导出到 '$($saveDialog.FileName)'。"
         Show-MessageBox -Message (Get-Translation -Key 'ImportExportExportFailedMessage') -Title (Get-Translation -Key 'ErrorTitle') -Button 'OK' -Icon 'Error' | Out-Null
     }
 }
@@ -523,33 +523,33 @@ function Import-Configuration {
     # Show native open-file dialog
     $openDialog = New-Object Microsoft.Win32.OpenFileDialog
     $openDialog.Title = Get-Translation -Key 'ImportExportSelectImportFileDialogTitle'
-    $openDialog.Filter = 'JSON files (*.json)|*.json|All files (*.*)|*.*'
+    $openDialog.Filter = 'JSON 文件 (*.json)|*.json|所有文件 (*.*)|*.*'
     $openDialog.DefaultExt = '.json'
 
     if ($openDialog.ShowDialog($Owner) -ne $true) {
-        Write-Host 'Import file dialog canceled.'
+        Write-Host '已取消选择导入文件。'
         return
     }
 
-    Write-Host "Importing configuration from '$($openDialog.FileName)'..."
+    Write-Host "正在从 '$($openDialog.FileName)' 导入配置……"
 
     $config = Import-JsonFile -filePath $openDialog.FileName -expectedVersion '1.0'
     if (-not $config) {
-        Write-Error "Failed to read configuration file '$($openDialog.FileName)'"
+        Write-Error "读取配置文件 '$($openDialog.FileName)' 失败。"
         Show-MessageBox -Message (Get-Translation -Key 'ImportExportReadFailedMessage') -Title (Get-Translation -Key 'ImportExportInvalidConfigTitle') -Button 'OK' -Icon 'Error' | Out-Null
         return
     }
 
     $consistencyError = Test-ConfigConsistency -Config $config
     if ($consistencyError) {
-        Write-Error "Invalid configuration file '$($openDialog.FileName)': $consistencyError"
+        Write-Error "配置文件 '$($openDialog.FileName)' 无效：$consistencyError"
         Show-MessageBox -Message (Get-Translation -Key 'ImportExportInvalidConfigMessage' -FormatArgs @($consistencyError)) -Title (Get-Translation -Key 'ImportExportInvalidConfigTitle') -Button 'OK' -Icon 'Error' | Out-Null
         return
     }
 
     $availableCategories = Get-AvailableImportExportCategories -Config $config
 
-    Write-Host "Available categories in config: $($availableCategories -join ', ')"
+    Write-Host "配置中的可用类别：$(($availableCategories | ForEach-Object { Get-Translation -Key (Get-ImportExportCategoryLabelKey -Category $_) }) -join '、')"
 
     $appCount = @($config.Apps | Where-Object { $_ -is [string] -and -not [string]::IsNullOrWhiteSpace($_) }).Count
     $tweakCount = @($config.Tweaks | Where-Object { $_ -and $_.Name -and $_.Value -eq $true }).Count
@@ -557,7 +557,7 @@ function Import-Configuration {
 
     $categories = Show-ImportExportConfigWindow -Owner $Owner -UsesDarkMode $UsesDarkMode -Title (Get-Translation -Key 'ImportExportImportTitle') -Prompt (Get-Translation -Key 'ImportExportImportPrompt') -Categories $availableCategories -CategoryDetails $categoryDetails -ActionLabel (Get-Translation -Key 'ImportExportImportActionLabel')
     if (-not $categories) {
-        Write-Host 'Import canceled.'
+        Write-Host '已取消导入。'
         return
     }
 
@@ -569,7 +569,7 @@ function Import-Configuration {
             Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
         )
 
-        Write-Host "Importing $($appIds.Count) app selection(s)."
+        Write-Host "正在导入 $($appIds.Count) 个应用选择项。"
         Set-ImportedApplications -AppsPanel $AppsPanel -AppIds $appIds
         
         if ($OnAppsImported) { 
@@ -578,15 +578,15 @@ function Import-Configuration {
     }
     if ($categories -contains 'System Tweaks' -and $config.Tweaks) {
         $tweakCount = @($config.Tweaks).Count
-        Write-Host "Importing $tweakCount tweak(s)."
+        Write-Host "正在导入 $tweakCount 项系统调整。"
         Set-ImportedTweakSettings -Owner $Owner -UiControlMappings $UiControlMappings -TweakSettings @($config.Tweaks)
     }
     if ($categories -contains 'Deployment Settings' -and $config.Deployment) {
-        Write-Host 'Importing deployment settings.'
+        Write-Host '正在导入部署设置。'
         Set-ImportedDeploymentSettings -Owner $Owner -UserSelectionCombo $UserSelectionCombo -OtherUsernameTextBox $OtherUsernameTextBox -DeploymentSettings @($config.Deployment)
     }
 
-    Write-Host 'Configuration imported successfully.'
+    Write-Host '配置已成功导入。'
     Show-MessageBox -Message (Get-Translation -Key 'ImportExportImportSuccessMessage') -Title (Get-Translation -Key 'ImportExportImportTitle') -Button 'OK' -Icon 'Information' | Out-Null
 
     if ($OnImportCompleted) {

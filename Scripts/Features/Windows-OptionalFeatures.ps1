@@ -1,4 +1,4 @@
-<#
+﻿<#
     .SYNOPSIS
     Enables a Windows optional feature and pipes its output to the console.
 
@@ -11,7 +11,7 @@ function Enable-WindowsFeature {
     )
 
     if ($script:Params.ContainsKey("WhatIf")) {
-        Write-Host "[WhatIf] Enable Windows feature: $FeatureName" -ForegroundColor Cyan
+        Write-Host "[模拟运行] 将启用 Windows 功能：$FeatureName" -ForegroundColor Cyan
         return $true
     }
 
@@ -36,13 +36,13 @@ function Enable-WindowsFeature {
         } -ArgumentList $FeatureName
     }
     catch {
-        Write-Warning "Failed to enable Windows feature '$FeatureName': $($_.Exception.Message)"
+        Write-Warning "启用 Windows 功能 '$FeatureName' 失败：$($_.Exception.Message)"
         return $false
     }
 
     if (-not $result -or -not $result.Success) {
         $details = if ($result -and $result.Error) { ": $($result.Error)" } else { '' }
-        Write-Warning "Failed to enable Windows feature '$FeatureName'$details"
+        Write-Warning "启用 Windows 功能 '$FeatureName' 失败。$details"
         return $false
     }
 
@@ -63,7 +63,7 @@ function Disable-WindowsFeature {
     )
 
     if ($script:Params.ContainsKey("WhatIf")) {
-        Write-Host "[WhatIf] Disable Windows feature: $FeatureName" -ForegroundColor Cyan
+        Write-Host "[模拟运行] 将禁用 Windows 功能：$FeatureName" -ForegroundColor Cyan
         return $true
     }
 
@@ -88,13 +88,13 @@ function Disable-WindowsFeature {
         } -ArgumentList $FeatureName
     }
     catch {
-        Write-Warning "Failed to disable Windows feature '$FeatureName': $($_.Exception.Message)"
+        Write-Warning "禁用 Windows 功能 '$FeatureName' 失败：$($_.Exception.Message)"
         return $false
     }
 
     if (-not $result -or -not $result.Success) {
         $details = if ($result -and $result.Error) { ": $($result.Error)" } else { '' }
-        Write-Warning "Failed to disable Windows feature '$FeatureName'$details"
+        Write-Warning "禁用 Windows 功能 '$FeatureName' 失败。$details"
         return $false
     }
 

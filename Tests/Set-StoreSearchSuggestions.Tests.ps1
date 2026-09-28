@@ -1,4 +1,4 @@
-BeforeAll {
+﻿BeforeAll {
     function Get-UserDirectory { param($userName, $fileName) }
     function Invoke-NonBlocking { param($ScriptBlock, $ArgumentList) }
     function takeown { param([Parameter(ValueFromRemainingArguments)]$Arguments) }
@@ -85,7 +85,7 @@ Describe 'Store-search suggestion all-user operations' {
         Mock Write-Warning {}
 
         Set-StoreSearchSuggestionsDisabledForAllUsers | Should -BeFalse
-        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -match 'no target user profiles' }
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -match '未找到目标用户配置文件' }
     }
 
 }
@@ -152,7 +152,7 @@ Describe 'Set-StoreSearchSuggestionsDisabled' {
         Set-StoreSearchSuggestionsDisabled -StoreAppsDatabase 'C:\Users\Alice\AppData\Local\Packages\store.db' | Should -BeFalse
 
         Should -Invoke Write-Warning -Times 1 -Exactly
-        Should -Invoke Write-Host -Times 0 -Exactly -ParameterFilter { $Object -like 'Disabled Microsoft Store search suggestions*' }
+        Should -Invoke Write-Host -Times 0 -Exactly -ParameterFilter { $Object -like '已为用户*禁用 Microsoft Store 搜索建议*' }
         Should -Invoke Set-Acl -Times 0 -Exactly
     }
 
@@ -167,7 +167,7 @@ Describe 'Set-StoreSearchSuggestionsDisabled' {
         Set-StoreSearchSuggestionsDisabled -StoreAppsDatabase 'C:\Users\Alice\AppData\Local\Packages\store.db'
 
         Should -Invoke Write-Warning -Times 1 -Exactly
-        Should -Invoke Write-Host -Times 0 -Exactly -ParameterFilter { $Object -like 'Disabled Microsoft Store search suggestions*' }
+        Should -Invoke Write-Host -Times 0 -Exactly -ParameterFilter { $Object -like '已为用户*禁用 Microsoft Store 搜索建议*' }
     }
 }
 
@@ -245,6 +245,6 @@ Describe 'Set-StoreSearchSuggestionsEnabled' {
         Mock Write-Warning {}
 
         Set-StoreSearchSuggestionsEnabled -StoreAppsDatabase 'C:\Users\Alice\AppData\Local\Packages\store.db' | Should -BeFalse
-        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -match 'Failed to remove.*database is locked' }
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -match '移除.*失败.*database is locked' }
     }
 }

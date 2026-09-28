@@ -1,4 +1,4 @@
-<#
+﻿<#
     .SYNOPSIS
         Creates and displays the main Win11Debloat window.
 #>
@@ -48,8 +48,8 @@ function Show-MainWindow {
     # ---- Handle unhandled exceptions on the dispatcher thread ----
     [System.Windows.Threading.Dispatcher]::CurrentDispatcher.Add_UnhandledException({
         param($sender, $e)
-        Write-Warning "Unhandled exception in GUI: $($e.Exception.Message)"
-        Write-Warning "Stack trace: $($e.Exception.StackTrace)"
+        Write-Warning "图形界面发生未处理的异常：$($e.Exception.Message)"
+        Write-Warning "调用堆栈：$($e.Exception.StackTrace)"
         $e.Handled = $true
     })
 
@@ -170,7 +170,7 @@ function Show-MainWindow {
             Export-Configuration -Owner $window -UsesDarkMode $usesDarkMode -AppsPanel $appsPanel -UiControlMappings $script:UiControlMappings -UserSelectionCombo $userSelectionCombo -OtherUsernameTextBox $otherUsernameTextBox
         }
         catch {
-            Write-Warning "Export configuration failed: $($_.Exception.Message)"
+            Write-Warning "导出配置失败：$($_.Exception.Message)"
             Show-MessageBox -Owner $window -Message (Get-Translation -Key 'ExportConfigFailedMessage' -FormatArgs @($_.Exception.Message)) -Title (Get-Translation -Key 'ExportConfigFailedTitle') -Button 'OK' -Icon 'Error' | Out-Null
         }
     })
@@ -186,7 +186,7 @@ function Show-MainWindow {
             }
         }
         catch {
-            Write-Warning "Import configuration failed: $($_.Exception.Message)"
+            Write-Warning "导入配置失败：$($_.Exception.Message)"
             Show-MessageBox -Owner $window -Message (Get-Translation -Key 'ImportConfigFailedMessage' -FormatArgs @($_.Exception.Message)) -Title (Get-Translation -Key 'ImportConfigFailedTitle') -Button 'OK' -Icon 'Error' | Out-Null
         }
     })
@@ -206,7 +206,7 @@ function Show-MainWindow {
                 }
             }
             catch {
-                Write-Warning "Restore backup action failed: $($_.Exception.Message)"
+                Write-Warning "恢复备份失败：$($_.Exception.Message)"
                 Show-MessageBox -Owner $window -Message (Get-Translation -Key 'RestoreBackupFailedMessage' -FormatArgs @($_.Exception.Message)) -Title (Get-Translation -Key 'RestoreBackupFailedTitle') -Button 'OK' -Icon 'Error' | Out-Null
             }
         })
@@ -672,7 +672,7 @@ function Show-MainWindow {
 
             $scopeTarget = Get-AppRemovalScopeTarget -AppRemovalScopeCombo $appRemovalScopeCombo -OtherUsernameTextBox $otherUsernameTextBox
             if ([string]::IsNullOrWhiteSpace($scopeTarget)) {
-                Write-Warning 'App removal was cancelled because the selected removal scope is invalid.'
+                Write-Warning '所选移除范围无效，已取消应用移除。'
                 return
             }
 
@@ -707,13 +707,13 @@ function Show-MainWindow {
         }
 
         switch ($userSelectionCombo.SelectedIndex) {
-            0 { Write-Host "Selected user mode: current user ($(Get-UserName))" }
+            0 { Write-Host "已选择用户模式：当前用户（$(Get-UserName)）" }
             1 {
-                Write-Host "Selected user mode: $($otherUsernameTextBox.Text.Trim())"
+                Write-Host "已选择用户模式：$($otherUsernameTextBox.Text.Trim())"
                 Add-Parameter User ($otherUsernameTextBox.Text.Trim())
             }
             2 {
-                Write-Host "Selected user mode: default user profile (Sysprep)"
+                Write-Host "已选择用户模式：默认用户配置文件（Sysprep 系统部署）"
                 Add-Parameter Sysprep
             }
         }
@@ -808,8 +808,8 @@ function Show-MainWindow {
             Invoke-NavigationUpdate
         }
         catch {
-            Write-Warning "Error during GUI initialization: $($_.Exception.Message)"
-            Write-Warning "Stack trace: $($_.Exception.StackTrace)"
+            Write-Warning "初始化图形界面时发生错误：$($_.Exception.Message)"
+            Write-Warning "调用堆栈：$($_.Exception.StackTrace)"
             Show-MessageBox -Message (Get-Translation -Key 'InitializationErrorMessage' -FormatArgs @($_.Exception.Message)) -Title (Get-Translation -Key 'InitializationErrorTitle') -Button 'OK' -Icon 'Error' | Out-Null
         }
     })
@@ -886,7 +886,7 @@ function Show-MainWindow {
         $script:PreloadedAppData = Import-AppDetailsFromJson -OnlyInstalled:$false -InstalledList $null -InitialCheckedFromJson:$false
     }
     catch {
-        Write-Warning "Failed to preload apps list: $_"
+        Write-Warning "预加载应用列表失败：$_"
     }
 
     # ---- Show window ----

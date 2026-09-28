@@ -1,4 +1,4 @@
-<#
+﻿<#
     .SYNOPSIS
         Imports enabled, compatible feature settings from a JSON file into the active parameters.
 #>
@@ -11,7 +11,7 @@ function Import-Settings {
     $settingsJson = Import-JsonFile -filePath $filePath -expectedVersion $expectedVersion
     
     if (-not $settingsJson -or -not $settingsJson.Settings) {
-        throw "Failed to load settings from $(Split-Path $filePath -Leaf)"
+        throw "无法从 $(Split-Path $filePath -Leaf) 加载设置。"
     }
 
     # Get current Windows build version

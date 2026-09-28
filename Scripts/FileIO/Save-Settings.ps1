@@ -1,10 +1,10 @@
-<#
+﻿<#
     .SYNOPSIS
         Saves active feature settings, excluding control parameters, unless running in WhatIf mode.
 #>
 function Save-Settings {
     if ($script:Params.ContainsKey("WhatIf")) {
-        Write-Host "[WhatIf] Save settings to LastUsedSettings.json" -ForegroundColor Cyan
+        Write-Host "[模拟运行] 将设置保存到 LastUsedSettings.json。" -ForegroundColor Cyan
         return
     }
 
@@ -26,6 +26,6 @@ function Save-Settings {
 
     if (-not (Save-ToFile -Config $settings -FilePath $script:SavedSettingsFilePath)) {
         Write-Output ""
-        Write-Host "Error: Failed to save settings to LastUsedSettings.json file" -ForegroundColor Red
+        Write-Host "错误：无法将设置保存到 LastUsedSettings.json 文件。" -ForegroundColor Red
     }
 }

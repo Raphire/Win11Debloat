@@ -1,4 +1,4 @@
-<#
+﻿<#
     .SYNOPSIS
     Replaces the start menu layout for all user profiles.
 
@@ -27,11 +27,11 @@ function Replace-StartMenuForAllUsers {
         [string]$startMenuTemplate = "$script:AssetsPath\Start\start2.bin"
     )
 
-    Write-Host "> Removing all pinned apps from the start menu for all users..."
+    Write-Host "> 正在为所有用户移除开始菜单中的全部固定应用……"
 
     # Check if template bin file exists
     if (-not (Test-Path $startMenuTemplate)) {
-        Write-Host "Error: Unable to clear start menu, start2.bin file missing from script folder" -ForegroundColor Red
+        Write-Host "错误：程序文件夹中缺少 start2.bin，无法清空开始菜单。" -ForegroundColor Red
         return $false
     }
 
@@ -51,7 +51,7 @@ function Replace-StartMenuForAllUsers {
     $defaultStartMenuPath = Get-UserDirectory -userName "Default" -fileName "AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState" -exitIfPathNotFound $false
 
     if ($script:Params.ContainsKey("WhatIf")) {
-        Write-Host "[WhatIf] Replace Start Menu for Default user profile with template $startMenuTemplate" -ForegroundColor Cyan
+        Write-Host "[模拟运行] 将使用模板 $startMenuTemplate 替换默认用户配置文件的开始菜单。" -ForegroundColor Cyan
         return $true
     }
 
@@ -59,10 +59,10 @@ function Replace-StartMenuForAllUsers {
     if (-not (Test-Path $defaultStartMenuPath)) {
         try {
             New-Item $defaultStartMenuPath -ItemType Directory -Force -ErrorAction Stop | Out-Null
-            Write-Host "Created LocalState folder for default user profile"
+            Write-Host "已为默认用户配置文件创建 LocalState 文件夹。"
         }
         catch {
-            Write-Warning "Failed to create the Default profile Start Menu directory: $($_.Exception.Message)"
+            Write-Warning "创建默认用户配置文件的开始菜单目录失败：$($_.Exception.Message)"
             return $false
         }
     }
@@ -72,7 +72,7 @@ function Replace-StartMenuForAllUsers {
         $success = $false
     }
     else {
-        Write-Host "Replaced start menu for the default user profile"
+        Write-Host "已替换默认用户配置文件的开始菜单。"
     }
     return $success
 }
@@ -115,19 +115,19 @@ function Replace-StartMenu {
 
     # Check if template bin file exists
     if (-not (Test-Path $startMenuTemplate)) {
-        Write-Host "Error: Unable to replace start menu, template file not found" -ForegroundColor Red
+        Write-Host "错误：未找到模板文件，无法替换开始菜单。" -ForegroundColor Red
         return $false
     }
 
     if ([IO.Path]::GetExtension($startMenuTemplate) -ne ".bin") {
-        Write-Host "Error: Unable to replace start menu, template file is not a valid .bin file" -ForegroundColor Red
+        Write-Host "错误：模板不是有效的 .bin 文件，无法替换开始菜单。" -ForegroundColor Red
         return $false
     }
 
     $userName = Get-StartMenuUserNameFromPath -StartMenuBinFile $startMenuBinFile
 
     if ($script:Params.ContainsKey("WhatIf")) {
-        Write-Host "[WhatIf] Replace Start Menu for user $userName with template $startMenuTemplate" -ForegroundColor Cyan
+        Write-Host "[模拟运行] 将使用模板 $startMenuTemplate 替换用户 $userName 的开始菜单。" -ForegroundColor Cyan
         return $true
     }
 
@@ -140,10 +140,10 @@ function Replace-StartMenu {
         if (Test-Path $startMenuBinFile) {
             # Backup current start menu file
             Copy-Item -Path $startMenuBinFile -Destination $backupBinFile -Force -ErrorAction Stop
-            Write-Verbose "Start menu backup for user $userName saved to $backupFileName"
+            Write-Verbose "用户 $userName 的开始菜单备份已保存到 $backupFileName"
         }
         else {
-            Write-Host "Unable to find original start2.bin file for user $userName, no backup was created for this user" -ForegroundColor Yellow
+            Write-Host "未找到用户 $userName 原有的 start2.bin 文件，未为该用户创建备份。" -ForegroundColor Yellow
             New-Item -ItemType File -Path $startMenuBinFile -Force -ErrorAction Stop | Out-Null
         }
 
@@ -151,11 +151,11 @@ function Replace-StartMenu {
         Copy-Item -Path $startMenuTemplate -Destination $startMenuBinFile -Force -ErrorAction Stop
     }
     catch {
-        Write-Warning "Failed to replace Start Menu for user ${userName}: $($_.Exception.Message)"
+        Write-Warning "替换用户 ${userName} 的开始菜单失败：$($_.Exception.Message)"
         return $false
     }
 
-    Write-Host "Replaced start menu for user $userName"
+    Write-Host "已替换用户 $userName 的开始菜单。"
     return $true
 }
 
@@ -324,7 +324,7 @@ function Restore-StartMenuFromBackup {
     }
 
     if ($script:Params.ContainsKey("WhatIf")) {
-        Write-Host "[WhatIf] Restore start menu for user $userName from backup $backupBinFile" -ForegroundColor Cyan
+        Write-Host "[模拟运行] 将从备份 $backupBinFile 恢复用户 $userName 的开始菜单。" -ForegroundColor Cyan
         return [PSCustomObject]@{
             UserName = $userName
             Result = $true
@@ -387,7 +387,7 @@ function Restore-StartMenu {
     $targetUserName = $env:USERNAME
     $startMenuBinFile = "$env:LOCALAPPDATA\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState\start2.bin"
 
-    Write-Host "Restoring start menu for user $targetUserName from backup..."
+    Write-Host "正在从备份恢复用户 $targetUserName 的开始菜单……"
 
     return Restore-StartMenuFromBackup -StartMenuBinFile $startMenuBinFile -BackupFilePath $BackupFilePath
 }
@@ -423,7 +423,7 @@ function Restore-StartMenuForAllUsers {
     $usersStartMenuPaths = Get-ChildItem -Path $userPathString -ErrorAction SilentlyContinue
     $results = @()
 
-    Write-Host "Restoring start menu for all users from backup..."
+    Write-Host "正在从备份恢复所有用户的开始菜单……"
 
     foreach ($startMenuPath in $usersStartMenuPaths) {
         $startMenuBinFile = Join-Path $startMenuPath.FullName 'start2.bin'
@@ -436,7 +436,7 @@ function Restore-StartMenuForAllUsers {
         $defaultStartMenuBinFile = Join-Path $defaultStartMenuPath 'start2.bin'
         if (Test-Path -LiteralPath $defaultStartMenuBinFile) {
             if ($script:Params.ContainsKey("WhatIf")) {
-                Write-Host "[WhatIf] Remove start2.bin for the default user profile" -ForegroundColor Cyan
+                Write-Host "[模拟运行] 将移除默认用户配置文件中的 start2.bin。" -ForegroundColor Cyan
                 $results += [PSCustomObject]@{
                     UserName = 'Default'
                     Result   = $true

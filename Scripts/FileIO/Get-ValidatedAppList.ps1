@@ -1,4 +1,4 @@
-# Returns a validated list of apps based on the provided appsList and the supported apps from Apps.json
+﻿# Returns a validated list of apps based on the provided appsList and the supported apps from Apps.json
 function Get-ValidatedAppList {
     param (
         $appsList
@@ -13,7 +13,7 @@ function Get-ValidatedAppList {
         $appString = $app.Trim('*')
 
         if ($supportedAppsList -notcontains $appString) {
-            Write-Host "Removal of app '$appString' is not supported and will be skipped" -ForegroundColor Yellow
+            Write-Host "不支持移除应用 '$appString'，将跳过该应用。" -ForegroundColor Yellow
             continue
         }
 

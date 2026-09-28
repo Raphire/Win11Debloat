@@ -1,4 +1,4 @@
-function Test-UserProfileExists {
+﻿function Test-UserProfileExists {
     param (
         [string]$userName
     )
@@ -35,7 +35,7 @@ function Test-UserProfileExists {
 
     }
     catch {
-        Write-Error "Something went wrong when trying to find the user directory path for user $lookupName. Please ensure the user exists on this system"
+        Write-Error "查找用户 $lookupName 的目录时发生错误，请确认该用户存在于此系统中。"
     }
 
     return $false

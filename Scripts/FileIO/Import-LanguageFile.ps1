@@ -1,4 +1,4 @@
-<#
+﻿<#
     .SYNOPSIS
         Resolves a language code to an available Config/Languages folder, or falls back to en-US.
 #>
@@ -68,12 +68,12 @@ function Import-LanguageFile {
     $content = Import-LanguageContent -LanguageFolder $resolvedFolder -LanguagesPath $LanguagesPath
 
     if (-not $content -and $resolvedFolder -ne 'en-US') {
-        Write-Warning "Failed to load language '$resolvedFolder', falling back to en-US."
+        Write-Warning "加载语言 '$resolvedFolder' 失败，将回退到英语（en-US）。"
         $content = Import-LanguageContent -LanguageFolder 'en-US' -LanguagesPath $LanguagesPath
     }
 
     if (-not $content) {
-        Write-Error "Unable to load the en-US language files. The GUI cannot continue without them."
+        Write-Error "无法加载英语（en-US）语言文件，图形界面无法继续运行。"
         return $null
     }
 
@@ -234,7 +234,7 @@ function Get-Translation {
             return $resolved -f $FormatArgs
         }
         catch {
-            Write-Warning "Translation '$Key' has a placeholder mismatch with its format arguments: $($_.Exception.Message)"
+            Write-Warning "翻译条目 '$Key' 的占位符与格式参数不匹配：$($_.Exception.Message)"
             return $resolved
         }
     }
@@ -367,7 +367,7 @@ function Test-LanguageKeyCoverage {
     $target = Import-LanguageContent -LanguageFolder $resolvedLanguageCode -LanguagesPath $LanguagesPath
 
     if (-not $baseline -or -not $target) {
-        Write-Error "Unable to load language content for coverage comparison ('$BaselineLanguageCode' vs '$resolvedLanguageCode')."
+        Write-Error "无法加载语言内容进行完整性比较（'$BaselineLanguageCode' 与 '$resolvedLanguageCode'）。"
         return $null
     }
 
@@ -421,7 +421,7 @@ function ConvertTo-LocalizedXaml {
     $result = [System.Text.RegularExpressions.Regex]::Replace($Xaml, '%LANG:([A-Za-z0-9_]+)%', $evaluator)
 
     if ($missingKeys.Count -gt 0) {
-        throw "Unresolved localization marker(s) in XAML, key(s) not found in any language: $($missingKeys -join ', ')"
+        throw "XAML 中存在未解析的语言标记，所有语言中均未找到以下键：$($missingKeys -join ', ')"
     }
 
     return $result

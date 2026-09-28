@@ -1,4 +1,4 @@
-# Runs a scriptblock in a background PowerShell runspace while keeping the UI responsive.
+﻿# Runs a scriptblock in a background PowerShell runspace while keeping the UI responsive.
 # In GUI mode, the work executes on a separate thread and the UI thread pumps messages (~60fps).
 # In CLI mode, the scriptblock runs directly in the current session.
 function Invoke-NonBlocking {
@@ -29,7 +29,7 @@ function Invoke-NonBlocking {
             while (-not $handle.IsCompleted) {
                 if ($stopwatch -and $stopwatch.Elapsed.TotalSeconds -ge $TimeoutSeconds) {
                     $ps.Stop()
-                    throw "Operation timed out after $TimeoutSeconds seconds"
+                    throw "操作已超时，等待时间为 $TimeoutSeconds 秒。"
                 }
                 Invoke-DoEvents
                 Start-Sleep -Milliseconds 16
@@ -39,7 +39,7 @@ function Invoke-NonBlocking {
             # CLI mode with timeout: block until completion or timeout
             if (-not $handle.AsyncWaitHandle.WaitOne($TimeoutSeconds * 1000)) {
                 $ps.Stop()
-                throw "Operation timed out after $TimeoutSeconds seconds"
+                throw "操作已超时，等待时间为 $TimeoutSeconds 秒。"
             }
         }
 

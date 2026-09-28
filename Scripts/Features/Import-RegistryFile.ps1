@@ -1,4 +1,4 @@
-<#
+﻿<#
     .SYNOPSIS
     Imports and executes a registry file.
 
@@ -18,8 +18,8 @@ function Import-RegistryFile {
         $regFilePath = Get-RegistryFilePathForFeature -RegistryKey $path
 
         if (-not (Test-Path $regFilePath)) {
-            $errorMessage = "Unable to find registry file: $path ($regFilePath)"
-            Write-Host "Error: $errorMessage" -ForegroundColor Red
+            $errorMessage = "未找到注册表文件：$path（$regFilePath）"
+            Write-Host "错误：$errorMessage" -ForegroundColor Red
             return $false
         }
 
@@ -38,7 +38,7 @@ function Import-RegistryFile {
             if ($usePowerShellFallbackOnly) {
                 $fallbackSucceeded = Invoke-RegistryOperationsFromRegFile -RegFilePath $targetRegFilePath
                 if ($fallbackSucceeded) {
-                    Write-Host "The operation completed successfully via PowerShell registry writer."
+                    Write-Host "已通过 PowerShell 注册表写入器成功完成操作。"
                 }
                 return $fallbackSucceeded
             }
@@ -62,7 +62,7 @@ function Import-RegistryFile {
                     $result.ExitCode = $importExitCode
 
                     if ($importExitCode -ne 0) {
-                        throw "Registry import failed with exit code $importExitCode for '$targetRegFilePath'"
+                        throw "导入注册表文件 '$targetRegFilePath' 失败，退出代码为 $importExitCode。"
                     }
                 }
                 catch {
@@ -91,11 +91,11 @@ function Import-RegistryFile {
             }
 
             if (-not $hasSuccess) {
-                $details = if ($regResult.Error) { $regResult.Error } else { "Exit code: $($regResult.ExitCode)" }
-                Write-Warning "reg import failed for '$path'. Falling back to PowerShell registry writer. Details: $details"
+                $details = if ($regResult.Error) { $regResult.Error } else { "退出代码：$($regResult.ExitCode)" }
+                Write-Warning "reg import 导入 '$path' 失败，将改用 PowerShell 注册表写入器。详情：$details"
                 $fallbackSucceeded = Invoke-RegistryOperationsFromRegFile -RegFilePath $targetRegFilePath
                 if ($fallbackSucceeded) {
-                    Write-Host "The operation completed successfully via PowerShell registry writer."
+                    Write-Host "已通过 PowerShell 注册表写入器成功完成操作。"
                 }
                 return $fallbackSucceeded
             }

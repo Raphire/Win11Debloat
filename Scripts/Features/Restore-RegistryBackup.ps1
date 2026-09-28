@@ -1,4 +1,4 @@
-<#
+﻿<#
     .SYNOPSIS
         Loads a registry backup from a JSON file and normalizes its contents.
 
@@ -148,7 +148,7 @@ function ConvertTo-NormalizedRegistryBackup {
     }
 
     if ($errors.Count -gt 0) {
-        Write-Error "Backup validation failed: $($errors -join ' ')"
+        Write-Error "备份校验失败：$($errors -join ' ')"
         if ($errors.Count -eq 1) {
             throw (Get-Translation -Key 'BackupValidationSingleError' -FormatArgs @($errors[0]))
         }
@@ -196,29 +196,29 @@ function Restore-RegistryBackupState {
     $friendlyTarget = Get-FriendlyRegistryBackupTarget -Target ([string]$Backup.Target)
 
     if ($script:Params.ContainsKey("WhatIf")) {
-        Write-Host "[WhatIf] Restore registry backup for $friendlyTarget" -ForegroundColor Cyan
+        Write-Host "[模拟运行] 将恢复 $friendlyTarget 的注册表备份。" -ForegroundColor Cyan
         return [PSCustomObject]@{ Result = $true }
     }
 
     $restoreAction = {
         param($normalizedBackup)
 
-        Write-Host "Applying registry restore from $(@($normalizedBackup.RegistryKeys).Count) root snapshot(s)."
+        Write-Host "正在从 $(@($normalizedBackup.RegistryKeys).Count) 个根注册表快照执行恢复。"
         foreach ($rootSnapshot in @($normalizedBackup.RegistryKeys)) {
             Restore-RegistryKeySnapshot -Snapshot $rootSnapshot
         }
     }
 
-    Write-Host "Starting restore for $friendlyTarget."
+    Write-Host "正在为 $friendlyTarget 开始恢复。"
 
     if ($Backup.Target -eq 'DefaultUserProfile' -or $Backup.Target -like 'User:*') {
-        Write-Host "Restore requires loading target user hive."
+        Write-Host "恢复操作需要加载目标用户的注册表配置单元。"
         Invoke-WithLoadedRestoreHive -Target $Backup.Target -ScriptBlock $restoreAction -ArgumentObject $Backup
-        Write-Host "Restore completed for $friendlyTarget."
+        Write-Host "已完成 $friendlyTarget 的恢复。"
         return [PSCustomObject]@{ Result = $true }
     }
 
     & $restoreAction $Backup
-    Write-Host "Restore completed for $friendlyTarget."
+    Write-Host "已完成 $friendlyTarget 的恢复。"
     return [PSCustomObject]@{ Result = $true }
 }

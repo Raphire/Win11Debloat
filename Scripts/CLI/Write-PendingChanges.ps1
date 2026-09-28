@@ -1,4 +1,4 @@
-<#
+﻿<#
     .SYNOPSIS
         Prints a summary of all pending changes to the console for the user to review.
 
@@ -13,7 +13,7 @@
         Enter, giving them an opportunity to review and cancel via Ctrl+C.
 #>
 function Write-PendingChanges {
-    Write-Output "Win11Debloat will make the following changes:"
+    Write-Output "Win11Debloat 将执行以下更改："
 
     if ($script:Params['CreateRestorePoint']) {
         Write-Output "- $($script:Features['CreateRestorePoint'].Label)"
@@ -35,12 +35,12 @@ function Write-PendingChanges {
                 $appsList = Generate-AppsList
 
                 if ($appsList.Count -eq 0) {
-                    Write-Host "No valid apps were selected for removal" -ForegroundColor Yellow
+                    Write-Host "未选择任何可移除的有效应用。" -ForegroundColor Yellow
                     Write-Output ""
                     continue
                 }
 
-                Write-Output "- Remove $($appsList.Count) apps:"
+                Write-Output "- 移除 $($appsList.Count) 个应用："
                 Write-Host $appsList -ForegroundColor DarkGray
                 continue
             }
@@ -54,6 +54,6 @@ function Write-PendingChanges {
 
     Write-Output ""
     Write-Output ""
-    Write-Output "Press enter to execute the script or press CTRL+C to quit..."
+    Write-Output "按回车键执行，或按 Ctrl+C 退出……"
     Read-Host | Out-Null
 }

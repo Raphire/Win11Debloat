@@ -1,4 +1,4 @@
-function Get-NormalizedRegistryValueName {
+﻿function Get-NormalizedRegistryValueName {
     param(
         [AllowNull()]
         $ValueName
@@ -51,7 +51,7 @@ function Convert-RegOperationToValueKind {
             return @{ Name = $valueName; Kind = [Microsoft.Win32.RegistryValueKind]::MultiString; Value = [string[]]@($Operation.ValueData) }
         }
         default {
-            throw "Unsupported value type '$valueType' while applying reg operation for '$operationKeyPath'"
+            throw "对 '$operationKeyPath' 应用注册表操作时遇到不受支持的值类型 '$valueType'。"
         }
     }
 }
@@ -66,12 +66,12 @@ function Get-RegistryKeyForOperation {
 
     $parts = Split-RegistryPath -path $RegistryPath
     if (-not $parts) {
-        throw "Unsupported registry path: $RegistryPath"
+        throw "不支持的注册表路径：$RegistryPath"
     }
 
     $rootKey = Get-RegistryRootKey -hiveName $parts.Hive
     if (-not $rootKey) {
-        throw "Unsupported registry hive '$($parts.Hive)' in path '$RegistryPath'"
+        throw "路径 '$RegistryPath' 中的注册表配置单元 '$($parts.Hive)' 不受支持。"
     }
 
     $subKeyPath = $parts.SubKey
@@ -103,8 +103,8 @@ function Invoke-RegistryDeleteValueOperation {
 
     if ($null -eq $KeyInfo.Key) {
         $valueName = Get-NormalizedRegistryValueName -ValueName $Operation.ValueName
-        $displayValueName = if ([string]::IsNullOrEmpty($valueName)) { '(Default)' } else { $valueName }
-        Write-Verbose "Unable to find or open key '$($Operation.KeyPath)' and value '$displayValueName'"
+        $displayValueName = if ([string]::IsNullOrEmpty($valueName)) { '（默认）' } else { $valueName }
+        Write-Verbose "无法找到或打开注册表项 '$($Operation.KeyPath)' 及值 '$displayValueName'。"
         return
     }
 
@@ -126,7 +126,7 @@ function Invoke-RegistrySetValueOperation {
     )
 
     if ($null -eq $KeyInfo.Key) {
-        throw [System.UnauthorizedAccessException]::new("Unable to open or create registry key '$($Operation.KeyPath)'")
+        throw [System.UnauthorizedAccessException]::new("无法打开或创建注册表项 '$($Operation.KeyPath)'。")
     }
 
     try {
@@ -151,12 +151,12 @@ function Write-RegistryOperationAccessDeniedWarning {
 
     if ($operationType -eq 'SetValue' -or $operationType -eq 'DeleteValue') {
         $valueName = Get-NormalizedRegistryValueName -ValueName $Operation.ValueName
-        $displayValueName = if ([string]::IsNullOrEmpty($valueName)) { '(Default)' } else { $valueName }
-        Write-Warning "Skipping operation '$operationType' on key '$keyPath' value '$displayValueName' due to access restrictions: $ExceptionMessage"
+        $displayValueName = if ([string]::IsNullOrEmpty($valueName)) { '（默认）' } else { $valueName }
+        Write-Warning "访问权限受限，跳过注册表项 '$keyPath'、值 '$displayValueName' 的操作 '$operationType'：$ExceptionMessage"
         return
     }
 
-    Write-Warning "Skipping operation '$operationType' on key '$keyPath' due to access restrictions: $ExceptionMessage"
+    Write-Warning "访问权限受限，跳过注册表项 '$keyPath' 的操作 '$operationType'：$ExceptionMessage"
 }
 
 function Invoke-RegistryOperation {
@@ -186,7 +186,7 @@ function Invoke-RegistryOperation {
             Invoke-RegistrySetValueOperation -Operation $Operation -KeyInfo $keyInfo
         }
         default {
-            throw "Unsupported reg operation type '$($Operation.OperationType)' in '$RegFilePath'"
+            throw "'$RegFilePath' 中的注册表操作类型 '$($Operation.OperationType)' 不受支持。"
         }
     }
 }
@@ -209,7 +209,7 @@ function Invoke-RegistryOperationsFromRegFile {
     $totalOperations = $operations.Count
 
     if ($script:Params.ContainsKey("WhatIf")) {
-        Write-Host "[WhatIf] Apply $totalOperations registry changes from '$RegFilePath'" -ForegroundColor Cyan
+        Write-Host "[模拟运行] 将从 '$RegFilePath' 应用 $totalOperations 项注册表更改。" -ForegroundColor Cyan
         return $true
     }
 
@@ -224,11 +224,11 @@ function Invoke-RegistryOperationsFromRegFile {
     }
 
     if ($totalOperations -gt 0 -and $accessDeniedCount -eq $totalOperations) {
-        throw "Registry fallback import could not apply any operations in '$RegFilePath' because all $accessDeniedCount operation(s) were blocked by access restrictions."
+        throw "备用导入方式也无法应用 '$RegFilePath' 中的任何操作，全部 $accessDeniedCount 项操作均被访问权限限制阻止。"
     }
 
     if ($accessDeniedCount -gt 0) {
-        Write-Warning "Registry fallback import completed with $accessDeniedCount access-restricted operation(s) skipped in '$RegFilePath'."
+        Write-Warning "备用注册表导入已完成，已跳过 '$RegFilePath' 中因访问权限受限而无法执行的 $accessDeniedCount 项操作。"
         return $false
     }
 

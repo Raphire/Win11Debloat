@@ -1,4 +1,4 @@
-<#
+﻿<#
     .SYNOPSIS
         Loads application details from Apps.json.
 
@@ -33,7 +33,7 @@ function Import-AppDetailsFromJson {
         $jsonContent = Get-Content -Path $script:AppsListFilePath -Raw | ConvertFrom-Json
     }
     catch {
-        Write-Error "Failed to read Apps.json: $_"
+        Write-Error "读取 Apps.json 失败：$_"
         return $apps
     }
 

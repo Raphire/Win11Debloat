@@ -1,6 +1,14 @@
 ﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
 
-# Shows the CLI default mode app removal options. Loops until a valid option is selected.
+<#
+    .SYNOPSIS
+        显示默认模式的应用卸载选项，循环读取有效选择。
+    .DESCRIPTION
+        n 或 0 表示不卸载，1 表示默认应用列表，2 表示手动选择。
+        手动选择窗口取消或关闭后重新显示菜单。
+    .OUTPUTS
+        System.String。返回 n、0、1 或 2；手动选择的应用保存在脚本状态中。
+#>
 function Show-CliDefaultModeAppRemovalOptions {
     Write-CliHeader (Get-ConsoleTranslation -Text 'Default Mode')
 

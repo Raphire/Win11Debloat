@@ -217,6 +217,22 @@ function Test-RegistryBackupMatchesSelectedFeatures {
         Appends a translated error to the caller-supplied Errors list for any feature ID that
         isn't in the current catalog, rather than failing the whole validation outright.
 #>
+<#
+    .SYNOPSIS
+        从所选功能中筛选需要注册表备份验证的功能。
+    .DESCRIPTION
+        未知功能 ID 记录到 Errors；跳过空功能或没有注册表文件的功能。
+        撤销模式优先使用 RegistryUndoKey，缺失时使用 RegistryKey。
+        Errors 不是 IList 集合时抛出调用参数错误。
+    .PARAMETER SelectedFeatureIds
+        要检查的功能 ID，可为空数组。
+    .PARAMETER IsUndoFeature
+        是否按撤销操作选择对应注册表文件。
+    .PARAMETER Errors
+        用于追加验证错误的可变 IList 集合。
+    .OUTPUTS
+        System.Object。符合条件的功能对象集合。
+#>
 function Get-SelectedRegistryFeaturesForBackupValidation {
     param(
         [Parameter(Mandatory)]
@@ -232,8 +248,7 @@ function Get-SelectedRegistryFeaturesForBackupValidation {
     if ($null -eq $Errors -or -not ($Errors -is [System.Collections.IList])) {
         throw (Get-ConsoleTranslation -Text 'Get-SelectedRegistryFeaturesForBackupValidation requires Errors to be a mutable list collection.')
     }
-    # Intentionally not localized: this throw signals a programming error (a caller passing the
-    # wrong collection type), not a condition a user's backup file can trigger.
+    # 上述异常表示调用方传入了错误的集合类型；提示已接入控制台翻译。
 
     $selectedRegistryFeatures = New-Object System.Collections.Generic.List[object]
     foreach ($featureId in @($SelectedFeatureIds)) {

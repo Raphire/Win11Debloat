@@ -148,6 +148,19 @@ function Get-DirectRegistrySnapshotChildName {
         Writes only values and descendants represented by the backup. Existing keys are
         retained so their security descriptors and unrelated data are not destroyed.
 #>
+<#
+    .SYNOPSIS
+        将注册表键快照递归恢复到指定根键下。
+    .DESCRIPTION
+        快照标记不存在时删除对应键树；否则创建或打开键，恢复记录的值和子键。
+        不清除快照未列出的其他值或子键。无法打开键时抛出异常，已打开的键会关闭。
+    .PARAMETER Snapshot
+        包含 Path、Exists、Values 和 SubKeys 的键快照。
+    .PARAMETER RootKey
+        用于创建或删除子键的注册表根键对象。
+    .PARAMETER SubKeyPath
+        相对于 RootKey 的目标子键路径。
+#>
 function Restore-RegistryKeySnapshotAtPath {
     param(
         [Parameter(Mandatory)]
@@ -195,6 +208,17 @@ function Restore-RegistryKeySnapshotAtPath {
     .PARAMETER Snapshot
         The saved registry-value state to apply.
 #>
+<#
+    .SYNOPSIS
+        根据快照恢复或删除单个注册表值。
+    .DESCRIPTION
+        Exists 为假时删除该值，否则转换类型和数据后写入；名称为空时操作默认值。
+        删除或写入失败时抛出包含值名和键路径的异常。本函数不关闭传入的键。
+    .PARAMETER RegistryKey
+        已打开、可写的注册表键。
+    .PARAMETER Snapshot
+        包含 Name、Exists、Kind 和 Data 的值快照。
+#>
 function Restore-RegistryValueSnapshot {
     param(
         [Parameter(Mandatory)]
@@ -236,6 +260,14 @@ function Restore-RegistryValueSnapshot {
     .OUTPUTS
         Microsoft.Win32.RegistryValueKind
 #>
+<#
+    .SYNOPSIS
+        将备份中的类型名称转换为注册表值类型。
+    .PARAMETER KindName
+        不区分大小写的枚举名称；空值按 String 处理，无法解析时抛出异常。
+    .OUTPUTS
+        Microsoft.Win32.RegistryValueKind。
+#>
 function Convert-RegistryValueKindFromBackup {
     param(
         [string]$KindName
@@ -262,6 +294,20 @@ function Convert-RegistryValueKindFromBackup {
 
     .PARAMETER Data
         The serialized value data from the backup.
+#>
+<#
+    .SYNOPSIS
+        将备份数据转换为注册表写入所需的类型。
+    .DESCRIPTION
+        DWord 和 QWord 按原始位模式转换为有符号整数，MultiString 和 Binary
+        保持数组不被管道展开。空二进制数据返回空字节数组，非法字节数据抛出异常；
+        其他类型转换为字符串，空数据转换为空字符串。
+    .PARAMETER Kind
+        目标注册表值类型。
+    .PARAMETER Data
+        从备份读取的值数据。
+    .OUTPUTS
+        System.Int32、System.Int64、System.String[]、System.Byte[] 或 System.String。
 #>
 function Convert-RegistryValueDataFromBackup {
     param(

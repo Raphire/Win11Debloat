@@ -1,6 +1,13 @@
 ﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
 
-# Shows the CLI menu options and prompts the user to select one. Loops until a valid option is selected.
+<#
+    .SYNOPSIS
+        显示命令行模式菜单，循环读取有效选项。
+    .DESCRIPTION
+        1 为默认模式，2 为应用卸载模式；仅存在已保存设置时提供并接受选项 3。
+    .OUTPUTS
+        System.String。返回用户选择的 1、2 或 3。
+#>
 function Show-CliMenuOptions {
     Do {
         $ModeSelectionMessage = (Get-ConsoleTranslation -Text 'Please select an option (1/2)')

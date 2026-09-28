@@ -1,6 +1,12 @@
 ﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
 
-# Shows the CLI last used settings from LastUsedSettings.json file, displays pending changes and prompts the user to apply them.
+<#
+    .SYNOPSIS
+        载入上次保存的设置，并在非静默模式显示待执行更改。
+    .DESCRIPTION
+        从 SavedSettingsFilePath 读取版本 1.0 的设置，失败时报告错误并退出。
+        静默模式直接返回；否则显示更改摘要并等待用户确认，本函数不执行更改。
+#>
 function Show-CliLastUsedSettings {
     Write-CliHeader (Get-ConsoleTranslation -Text 'Custom Mode')
 

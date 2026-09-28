@@ -5,6 +5,10 @@
     . "$script:RepoRoot/Scripts/FileIO/Import-AppDetailsFromJson.ps1"
     . "$script:RepoRoot/Scripts/FileIO/Import-AppPresetsFromJson.ps1"
     . "$script:RepoRoot/Scripts/Threading/Invoke-NonBlocking.ps1"
+    <#
+        .SYNOPSIS
+            供这些测试使用的空事件处理函数，不执行任何操作。
+    #>
     function Invoke-DoEvents {}
     $script:LanguagesPath = "$script:RepoRoot/Config/Languages"
     $script:AppsListFilePath = "$script:RepoRoot/Config/Apps.json"

@@ -1,5 +1,21 @@
 ﻿. (Join-Path $PSScriptRoot '../FileIO/获取控制台翻译.ps1')
 
+<#
+    .SYNOPSIS
+        将所选应用及撤销功能的注册表操作合并为备份捕获计划。
+    .DESCRIPTION
+        解析功能对应的注册表文件并合并同一路径的捕获范围。
+        撤销功能无法解析文件路径时跳过；已解析出的应用或撤销文件不存在时抛出异常。
+    .PARAMETER SelectedRegistryFeatures
+        要应用的功能对象数组，通过 RegistryKey 查找文件。
+    .PARAMETER UndoRegistryFeatures
+        要撤销的功能对象数组，通过撤销文件解析函数查找文件。
+    .PARAMETER UseSysprepRegFiles
+        对要应用的功能使用 Sysprep 版本的注册表文件。
+    .OUTPUTS
+        System.Management.Automation.PSCustomObject。每项包含 Path、IncludeSubKeys、
+        CaptureAllValues 和 ValueNames。
+#>
 function Get-RegistryBackupCapturePlans {
     param(
         [object[]]$SelectedRegistryFeatures = @(),
@@ -159,6 +175,23 @@ function Invoke-WithLoadedBackupHive {
     return Invoke-WithTargetUserHive -TargetUserName $targetUserName -ScriptBlock $ScriptBlock -ArgumentObject $ArgumentObject
 }
 
+<#
+    .SYNOPSIS
+        只读捕获指定注册表键的值及可选子键快照。
+    .DESCRIPTION
+        不支持的路径或根键抛出异常；目标键不存在时返回 Exists 为假的空快照。
+        存在时按参数捕获内容，并在 finally 中关闭已打开的键。
+    .PARAMETER KeyPath
+        要捕获的完整注册表键路径。
+    .PARAMETER CaptureAllValues
+        是否捕获该键的全部值。
+    .PARAMETER ValueNames
+        未要求捕获全部值时，要捕获的值名列表。
+    .PARAMETER IncludeSubKeys
+        是否递归捕获子键。
+    .OUTPUTS
+        System.Collections.Hashtable。包含 Path、Exists、Values 和 SubKeys 的快照。
+#>
 function Get-RegistryKeySnapshot {
     param(
         [Parameter(Mandatory)]

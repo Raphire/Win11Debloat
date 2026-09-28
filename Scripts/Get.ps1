@@ -114,6 +114,16 @@ if ($PSScriptRoot -and (Test-Path -LiteralPath (Join-Path $PSScriptRoot 'FileIO/
     . (Join-Path $PSScriptRoot 'FileIO/获取控制台翻译.ps1')
 }
 else {
+    <#
+        .SYNOPSIS
+            在单文件下载阶段缺少语言资源时返回英文提示。
+        .PARAMETER Text
+            要显示的英文模板，不查询语言资源。
+        .PARAMETER FormatArgs
+            可选的格式参数；非空时按顺序替换模板占位符。
+        .OUTPUTS
+            System.String。原始英文文本或格式化后的英文文本。
+    #>
     function Get-ConsoleTranslation {
         param([string]$Text, [object[]]$FormatArgs)
         if ($FormatArgs.Count) { return $Text -f $FormatArgs }

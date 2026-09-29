@@ -171,13 +171,14 @@ Describe 'Import-AppDetailsFromJson' {
     }
 
     It 'filters to installed apps using Appx and winget detection' {
-        Mock Get-AppxPackage { param($Name) if ($Name -eq 'Two.App') { [PSCustomObject]@{ Name = $Name } } }
+        Mock Get-AppxPackage { [PSCustomObject]@{ Name = 'Two.App' } }
         Mock Test-AppInWingetList { $false }
 
         $apps = @(Import-AppDetailsFromJson -OnlyInstalled -InstalledList @())
 
         $apps | Should -HaveCount 1
         $apps[0].AppId | Should -Be 'Two.App'
+        Should -Invoke Get-AppxPackage -Times 1 -Exactly
     }
 
     It 'loads presets and preserves their ID arrays' {

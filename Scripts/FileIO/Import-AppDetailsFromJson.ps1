@@ -37,6 +37,16 @@ function Import-AppDetailsFromJson {
         return $apps
     }
 
+    $installedAppNames = @{}
+    if ($OnlyInstalled) {
+        # Get-AppxPackage is expensive; query it once and use its package names for the catalog lookup.
+        foreach ($installedApp in @(Get-AppxPackage -ErrorAction SilentlyContinue)) {
+            if ($installedApp.Name -is [string]) {
+                $installedAppNames[$installedApp.Name] = $true
+            }
+        }
+    }
+
     foreach ($appData in $jsonContent.Apps) {
         # Handle AppId as array (could be single or multiple IDs)
         $appIdArray = @(
@@ -51,8 +61,7 @@ function Import-AppDetailsFromJson {
         if ($OnlyInstalled) {
             $isInstalled = $false
             foreach ($appId in $appIdArray) {
-                # Check Get-AppxPackage first (fast, no process launch)
-                if (Get-AppxPackage -Name $appId) {
+                if ($installedAppNames.ContainsKey($appId)) {
                     $isInstalled = $true
                     break
                 }

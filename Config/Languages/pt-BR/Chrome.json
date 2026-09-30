@@ -87,7 +87,7 @@
   "DeployTitle": "Configuração de implantação",
   "DeploySubtitle": "Configure como as alterações selecionadas serão aplicadas ao seu sistema",
   "DeployApplyToTitle": "As alterações serão aplicadas para",
-  "DeployUserDescriptionDescription": "O perfil do usuário atualmente conectado.",
+  "DeployUserSelectionDescription": "O perfil do usuário atualmente conectado.",
   "DeployAppRemovalScopeTitle": "Os apps serão removidos para",
   "DeployAppRemovalScopeAutomationName": "Escopo de remoção de apps",
   "DeployAppRemovalScopeAllUsers": "Todos os usuários",

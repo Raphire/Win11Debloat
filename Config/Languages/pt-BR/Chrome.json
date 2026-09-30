@@ -131,6 +131,7 @@
   "ApplyCompletionMessageVerificationUnavailable": "Todas as alterações foram aplicadas sem erros, mas o Win11Debloat não conseguiu confirmar que todos os apps selecionados foram desinstalados com sucesso.",
   "ApplyCompletionMessageFailures_one": "{0} alteração falhou. Veja o console para detalhes.",
   "ApplyCompletionMessageFailures_other": "{0} alterações falharam. Veja o console para detalhes.",
+  "ApplyCompletionMessageFailures_many": "{0} de alterações falharam. Veja o console para detalhes.",
   "ApplyCompletionMessageReady": "Seu sistema está pronto. Obrigado por usar o Win11Debloat!",
   "ApplyCompletionTitleError": "Erro",
   "ApplyCompletionMessageError": "Ocorreu um erro ao aplicar as alterações: {0}",
@@ -235,9 +236,11 @@
   "ImportExportDefaultDeploymentSettings": "Configurações de implantação padrão",
   "ImportExportAppsSelected_one": "{0} app selecionado",
   "ImportExportAppsSelected_other": "{0} apps selecionados",
+  "ImportExportAppsSelected_many": "{0} de apps selecionados",
   "ImportExportNoAppsSelected": "Nenhum app selecionado",
   "ImportExportTweaksSelected_one": "{0} ajuste selecionado",
   "ImportExportTweaksSelected_other": "{0} ajustes selecionados",
+  "ImportExportTweaksSelected_many": "{0} de ajustes selecionados",
   "ImportExportNoTweaksSelected": "Nenhum ajuste selecionado",
 
   "AppSelectionWinGetLoadFailedMessage": "Não foi possível carregar a lista de apps instalados via WinGet.",
@@ -245,6 +248,7 @@
 
   "AppSelectionStatusSelected_one": "{0} app selecionado para remoção",
   "AppSelectionStatusSelected_other": "{0} apps selecionados para remoção",
+  "AppSelectionStatusSelected_many": "{0} de apps selecionados para remoção",
   "AppRemovalScopeDescriptionAllUsers": "Os apps serão removidos para todos os usuários e da imagem do Windows para evitar a reinstalação para novos usuários.",
   "AppRemovalScopeDescriptionCurrentUser": "Os apps serão removidos apenas para o usuário atual.",
   "AppRemovalScopeDescriptionTargetUser": "Os apps serão removidos apenas para o usuário alvo especificado.",
@@ -258,6 +262,7 @@
 
   "DeployChangeRemoveApps_one": "Remover {0} aplicativo",
   "DeployChangeRemoveApps_other": "Remover {0} aplicativos",
+  "DeployChangeRemoveApps_many": "Remover {0} de aplicativos",
   "DeployChangeUndoPrefix": "Desfazer: {0}",
   "DeployNoChangesSelectedMessage": "Nenhuma alteração foi selecionada.",
   "DeploySelectedChangesTitle": "Alterações selecionadas",

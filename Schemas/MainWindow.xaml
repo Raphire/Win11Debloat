@@ -547,9 +547,8 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="10"/>
-                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*" MaxWidth="300"/>
                                     </Grid.ColumnDefinitions>
                                     
                                     <StackPanel Orientation="Horizontal" Grid.Column="0">
@@ -615,9 +614,11 @@
                                         </Popup>
                                     </StackPanel>
                                     
-                                    <CheckBox x:Name="OnlyInstalledAppsBox" Grid.Column="2" Content="%LANG:AppOnlyInstalledCheckbox%" ToolTip="%LANG:AppOnlyInstalledCheckboxTooltip%" IsChecked="False" Foreground="{DynamicResource AppFgColor}" VerticalAlignment="Center" AutomationProperties.Name="%LANG:AppOnlyInstalledCheckbox%"/>
+                                    <CheckBox x:Name="OnlyInstalledAppsBox" Grid.Column="1" ToolTip="%LANG:AppOnlyInstalledCheckboxTooltip%" IsChecked="False" Foreground="{DynamicResource AppFgColor}" VerticalAlignment="Center" HorizontalAlignment="Left" AutomationProperties.Name="%LANG:AppOnlyInstalledCheckbox%">
+                                        <TextBlock Text="%LANG:AppOnlyInstalledCheckbox%" TextWrapping="Wrap"/>
+                                    </CheckBox>
 
-                                    <Border x:Name="AppSearchBorder" Grid.Column="4" Width="300">
+                                    <Border x:Name="AppSearchBorder" Grid.Column="3" ClipToBounds="True">
                                         <Border Style="{DynamicResource TextBoxBorderStyle}">
                                             <Border Style="{DynamicResource TextBoxBottomBorderStyle}">
                                                 <Grid>
@@ -751,9 +752,8 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="10"/>
-                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*" MaxWidth="300"/>
                                     </Grid.ColumnDefinitions>
                                     
                                     <StackPanel Grid.Column="0" Orientation="Horizontal">
@@ -820,9 +820,11 @@
                                         </Popup>
                                     </StackPanel>
 
-                                    <CheckBox x:Name="ShowCurrentlyAppliedTweaksCheckBox" Grid.Column="2" Content="%LANG:TweaksDetectApplied%" IsChecked="True" Foreground="{DynamicResource AppFgColor}" VerticalAlignment="Center" AutomationProperties.Name="%LANG:TweaksDetectApplied%" ToolTip="%LANG:TweaksDetectAppliedTooltip%"/>
+                                    <CheckBox x:Name="ShowCurrentlyAppliedTweaksCheckBox" Grid.Column="1" IsChecked="True" Foreground="{DynamicResource AppFgColor}" VerticalAlignment="Center" HorizontalAlignment="Left" AutomationProperties.Name="%LANG:TweaksDetectApplied%" ToolTip="%LANG:TweaksDetectAppliedTooltip%">
+                                        <TextBlock Text="%LANG:TweaksDetectApplied%" TextWrapping="Wrap"/>
+                                    </CheckBox>
 
-                                    <Border x:Name="TweakSearchBorder" Grid.Column="4" Width="300">
+                                    <Border x:Name="TweakSearchBorder" Grid.Column="3" ClipToBounds="True">
                                         <Border Style="{DynamicResource TextBoxBorderStyle}">
                                             <Border Style="{DynamicResource TextBoxBottomBorderStyle}">
                                                 <Grid>

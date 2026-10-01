@@ -3,6 +3,7 @@ BeforeAll {
     function Test-AppInWingetList { param($appId, $InstalledList) $false }
 
     . (Join-Path $PSScriptRoot '..\Scripts\FileIO\Import-JsonFile.ps1')
+    . (Join-Path $PSScriptRoot '..\Scripts\FileIO\Import-LanguageFile.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\Helpers\Add-Parameter.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\FileIO\Save-ToFile.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\FileIO\Import-Settings.ps1')
@@ -12,6 +13,8 @@ BeforeAll {
     . (Join-Path $PSScriptRoot '..\Scripts\FileIO\Import-AppPresetsFromJson.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\FileIO\Get-ValidatedAppList.ps1')
     $script:JsonFixturePath = Join-Path $PSScriptRoot 'TestData\JsonFileLoading'
+    $script:LanguagesPath = Join-Path $PSScriptRoot '..\Config\Languages'
+    $script:Lang = Import-LanguageFile -LanguageCode 'en-US'
 }
 
 Describe 'Save-ToFile' {
@@ -150,13 +153,26 @@ Describe 'Import-AppDetailsFromJson' {
         $apps = @(Import-AppDetailsFromJson -InitialCheckedFromJson)
 
         $apps | Should -HaveCount 2
-        $apps[0].DisplayName | Should -Be 'One (One.App, Alias.App)'
+        # 'One.App' has no en-US Apps.json entry, so Get-Translation falls back to the raw key.
+        $apps[0].DisplayName | Should -Be 'One.App (One.App, Alias.App)'
         $apps[0].IsChecked | Should -BeTrue
         $apps[0].RemovalMethod | Should -Be 'WinGet'
         $apps[1].FriendlyName | Should -Be 'Two.App'
         $apps[1].RemovalMethod | Should -Be 'Appx'
         $apps[1].AppId -is [array] | Should -BeTrue
         @($apps[1].AppId) | Should -HaveCount 1
+    }
+
+    It 'resolves FriendlyName and Description from Config/Languages/en-US/Apps.json for a real AppId' {
+        '{"Apps":[{"AppId":"Clipchamp.Clipchamp","FriendlyName":"stale JSON name, should not appear","Description":"stale JSON description, should not appear"}]}' |
+            Set-Content -LiteralPath $script:AppsListFilePath -Encoding UTF8
+
+        $apps = @(Import-AppDetailsFromJson)
+
+        $apps | Should -HaveCount 1
+        $apps[0].FriendlyName | Should -Be 'Clipchamp'
+        $apps[0].Description | Should -Be 'Video editor from Microsoft'
+        $apps[0].DisplayName | Should -Be 'Clipchamp (Clipchamp.Clipchamp)'
     }
 
     It 'skips missing, blank, and non-string app IDs without failing the complete catalog' {

@@ -391,27 +391,15 @@ function Add-AppsToMainWindow {
 
     $script:MainWindowLastSelectedCheckbox = $null
 
-    $loaderScriptPath = $script:LoadAppsDetailsScriptPath
-    $helperScriptPath = $script:TestAppInWingetListScriptPath
-    $appsFilePath = $script:AppsListFilePath
     $onlyInstalled = [bool]$OnlyInstalledAppsBox.IsChecked
 
-    # Use preloaded data if available; otherwise load in background job
+    # Use preloaded data if available; otherwise load in a background job to keep the UI responsive.
     if (-not $onlyInstalled -and $script:PreloadedAppData) {
         $rawAppData = $script:PreloadedAppData
         $script:PreloadedAppData = $null
     }
     else {
-        # Load apps details in a background job to keep the UI responsive.
-        # The helper is dot-sourced inside the job because the runspace
-        # does not inherit the parent scope's dot-sourced functions.
-        $rawAppData = Invoke-NonBlocking -ScriptBlock {
-            param($loaderScript, $helperScript, $appsListFilePath, $installedList, $onlyInstalled)
-            $script:AppsListFilePath = $appsListFilePath
-            . $helperScript
-            . $loaderScript
-            Import-AppDetailsFromJson -OnlyInstalled:$onlyInstalled -InstalledList $installedList -InitialCheckedFromJson:$false
-        } -ArgumentList $loaderScriptPath, $helperScriptPath, $appsFilePath, $ListOfApps, $onlyInstalled
+        $rawAppData = Invoke-AppDetailsFromJsonAsync -OnlyInstalled:$onlyInstalled -InstalledList $ListOfApps
     }
 
     $appsToAdd = @($rawAppData | Where-Object { $_ -and ($_.AppId -or $_.FriendlyName) } | Sort-Object -Property FriendlyName)

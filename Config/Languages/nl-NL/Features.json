@@ -42,7 +42,7 @@
       "ApplyUndoText": "Windows-meldingen en herinneringen inschakelen"
     },
     "DisableLocationServices": {
-      "Label": "Locatieservices van Windows en toegang van apps tot je locatie uitschakelen",
+      "Label": "Locatieservices van Windows en toegang van apps tot locatie uitschakelen",
       "ToolTip": "Schakelt de locatieservices van Windows uit en voorkomt dat apps je locatie kunnen gebruiken. Dit gebeurt via beleidsinstellingen, waardoor je bepaalde instellingen niet meer zelf kunt wijzigen.",
       "ApplyText": "Locatieservices van Windows en toegang van apps tot je locatie uitschakelen",
       "UndoLabel": "Locatieservices van Windows en toegang van apps tot je locatie inschakelen",
@@ -182,7 +182,7 @@
       "ApplyUndoText": "App-aanbevelingen van de Microsoft Store in Zoeken inschakelen"
     },
     "DisableSettings365Ads": {
-      "Label": "Microsoft 365 Copilot-advertenties op de startpagina van Instellingen verbergen",
+      "Label": "Microsoft 365 Copilot-advertenties in instellingen verbergen",
       "ToolTip": "Schakelt de Microsoft 365 Copilot-advertenties op de startpagina van Instellingen uit.",
       "ApplyText": "Microsoft 365 Copilot-advertenties op de startpagina van Instellingen uitschakelen",
       "UndoLabel": "Microsoft 365 Copilot-advertenties op de startpagina van Instellingen tonen",
@@ -721,7 +721,7 @@
       }
     },
     "ShowTabsInAltTab": {
-      "Label": "Weergave van app-tabbladen bij het uitlijnen van vensters of via Alt+Tab",
+      "Label": "Weergave van tabbladen bij het uitlijnen van vensters of via Alt+Tab",
       "ToolTip": "Kies of je tabbladen van apps, zoals Edge, wilt zien wanneer je vensters uitlijnt of Alt+Tab indrukt.",
       "Values": {
         "HideTabsInAltTab": "Geen tabbladen tonen",

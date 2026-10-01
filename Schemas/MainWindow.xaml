@@ -487,7 +487,7 @@
                                 <Run Text="%LANG:HomeSubtitle%"/>
                             </TextBlock>
 
-                            <Border HorizontalAlignment="Center" BorderBrush="{DynamicResource AppBorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="16,12" Width="500">
+                            <Border HorizontalAlignment="Center" BorderBrush="{DynamicResource AppBorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="16,12" MinWidth="500">
                                 <StackPanel>
                                     <TextBlock Text="%LANG:HomeUserQuestion%" Style="{StaticResource CategoryHeaderTextBlock}"/>
                                     <ComboBox x:Name="UserSelectionCombo" Margin="0,0,0,6" AutomationProperties.Name="%LANG:HomeUserSelectionAutomationName%" ToolTip="%LANG:DeployUserDescriptionCurrentUser%">
@@ -514,20 +514,20 @@
 
                                     <Separator Margin="0,10,0,8" Background="{DynamicResource AppBorderColor}"/>
 
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,8,0,4">
-                                        <Button x:Name="HomeDefaultModeBtn" Width="227" Height="50" Style="{DynamicResource PrimaryButtonStyle}" Margin="0,0,12,0" AutomationProperties.Name="%LANG:HomeDefaultModeBtn%">
+                                    <UniformGrid Columns="2" Rows="1" HorizontalAlignment="Center" Margin="0,8,0,4">
+                                        <Button x:Name="HomeDefaultModeBtn" MinWidth="227" Height="50" Padding="12,0" Margin="0,0,6,0" Style="{DynamicResource PrimaryButtonStyle}" AutomationProperties.Name="%LANG:HomeDefaultModeBtn%">
                                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                                 <TextBlock Text="&#xe735;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="16" VerticalAlignment="Center" Margin="0,0,8,-1"/>
                                                 <TextBlock Text="%LANG:HomeDefaultModeBtn%" ToolTip="%LANG:HomeDefaultModeBtnTooltip%" FontWeight="SemiBold" VerticalAlignment="Center" FontSize="17" Margin="0,0,0,1"/>
                                             </StackPanel>
                                         </Button>
-                                        <Button x:Name="HomeStartBtn" Width="227" Height="50" Style="{DynamicResource SecondaryButtonStyle}" AutomationProperties.Name="%LANG:HomeCustomSetupBtn%">
+                                        <Button x:Name="HomeStartBtn" MinWidth="227" Height="50" Padding="12,0" Margin="6,0,0,0" Style="{DynamicResource SecondaryButtonStyle}" AutomationProperties.Name="%LANG:HomeCustomSetupBtn%">
                                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                                 <TextBlock Text="&#xe90f;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="14" VerticalAlignment="Center" Margin="0,0,8,-1"/>
                                                 <TextBlock Text="%LANG:HomeCustomSetupBtn%" ToolTip="%LANG:HomeCustomSetupBtnTooltip%" FontWeight="SemiBold" VerticalAlignment="Center" FontSize="17" Margin="0,0,0,1"/>
                                             </StackPanel>
                                         </Button>
-                                    </StackPanel>
+                                    </UniformGrid>
                                 </StackPanel>
                             </Border>
                         </StackPanel>

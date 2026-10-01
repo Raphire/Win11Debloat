@@ -105,6 +105,19 @@ function Get-PluralCategory {
     $languagePrefix = ($LanguageCode -split '-')[0].ToLowerInvariant()
 
     switch ($languagePrefix) {
+        # Portuguese CLDR rule: 'one' for 0 and 1, 'many' for positive multiples
+        # of 1,000,000, and 'other' for every remaining count.
+        'pt' {
+            if ($Count -le 1) {
+                return 'one'
+            }
+
+            if ($Count % 1000000 -eq 0) {
+                return 'many'
+            }
+
+            return 'other'
+        }
         # English CLDR rule: singular only for exactly 1, plural otherwise. Also correct for Dutch/German.
         default {
             if ($Count -eq 1) {

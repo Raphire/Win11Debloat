@@ -1,0 +1,14 @@
+{
+  "PrivacySuggestedContent": { "Label": "Privacy en aanbevolen inhoud" },
+  "System": { "Label": "Systeem" },
+  "StartMenuSearch": { "Label": "Startmenu en zoeken" },
+  "AI": { "Label": "AI" },
+  "WindowsUpdate": { "Label": "Windows Update" },
+  "Taskbar": { "Label": "Taakbalk" },
+  "Appearance": { "Label": "Vormgeving" },
+  "FileExplorer": { "Label": "Verkenner" },
+  "Gaming": { "Label": "Gamen" },
+  "MultiTasking": { "Label": "Multitasking" },
+  "OptionalWindowsFeatures": { "Label": "Optionele Windows-onderdelen" },
+  "Other": { "Label": "Overig" }
+}

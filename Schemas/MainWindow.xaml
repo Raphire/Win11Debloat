@@ -986,7 +986,7 @@
                                         </ControlTemplate>
                                     </Button.Template>
                                 </Button>
-                                <Button x:Name="DeploymentApplyBtn" Style="{DynamicResource PrimaryButtonStyle}" Width="200" Height="44" HorizontalAlignment="Center" AutomationProperties.Name="%LANG:DeployApplyChanges%">
+                                <Button x:Name="DeploymentApplyBtn" Style="{DynamicResource PrimaryButtonStyle}" MinWidth="200" Height="44" Padding="12,0" HorizontalAlignment="Center" AutomationProperties.Name="%LANG:DeployApplyChanges%">
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                         <TextBlock Text="&#xE73E;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="20" FontWeight="SemiBold" VerticalAlignment="Center"/>
                                         <TextBlock Text="%LANG:DeployApplyChanges%" VerticalAlignment="Center" FontSize="18" FontWeight="SemiBold" Margin="8,0,0,4"/>

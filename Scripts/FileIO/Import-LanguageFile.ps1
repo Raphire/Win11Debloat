@@ -105,6 +105,17 @@ function Get-PluralCategory {
     $languagePrefix = ($LanguageCode -split '-')[0].ToLowerInvariant()
 
     switch ($languagePrefix) {
+        'pl' {
+            if ($Count -eq 1) {
+                return 'one'
+            }
+
+            if (($Count % 10 -in 2..4) -and ($Count % 100 -notin 12..14)) {
+                return 'few'
+            }
+
+            return 'many'
+        }
         # Portuguese CLDR rule: 'one' for 0 and 1, 'many' for positive multiples
         # of 1,000,000, and 'other' for every remaining count.
         'pt' {
@@ -218,7 +229,7 @@ function Get-Translation {
     $lookupKeys = @($Key)
     if ($null -ne $Count) {
         $category = Get-PluralCategory -LanguageCode $Lang.LanguageCode -Count $Count
-        $lookupKeys = @("${Key}_$category", $Key)
+        $lookupKeys = @("${Key}_$category", "${Key}_other", $Key) | Select-Object -Unique
     }
 
     $resolved = $Key

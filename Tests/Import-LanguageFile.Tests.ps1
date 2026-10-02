@@ -1,4 +1,4 @@
-BeforeAll {
+﻿BeforeAll {
     . (Join-Path $PSScriptRoot '..\Scripts\FileIO\Import-JsonFile.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\FileIO\Import-LanguageFile.ps1')
     $script:LanguagesPath = Join-Path $PSScriptRoot 'TestData\LanguageLoading'
@@ -103,6 +103,81 @@ Describe 'Get-PluralCategory' {
         @{ Count = 5; Expected = 'other' }
     ) {
         Get-PluralCategory -LanguageCode 'en-US' -Count $Count | Should -Be $Expected
+    }
+
+    It 'uses Polish CLDR categories for integer counts' -ForEach @(
+        @{ Count = 0; Expected = 'many' }
+        @{ Count = 1; Expected = 'one' }
+        @{ Count = 2; Expected = 'few' }
+        @{ Count = 3; Expected = 'few' }
+        @{ Count = 4; Expected = 'few' }
+        @{ Count = 5; Expected = 'many' }
+        @{ Count = 11; Expected = 'many' }
+        @{ Count = 12; Expected = 'many' }
+        @{ Count = 13; Expected = 'many' }
+        @{ Count = 14; Expected = 'many' }
+        @{ Count = 21; Expected = 'many' }
+        @{ Count = 22; Expected = 'few' }
+        @{ Count = 23; Expected = 'few' }
+        @{ Count = 24; Expected = 'few' }
+        @{ Count = 102; Expected = 'few' }
+        @{ Count = 112; Expected = 'many' }
+    ) {
+        Get-PluralCategory -LanguageCode 'pl-PL' -Count $Count | Should -Be $Expected
+    }
+}
+
+Describe 'Production Polish language' {
+    BeforeAll {
+        $script:ProductionLanguagesPath = Join-Path $PSScriptRoot '..\Config\Languages'
+        $script:PolishLang = Import-LanguageFile -LanguageCode 'pl-PL' -LanguagesPath $script:ProductionLanguagesPath
+    }
+
+    It 'loads all required Polish resource files' {
+        $script:PolishLang.LanguageCode | Should -Be 'pl-PL'
+        $script:PolishLang.Chrome.HomeTitle | Should -Be 'Witaj w Win11Debloat'
+        $script:PolishLang.Features.DisableTelemetry.Label | Should -Match 'Wyłącz'
+        $script:PolishLang.Categories.Gaming.Label | Should -Be 'Gry'
+        $script:PolishLang.Apps.'Microsoft.XboxApp'.FriendlyName | Should -Be 'Pomocnik konsoli Xbox'
+    }
+
+    It 'uses Polish plural forms and translates the WhatIf dialog' {
+        Get-Translation -Key 'AppSelectionStatusSelected' -Count 2 -FormatArgs @(2) -Lang $script:PolishLang | Should -Be 'Wybrano 2 aplikacje do usunięcia'
+        Get-Translation -Key 'AppSelectionStatusSelected' -Count 5 -FormatArgs @(5) -Lang $script:PolishLang | Should -Be 'Wybrano 5 aplikacji do usunięcia'
+        Get-Translation -Key 'TitleBarSupportCreator' -Lang $script:PolishLang | Should -Be 'Wesprzyj autora'
+        Get-Translation -Key 'WhatIfModeTitle' -Lang $script:PolishLang | Should -Be 'Tryb symulacji WhatIf'
+    }
+
+    It 'falls back to the English other form if a Polish plural variant is absent' {
+        $incompleteLanguage = [PSCustomObject]@{
+            LanguageCode = 'pl-PL'
+            Chrome = [PSCustomObject]@{}
+            Fallback = Import-LanguageFile -LanguageCode 'en-US' -LanguagesPath $script:ProductionLanguagesPath
+        }
+        Get-Translation -Key 'ImportExportAppsSelected' -Count 2 -FormatArgs @(2) -Lang $incompleteLanguage | Should -Be '2 apps selected'
+    }
+
+    It 'covers every English resource field with the same formatting placeholders' {
+        $english = Import-LanguageFile -LanguageCode 'en-US' -LanguagesPath $script:ProductionLanguagesPath
+        function Compare-ResourceFields {
+            param($Original, $Translation)
+            foreach ($property in $Original.PSObject.Properties) {
+                $translatedProperty = $Translation.PSObject.Properties[$property.Name]
+                $translatedProperty | Should -Not -BeNullOrEmpty -Because "resource $($property.Name) must be translated"
+                if ($property.Value -is [string]) {
+                    $translatedProperty.Value | Should -Not -BeNullOrEmpty
+                    $originalPlaceholders = @([regex]::Matches($property.Value, '\{\d+\}') | ForEach-Object { $_.Value }) -join ','
+                    $translatedPlaceholders = @([regex]::Matches($translatedProperty.Value, '\{\d+\}') | ForEach-Object { $_.Value }) -join ','
+                    $translatedPlaceholders | Should -Be $originalPlaceholders -Because "placeholders in $($property.Name) must be preserved"
+                }
+                else {
+                    Compare-ResourceFields -Original $property.Value -Translation $translatedProperty.Value
+                }
+            }
+        }
+        foreach ($section in @('Chrome', 'Features', 'UiGroups', 'Categories', 'Apps')) {
+            Compare-ResourceFields -Original $english.$section -Translation $script:PolishLang.$section
+        }
     }
 }
 

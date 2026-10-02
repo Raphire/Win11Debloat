@@ -42,7 +42,7 @@
       "ApplyUndoText": "Windows-meldingen en herinneringen inschakelen"
     },
     "DisableLocationServices": {
-      "Label": "Locatieservices van Windows en toegang van apps tot locatie uitschakelen",
+      "Label": "Windows locatieservices en app-toegang tot locatie uitschakelen",
       "ToolTip": "Schakelt de locatieservices van Windows uit en voorkomt dat apps je locatie kunnen gebruiken. Dit gebeurt via beleidsinstellingen, waardoor je bepaalde instellingen niet meer zelf kunt wijzigen.",
       "ApplyText": "Locatieservices van Windows en toegang van apps tot je locatie uitschakelen",
       "UndoLabel": "Locatieservices van Windows en toegang van apps tot je locatie inschakelen",
@@ -82,10 +82,10 @@
       "ApplyUndoText": "De bureaubladsnelkoppeling 'Meer informatie over deze afbeelding' van Windows Spotlight tonen"
     },
     "DisableEdgeAds": {
-      "Label": "Advertenties, aanbevelingen en de nieuwsfeed in Edge uitschakelen",
+      "Label": "Advertenties, aanbevelingen en nieuwsfeed in Edge uitschakelen",
       "ToolTip": "Schakelt verschillende afleidingen in Microsoft Edge uit, zoals advertenties, aanbevelingen en de MSN-nieuwsfeed. Dit gebeurt via beleidsinstellingen, waardoor je bepaalde instellingen niet meer zelf kunt wijzigen.",
       "ApplyText": "Advertenties, aanbevelingen en de MSN-nieuwsfeed in Microsoft Edge uitschakelen",
-      "UndoLabel": "Advertenties, aanbevelingen en de nieuwsfeed in Edge inschakelen",
+      "UndoLabel": "Advertenties, aanbevelingen en nieuwsfeed in Edge inschakelen",
       "ApplyUndoText": "Advertenties, aanbevelingen en de MSN-nieuwsfeed in Microsoft Edge inschakelen"
     },
     "DisableCopilot": {
@@ -273,7 +273,7 @@
       "ApplyUndoText": "Suggesties van de Uitlijnassistent inschakelen"
     },
     "DisableSnapLayouts": {
-      "Label": "Uitlijnindelingen bovenaan het scherm en bij de maximaliseerknop verbergen",
+      "Label": "Uitlijnindelingen bovenin het scherm en bij maximaliseerknop verbergen",
       "ToolTip": "Verbergt het menu met uitlijnindelingen dat verschijnt wanneer je de muis boven de maximaliseerknop houdt of een venster naar de bovenkant van het scherm sleept.",
       "ApplyText": "Uitlijnindelingen bovenaan het scherm en bij de maximaliseerknop verbergen",
       "UndoLabel": "Uitlijnindelingen bovenaan het scherm en bij de maximaliseerknop tonen",

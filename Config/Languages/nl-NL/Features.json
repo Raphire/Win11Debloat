@@ -209,6 +209,13 @@
       "UndoLabel": "AI-functies in Paint inschakelen",
       "ApplyUndoText": "AI-functies in Paint inschakelen"
     },
+    "DisableChromeAI": {
+      "Label": "AI-functies in Google Chrome uitschakelen",
+      "ToolTip": "Schakelt de ingebouwde AI-hulpmiddelen en -integraties van Google Chrome uit, waaronder Gemini, AI-zoeken en -suggesties, schrijfhulp en automatisch invullen. Ook worden lokale AI-modellen verwijderd. Dit gebeurt via beleidsinstellingen, waardoor je bepaalde instellingen niet meer zelf kunt wijzigen.",
+      "ApplyText": "AI-functies in Google Chrome uitschakelen",
+      "UndoLabel": "AI-functies in Google Chrome inschakelen",
+      "ApplyUndoText": "AI-functies in Google Chrome inschakelen"
+    },
     "DisableNotepadAI": {
       "Label": "AI-functies in Kladblok uitschakelen",
       "ToolTip": "Schakelt AI-functies in Kladblok uit, zoals AI-schrijfsuggesties. Dit gebeurt via beleidsinstellingen, waardoor je bepaalde instellingen niet meer zelf kunt wijzigen.",

@@ -643,6 +643,14 @@
       "ApplyText": "Pokazywanie sekcji Wszystkie aplikacje na liście",
       "UndoLabel": "Pokaż Wszystkie aplikacje według kategorii",
       "ApplyUndoText": "Pokazywanie sekcji Wszystkie aplikacje według kategorii"
+    },
+    "SetWallpaper": {
+      "Label": "Ustaw wybraną tapetę",
+      "ApplyText": "Ustawianie wybranej tapety"
+    },
+    "RestoreWallpaper": {
+      "Label": "Przywróć ostatnią kopię tapety Win11Debloat",
+      "ApplyText": "Przywracanie ostatniej kopii tapety Win11Debloat"
     }
   },
   "UiGroups": {

@@ -1,0 +1,65 @@
+{
+  "Version": "1.0",
+  "Presets": {
+    "Normal": {
+      "DisplayName": "Normalny",
+      "Description": "Bieżące zalecane ustawienia Win11Debloat i domyślna lista aplikacji.",
+      "SettingsFile": "DefaultSettings.json",
+      "AppMode": "Default"
+    },
+    "Aggressive": {
+      "DisplayName": "Agresywny",
+      "Description": "Normalny preset oraz dodatkowe ustawienia prywatności, interfejsu i aplikacji OEM.",
+      "SettingsFile": "DefaultSettings.json",
+      "AppMode": "Default",
+      "AppPresets": [
+        "OEM software (Dell, HP, Lenovo, LG)"
+      ],
+      "ExcludeAppIds": [
+        "AD2F1837.HPSureShieldAI"
+      ],
+      "Settings": [
+        { "Name": "DisableNotifications", "Value": true },
+        { "Name": "DisableLocationServices", "Value": true },
+        { "Name": "DisableFindMyDevice", "Value": true },
+        { "Name": "DisableStartRecommended", "Value": true },
+        { "Name": "DisableStartPhoneLink", "Value": true },
+        { "Name": "DisableSettings365Ads", "Value": true },
+        { "Name": "DisableEdgeAI", "Value": true },
+        { "Name": "DisablePaintAI", "Value": true },
+        { "Name": "DisableNotepadAI", "Value": true },
+        { "Name": "DisableTransparency", "Value": true },
+        { "Name": "DisableAnimations", "Value": true },
+        { "Name": "HideHome", "Value": true },
+        { "Name": "HideGallery", "Value": true },
+        { "Name": "HideOnedrive", "Value": true },
+        { "Name": "DisableDeviceAutoAppDownload", "Value": true },
+        { "Name": "PreventUpdateAutoReboot", "Value": true }
+      ]
+    },
+    "Gaming": {
+      "DisplayName": "Gaming",
+      "Description": "Lżejszy system do gier bez usuwania usług, sterowników i wymaganych aplikacji Xbox.",
+      "SettingsFile": "DefaultSettings.json",
+      "AppMode": "Default",
+      "ExcludeAppIds": [
+        "Microsoft.GamingApp",
+        "Microsoft.Xbox.TCUI",
+        "Microsoft.XboxApp",
+        "Microsoft.XboxGameOverlay",
+        "Microsoft.XboxGamingOverlay",
+        "Microsoft.XboxIdentityProvider",
+        "Microsoft.XboxSpeechToTextOverlay",
+        "Microsoft.GamingServices"
+      ],
+      "Settings": [
+        { "Name": "DisableDVR", "Value": true },
+        { "Name": "DisableGameBarIntegration", "Value": true },
+        { "Name": "DisableNotifications", "Value": true },
+        { "Name": "DisableTransparency", "Value": true },
+        { "Name": "DisableAnimations", "Value": true },
+        { "Name": "HideChat", "Value": true }
+      ]
+    }
+  }
+}

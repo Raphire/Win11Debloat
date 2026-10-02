@@ -14,7 +14,7 @@ function Save-Settings {
     }
     
     foreach ($param in $script:Params.Keys) {
-        if ($script:ControlParams -notcontains $param -and $script:Features.ContainsKey($param)) {
+        if ($script:ControlParams -notcontains $param -and $param -notin @('SetWallpaper', 'RestoreWallpaper') -and $script:Features.ContainsKey($param)) {
             $value = $script:Params[$param]
 
             $settings.Settings += @{

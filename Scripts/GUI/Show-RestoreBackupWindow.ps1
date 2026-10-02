@@ -13,6 +13,8 @@ function Show-RestoreBackupWindow {
         $restoreResult = [PSCustomObject]@{
             RestoredRegistry = $false
             RestoredStartMenu = $false
+            Cancelled = $true
+            Failed = $false
         }
 
         $dialogResult = Show-RestoreBackupDialog -Owner $Owner
@@ -22,6 +24,7 @@ function Show-RestoreBackupWindow {
         }
 
         $successMessage = $null
+        $restoreResult.Cancelled = $false
         $warningMessage = $null
 
         if ($dialogResult.Result -eq 'RestoreRegistry') {
@@ -40,6 +43,9 @@ function Show-RestoreBackupWindow {
                 else {
                     $successMessage = Get-Translation -Key 'RestoreRegistrySuccessMessage'
                 }
+            }
+            else {
+                $restoreResult.Failed = $true
             }
         }
         elseif ($dialogResult.Result -eq 'Restore-StartMenu') {
@@ -74,6 +80,7 @@ function Show-RestoreBackupWindow {
             }
 
             if ($failedEntries.Count -gt 0) {
+                $restoreResult.Failed = $true
                 $failureSummary = ($failedEntries | ForEach-Object { $_.Message }) -join [Environment]::NewLine
                 $warningMessage = Get-Translation -Key 'RestoreStartMenuPartialSuccessMessage' -FormatArgs @($successCount, $failureSummary)
             }
@@ -110,6 +117,8 @@ function Show-RestoreBackupWindow {
         return [PSCustomObject]@{
             RestoredRegistry = $false
             RestoredStartMenu = $false
+            Cancelled = $false
+            Failed = $true
         }
     }
 }

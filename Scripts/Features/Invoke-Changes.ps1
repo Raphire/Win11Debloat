@@ -129,6 +129,14 @@ function Invoke-FeatureApply {
             Write-Warning "Unable to disable Microsoft Store search suggestions because the Store database for user $(Get-UserName) could not be resolved."
             return $false
         }
+        'SetWallpaper' {
+            Write-Host "> $applyText..."
+            return (Set-WallpaperFromPath -WallpaperPath ([string]$script:Params['WallpaperPath']))
+        }
+        'RestoreWallpaper' {
+            Write-Host "> $applyText..."
+            return (Restore-WallpaperFromBackup)
+        }
     }
     }
     catch {
@@ -341,6 +349,7 @@ function Invoke-UndoFeatures {
 #>
 function Invoke-AllChanges {
     if ($script:CancelRequested) { return }
+    $script:UsbApplyStarted = $true
 
     # Guard: prevent running as SYSTEM account without explicit target user
     $isSystem = Test-RunningAsSystem

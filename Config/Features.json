@@ -782,7 +782,7 @@
     },{
       "FeatureId": "DisableChromeAI",
       "Label": "Disable AI features in Google Chrome",
-      "ToolTip": "This will turn off AI features in Google Chrome, such as AI Mode integrations in the address bar and New Tab page search box. This feature uses policies, which will lock down certain settings.",
+      "ToolTip": "Disables Google Chrome's built-in AI tools and integrations, including Gemini, AI search & suggestions, writing assistance, autofill and more. It also removes local AI models. This feature uses policies, which will lock down certain settings.",
       "Category": "AI",
       "RegistryKey": "Disable_Chrome_AI_Features.reg",
       "ApplyText": "Disabling AI features in Google Chrome",

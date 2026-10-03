@@ -157,14 +157,14 @@
             <Setter Property="Margin" Value="8,0,8,0"/>
         </Style>
 
-        <!-- Column widths for the app table rows and header (dot | name | description | id) -->
+        <!-- Column widths for the app table rows and header (indicator | name | description | id) -->
         <GridLength x:Key="AppTableDotColWidth">16</GridLength>
         <GridLength x:Key="AppTableNameColWidth">180</GridLength>
         <GridLength x:Key="AppTableDescColWidth">1*</GridLength>
         <GridLength x:Key="AppTableIdColWidth">261</GridLength>
 
-        <!-- Recommendation dot shape style for app table rows -->
-        <Style x:Key="AppRecommendationDotStyle" TargetType="Ellipse">
+        <!-- Recommendation indicator style shared by circles, diamonds, and triangles -->
+        <Style x:Key="AppRecommendationIndicatorStyle" TargetType="Shape">
             <Setter Property="Width" Value="9"/>
             <Setter Property="Height" Value="9"/>
             <Setter Property="HorizontalAlignment" Value="Left"/>
@@ -184,7 +184,7 @@
         <SolidColorBrush x:Key="ValidationErrorColor" Color="#c42b1c"/>
         <SolidColorBrush x:Key="ValidationSuccessColor" Color="#28a745"/>
 
-        <!-- App recommendation dot / legend colors -->
+        <!-- App recommendation indicator / legend colors -->
         <SolidColorBrush x:Key="AppRecommendationSafeColor" Color="#4CAF50"/>
         <SolidColorBrush x:Key="AppRecommendationOptionalColor" Color="#FFC107"/>
         <SolidColorBrush x:Key="AppRecommendationUnsafeColor" Color="#F44336"/>
@@ -725,12 +725,12 @@
                                     </StackPanel>
                                     <!-- Optional (default) -->
                                     <StackPanel Orientation="Horizontal" Margin="0,0,16,0" ToolTip="%LANG:AppLegendOptionalTooltip%">
-                                        <Ellipse Width="9" Height="9" Fill="{DynamicResource AppRecommendationOptionalColor}" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                        <Polygon Points="4.5,0 9,4.5 4.5,9 0,4.5" Stretch="Fill" Width="9" Height="9" Fill="{DynamicResource AppRecommendationOptionalColor}" VerticalAlignment="Center" Margin="0,0,6,0"/>
                                         <TextBlock Text="%LANG:AppLegendOptional%" Foreground="{DynamicResource AppFgColor}" FontSize="12" VerticalAlignment="Center" Opacity="0.8"/>
                                     </StackPanel>
                                     <!-- Not Recommended (unsafe) -->
                                     <StackPanel Orientation="Horizontal" ToolTip="%LANG:AppLegendNotRecommendedTooltip%">
-                                        <Ellipse Width="9" Height="9" Fill="{DynamicResource AppRecommendationUnsafeColor}" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                        <Polygon Points="0,9 4.5,0 9,9" Stretch="Fill" Width="9" Height="9" Fill="{DynamicResource AppRecommendationUnsafeColor}" VerticalAlignment="Center" Margin="0,0,6,0"/>
                                         <TextBlock Text="%LANG:AppLegendNotRecommended%" Foreground="{DynamicResource AppFgColor}" FontSize="12" VerticalAlignment="Center" Opacity="0.8"/>
                                     </StackPanel>
                                 </StackPanel>

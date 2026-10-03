@@ -1363,7 +1363,7 @@
     {
       "FeatureId": "HideHome",
       "Label": "Hide 'Home' from navigation pane",
-      "ToolTip": "Hides the 'Home' section from the File Explorer navigation pane.",
+      "ToolTip": "Hides the 'Home' section from the File Explorer navigation pane. Warning: This may prevent Quick access links from updating until you restart your PC or Windows Explorer.",
       "Category": "File Explorer",
       "Priority": 5,
       "RegistryKey": "Hide_Home_from_Explorer.reg",

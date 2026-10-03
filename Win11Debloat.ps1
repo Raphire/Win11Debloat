@@ -1,6 +1,15 @@
-[CmdletBinding(SupportsShouldProcess)]
+﻿[CmdletBinding(SupportsShouldProcess)]
 param (
     [switch]$CLI,
+    [ValidateSet('Normal', 'Aggressive', 'Gaming')]
+    [string]$Preset,
+    [string]$WallpaperPath,
+    [switch]$SetWallpaper,
+    [switch]$RestoreWallpaper,
+    [switch]$RestoreBackup,
+    [switch]$UsbMode,
+    [string]$UsbUserSid,
+    [switch]$ConfirmAggressive,
     [switch]$Silent,
     [switch]$Sysprep,
     [string]$LogPath,
@@ -118,6 +127,43 @@ if ($PSVersionTable.PSEdition -eq 'Core') {
     exit 1
 }
 
+foreach ($usbSwitchName in @('SetWallpaper', 'RestoreWallpaper', 'RestoreBackup', 'UsbMode', 'ConfirmAggressive')) {
+    if ($PSBoundParameters.ContainsKey($usbSwitchName) -and -not $PSBoundParameters[$usbSwitchName]) {
+        $PSBoundParameters.Remove($usbSwitchName) | Out-Null
+    }
+}
+
+if ($UsbUserSid -and $UsbUserSid -ne [Security.Principal.WindowsIdentity]::GetCurrent().User.Value) {
+    Write-Error 'UAC użył innego konta. Zaloguj się na konto administratora, którego profil chcesz przygotować, i uruchom Run.bat ponownie.'
+    exit 1
+}
+
+if ($Preset -and ($Config -or $RunDefaults -or $RunDefaultsLite -or $RunSavedSettings -or $User -or $Sysprep -or $SkipRegistryBackup -or $RestoreWallpaper -or $RestoreBackup)) {
+    Write-Error 'Nie łącz presetu z inną konfiguracją, pomijaniem kopii rejestru, przywracaniem ani zmianą użytkownika.'
+    exit 1
+}
+if ($Preset) {
+    $allowedPresetParameters = @('Preset', 'WallpaperPath', 'SetWallpaper', 'UsbMode', 'UsbUserSid', 'ConfirmAggressive',
+        'CLI', 'Silent', 'Language', 'LogPath', 'WhatIf', 'Verbose', 'Debug', 'CreateRestorePoint', 'SkipExplorerRestart')
+    $conflictingParameters = @($PSBoundParameters.Keys | Where-Object { $_ -notin $allowedPresetParameters })
+    if ($conflictingParameters.Count -gt 0) {
+        Write-Error "Preset nie może nadpisać jawnie podanych zmian: $($conflictingParameters -join ', ')."
+        exit 1
+    }
+}
+if (($RestoreWallpaper -or $RestoreBackup) -and ($WallpaperPath -or $SetWallpaper -or ($RestoreWallpaper -and $RestoreBackup) -or $User -or $Sysprep)) {
+    Write-Error 'Przywracanie uruchom osobno, dla bieżącego użytkownika.'
+    exit 1
+}
+if ($RestoreWallpaper -or $RestoreBackup) {
+    $allowedRestoreParameters = @('RestoreWallpaper', 'RestoreBackup', 'UsbMode', 'UsbUserSid', 'CLI', 'Silent',
+        'Language', 'LogPath', 'WhatIf', 'Verbose', 'Debug', 'SkipExplorerRestart')
+    if (@($PSBoundParameters.Keys | Where-Object { $_ -notin $allowedRestoreParameters }).Count -gt 0) {
+        Write-Error 'Przywracania nie można łączyć z innymi zmianami.'
+        exit 1
+    }
+}
+
 # Check if script is running as administrator
 $isAdmin = ([Security.Principal.WindowsPrincipal] `
     [Security.Principal.WindowsIdentity]::GetCurrent()
@@ -182,13 +228,18 @@ $scriptsPath = Join-Path $PSScriptRoot 'Scripts'
 
 $script:AppsListFilePath = Join-Path $configPath 'Apps.json'
 $script:DefaultSettingsFilePath = Join-Path $configPath 'DefaultSettings.json'
+$script:UsbPresetsFilePath = Join-Path $configPath 'UsbPresets.json'
 $script:FeaturesFilePath = Join-Path $configPath 'Features.json'
-$script:SavedSettingsFilePath = Join-Path $configPath 'LastUsedSettings.json'
 $script:LanguagesPath = Join-Path $configPath 'Languages'
 $script:DefaultLanguagePath = Join-Path $script:LanguagesPath 'en-US'
 $script:DefaultLogPath = Join-Path $logsPath 'Win11Debloat.log'
 $script:RegfilesPath = Join-Path $PSScriptRoot 'Regfiles'
-$script:RegistryBackupsPath = Join-Path $PSScriptRoot 'Backups'
+$commonDataPath = [Environment]::GetFolderPath('CommonApplicationData')
+$script:MachineDataPath = if ($UsbMode -and $commonDataPath) { Join-Path $commonDataPath 'Win11Debloat' } else { $PSScriptRoot }
+$script:SavedSettingsFilePath = if ($UsbMode) { Join-Path $script:MachineDataPath 'LastUsedSettings.json' } else { Join-Path $configPath 'LastUsedSettings.json' }
+$script:RegistryBackupsPath = Join-Path $script:MachineDataPath 'Backups'
+$script:WallpaperDataPath = Join-Path $env:LOCALAPPDATA 'Win11Debloat\Wallpapers'
+$script:WallpaperBackupsPath = Join-Path $env:LOCALAPPDATA 'Win11Debloat\Backups\Wallpaper'
 $script:AssetsPath = Join-Path $PSScriptRoot 'Assets'
 $script:AppSelectionSchema = Join-Path $schemasPath 'AppSelectionWindow.xaml'
 $script:MainWindowSchema = Join-Path $schemasPath 'MainWindow.xaml'
@@ -203,10 +254,11 @@ $script:LoadAppsDetailsScriptPath = Join-Path (Join-Path $scriptsPath 'FileIO') 
 $script:TestAppInWingetListScriptPath = Join-Path (Join-Path $scriptsPath 'AppRemoval') 'Test-AppInWingetList.ps1'
 $script:ImportLanguageFileScriptPath = Join-Path (Join-Path $scriptsPath 'FileIO') 'Import-LanguageFile.ps1'
 
-$script:ControlParams = 'WhatIf', 'Confirm', 'Verbose', 'Debug', 'LogPath', 'Language', 'Silent', 'Sysprep', 'User', 'SkipExplorerRestart', 'SkipRegistryBackup', 'RunDefaults', 'RunDefaultsLite', 'RunSavedSettings', 'Config', 'CLI', 'AppRemovalTarget'
+$script:ControlParams = 'WhatIf', 'Confirm', 'Verbose', 'Debug', 'LogPath', 'Language', 'Silent', 'Sysprep', 'User', 'SkipExplorerRestart', 'SkipRegistryBackup', 'RunDefaults', 'RunDefaultsLite', 'RunSavedSettings', 'Config', 'CLI', 'AppRemovalTarget', 'Preset', 'WallpaperPath', 'UsbMode', 'UsbUserSid', 'ConfirmAggressive', 'RestoreBackup'
 
 # Script-level variables for GUI elements
 $script:GuiWindow = $null
+$script:UsbApplyStarted = $false
 $script:CancelRequested = $false
 $script:ApplyProgressCallback = $null
 $script:ApplySubStepCallback = $null
@@ -391,6 +443,7 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 . "$PSScriptRoot/Scripts/Features/Import-RegistryFile.ps1"
 . "$PSScriptRoot/Scripts/Features/Replace-StartMenu.ps1"
 . "$PSScriptRoot/Scripts/Features/Invoke-RestartExplorer.ps1"
+. "$PSScriptRoot/Scripts/Features/Set-Wallpaper.ps1"
 
 # File I/O functions
 . "$PSScriptRoot/Scripts/FileIO/Import-JsonFile.ps1"
@@ -444,6 +497,8 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 . "$PSScriptRoot/Scripts/Helpers/Registry-PathHelpers.ps1"
 . "$PSScriptRoot/Scripts/Helpers/Apply-RegistryRegFile.ps1"
 . "$PSScriptRoot/Scripts/Helpers/Confirm-UnsafeAppRemoval.ps1"
+. "$PSScriptRoot/Scripts/Helpers/Import-UsbPreset.ps1"
+. "$PSScriptRoot/Scripts/Helpers/Usb-WorkflowHelpers.ps1"
 
 # Threading functions
 . "$PSScriptRoot/Scripts/Threading/Invoke-DoEvents.ps1"
@@ -462,6 +517,11 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 # Get current Windows build version
 $WinVersion = Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' CurrentBuild
 
+if (($UsbMode -or $Preset -or $WallpaperPath -or $SetWallpaper -or $RestoreWallpaper -or $RestoreBackup) -and [int]$WinVersion -lt 22000) {
+    Write-Error 'Nowe presety i tryb USB obsługują wyłącznie Windows 11.'
+    Wait-ForKeyPress -ExitCode 1
+}
+
 # Check if the machine supports Modern Standby, this is used to determine if the DisableModernStandbyNetworking option can be used
 $script:ModernStandbySupported = Test-ModernStandbySupport
 
@@ -471,6 +531,51 @@ $script:Lang = if ($Language) { Import-LanguageFile -LanguageCode $Language } el
 
 $script:Params = $PSBoundParameters
 $script:UndoParams = @{}
+
+if ($UsbMode -and -not $WhatIfPreference) {
+    New-Item -ItemType Directory -Path $script:MachineDataPath -Force -ErrorAction Stop | Out-Null
+}
+if ($RestoreBackup) {
+    Add-Type -AssemblyName PresentationFramework -ErrorAction Stop
+    $restoreResult = Show-RestoreBackupWindow
+    $restoreExitCode = if (-not $restoreResult -or $restoreResult.Failed) { 1 } elseif ($restoreResult.Cancelled) { 3 } else { 0 }
+    Wait-ForKeyPress -ExitCode $restoreExitCode
+}
+
+if ($WallpaperPath) {
+    Add-Parameter 'SetWallpaper'
+}
+elseif ($SetWallpaper) {
+    Add-Parameter 'WallpaperPath' 'Black'
+}
+
+if ($Preset) {
+    if ($Preset -eq 'Aggressive' -and -not $ConfirmAggressive) {
+        if ($Silent) {
+            Write-Error 'Preset agresywny w trybie -Silent wymaga parametru -ConfirmAggressive.'
+            Exit 1
+        }
+
+        Write-Warning 'Preset agresywny usuwa również aplikacje OEM, w tym narzędzia zasilania, diagnostyki i wsparcia producenta.'
+        $aggressiveConfirmation = Read-Host 'Wyłączyć dodatkowe funkcje i usunąć aplikacje OEM? (t/n)'
+        if ($aggressiveConfirmation -notmatch '^(t|tak|y|yes)$') {
+            Write-Host 'Anulowano preset agresywny.' -ForegroundColor Yellow
+            Exit 3
+        }
+    }
+
+    try {
+        Import-UsbPreset -PresetName $Preset | Out-Null
+        Save-Settings
+        if (-not $Silent) {
+            Write-PendingChanges
+        }
+    }
+    catch {
+        Write-Error "Nie udało się wczytać presetu '$Preset': $($_.Exception.Message)"
+        Wait-ForKeyPress -ExitCode 1
+    }
+}
 
 # Add default Apps parameter when RemoveApps is requested and Apps was not explicitly provided
 if ((-not $script:Params.ContainsKey("Apps")) -and $script:Params.ContainsKey("RemoveApps")) {
@@ -571,6 +676,7 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
                 }
                 catch { }
 
+                if ($UsbMode) { Exit (Get-UsbWorkflowExitCode) }
                 Exit
             }
             catch {
@@ -618,11 +724,18 @@ if (($controlParamsCount -eq $script:Params.Keys.Count) -or ($script:Params.Keys
 
 # Execute all selected/provided parameters using the consolidated function
 # (This also handles restore point creation if requested)
-Invoke-AllChanges
+try {
+    Invoke-AllChanges
+}
+catch {
+    Write-Error $_
+    Wait-ForKeyPress -ExitCode 1
+}
 
 if ($script:CancelRequested) {
     Write-Warning "Script execution was cancelled by the user. Any remaining changes were not applied."
-    Wait-ForKeyPress
+    $cancelExitCode = if ($UsbMode) { 3 } else { 0 }
+    Wait-ForKeyPress -ExitCode $cancelExitCode
 }
 
 # Restart Explorer process unless running in Sysprep or User context
@@ -635,4 +748,8 @@ Write-Output ""
 Write-Output ""
 Write-Output "Script completed! Please check above for any errors."
 
-Wait-ForKeyPress
+$exitCode = 0
+if ($UsbMode) {
+    $exitCode = Get-UsbWorkflowExitCode
+}
+Wait-ForKeyPress -ExitCode $exitCode

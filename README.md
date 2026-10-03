@@ -6,6 +6,8 @@
 
  Win11Debloat is a lightweight, easy to use PowerShell script that allows you to quickly declutter and customize your Windows experience, no installation required! You can use it to remove pre-installed apps, disable telemetry, remove intrusive interface elements and much more. No need to painstakingly go through all the settings yourself or remove apps one by one. Win11Debloat makes the process quick and easy!
 
+For a Polish USB workflow, see the [Polish guide](README.pl-PL.md).
+
 The script also includes many features that system administrators and power users will enjoy. Such as a powerful command-line interface, support for Windows Audit mode and the ability to make changes to other Windows users. You can also easily export & import your preferred settings, allowing you to quickly apply the same settings on all your systems. Please refer to our [wiki](https://github.com/Raphire/Win11Debloat/wiki) for more details.
 
 ![Win11Debloat Menu](/Assets/Images/menu.png)
@@ -46,6 +48,19 @@ This method supports command-line parameters to customize the behaviour of the s
   4. Accept the Windows UAC prompt to run the script as administrator, this is required for the script to function.
   5. Carefully read through and follow the on-screen instructions.
 </details>
+
+### USB preparation workflow
+
+The repository can be copied to a USB drive and used to prepare multiple Windows 11 devices without installing Win11Debloat. Open `Run.bat` and choose one of the Polish presets:
+
+- **Normalny** — the current recommended settings and default app list.
+- **Agresywny** — additional privacy, interface, AI, and OEM-app cleanup; requires confirmation.
+- **Gaming** — disables selected recording and interface distractions without removing Xbox services, drivers, or protected gaming apps.
+- **Tryb własny** — opens the regular Win11Debloat interface.
+
+The launcher uses local, relative paths and native Windows PowerShell 5.1. It writes per-run logs to `Logs\<COMPUTERNAME>\<TIMESTAMP_ID>`. Registry backups and last-used settings stay under `%ProgramData%\Win11Debloat`; wallpaper images and backups stay under `%LOCALAPPDATA%\Win11Debloat` for the current account. The wallpaper menu offers built-in black, supported images in `Assets\Wallpapers`, or no change. Enter selects `default.jpg` when available, otherwise black. Images are copied locally, so they remain available after unplugging the drive.
+
+Presets request a system restore point through the existing engine (which may reuse a recent point) and keep registry backups enabled. Aggressive can remove OEM power-management and support tools; review the confirmation before applying it. Wallpaper failure does not stop other changes, but produces a nonzero exit status. The launcher also exposes the existing registry/Start Menu restore dialog and a separate latest-wallpaper restore option. See the [Polish guide](README.pl-PL.md) for limitations and the required Windows 11 acceptance checklist. Portable tests on macOS do not validate Windows runtime behavior.
 
 ### Advanced method
 

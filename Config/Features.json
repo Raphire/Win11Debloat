@@ -1710,6 +1710,26 @@
       "RegistryUndoKey": "Start_AllApps_Category.reg",
       "MinVersion": 26200,
       "MaxVersion": null
+    },
+    {
+      "FeatureId": "SetWallpaper",
+      "Label": "Set the selected wallpaper",
+      "ApplyText": "Setting the selected wallpaper",
+      "Category": null,
+      "RegistryKey": null,
+      "RegistryUndoKey": null,
+      "MinVersion": null,
+      "MaxVersion": null
+    },
+    {
+      "FeatureId": "RestoreWallpaper",
+      "Label": "Restore the latest Win11Debloat wallpaper backup",
+      "ApplyText": "Restoring the wallpaper backup",
+      "Category": null,
+      "RegistryKey": null,
+      "RegistryUndoKey": null,
+      "MinVersion": null,
+      "MaxVersion": null
     }
   ]
 }

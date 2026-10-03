@@ -1,7 +1,7 @@
 {
   "Features": {
     "RemoveApps": {
-      "Label": "De apps verwijderen die zijn opgegeven met de parameter 'Apps'",
+      "Label": "Apps verwijderen die met de parameter 'Apps' zijn opgegeven",
       "ApplyText": "Geselecteerde apps verwijderen"
     },
     "Apps": {
@@ -17,69 +17,69 @@
       "ApplyText": "HP-apps verwijderen"
     },
     "CreateRestorePoint": {
-      "Label": "Een systeemherstelpunt maken",
+      "Label": "Systeemherstelpunt maken",
       "ApplyText": "Systeemherstelpunt maken"
     },
     "DisableTelemetry": {
       "Label": "Telemetrie, tracking en gerichte advertenties uitschakelen",
-      "ToolTip": "Schakelt onder meer telemetrie, het verzamelen van diagnostische gegevens, de activiteitengeschiedenis, het bijhouden van gestarte apps en gerichte advertenties uit. Hierdoor ontvangt Microsoft minder gegevens over je apparaat en hoe je het gebruikt. Gebruik je Windows Insider? Dan kunnen updates worden geblokkeerd totdat je het verzamelen van optionele diagnostische gegevens weer inschakelt.",
+      "ToolTip": "Schakelt onder meer telemetrie, diagnostische gegevensverzameling, activiteitengeschiedenis, het bijhouden van gestarte apps en gerichte advertenties uit. Zo ontvangt Microsoft minder gegevens over je apparaat en het gebruik ervan. Bij Windows Insider kunnen updates worden geblokkeerd totdat je optionele diagnostische gegevens weer inschakelt.",
       "ApplyText": "Telemetrie en diagnostische gegevensverzameling uitschakelen",
       "UndoLabel": "Telemetrie, tracking en gerichte advertenties inschakelen",
       "ApplyUndoText": "Telemetrie en diagnostische gegevensverzameling inschakelen"
     },
     "DisableSuggestions": {
-      "Label": "Tips, trucs en aanbevolen inhoud in heel Windows uitschakelen",
+      "Label": "Tips en aanbevelingen in Windows uitschakelen",
       "ToolTip": "Verwijdert veel storende meldingen, herinneringen en advertenties van synchronisatieproviders uit Windows. Voorkomt ook dat aanbevolen apps automatisch worden geïnstalleerd.",
       "ApplyText": "Tips, aanbevelingen en advertenties in Windows uitschakelen",
-      "UndoLabel": "Tips, trucs en aanbevolen inhoud in heel Windows inschakelen",
+      "UndoLabel": "Tips en aanbevelingen in Windows inschakelen",
       "ApplyUndoText": "Tips, aanbevelingen en advertenties in Windows inschakelen"
     },
     "DisableNotifications": {
       "Label": "Windows-meldingen uitschakelen",
-      "ToolTip": "Schakelt Windows-meldingen van apps en andere afzenders uit, waaronder meldingen van apps zoals Discord, WhatsApp, Teams en Slack.",
+      "ToolTip": "Schakelt Windows-meldingen uit van apps zoals Discord, WhatsApp, Teams en Slack, en van andere afzenders.",
       "ApplyText": "Windows-meldingen en herinneringen uitschakelen",
       "UndoLabel": "Windows-meldingen en herinneringen inschakelen",
       "ApplyUndoText": "Windows-meldingen en herinneringen inschakelen"
     },
     "DisableLocationServices": {
-      "Label": "Windows locatieservices en app-toegang tot locatie uitschakelen",
+      "Label": "Locatieservices en locatietoegang voor apps uitschakelen",
       "ToolTip": "Schakelt de locatieservices van Windows uit en voorkomt dat apps je locatie kunnen gebruiken. Dit gebeurt via beleidsinstellingen, waardoor je bepaalde instellingen niet meer zelf kunt wijzigen.",
-      "ApplyText": "Locatieservices van Windows en toegang van apps tot je locatie uitschakelen",
-      "UndoLabel": "Locatieservices van Windows en toegang van apps tot je locatie inschakelen",
-      "ApplyUndoText": "Locatieservices van Windows en toegang van apps tot je locatie inschakelen"
+      "ApplyText": "Locatieservices en locatietoegang voor apps uitschakelen",
+      "UndoLabel": "Locatieservices en locatietoegang voor apps inschakelen",
+      "ApplyUndoText": "Locatieservices en locatietoegang voor apps inschakelen"
     },
     "DisableFindMyDevice": {
-      "Label": "Locatiebepaling via 'Mijn apparaat zoeken' uitschakelen",
+      "Label": "'Mijn apparaat zoeken' uitschakelen",
       "ToolTip": "Schakelt 'Mijn apparaat zoeken' uit. Deze functie verzendt regelmatig de locatie van je apparaat naar Microsoft. Dit gebeurt via beleidsinstellingen, waardoor je bepaalde instellingen niet meer zelf kunt wijzigen.",
-      "ApplyText": "Locatiebepaling via 'Mijn apparaat zoeken' uitschakelen",
-      "UndoLabel": "Locatiebepaling via 'Mijn apparaat zoeken' inschakelen",
-      "ApplyUndoText": "Locatiebepaling via 'Mijn apparaat zoeken' inschakelen"
+      "ApplyText": "'Mijn apparaat zoeken' uitschakelen",
+      "UndoLabel": "'Mijn apparaat zoeken' inschakelen",
+      "ApplyUndoText": "'Mijn apparaat zoeken' inschakelen"
     },
     "DisableLockscreenTips": {
       "Label": "Tips en trucs op het vergrendelingsscherm uitschakelen",
-      "ToolTip": "Schakelt Windows Spotlight op het vergrendelingsscherm uit, evenals de tips, trucs en weetjes die op het vergrendelingsscherm verschijnen.",
+      "ToolTip": "Schakelt Windows-spotlight en de bijbehorende tips, trucs en weetjes op het vergrendelingsscherm uit.",
       "ApplyText": "Tips en trucs op het vergrendelingsscherm uitschakelen",
       "UndoLabel": "Tips en trucs op het vergrendelingsscherm inschakelen",
       "ApplyUndoText": "Tips en trucs op het vergrendelingsscherm inschakelen"
     },
     "EnableDesktopSpotlight": {
-      "Label": "Windows Spotlight als bureaubladachtergrond en de bijbehorende snelkoppeling inschakelen",
-      "ToolTip": "Herstelt Windows Spotlight als bureaubladachtergrond en de snelkoppeling 'Meer informatie over deze afbeelding'.",
-      "ApplyText": "De bureaubladachtergrond en snelkoppeling van Windows Spotlight herstellen"
+      "Label": "Windows-spotlight op het bureaublad inschakelen, inclusief snelkoppeling",
+      "ToolTip": "Herstelt Windows-spotlight als bureaubladachtergrond en de snelkoppeling 'Meer informatie over deze afbeelding'.",
+      "ApplyText": "De bureaubladachtergrond en snelkoppeling van Windows-spotlight herstellen"
     },
     "DisableDesktopSpotlight": {
-      "Label": "Windows Spotlight als bureaubladachtergrond uitschakelen",
-      "ToolTip": "Schakelt Windows Spotlight voor de bureaubladachtergrond uit. Deze functie toont wisselende afbeeldingen en kan tips en weetjes weergeven. Dit gebeurt via beleidsinstellingen, waardoor je bepaalde instellingen niet meer zelf kunt wijzigen.",
-      "ApplyText": "Windows Spotlight als bureaubladachtergrond uitschakelen",
-      "UndoLabel": "Windows Spotlight als bureaubladachtergrond inschakelen",
-      "ApplyUndoText": "De bureaubladachtergrond en snelkoppeling van Windows Spotlight herstellen"
+      "Label": "Windows-spotlight als bureaubladachtergrond uitschakelen",
+      "ToolTip": "Schakelt Windows-spotlight voor de bureaubladachtergrond uit. Deze functie toont wisselende afbeeldingen en kan tips en weetjes weergeven. Dit gebeurt via beleidsinstellingen, waardoor je bepaalde instellingen niet meer zelf kunt wijzigen.",
+      "ApplyText": "Windows-spotlight als bureaubladachtergrond uitschakelen",
+      "UndoLabel": "Windows-spotlight als bureaubladachtergrond inschakelen",
+      "ApplyUndoText": "De bureaubladachtergrond en snelkoppeling van Windows-spotlight herstellen"
     },
     "HideDesktopSpotlightIcon": {
       "Label": "De bureaubladsnelkoppeling 'Meer informatie over deze afbeelding' verbergen",
-      "ToolTip": "Verbergt de bureaubladsnelkoppeling 'Meer informatie over deze afbeelding', terwijl Windows Spotlight de achtergrond blijft wisselen. Windows Spotlight wordt niet uitgeschakeld.",
-      "ApplyText": "De bureaubladsnelkoppeling 'Meer informatie over deze afbeelding' van Windows Spotlight verbergen",
+      "ToolTip": "Verbergt de bureaubladsnelkoppeling 'Meer informatie over deze afbeelding'. Windows-spotlight blijft de achtergrond wisselen.",
+      "ApplyText": "De snelkoppeling van Windows-spotlight op het bureaublad verbergen",
       "UndoLabel": "De bureaubladsnelkoppeling 'Meer informatie over deze afbeelding' tonen",
-      "ApplyUndoText": "De bureaubladsnelkoppeling 'Meer informatie over deze afbeelding' van Windows Spotlight tonen"
+      "ApplyUndoText": "De snelkoppeling van Windows-spotlight op het bureaublad tonen"
     },
     "DisableEdgeAds": {
       "Label": "Advertenties, aanbevelingen en nieuwsfeed in Edge uitschakelen",
@@ -110,11 +110,11 @@
       "ApplyUndoText": "Click To Do inschakelen"
     },
     "DisableAISvcAutoStart": {
-      "Label": "Voorkomen dat de AI-service automatisch start",
+      "Label": "Automatisch starten van de AI-service uitschakelen",
       "ToolTip": "Stelt de service WSAIFabricSvc in op handmatig starten, zodat deze niet automatisch met Windows start.",
-      "ApplyText": "Voorkomen dat de AI-service automatisch start",
-      "UndoLabel": "Toestaan dat de AI-service automatisch start",
-      "ApplyUndoText": "Toestaan dat de AI-service automatisch start"
+      "ApplyText": "Automatisch starten van de AI-service uitschakelen",
+      "UndoLabel": "Automatisch starten van de AI-service inschakelen",
+      "ApplyUndoText": "Automatisch starten van de AI-service inschakelen"
     },
     "DisableDVR": {
       "Label": "Game- en schermopnamen via Xbox uitschakelen",
@@ -161,18 +161,18 @@
       "ApplyUndoText": "De sectie 'Alle apps' in het Startmenu inschakelen"
     },
     "DisableStartPhoneLink": {
-      "Label": "De integratie van Telefoonkoppeling in het Startmenu uitschakelen",
-      "ToolTip": "Verwijdert Telefoonkoppeling uit het Startmenu als je een mobiel apparaat aan je pc hebt gekoppeld.",
-      "ApplyText": "De integratie van Telefoonkoppeling voor mobiele apparaten in het Startmenu uitschakelen",
-      "UndoLabel": "De integratie van Telefoonkoppeling in het Startmenu inschakelen",
-      "ApplyUndoText": "De integratie van Telefoonkoppeling voor mobiele apparaten in het Startmenu inschakelen"
+      "Label": "Telefoonkoppeling in het Startmenu uitschakelen",
+      "ToolTip": "Verwijdert Telefoonkoppeling integratie uit het Startmenu als je een mobiel apparaat aan je pc hebt gekoppeld.",
+      "ApplyText": "Telefoonkoppeling in het Startmenu uitschakelen",
+      "UndoLabel": "Telefoonkoppeling in het Startmenu inschakelen",
+      "ApplyUndoText": "Telefoonkoppeling in het Startmenu inschakelen"
     },
     "DisableBing": {
-      "Label": "Bing-webzoeken en Copilot-integratie in Zoeken uitschakelen",
+      "Label": "Bing en Copilot in Windows Zoeken uitschakelen",
       "ToolTip": "Schakelt Bing-webzoekresultaten en Copilot-integratie in Windows Zoeken uit. Dit gebeurt via beleidsinstellingen, waardoor je bepaalde instellingen niet meer zelf kunt wijzigen.",
-      "ApplyText": "Bing-webzoeken en Copilot-integratie in Windows Zoeken uitschakelen",
-      "UndoLabel": "Bing-webzoeken en Copilot-integratie in Zoeken inschakelen",
-      "ApplyUndoText": "Bing-webzoeken en Copilot-integratie in Windows Zoeken inschakelen"
+      "ApplyText": "Bing en Copilot in Windows Zoeken uitschakelen",
+      "UndoLabel": "Bing en Copilot in Windows Zoeken inschakelen",
+      "ApplyUndoText": "Bing en Copilot in Windows Zoeken inschakelen"
     },
     "DisableStoreSearchSuggestions": {
       "Label": "App-aanbevelingen van de Microsoft Store in Zoeken uitschakelen",
@@ -182,7 +182,7 @@
       "ApplyUndoText": "App-aanbevelingen van de Microsoft Store in Zoeken inschakelen"
     },
     "DisableSettings365Ads": {
-      "Label": "Microsoft 365 Copilot-advertenties in instellingen verbergen",
+      "Label": "Microsoft 365 Copilot-advertenties in Instellingen verbergen",
       "ToolTip": "Schakelt de Microsoft 365 Copilot-advertenties op de startpagina van Instellingen uit.",
       "ApplyText": "Microsoft 365 Copilot-advertenties op de startpagina van Instellingen uitschakelen",
       "UndoLabel": "Microsoft 365 Copilot-advertenties op de startpagina van Instellingen tonen",
@@ -204,7 +204,7 @@
     },
     "DisablePaintAI": {
       "Label": "AI-functies in Paint uitschakelen",
-      "ToolTip": "Schakelt AI-functies in Paint uit, zoals de hulpmiddelen voor het genereren en bewerken van afbeeldingen met AI. Dit gebeurt via beleidsinstellingen, waardoor je bepaalde instellingen niet meer zelf kunt wijzigen.",
+      "ToolTip": "Schakelt AI-functies in Paint uit, zoals het genereren en bewerken van afbeeldingen. Dit gebeurt via beleidsinstellingen, waardoor je bepaalde instellingen niet meer zelf kunt wijzigen.",
       "ApplyText": "AI-functies in Paint uitschakelen",
       "UndoLabel": "AI-functies in Paint inschakelen",
       "ApplyUndoText": "AI-functies in Paint inschakelen"
@@ -231,10 +231,10 @@
       "ApplyUndoText": "Donker thema voor Windows en apps uitschakelen"
     },
     "DisableDragTray": {
-      "Label": "'Drag Tray' voor het delen en verplaatsen van bestanden uitschakelen",
-      "ToolTip": "Drag Tray is een nieuwe functie voor het delen en verplaatsen van bestanden in Windows 11. Deze verschijnt bovenaan het scherm wanneer je bestanden sleept.",
+      "Label": "Drag Tray uitschakelen",
+      "ToolTip": "Drag Tray verschijnt bovenaan het scherm wanneer je bestanden sleept in Windows 11. Hiermee kun je bestanden delen en verplaatsen.",
       "ApplyText": "Drag Tray uitschakelen",
-      "UndoLabel": "'Drag Tray' voor het delen en verplaatsen van bestanden inschakelen",
+      "UndoLabel": "Drag Tray inschakelen",
       "ApplyUndoText": "Drag Tray inschakelen"
     },
     "RevertContextMenu": {
@@ -245,11 +245,11 @@
       "ApplyUndoText": "Het Windows 11-contextmenu herstellen"
     },
     "DisableMouseAcceleration": {
-      "Label": "'Precisie van de aanwijzer verbeteren' (muisversnelling) uitschakelen",
-      "ToolTip": "Schakelt muisversnelling uit, die standaard in Windows is ingeschakeld. Dit maakt muisbewegingen consistenter en voorspelbaarder.",
-      "ApplyText": "'Precisie van de aanwijzer verbeteren' uitschakelen",
-      "UndoLabel": "'Precisie van de aanwijzer verbeteren' (muisversnelling) inschakelen",
-      "ApplyUndoText": "'Precisie van de aanwijzer verbeteren' inschakelen"
+      "Label": "'Precisie van aanwijzer verbeteren' uitschakelen",
+      "ToolTip": "Schakelt muisversnelling uit via de Windows-optie 'Precisie van aanwijzer verbeteren'. Dit maakt muisbewegingen consistenter en voorspelbaarder.",
+      "ApplyText": "'Precisie van aanwijzer verbeteren' uitschakelen",
+      "UndoLabel": "'Precisie van aanwijzer verbeteren' inschakelen",
+      "ApplyUndoText": "'Precisie van aanwijzer verbeteren' inschakelen"
     },
     "DisableStickyKeys": {
       "Label": "De sneltoets voor Plaktoetsen uitschakelen (5x Shift)",
@@ -259,25 +259,25 @@
       "ApplyUndoText": "De sneltoets voor Plaktoetsen inschakelen"
     },
     "DisableWindowSnapping": {
-      "Label": "Automatisch uitlijnen van vensters uitschakelen",
+      "Label": "Vensters uitlijnen uitschakelen",
       "ToolTip": "Schakelt de mogelijkheid uit om vensters aan de zijkanten of in de hoeken van het scherm uit te lijnen.",
-      "ApplyText": "Automatisch uitlijnen van vensters uitschakelen",
-      "UndoLabel": "Automatisch uitlijnen van vensters inschakelen",
-      "ApplyUndoText": "Automatisch uitlijnen van vensters inschakelen"
+      "ApplyText": "Vensters uitlijnen uitschakelen",
+      "UndoLabel": "Vensters uitlijnen inschakelen",
+      "ApplyUndoText": "Vensters uitlijnen inschakelen"
     },
     "DisableSnapAssist": {
-      "Label": "App-aanbevelingen bij het uitlijnen van vensters uitschakelen",
-      "ToolTip": "Schakelt app-aanbevelingen uit wanneer je vensters aan de zijkanten of in de hoeken van het scherm uitlijnt.",
+      "Label": "App-suggesties bij het uitlijnen van vensters uitschakelen",
+      "ToolTip": "Schakelt suggesties voor andere apps uit wanneer je een venster aan een zijkant of in een hoek van het scherm uitlijnt.",
       "ApplyText": "Suggesties van de Uitlijnassistent uitschakelen",
-      "UndoLabel": "App-aanbevelingen bij het uitlijnen van vensters inschakelen",
+      "UndoLabel": "App-suggesties bij het uitlijnen van vensters inschakelen",
       "ApplyUndoText": "Suggesties van de Uitlijnassistent inschakelen"
     },
     "DisableSnapLayouts": {
-      "Label": "Uitlijnindelingen bovenin het scherm en bij maximaliseerknop verbergen",
+      "Label": "Menu's met uitlijnindelingen verbergen",
       "ToolTip": "Verbergt het menu met uitlijnindelingen dat verschijnt wanneer je de muis boven de maximaliseerknop houdt of een venster naar de bovenkant van het scherm sleept.",
-      "ApplyText": "Uitlijnindelingen bovenaan het scherm en bij de maximaliseerknop verbergen",
-      "UndoLabel": "Uitlijnindelingen bovenaan het scherm en bij de maximaliseerknop tonen",
-      "ApplyUndoText": "Uitlijnindelingen bovenaan het scherm en bij de maximaliseerknop tonen"
+      "ApplyText": "Menu's met uitlijnindelingen verbergen",
+      "UndoLabel": "Menu's met uitlijnindelingen tonen",
+      "ApplyUndoText": "Menu's met uitlijnindelingen tonen"
     },
     "HideTabsInAltTab": {
       "Label": "Tabbladen van apps verbergen bij het uitlijnen van vensters of via Alt+Tab",
@@ -296,10 +296,10 @@
       "ApplyText": "20 tabbladen van apps tonen bij het uitlijnen van vensters of via Alt+Tab"
     },
     "TaskbarAlignLeft": {
-      "Label": "Taakbalk links uitlijnen",
+      "Label": "Taakbalkknoppen links uitlijnen",
       "ToolTip": "Windows 11 plaatst de taakbalkknoppen standaard in het midden. Deze instelling verplaatst de knoppen naar links, zoals in eerdere Windows-versies.",
       "ApplyText": "Taakbalkknoppen links uitlijnen",
-      "UndoLabel": "Taakbalk in het midden uitlijnen",
+      "UndoLabel": "Taakbalkknoppen in het midden uitlijnen",
       "ApplyUndoText": "Taakbalkknoppen in het midden uitlijnen"
     },
     "HideSearchTb": {
@@ -344,11 +344,11 @@
       "ApplyUndoText": "Het Chat-pictogram op de taakbalk tonen"
     },
     "DisableStorageSense": {
-      "Label": "Automatische schijfopruiming met Opslaginzicht uitschakelen",
+      "Label": "Automatische schijfopruiming (Opslaginzicht) uitschakelen",
       "ToolTip": "Schakelt Opslaginzicht uit. Deze functie maakt automatisch schijfruimte vrij door tijdelijke bestanden te verwijderen, de prullenbak te legen en de map Downloads op te ruimen.",
-      "ApplyText": "Automatische schijfopruiming met Opslaginzicht uitschakelen",
-      "UndoLabel": "Automatische schijfopruiming met Opslaginzicht inschakelen",
-      "ApplyUndoText": "Automatische schijfopruiming met Opslaginzicht inschakelen"
+      "ApplyText": "Automatische schijfopruiming uitschakelen",
+      "UndoLabel": "Automatische schijfopruiming inschakelen",
+      "ApplyUndoText": "Automatische schijfopruiming inschakelen"
     },
     "DisableFastStartup": {
       "Label": "Snel opstarten uitschakelen",
@@ -372,18 +372,18 @@
       "ApplyUndoText": "Netwerkverbinding tijdens Modern Standby inschakelen"
     },
     "EnableEndTask": {
-      "Label": "De optie 'Taak beëindigen' in het contextmenu van de taakbalk tonen",
+      "Label": "'Taak beëindigen' in het taakbalkmenu tonen",
       "ToolTip": "Voegt 'Taak beëindigen' toe aan het rechtermuisknopmenu van apps op de taakbalk. Hiermee kun je apps snel geforceerd sluiten.",
-      "ApplyText": "De optie 'Taak beëindigen' in het rechtermuisknopmenu van de taakbalk inschakelen",
-      "UndoLabel": "De optie 'Taak beëindigen' in het contextmenu van de taakbalk verbergen",
-      "ApplyUndoText": "De optie 'Taak beëindigen' in het rechtermuisknopmenu van de taakbalk uitschakelen"
+      "ApplyText": "'Taak beëindigen' in het taakbalkmenu inschakelen",
+      "UndoLabel": "'Taak beëindigen' in het taakbalkmenu verbergen",
+      "ApplyUndoText": "'Taak beëindigen' in het taakbalkmenu uitschakelen"
     },
     "EnableLastActiveClick": {
-      "Label": "Bij een klik op een taakbalk-app direct naar het laatst actieve venster gaan",
-      "ToolTip": "Als dit is ingeschakeld, ga je met een klik op een app in de taakbalk direct naar het laatst actieve venster van die app, in plaats van alleen een miniatuurvoorbeeld te zien.",
-      "ApplyText": "Taakbalk-apps instellen op direct overschakelen naar het laatst actieve venster",
-      "UndoLabel": "Bij een klik op een taakbalk-app eerst de venstervoorbeelden tonen",
-      "ApplyUndoText": "Taakbalk-apps instellen op het tonen van venstervoorbeelden"
+      "Label": "Laatst actieve venster openen bij een klik op de taakbalkknop",
+      "ToolTip": "Klik op een taakbalkknop om direct naar het laatst actieve venster van die app te gaan, in plaats van eerst de venstervoorbeelden te tonen.",
+      "ApplyText": "Taakbalkknoppen direct het laatst actieve venster laten openen",
+      "UndoLabel": "Venstervoorbeelden tonen bij een klik op de taakbalkknop",
+      "ApplyUndoText": "Taakbalkknoppen venstervoorbeelden laten tonen"
     },
     "CombineTaskbarAlways": {
       "Label": "Taakbalkknoppen op het hoofdscherm altijd combineren en labels verbergen",
@@ -505,11 +505,11 @@
       "ApplyUndoText": "Animaties en visuele effecten inschakelen"
     },
     "DisableUpdateASAP": {
-      "Label": "Nieuwe updates niet direct ontvangen zodra ze beschikbaar zijn",
-      "ToolTip": "Voorkomt dat je pc als een van de eerste nieuwe updates ontvangt die geen beveiligingsupdates zijn. Je ontvangt deze updates later alsnog.",
-      "ApplyText": "Voorkomen dat Windows nieuwe updates direct ontvangt",
-      "UndoLabel": "Nieuwe updates ontvangen zodra ze beschikbaar zijn",
-      "ApplyUndoText": "Windows nieuwe updates laten ontvangen zodra ze beschikbaar zijn"
+      "Label": "'De nieuwste updates ontvangen zodra ze beschikbaar zijn' uitschakelen",
+      "ToolTip": "Je ontvangt niet-beveiligingsupdates later, in plaats van zodra ze beschikbaar zijn. Beveiligingsupdates blijf je gewoon ontvangen.",
+      "ApplyText": "'De nieuwste updates ontvangen zodra ze beschikbaar zijn' uitschakelen",
+      "UndoLabel": "'De nieuwste updates ontvangen zodra ze beschikbaar zijn' inschakelen",
+      "ApplyUndoText": "'De nieuwste updates ontvangen zodra ze beschikbaar zijn' inschakelen"
     },
     "PreventUpdateAutoReboot": {
       "Label": "Automatische herstarts na updates voorkomen zolang een gebruiker is aangemeld",
@@ -519,15 +519,15 @@
       "ApplyUndoText": "Automatische herstarts na updates toestaan zolang een gebruiker is aangemeld"
     },
     "DisableDeliveryOptimization": {
-      "Label": "Het delen van gedownloade updates met andere pc's uitschakelen",
-      "ToolTip": "Voorkomt dat je pc gedownloade updates deelt met andere pc's op het lokale netwerk of internet. Dit voorkomt ook dat je pc updates van andere pc's downloadt.",
-      "ApplyText": "Het delen van gedownloade updates met andere pc's uitschakelen",
-      "UndoLabel": "Het delen van gedownloade updates met andere pc's inschakelen",
-      "ApplyUndoText": "Het delen van gedownloade updates met andere pc's inschakelen"
+      "Label": "Update downloads van andere pc's blokkeren",
+      "ToolTip": "Voorkomt dat je pc updates uitwisselt met andere pc's op het lokale netwerk of internet.",
+      "ApplyText": "Update downloads van andere pc's blokkeren",
+      "UndoLabel": "Update downloads van andere pc's toestaan",
+      "ApplyUndoText": "Update downloads van andere pc's toestaan"
     },
     "DisableDeviceAutoAppDownload": {
-      "Label": "Automatische installatie van apps voor aangesloten apparaten voorkomen",
-      "ToolTip": "Voorkomt dat Windows Update ongemerkt extra apps installeert wanneer je bepaalde apparaten aansluit, zoals beeldschermen van LG en Alienware. De apparaten blijven gewoon werken. Alleen de automatische installatie van bijbehorende apps zonder je toestemming wordt geblokkeerd.",
+      "Label": "Automatische app-installatie voor aangesloten apparaten voorkomen",
+      "ToolTip": "Voorkomt dat Windows Update automatisch extra apps installeert voor aangesloten apparaten, zoals beeldschermen van LG en Alienware. De apparaten blijven gewoon werken.",
       "ApplyText": "Automatische installatie van apps voor aangesloten apparaten voorkomen",
       "UndoLabel": "Automatische installatie van apps voor aangesloten apparaten toestaan",
       "ApplyUndoText": "Automatische installatie van apps voor aangesloten apparaten toestaan"
@@ -560,9 +560,9 @@
     "AddFoldersToThisPC": {
       "Label": "Veelgebruikte mappen weer tonen onder 'Deze pc'",
       "ToolTip": "Voegt veelgebruikte mappen zoals Bureaublad, Documenten, Downloads, Muziek, Afbeeldingen en Video's weer toe aan de pagina 'Deze pc' in Verkenner.",
-      "ApplyText": "Alle veelgebruikte mappen (Bureaublad, Downloads enz.) weer toevoegen aan 'Deze pc' in Verkenner",
+      "ApplyText": "Veelgebruikte mappen weer toevoegen aan 'Deze pc' in Verkenner",
       "UndoLabel": "Veelgebruikte mappen verbergen onder 'Deze pc'",
-      "ApplyUndoText": "Alle veelgebruikte mappen (Bureaublad, Downloads enz.) uit 'Deze pc' in Verkenner verwijderen"
+      "ApplyUndoText": "Veelgebruikte mappen uit 'Deze pc' in Verkenner verwijderen"
     },
     "HideIncludeInLibrary": {
       "Label": "De optie 'In bibliotheek opnemen' in het contextmenu verbergen",
@@ -586,15 +586,15 @@
       "ApplyUndoText": "'Delen' in het contextmenu tonen"
     },
     "DisableBraveBloat": {
-      "Label": "Overbodige functies in de Brave-browser uitschakelen (AI, crypto enz.)",
+      "Label": "Extra functies in Brave uitschakelen (AI, crypto enz.)",
       "ToolTip": "Schakelt de ingebouwde AI-functies, cryptowallet, News, Rewards, Talk en VPN van Brave uit. Dit gebeurt via beleidsinstellingen, waardoor je bepaalde instellingen niet meer zelf kunt wijzigen.",
       "ApplyText": "AI, cryptowallet, News, Rewards, Talk en VPN in Brave uitschakelen",
-      "UndoLabel": "Functies van de Brave-browser inschakelen (AI, crypto enz.)",
+      "UndoLabel": "Extra functies in Brave inschakelen (AI, crypto enz.)",
       "ApplyUndoText": "AI, cryptowallet, News, Rewards, Talk en VPN in Brave inschakelen"
     },
     "EnableWindowsSandbox": {
       "Label": "Windows Sandbox inschakelen",
-      "ToolTip": "Windows Sandbox is een lichte bureaubladomgeving waarin je apps veilig kunt uitvoeren. Software in deze omgeving draait los van je eigen Windows-installatie en blijft daarvan geïsoleerd. Alleen beschikbaar in de Pro-, Workstation- en Enterprise-edities van Windows 11.",
+      "ToolTip": "Met Windows Sandbox kun je apps in een afgeschermde bureaubladomgeving uitvoeren, los van je eigen Windows-installatie. Alleen beschikbaar in de Pro-, Workstation- en Enterprise-edities van Windows 11.",
       "ApplyText": "Windows Sandbox inschakelen",
       "UndoLabel": "Windows Sandbox uitschakelen",
       "ApplyUndoText": "Windows Sandbox uitschakelen"
@@ -654,26 +654,26 @@
   },
   "UiGroups": {
     "DesktopSpotlight": {
-      "Label": "Windows Spotlight op het bureaublad",
-      "ToolTip": "Kies of je Windows Spotlight als bureaubladachtergrond wilt gebruiken. Je kunt de wisselende achtergrond behouden met of zonder de snelkoppeling 'Meer informatie over deze afbeelding', of Windows Spotlight helemaal uitschakelen.",
+      "Label": "Windows-spotlight op het bureaublad",
+      "ToolTip": "Kies een wisselende bureaubladachtergrond met of zonder de snelkoppeling 'Meer informatie over deze afbeelding', of schakel Windows-spotlight uit.",
       "Values": {
-        "EnableDesktopSpotlight": "De snelkoppeling 'Meer informatie over deze afbeelding' tonen (standaard)",
-        "HideDesktopSpotlightIcon": "De snelkoppeling 'Meer informatie over deze afbeelding' verbergen",
-        "DisableDesktopSpotlight": "Windows Spotlight als bureaubladachtergrond uitschakelen"
+        "EnableDesktopSpotlight": "Achtergrond met snelkoppeling (standaard)",
+        "HideDesktopSpotlightIcon": "Achtergrond zonder snelkoppeling",
+        "DisableDesktopSpotlight": "Windows-spotlight als bureaubladachtergrond uitschakelen"
       }
     },
     "SearchIcon": {
       "Label": "Zoeken op de taakbalk",
       "ToolTip": "Kies hoe de zoekfunctie op de taakbalk wordt weergegeven.",
       "Values": {
-        "ShowSearchBoxTb": "Zoekvak tonen (standaard)",
-        "ShowSearchLabelTb": "Zoekpictogram en label tonen",
-        "ShowSearchIconTb": "Alleen zoekpictogram tonen",
+        "ShowSearchBoxTb": "Zoekvak (standaard)",
+        "ShowSearchLabelTb": "Zoekpictogram en -label",
+        "ShowSearchIconTb": "Alleen zoekpictogram",
         "HideSearchTb": "Verbergen"
       }
     },
     "MultiMon": {
-      "Label": "Appknoppen op de taakbalk tonen op",
+      "Label": "Appknoppen op de taakbalk weergeven op",
       "ToolTip": "Kies op welke taakbalken appknoppen verschijnen als je meerdere beeldschermen gebruikt.",
       "Values": {
         "MMTaskbarModeAll": "Alle taakbalken (standaard)",
@@ -700,8 +700,8 @@
       }
     },
     "ClearStart": {
-      "Label": "Verwijdering van vastgemaakte apps uit het Startmenu",
-      "ToolTip": "Met deze instelling kun je snel alle vastgemaakte apps uit het Startmenu verwijderen.",
+      "Label": "Vastgemaakte apps in het Startmenu",
+      "ToolTip": "Verwijdert alle vastgemaakte apps uit het Startmenu voor de gekozen gebruikers.",
       "Values": {
         "ClearStart": "Verwijderen voor de geselecteerde gebruiker",
         "ClearStartAllUsers": "Verwijderen voor alle gebruikers"
@@ -721,20 +721,20 @@
       "Label": "Positie van stationsletters",
       "ToolTip": "Kies waar stationsletters in Verkenner worden getoond.",
       "Values": {
-        "ShowDriveLettersLast": "Stationsletters na de stationsnaam tonen (standaard)",
-        "ShowDriveLettersFirst": "Stationsletters vóór de stationsnaam tonen",
-        "ShowNetworkDriveLettersFirst": "Stationsletters van netwerkstations vóór de stationsnaam tonen",
-        "HideDriveLetters": "Alle stationsletters verbergen"
+        "ShowDriveLettersLast": "Na de stationsnaam (standaard)",
+        "ShowDriveLettersFirst": "Vóór de stationsnaam",
+        "ShowNetworkDriveLettersFirst": "Vóór de stationsnaam bij netwerkstations",
+        "HideDriveLetters": "Verbergen"
       }
     },
     "ShowTabsInAltTab": {
-      "Label": "Weergave van tabbladen bij het uitlijnen van vensters of via Alt+Tab",
+      "Label": "Tabbladen tonen bij uitlijnen en Alt+Tab",
       "ToolTip": "Kies of je tabbladen van apps, zoals Edge, wilt zien wanneer je vensters uitlijnt of Alt+Tab indrukt.",
       "Values": {
         "HideTabsInAltTab": "Geen tabbladen tonen",
-        "Show3TabsInAltTab": "De 3 meest recente tabbladen tonen (standaard)",
-        "Show5TabsInAltTab": "De 5 meest recente tabbladen tonen",
-        "Show20TabsInAltTab": "De 20 meest recente tabbladen tonen"
+        "Show3TabsInAltTab": "3 meest recente tabbladen (standaard)",
+        "Show5TabsInAltTab": "5 meest recente tabbladen",
+        "Show20TabsInAltTab": "20 meest recente tabbladen"
       }
     },
     "StartAllAppsView": {

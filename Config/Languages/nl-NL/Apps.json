@@ -9,7 +9,7 @@
   },
   "Microsoft.549981C3F5F10": {
     "FriendlyName": "Cortana",
-    "Description": "Microsoft Cortana-spraakassistent (niet meer ondersteund)"
+    "Description": "Spraakassistent van Microsoft (niet meer ondersteund)"
   },
   "Microsoft.BingFinance": {
     "FriendlyName": "Bing Financiën",
@@ -21,7 +21,7 @@
   },
   "Microsoft.BingHealthAndFitness": {
     "FriendlyName": "Bing Gezondheid en fitness",
-    "Description": "App voor het bijhouden van je gezondheid en conditie, met nieuws via Bing (niet meer ondersteund)"
+    "Description": "Houdt je gezondheid en conditie bij en toont nieuws via Bing (niet meer ondersteund)"
   },
   "Microsoft.BingNews": {
     "FriendlyName": "Bing Nieuws",
@@ -33,7 +33,7 @@
   },
   "Microsoft.BingTranslator": {
     "FriendlyName": "Bing Vertaler",
-    "Description": "Vertaaldienst via Bing"
+    "Description": "Vertaaldienst van Bing"
   },
   "Microsoft.BingTravel": {
     "FriendlyName": "Bing Reizen",
@@ -53,7 +53,7 @@
   },
   "Microsoft.PCManager": {
     "FriendlyName": "Microsoft PC Manager",
-    "Description": "Hulpmiddel van Microsoft om je systeem op te schonen en te optimaliseren (vaak vooraf geïnstalleerd)"
+    "Description": "Microsoft-hulpmiddel voor systeemopruiming en optimalisatie (vaak vooraf geïnstalleerd)"
   },
   "Microsoft.Getstarted": {
     "FriendlyName": "Aan de slag",
@@ -68,8 +68,8 @@
     "Description": "App om 3D-modellen te bekijken"
   },
   "Microsoft.MicrosoftJournal": {
-    "FriendlyName": "Microsoft Journal",
-    "Description": "Digitale notitie-app, speciaal ontworpen voor gebruik met een pen"
+    "FriendlyName": "Microsoft Logboek",
+    "Description": "Notitie-app voor schrijven met een digitale pen"
   },
   "Microsoft.MicrosoftOfficeHub": {
     "FriendlyName": "Office Hub",
@@ -80,7 +80,7 @@
     "Description": "App voor het analyseren van bedrijfsgegevens"
   },
   "Microsoft.MicrosoftSolitaireCollection": {
-    "FriendlyName": "Solitaire-verzameling",
+    "FriendlyName": "Microsoft Solitaire Collection",
     "Description": "Verzameling kaartspellen voor één speler"
   },
   "Microsoft.MicrosoftStickyNotes": {
@@ -93,15 +93,15 @@
   },
   "Microsoft.NetworkSpeedTest": {
     "FriendlyName": "Network Speed Test",
-    "Description": "Hulpmiddel om de snelheid van de internetverbinding te testen"
+    "Description": "Meet de snelheid van je internetverbinding"
   },
   "Microsoft.News": {
     "FriendlyName": "Microsoft Nieuws",
-    "Description": "App die nieuws verzamelt (verving Bing Nieuws en is nu onderdeel van Microsoft Start)"
+    "Description": "Nieuwsapp (opvolger van Bing Nieuws, nu onderdeel van Microsoft Start)"
   },
   "Microsoft.Office.OneNote": {
     "FriendlyName": "OneNote",
-    "Description": "Digitale notitie-app (Universal Windows Platform-versie)"
+    "Description": "Digitale notitie-app (UWP-versie)"
   },
   "Microsoft.Office.Sway": {
     "FriendlyName": "Sway",
@@ -121,7 +121,7 @@
   },
   "Microsoft.SkypeApp": {
     "FriendlyName": "Skype (UWP)",
-    "Description": "Skype-communicatieapp, Universal Windows Platform-versie (niet meer ondersteund)"
+    "Description": "Skype voor chatten en bellen (UWP-versie, niet meer ondersteund)"
   },
   "Microsoft.Todos": {
     "FriendlyName": "Microsoft To Do",
@@ -133,7 +133,7 @@
   },
   "Microsoft.WindowsAlarms": {
     "FriendlyName": "Alarmen en klok",
-    "Description": "App met alarmen en een klok"
+    "Description": "Klok met wekkerfunctie"
   },
   "Microsoft.WindowsFeedbackHub": {
     "FriendlyName": "Feedback-hub",
@@ -169,11 +169,11 @@
   },
   "MSTeams": {
     "FriendlyName": "Microsoft Teams (nieuw)",
-    "Description": "Nieuwe Microsoft Teams-app (werk, school of persoonlijk gebruik)"
+    "Description": "Nieuwe Microsoft Teams-app voor werk, school en privégebruik"
   },
   "ACGMediaPlayer": {
     "FriendlyName": "ACG Media Player",
-    "Description": "Mediaspeler-app"
+    "Description": "Mediaspeler"
   },
   "ActiproSoftwareLLC": {
     "FriendlyName": "Actipro Software",
@@ -209,7 +209,7 @@
   },
   "CyberLinkMediaSuiteEssentials": {
     "FriendlyName": "CyberLink Media Suite",
-    "Description": "Multimediasoftwarepakket (vaak vooraf geïnstalleerd door fabrikanten)"
+    "Description": "Pakket met multimediasoftware (vaak vooraf geïnstalleerd door fabrikanten)"
   },
   "DisneyMagicKingdoms": {
     "FriendlyName": "Disney Magic Kingdoms",
@@ -221,7 +221,7 @@
   },
   "DrawboardPDF": {
     "FriendlyName": "Drawboard PDF",
-    "Description": "App om PDF-bestanden te bekijken en van aantekeningen te voorzien, vaak gericht op gebruik met een pen"
+    "Description": "PDF-lezer met functies voor aantekeningen, vooral met een digitale pen"
   },
   "Duolingo-LearnLanguagesforFree": {
     "FriendlyName": "Duolingo",
@@ -273,7 +273,7 @@
   },
   "LinkedInforWindows": {
     "FriendlyName": "LinkedIn",
-    "Description": "App voor het professionele netwerk LinkedIn"
+    "Description": "App voor het zakelijke netwerk LinkedIn"
   },
   "MarchofEmpires": {
     "FriendlyName": "March of Empires",
@@ -333,7 +333,7 @@
   },
   "WinZipUniversal": {
     "FriendlyName": "WinZip",
-    "Description": "Hulpmiddel voor het comprimeren en uitpakken van bestanden (Universal Windows Platform-versie)"
+    "Description": "Hulpmiddel waarmee je bestanden kan comprimeren en uitpakken (UWP-versie)"
   },
   "Microsoft.BingSearch": {
     "FriendlyName": "Bing Zoeken",
@@ -353,7 +353,7 @@
   },
   "Microsoft.M365Companions": {
     "FriendlyName": "Microsoft 365 Companions",
-    "Description": "Kleine zakelijke Microsoft 365-apps voor Agenda, Bestanden en Personen. Ze kunnen opnieuw worden geïnstalleerd als je Microsoft 365-beheerder ze inschakelt"
+    "Description": "Compacte zakelijke Microsoft 365-apps voor Agenda, Bestanden en Personen. Ze kunnen opnieuw worden geïnstalleerd als je Microsoft 365-beheerder ze inschakelt"
   },
   "Microsoft.MSPaint": {
     "FriendlyName": "Paint 3D",
@@ -369,7 +369,7 @@
   },
   "Microsoft.Paint": {
     "FriendlyName": "Paint",
-    "Description": "Klassieke Paint (traditionele 2D-tekenapp)"
+    "Description": "Klassieke tekenapp voor 2D-afbeeldingen"
   },
   "Microsoft.People": {
     "FriendlyName": "Personen",
@@ -381,11 +381,11 @@
   },
   "Microsoft.ScreenSketch": {
     "FriendlyName": "Knipprogramma",
-    "Description": "Hulpmiddel om schermafbeeldingen te maken en van aantekeningen te voorzien"
+    "Description": "Schermafbeeldingen maken en er aantekeningen aan toevoegen"
   },
   "Microsoft.StartExperiencesApp": {
     "FriendlyName": "Widgetervaring",
-    "Description": "Deze app verzorgt Mijn feed in Windows Widgets"
+    "Description": "Toont 'Mijn feed' in Windows Widgets"
   },
   "Microsoft.Whiteboard": {
     "FriendlyName": "Whiteboard",
@@ -457,7 +457,7 @@
   },
   "Microsoft.WidgetsPlatformRuntime": {
     "FriendlyName": "Widgets Platform Runtime",
-    "Description": "Onderdeel dat nodig is om Windows Widgets te laten werken"
+    "Description": "Vereist voor Windows Widgets"
   },
   "LGElectronics.LGMonitorApp": {
     "FriendlyName": "LG Monitor App",
@@ -473,11 +473,11 @@
   },
   "AD2F1837.HPConnectedPhotopoweredbySnapfish": {
     "FriendlyName": "HP Connected Photo",
-    "Description": "HP-software voor foto's, geïntegreerd met Snapfish (mogelijk niet meer ondersteund)"
+    "Description": "HP-fotosoftware met Snapfish-integratie (mogelijk niet meer ondersteund)"
   },
   "AD2F1837.HPDesktopSupportUtilities": {
     "FriendlyName": "HP Desktop Support Utilities",
-    "Description": "HP-software met hulpmiddelen voor desktopondersteuning"
+    "Description": "HP-hulpmiddelen voor desktopondersteuning"
   },
   "AD2F1837.HPEasyClean": {
     "FriendlyName": "HP Easy Clean",
@@ -489,7 +489,7 @@
   },
   "AD2F1837.HPJumpStarts": {
     "FriendlyName": "HP JumpStarts",
-    "Description": "HP-software met uitleg, tips om apps te ontdekken en snelle toegang tot HP-functies"
+    "Description": "HP-software met uitleg, app-suggesties en snelkoppelingen naar HP-functies"
   },
   "AD2F1837.HPPCHardwareDiagnosticsWindows": {
     "FriendlyName": "HP PC Hardware Diagnostics",
@@ -528,8 +528,8 @@
     "Description": "Beveiligingssoftware van HP, waarschijnlijk met AI om bedreigingen tegen te houden"
   },
   "AD2F1837.HPSystemInformation": {
-    "FriendlyName": "HP System Information",
-    "Description": "HP-software voor het weergeven van systeeminformatie"
+    "FriendlyName": "HP Systeeminformatie",
+    "Description": "Toont systeeminformatie van je HP-pc"
   },
   "AD2F1837.HPWelcome": {
     "FriendlyName": "HP Welcome",

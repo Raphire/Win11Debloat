@@ -231,10 +231,10 @@
       "ApplyUndoText": "Donker thema voor Windows en apps uitschakelen"
     },
     "DisableDragTray": {
-      "Label": "Drag Tray uitschakelen",
-      "ToolTip": "Drag Tray verschijnt bovenaan het scherm wanneer je bestanden sleept in Windows 11. Hiermee kun je bestanden delen en verplaatsen.",
+      "Label": "'Drag Tray' voor het delen van bestanden uitschakelen",
+      "ToolTip": "Drag Tray is een nieuwe functie voor het delen en verplaatsen van bestanden in Windows 11. Deze verschijnt bovenaan het scherm wanneer je bestanden sleept.",
       "ApplyText": "Drag Tray uitschakelen",
-      "UndoLabel": "Drag Tray inschakelen",
+      "UndoLabel": "'Drag Tray' voor het delen van bestanden inschakelen",
       "ApplyUndoText": "Drag Tray inschakelen"
     },
     "RevertContextMenu": {

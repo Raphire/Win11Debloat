@@ -471,7 +471,7 @@
     },
     "HideHome": {
       "Label": "Ocultar 'Inicial' do painel de navegação",
-      "ToolTip": "Oculta a seção 'Inicial' do painel de navegação do Explorador de Arquivos.",
+      "ToolTip": "Oculta a seção 'Inicial' do painel de navegação do Explorador de Arquivos. Aviso: os atalhos do Acesso rápido podem não ser atualizados até você reiniciar o PC ou o Explorador de Arquivos.",
       "ApplyText": "Ocultando a seção 'Inicial' do painel de navegação do Explorador de Arquivos",
       "UndoLabel": "Mostrar 'Inicial' do painel de navegação",
       "ApplyUndoText": "Mostrando a seção 'Inicial' do painel de navegação do Explorador de Arquivos"

@@ -471,7 +471,7 @@
     },
     "HideHome": {
       "Label": "Hide 'Home' from navigation pane",
-      "ToolTip": "Hides the 'Home' section from the File Explorer navigation pane.",
+      "ToolTip": "Hides the 'Home' section from the File Explorer navigation pane. Warning: This may prevent Quick access links from updating until you restart your PC or Windows Explorer.",
       "ApplyText": "Hiding the 'Home' section from the File Explorer navigation pane",
       "UndoLabel": "Show 'Home' from navigation pane",
       "ApplyUndoText": "Showing the 'Home' section from the File Explorer navigation pane"

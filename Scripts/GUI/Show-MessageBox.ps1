@@ -36,7 +36,7 @@ function Show-MessageBox {
     
     Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase | Out-Null
     
-    $usesDarkMode = Get-SystemUsesDarkMode
+    $usesDarkMode = Get-AppUsesDarkMode
     
     # Determine owner window - use provided Owner, or fall back to main GUI window
     $ownerWindow = if ($Owner) { $Owner } else { $script:GuiWindow }

@@ -64,6 +64,21 @@ Describe 'Get-UndoFeatureLabel' {
         Mock Get-ItemProperty { throw 'Registry unavailable' }
         Get-SystemUsesDarkMode | Should -BeFalse
     }
+
+    It 'quietly falls back to light mode on repeated missing personalization lookups' {
+        $ErrorActionPreference = 'Continue'
+        Mock Get-ItemProperty {
+            param($ErrorAction)
+            $lookupErrorAction = if ($ErrorAction) { $ErrorAction } else { 'Continue' }
+            Write-Error -Message 'Personalization key was not found.' -Category ObjectNotFound -ErrorAction $lookupErrorAction
+        }
+
+        foreach ($poll in 1..3) {
+            $output = @(Get-SystemUsesDarkMode *>&1)
+            $output.Count | Should -Be 1
+            $output[0] | Should -BeFalse
+        }
+    }
 }
 
 Describe 'Test-OtherUsername' {

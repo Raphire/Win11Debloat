@@ -444,11 +444,12 @@ function Add-AppsToMainWindow {
         $dot = New-Object System.Windows.Shapes.Ellipse
         $dot.Style = $Window.Resources['AppRecommendationDotStyle']
         $dot.Fill = switch ($app.Recommendation) { 'safe' { $brushSafe } 'unsafe' { $brushUnsafe } default { $brushDefault } }
-        $dot.ToolTip = switch ($app.Recommendation) {
-            'safe'   { Get-Translation -Key 'AppLegendRecommendedTooltip' }
-            'unsafe' { Get-Translation -Key 'AppLegendNotRecommendedTooltip' }
-            default  { Get-Translation -Key 'AppLegendOptionalTooltip' }
+        $recommendationKey = switch ($app.Recommendation) {
+            'safe'   { 'AppLegendRecommendedTooltip' }
+            'unsafe' { 'AppLegendNotRecommendedTooltip' }
+            default  { 'AppLegendOptionalTooltip' }
         }
+        $dot.SetResourceReference([System.Windows.FrameworkElement]::ToolTipProperty, "Language_$recommendationKey")
         [System.Windows.Controls.Grid]::SetColumn($dot, 0)
 
         $tbName = New-Object System.Windows.Controls.TextBlock
@@ -479,6 +480,8 @@ function Add-AppsToMainWindow {
         Add-Member -InputObject $checkbox -MemberType NoteProperty -Name 'SelectedByDefault' -Value $app.SelectedByDefault
         Add-Member -InputObject $checkbox -MemberType NoteProperty -Name 'AppIds' -Value @($app.AppId)
         Add-Member -InputObject $checkbox -MemberType NoteProperty -Name 'AppIdDisplay' -Value $app.AppIdDisplay
+        Add-Member -InputObject $checkbox -MemberType NoteProperty -Name 'AppNameText' -Value $tbName
+        Add-Member -InputObject $checkbox -MemberType NoteProperty -Name 'AppDescriptionText' -Value $tbDesc
 
         $checkbox.Add_Checked({
             $w = $script:MainWindow
@@ -574,6 +577,8 @@ function Initialize-MainWindowApps {
     # Prevent concurrent loads
     if ($script:IsLoadingApps) { return }
     $script:IsLoadingApps = $true
+    $settingsButton = $Window.FindName('SettingsBtn')
+    if ($settingsButton) { $settingsButton.IsEnabled = $false }
 
     if ($ImportConfigBtn) {
         $ImportConfigBtn.IsEnabled = $false
@@ -622,6 +627,8 @@ function Initialize-MainWindowApps {
             }
             finally {
                 $script:IsLoadingApps = $false
+                $settingsButton = $Window.FindName('SettingsBtn')
+                if ($settingsButton) { $settingsButton.IsEnabled = $true }
             }
         }) | Out-Null
 }

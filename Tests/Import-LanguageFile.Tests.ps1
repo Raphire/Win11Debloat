@@ -4,6 +4,26 @@ BeforeAll {
     $script:LanguagesPath = Join-Path $PSScriptRoot 'TestData\LanguageLoading'
 }
 
+Describe 'Get-AvailableLanguageFolders' {
+    It 'lists complete folders in name order' {
+        @(Get-AvailableLanguageFolders | Select-Object -ExpandProperty Name) | Should -Be @('en-US', 'es-ES')
+    }
+
+    It 'excludes folders with a missing catalog or a directory in place of a catalog' {
+        $languagesPath = Join-Path $TestDrive 'Discovery'
+        New-Item -ItemType Directory -Path $languagesPath | Out-Null
+        foreach ($name in @('complete', 'missing', 'directory')) {
+            Copy-Item -LiteralPath (Join-Path $script:LanguagesPath 'en-US') -Destination (Join-Path $languagesPath $name) -Recurse
+        }
+        Remove-Item -LiteralPath (Join-Path $languagesPath 'missing/Apps.json')
+        Remove-Item -LiteralPath (Join-Path $languagesPath 'directory/Apps.json')
+        New-Item -ItemType Directory -Path (Join-Path $languagesPath 'directory/Apps.json') | Out-Null
+
+        @(Get-AvailableLanguageFolders -LanguagesPath $languagesPath | Select-Object -ExpandProperty Name) | Should -Be @('complete')
+        (Import-LanguageContent -LanguageFolder 'complete' -LanguagesPath $languagesPath).Apps.'TestApp.One'.FriendlyName | Should -Be 'Test App'
+    }
+}
+
 Describe 'Resolve-LanguageFolder' {
     It 'resolves <Case>' -ForEach @(
         @{ Case = 'an exact match'; LanguageCode = 'en-US'; Expected = 'en-US' }
@@ -258,5 +278,13 @@ Describe 'ConvertTo-LocalizedXaml' {
         $xaml = '<TextBlock Text="%LANG:DisableTelemetry%"/>'
 
         { ConvertTo-LocalizedXaml -Xaml $xaml -Lang $script:EnLang } | Should -Throw '*DisableTelemetry*'
+    }
+
+    It 'emits live resource references while retaining missing-key and fallback validation' {
+        $xaml = '<Button Content="%LANG:TitleBarOptions%"/>'
+        ConvertTo-LocalizedXaml -Xaml $xaml -Lang $script:EsLang -DynamicResources |
+            Should -Be '<Button Content="{DynamicResource Language_TitleBarOptions}"/>'
+        { ConvertTo-LocalizedXaml -Xaml '<Button Content="%LANG:MissingKey%"/>' -Lang $script:EnLang -DynamicResources } |
+            Should -Throw '*MissingKey*'
     }
 }

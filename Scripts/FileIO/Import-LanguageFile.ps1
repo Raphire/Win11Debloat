@@ -1,3 +1,20 @@
+# Catalog names are shared by loading and language discovery.
+function Get-LanguageCatalogNames {
+    return @('Chrome', 'Features', 'Categories', 'Apps')
+}
+
+function Get-AvailableLanguageFolders {
+    param([string]$LanguagesPath = $script:LanguagesPath)
+
+    $catalogNames = Get-LanguageCatalogNames
+    foreach ($folder in (Get-ChildItem -LiteralPath $LanguagesPath -Directory | Sort-Object Name)) {
+        $missingCatalogs = @($catalogNames | Where-Object {
+            -not (Test-Path -LiteralPath (Join-Path $folder.FullName "$_.json") -PathType Leaf)
+        })
+        if ($missingCatalogs.Count -eq 0) { $folder }
+    }
+}
+
 <#
     .SYNOPSIS
         Resolves a language code to an available Config/Languages folder, or falls back to en-US.
@@ -35,22 +52,19 @@ function Import-LanguageContent {
     )
 
     $folderPath = Join-Path $LanguagesPath $LanguageFolder
-    $chrome = Import-JsonFile -filePath (Join-Path $folderPath 'Chrome.json')
-    $features = Import-JsonFile -filePath (Join-Path $folderPath 'Features.json')
-    $categories = Import-JsonFile -filePath (Join-Path $folderPath 'Categories.json')
-    $apps = Import-JsonFile -filePath (Join-Path $folderPath 'Apps.json')
-
-    if (-not $chrome -or -not $features -or -not $categories -or -not $apps) {
-        return $null
+    $catalogs = @{}
+    foreach ($name in (Get-LanguageCatalogNames)) {
+        $catalogs[$name] = Import-JsonFile -filePath (Join-Path $folderPath "$name.json")
     }
+    if (@($catalogs.Values | Where-Object { -not $_ }).Count) { return $null }
 
     return [PSCustomObject]@{
         LanguageCode = $LanguageFolder
-        Chrome       = $chrome
-        Features     = $features.Features
-        UiGroups     = $features.UiGroups
-        Categories   = $categories
-        Apps         = $apps
+        Chrome       = $catalogs.Chrome
+        Features     = $catalogs.Features.Features
+        UiGroups     = $catalogs.Features.UiGroups
+        Categories   = $catalogs.Categories
+        Apps         = $catalogs.Apps
     }
 }
 
@@ -416,7 +430,9 @@ function ConvertTo-LocalizedXaml {
     param(
         [Parameter(Mandatory)]
         [string]$Xaml,
-        [object]$Lang = $script:Lang
+        [object]$Lang = $script:Lang,
+        # For live windows, keep a resource reference instead of embedding the translated text.
+        [switch]$DynamicResources
     )
 
     $missingKeys = New-Object System.Collections.Generic.List[string]
@@ -426,6 +442,7 @@ function ConvertTo-LocalizedXaml {
         $key = $match.Groups[1].Value
         $resolvesSomewhere = @(Get-LanguageFallbackChain -Lang $Lang) | Where-Object { $_.Chrome -and $_.Chrome.PSObject.Properties[$key] }
         if (-not $resolvesSomewhere) { $missingKeys.Add($key) }
+        if ($DynamicResources) { return "{DynamicResource Language_$key}" }
         $value = if ($resolvesSomewhere) { Get-Translation -Key $key -Lang $Lang } else { $key }
         return [System.Security.SecurityElement]::Escape($value)
     }

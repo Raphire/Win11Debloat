@@ -8,7 +8,7 @@
 function Show-AppSelectionWindow {
     Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase | Out-Null
 
-    $usesDarkMode = Get-SystemUsesDarkMode
+    $usesDarkMode = Get-AppUsesDarkMode
     
     # Show overlay if main window exists
     $overlay = $null

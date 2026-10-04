@@ -1,6 +1,30 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
+    <!-- Loading spinner for app inventory. -->
+    <Style x:Key="LoadingSpinnerStyle" TargetType="TextBlock">
+        <Setter Property="Text" Value="&#xF16A;"/>
+        <Setter Property="FontFamily" Value="{DynamicResource AppIconFontFamily}"/>
+        <Setter Property="FontSize" Value="28"/>
+        <Setter Property="Foreground" Value="{DynamicResource AppFgColor}"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+        <Setter Property="RenderTransform"><Setter.Value><RotateTransform Angle="0"/></Setter.Value></Setter>
+        <Style.Triggers>
+            <Trigger Property="IsVisible" Value="True">
+                <Trigger.EnterActions>
+                    <BeginStoryboard x:Name="LoadingSpinStoryboard">
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)"
+                                             From="0" To="360" Duration="0:0:1.5" RepeatBehavior="Forever"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </Trigger.EnterActions>
+                <Trigger.ExitActions><RemoveStoryboard BeginStoryboardName="LoadingSpinStoryboard"/></Trigger.ExitActions>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
     <!-- Primary Button Style -->
     <Style x:Key="PrimaryButtonStyle" TargetType="Button">
         <Setter Property="Background" Value="{DynamicResource ButtonBgColor}"/>

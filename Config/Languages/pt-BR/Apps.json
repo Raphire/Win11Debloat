@@ -53,7 +53,7 @@
   },
   "Microsoft.PCManager": {
     "FriendlyName": "Gerenciador do PC",
-    "Description": "Ferramenta de limpeza e otimização do sistema, que faz parte do Microsoft PC Manager (frequentemente pré-instalada)"
+    "Description": "Ferramenta de limpeza e otimização do sistema, que faz parte do Gerenciador do PC (frequentemente pré-instalada)"
   },
   "Microsoft.Getstarted": {
     "FriendlyName": "Introdução",
@@ -153,7 +153,7 @@
   },
   "Microsoft.ZuneVideo": {
     "FriendlyName": "Filmes e TV",
-    "Description": "App Filmes e TV para alugar, comprar e reproduzir conteúdos de vídeo (renomeado para \"Films & TV\")"
+    "Description": "App Filmes e TV para alugar, comprar e reproduzir conteúdos de vídeo"
   },
   "MicrosoftCorporationII.MicrosoftFamily": {
     "FriendlyName": "Segurança da Família",

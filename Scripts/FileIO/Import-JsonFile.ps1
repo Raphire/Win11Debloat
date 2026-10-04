@@ -17,7 +17,7 @@ function Import-JsonFile {
     }
     
     try {
-        $jsonContent = Get-Content -Path $filePath -Raw -Encoding UTF8 | ConvertFrom-Json
+        $jsonContent = Get-Content -Path $filePath -Raw -Encoding UTF8 -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop
         
         # Validate version if specified
         if ($expectedVersion -and $jsonContent.Version -and $jsonContent.Version -ne $expectedVersion) {
@@ -28,7 +28,7 @@ function Import-JsonFile {
         return $jsonContent
     }
     catch {
-        Write-Error "Failed to parse JSON file: $filePath"
+        Write-Error "Failed to parse JSON file: ${filePath}. $($_.Exception.Message)"
         return $null
     }
 }

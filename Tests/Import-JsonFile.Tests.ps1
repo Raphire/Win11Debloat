@@ -43,6 +43,34 @@ Describe 'Import-JsonFile' {
         Should -Invoke Write-Error -Times 0 -Exactly
     }
 
+    It 'includes the file path and underlying read error in the diagnostic' {
+        $filePath = Join-Path $script:FixturePath 'Config.Valid.json'
+        Mock Get-Content { throw [System.IO.IOException]::new('Catalog read failed') }
+
+        $result = Import-JsonFile -filePath $filePath
+
+        $result | Should -BeNullOrEmpty
+        Should -Invoke Write-Error -Times 1 -Exactly -ParameterFilter {
+            $Message -eq "Failed to parse JSON file: ${filePath}. Catalog read failed"
+        }
+        Should -Invoke Get-Content -Times 1 -Exactly -ParameterFilter { $ErrorAction -eq 'Stop' }
+    }
+
+    It 'includes the underlying JSON parser error in the diagnostic' {
+        $filePath = Join-Path $script:FixturePath 'Config.Invalid.json'
+        $parserMessage = try {
+            Get-Content -Path $filePath -Raw -Encoding UTF8 | ConvertFrom-Json -ErrorAction Stop
+        }
+        catch { $_.Exception.Message }
+
+        $result = Import-JsonFile -filePath $filePath
+
+        $result | Should -BeNullOrEmpty
+        Should -Invoke Write-Error -Times 1 -Exactly -ParameterFilter {
+            $Message -eq "Failed to parse JSON file: ${filePath}. $parserMessage"
+        }
+    }
+
     It 'reads non-ASCII characters correctly from a UTF-8 file with no BOM, regardless of the system default encoding' {
         # Unicode escapes here, not literal accented characters: this test file has no BOM, so
         # PowerShell 5.1 would decode literal non-ASCII source characters using the system default
@@ -54,5 +82,15 @@ Describe 'Import-JsonFile' {
 
         $result.Name | Should -Be $expectedName
         $result.Note | Should -Be $expectedNote
+    }
+
+    It 'loads the shipped <Catalog> language catalog without errors' -ForEach @(
+        Get-ChildItem -LiteralPath (Join-Path $PSScriptRoot '..\Config\Languages') -Recurse -Filter '*.json' -File |
+            ForEach-Object { @{ Catalog = "$($_.Directory.Name)/$($_.Name)"; FilePath = $_.FullName } }
+    ) {
+        $result = Import-JsonFile -filePath $FilePath
+
+        ($null -ne $result) | Should -BeTrue
+        Should -Invoke Write-Error -Times 0 -Exactly
     }
 }

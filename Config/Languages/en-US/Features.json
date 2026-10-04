@@ -643,6 +643,14 @@
       "ApplyText": "Setting All Apps view to List",
       "UndoLabel": "Show All Apps in Category view",
       "ApplyUndoText": "Setting All Apps view to Category"
+    },
+    "SetWallpaper": {
+      "Label": "Set the selected wallpaper",
+      "ApplyText": "Setting the selected wallpaper"
+    },
+    "RestoreWallpaper": {
+      "Label": "Restore the latest Win11Debloat wallpaper backup",
+      "ApplyText": "Restoring the wallpaper backup"
     }
   },
   "UiGroups": {

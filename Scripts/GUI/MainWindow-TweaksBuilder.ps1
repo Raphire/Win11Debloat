@@ -1,7 +1,24 @@
 # MainWindow-TweaksBuilder.ps1
 # Dynamic tweaks UI construction from Features.json, tweak state management, selection clear, and search/highlight.
 
-# Resolve tweak text once for both control creation and language refresh.
+<#
+    .SYNOPSIS
+        Resolves localized labels, tooltips, and options for a tweak control.
+
+    .DESCRIPTION
+        Provides consistent text for individual features and groups during control creation
+        and language changes.
+
+    .PARAMETER Mapping
+        A control mapping with Type and either FeatureId or GroupId and Values. Group values
+        contain FeatureIds and fallback Label text.
+
+    .PARAMETER Features
+        The feature definitions keyed by FeatureId. Defaults to $script:Features.
+
+    .OUTPUTS
+        PSCustomObject. Label, ToolTip, and Options, beginning with the No Change option.
+#>
 function Get-TweakControlText {
     param(
         [hashtable]$Mapping,
@@ -32,6 +49,16 @@ function Get-TweakControlText {
     return [PSCustomObject]@{ Label = $label; ToolTip = $tooltip; Options = $options }
 }
 
+<#
+    .SYNOPSIS
+        Rebuilds localized feature and undo label lookups.
+
+    .DESCRIPTION
+        Keeps feature names used in change overviews in sync with the active language.
+
+    .PARAMETER Features
+        The feature definitions to translate. Defaults to the values of $script:Features.
+#>
 function Update-FeatureLabelLookup {
     param([object[]]$Features = @($script:Features.Values))
 
@@ -173,6 +200,19 @@ function New-DynamicTweakControls {
         return $combo
     }
 
+    <#
+        .SYNOPSIS
+            Attaches a wrapping tooltip to a tweak control and its label border.
+
+        .PARAMETER Control
+            The tweak control receiving the tooltip.
+
+        .PARAMETER TooltipText
+            The localized text displayed by the tooltip.
+
+        .PARAMETER ShowOnDisabled
+            Enables tooltip display even when the tweak control is disabled.
+    #>
     function Set-TweakControlToolTip($control, $tooltipText, [switch]$ShowOnDisabled) {
         $tipBlock = New-Object System.Windows.Controls.TextBlock
         $tipBlock.Text = $tooltipText
@@ -186,6 +226,19 @@ function New-DynamicTweakControls {
         if ($labelBorder) { $labelBorder.ToolTip = $tipBlock }
     }
 
+    <#
+        .SYNOPSIS
+            Creates and maps a localized control for an individual feature.
+
+        .PARAMETER Feature
+            The feature definition to display.
+
+        .PARAMETER Parent
+            The category panel that receives the generated control.
+
+        .PARAMETER CategoryId
+            The category identifier stored in the control mapping.
+    #>
     function Add-FeatureTweakControl($feature, $parent, $categoryId) {
         $mapping = @{ Type = 'feature'; FeatureId = $feature.FeatureId; CategoryId = $categoryId }
         $text = Get-TweakControlText -Mapping $mapping -Features $featureMap

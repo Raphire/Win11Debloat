@@ -1,3 +1,18 @@
+<#
+    .SYNOPSIS
+        Shows the modal theme and language settings dialog.
+
+    .DESCRIPTION
+        Lets users choose a theme and language. Changes take effect only after Save;
+        closing without saving discards edits. Displays an error if saving fails.
+
+    .PARAMETER Owner
+        The window that owns the settings dialog.
+
+    .OUTPUTS
+        System.Boolean. $true when changed preferences were saved; $false when closed
+        without changes or without saving.
+#>
 function Show-SettingsDialog {
     param([Parameter(Mandatory)][System.Windows.Window]$Owner)
     $path = Join-Path (Split-Path $script:MainWindowSchema -Parent) 'SettingsWindow.xaml'

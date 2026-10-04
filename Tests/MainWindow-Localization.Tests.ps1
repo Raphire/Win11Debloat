@@ -23,6 +23,13 @@ BeforeAll {
         $script:SearchHandlers[$handler.Expression.VariablePath.UserPath] = $handler.Arguments[0].ScriptBlock.GetScriptBlock()
     }
 
+    <#
+        .SYNOPSIS
+            Creates a minimal window for dynamic tweak localization tests.
+
+        .OUTPUTS
+            System.Windows.Window. The test window with its registered column panels.
+    #>
     function New-LanguageTestWindow {
         $window = [System.Windows.Window]::new()
         [System.Windows.NameScope]::SetNameScope($window, [System.Windows.NameScope]::new())
@@ -46,6 +53,20 @@ Describe 'Language changes on existing controls' {
         @{ Build = 19045 }
         @{ Build = 26100 }
     ) {
+        <#
+            .SYNOPSIS
+                Serializes current tweak presentation text for comparison.
+
+            .DESCRIPTION
+                Captures labels, tooltips, and options to compare freshly created controls
+                with controls refreshed after a language change.
+
+            .PARAMETER Window
+                The test window containing registered tweak controls and label borders.
+
+            .OUTPUTS
+                System.String. The serialized presentation snapshot.
+        #>
         function Get-TweakPresentationSnapshot($window) {
             $rows = foreach ($name in ($script:UiControlMappings.Keys | Sort-Object)) {
                 $control = $window.FindName($name)

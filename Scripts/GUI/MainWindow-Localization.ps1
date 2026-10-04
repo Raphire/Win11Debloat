@@ -1,4 +1,14 @@
-# Refresh presentation text without replacing controls or querying system/app state.
+<#
+    .SYNOPSIS
+        Populates dynamic language resources for a window and its detached menus.
+
+    .DESCRIPTION
+        Keeps text bound to language resources in sync with the active language, including
+        menus and popups that use separate resources.
+
+    .PARAMETER Window
+        The window whose language resources are updated, along with its menus and popups.
+#>
 function Update-WindowLanguageResources {
     param([System.Windows.Window]$Window)
 
@@ -13,6 +23,17 @@ function Update-WindowLanguageResources {
     }
 }
 
+<#
+    .SYNOPSIS
+        Refreshes localized text on existing main window tweak controls.
+
+    .DESCRIPTION
+        Updates tweak text and accessibility labels for the active language while preserving
+        existing controls and selections.
+
+    .PARAMETER Window
+        The main window containing the registered dynamic tweak controls.
+#>
 function Update-MainWindowTweakLanguage {
     param([System.Windows.Window]$Window)
 
@@ -41,6 +62,17 @@ function Update-MainWindowTweakLanguage {
     Update-FeatureLabelLookup
 }
 
+<#
+    .SYNOPSIS
+        Refreshes localized app text and preset tooltips.
+
+    .DESCRIPTION
+        Updates app details, accessibility labels, and preset tooltips for the active language
+        while preserving app selections.
+
+    .PARAMETER AppsPanel
+        The panel containing the app selection controls.
+#>
 function Update-MainWindowAppLanguage {
     param([System.Windows.Controls.Panel]$AppsPanel)
 
@@ -61,6 +93,17 @@ function Update-MainWindowAppLanguage {
     $script:PreloadedAppData = $null
 }
 
+<#
+    .SYNOPSIS
+        Applies the current language to an existing main window.
+
+    .DESCRIPTION
+        Updates the interface and search results for the active language while preserving
+        user selections and app scroll position.
+
+    .PARAMETER Window
+        The initialized main window to refresh.
+#>
 function Update-MainWindowLanguage {
     param([System.Windows.Window]$Window)
 

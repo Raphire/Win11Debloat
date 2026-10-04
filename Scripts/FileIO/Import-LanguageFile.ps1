@@ -1,8 +1,24 @@
-# Catalog names are shared by loading and language discovery.
+<#
+    .SYNOPSIS
+        Returns the required language catalog names.
+
+    .OUTPUTS
+        System.String. The required catalog names.
+#>
 function Get-LanguageCatalogNames {
     return @('Chrome', 'Features', 'Categories', 'Apps')
 }
 
+<#
+    .SYNOPSIS
+        Lists language folders containing every required JSON catalog.
+
+    .PARAMETER LanguagesPath
+        The directory containing language folders. Defaults to $script:LanguagesPath.
+
+    .OUTPUTS
+        System.IO.DirectoryInfo. The available language folders.
+#>
 function Get-AvailableLanguageFolders {
     param([string]$LanguagesPath = $script:LanguagesPath)
 
@@ -412,19 +428,25 @@ function Test-LanguageKeyCoverage {
 
 <#
     .SYNOPSIS
-        Substitutes %LANG:Key% markers in XAML text with translated, XML-escaped values.
+        Replaces %LANG:Key% markers with translated text or dynamic language resources.
 
     .DESCRIPTION
-        Only resolves flat Chrome.json keys, since XAML markers never reference a Feature/Category/
-        UiGroup field directly (those get their text from Get-Translation calls in the GUI scripts
-        that build dynamic controls). Runs a single pass over every marker rather than sequential
-        .Replace() calls, so an already-substituted value can't be re-matched by a later key.
+        Resolves Chrome catalog markers using the active language and its English fallback.
+        Supports embedded text or dynamic resources for windows that allow language changes.
+        Throws when a marker's key is missing from both languages.
 
-        After substitution, scans for any %LANG:...% text that survived unresolved and throws,
-        since Get-Translation's key-as-fallback behavior means a missing key would otherwise render
-        as plain, un-marked text (e.g. "TitleBarClose" instead of a visible error) rather than being
-        caught here. Checks both the active language and its Fallback before flagging a key missing,
-        so a partially-translated language degrades to en-US text instead of failing to load.
+    .PARAMETER Xaml
+        The XAML text containing %LANG:Key% markers to replace.
+
+    .PARAMETER Lang
+        The loaded language object and its optional Fallback. Defaults to $script:Lang.
+
+    .PARAMETER DynamicResources
+        Uses DynamicResource references to Language_<key> resources for live language updates.
+        The window must provide those resources. When omitted, embeds XML-escaped translated text.
+
+    .OUTPUTS
+        System.String. The XAML text with localization markers replaced.
 #>
 function ConvertTo-LocalizedXaml {
     param(

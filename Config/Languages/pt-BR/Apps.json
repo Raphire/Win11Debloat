@@ -85,7 +85,7 @@
   },
   "Microsoft.MicrosoftStickyNotes": {
     "FriendlyName": "Notas Autoadesivas",
-    "Description": "App de anotações digital (descontinuado e substituído pelo OneNote)"
+    "Description": "App de anotações digital"
   },
   "Microsoft.MixedReality.Portal": {
     "FriendlyName": "Portal de Realidade Mista",
@@ -440,8 +440,8 @@
     "Description": "Recurso de acessibilidade necessário para alguns jogos, AVISO: este app não pode ser reinstalado facilmente!"
   },
   "Microsoft.YourPhone": {
-    "FriendlyName": "Phone Link",
-    "Description": "Phone Link (conecta um celular Android/iOS ao PC)"
+    "FriendlyName": "Vincular ao Celular",
+    "Description": "Vincular ao Celular (conecta um celular Android/iOS ao PC)"
   },
   "Microsoft.ZuneMusic": {
     "FriendlyName": "Media Player",
@@ -481,7 +481,7 @@
   },
   "AD2F1837.HPEasyClean": {
     "FriendlyName": "HP Easy Clean",
-    "Description": "Software OEM da HP para limpeza ou otimização do sistema"
+    "Description": "Desabilita teclado, touchpad e tela touch temporariamente para limpeza física do dispositivo"
   },
   "AD2F1837.HPFileViewer": {
     "FriendlyName": "HP File Viewer",

@@ -478,7 +478,7 @@
     },
     "HideHome": {
       "Label": "'Start' in het navigatievenster verbergen",
-      "ToolTip": "Verbergt de sectie 'Start' in het navigatievenster van Verkenner. Waarschuwing: dit kan ervoor zorgen dat snelkoppelingen in Snelle toegang niet worden bijgewerkt totdat je je pc of Verkenner opnieuw opstart."
+      "ToolTip": "Verbergt de sectie 'Start' in het navigatievenster van Verkenner. Waarschuwing: dit kan ervoor zorgen dat snelkoppelingen in Snelle toegang niet worden bijgewerkt totdat je je pc of Verkenner opnieuw opstart.",
       "ApplyText": "De sectie 'Start' in het navigatievenster van Verkenner verbergen",
       "UndoLabel": "'Start' in het navigatievenster tonen",
       "ApplyUndoText": "De sectie 'Start' in het navigatievenster van Verkenner tonen"

@@ -3,14 +3,16 @@
         Creates and displays the main Win11Debloat window.
 #>
 function Show-MainWindow {
+    if (-not $script:Lang) { throw 'Unable to load UI language.' }
+    $script:CancelRequested = $false
     Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase,System.Windows.Forms | Out-Null
 
     $WinVersion = Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' CurrentBuild
-    $usesDarkMode = Get-SystemUsesDarkMode
+    $usesDarkMode = Get-AppUsesDarkMode
 
     # ---- Load XAML ----
     $xaml = Get-Content -Path $script:MainWindowSchema -Raw
-    $xaml = ConvertTo-LocalizedXaml -Xaml $xaml
+    $xaml = ConvertTo-LocalizedXaml -Xaml $xaml -DynamicResources
     $reader = [System.Xml.XmlReader]::Create([System.IO.StringReader]::new($xaml))
     try {
         $window = [System.Windows.Markup.XamlReader]::Load($reader)
@@ -20,6 +22,7 @@ function Show-MainWindow {
     }
 
     Set-WindowThemeResources -window $window -usesDarkMode $usesDarkMode
+    Update-WindowLanguageResources -Window $window
 
     $mainBorder = $window.FindName('MainBorder')
     $titleBarBackground = $window.FindName('TitleBarBackground')
@@ -46,12 +49,13 @@ function Show-MainWindow {
     $script:GuiWindow = $window
 
     # ---- Handle unhandled exceptions on the dispatcher thread ----
-    [System.Windows.Threading.Dispatcher]::CurrentDispatcher.Add_UnhandledException({
+    $dispatcherErrorHandler = [System.Windows.Threading.DispatcherUnhandledExceptionEventHandler]{
         param($sender, $e)
         Write-Warning "Unhandled exception in GUI: $($e.Exception.Message)"
         Write-Warning "Stack trace: $($e.Exception.StackTrace)"
         $e.Handled = $true
-    })
+    }
+    [System.Windows.Threading.Dispatcher]::CurrentDispatcher.Add_UnhandledException($dispatcherErrorHandler)
 
     # ---- Window chrome helpers ----
     $updateWindowChrome = { Update-MainWindowChrome -Window $window -MainBorder $mainBorder -TitleBarBackground $titleBarBackground -NormalWindowShadow $normalWindowShadow }
@@ -82,6 +86,7 @@ function Show-MainWindow {
 
     # ---- Menu/button event wiring ----
     $kofiBtn.Add_Click({ Start-Process "https://ko-fi.com/raphire" })
+    $window.FindName('SettingsBtn').Add_Click({ Open-MainWindowSettings -Window $window })
 
     $menuBtn.Add_Click({
         $menuBtn.ContextMenu.PlacementTarget = $menuBtn
@@ -167,7 +172,7 @@ function Show-MainWindow {
     # ---- Wire export/import ----
     $exportConfigBtn.Add_Click({
         try {
-            Export-Configuration -Owner $window -UsesDarkMode $usesDarkMode -AppsPanel $appsPanel -UiControlMappings $script:UiControlMappings -UserSelectionCombo $userSelectionCombo -OtherUsernameTextBox $otherUsernameTextBox
+            Export-Configuration -Owner $window -UsesDarkMode (Get-AppUsesDarkMode) -AppsPanel $appsPanel -UiControlMappings $script:UiControlMappings -UserSelectionCombo $userSelectionCombo -OtherUsernameTextBox $otherUsernameTextBox
         }
         catch {
             Write-Warning "Export configuration failed: $($_.Exception.Message)"
@@ -177,7 +182,7 @@ function Show-MainWindow {
 
     $importConfigBtn.Add_Click({
         try {
-            Import-Configuration -Owner $window -UsesDarkMode $usesDarkMode -AppsPanel $appsPanel -UiControlMappings $script:UiControlMappings -UserSelectionCombo $userSelectionCombo -OtherUsernameTextBox $otherUsernameTextBox -OnAppsImported { Update-AppSelectionStatus -AppsPanel $appsPanel -AppSelectionStatus $appSelectionStatus -AppRemovalScopeCombo $appRemovalScopeCombo -AppRemovalScopeSection $appRemovalScopeSection -AppRemovalScopeDescription $appRemovalScopeDescription -UserSelectionCombo $userSelectionCombo; Update-AppPresetStates -AppsPanel $appsPanel } -OnImportCompleted {
+            Import-Configuration -Owner $window -UsesDarkMode (Get-AppUsesDarkMode) -AppsPanel $appsPanel -UiControlMappings $script:UiControlMappings -UserSelectionCombo $userSelectionCombo -OtherUsernameTextBox $otherUsernameTextBox -OnAppsImported { Update-AppSelectionStatus -AppsPanel $appsPanel -AppSelectionStatus $appSelectionStatus -AppRemovalScopeCombo $appRemovalScopeCombo -AppRemovalScopeSection $appRemovalScopeSection -AppRemovalScopeDescription $appRemovalScopeDescription -UserSelectionCombo $userSelectionCombo; Update-AppPresetStates -AppsPanel $appsPanel } -OnImportCompleted {
                 $tabControl.SelectedIndex = 3
                 Update-NavigationButtons -Window $window -TabControl $tabControl
                 $window.Dispatcher.BeginInvoke([System.Windows.Threading.DispatcherPriority]::Loaded, [action]{
@@ -382,16 +387,14 @@ function Show-MainWindow {
 
         if ([string]::IsNullOrWhiteSpace($searchText)) { return }
 
-        $highlightBrush = $window.Resources["SearchHighlightColor"]
-        $activeHighlightBrush = $window.Resources["SearchHighlightActiveColor"]
-
+        # Keep existing highlights in sync when Auto changes the window's theme resources.
         foreach ($child in $appsPanel.Children) {
             if ($child -is [System.Windows.Controls.CheckBox] -and $child.Visibility -eq 'Visible') {
                 $appName = if ($child.AppName) { $child.AppName } else { '' }
                 $appId = if ($child.Tag) { $child.Tag.ToString() } else { '' }
                 $appDesc = if ($child.AppDescription) { $child.AppDescription } else { '' }
                 if ($appName.ToLower().Contains($searchText) -or $appId.ToLower().Contains($searchText) -or $appDesc.ToLower().Contains($searchText)) {
-                    $child.Background = $highlightBrush
+                    $child.SetResourceReference([System.Windows.Controls.Control]::BackgroundProperty, 'SearchHighlightColor')
                     $script:AppSearchMatches += $child
                 }
             }
@@ -399,9 +402,9 @@ function Show-MainWindow {
 
         if ($script:AppSearchMatches.Count -gt 0) {
             $script:AppSearchMatchIndex = 0
-            $script:AppSearchMatches[0].Background = $activeHighlightBrush
+            $script:AppSearchMatches[0].SetResourceReference([System.Windows.Controls.Control]::BackgroundProperty, 'SearchHighlightActiveColor')
             $scrollViewer = Find-ParentScrollViewer -Element $appsPanel
-            if ($scrollViewer) {
+            if ($scrollViewer -and -not $script:UpdatingLanguage) {
                 Scroll-ToItemIfNotVisible -ScrollViewer $scrollViewer -Item $script:AppSearchMatches[0] -Container $appsPanel
             }
         }
@@ -410,9 +413,9 @@ function Show-MainWindow {
     $appSearchBox.Add_KeyDown({
         param($sourceControl, $e)
         if ($e.Key -eq [System.Windows.Input.Key]::Enter -and $script:AppSearchMatches.Count -gt 0) {
-            $script:AppSearchMatches[$script:AppSearchMatchIndex].Background = $window.Resources["SearchHighlightColor"]
+            $script:AppSearchMatches[$script:AppSearchMatchIndex].SetResourceReference([System.Windows.Controls.Control]::BackgroundProperty, 'SearchHighlightColor')
             $script:AppSearchMatchIndex = ($script:AppSearchMatchIndex + 1) % $script:AppSearchMatches.Count
-            $script:AppSearchMatches[$script:AppSearchMatchIndex].Background = $window.Resources["SearchHighlightActiveColor"]
+            $script:AppSearchMatches[$script:AppSearchMatchIndex].SetResourceReference([System.Windows.Controls.Control]::BackgroundProperty, 'SearchHighlightActiveColor')
             $scrollViewer = Find-ParentScrollViewer -Element $appsPanel
             if ($scrollViewer) {
                 Scroll-ToItemIfNotVisible -ScrollViewer $scrollViewer -Item $script:AppSearchMatches[$script:AppSearchMatchIndex] -Container $appsPanel
@@ -440,7 +443,6 @@ function Show-MainWindow {
         if ([string]::IsNullOrWhiteSpace($searchText)) { return }
 
         $firstMatch = $null
-        $highlightBrush = $window.Resources["SearchHighlightColor"]
         $col0 = $window.FindName('Column0Panel')
         $col1 = $window.FindName('Column1Panel')
         $col2 = $window.FindName('Column2Panel')
@@ -472,7 +474,13 @@ function Show-MainWindow {
                         }
 
                         if ($matchFound -and $controlToHighlight) {
-                            $controlToHighlight.Background = $highlightBrush
+                            $backgroundProperty = if ($controlToHighlight -is [System.Windows.Controls.Border]) {
+                                [System.Windows.Controls.Border]::BackgroundProperty
+                            }
+                            else {
+                                [System.Windows.Controls.Control]::BackgroundProperty
+                            }
+                            $controlToHighlight.SetResourceReference($backgroundProperty, 'SearchHighlightColor')
                             if ($null -eq $firstMatch) { $firstMatch = $controlToHighlight }
                         }
                     }
@@ -480,7 +488,7 @@ function Show-MainWindow {
             }
         }
 
-        if ($firstMatch -and $tweaksScrollViewer) {
+        if ($firstMatch -and $tweaksScrollViewer -and -not $script:UpdatingLanguage) {
             Scroll-ToItemIfNotVisible -ScrollViewer $tweaksScrollViewer -Item $firstMatch -Container $tweaksGrid
         }
     })
@@ -896,6 +904,10 @@ function Show-MainWindow {
     })
 
     $window.Show() | Out-Null
+    $themeTimer = [System.Windows.Threading.DispatcherTimer]::new()
+    $themeTimer.Interval = [TimeSpan]::FromSeconds(2)
+    $themeTimer.Add_Tick({ Update-AutoThemeResources -Window $window })
+    $themeTimer.Start()
 
     # If WhatIf mode is enabled, notify the user that no changes will be made
     if ($script:Params.ContainsKey("WhatIf")) {
@@ -904,6 +916,11 @@ function Show-MainWindow {
         }) | Out-Null
     }
 
-    [System.Windows.Threading.Dispatcher]::PushFrame($frame)
+    try { [System.Windows.Threading.Dispatcher]::PushFrame($frame) }
+    finally {
+        $themeTimer.Stop()
+        [System.Windows.Threading.Dispatcher]::CurrentDispatcher.Remove_UnhandledException($dispatcherErrorHandler)
+        if ($script:BubblePopup) { $script:BubblePopup.IsOpen = $false }
+    }
     return $null
 }

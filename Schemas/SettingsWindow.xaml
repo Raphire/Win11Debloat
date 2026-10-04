@@ -1,0 +1,71 @@
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="%LANG:SettingsTitle%" Width="500" SizeToContent="Height"
+        ResizeMode="NoResize" WindowStartupLocation="CenterOwner" WindowStyle="None"
+        AllowsTransparency="True" Background="Transparent" ShowInTaskbar="False">
+    <Border Style="{DynamicResource ModalCardBorderStyle}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid x:Name="TitleBar" Style="{DynamicResource ModalTitleBarStyle}">
+                <TextBlock Text="%LANG:SettingsTitle%" Style="{DynamicResource ModalTitleTextStyle}" HorizontalAlignment="Left"/>
+            </Grid>
+            <Button x:Name="CloseBtn" Grid.Row="0"
+                    HorizontalAlignment="Right" VerticalAlignment="Top"
+                    Width="36" Height="32"
+                    BorderThickness="0" IsCancel="True"
+                    Cursor="Hand"
+                    ToolTip="%LANG:TitleBarClose%"
+                    AutomationProperties.Name="%LANG:TitleBarClose%">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" BorderThickness="0" CornerRadius="0,8,0,0">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="Foreground" Value="{DynamicResource AppFgColor}"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource TitleBarCloseHoverColor}"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <TextBlock Text="&#xE8BB;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="10"/>
+            </Button>
+            <StackPanel Grid.Row="1" Margin="20,4,20,10">
+                <TextBlock Text="%LANG:SettingsTheme%" Style="{DynamicResource ModalInfoLabelTextStyle}" HorizontalAlignment="Left" Margin="0,0,0,10"/>
+                <UniformGrid Columns="3" Margin="0,0,0,20">
+                    <Button x:Name="ThemeAutoButton" Tag="Auto" Style="{DynamicResource SecondaryButtonStyle}" Height="32" Padding="12,0" Margin="0,0,6,0" AutomationProperties.Name="%LANG:SettingsThemeAuto%">
+                        <StackPanel Orientation="Horizontal"><TextBlock Text="&#xE770;" FontFamily="{DynamicResource AppIconFontFamily}" Margin="0,0,8,0" VerticalAlignment="Center"/><TextBlock Text="%LANG:SettingsThemeAuto%"/></StackPanel>
+                    </Button>
+                    <Button x:Name="ThemeLightButton" Tag="Light" Style="{DynamicResource SecondaryButtonStyle}" Height="32" Padding="12,0" Margin="3,0,3,0" AutomationProperties.Name="%LANG:SettingsThemeLight%">
+                        <StackPanel Orientation="Horizontal"><TextBlock Text="&#xE706;" FontFamily="{DynamicResource AppIconFontFamily}" Margin="0,0,8,0" VerticalAlignment="Center"/><TextBlock Text="%LANG:SettingsThemeLight%"/></StackPanel>
+                    </Button>
+                    <Button x:Name="ThemeDarkButton" Tag="Dark" Style="{DynamicResource SecondaryButtonStyle}" Height="32" Padding="12,0" Margin="6,0,0,0" AutomationProperties.Name="%LANG:SettingsThemeDark%">
+                        <StackPanel Orientation="Horizontal"><TextBlock Text="&#xE708;" FontFamily="{DynamicResource AppIconFontFamily}" Margin="0,0,8,0" VerticalAlignment="Center"/><TextBlock Text="%LANG:SettingsThemeDark%"/></StackPanel>
+                    </Button>
+                </UniformGrid>
+                <TextBlock Text="%LANG:SettingsLanguage%" Style="{DynamicResource ModalInfoLabelTextStyle}" HorizontalAlignment="Left" Margin="0,0,0,10"/>
+                <ComboBox x:Name="SettingsLanguageCombo" AutomationProperties.Name="%LANG:SettingsLanguage%"/>
+                <TextBlock x:Name="SettingsErrorText" Style="{DynamicResource ModalSubtextStyle}" Visibility="Collapsed" Margin="0,12,0,0"/>
+            </StackPanel>
+            <Border Grid.Row="2" Style="{DynamicResource ModalFooterBorderStyle}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="SaveButton" Grid.Column="1" Content="%LANG:SettingsSave%" IsDefault="True" Padding="12,0" Style="{DynamicResource ModalPrimaryStretchedButtonStyle}"/>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

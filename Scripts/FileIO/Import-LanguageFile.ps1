@@ -1,5 +1,38 @@
 <#
     .SYNOPSIS
+        Returns the required language catalog names.
+
+    .OUTPUTS
+        System.String. The required catalog names.
+#>
+function Get-LanguageCatalogNames {
+    return @('Chrome', 'Features', 'Categories', 'Apps')
+}
+
+<#
+    .SYNOPSIS
+        Lists language folders containing every required JSON catalog.
+
+    .PARAMETER LanguagesPath
+        The directory containing language folders. Defaults to $script:LanguagesPath.
+
+    .OUTPUTS
+        System.IO.DirectoryInfo. The available language folders.
+#>
+function Get-AvailableLanguageFolders {
+    param([string]$LanguagesPath = $script:LanguagesPath)
+
+    $catalogNames = Get-LanguageCatalogNames
+    foreach ($folder in (Get-ChildItem -LiteralPath $LanguagesPath -Directory | Sort-Object Name)) {
+        $missingCatalogs = @($catalogNames | Where-Object {
+            -not (Test-Path -LiteralPath (Join-Path $folder.FullName "$_.json") -PathType Leaf)
+        })
+        if ($missingCatalogs.Count -eq 0) { $folder }
+    }
+}
+
+<#
+    .SYNOPSIS
         Resolves a language code to an available Config/Languages folder, or falls back to en-US.
 #>
 function Resolve-LanguageFolder {
@@ -35,22 +68,19 @@ function Import-LanguageContent {
     )
 
     $folderPath = Join-Path $LanguagesPath $LanguageFolder
-    $chrome = Import-JsonFile -filePath (Join-Path $folderPath 'Chrome.json')
-    $features = Import-JsonFile -filePath (Join-Path $folderPath 'Features.json')
-    $categories = Import-JsonFile -filePath (Join-Path $folderPath 'Categories.json')
-    $apps = Import-JsonFile -filePath (Join-Path $folderPath 'Apps.json')
-
-    if (-not $chrome -or -not $features -or -not $categories -or -not $apps) {
-        return $null
+    $catalogs = @{}
+    foreach ($name in (Get-LanguageCatalogNames)) {
+        $catalogs[$name] = Import-JsonFile -filePath (Join-Path $folderPath "$name.json")
     }
+    if (@($catalogs.Values | Where-Object { -not $_ }).Count) { return $null }
 
     return [PSCustomObject]@{
         LanguageCode = $LanguageFolder
-        Chrome       = $chrome
-        Features     = $features.Features
-        UiGroups     = $features.UiGroups
-        Categories   = $categories
-        Apps         = $apps
+        Chrome       = $catalogs.Chrome
+        Features     = $catalogs.Features.Features
+        UiGroups     = $catalogs.Features.UiGroups
+        Categories   = $catalogs.Categories
+        Apps         = $catalogs.Apps
     }
 }
 
@@ -398,25 +428,33 @@ function Test-LanguageKeyCoverage {
 
 <#
     .SYNOPSIS
-        Substitutes %LANG:Key% markers in XAML text with translated, XML-escaped values.
+        Replaces %LANG:Key% markers with translated text or dynamic language resources.
 
     .DESCRIPTION
-        Only resolves flat Chrome.json keys, since XAML markers never reference a Feature/Category/
-        UiGroup field directly (those get their text from Get-Translation calls in the GUI scripts
-        that build dynamic controls). Runs a single pass over every marker rather than sequential
-        .Replace() calls, so an already-substituted value can't be re-matched by a later key.
+        Resolves Chrome catalog markers using the active language and its English fallback.
+        Supports embedded text or dynamic resources for windows that allow language changes.
+        Throws when a marker's key is missing from both languages.
 
-        After substitution, scans for any %LANG:...% text that survived unresolved and throws,
-        since Get-Translation's key-as-fallback behavior means a missing key would otherwise render
-        as plain, un-marked text (e.g. "TitleBarClose" instead of a visible error) rather than being
-        caught here. Checks both the active language and its Fallback before flagging a key missing,
-        so a partially-translated language degrades to en-US text instead of failing to load.
+    .PARAMETER Xaml
+        The XAML text containing %LANG:Key% markers to replace.
+
+    .PARAMETER Lang
+        The loaded language object and its optional Fallback. Defaults to $script:Lang.
+
+    .PARAMETER DynamicResources
+        Uses DynamicResource references to Language_<key> resources for live language updates.
+        The window must provide those resources. When omitted, embeds XML-escaped translated text.
+
+    .OUTPUTS
+        System.String. The XAML text with localization markers replaced.
 #>
 function ConvertTo-LocalizedXaml {
     param(
         [Parameter(Mandatory)]
         [string]$Xaml,
-        [object]$Lang = $script:Lang
+        [object]$Lang = $script:Lang,
+        # For live windows, keep a resource reference instead of embedding the translated text.
+        [switch]$DynamicResources
     )
 
     $missingKeys = New-Object System.Collections.Generic.List[string]
@@ -426,6 +464,7 @@ function ConvertTo-LocalizedXaml {
         $key = $match.Groups[1].Value
         $resolvesSomewhere = @(Get-LanguageFallbackChain -Lang $Lang) | Where-Object { $_.Chrome -and $_.Chrome.PSObject.Properties[$key] }
         if (-not $resolvesSomewhere) { $missingKeys.Add($key) }
+        if ($DynamicResources) { return "{DynamicResource Language_$key}" }
         $value = if ($resolvesSomewhere) { Get-Translation -Key $key -Lang $Lang } else { $key }
         return [System.Security.SecurityElement]::Escape($value)
     }

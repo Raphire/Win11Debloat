@@ -26,7 +26,7 @@ function Show-RestoreBackupDialog {
 
     Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase | Out-Null
 
-    $usesDarkMode = Get-SystemUsesDarkMode
+    $usesDarkMode = Get-AppUsesDarkMode
     $ownerWindow = if ($Owner) { $Owner } else { $script:GuiWindow }
 
     $overlay = $null

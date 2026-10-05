@@ -1,0 +1,38 @@
+{
+  "PrivacySuggestedContent": {
+    "Label": "Privacy e contenuti suggeriti"
+  },
+  "System": {
+    "Label": "Sistema"
+  },
+  "StartMenuSearch": {
+    "Label": "Menu Start e ricerca"
+  },
+  "AI": {
+    "Label": "IA"
+  },
+  "WindowsUpdate": {
+    "Label": "Windows Update"
+  },
+  "Taskbar": {
+    "Label": "Barra delle applicazioni"
+  },
+  "Appearance": {
+    "Label": "Aspetto"
+  },
+  "FileExplorer": {
+    "Label": "Esplora file"
+  },
+  "Gaming": {
+    "Label": "Gaming"
+  },
+  "MultiTasking": {
+    "Label": "Multitasking"
+  },
+  "OptionalWindowsFeatures": {
+    "Label": "Funzionalità facoltative di Windows"
+  },
+  "Other": {
+    "Label": "Altro"
+  }
+}

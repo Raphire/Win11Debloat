@@ -425,11 +425,11 @@
   },
   "Microsoft.XboxGameOverlay": {
     "FriendlyName": "Xbox Game Overlay",
-    "Description": "Sobreposição de jogos, necessária ou útil para alguns jogos (faz parte da Xbox Game Bar)"
+    "Description": "Sobreposição de jogos, necessária ou útil para alguns jogos (parte da Xbox Game Bar). Aviso: desinstalá-la pode reduzir o desempenho em jogos em PCs com determinados processadores modernos."
   },
   "Microsoft.XboxGamingOverlay": {
     "FriendlyName": "Xbox Gaming Overlay",
-    "Description": "Sobreposição de jogos, necessária ou útil para alguns jogos (faz parte da Xbox Game Bar)"
+    "Description": "Sobreposição de jogos, necessária ou útil para alguns jogos (parte da Xbox Game Bar). Aviso: desinstalá-la pode reduzir o desempenho em jogos em PCs com determinados processadores modernos."
   },
   "Microsoft.XboxIdentityProvider": {
     "FriendlyName": "Provedor de Identidade do Xbox",

@@ -425,11 +425,11 @@
   },
   "Microsoft.XboxGameOverlay": {
     "FriendlyName": "Xbox Game Overlay",
-    "Description": "Game overlay, required/useful for some games (Part of Xbox Game Bar)"
+    "Description": "Game overlay, required or useful for some games (part of Xbox Game Bar). Warning: Uninstalling this app may reduce game performance on PCs with certain modern processors."
   },
   "Microsoft.XboxGamingOverlay": {
     "FriendlyName": "Xbox Gaming Overlay",
-    "Description": "Game overlay, required/useful for some games (Part of Xbox Game Bar)"
+    "Description": "Game overlay, required or useful for some games (part of Xbox Game Bar). Warning: Uninstalling this app may reduce game performance on PCs with certain modern processors."
   },
   "Microsoft.XboxIdentityProvider": {
     "FriendlyName": "Xbox Identity Provider",

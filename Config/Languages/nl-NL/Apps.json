@@ -425,11 +425,11 @@
   },
   "Microsoft.XboxGameOverlay": {
     "FriendlyName": "Xbox Game Overlay",
-    "Description": "Game-overlay, vereist of nuttig voor bepaalde games (onderdeel van Xbox Game Bar)"
+    "Description": "Game-overlay, vereist of nuttig voor sommige games (onderdeel van Xbox Game Bar). Waarschuwing: het verwijderen van deze app kan de gameprestaties verminderen op pc's met bepaalde moderne processors."
   },
   "Microsoft.XboxGamingOverlay": {
     "FriendlyName": "Xbox Gaming Overlay",
-    "Description": "Game-overlay, vereist of nuttig voor bepaalde games (onderdeel van Xbox Game Bar)"
+    "Description": "Game-overlay, vereist of nuttig voor sommige games (onderdeel van Xbox Game Bar). Waarschuwing: het verwijderen van deze app kan de gameprestaties verminderen op pc's met bepaalde moderne processors."
   },
   "Microsoft.XboxIdentityProvider": {
     "FriendlyName": "Xbox Identity Provider",

@@ -52,8 +52,8 @@
     "Description": "App do Hub de IA do Copilot+ (Windows 11 24H2+)"
   },
   "Microsoft.PCManager": {
-    "FriendlyName": "Gerenciador do PC Microsoft",
-    "Description": "Ferramenta de limpeza e otimização do sistema, que faz parte do Gerenciador do PC (frequentemente pré-instalada)"
+    "FriendlyName": "Microsoft PC Manager",
+    "Description": "Ferramenta da Microsoft para limpar o sistema e otimizar o desempenho do PC (frequentemente pré-instalada)"
   },
   "Microsoft.Getstarted": {
     "FriendlyName": "Introdução",
@@ -65,7 +65,7 @@
   },
   "Microsoft.Microsoft3DViewer": {
     "FriendlyName": "Visualizador 3D",
-    "Description": "Visualizador de modelos 3D"
+    "Description": "Visualizador de modelos 3D (descontinuado)"
   },
   "Microsoft.MicrosoftJournal": {
     "FriendlyName": "Microsoft Journal",
@@ -84,8 +84,8 @@
     "Description": "Coleção de jogos de cartas de paciência"
   },
   "Microsoft.MicrosoftStickyNotes": {
-    "FriendlyName": "Microsoft Sticky Notes",
-    "Description": "App de anotações digital"
+    "FriendlyName": "Notas Autoadesivas",
+    "Description": "App de notas rápidas"
   },
   "Microsoft.MixedReality.Portal": {
     "FriendlyName": "Portal de Realidade Mista",
@@ -132,8 +132,8 @@
     "Description": "Painel do desenvolvedor e utilitário de configuração de ferramentas (descontinuado)"
   },
   "Microsoft.WindowsAlarms": {
-    "FriendlyName": "Alarmes e Relógio",
-    "Description": "App Alarmes e Relógio"
+    "FriendlyName": "Relógio",
+    "Description": "App de alarmes, temporizadores, cronômetro e sessões de foco"
   },
   "Microsoft.WindowsFeedbackHub": {
     "FriendlyName": "Hub de Feedback",
@@ -141,7 +141,7 @@
   },
   "Microsoft.WindowsMaps": {
     "FriendlyName": "Mapas",
-    "Description": "App de mapas e navegação"
+    "Description": "App de mapas e navegação (descontinuado)"
   },
   "Microsoft.WindowsSoundRecorder": {
     "FriendlyName": "Gravador de Som",
@@ -153,11 +153,11 @@
   },
   "Microsoft.ZuneVideo": {
     "FriendlyName": "Filmes e TV",
-    "Description": "App Filmes e TV para alugar, comprar e reproduzir conteúdos de vídeo"
+    "Description": "App de reprodução de vídeos (descontinuado)"
   },
   "MicrosoftCorporationII.MicrosoftFamily": {
     "FriendlyName": "Microsoft Family Safety",
-    "Description": "App Segurança da Família para gerenciar contas e configurações da família"
+    "Description": "App para gerenciar o tempo de tela, os filtros de conteúdo e os relatórios de atividade da família"
   },
   "MicrosoftCorporationII.QuickAssist": {
     "FriendlyName": "Assistência Rápida",
@@ -344,8 +344,8 @@
     "Description": "Navegador padrão do Windows, AVISO: remover este app também remove o único navegador do Windows Sandbox e pode afetar outros apps"
   },
   "Microsoft.GamingApp": {
-    "FriendlyName": "Xbox App",
-    "Description": "App de jogos do Xbox mais recente, necessário para instalar alguns jogos de PC"
+    "FriendlyName": "Xbox app",
+    "Description": "Aplicativo Xbox para Windows, necessário para instalar alguns jogos de PC"
   },
   "Microsoft.GetHelp": {
     "FriendlyName": "Obter Ajuda",
@@ -357,7 +357,7 @@
   },
   "Microsoft.MSPaint": {
     "FriendlyName": "Paint 3D",
-    "Description": "Paint 3D (aplicativo de desenho moderno com recursos 3D)"
+    "Description": "App de desenho 3D (descontinuado)"
   },
   "Microsoft.OneDrive": {
     "FriendlyName": "OneDrive",
@@ -381,7 +381,7 @@
   },
   "Microsoft.ScreenSketch": {
     "FriendlyName": "Ferramenta de Captura",
-    "Description": "Ferramenta para capturar e anotar imagens da tela"
+    "Description": "Permite capturar imagens da tela, fazer anotações, salvar e compartilhar"
   },
   "Microsoft.StartExperiencesApp": {
     "FriendlyName": "Experiência de Widgets",
@@ -481,7 +481,7 @@
   },
   "AD2F1837.HPEasyClean": {
     "FriendlyName": "HP Easy Clean",
-    "Description": "Desabilita teclado, touchpad e tela touch temporariamente para limpeza física do dispositivo"
+    "Description": "Desativa temporariamente dispositivos de entrada para permitir a limpeza do computador"
   },
   "AD2F1837.HPFileViewer": {
     "FriendlyName": "HP File Viewer",
@@ -509,7 +509,7 @@
   },
   "AD2F1837.HPQuickDrop": {
     "FriendlyName": "HP QuickDrop",
-    "Description": "Software OEM da HP para transferência rápida de arquivos entre dispositivos"
+    "Description": "App de transferência de arquivos (descontinuado)"
   },
   "AD2F1837.HPQuickTouch": {
     "FriendlyName": "HP QuickTouch",

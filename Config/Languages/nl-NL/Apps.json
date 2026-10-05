@@ -65,7 +65,7 @@
   },
   "Microsoft.Microsoft3DViewer": {
     "FriendlyName": "3D-viewer",
-    "Description": "App om 3D-modellen te bekijken"
+    "Description": "App om 3D-modellen te bekijken (niet meer ondersteund)"
   },
   "Microsoft.MicrosoftJournal": {
     "FriendlyName": "Microsoft Logboek",
@@ -85,7 +85,7 @@
   },
   "Microsoft.MicrosoftStickyNotes": {
     "FriendlyName": "Plaknotities",
-    "Description": "App voor digitale plaknotities (niet meer ondersteund en vervangen door OneNote)"
+    "Description": "App om snelle notities te maken en te synchroniseren tussen apparaten"
   },
   "Microsoft.MixedReality.Portal": {
     "FriendlyName": "Mixed Reality-portaal",
@@ -132,8 +132,8 @@
     "Description": "Dashboard voor ontwikkelaars om ontwikkeltools in te stellen (niet meer ondersteund)"
   },
   "Microsoft.WindowsAlarms": {
-    "FriendlyName": "Alarmen en klok",
-    "Description": "Klok met wekkerfunctie"
+    "FriendlyName": "Klok",
+    "Description": "App voor alarmen, timers, stopwatch en focussessies"
   },
   "Microsoft.WindowsFeedbackHub": {
     "FriendlyName": "Feedback-hub",
@@ -141,7 +141,7 @@
   },
   "Microsoft.WindowsMaps": {
     "FriendlyName": "Windows Kaarten",
-    "Description": "App voor kaarten en navigatie"
+    "Description": "App voor kaarten en navigatie (niet meer ondersteund)"
   },
   "Microsoft.WindowsSoundRecorder": {
     "FriendlyName": "Geluidsrecorder",
@@ -153,11 +153,11 @@
   },
   "Microsoft.ZuneVideo": {
     "FriendlyName": "Films en tv",
-    "Description": "App voor het huren, kopen en afspelen van video's (hernoemd naar 'Films en tv')"
+    "Description": "App voor het huren, kopen en afspelen van video's (niet meer ondersteund)"
   },
   "MicrosoftCorporationII.MicrosoftFamily": {
-    "FriendlyName": "Family Safety",
-    "Description": "Family Safety-app voor het beheren van gezinsaccounts en instellingen"
+    "FriendlyName": "Microsoft Family Safety",
+    "Description": "App voor het beheren van schermtijd, inhoudsfilters en activiteitenrapporten voor je gezin"
   },
   "MicrosoftCorporationII.QuickAssist": {
     "FriendlyName": "Quick Assist",
@@ -344,8 +344,8 @@
     "Description": "Standaardbrowser van Windows. WAARSCHUWING: als je deze app verwijdert, heeft Windows Sandbox geen browser meer. Ook kunnen andere apps hierdoor problemen krijgen"
   },
   "Microsoft.GamingApp": {
-    "FriendlyName": "Xbox Gaming App",
-    "Description": "Moderne Xbox Gaming-app, vereist voor het installeren van bepaalde pc-games"
+    "FriendlyName": "Xbox app",
+    "Description": "Xbox-app voor Windows, vereist voor het installeren van sommige pc-games"
   },
   "Microsoft.GetHelp": {
     "FriendlyName": "Hulp vragen",
@@ -357,7 +357,7 @@
   },
   "Microsoft.MSPaint": {
     "FriendlyName": "Paint 3D",
-    "Description": "Paint 3D (moderne tekenapp met 3D-functies)"
+    "Description": "3D-tekenapp (niet meer ondersteund)"
   },
   "Microsoft.OneDrive": {
     "FriendlyName": "OneDrive",
@@ -381,7 +381,7 @@
   },
   "Microsoft.ScreenSketch": {
     "FriendlyName": "Knipprogramma",
-    "Description": "Schermafbeeldingen maken en er aantekeningen aan toevoegen"
+    "Description": "Schermafbeeldingen maken, annoteren, opslaan en delen"
   },
   "Microsoft.StartExperiencesApp": {
     "FriendlyName": "Widgetervaring",
@@ -481,7 +481,7 @@
   },
   "AD2F1837.HPEasyClean": {
     "FriendlyName": "HP Easy Clean",
-    "Description": "HP-software voor systeemopruiming of optimalisatie"
+    "Description": "Schakelt invoerapparaten tijdelijk uit zodat je je pc kunt schoonmaken zonder onbedoelde invoer"
   },
   "AD2F1837.HPFileViewer": {
     "FriendlyName": "HP File Viewer",
@@ -509,7 +509,7 @@
   },
   "AD2F1837.HPQuickDrop": {
     "FriendlyName": "HP QuickDrop",
-    "Description": "HP-software voor snelle bestandsoverdracht tussen apparaten"
+    "Description": "HP-software voor snelle bestandsoverdracht tussen apparaten (niet meer ondersteund)"
   },
   "AD2F1837.HPQuickTouch": {
     "FriendlyName": "HP QuickTouch",

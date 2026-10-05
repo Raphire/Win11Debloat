@@ -48,11 +48,11 @@
     "Description": "Assistente de IA integrado ao Windows"
   },
   "Microsoft.Windows.AIHub": {
-    "FriendlyName": "Hub de IA do Copilot+",
+    "FriendlyName": "Copilot+ AI Hub",
     "Description": "App do Hub de IA do Copilot+ (Windows 11 24H2+)"
   },
   "Microsoft.PCManager": {
-    "FriendlyName": "Gerenciador do PC",
+    "FriendlyName": "Gerenciador do PC Microsoft",
     "Description": "Ferramenta de limpeza e otimização do sistema, que faz parte do Gerenciador do PC (frequentemente pré-instalada)"
   },
   "Microsoft.Getstarted": {
@@ -72,7 +72,7 @@
     "Description": "App de anotações digitais otimizado para uso com caneta"
   },
   "Microsoft.MicrosoftOfficeHub": {
-    "FriendlyName": "Hub do Office",
+    "FriendlyName": "Office Hub",
     "Description": "Central para acessar apps e documentos do Microsoft Office (precursor do app Microsoft 365)"
   },
   "Microsoft.MicrosoftPowerBIForWindows": {
@@ -84,7 +84,7 @@
     "Description": "Coleção de jogos de cartas de paciência"
   },
   "Microsoft.MicrosoftStickyNotes": {
-    "FriendlyName": "Notas Autoadesivas",
+    "FriendlyName": "Microsoft Sticky Notes",
     "Description": "App de anotações digital"
   },
   "Microsoft.MixedReality.Portal": {
@@ -92,7 +92,7 @@
     "Description": "Portal para visores de Realidade Mista do Windows"
   },
   "Microsoft.NetworkSpeedTest": {
-    "FriendlyName": "Teste de Velocidade de Rede",
+    "FriendlyName": "Network Speed Test",
     "Description": "Utilitário para testar a velocidade da conexão com a internet"
   },
   "Microsoft.News": {
@@ -112,7 +112,7 @@
     "Description": "App de gerenciamento de operadoras móveis (substituído por Planos)"
   },
   "Microsoft.Print3D": {
-    "FriendlyName": "Imprimir em 3D",
+    "FriendlyName": "Print 3D",
     "Description": "Software de preparação para impressão 3D"
   },
   "Microsoft.PowerAutomateDesktop": {
@@ -132,8 +132,8 @@
     "Description": "Painel do desenvolvedor e utilitário de configuração de ferramentas (descontinuado)"
   },
   "Microsoft.WindowsAlarms": {
-    "FriendlyName": "Despertador & Relógio",
-    "Description": "App Despertador & Relógio"
+    "FriendlyName": "Alarmes e Relógio",
+    "Description": "App Alarmes e Relógio"
   },
   "Microsoft.WindowsFeedbackHub": {
     "FriendlyName": "Hub de Feedback",
@@ -156,7 +156,7 @@
     "Description": "App Filmes e TV para alugar, comprar e reproduzir conteúdos de vídeo"
   },
   "MicrosoftCorporationII.MicrosoftFamily": {
-    "FriendlyName": "Segurança da Família",
+    "FriendlyName": "Microsoft Family Safety",
     "Description": "App Segurança da Família para gerenciar contas e configurações da família"
   },
   "MicrosoftCorporationII.QuickAssist": {
@@ -192,7 +192,7 @@
     "Description": "App do serviço de streaming Amazon Prime Video"
   },
   "Asphalt8Airborne": {
-    "FriendlyName": "Asphalt 8",
+    "FriendlyName": "Asphalt 8: Airborne",
     "Description": "Jogo de corrida"
   },
   "AutodeskSketchBook": {
@@ -236,7 +236,7 @@
     "Description": "App de rede social Facebook"
   },
   "FarmVille2CountryEscape": {
-    "FriendlyName": "FarmVille 2",
+    "FriendlyName": "FarmVille 2: Country Escape",
     "Description": "Jogo de simulação de fazenda"
   },
   "Flipboard": {
@@ -260,7 +260,7 @@
     "Description": "App de rede social Instagram"
   },
   "king.com.BubbleWitch3Saga": {
-    "FriendlyName": "Bubble Witch 3",
+    "FriendlyName": "Bubble Witch 3 Saga",
     "Description": "Jogo de puzzles da King"
   },
   "king.com.CandyCrushSaga": {
@@ -268,7 +268,7 @@
     "Description": "Jogo de puzzles da King"
   },
   "king.com.CandyCrushSodaSaga": {
-    "FriendlyName": "Candy Crush Soda",
+    "FriendlyName": "Candy Crush Soda Saga",
     "Description": "Jogo de puzzles da King"
   },
   "LinkedInforWindows": {
@@ -344,7 +344,7 @@
     "Description": "Navegador padrão do Windows, AVISO: remover este app também remove o único navegador do Windows Sandbox e pode afetar outros apps"
   },
   "Microsoft.GamingApp": {
-    "FriendlyName": "Xbox Gaming App",
+    "FriendlyName": "Xbox App",
     "Description": "App de jogos do Xbox mais recente, necessário para instalar alguns jogos de PC"
   },
   "Microsoft.GetHelp": {
@@ -352,7 +352,7 @@
     "Description": "Necessário para algumas ferramentas de solução de problemas do Windows 11 e interações com o suporte"
   },
   "Microsoft.M365Companions": {
-    "FriendlyName": "Componentes do Microsoft 365",
+    "FriendlyName": "Microsoft 365 Companions",
     "Description": "Miniaplicativos Calendário, Arquivos e Pessoas do Microsoft 365 (Business); esses aplicativos podem ser reinstalados se estiverem habilitados pelo administrador do Microsoft 365"
   },
   "Microsoft.MSPaint": {
@@ -381,14 +381,14 @@
   },
   "Microsoft.ScreenSketch": {
     "FriendlyName": "Ferramenta de Captura",
-    "Description": "Ferramenta de Captura (ferramenta de captura de tela e anotações)"
+    "Description": "Ferramenta para capturar e anotar imagens da tela"
   },
   "Microsoft.StartExperiencesApp": {
     "FriendlyName": "Experiência de Widgets",
     "Description": "Este app dá suporte ao Meu Feed de Widgets do Windows"
   },
   "Microsoft.Whiteboard": {
-    "FriendlyName": "Quadro de Comunicações",
+    "FriendlyName": "Microsoft Whiteboard",
     "Description": "App de quadro branco digital colaborativo"
   },
   "Microsoft.Windows.Photos": {
@@ -452,7 +452,7 @@
     "Description": "Integração do celular no Explorador de Arquivos, na Câmera e em outros locais (faz parte dos recursos do Phone Link)"
   },
   "MicrosoftWindows.Client.WebExperience": {
-    "FriendlyName": "Pacote da Experiência Web do Windows",
+    "FriendlyName": "Windows Web Experience Pack",
     "Description": "Ajuda a entregar e atualizar determinados recursos, como os Widgets, por meio do Microsoft Store"
   },
   "Microsoft.WidgetsPlatformRuntime": {

@@ -65,7 +65,7 @@
   },
   "Microsoft.Microsoft3DViewer": {
     "FriendlyName": "3D Viewer",
-    "Description": "Viewer for 3D models"
+    "Description": "Viewer for 3D models (discontinued)"
   },
   "Microsoft.MicrosoftJournal": {
     "FriendlyName": "Microsoft Journal",
@@ -85,7 +85,7 @@
   },
   "Microsoft.MicrosoftStickyNotes": {
     "FriendlyName": "Sticky Notes",
-    "Description": "Digital sticky notes app (Discontinued & replaced by OneNote)"
+    "Description": "App for creating and syncing quick notes"
   },
   "Microsoft.MixedReality.Portal": {
     "FriendlyName": "Mixed Reality Portal",
@@ -132,8 +132,8 @@
     "Description": "Developer dashboard and tool configuration utility (Discontinued)"
   },
   "Microsoft.WindowsAlarms": {
-    "FriendlyName": "Alarms & Clock",
-    "Description": "Alarms & Clock app"
+    "FriendlyName": "Clock",
+    "Description": "App for alarms, timers, stopwatch, and focus sessions"
   },
   "Microsoft.WindowsFeedbackHub": {
     "FriendlyName": "Feedback Hub",
@@ -141,7 +141,7 @@
   },
   "Microsoft.WindowsMaps": {
     "FriendlyName": "Windows Maps",
-    "Description": "Mapping and navigation app"
+    "Description": "Maps and navigation app (discontinued)"
   },
   "Microsoft.WindowsSoundRecorder": {
     "FriendlyName": "Sound Recorder",
@@ -153,11 +153,11 @@
   },
   "Microsoft.ZuneVideo": {
     "FriendlyName": "Movies & TV",
-    "Description": "Movies & TV app for renting/buying/playing video content (Rebranded as \"Films & TV\")"
+    "Description": "App for renting/buying/playing video content (discontinued)"
   },
   "MicrosoftCorporationII.MicrosoftFamily": {
-    "FriendlyName": "Family Safety",
-    "Description": "Family Safety App for managing family accounts and settings"
+    "FriendlyName": "Microsoft Family Safety",
+    "Description": "App for managing family screen time, content filters, and activity reports"
   },
   "MicrosoftCorporationII.QuickAssist": {
     "FriendlyName": "Quick Assist",
@@ -344,8 +344,8 @@
     "Description": "Windows' default browser, WARNING: Removing this app also removes the only browser from Windows Sandbox and could affect other apps"
   },
   "Microsoft.GamingApp": {
-    "FriendlyName": "Xbox Gaming App",
-    "Description": "Modern Xbox Gaming App, required for installing some PC games"
+    "FriendlyName": "Xbox app",
+    "Description": "Xbox gaming app for Windows, required to install some PC games"
   },
   "Microsoft.GetHelp": {
     "FriendlyName": "Get Help",
@@ -357,7 +357,7 @@
   },
   "Microsoft.MSPaint": {
     "FriendlyName": "Paint 3D",
-    "Description": "Paint 3D (Modern paint application with 3D features)"
+    "Description": "3D drawing app (discontinued)"
   },
   "Microsoft.OneDrive": {
     "FriendlyName": "OneDrive",
@@ -381,7 +381,7 @@
   },
   "Microsoft.ScreenSketch": {
     "FriendlyName": "Snipping Tool",
-    "Description": "Snipping Tool (Screenshot and annotation tool)"
+    "Description": "Capture, annotate, save, and share screenshots"
   },
   "Microsoft.StartExperiencesApp": {
     "FriendlyName": "Widgets Experience",
@@ -425,11 +425,11 @@
   },
   "Microsoft.XboxGameOverlay": {
     "FriendlyName": "Xbox Game Overlay",
-    "Description": "Game overlay, required/useful for some games (Part of Xbox Game Bar)"
+    "Description": "Game overlay, required or useful for some games (part of Xbox Game Bar). Warning: Uninstalling this app may reduce game performance on PCs with certain modern processors."
   },
   "Microsoft.XboxGamingOverlay": {
     "FriendlyName": "Xbox Gaming Overlay",
-    "Description": "Game overlay, required/useful for some games (Part of Xbox Game Bar)"
+    "Description": "Game overlay, required or useful for some games (part of Xbox Game Bar). Warning: Uninstalling this app may reduce game performance on PCs with certain modern processors."
   },
   "Microsoft.XboxIdentityProvider": {
     "FriendlyName": "Xbox Identity Provider",
@@ -481,7 +481,7 @@
   },
   "AD2F1837.HPEasyClean": {
     "FriendlyName": "HP Easy Clean",
-    "Description": "HP OEM software for system cleaning or optimization"
+    "Description": "Temporarily disables input devices for cleaning"
   },
   "AD2F1837.HPFileViewer": {
     "FriendlyName": "HP File Viewer",
@@ -509,7 +509,7 @@
   },
   "AD2F1837.HPQuickDrop": {
     "FriendlyName": "HP QuickDrop",
-    "Description": "HP OEM software for quick file transfer between devices"
+    "Description": "HP OEM software for quick file transfer between devices (discontinued)"
   },
   "AD2F1837.HPQuickTouch": {
     "FriendlyName": "HP QuickTouch",

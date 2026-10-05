@@ -852,7 +852,7 @@
     {
       "FriendlyName": "Xbox Game Overlay",
       "AppId": "Microsoft.XboxGameOverlay",
-      "Description": "Game overlay, required/useful for some games (Part of Xbox Game Bar)",
+      "Description": "Game overlay, required or useful for some games (part of Xbox Game Bar). Warning: Uninstalling this app may reduce game performance on PCs with certain modern processors.",
       "SelectedByDefault": false,
       "Recommendation": "optional",
       "RemovalMethod": "Appx"
@@ -860,7 +860,7 @@
     {
       "FriendlyName": "Xbox Gaming Overlay",
       "AppId": "Microsoft.XboxGamingOverlay",
-      "Description": "Game overlay, required/useful for some games (Part of Xbox Game Bar)",
+      "Description": "Game overlay, required or useful for some games (part of Xbox Game Bar). Warning: Uninstalling this app may reduce game performance on PCs with certain modern processors.",
       "SelectedByDefault": false,
       "Recommendation": "optional",
       "RemovalMethod": "Appx"

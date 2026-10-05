@@ -169,6 +169,11 @@
             <Setter Property="Height" Value="9"/>
             <Setter Property="HorizontalAlignment" Value="Left"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <TranslateTransform Y="1"/>
+                </Setter.Value>
+            </Setter>
         </Style>
 
         <!-- Container style for each dynamically-created app table row -->

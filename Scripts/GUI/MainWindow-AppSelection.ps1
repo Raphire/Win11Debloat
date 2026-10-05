@@ -463,7 +463,7 @@ function Add-AppsToMainWindow {
             'unsafe' { Get-Translation -Key 'AppLegendNotRecommendedTooltip' }
             default  { Get-Translation -Key 'AppLegendOptionalTooltip' }
         }
-        [System.Windows.Controls.Grid]::SetColumn($dot, 0)
+        [System.Windows.Controls.Grid]::SetColumn($indicator, 0)
 
         $tbName = New-Object System.Windows.Controls.TextBlock
         $tbName.Text = $app.FriendlyName

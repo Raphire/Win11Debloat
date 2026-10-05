@@ -24,8 +24,8 @@
     "Description": "Houdt je gezondheid en conditie bij en toont nieuws via Bing (niet meer ondersteund)"
   },
   "Microsoft.BingNews": {
-    "FriendlyName": "Bing Nieuws",
-    "Description": "Nieuwsapp van Bing (vervangen door Microsoft News/Start)"
+    "FriendlyName": "Bing News",
+    "Description": "Nieuws via Bing (niet meer beschikbaar)"
   },
   "Microsoft.BingSports": {
     "FriendlyName": "Bing Sport",
@@ -97,7 +97,7 @@
   },
   "Microsoft.News": {
     "FriendlyName": "Microsoft Nieuws",
-    "Description": "Nieuwsapp (opvolger van Bing Nieuws, nu onderdeel van Microsoft Start)"
+    "Description": "Microsoft News-app voor Windows"
   },
   "Microsoft.Office.OneNote": {
     "FriendlyName": "OneNote",

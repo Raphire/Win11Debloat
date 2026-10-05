@@ -25,7 +25,7 @@
   },
   "Microsoft.BingNews": {
     "FriendlyName": "Bing News",
-    "Description": "Aggregatore di notizie tramite Bing (sostituito da Microsoft News/Start)"
+    "Description": "Aggregatore di notizie Bing (discontinuato)"
   },
   "Microsoft.BingSports": {
     "FriendlyName": "Bing Sports",
@@ -65,7 +65,7 @@
   },
   "Microsoft.Microsoft3DViewer": {
     "FriendlyName": "3D Viewer",
-    "Description": "Visualizzatore di modelli 3D"
+    "Description": "Visualizzatore di modelli 3D (non più supportato)"
   },
   "Microsoft.MicrosoftJournal": {
     "FriendlyName": "Microsoft Journal",
@@ -84,8 +84,8 @@
     "Description": "Raccolta di giochi di solitario"
   },
   "Microsoft.MicrosoftStickyNotes": {
-    "FriendlyName": "Sticky Notes",
-    "Description": "App per note adesive digitali (discontinuata e sostituita da OneNote)"
+    "FriendlyName": "Memo",
+    "Description": "App per creare memo rapidi sul desktop e sincronizzarli tra dispositivi"
   },
   "Microsoft.MixedReality.Portal": {
     "FriendlyName": "Mixed Reality Portal",
@@ -97,7 +97,7 @@
   },
   "Microsoft.News": {
     "FriendlyName": "Microsoft News",
-    "Description": "Aggregatore di notizie (sostituito da Bing News, ora parte di Microsoft Start)"
+    "Description": "App Microsoft News per Windows"
   },
   "Microsoft.Office.OneNote": {
     "FriendlyName": "OneNote",
@@ -132,19 +132,19 @@
     "Description": "Dashboard per sviluppatori e utilità per la configurazione degli strumenti (discontinuata)"
   },
   "Microsoft.WindowsAlarms": {
-    "FriendlyName": "Alarms & Clock",
-    "Description": "App Sveglie e orologio"
+    "FriendlyName": "Orologio",
+    "Description": "App Orologio per sveglie, timer e cronometro"
   },
   "Microsoft.WindowsFeedbackHub": {
-    "FriendlyName": "Feedback Hub",
+    "FriendlyName": "Hub di Feedback",
     "Description": "App per inviare feedback a Microsoft su Windows"
   },
   "Microsoft.WindowsMaps": {
-    "FriendlyName": "Windows Maps",
-    "Description": "App per mappe e navigazione"
+    "FriendlyName": "Mappe",
+    "Description": "App per mappe e navigazione (non più supportata)"
   },
   "Microsoft.WindowsSoundRecorder": {
-    "FriendlyName": "Sound Recorder",
+    "FriendlyName": "Registratore di suoni",
     "Description": "App di base per la registrazione audio"
   },
   "Microsoft.XboxApp": {
@@ -152,15 +152,15 @@
     "Description": "Vecchia app Xbox Console Companion (discontinuata)"
   },
   "Microsoft.ZuneVideo": {
-    "FriendlyName": "Movies & TV",
-    "Description": "App Movies & TV per noleggiare, acquistare e riprodurre contenuti video (rinominata \"Films & TV\")"
+    "FriendlyName": "Film & TV",
+    "Description": "App per noleggiare, acquistare e riprodurre contenuti video (non più supportata)"
   },
   "MicrosoftCorporationII.MicrosoftFamily": {
     "FriendlyName": "Family Safety",
-    "Description": "App Family Safety per gestire gli account e le impostazioni della famiglia"
+    "Description": "App per gestire il tempo di utilizzo dello schermo, i filtri dei contenuti e i report sulle attività della famiglia"
   },
   "MicrosoftCorporationII.QuickAssist": {
-    "FriendlyName": "Quick Assist",
+    "FriendlyName": "Assistenza rapida",
     "Description": "Strumento per l'assistenza remota"
   },
   "MicrosoftTeams": {
@@ -344,8 +344,8 @@
     "Description": "Browser predefinito di Windows, ATTENZIONE: la rimozione di questa app rimuove anche l'unico browser da Windows Sandbox e potrebbe influire su altre app"
   },
   "Microsoft.GamingApp": {
-    "FriendlyName": "Xbox Gaming App",
-    "Description": "Moderna app Xbox Gaming, necessaria per installare alcuni giochi per PC"
+    "FriendlyName": "Xbox app",
+    "Description": "App Xbox per Windows, necessaria per installare alcuni giochi per PC"
   },
   "Microsoft.GetHelp": {
     "FriendlyName": "Get Help",
@@ -357,7 +357,7 @@
   },
   "Microsoft.MSPaint": {
     "FriendlyName": "Paint 3D",
-    "Description": "Paint 3D (app di pittura moderna con funzionalità 3D)"
+    "Description": "App di disegno 3D (non più supportata)"
   },
   "Microsoft.OneDrive": {
     "FriendlyName": "OneDrive",
@@ -380,7 +380,7 @@
     "Description": "App client di Desktop remoto"
   },
   "Microsoft.ScreenSketch": {
-    "FriendlyName": "Snipping Tool",
+    "FriendlyName": "Strumento di cattura",
     "Description": "Strumento per acquisire schermate e aggiungere annotazioni"
   },
   "Microsoft.StartExperiencesApp": {
@@ -392,24 +392,24 @@
     "Description": "App di lavagna digitale collaborativa"
   },
   "Microsoft.Windows.Photos": {
-    "FriendlyName": "Photos",
+    "FriendlyName": "Foto",
     "Description": "App predefinita per visualizzare e modificare le foto di base"
   },
   "Microsoft.WindowsCalculator": {
-    "FriendlyName": "Calculator",
+    "FriendlyName": "Calcolatrice",
     "Description": "App Calcolatrice"
   },
   "Microsoft.WindowsCamera": {
-    "FriendlyName": "Camera",
+    "FriendlyName": "Fotocamera",
     "Description": "App Fotocamera per utilizzare fotocamere integrate o collegate"
   },
   "Microsoft.windowscommunicationsapps": {
-    "FriendlyName": "Mail & Calendar",
-    "Description": "Suite di app Mail & Calendar (discontinuata)"
+    "FriendlyName": "Posta e Calendario",
+    "Description": "Suite di app Posta e Calendario (il supporto è terminato)"
   },
   "Microsoft.WindowsNotepad": {
-    "FriendlyName": "Notepad",
-    "Description": "App editor di testo Notepad"
+    "FriendlyName": "Blocco note",
+    "Description": "Editor di testo Blocco note"
   },
   "Microsoft.WindowsStore": {
     "FriendlyName": "Microsoft Store",
@@ -425,11 +425,11 @@
   },
   "Microsoft.XboxGameOverlay": {
     "FriendlyName": "Xbox Game Overlay",
-    "Description": "Sovrapposizione di gioco, necessaria o utile per alcuni giochi (parte di Xbox Game Bar)"
+    "Description": "Sovrapposizione di gioco, necessaria o utile per alcuni giochi (parte di Xbox Game Bar). ATTENZIONE: la disinstallazione può ridurre le prestazioni dei giochi su alcuni PC con processori moderni."
   },
   "Microsoft.XboxGamingOverlay": {
     "FriendlyName": "Xbox Gaming Overlay",
-    "Description": "Sovrapposizione di gioco, necessaria o utile per alcuni giochi (parte di Xbox Game Bar)"
+    "Description": "Sovrapposizione di gioco, necessaria o utile per alcuni giochi (parte di Xbox Game Bar). ATTENZIONE: la disinstallazione può ridurre le prestazioni dei giochi su alcuni PC con processori moderni."
   },
   "Microsoft.XboxIdentityProvider": {
     "FriendlyName": "Xbox Identity Provider",
@@ -440,7 +440,7 @@
     "Description": "Funzionalità di accessibilità necessaria per alcuni giochi, ATTENZIONE: questa app non può essere reinstallata facilmente!"
   },
   "Microsoft.YourPhone": {
-    "FriendlyName": "Phone Link",
+    "FriendlyName": "Collegamento al telefono",
     "Description": "Collegamento del telefono (connette telefoni Android/iOS al PC)"
   },
   "Microsoft.ZuneMusic": {
@@ -509,7 +509,7 @@
   },
   "AD2F1837.HPQuickDrop": {
     "FriendlyName": "HP QuickDrop",
-    "Description": "Software OEM HP per il trasferimento rapido di file tra dispositivi"
+    "Description": "Software OEM HP per il trasferimento rapido di file tra dispositivi (non più supportato)"
   },
   "AD2F1837.HPQuickTouch": {
     "FriendlyName": "HP QuickTouch",

@@ -20,7 +20,7 @@
     {
       "FriendlyName": "Cortana",
       "AppId": "Microsoft.549981C3F5F10",
-      "Description": "Microsoft Cortana voice assistant (Discontinued)",
+      "Description": "Microsoft Cortana voice assistant (discontinued)",
       "SelectedByDefault": true,
       "Recommendation": "safe",
       "RemovalMethod": "Appx"
@@ -28,7 +28,7 @@
     {
       "FriendlyName": "Bing Finance",
       "AppId": "Microsoft.BingFinance",
-      "Description": "Finance news and tracking via Bing (Discontinued)",
+      "Description": "Finance news and tracking via Bing (discontinued)",
       "SelectedByDefault": true,
       "Recommendation": "safe",
       "RemovalMethod": "Appx"
@@ -36,7 +36,7 @@
     {
       "FriendlyName": "Bing Food And Drink",
       "AppId": "Microsoft.BingFoodAndDrink",
-      "Description": "Recipes and food news via Bing (Discontinued)",
+      "Description": "Recipes and food news via Bing (discontinued)",
       "SelectedByDefault": true,
       "Recommendation": "safe",
       "RemovalMethod": "Appx"
@@ -44,7 +44,7 @@
     {
       "FriendlyName": "Bing Health And Fitness",
       "AppId": "Microsoft.BingHealthAndFitness",
-      "Description": "Health and fitness tracking/news via Bing (Discontinued)",
+      "Description": "Health and fitness tracking/news via Bing (discontinued)",
       "SelectedByDefault": true,
       "Recommendation": "safe",
       "RemovalMethod": "Appx"
@@ -52,7 +52,7 @@
     {
       "FriendlyName": "Bing News",
       "AppId": "Microsoft.BingNews",
-      "Description": "News aggregator via Bing (Replaced by Microsoft News/Start)",
+      "Description": "News aggregator via Bing (discontinued)",
       "SelectedByDefault": true,
       "Recommendation": "safe",
       "RemovalMethod": "Appx"
@@ -60,7 +60,7 @@
     {
       "FriendlyName": "Bing Sports",
       "AppId": "Microsoft.BingSports",
-      "Description": "Sports news and scores via Bing (Discontinued)",
+      "Description": "Sports news and scores via Bing (discontinued)",
       "SelectedByDefault": true,
       "Recommendation": "safe",
       "RemovalMethod": "Appx"
@@ -76,7 +76,7 @@
     {
       "FriendlyName": "Bing Travel",
       "AppId": "Microsoft.BingTravel",
-      "Description": "Travel planning and news via Bing (Discontinued)",
+      "Description": "Travel planning and news via Bing (discontinued)",
       "SelectedByDefault": true,
       "Recommendation": "safe",
       "RemovalMethod": "Appx"
@@ -196,7 +196,7 @@
     {
       "FriendlyName": "Microsoft News",
       "AppId": "Microsoft.News",
-      "Description": "News aggregator (Replaced Bing News, now part of Microsoft Start)",
+      "Description": "Microsoft News app for Windows",
       "SelectedByDefault": true,
       "Recommendation": "safe",
       "RemovalMethod": "Appx"
@@ -244,7 +244,7 @@
     {
       "FriendlyName": "Skype (UWP)",
       "AppId": "Microsoft.SkypeApp",
-      "Description": "Skype communication app, Universal Windows Platform version (Discontinued)",
+      "Description": "Skype communication app, Universal Windows Platform version (discontinued)",
       "SelectedByDefault": true,
       "Recommendation": "safe",
       "RemovalMethod": "Appx"
@@ -260,7 +260,7 @@
     {
       "FriendlyName": "Dev Home",
       "AppId": "Microsoft.Windows.DevHome",
-      "Description": "Developer dashboard and tool configuration utility (Discontinued)",
+      "Description": "Developer dashboard and tool configuration utility (discontinued)",
       "SelectedByDefault": true,
       "Recommendation": "safe",
       "RemovalMethod": "Appx"
@@ -300,7 +300,7 @@
     {
       "FriendlyName": "Xbox Console Companion",
       "AppId": "Microsoft.XboxApp",
-      "Description": "Old Xbox Console Companion App (Discontinued)",
+      "Description": "Old Xbox Console Companion App (discontinued)",
       "SelectedByDefault": true,
       "Recommendation": "safe",
       "RemovalMethod": "Appx"
@@ -308,7 +308,7 @@
     {
       "FriendlyName": "Movies & TV",
       "AppId": "Microsoft.ZuneVideo",
-      "Description": "Movies & TV app for renting/buying/playing video content (Rebranded as \"Films & TV\")",
+      "Description": "Microsoft Movies & TV app for playing previously purchased movies and TV shows on Windows",
       "SelectedByDefault": true,
       "Recommendation": "safe",
       "RemovalMethod": "Appx"
@@ -812,7 +812,7 @@
     {
       "FriendlyName": "Mail & Calendar",
       "AppId": "Microsoft.windowscommunicationsapps",
-      "Description": "Mail & Calendar app suite (Discontinued)",
+      "Description": "Mail & Calendar app suite (discontinued)",
       "SelectedByDefault": false,
       "Recommendation": "safe",
       "RemovalMethod": "Appx"

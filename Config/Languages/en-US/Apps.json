@@ -9,27 +9,27 @@
   },
   "Microsoft.549981C3F5F10": {
     "FriendlyName": "Cortana",
-    "Description": "Microsoft Cortana voice assistant (Discontinued)"
+    "Description": "Microsoft Cortana voice assistant (discontinued)"
   },
   "Microsoft.BingFinance": {
     "FriendlyName": "Bing Finance",
-    "Description": "Finance news and tracking via Bing (Discontinued)"
+    "Description": "Finance news and tracking via Bing (discontinued)"
   },
   "Microsoft.BingFoodAndDrink": {
     "FriendlyName": "Bing Food And Drink",
-    "Description": "Recipes and food news via Bing (Discontinued)"
+    "Description": "Recipes and food news via Bing (discontinued)"
   },
   "Microsoft.BingHealthAndFitness": {
     "FriendlyName": "Bing Health And Fitness",
-    "Description": "Health and fitness tracking/news via Bing (Discontinued)"
+    "Description": "Health and fitness tracking/news via Bing (discontinued)"
   },
   "Microsoft.BingNews": {
     "FriendlyName": "Bing News",
-    "Description": "News aggregator via Bing (Replaced by Microsoft News/Start)"
+    "Description": "News aggregator via Bing (discontinued)"
   },
   "Microsoft.BingSports": {
     "FriendlyName": "Bing Sports",
-    "Description": "Sports news and scores via Bing (Discontinued)"
+    "Description": "Sports news and scores via Bing (discontinued)"
   },
   "Microsoft.BingTranslator": {
     "FriendlyName": "Bing Translator",
@@ -37,7 +37,7 @@
   },
   "Microsoft.BingTravel": {
     "FriendlyName": "Bing Travel",
-    "Description": "Travel planning and news via Bing (Discontinued)"
+    "Description": "Travel planning and news via Bing (discontinued)"
   },
   "Microsoft.BingWeather": {
     "FriendlyName": "Bing Weather",
@@ -97,7 +97,7 @@
   },
   "Microsoft.News": {
     "FriendlyName": "Microsoft News",
-    "Description": "News aggregator (Replaced Bing News, now part of Microsoft Start)"
+    "Description": "Microsoft News app for Windows"
   },
   "Microsoft.Office.OneNote": {
     "FriendlyName": "OneNote",
@@ -121,7 +121,7 @@
   },
   "Microsoft.SkypeApp": {
     "FriendlyName": "Skype (UWP)",
-    "Description": "Skype communication app, Universal Windows Platform version (Discontinued)"
+    "Description": "Skype communication app, Universal Windows Platform version (discontinued)"
   },
   "Microsoft.Todos": {
     "FriendlyName": "Microsoft To Do",
@@ -129,7 +129,7 @@
   },
   "Microsoft.Windows.DevHome": {
     "FriendlyName": "Dev Home",
-    "Description": "Developer dashboard and tool configuration utility (Discontinued)"
+    "Description": "Developer dashboard and tool configuration utility (discontinued)"
   },
   "Microsoft.WindowsAlarms": {
     "FriendlyName": "Clock",
@@ -149,7 +149,7 @@
   },
   "Microsoft.XboxApp": {
     "FriendlyName": "Xbox Console Companion",
-    "Description": "Old Xbox Console Companion App (Discontinued)"
+    "Description": "Old Xbox Console Companion App (discontinued)"
   },
   "Microsoft.ZuneVideo": {
     "FriendlyName": "Movies & TV",
@@ -405,7 +405,7 @@
   },
   "Microsoft.windowscommunicationsapps": {
     "FriendlyName": "Mail & Calendar",
-    "Description": "Mail & Calendar app suite (Discontinued)"
+    "Description": "Mail & Calendar app suite (discontinued)"
   },
   "Microsoft.WindowsNotepad": {
     "FriendlyName": "Notepad",

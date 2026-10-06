@@ -458,11 +458,12 @@ function Add-AppsToMainWindow {
         }
         $indicator.Style = $Window.Resources['AppRecommendationIndicatorStyle']
         $indicator.Fill = switch ($app.Recommendation) { 'safe' { $brushSafe } 'unsafe' { $brushUnsafe } default { $brushDefault } }
-        $indicator.ToolTip = switch ($app.Recommendation) {
-            'safe'   { Get-Translation -Key 'AppLegendRecommendedTooltip' }
-            'unsafe' { Get-Translation -Key 'AppLegendNotRecommendedTooltip' }
-            default  { Get-Translation -Key 'AppLegendOptionalTooltip' }
+        $recommendationKey = switch ($app.Recommendation) {
+            'safe'   { 'AppLegendRecommendedTooltip' }
+            'unsafe' { 'AppLegendNotRecommendedTooltip' }
+            default  { 'AppLegendOptionalTooltip' }
         }
+        $indicator.SetResourceReference([System.Windows.FrameworkElement]::ToolTipProperty, "Language_$recommendationKey")
         [System.Windows.Controls.Grid]::SetColumn($indicator, 0)
 
         $tbName = New-Object System.Windows.Controls.TextBlock

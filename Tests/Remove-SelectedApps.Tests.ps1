@@ -4,6 +4,7 @@ BeforeAll {
     function Test-AppInWingetList { param($appId, $InstalledList) $false }
     function Invoke-NonBlocking { param($ScriptBlock, $ArgumentList, $TimeoutSeconds) }
     function Get-UserName { 'Alice' }
+    function Get-Translation { param($Key, $FormatArgs) if ($FormatArgs) { return "$Key $($FormatArgs -join ' ')" }; return $Key }
     function Invoke-ForceRemoveEdge {}
     function Show-MessageBox { 'No' }
     function Invoke-WithTargetUserHive { param($TargetUserName, $ScriptBlock, $ArgumentObject) }
@@ -20,6 +21,7 @@ Describe 'Remove-SelectedApps' {
         $script:CancelRequested = $false
         $script:ApplySubStepCallback = $null
         $script:WingetInstalled = $true
+        $script:WingetDeferredRemovals = @{}
         $script:AppRemovalFailures = 0
         $script:AppRemovalVerificationUnavailable = $false
         Mock Get-TargetUserForAppRemoval { 'AllUsers' }
@@ -52,6 +54,18 @@ Describe 'Remove-SelectedApps' {
         Mock Get-WingetInstalledApps { return ,@([PSCustomObject]@{ Id = 'Other.App' }) }
         Remove-SelectedApps -appsList @('Winget.App')
         Should -Invoke Test-AppInWingetList -Times 1 -Exactly -ParameterFilter { $appId -eq 'Winget.App' -and $InstalledList[0].Id -eq 'Other.App' }
+    }
+
+    It 'skips immediate inventory verification for a deferred WinGet uninstall' {
+        Mock Get-AppRemovalMethod { 'WinGet' }
+        Mock Remove-WinGetApp {
+            $script:WingetDeferredRemovals[$app] = 'Alice'
+            return $true
+        }
+
+        Remove-SelectedApps -appsList @('Winget.App') | Should -BeTrue
+
+        Should -Invoke Get-WingetInstalledApps -Times 0 -Exactly
     }
 
     It 'stops before the first removal when cancellation is requested' {
@@ -157,6 +171,7 @@ Describe 'Remove-WinGetApp' {
     BeforeEach {
         $script:Params = @{}
         $script:WingetInstalled = $true
+        $script:WingetDeferredRemovals = @{}
         Mock Invoke-NonBlocking { [PSCustomObject]@{ Success = $true; ExitCode = 0; Output = @() } }
         Mock Set-RunOnceWingetTask { $true }
         Mock Get-UserName { 'Alice' }
@@ -194,6 +209,17 @@ Describe 'Remove-WinGetApp' {
         Should -Invoke Invoke-NonBlocking -Times 1 -Exactly -ParameterFilter {
             $ArgumentList -eq 'One.App' -and $TimeoutSeconds -eq 30
         }
+    }
+
+    It 'defers a user-scope uninstall when WinGet returns the administrator-context error code' {
+        Mock Invoke-NonBlocking { [PSCustomObject]@{ ExitCode = -1978335107; Output = @('localized WinGet error') } }
+
+        Remove-WinGetApp -app 'One.App' | Should -BeTrue
+
+        Should -Invoke Set-RunOnceWingetTask -Times 1 -Exactly -ParameterFilter {
+            $appId -eq 'One.App'
+        }
+        $script:WingetDeferredRemovals['One.App'] | Should -Be 'Alice'
     }
 
     It 'reports a timed-out winget uninstall and continues' {

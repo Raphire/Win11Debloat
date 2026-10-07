@@ -43,6 +43,7 @@ function Remove-SelectedApps {
     $edgeIds = @('Microsoft.Edge', 'XPFFTQ037JWMHS')
     $wingetRemovedApps = @()
     $wingetRemovalFailures = @{}
+    if (-not $script:WingetDeferredRemovals) { $script:WingetDeferredRemovals = @{} }
 
     Foreach ($app in $appsList) {
         if ($script:CancelRequested) { return $false }
@@ -74,6 +75,10 @@ function Remove-SelectedApps {
     }
 
     # Check whether any winget-removed apps are still present, and report errors for each one.
+    if ($wingetRemovedApps.Count -gt 0) {
+        $wingetRemovedApps = @($wingetRemovedApps | Where-Object { -not $script:WingetDeferredRemovals.ContainsKey($_) })
+    }
+
     if ($wingetRemovedApps.Count -gt 0) {
         $postRemovalList = if ($script:WingetInstalled) { Get-WingetInstalledApps -TimeOut 10 -NonBlocking } else { $null }
         $edgeForceRemoveRequested = $false
@@ -122,10 +127,10 @@ function Remove-SelectedApps {
     Runs winget uninstall for a single app, with a bounded execution time.
     WinGet's own exit code/success reporting is unreliable and is only logged
     for diagnostics; it never causes this function to report failure. Callers
-    verify removal with a post-removal inventory check instead. This function
-    only reports failure when the winget invocation itself throws a terminating
-    error (e.g. it times out or cannot be started). If the User or Sysprep
-    parameter was passed, also schedules removal for future logins.
+    verify removal with a post-removal inventory check instead. If WinGet blocks
+    an elevated uninstall of a user-scope package, removal is deferred to the
+    target user's next logon. If the User or Sysprep parameter was passed, this
+    function also schedules removal for future logins.
 
     .PARAMETER app
     The WinGet package ID to uninstall (e.g. 'Microsoft.BingNews').
@@ -151,6 +156,7 @@ function Remove-WinGetApp {
 
     $uninstallCommandSucceeded = $true
     $exitCode = $null
+    $uninstallDeferred = $false
     try {
         $uninstallResult = Invoke-NonBlocking -ScriptBlock {
             param($appId)
@@ -163,6 +169,25 @@ function Remove-WinGetApp {
         Write-WinGetUninstallOutput -Output $(if ($uninstallResult) { $uninstallResult.Output } else { $null })
         $exitCode = if ($uninstallResult) { $uninstallResult.ExitCode } else { 'unknown' }
         Write-Verbose "WinGet uninstall for $app returned exit code $exitCode."
+
+        # WinGet reports APPINSTALLER_CLI_ERROR_ADMIN_CONTEXT_ACTION_PROHIBITED (0x8A15007D).
+        # Keep the English message check as a fallback for clients that don't return the specific code.
+        $userScopeBlocked = ([string]$exitCode -eq '-1978335107') -or ([string]$exitCode -match '^0x0?8A15007D$')
+        if (-not $userScopeBlocked) {
+            $userScopeBlocked = @($uninstallResult.Output | Where-Object {
+                $null -ne $_ -and $_.ToString() -match 'package installed for user scope cannot be uninstalled when running with administrator privileges'
+            }).Count -gt 0
+        }
+        if ($userScopeBlocked) {
+            $targetUserName = Get-RunOnceWingetTargetUserName
+
+            $uninstallDeferred = Set-RunOnceWingetTask -appId $app
+            if ($uninstallDeferred) {
+                if (-not $script:WingetDeferredRemovals) { $script:WingetDeferredRemovals = @{} }
+                $script:WingetDeferredRemovals[$app] = $targetUserName
+                Write-Host (Get-Translation -Key 'WingetUserScopeUninstallDeferred' -FormatArgs @($app, $targetUserName)) -ForegroundColor Yellow
+            }
+        }
     }
     catch {
         $uninstallCommandSucceeded = $false
@@ -175,11 +200,11 @@ function Remove-WinGetApp {
     }
 
     $scheduleSucceeded = $true
-    if ($script:Params.ContainsKey("User")) {
+    if (-not $uninstallDeferred -and $script:Params.ContainsKey("User")) {
         Write-Host "Adding scheduled task to uninstall $app for user $(Get-UserName)..."
         $scheduleSucceeded = Set-RunOnceWingetTask -appId $app
     }
-    elseif ($script:Params.ContainsKey("Sysprep")) {
+    elseif (-not $uninstallDeferred -and $script:Params.ContainsKey("Sysprep")) {
         Write-Host "Adding scheduled task to uninstall $app for new users..."
         $scheduleSucceeded = Set-RunOnceWingetTask -appId $app
     }
@@ -343,6 +368,11 @@ function Request-EdgeForceRemove {
     return $false
 }
 
+function Get-RunOnceWingetTargetUserName {
+    if ($script:Params.ContainsKey("Sysprep")) { return "Default" }
+    return Get-UserName
+}
+
 <#
     .SYNOPSIS
     Dynamically sets a RunOnce registry key to schedule a winget uninstall.
@@ -364,7 +394,7 @@ function Request-EdgeForceRemove {
 function Set-RunOnceWingetTask {
     param([string]$appId)
 
-    $targetUserName = if ($script:Params.ContainsKey("Sysprep")) { "Default" } else { $script:Params.Item("User") }
+    $targetUserName = Get-RunOnceWingetTargetUserName
 
     # Sanitize appId for use in registry value names (backslashes are path separators)
     $safeAppId = $appId.Replace('\', '_')

@@ -351,6 +351,7 @@ function Invoke-AllChanges {
     $script:AppRemovalFailures = 0
     $script:FeatureFailures = 0
     $script:AppRemovalVerificationUnavailable = $false
+    $script:WingetDeferredRemovals = @{}
 
     # ---- Gather work items ----
     $applyIds = @()

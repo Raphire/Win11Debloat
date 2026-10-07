@@ -1,5 +1,6 @@
 BeforeAll {
-    Add-Type -TypeDefinition @'
+    if (-not ('LauncherArgvNative' -as [type])) {
+        Add-Type -TypeDefinition @'
 using System;
 using System.Runtime.InteropServices;
 
@@ -22,6 +23,7 @@ public static class LauncherArgvNative {
     }
 }
 '@
+    }
 
     # Load only Format-LauncherArg from the launcher; dot-sourcing Get.ps1 would download and run the script.
     $tokens = $null

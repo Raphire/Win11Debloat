@@ -89,4 +89,19 @@ Describe 'FeatureId parameter contracts' {
 
         $missing | Should -HaveCount 0 -Because ($missing -join '; ')
     }
+
+    It 'has an en-US Features translation with a Label for every FeatureId' {
+        $enUsPath = Join-Path $script:RepoRoot 'Config\Languages\en-US\Features.json'
+        $translations = (Get-Content -LiteralPath $enUsPath -Raw | ConvertFrom-Json).Features
+        $missing = @(
+            foreach ($feature in $script:Features) {
+                $entry = $translations.PSObject.Properties[$feature.FeatureId]
+                if ($null -eq $entry -or [string]::IsNullOrWhiteSpace($entry.Value.Label)) {
+                    $feature.FeatureId
+                }
+            }
+        )
+
+        $missing | Should -HaveCount 0 -Because ($missing -join ', ')
+    }
 }

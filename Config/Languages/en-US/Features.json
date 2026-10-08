@@ -195,13 +195,6 @@
       "UndoLabel": "Show Settings 'Home' page",
       "ApplyUndoText": "Enabling the Settings Home page"
     },
-    "DisableChromeAI": {
-      "Label": "Disable AI features in Google Chrome",
-      "ToolTip": "Disables Google Chrome's built-in AI tools and integrations, including Gemini, AI search & suggestions, writing assistance, autofill and more. It also removes local AI models. This feature uses policies, which will lock down certain settings.",
-      "ApplyText": "Disabling AI features in Google Chrome",
-      "UndoLabel": "Enable AI features in Google Chrome",
-      "ApplyUndoText": "Enabling AI features in Google Chrome"
-    },
     "DisableEdgeAI": {
       "Label": "Disable AI features in Microsoft Edge",
       "ToolTip": "This will turn off AI features in Microsoft Edge, such as the AI-powered sidebar and Copilot features. This feature uses policies, which will lock down certain settings.",

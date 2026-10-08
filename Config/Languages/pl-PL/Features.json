@@ -1,0 +1,752 @@
+{
+  "Features": {
+    "RemoveApps": {
+      "Label": "Usuń aplikacje wskazane parametrem Apps",
+      "ApplyText": "Usuwanie aplikacji wskazanych parametrem Apps"
+    },
+    "Apps": {
+      "Label": "Wybierz aplikacje do usunięcia jako listę rozdzieloną przecinkami; Default lub brak wartości oznacza listę domyślną",
+      "ApplyText": "Usuwanie wybranych aplikacji"
+    },
+    "RemoveGamingApps": {
+      "Label": "Usuń aplikację Xbox i Xbox Game Bar",
+      "ApplyText": "Usuwanie aplikacji Xbox i Xbox Game Bar"
+    },
+    "RemoveHPApps": {
+      "Label": "Usuń aplikacje producenta HP",
+      "ApplyText": "Usuwanie aplikacji producenta HP"
+    },
+    "CreateRestorePoint": {
+      "Label": "Utwórz punkt przywracania systemu",
+      "ApplyText": "Tworzenie punktu przywracania systemu"
+    },
+    "DisableTelemetry": {
+      "Label": "Wyłącz telemetrię, śledzenie i reklamy dopasowane do użytkownika",
+      "ToolTip": "Wyłącza telemetrię, zbieranie danych diagnostycznych, historię aktywności, śledzenie uruchamianych aplikacji i reklamy dopasowane do użytkownika. Ogranicza dane wysyłane do Microsoft. W programie Windows Insider aktualizacje mogą zostać zablokowane do czasu ponownego włączenia opcjonalnych danych diagnostycznych.",
+      "ApplyText": "Wyłączanie telemetrii, śledzenia i reklam dopasowanych do użytkownika",
+      "UndoLabel": "Włącz telemetrię, śledzenie i reklamy dopasowane do użytkownika",
+      "ApplyUndoText": "Włączanie telemetrii, śledzenia i reklam dopasowanych do użytkownika"
+    },
+    "DisableSuggestions": {
+      "Label": "Wyłącz porady i sugerowane treści w Windows",
+      "ToolTip": "Usuwa rozpraszające treści, w tym powiadomienia z poradami, przypomnienia i reklamy dostawców synchronizacji. Zapobiega też automatycznej instalacji sugerowanych aplikacji.",
+      "ApplyText": "Wyłączanie porad i sugerowanych treści w Windows",
+      "UndoLabel": "Włącz porady i sugerowane treści w Windows",
+      "ApplyUndoText": "Włączanie porad i sugerowanych treści w Windows"
+    },
+    "DisableNotifications": {
+      "Label": "Wyłącz powiadomienia Windows z aplikacji i od innych nadawców",
+      "ToolTip": "Wyłącza powiadomienia systemowe, również z aplikacji takich jak Discord, WhatsApp, Teams i Slack.",
+      "ApplyText": "Wyłączanie powiadomień Windows z aplikacji i od innych nadawców",
+      "UndoLabel": "Włącz powiadomienia i przypomnienia Windows",
+      "ApplyUndoText": "Włączanie powiadomień i przypomnień Windows"
+    },
+    "DisableLocationServices": {
+      "Label": "Wyłącz usługi lokalizacji Windows i dostęp aplikacji do lokalizacji",
+      "ToolTip": "Wyłącza usługi lokalizacji i odmawia aplikacjom dostępu do położenia. Korzysta z zasad systemowych, które blokują część ustawień.",
+      "ApplyText": "Wyłączanie usług lokalizacji Windows i dostępu aplikacji do lokalizacji",
+      "UndoLabel": "Włącz usługi lokalizacji Windows i dostęp aplikacji do lokalizacji",
+      "ApplyUndoText": "Włączanie usług lokalizacji Windows i dostępu aplikacji do lokalizacji"
+    },
+    "DisableFindMyDevice": {
+      "Label": "Wyłącz śledzenie lokalizacji przez funkcję Znajdź moje urządzenie",
+      "ToolTip": "Wyłącza funkcję Znajdź moje urządzenie, która okresowo wysyła lokalizację do Microsoft. Korzysta z zasad systemowych, które blokują część ustawień.",
+      "ApplyText": "Wyłączanie śledzenia lokalizacji przez funkcję Znajdź moje urządzenie",
+      "UndoLabel": "Włącz śledzenie lokalizacji przez funkcję Znajdź moje urządzenie",
+      "ApplyUndoText": "Włączanie śledzenia lokalizacji przez funkcję Znajdź moje urządzenie"
+    },
+    "DisableLockscreenTips": {
+      "Label": "Wyłącz porady na ekranie blokady",
+      "ToolTip": "Wyłącza Windows Spotlight na ekranie blokady oraz wyświetlane tam porady i ciekawostki.",
+      "ApplyText": "Wyłączanie porad na ekranie blokady",
+      "UndoLabel": "Włącz porady na ekranie blokady",
+      "ApplyUndoText": "Włączanie porad na ekranie blokady"
+    },
+    "EnableDesktopSpotlight": {
+      "Label": "Włącz tło pulpitu Windows Spotlight i skrót do informacji o zdjęciu",
+      "ToolTip": "Przywraca tło pulpitu Windows Spotlight oraz skrót „Dowiedz się więcej o tym obrazie”.",
+      "ApplyText": "Włączanie tła pulpitu Windows Spotlight i skrótu do informacji o zdjęciu"
+    },
+    "DisableDesktopSpotlight": {
+      "Label": "Wyłącz tło pulpitu Windows Spotlight",
+      "ToolTip": "Wyłącza zmieniające się obrazy Windows Spotlight na pulpicie, wraz z poradami i ciekawostkami. Korzysta z zasad systemowych, które blokują część ustawień.",
+      "ApplyText": "Wyłączanie tła pulpitu Windows Spotlight",
+      "UndoLabel": "Włącz tło pulpitu Windows Spotlight",
+      "ApplyUndoText": "Włączanie tła pulpitu Windows Spotlight"
+    },
+    "HideDesktopSpotlightIcon": {
+      "Label": "Ukryj skrót „Dowiedz się więcej o tym obrazie” na pulpicie",
+      "ToolTip": "Ukrywa skrót, zachowując zmieniające się tapety Windows Spotlight. Nie wyłącza tej funkcji.",
+      "ApplyText": "Ukrywanie skrótu „Dowiedz się więcej o tym obrazie” na pulpicie",
+      "UndoLabel": "Pokaż skrót „Dowiedz się więcej o tym obrazie” na pulpicie",
+      "ApplyUndoText": "Pokazywanie skrótu „Dowiedz się więcej o tym obrazie” na pulpicie"
+    },
+    "DisableEdgeAds": {
+      "Label": "Wyłącz reklamy, sugestie i wiadomości w Edge",
+      "ToolTip": "Wyłącza reklamy, sugestie i kanał wiadomości MSN w Microsoft Edge. Korzysta z zasad systemowych, które blokują część ustawień.",
+      "ApplyText": "Wyłączanie reklam, sugestii i wiadomości w Edge",
+      "UndoLabel": "Włącz reklamy, sugestie i wiadomości w Edge",
+      "ApplyUndoText": "Włączanie reklam, sugestii i wiadomości w Edge"
+    },
+    "DisableCopilot": {
+      "Label": "Wyłącz Microsoft Copilot",
+      "ToolTip": "Wyłącza i usuwa Microsoft Copilot, wbudowanego asystenta AI w Windows.",
+      "ApplyText": "Wyłączanie Microsoft Copilot",
+      "UndoLabel": "Włącz Microsoft Copilot",
+      "ApplyUndoText": "Włączanie Microsoft Copilot"
+    },
+    "DisableRecall": {
+      "Label": "Wyłącz Windows Recall",
+      "ToolTip": "Wyłącza Windows Recall — funkcję AI zapewniającą dostęp do ostatnio używanych plików, aplikacji i aktywności. Korzysta z zasad systemowych, które blokują część ustawień.",
+      "ApplyText": "Wyłączanie Windows Recall",
+      "UndoLabel": "Włącz Windows Recall",
+      "ApplyUndoText": "Włączanie Windows Recall"
+    },
+    "DisableClickToDo": {
+      "Label": "Wyłącz Click to Do i analizę tekstu oraz obrazów przez AI",
+      "ToolTip": "Wyłącza Click to Do, funkcję analizującą tekst i obrazy za pomocą AI. Korzysta z zasad systemowych, które blokują część ustawień.",
+      "ApplyText": "Wyłączanie Click to Do i analizy tekstu oraz obrazów przez AI",
+      "UndoLabel": "Włącz Click to Do i analizę tekstu oraz obrazów przez AI",
+      "ApplyUndoText": "Włączanie Click to Do i analizy tekstu oraz obrazów przez AI"
+    },
+    "DisableAISvcAutoStart": {
+      "Label": "Zablokuj automatyczny start usługi AI",
+      "ToolTip": "Ustawia ręczne uruchamianie usługi WSAIFabricSvc, aby nie startowała automatycznie wraz z Windows.",
+      "ApplyText": "Blokowanie automatycznego uruchamiania usługi AI",
+      "UndoLabel": "Zezwól na automatyczny start usługi AI",
+      "ApplyUndoText": "Zezwalanie na automatyczny start usługi AI"
+    },
+    "DisableDVR": {
+      "Label": "Wyłącz nagrywanie gier i ekranu przez Xbox",
+      "ToolTip": "Wyłącza nagrywanie gier i ekranu w Xbox Game Bar. Korzysta z zasad systemowych, które blokują część ustawień.",
+      "ApplyText": "Wyłączanie nagrywania gier i ekranu przez Xbox",
+      "UndoLabel": "Włącz nagrywanie gier i ekranu przez Xbox",
+      "ApplyUndoText": "Włączanie nagrywania gier i ekranu przez Xbox"
+    },
+    "DisableGameBarIntegration": {
+      "Label": "Wyłącz integrację z Game Bar",
+      "ToolTip": "Wyłącza integrację Game Bar z grami i kontrolerami. Zapobiega komunikatom ms-gamebar podczas uruchamiania gier lub podłączania kontrolera.",
+      "ApplyText": "Wyłączanie integracji z Game Bar",
+      "UndoLabel": "Włącz integrację z Game Bar",
+      "ApplyUndoText": "Włączanie integracji z Game Bar"
+    },
+    "ClearStart": {
+      "Label": "Usuń wszystkie przypięte aplikacje z menu Start bieżącego użytkownika",
+      "ApplyText": "Usuwanie wszystkich przypiętych aplikacji z menu Start bieżącego użytkownika"
+    },
+    "ClearStartAllUsers": {
+      "Label": "Usuń wszystkie przypięte aplikacje z menu Start istniejących i nowych użytkowników",
+      "ApplyText": "Usuwanie wszystkich przypiętych aplikacji z menu Start istniejących i nowych użytkowników"
+    },
+    "ReplaceStart": {
+      "Label": "Zastąp układ menu Start bieżącego użytkownika wskazanym szablonem",
+      "ApplyText": "Zastępowanie układu menu Start bieżącego użytkownika wskazanym szablonem"
+    },
+    "ReplaceStartAllUsers": {
+      "Label": "Zastąp układ menu Start istniejących i nowych użytkowników wskazanym szablonem",
+      "ApplyText": "Zastępowanie układu menu Start istniejących i nowych użytkowników wskazanym szablonem"
+    },
+    "DisableStartRecommended": {
+      "Label": "Ukryj sekcję Polecane w menu Start",
+      "ToolTip": "Ukrywa sekcję z ostatnio dodanymi aplikacjami, otwieranymi plikami i rekomendacjami. Korzysta z zasad systemowych, które blokują część ustawień.",
+      "ApplyText": "Ukrywanie sekcji Polecane w menu Start",
+      "UndoLabel": "Pokaż sekcję Polecane w menu Start",
+      "ApplyUndoText": "Pokazywanie sekcji Polecane w menu Start"
+    },
+    "DisableStartAllApps": {
+      "Label": "Ukryj sekcję Wszystkie aplikacje w menu Start",
+      "ToolTip": "Ukrywa listę zainstalowanych aplikacji. UWAGA: może to utrudnić ich odnajdywanie. Korzysta z zasad systemowych, które blokują część ustawień.",
+      "ApplyText": "Ukrywanie sekcji Wszystkie aplikacje w menu Start",
+      "UndoLabel": "Pokaż sekcję Wszystkie aplikacje w menu Start",
+      "ApplyUndoText": "Pokazywanie sekcji Wszystkie aplikacje w menu Start"
+    },
+    "DisableStartPhoneLink": {
+      "Label": "Wyłącz integrację Łącza z telefonem w menu Start",
+      "ToolTip": "Usuwa integrację Łącza z telefonem w menu Start, gdy urządzenie mobilne jest połączone z komputerem.",
+      "ApplyText": "Wyłączanie integracji Łącza z telefonem w menu Start",
+      "UndoLabel": "Włącz integrację Łącza z telefonem w menu Start",
+      "ApplyUndoText": "Włączanie integracji Łącza z telefonem w menu Start"
+    },
+    "DisableBing": {
+      "Label": "Wyłącz wyniki internetowe Bing i integrację Copilot w wyszukiwaniu",
+      "ToolTip": "Wyłącza wyniki internetowe Bing i integrację Copilot w wyszukiwarce Windows. Korzysta z zasad systemowych, które blokują część ustawień.",
+      "ApplyText": "Wyłączanie wyników internetowych Bing i integracji Copilot w wyszukiwaniu",
+      "UndoLabel": "Włącz wyniki internetowe Bing i integrację Copilot w wyszukiwaniu",
+      "ApplyUndoText": "Włączanie wyników internetowych Bing i integracji Copilot w wyszukiwaniu"
+    },
+    "DisableStoreSearchSuggestions": {
+      "Label": "Wyłącz sugestie aplikacji Microsoft Store w wyszukiwaniu",
+      "ToolTip": "Wyłącza sugestie aplikacji z Microsoft Store w wyszukiwarce Windows.",
+      "ApplyText": "Wyłączanie sugestii aplikacji Microsoft Store w wyszukiwaniu",
+      "UndoLabel": "Włącz sugestie aplikacji Microsoft Store w wyszukiwaniu",
+      "ApplyUndoText": "Włączanie sugestii aplikacji Microsoft Store w wyszukiwaniu"
+    },
+    "DisableSettings365Ads": {
+      "Label": "Ukryj reklamy Microsoft 365 Copilot na stronie głównej Ustawień",
+      "ToolTip": "Wyłącza reklamy Microsoft 365 Copilot na stronie głównej aplikacji Ustawienia.",
+      "ApplyText": "Ukrywanie reklam Microsoft 365 Copilot na stronie głównej Ustawień",
+      "UndoLabel": "Pokaż reklamy Microsoft 365 Copilot na stronie głównej Ustawień",
+      "ApplyUndoText": "Pokazywanie reklam Microsoft 365 Copilot na stronie głównej Ustawień"
+    },
+    "DisableSettingsHome": {
+      "Label": "Ukryj stronę główną aplikacji Ustawienia",
+      "ToolTip": "Usuwa stronę główną z aplikacji Ustawienia.",
+      "ApplyText": "Ukrywanie strony głównej aplikacji Ustawienia",
+      "UndoLabel": "Pokaż stronę główną aplikacji Ustawienia",
+      "ApplyUndoText": "Pokazywanie strony głównej aplikacji Ustawienia"
+    },
+    "DisableEdgeAI": {
+      "Label": "Wyłącz funkcje AI w Microsoft Edge",
+      "ToolTip": "Wyłącza funkcje AI, takie jak pasek boczny i Copilot. Korzysta z zasad systemowych, które blokują część ustawień.",
+      "ApplyText": "Wyłączanie funkcji AI w Microsoft Edge",
+      "UndoLabel": "Włącz funkcje AI w Microsoft Edge",
+      "ApplyUndoText": "Włączanie funkcji AI w Microsoft Edge"
+    },
+    "DisablePaintAI": {
+      "Label": "Wyłącz funkcje AI w Paint",
+      "ToolTip": "Wyłącza generowanie i edycję obrazów za pomocą AI w Paint. Korzysta z zasad systemowych, które blokują część ustawień.",
+      "ApplyText": "Wyłączanie funkcji AI w Paint",
+      "UndoLabel": "Włącz funkcje AI w Paint",
+      "ApplyUndoText": "Włączanie funkcji AI w Paint"
+    },
+    "DisableNotepadAI": {
+      "Label": "Wyłącz funkcje AI w Notatniku",
+      "ToolTip": "Wyłącza sugestie pisania generowane przez AI w Notatniku. Korzysta z zasad systemowych, które blokują część ustawień.",
+      "ApplyText": "Wyłączanie funkcji AI w Notatniku",
+      "UndoLabel": "Włącz funkcje AI w Notatniku",
+      "ApplyUndoText": "Włączanie funkcji AI w Notatniku"
+    },
+    "EnableDarkMode": {
+      "Label": "Włącz ciemny motyw systemu i aplikacji",
+      "ToolTip": "Ustawia ciemny motyw dla systemu i aplikacji.",
+      "ApplyText": "Włączanie ciemnego motywu systemu i aplikacji",
+      "UndoLabel": "Wyłącz ciemny motyw systemu i aplikacji",
+      "ApplyUndoText": "Wyłączanie ciemnego motywu systemu i aplikacji"
+    },
+    "DisableDragTray": {
+      "Label": "Wyłącz panel Drag Tray do udostępniania i przenoszenia plików",
+      "ToolTip": "Panel Drag Tray pojawia się u góry ekranu podczas przeciągania plików w Windows 11.",
+      "ApplyText": "Wyłączanie panelu Drag Tray do udostępniania i przenoszenia plików",
+      "UndoLabel": "Włącz panel Drag Tray do udostępniania i przenoszenia plików",
+      "ApplyUndoText": "Włączanie panelu Drag Tray do udostępniania i przenoszenia plików"
+    },
+    "RevertContextMenu": {
+      "Label": "Przywróć klasyczne menu kontekstowe znane z Windows 10",
+      "ToolTip": "Przywraca klasyczne menu, zwykle dostępne po wybraniu „Pokaż więcej opcji” w Windows 11.",
+      "ApplyText": "Przywracanie klasycznego menu kontekstowego znanego z Windows 10",
+      "UndoLabel": "Przywróć menu kontekstowe Windows 11",
+      "ApplyUndoText": "Przywracanie menu kontekstowego Windows 11"
+    },
+    "DisableMouseAcceleration": {
+      "Label": "Wyłącz zwiększanie precyzji wskaźnika (akcelerację myszy)",
+      "ToolTip": "Wyłącza domyślną akcelerację myszy, dzięki czemu ruch wskaźnika jest bardziej przewidywalny.",
+      "ApplyText": "Wyłączanie zwiększania precyzji wskaźnika (akceleracji myszy)",
+      "UndoLabel": "Włącz zwiększanie precyzji wskaźnika (akcelerację myszy)",
+      "ApplyUndoText": "Włączanie zwiększania precyzji wskaźnika (akceleracji myszy)"
+    },
+    "DisableStickyKeys": {
+      "Label": "Wyłącz skrót klawiszy trwałych (Shift pięć razy)",
+      "ToolTip": "Zapobiega otwieraniu okna klawiszy trwałych po pięciokrotnym naciśnięciu Shift.",
+      "ApplyText": "Wyłączanie skrótu klawiszy trwałych (Shift pięć razy)",
+      "UndoLabel": "Włącz skrót klawiszy trwałych (Shift pięć razy)",
+      "ApplyUndoText": "Włączanie skrótu klawiszy trwałych (Shift pięć razy)"
+    },
+    "DisableWindowSnapping": {
+      "Label": "Wyłącz przyciąganie okien",
+      "ToolTip": "Wyłącza przyciąganie okien do boków i narożników ekranu.",
+      "ApplyText": "Wyłączanie przyciągania okien",
+      "UndoLabel": "Włącz przyciąganie okien",
+      "ApplyUndoText": "Włączanie przyciągania okien"
+    },
+    "DisableSnapAssist": {
+      "Label": "Wyłącz sugestie aplikacji podczas przyciągania okien",
+      "ToolTip": "Wyłącza propozycje innych aplikacji po przyciągnięciu okna do boku lub narożnika ekranu.",
+      "ApplyText": "Wyłączanie sugestii aplikacji podczas przyciągania okien",
+      "UndoLabel": "Włącz sugestie aplikacji podczas przyciągania okien",
+      "ApplyUndoText": "Włączanie sugestii aplikacji podczas przyciągania okien"
+    },
+    "DisableSnapLayouts": {
+      "Label": "Ukryj układy przyciągania u góry ekranu i przy przycisku maksymalizacji",
+      "ToolTip": "Wyłącza panel układów pojawiający się po najechaniu na maksymalizację lub przeciągnięciu okna do górnej krawędzi ekranu.",
+      "ApplyText": "Ukrywanie układów przyciągania u góry ekranu i przy przycisku maksymalizacji",
+      "UndoLabel": "Pokaż układy przyciągania u góry ekranu i przy przycisku maksymalizacji",
+      "ApplyUndoText": "Pokazywanie układów przyciągania u góry ekranu i przy przycisku maksymalizacji"
+    },
+    "HideTabsInAltTab": {
+      "Label": "Ukryj karty aplikacji podczas przyciągania okien i używania Alt+Tab",
+      "ApplyText": "Ukrywanie kart aplikacji podczas przyciągania okien i używania Alt+Tab"
+    },
+    "Show3TabsInAltTab": {
+      "Label": "Pokaż 3 karty aplikacji podczas przyciągania okien i używania Alt+Tab",
+      "ApplyText": "Pokazywanie 3 kart aplikacji podczas przyciągania okien i używania Alt+Tab"
+    },
+    "Show5TabsInAltTab": {
+      "Label": "Pokaż 5 kart aplikacji podczas przyciągania okien i używania Alt+Tab",
+      "ApplyText": "Pokazywanie 5 kart aplikacji podczas przyciągania okien i używania Alt+Tab"
+    },
+    "Show20TabsInAltTab": {
+      "Label": "Pokaż 20 kart aplikacji podczas przyciągania okien i używania Alt+Tab",
+      "ApplyText": "Pokazywanie 20 kart aplikacji podczas przyciągania okien i używania Alt+Tab"
+    },
+    "TaskbarAlignLeft": {
+      "Label": "Wyrównaj przyciski paska zadań do lewej",
+      "ToolTip": "Przenosi domyślnie wyśrodkowane przyciski Windows 11 na lewą stronę, podobnie jak w poprzednich wersjach systemu.",
+      "ApplyText": "Wyrównywanie przycisków paska zadań do lewej",
+      "UndoLabel": "Wyśrodkuj przyciski paska zadań",
+      "ApplyUndoText": "Wyśrodkowanie przycisków paska zadań"
+    },
+    "HideSearchTb": {
+      "Label": "Ukryj ikonę wyszukiwania na pasku zadań",
+      "ApplyText": "Ukrywanie ikony wyszukiwania na pasku zadań",
+      "UndoLabel": "Pokaż pole wyszukiwania na pasku zadań",
+      "ApplyUndoText": "Pokazywanie pola wyszukiwania na pasku zadań"
+    },
+    "ShowSearchIconTb": {
+      "Label": "Pokaż tylko ikonę wyszukiwania na pasku zadań",
+      "ApplyText": "Pokazywanie tylko ikony wyszukiwania na pasku zadań",
+      "UndoLabel": "Pokaż pole wyszukiwania na pasku zadań",
+      "ApplyUndoText": "Pokazywanie pola wyszukiwania na pasku zadań"
+    },
+    "ShowSearchLabelTb": {
+      "Label": "Pokaż ikonę i etykietę wyszukiwania na pasku zadań",
+      "ApplyText": "Pokazywanie ikony i etykiety wyszukiwania na pasku zadań",
+      "UndoLabel": "Pokaż pole wyszukiwania na pasku zadań",
+      "ApplyUndoText": "Pokazywanie pola wyszukiwania na pasku zadań"
+    },
+    "ShowSearchBoxTb": {
+      "Label": "Pokaż pole wyszukiwania na pasku zadań",
+      "ApplyText": "Pokazywanie pola wyszukiwania na pasku zadań"
+    },
+    "HideTaskview": {
+      "Label": "Ukryj przycisk Widok zadań na pasku zadań",
+      "ToolTip": "Ukrywa przycisk pozwalający zobaczyć otwarte okna i pulpity wirtualne.",
+      "ApplyText": "Ukrywanie przycisku Widok zadań na pasku zadań",
+      "UndoLabel": "Pokaż przycisk Widok zadań na pasku zadań",
+      "ApplyUndoText": "Pokazywanie przycisku Widok zadań na pasku zadań"
+    },
+    "DisableWidgets": {
+      "Label": "Wyłącz widżety na pasku zadań i ekranie blokady",
+      "ToolTip": "Wyłącza widżety Windows, ich przycisk na pasku zadań oraz widżety na ekranie blokady.",
+      "ApplyText": "Wyłączanie widżetów na pasku zadań i ekranie blokady"
+    },
+    "HideChat": {
+      "Label": "Ukryj ikonę czatu (Rozpocznij spotkanie) na pasku zadań",
+      "ToolTip": "Ukrywa ikonę czatu i spotkań na pasku zadań.",
+      "ApplyText": "Ukrywanie ikony czatu (Rozpocznij spotkanie) na pasku zadań",
+      "UndoLabel": "Pokaż ikonę czatu (Rozpocznij spotkanie) na pasku zadań",
+      "ApplyUndoText": "Pokazywanie ikony czatu (Rozpocznij spotkanie) na pasku zadań"
+    },
+    "DisableStorageSense": {
+      "Label": "Wyłącz automatyczne czyszczenie dysku przez Czujnik pamięci",
+      "ToolTip": "Wyłącza Czujnik pamięci, który usuwa pliki tymczasowe, opróżnia Kosz i czyści folder Pobrane.",
+      "ApplyText": "Wyłączanie automatycznego czyszczenia dysku przez Czujnik pamięci",
+      "UndoLabel": "Włącz automatyczne czyszczenie dysku przez Czujnik pamięci",
+      "ApplyUndoText": "Włączanie automatycznego czyszczenia dysku przez Czujnik pamięci"
+    },
+    "DisableFastStartup": {
+      "Label": "Wyłącz szybkie uruchamianie",
+      "ToolTip": "Szybkie uruchamianie zapisuje stan systemu na dysku, by skrócić start po wyłączeniu. Wyłączenie tej funkcji może rozwiązać niektóre problemy, ale wydłużyć rozruch.",
+      "ApplyText": "Wyłączanie szybkiego uruchamiania",
+      "UndoLabel": "Włącz szybkie uruchamianie",
+      "ApplyUndoText": "Włączanie szybkiego uruchamiania"
+    },
+    "DisableBitlockerAutoEncryption": {
+      "Label": "Wyłącz automatyczne szyfrowanie urządzenia przez BitLocker",
+      "ToolTip": "Wyłącza automatyczne szyfrowanie na obsługiwanych urządzeniach. BitLocker nadal można włączyć ręcznie. Już zaszyfrowane dyski pozostaną zaszyfrowane.",
+      "ApplyText": "Wyłączanie automatycznego szyfrowania urządzenia przez BitLocker",
+      "UndoLabel": "Włącz automatyczne szyfrowanie urządzenia przez BitLocker",
+      "ApplyUndoText": "Włączanie automatycznego szyfrowania urządzenia przez BitLocker"
+    },
+    "DisableModernStandbyNetworking": {
+      "Label": "Wyłącz połączenie sieciowe podczas Modern Standby",
+      "ToolTip": "Urządzenia z Modern Standby domyślnie utrzymują połączenie podczas uśpienia. Wyłączenie go może ograniczyć zużycie baterii.",
+      "ApplyText": "Wyłączanie połączenia sieciowego podczas Modern Standby",
+      "UndoLabel": "Włącz połączenie sieciowe podczas Modern Standby",
+      "ApplyUndoText": "Włączanie połączenia sieciowego podczas Modern Standby"
+    },
+    "EnableEndTask": {
+      "Label": "Pokaż opcję Zakończ zadanie w menu paska zadań",
+      "ToolTip": "Dodaje opcję wymuszonego zamykania aplikacji do menu otwieranego prawym przyciskiem myszy na pasku zadań.",
+      "ApplyText": "Pokazywanie opcji Zakończ zadanie w menu paska zadań",
+      "UndoLabel": "Ukryj opcję Zakończ zadanie w menu paska zadań",
+      "ApplyUndoText": "Ukrywanie opcji Zakończ zadanie w menu paska zadań"
+    },
+    "EnableLastActiveClick": {
+      "Label": "Włącz przełączanie do ostatniego aktywnego okna po kliknięciu paska zadań",
+      "ToolTip": "Kliknięcie aplikacji na pasku zadań przełącza do jej ostatnio aktywnego okna zamiast wyświetlać tylko miniatury.",
+      "ApplyText": "Włączanie przełączania do ostatniego aktywnego okna po kliknięciu paska zadań",
+      "UndoLabel": "Wyłącz przełączanie do ostatniego aktywnego okna po kliknięciu paska zadań",
+      "ApplyUndoText": "Wyłączanie przełączania do ostatniego aktywnego okna po kliknięciu paska zadań"
+    },
+    "CombineTaskbarAlways": {
+      "Label": "Zawsze łącz przyciski i ukrywaj etykiety na głównym ekranie",
+      "ApplyText": "Ustawianie stałego łączenia przycisków i ukrywania etykiet na głównym ekranie"
+    },
+    "CombineMMTaskbarAlways": {
+      "Label": "Zawsze łącz przyciski i ukrywaj etykiety na dodatkowych ekranach",
+      "ApplyText": "Ustawianie stałego łączenia przycisków i ukrywania etykiet na dodatkowych ekranach"
+    },
+    "CombineTaskbarWhenFull": {
+      "Label": "Łącz przyciski i ukrywaj etykiety na głównym ekranie tylko przy pełnym pasku",
+      "ApplyText": "Ustawianie łączenia przycisków i ukrywania etykiet przy pełnym pasku na głównym ekranie",
+      "UndoLabel": "Zawsze łącz przyciski i ukrywaj etykiety na głównym ekranie",
+      "ApplyUndoText": "Ustawianie stałego łączenia przycisków i ukrywania etykiet na głównym ekranie"
+    },
+    "CombineMMTaskbarWhenFull": {
+      "Label": "Łącz przyciski i ukrywaj etykiety na dodatkowych ekranach tylko przy pełnym pasku",
+      "ApplyText": "Ustawianie łączenia przycisków i ukrywania etykiet przy pełnym pasku na dodatkowych ekranach",
+      "UndoLabel": "Zawsze łącz przyciski i ukrywaj etykiety na dodatkowych ekranach",
+      "ApplyUndoText": "Ustawianie stałego łączenia przycisków i ukrywania etykiet na dodatkowych ekranach"
+    },
+    "CombineTaskbarNever": {
+      "Label": "Nigdy nie łącz przycisków; pokazuj etykiety na głównym ekranie",
+      "ApplyText": "Wyłączanie łączenia przycisków i pokazywanie etykiet na głównym ekranie",
+      "UndoLabel": "Zawsze łącz przyciski i ukrywaj etykiety na głównym ekranie",
+      "ApplyUndoText": "Ustawianie stałego łączenia przycisków i ukrywania etykiet na głównym ekranie"
+    },
+    "CombineMMTaskbarNever": {
+      "Label": "Nigdy nie łącz przycisków; pokazuj etykiety na dodatkowych ekranach",
+      "ApplyText": "Wyłączanie łączenia przycisków i pokazywanie etykiet na dodatkowych ekranach",
+      "UndoLabel": "Zawsze łącz przyciski i ukrywaj etykiety na dodatkowych ekranach",
+      "ApplyUndoText": "Ustawianie stałego łączenia przycisków i ukrywania etykiet na dodatkowych ekranach"
+    },
+    "MMTaskbarModeAll": {
+      "Label": "Pokaż ikony aplikacji na wszystkich paskach zadań",
+      "ApplyText": "Pokazywanie ikon aplikacji na wszystkich paskach zadań"
+    },
+    "MMTaskbarModeMainActive": {
+      "Label": "Pokaż ikony na głównym pasku i na ekranie z otwartym oknem",
+      "ApplyText": "Pokazywanie ikon na głównym pasku i na ekranie z otwartym oknem",
+      "UndoLabel": "Pokaż ikony aplikacji na wszystkich paskach zadań",
+      "ApplyUndoText": "Pokazywanie ikon aplikacji na wszystkich paskach zadań"
+    },
+    "MMTaskbarModeActive": {
+      "Label": "Pokaż ikony tylko na ekranie z otwartym oknem",
+      "ApplyText": "Pokazywanie ikon tylko na ekranie z otwartym oknem",
+      "UndoLabel": "Pokaż ikony aplikacji na wszystkich paskach zadań",
+      "ApplyUndoText": "Pokazywanie ikon aplikacji na wszystkich paskach zadań"
+    },
+    "ExplorerToHome": {
+      "Label": "Otwieraj Eksplorator plików na stronie głównej",
+      "ApplyText": "Ustawianie otwierania Eksploratora plików na stronie głównej"
+    },
+    "ExplorerToThisPC": {
+      "Label": "Otwieraj Eksplorator plików w lokalizacji Ten komputer",
+      "ApplyText": "Ustawianie otwierania Eksploratora plików w lokalizacji Ten komputer",
+      "UndoLabel": "Otwieraj Eksplorator plików na stronie głównej",
+      "ApplyUndoText": "Ustawianie otwierania Eksploratora plików na stronie głównej"
+    },
+    "ExplorerToDownloads": {
+      "Label": "Otwieraj Eksplorator plików w folderze Pobrane",
+      "ApplyText": "Ustawianie otwierania Eksploratora plików w folderze Pobrane",
+      "UndoLabel": "Otwieraj Eksplorator plików na stronie głównej",
+      "ApplyUndoText": "Ustawianie otwierania Eksploratora plików na stronie głównej"
+    },
+    "ExplorerToOneDrive": {
+      "Label": "Otwieraj Eksplorator plików w OneDrive",
+      "ApplyText": "Ustawianie otwierania Eksploratora plików w OneDrive",
+      "UndoLabel": "Otwieraj Eksplorator plików na stronie głównej",
+      "ApplyUndoText": "Ustawianie otwierania Eksploratora plików na stronie głównej"
+    },
+    "ShowKnownFileExt": {
+      "Label": "Pokaż rozszerzenia znanych typów plików",
+      "ToolTip": "Windows domyślnie ukrywa znane rozszerzenia, co może utrudniać rozpoznawanie plików i zwiększać ryzyko pomyłek.",
+      "ApplyText": "Pokazywanie rozszerzeń znanych typów plików",
+      "UndoLabel": "Ukryj rozszerzenia znanych typów plików",
+      "ApplyUndoText": "Ukrywanie rozszerzeń znanych typów plików"
+    },
+    "ShowHiddenFolders": {
+      "Label": "Pokaż ukryte pliki, foldery i dyski",
+      "ToolTip": "Windows ukrywa część plików, folderów i dysków, by zapobiec przypadkowej zmianie lub usunięciu. Ta opcja ujawnia je w Eksploratorze.",
+      "ApplyText": "Pokazywanie ukrytych plików, folderów i dysków",
+      "UndoLabel": "Ukryj ukryte pliki, foldery i dyski",
+      "ApplyUndoText": "Ukrywanie ukrytych plików, folderów i dysków"
+    },
+    "HideDupliDrive": {
+      "Label": "Ukryj powielone wpisy dysków wymiennych",
+      "ToolTip": "Dyski wymienne są widoczne w lokalizacji Ten komputer i osobno w panelu nawigacji. Ta opcja pozostawia je tylko w lokalizacji Ten komputer.",
+      "ApplyText": "Ukrywanie powielonych wpisów dysków wymiennych",
+      "UndoLabel": "Pokaż powielone wpisy dysków wymiennych",
+      "ApplyUndoText": "Pokazywanie powielonych wpisów dysków wymiennych"
+    },
+    "HideHome": {
+      "Label": "Ukryj stronę główną w panelu nawigacji",
+      "ToolTip": "Ukrywa stronę główną w panelu nawigacji Eksploratora plików.",
+      "ApplyText": "Ukrywanie strony głównej w panelu nawigacji",
+      "UndoLabel": "Pokaż stronę główną w panelu nawigacji",
+      "ApplyUndoText": "Pokazywanie strony głównej w panelu nawigacji"
+    },
+    "HideGallery": {
+      "Label": "Ukryj Galerię w panelu nawigacji",
+      "ToolTip": "Ukrywa Galerię w panelu nawigacji Eksploratora plików.",
+      "ApplyText": "Ukrywanie Galerii w panelu nawigacji",
+      "UndoLabel": "Pokaż Galerię w panelu nawigacji",
+      "ApplyUndoText": "Pokazywanie Galerii w panelu nawigacji"
+    },
+    "DisableTransparency": {
+      "Label": "Wyłącz efekty przezroczystości",
+      "ToolTip": "Wyłącza przezroczystość interfejsu, co może poprawić działanie na starszym sprzęcie.",
+      "ApplyText": "Wyłączanie efektów przezroczystości",
+      "UndoLabel": "Włącz efekty przezroczystości",
+      "ApplyUndoText": "Włączanie efektów przezroczystości"
+    },
+    "DisableAnimations": {
+      "Label": "Wyłącz animacje i efekty wizualne",
+      "ToolTip": "Wyłącza animacje i część efektów wizualnych. Interfejs może reagować szybciej, szczególnie na starszym sprzęcie.",
+      "ApplyText": "Wyłączanie animacji i efektów wizualnych",
+      "UndoLabel": "Włącz animacje i efekty wizualne",
+      "ApplyUndoText": "Włączanie animacji i efektów wizualnych"
+    },
+    "DisableUpdateASAP": {
+      "Label": "Zablokuj otrzymywanie aktualizacji natychmiast po ich udostępnieniu",
+      "ToolTip": "Komputer nie będzie w pierwszej grupie otrzymującej nowe aktualizacje niezwiązane z zabezpieczeniami. Nadal otrzyma je później.",
+      "ApplyText": "Blokowanie otrzymywania aktualizacji natychmiast po ich udostępnieniu",
+      "UndoLabel": "Zezwól na otrzymywanie aktualizacji natychmiast po ich udostępnieniu",
+      "ApplyUndoText": "Zezwalanie na otrzymywanie aktualizacji natychmiast po ich udostępnieniu"
+    },
+    "PreventUpdateAutoReboot": {
+      "Label": "Zablokuj automatyczny restart po aktualizacji przy zalogowanym użytkowniku",
+      "ToolTip": "Zapobiega automatycznemu restartowi po aktualizacji, gdy jakikolwiek użytkownik jest zalogowany.",
+      "ApplyText": "Blokowanie automatycznego restartu po aktualizacji przy zalogowanym użytkowniku",
+      "UndoLabel": "Zezwól na automatyczny restart po aktualizacji przy zalogowanym użytkowniku",
+      "ApplyUndoText": "Zezwalanie na automatyczny restart po aktualizacji przy zalogowanym użytkowniku"
+    },
+    "DisableDeliveryOptimization": {
+      "Label": "Wyłącz udostępnianie pobranych aktualizacji innym komputerom",
+      "ToolTip": "Blokuje wysyłanie aktualizacji do innych komputerów w sieci lokalnej i internecie oraz pobieranie aktualizacji z tych komputerów.",
+      "ApplyText": "Wyłączanie udostępniania pobranych aktualizacji innym komputerom",
+      "UndoLabel": "Włącz udostępnianie pobranych aktualizacji innym komputerom",
+      "ApplyUndoText": "Włączanie udostępniania pobranych aktualizacji innym komputerom"
+    },
+    "DisableDeviceAutoAppDownload": {
+      "Label": "Zablokuj automatyczną instalację aplikacji towarzyszących urządzeniom",
+      "ToolTip": "Zapobiega instalacji dodatkowych aplikacji przez Windows Update po podłączeniu np. monitora LG lub Alienware. Nie wyłącza urządzeń; blokuje instalowanie dodatkowych aplikacji bez zgody.",
+      "ApplyText": "Blokowanie automatycznej instalacji aplikacji towarzyszących urządzeniom",
+      "UndoLabel": "Zezwól na automatyczną instalację aplikacji towarzyszących urządzeniom",
+      "ApplyUndoText": "Zezwalanie na automatyczną instalację aplikacji towarzyszących urządzeniom"
+    },
+    "ForceRemoveEdge": {
+      "Label": "Wymuś usunięcie Microsoft Edge. NIEZALECANE!",
+      "ApplyText": "Wymuszanie usunięcia Microsoft Edge. NIEZALECANE!"
+    },
+    "HideOnedrive": {
+      "Label": "Ukryj OneDrive w panelu nawigacji",
+      "ToolTip": "Ukrywa OneDrive w panelu nawigacji Eksploratora plików.",
+      "ApplyText": "Ukrywanie OneDrive w panelu nawigacji",
+      "UndoLabel": "Pokaż OneDrive w panelu nawigacji",
+      "ApplyUndoText": "Pokazywanie OneDrive w panelu nawigacji"
+    },
+    "Hide3dObjects": {
+      "Label": "Ukryj folder Obiekty 3D w lokalizacji Ten komputer",
+      "ToolTip": "Ukrywa folder Obiekty 3D w panelu nawigacji Eksploratora plików.",
+      "ApplyText": "Ukrywanie folderu Obiekty 3D w lokalizacji Ten komputer",
+      "UndoLabel": "Pokaż folder Obiekty 3D w lokalizacji Ten komputer",
+      "ApplyUndoText": "Pokazywanie folderu Obiekty 3D w lokalizacji Ten komputer"
+    },
+    "HideMusic": {
+      "Label": "Ukryj folder Muzyka w lokalizacji Ten komputer",
+      "ToolTip": "Ukrywa folder Muzyka w panelu nawigacji Eksploratora plików.",
+      "ApplyText": "Ukrywanie folderu Muzyka w lokalizacji Ten komputer",
+      "UndoLabel": "Pokaż folder Muzyka w lokalizacji Ten komputer",
+      "ApplyUndoText": "Pokazywanie folderu Muzyka w lokalizacji Ten komputer"
+    },
+    "AddFoldersToThisPC": {
+      "Label": "Przywróć standardowe foldery w lokalizacji Ten komputer",
+      "ToolTip": "Dodaje z powrotem foldery Pulpit, Dokumenty, Pobrane, Muzyka, Obrazy i Wideo do lokalizacji Ten komputer w Eksploratorze.",
+      "ApplyText": "Przywracanie standardowych folderów w lokalizacji Ten komputer",
+      "UndoLabel": "Usuń standardowe foldery z lokalizacji Ten komputer",
+      "ApplyUndoText": "Usuwanie standardowych folderów z lokalizacji Ten komputer"
+    },
+    "HideIncludeInLibrary": {
+      "Label": "Ukryj opcję Uwzględnij w bibliotece w menu kontekstowym",
+      "ToolTip": "Ukrywa opcję Uwzględnij w bibliotece w menu Eksploratora plików.",
+      "ApplyText": "Ukrywanie opcji Uwzględnij w bibliotece w menu kontekstowym",
+      "UndoLabel": "Pokaż opcję Uwzględnij w bibliotece w menu kontekstowym",
+      "ApplyUndoText": "Pokazywanie opcji Uwzględnij w bibliotece w menu kontekstowym"
+    },
+    "HideGiveAccessTo": {
+      "Label": "Ukryj opcję Udziel dostępu w menu kontekstowym",
+      "ToolTip": "Ukrywa opcję Udziel dostępu w menu Eksploratora plików.",
+      "ApplyText": "Ukrywanie opcji Udziel dostępu w menu kontekstowym",
+      "UndoLabel": "Pokaż opcję Udziel dostępu w menu kontekstowym",
+      "ApplyUndoText": "Pokazywanie opcji Udziel dostępu w menu kontekstowym"
+    },
+    "HideShare": {
+      "Label": "Ukryj opcję Udostępnij w menu kontekstowym",
+      "ToolTip": "Ukrywa opcję Udostępnij w menu Eksploratora plików.",
+      "ApplyText": "Ukrywanie opcji Udostępnij w menu kontekstowym",
+      "UndoLabel": "Pokaż opcję Udostępnij w menu kontekstowym",
+      "ApplyUndoText": "Pokazywanie opcji Udostępnij w menu kontekstowym"
+    },
+    "DisableBraveBloat": {
+      "Label": "Wyłącz dodatki w Brave (AI, kryptowaluty i inne)",
+      "ToolTip": "Wyłącza AI, portfel kryptowalut, News, Rewards, Talk i VPN w Brave. Korzysta z zasad systemowych, które blokują część ustawień.",
+      "ApplyText": "Wyłączanie dodatków w Brave (AI, kryptowaluty i innych)",
+      "UndoLabel": "Włącz dodatki w Brave (AI, kryptowaluty i inne)",
+      "ApplyUndoText": "Włączanie dodatków w Brave (AI, kryptowaluty i innych)"
+    },
+    "EnableWindowsSandbox": {
+      "Label": "Włącz Piaskownicę Windows",
+      "ToolTip": "Piaskownica to oddzielne środowisko pulpitu do uruchamiania aplikacji w izolacji od systemu. Dostępna tylko w Windows 11 Pro, Workstation i Enterprise.",
+      "ApplyText": "Włączanie Piaskownicy Windows",
+      "UndoLabel": "Wyłącz Piaskownicę Windows",
+      "ApplyUndoText": "Wyłączanie Piaskownicy Windows"
+    },
+    "EnableWindowsSubsystemForLinux": {
+      "Label": "Włącz Podsystem Windows dla systemu Linux",
+      "ToolTip": "Pozwala uruchamiać środowisko Linux bezpośrednio w Windows bez osobnej maszyny wirtualnej.",
+      "ApplyText": "Włączanie Podsystemu Windows dla systemu Linux",
+      "UndoLabel": "Wyłącz Podsystem Windows dla systemu Linux",
+      "ApplyUndoText": "Wyłączanie Podsystemu Windows dla systemu Linux"
+    },
+    "ShowDriveLettersFirst": {
+      "Label": "Pokaż litery dysków przed ich nazwami",
+      "ToolTip": "Umieszcza litery dysków przed ich nazwami w Eksploratorze plików.",
+      "ApplyText": "Pokazywanie liter dysków przed ich nazwami",
+      "UndoLabel": "Pokaż litery dysków po ich nazwach",
+      "ApplyUndoText": "Pokazywanie liter dysków po ich nazwach"
+    },
+    "ShowDriveLettersLast": {
+      "Label": "Pokaż litery dysków po ich nazwach",
+      "ToolTip": "Umieszcza litery dysków po ich nazwach w Eksploratorze plików (domyślne zachowanie Windows).",
+      "ApplyText": "Pokazywanie liter dysków po ich nazwach"
+    },
+    "ShowNetworkDriveLettersFirst": {
+      "Label": "Pokaż litery dysków sieciowych przed ich nazwami",
+      "ToolTip": "Umieszcza przed nazwą tylko litery dysków sieciowych.",
+      "ApplyText": "Pokazywanie liter dysków sieciowych przed ich nazwami",
+      "UndoLabel": "Pokaż litery dysków po ich nazwach",
+      "ApplyUndoText": "Pokazywanie liter dysków po ich nazwach"
+    },
+    "HideDriveLetters": {
+      "Label": "Ukryj wszystkie litery dysków",
+      "ToolTip": "Ukrywa litery dysków w panelu nawigacji i lokalizacji Ten komputer.",
+      "ApplyText": "Ukrywanie wszystkich liter dysków",
+      "UndoLabel": "Pokaż litery dysków po ich nazwach",
+      "ApplyUndoText": "Pokazywanie liter dysków po ich nazwach"
+    },
+    "StartAllAppsCategory": {
+      "Label": "Pokaż Wszystkie aplikacje według kategorii (domyślnie)",
+      "ToolTip": "Grupuje aplikacje w menu Start według kategorii.",
+      "ApplyText": "Pokazywanie sekcji Wszystkie aplikacje według kategorii (domyślnie)"
+    },
+    "StartAllAppsGrid": {
+      "Label": "Pokaż Wszystkie aplikacje w siatce",
+      "ToolTip": "Układa aplikacje w menu Start alfabetycznie w siatce.",
+      "ApplyText": "Pokazywanie sekcji Wszystkie aplikacje w siatce",
+      "UndoLabel": "Pokaż Wszystkie aplikacje według kategorii",
+      "ApplyUndoText": "Pokazywanie sekcji Wszystkie aplikacje według kategorii"
+    },
+    "StartAllAppsList": {
+      "Label": "Pokaż Wszystkie aplikacje na liście",
+      "ToolTip": "Układa aplikacje w menu Start alfabetycznie na liście.",
+      "ApplyText": "Pokazywanie sekcji Wszystkie aplikacje na liście",
+      "UndoLabel": "Pokaż Wszystkie aplikacje według kategorii",
+      "ApplyUndoText": "Pokazywanie sekcji Wszystkie aplikacje według kategorii"
+    },
+    "SetWallpaper": {
+      "Label": "Ustaw wybraną tapetę",
+      "ApplyText": "Ustawianie wybranej tapety"
+    },
+    "RestoreWallpaper": {
+      "Label": "Przywróć ostatnią kopię tapety Win11Debloat",
+      "ApplyText": "Przywracanie ostatniej kopii tapety Win11Debloat"
+    }
+  },
+  "UiGroups": {
+    "DesktopSpotlight": {
+      "Label": "Windows Spotlight na pulpicie",
+      "ToolTip": "Wybierz zmieniające się tło pulpitu ze skrótem do informacji o zdjęciu lub bez niego albo wyłącz Windows Spotlight.",
+      "Values": {
+        "EnableDesktopSpotlight": "Pokaż skrót do informacji o zdjęciu (domyślnie)",
+        "HideDesktopSpotlightIcon": "Ukryj skrót do informacji o zdjęciu",
+        "DisableDesktopSpotlight": "Wyłącz tło pulpitu Windows Spotlight"
+      }
+    },
+    "SearchIcon": {
+      "Label": "Wygląd wyszukiwania na pasku zadań",
+      "ToolTip": "Wybierz wygląd pola wyszukiwania na pasku zadań.",
+      "Values": {
+        "ShowSearchBoxTb": "Pole wyszukiwania (domyślnie)",
+        "ShowSearchLabelTb": "Ikona i etykieta",
+        "ShowSearchIconTb": "Tylko ikona",
+        "HideSearchTb": "Ukryj"
+      }
+    },
+    "MultiMon": {
+      "Label": "Pokaż aplikacje na paskach zadań",
+      "ToolTip": "Wybierz paski, na których mają być widoczne przyciski aplikacji przy wielu monitorach.",
+      "Values": {
+        "MMTaskbarModeAll": "Wszystkie paski zadań (domyślnie)",
+        "MMTaskbarModeMainActive": "Główny pasek i ekran z otwartym oknem",
+        "MMTaskbarModeActive": "Tylko ekran z otwartym oknem"
+      }
+    },
+    "CombineButtons": {
+      "Label": "Łączenie przycisków na głównym ekranie",
+      "ToolTip": "Wybierz sposób łączenia przycisków paska zadań na głównym ekranie.",
+      "Values": {
+        "CombineTaskbarAlways": "Zawsze (domyślnie)",
+        "CombineTaskbarWhenFull": "Gdy pasek jest pełny",
+        "CombineTaskbarNever": "Nigdy"
+      }
+    },
+    "CombineMMButtons": {
+      "Label": "Łączenie przycisków na dodatkowych ekranach",
+      "ToolTip": "Wybierz sposób łączenia przycisków paska zadań na dodatkowych ekranach.",
+      "Values": {
+        "CombineMMTaskbarAlways": "Zawsze (domyślnie)",
+        "CombineMMTaskbarWhenFull": "Gdy pasek jest pełny",
+        "CombineMMTaskbarNever": "Nigdy"
+      }
+    },
+    "ClearStart": {
+      "Label": "Usuń przypięte aplikacje z menu Start",
+      "ToolTip": "Usuwa wszystkie przypięte aplikacje z menu Start.",
+      "Values": {
+        "ClearStart": "Dla wybranego użytkownika",
+        "ClearStartAllUsers": "Dla wszystkich użytkowników"
+      }
+    },
+    "ExplorerLocation": {
+      "Label": "Początkowa lokalizacja Eksploratora plików",
+      "ToolTip": "Wybierz lokalizację otwieraną po uruchomieniu Eksploratora plików.",
+      "Values": {
+        "ExplorerToHome": "Strona główna (domyślnie)",
+        "ExplorerToThisPC": "Ten komputer",
+        "ExplorerToDownloads": "Pobrane",
+        "ExplorerToOneDrive": "OneDrive"
+      }
+    },
+    "DriveLetterPosition": {
+      "Label": "Położenie liter dysków",
+      "ToolTip": "Wybierz miejsce wyświetlania liter dysków w Eksploratorze plików.",
+      "Values": {
+        "ShowDriveLettersLast": "Po nazwie dysku (domyślnie)",
+        "ShowDriveLettersFirst": "Przed nazwą dysku",
+        "ShowNetworkDriveLettersFirst": "Przed nazwą tylko dla dysków sieciowych",
+        "HideDriveLetters": "Ukryj wszystkie litery"
+      }
+    },
+    "ShowTabsInAltTab": {
+      "Label": "Karty aplikacji podczas przyciągania okien i używania Alt+Tab",
+      "ToolTip": "Wybierz, czy pokazywać karty aplikacji (np. Edge) podczas przyciągania okien i używania Alt+Tab.",
+      "Values": {
+        "HideTabsInAltTab": "Nie pokazuj kart",
+        "Show3TabsInAltTab": "3 ostatnie karty (domyślnie)",
+        "Show5TabsInAltTab": "5 ostatnich kart",
+        "Show20TabsInAltTab": "20 ostatnich kart"
+      }
+    },
+    "StartAllAppsView": {
+      "Label": "Widok Wszystkie aplikacje w menu Start",
+      "ToolTip": "Wybierz układ sekcji Wszystkie aplikacje lub ukryj ją. Ukrycie może utrudnić odnajdywanie aplikacji. Korzysta z zasad systemowych, które blokują część ustawień.",
+      "Values": {
+        "DisableStartAllApps": "Ukryj",
+        "StartAllAppsCategory": "Kategorie (domyślnie)",
+        "StartAllAppsGrid": "Siatka",
+        "StartAllAppsList": "Lista"
+      }
+    }
+  }
+}

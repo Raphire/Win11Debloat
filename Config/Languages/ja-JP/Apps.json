@@ -1,0 +1,566 @@
+{
+  "Clipchamp.Clipchamp": {
+    "FriendlyName": "Clipchamp",
+    "Description": "Microsoft のビデオ エディターです"
+  },
+  "Microsoft.3DBuilder": {
+    "FriendlyName": "3D Builder",
+    "Description": "基本的な 3D モデリング ソフトウェアです"
+  },
+  "Microsoft.549981C3F5F10": {
+    "FriendlyName": "Cortana",
+    "Description": "Microsoft Cortana 音声アシスタントです (提供終了)"
+  },
+  "Microsoft.BingFinance": {
+    "FriendlyName": "Bing Finance",
+    "Description": "Bing による金融ニュースと市場追跡です (提供終了)"
+  },
+  "Microsoft.BingFoodAndDrink": {
+    "FriendlyName": "Bing Food And Drink",
+    "Description": "Bing によるレシピと料理ニュースです (提供終了)"
+  },
+  "Microsoft.BingHealthAndFitness": {
+    "FriendlyName": "Bing Health And Fitness",
+    "Description": "Bing による健康・フィットネスの記録とニュースです (提供終了)"
+  },
+  "Microsoft.BingNews": {
+    "FriendlyName": "Bing News",
+    "Description": "Bing によるニュース アグリゲーターです (提供終了)"
+  },
+  "Microsoft.BingSports": {
+    "FriendlyName": "Bing Sports",
+    "Description": "Bing によるスポーツ ニュースとスコアです (提供終了)"
+  },
+  "Microsoft.BingTranslator": {
+    "FriendlyName": "Bing Translator",
+    "Description": "Bing による翻訳サービスです"
+  },
+  "Microsoft.BingTravel": {
+    "FriendlyName": "Bing Travel",
+    "Description": "Bing による旅行計画と旅行ニュースです (提供終了)"
+  },
+  "Microsoft.BingWeather": {
+    "FriendlyName": "Bing Weather",
+    "Description": "Bing による天気予報です"
+  },
+  "XP9CXNGPPJ97XX": {
+    "FriendlyName": "Microsoft Copilot",
+    "Description": "Windows に統合された AI アシスタントです"
+  },
+  "Microsoft.Windows.AIHub": {
+    "FriendlyName": "Copilot+ AI Hub",
+    "Description": "Copilot+ AI Hub アプリです (Windows 11 24H2 以降)"
+  },
+  "Microsoft.PCManager": {
+    "FriendlyName": "Microsoft PC Manager",
+    "Description": "Microsoft PC Manager システム クリーンアップおよび最適化ツールです (プリインストールされている場合が多いです)"
+  },
+  "Microsoft.Getstarted": {
+    "FriendlyName": "はじめに",
+    "Description": "Windows のヒントと入門ガイドです (Windows 11 ではアンインストールできません)"
+  },
+  "Microsoft.Messaging": {
+    "FriendlyName": "メッセージング",
+    "Description": "Skype と連携することが多いメッセージング アプリです (ほぼ提供終了)"
+  },
+  "Microsoft.Microsoft3DViewer": {
+    "FriendlyName": "3D ビューアー",
+    "Description": "3D モデル用のビューアーです (提供終了)"
+  },
+  "Microsoft.MicrosoftJournal": {
+    "FriendlyName": "Microsoft Journal",
+    "Description": "ペン入力に最適化されたデジタル ノート アプリです"
+  },
+  "Microsoft.MicrosoftOfficeHub": {
+    "FriendlyName": "Office Hub",
+    "Description": "Microsoft Office アプリとドキュメントにアクセスするためのハブです (Microsoft 365 アプリの前身)"
+  },
+  "Microsoft.MicrosoftPowerBIForWindows": {
+    "FriendlyName": "Power BI",
+    "Description": "ビジネス分析サービスのクライアントです"
+  },
+  "Microsoft.MicrosoftSolitaireCollection": {
+    "FriendlyName": "Solitaire Collection",
+    "Description": "ソリティア カード ゲームのコレクションです"
+  },
+  "Microsoft.MicrosoftStickyNotes": {
+    "FriendlyName": "付箋",
+    "Description": "クイック メモを作成して同期するためのアプリです"
+  },
+  "Microsoft.MixedReality.Portal": {
+    "FriendlyName": "Mixed Reality ポータル",
+    "Description": "Windows Mixed Reality ヘッドセット用ポータルです"
+  },
+  "Microsoft.NetworkSpeedTest": {
+    "FriendlyName": "Network Speed Test",
+    "Description": "インターネット接続速度のテスト ユーティリティです"
+  },
+  "Microsoft.News": {
+    "FriendlyName": "Microsoft ニュース",
+    "Description": "Windows 向け Microsoft ニュース アプリです"
+  },
+  "Microsoft.Office.OneNote": {
+    "FriendlyName": "OneNote",
+    "Description": "デジタル ノート アプリです (ユニバーサル Windows プラットフォーム版)"
+  },
+  "Microsoft.Office.Sway": {
+    "FriendlyName": "Sway",
+    "Description": "プレゼンテーションおよびストーリーテリング アプリです"
+  },
+  "Microsoft.OneConnect": {
+    "FriendlyName": "One Connect",
+    "Description": "携帯通信会社の管理アプリです (「モバイル プラン」に置き換えられました)"
+  },
+  "Microsoft.Print3D": {
+    "FriendlyName": "Print 3D",
+    "Description": "3D プリント準備ソフトウェアです"
+  },
+  "Microsoft.PowerAutomateDesktop": {
+    "FriendlyName": "Power Automate",
+    "Description": "デスクトップ自動化ツール (RPA) です"
+  },
+  "Microsoft.SkypeApp": {
+    "FriendlyName": "Skype (UWP)",
+    "Description": "Skype 通信アプリ、ユニバーサル Windows プラットフォーム版です (提供終了)"
+  },
+  "Microsoft.Todos": {
+    "FriendlyName": "Microsoft To Do",
+    "Description": "To-Do リストおよびタスク管理アプリです"
+  },
+  "Microsoft.Windows.DevHome": {
+    "FriendlyName": "Dev Home",
+    "Description": "開発者向けダッシュボードおよびツール構成ユーティリティです (提供終了)"
+  },
+  "Microsoft.WindowsAlarms": {
+    "FriendlyName": "クロック",
+    "Description": "アラーム、タイマー、ストップウォッチ、フォーカス セッション用のアプリです"
+  },
+  "Microsoft.WindowsFeedbackHub": {
+    "FriendlyName": "フィードバック Hub",
+    "Description": "Windows に関するフィードバックを Microsoft に送信するためのアプリです"
+  },
+  "Microsoft.WindowsMaps": {
+    "FriendlyName": "マップ",
+    "Description": "マップおよびナビゲーション アプリです (提供終了)"
+  },
+  "Microsoft.WindowsSoundRecorder": {
+    "FriendlyName": "サウンド レコーダー",
+    "Description": "基本的な音声録音アプリです"
+  },
+  "Microsoft.XboxApp": {
+    "FriendlyName": "Xbox 本体コンパニオン",
+    "Description": "以前の Xbox 本体コンパニオン アプリです (提供終了)"
+  },
+  "Microsoft.ZuneVideo": {
+    "FriendlyName": "映画 & テレビ",
+    "Description": "動画コンテンツのレンタル、購入、再生用アプリです (提供終了)"
+  },
+  "MicrosoftCorporationII.MicrosoftFamily": {
+    "FriendlyName": "Microsoft Family Safety",
+    "Description": "家族のスクリーン タイム、コンテンツ フィルター、アクティビティ レポートを管理するためのアプリです"
+  },
+  "MicrosoftCorporationII.QuickAssist": {
+    "FriendlyName": "クイック アシスト",
+    "Description": "リモート アシスタンス ツールです"
+  },
+  "MicrosoftTeams": {
+    "FriendlyName": "Microsoft Teams (Old)",
+    "Description": "従来の個人用 Microsoft Teams です (MS Store 版)"
+  },
+  "MSTeams": {
+    "FriendlyName": "Microsoft Teams (New)",
+    "Description": "新しい Microsoft Teams アプリです (職場/学校用または個人用)"
+  },
+  "ACGMediaPlayer": {
+    "FriendlyName": "ACG Media Player",
+    "Description": "メディア プレーヤー アプリです"
+  },
+  "ActiproSoftwareLLC": {
+    "FriendlyName": "Actipro Software",
+    "Description": "UI コントロールまたはソフトウェア コンポーネントの可能性があり、OEM によってバンドルされることが多いです"
+  },
+  "AdobeSystemsIncorporated.AdobePhotoshopExpress": {
+    "FriendlyName": "Adobe Photoshop Express",
+    "Description": "Adobe の基本的な写真編集アプリです"
+  },
+  "Amazon.com.Amazon": {
+    "FriendlyName": "Amazon",
+    "Description": "Amazon ショッピング アプリです"
+  },
+  "AmazonVideo.PrimeVideo": {
+    "FriendlyName": "Prime Video",
+    "Description": "Amazon Prime Video ストリーミング サービス アプリです"
+  },
+  "Asphalt8Airborne": {
+    "FriendlyName": "Asphalt 8",
+    "Description": "レース ゲームです"
+  },
+  "AutodeskSketchBook": {
+    "FriendlyName": "Autodesk SketchBook",
+    "Description": "デジタル描画およびスケッチ アプリです"
+  },
+  "CaesarsSlotsFreeCasino": {
+    "FriendlyName": "Caesars Slots",
+    "Description": "カジノ スロット マシン ゲームです"
+  },
+  "COOKINGFEVER": {
+    "FriendlyName": "Cooking Fever",
+    "Description": "レストラン シミュレーション ゲームです"
+  },
+  "CyberLinkMediaSuiteEssentials": {
+    "FriendlyName": "CyberLink Media Suite",
+    "Description": "マルチメディア ソフトウェア スイートです (OEM によってプリインストールされていることが多いです)"
+  },
+  "DisneyMagicKingdoms": {
+    "FriendlyName": "Disney Magic Kingdoms",
+    "Description": "ディズニー テーマ パーク建設ゲームです"
+  },
+  "Disney.37853FC22B2CE": {
+    "FriendlyName": "Disney+",
+    "Description": "Disney+ ストリーミング サービス アプリです"
+  },
+  "DrawboardPDF": {
+    "FriendlyName": "Drawboard PDF",
+    "Description": "ペン入力に特化した PDF 閲覧および注釈アプリです"
+  },
+  "Duolingo-LearnLanguagesforFree": {
+    "FriendlyName": "Duolingo",
+    "Description": "言語学習アプリです"
+  },
+  "EclipseManager": {
+    "FriendlyName": "Eclipse Manager",
+    "Description": "特定の OEM ソフトウェアまたはユーティリティに関連することが多いです (画面設定の管理など)"
+  },
+  "FACEBOOK.FACEBOOK": {
+    "FriendlyName": "Facebook",
+    "Description": "Facebook ソーシャル メディア アプリです"
+  },
+  "FarmVille2CountryEscape": {
+    "FriendlyName": "FarmVille 2",
+    "Description": "農場シミュレーション ゲームです"
+  },
+  "Flipboard": {
+    "FriendlyName": "Flipboard",
+    "Description": "雑誌スタイルのニュースおよびソーシャル ネットワーク アグリゲーターです"
+  },
+  "HiddenCity": {
+    "FriendlyName": "Hidden City",
+    "Description": "アイテム探しパズル アドベンチャー ゲームです"
+  },
+  "HULULLC.HULUPLUS": {
+    "FriendlyName": "Hulu",
+    "Description": "Hulu ストリーミング サービス アプリです"
+  },
+  "iHeartRadio": {
+    "FriendlyName": "iHeartRadio",
+    "Description": "インターネット ラジオ ストリーミング アプリです"
+  },
+  "Facebook.Instagram": {
+    "FriendlyName": "Instagram",
+    "Description": "Instagram ソーシャル メディア アプリです"
+  },
+  "king.com.BubbleWitch3Saga": {
+    "FriendlyName": "Bubble Witch 3",
+    "Description": "King のパズル ゲームです"
+  },
+  "king.com.CandyCrushSaga": {
+    "FriendlyName": "Candy Crush Saga",
+    "Description": "King のパズル ゲームです"
+  },
+  "king.com.CandyCrushSodaSaga": {
+    "FriendlyName": "Candy Crush Soda",
+    "Description": "King のパズル ゲームです"
+  },
+  "LinkedInforWindows": {
+    "FriendlyName": "LinkedIn",
+    "Description": "LinkedIn ビジネス SNS アプリです"
+  },
+  "MarchofEmpires": {
+    "FriendlyName": "March of Empires",
+    "Description": "ストラテジー ゲームです"
+  },
+  "4DF9E0F8.Netflix": {
+    "FriendlyName": "Netflix",
+    "Description": "Netflix ストリーミング サービス アプリです"
+  },
+  "NYTCrossword": {
+    "FriendlyName": "NYT Crossword",
+    "Description": "New York Times のクロスワード パズル アプリです"
+  },
+  "OneCalendar": {
+    "FriendlyName": "One Calendar",
+    "Description": "カレンダー統合アプリです"
+  },
+  "PandoraMediaInc": {
+    "FriendlyName": "Pandora",
+    "Description": "Pandora 音楽ストリーミング アプリです"
+  },
+  "PhototasticCollage": {
+    "FriendlyName": "Phototastic Collage",
+    "Description": "写真コラージュ作成アプリです"
+  },
+  "PicsArt-PhotoStudio": {
+    "FriendlyName": "PicsArt",
+    "Description": "写真編集およびクリエイティブ アプリです"
+  },
+  "PolarrPhotoEditorAcademicEdition": {
+    "FriendlyName": "Polarr Photo Editor",
+    "Description": "写真編集アプリです (アカデミック版)"
+  },
+  "flaregamesGmbH.RoyalRevolt": {
+    "FriendlyName": "Royal Revolt",
+    "Description": "タワー ディフェンス / ストラテジー ゲームです"
+  },
+  "Sidia.LiveWallpaper": {
+    "FriendlyName": "Live Wallpaper",
+    "Description": "ライブ壁紙アプリです"
+  },
+  "SlingTV": {
+    "FriendlyName": "Sling TV",
+    "Description": "ライブ TV ストリーミング サービス アプリです"
+  },
+  "SpotifyAB.SpotifyMusic": {
+    "FriendlyName": "Spotify",
+    "Description": "Spotify 音楽ストリーミング アプリです"
+  },
+  "BytedancePte.Ltd.TikTok": {
+    "FriendlyName": "TikTok",
+    "Description": "TikTok ショート動画アプリです"
+  },
+  "TuneInRadio": {
+    "FriendlyName": "TuneIn Radio",
+    "Description": "インターネット ラジオ ストリーミング アプリです"
+  },
+  "WinZipUniversal": {
+    "FriendlyName": "WinZip",
+    "Description": "ファイル圧縮・展開ユーティリティです (ユニバーサル Windows プラットフォーム版)"
+  },
+  "Microsoft.BingSearch": {
+    "FriendlyName": "Bing Search",
+    "Description": "Microsoft Bing による Web 検索です (Windows 検索に統合)"
+  },
+  "Microsoft.Edge": {
+    "FriendlyName": "Microsoft Edge",
+    "Description": "Windows の既定のブラウザーです。警告: このアプリを削除すると、Windows サンドボックスから唯一のブラウザーも削除され、他のアプリに影響を与える可能性があります"
+  },
+  "Microsoft.GamingApp": {
+    "FriendlyName": "Xbox app",
+    "Description": "Windows 向け Xbox ゲーム アプリです。一部の PC ゲームのインストールに必要です"
+  },
+  "Microsoft.GetHelp": {
+    "FriendlyName": "問い合わせ",
+    "Description": "一部の Windows 11 トラブルシューティング ツールやサポート対応に必要です"
+  },
+  "Microsoft.M365Companions": {
+    "FriendlyName": "Microsoft 365 Companions",
+    "Description": "Microsoft 365 (一般法人向け) の予定表、ファイル、連絡先ミニ アプリです。Microsoft 365 管理者によって有効にされている場合、これらのアプリは再インストールされる可能性があります"
+  },
+  "Microsoft.MSPaint": {
+    "FriendlyName": "ペイント 3D",
+    "Description": "3D 描画アプリです (提供終了)"
+  },
+  "Microsoft.OneDrive": {
+    "FriendlyName": "OneDrive",
+    "Description": "OneDrive 個人向けクラウド ストレージ クライアントです"
+  },
+  "Microsoft.OutlookForWindows": {
+    "FriendlyName": "Outlook for Windows",
+    "Description": "新しい Windows 向け Outlook メール クライアントです"
+  },
+  "Microsoft.Paint": {
+    "FriendlyName": "ペイント",
+    "Description": "従来のペイントです (伝統的な 2D ペイント アプリケーション)"
+  },
+  "Microsoft.People": {
+    "FriendlyName": "People",
+    "Description": "メールとカレンダーに必要で、同梱されています (提供終了)"
+  },
+  "Microsoft.RemoteDesktop": {
+    "FriendlyName": "リモート デスクトップ",
+    "Description": "リモート デスクトップ クライアント アプリです"
+  },
+  "Microsoft.ScreenSketch": {
+    "FriendlyName": "Snipping Tool",
+    "Description": "スクリーンショットの撮影、注釈の追加、保存、共有を行います"
+  },
+  "Microsoft.StartExperiencesApp": {
+    "FriendlyName": "Widgets Experience",
+    "Description": "このアプリは Windows ウィジェットの「マイ フィード」機能を提供します"
+  },
+  "Microsoft.Whiteboard": {
+    "FriendlyName": "Whiteboard",
+    "Description": "デジタル共同作業用ホワイトボード アプリです"
+  },
+  "Microsoft.Windows.Photos": {
+    "FriendlyName": "フォト",
+    "Description": "既定の写真閲覧および基本的な写真編集アプリです"
+  },
+  "Microsoft.WindowsCalculator": {
+    "FriendlyName": "電卓",
+    "Description": "電卓アプリです"
+  },
+  "Microsoft.WindowsCamera": {
+    "FriendlyName": "カメラ",
+    "Description": "内蔵または接続されたカメラを使用するためのカメラ アプリです"
+  },
+  "Microsoft.windowscommunicationsapps": {
+    "FriendlyName": "メールとカレンダー",
+    "Description": "メールとカレンダーのアプリ スイートです (提供終了)"
+  },
+  "Microsoft.WindowsNotepad": {
+    "FriendlyName": "メモ帳",
+    "Description": "メモ帳テキスト エディター アプリです"
+  },
+  "Microsoft.WindowsStore": {
+    "FriendlyName": "Microsoft Store",
+    "Description": "Microsoft Store です。警告: このアプリを削除すると、簡単には再インストールできません。"
+  },
+  "Microsoft.WindowsTerminal": {
+    "FriendlyName": "Windows Terminal",
+    "Description": "Windows 11 の既定のターミナル アプリ (コマンド プロンプト、PowerShell、WSL) です。警告: Windows Terminal から Win11Debloat を起動した場合は削除しないでください。スクリプトが失敗します。"
+  },
+  "Microsoft.Xbox.TCUI": {
+    "FriendlyName": "Xbox TCUI Framework",
+    "Description": "UI フレームワークです。Microsoft Store、フォト、特定のゲームに必要なようです"
+  },
+  "Microsoft.XboxGameOverlay": {
+    "FriendlyName": "Xbox Game Overlay",
+    "Description": "ゲーム オーバーレイです。一部のゲームで必要または役立ちます (Xbox Game Bar の一部)。警告: このアプリをアンインストールすると、特定の最新プロセッサを搭載した PC でゲームのパフォーマンスが低下する可能性があります。"
+  },
+  "Microsoft.XboxGamingOverlay": {
+    "FriendlyName": "Xbox Gaming Overlay",
+    "Description": "ゲーム オーバーレイです。一部のゲームで必要または役立ちます (Xbox Game Bar の一部)。警告: このアプリをアンインストールすると、特定の最新プロセッサを搭載した PC でゲームのパフォーマンスが低下する可能性があります。"
+  },
+  "Microsoft.XboxIdentityProvider": {
+    "FriendlyName": "Xbox Identity Provider",
+    "Description": "Xbox サインイン フレームワークです。一部のゲームや Xbox サービスに必要です"
+  },
+  "Microsoft.XboxSpeechToTextOverlay": {
+    "FriendlyName": "Xbox Speech To Text",
+    "Description": "一部のゲームに必要なアクセシビリティ機能です。警告: このアプリは簡単には再インストールできません。"
+  },
+  "Microsoft.YourPhone": {
+    "FriendlyName": "スマートフォン連携",
+    "Description": "スマートフォン連携です (Android/iOS スマートフォンを PC に接続)"
+  },
+  "Microsoft.ZuneMusic": {
+    "FriendlyName": "メディア プレーヤー",
+    "Description": "最新のメディア プレーヤーです (Groove ミュージックの後継、ローカルのオーディオ/ビデオを再生)"
+  },
+  "MicrosoftWindows.CrossDevice": {
+    "FriendlyName": "Cross Device Experience",
+    "Description": "エクスプローラーやカメラなどとのスマートフォン統合です (スマートフォン連携機能の一部)"
+  },
+  "MicrosoftWindows.Client.WebExperience": {
+    "FriendlyName": "Windows Web Experience Pack",
+    "Description": "Microsoft Store を通じてウィジェットなどの特定の機能を提供および更新するのに役立ちます"
+  },
+  "Microsoft.WidgetsPlatformRuntime": {
+    "FriendlyName": "Widgets Platform Runtime",
+    "Description": "Windows ウィジェットが動作するために必要なランタイムです"
+  },
+  "LGElectronics.LGMonitorApp": {
+    "FriendlyName": "LG Monitor App",
+    "Description": "LG 製モニターを制御するための LG OEM ソフトウェアです。LG 製モニターが接続されている場合、Windows Update によって自動的に再インストールされることがあります"
+  },
+  "AD2F1837.HPAIExperienceCenter": {
+    "FriendlyName": "HP AI Experience Center",
+    "Description": "HP OEM ソフトウェアです。AI を活用した機能とサポートを提供します"
+  },
+  "AD2F1837.HPConnectedMusic": {
+    "FriendlyName": "HP Connected Music",
+    "Description": "音楽用の HP OEM ソフトウェアです (提供終了の可能性あり)"
+  },
+  "AD2F1837.HPConnectedPhotopoweredbySnapfish": {
+    "FriendlyName": "HP Connected Photo",
+    "Description": "写真用の HP OEM ソフトウェアです。Snapfish と統合されています (提供終了の可能性あり)"
+  },
+  "AD2F1837.HPDesktopSupportUtilities": {
+    "FriendlyName": "HP Desktop Support Utilities",
+    "Description": "デスクトップ サポート ツールを提供する HP OEM ソフトウェアです"
+  },
+  "AD2F1837.HPEasyClean": {
+    "FriendlyName": "HP Easy Clean",
+    "Description": "清掃のために入力デバイスを一時的に無効にします"
+  },
+  "AD2F1837.HPFileViewer": {
+    "FriendlyName": "HP File Viewer",
+    "Description": "特定のファイル形式を表示するための HP OEM ソフトウェアです"
+  },
+  "AD2F1837.HPJumpStarts": {
+    "FriendlyName": "HP JumpStarts",
+    "Description": "チュートリアル、アプリ検出、または HP 機能へのクイック アクセス用の HP OEM ソフトウェアです"
+  },
+  "AD2F1837.HPPCHardwareDiagnosticsWindows": {
+    "FriendlyName": "HP PC Hardware Diagnostics",
+    "Description": "PC ハードウェア診断用の HP OEM ソフトウェアです"
+  },
+  "AD2F1837.HPPowerManager": {
+    "FriendlyName": "HP Power Manager",
+    "Description": "電源設定とバッテリーを管理するための HP OEM ソフトウェアです"
+  },
+  "AD2F1837.HPPrinterControl": {
+    "FriendlyName": "HP Printer Control",
+    "Description": "HP プリンターを管理するための HP OEM ソフトウェアです"
+  },
+  "AD2F1837.HPPrivacySettings": {
+    "FriendlyName": "HP Privacy Settings",
+    "Description": "プライバシー設定を管理するための HP OEM ソフトウェアです"
+  },
+  "AD2F1837.HPQuickDrop": {
+    "FriendlyName": "HP QuickDrop",
+    "Description": "デバイス間で素早くファイルを転送するための HP OEM ソフトウェアです (提供終了)"
+  },
+  "AD2F1837.HPQuickTouch": {
+    "FriendlyName": "HP QuickTouch",
+    "Description": "HP OEM ソフトウェアです。タッチ専用のショートカットや操作用の可能性があります"
+  },
+  "AD2F1837.HPRegistration": {
+    "FriendlyName": "HP Registration",
+    "Description": "製品登録用の HP OEM ソフトウェアです"
+  },
+  "AD2F1837.HPSupportAssistant": {
+    "FriendlyName": "HP Support Assistant",
+    "Description": "サポート、アップデート、トラブルシューティング用の HP OEM ソフトウェアです"
+  },
+  "AD2F1837.HPSureShieldAI": {
+    "FriendlyName": "HP Sure Shield AI",
+    "Description": "HP OEM セキュリティ ソフトウェアです。AI ベースの脅威保護の可能性があります"
+  },
+  "AD2F1837.HPSystemInformation": {
+    "FriendlyName": "HP System Information",
+    "Description": "システム情報を表示するための HP OEM ソフトウェアです"
+  },
+  "AD2F1837.HPWelcome": {
+    "FriendlyName": "HP Welcome",
+    "Description": "ウェルカム エクスペリエンスや初期セットアップのヘルプを提供する HP OEM ソフトウェアです"
+  },
+  "AD2F1837.HPWorkWell": {
+    "FriendlyName": "HP WorkWell",
+    "Description": "健康維持に焦点を当てた HP OEM ソフトウェアです。休憩のリマインダーや人間工学のヒントが含まれる可能性があります"
+  },
+  "AD2F1837.myHP": {
+    "FriendlyName": "myHP",
+    "Description": "デバイス情報、サポート、サービス用の HP OEM セントラル ハブ アプリです"
+  },
+  "E046963F.LenovoCompanion": {
+    "FriendlyName": "Lenovo Vantage",
+    "Description": "デバイス設定、アップデート、サポート用の Lenovo OEM ハブ アプリです"
+  },
+  "LenovoCompanyLimited.LenovoVantageService": {
+    "FriendlyName": "Lenovo Vantage Service",
+    "Description": "Lenovo Vantage のバックグラウンド サービス コンポーネントです"
+  },
+  "DellInc.DellSupportAssistforPCs": {
+    "FriendlyName": "Dell SupportAssist",
+    "Description": "Dell OEM のサポート、診断、アップデート ツールです"
+  },
+  "DellInc.DellDigitalDelivery": {
+    "FriendlyName": "Dell Digital Delivery Services",
+    "Description": "事前購入されたソフトウェアを配信するための Dell OEM ソフトウェアです"
+  },
+  "DellInc.DellMobileConnect": {
+    "FriendlyName": "Dell Mobile Connect",
+    "Description": "Android/iOS スマートフォンを PC に連携するための Dell OEM アプリです (スマートフォン連携に置き換えられました)"
+  }
+}

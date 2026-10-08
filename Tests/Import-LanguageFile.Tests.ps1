@@ -124,6 +124,15 @@ Describe 'Get-PluralCategory' {
     ) {
         Get-PluralCategory -LanguageCode 'en-US' -Count $Count | Should -Be $Expected
     }
+
+    It 'returns other for a Japanese count of <Count>' -ForEach @(
+        @{ Count = 0 }
+        @{ Count = 1 }
+        @{ Count = 2 }
+        @{ Count = 5 }
+    ) {
+        Get-PluralCategory -LanguageCode 'ja-JP' -Count $Count | Should -Be 'other'
+    }
 }
 
 Describe 'Get-Translation' {

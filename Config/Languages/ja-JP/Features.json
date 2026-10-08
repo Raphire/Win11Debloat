@@ -202,6 +202,13 @@
       "UndoLabel": "Microsoft Edge の AI 機能を有効にする",
       "ApplyUndoText": "Microsoft Edge の AI 機能を有効にしています"
     },
+    "DisableChromeAI": {
+      "Label": "Google Chrome の AI 機能を無効にする",
+      "ToolTip": "Gemini、AI による検索と候補表示、文章作成の支援、自動入力など、Google Chrome に組み込まれた AI ツールと連携機能を無効にします。ローカルの AI モデルも削除します。この機能はポリシーを使用するため、一部の設定がロックされます。",
+      "ApplyText": "Google Chrome の AI 機能を無効にしています",
+      "UndoLabel": "Google Chrome の AI 機能を有効にする",
+      "ApplyUndoText": "Google Chrome の AI 機能を有効にしています"
+    },
     "DisablePaintAI": {
       "Label": "ペイントの AI 機能を無効にする",
       "ToolTip": "AI による画像生成や編集ツールなど、ペイントの AI 機能をオフにします。この機能はポリシーを使用するため、一部の設定がロックされます。",

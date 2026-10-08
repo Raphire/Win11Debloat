@@ -1,0 +1,38 @@
+{
+  "PrivacySuggestedContent": {
+    "Label": "隐私与推荐内容"
+  },
+  "System": {
+    "Label": "系统"
+  },
+  "StartMenuSearch": {
+    "Label": "开始菜单与搜索"
+  },
+  "AI": {
+    "Label": "人工智能"
+  },
+  "WindowsUpdate": {
+    "Label": "Windows 更新"
+  },
+  "Taskbar": {
+    "Label": "任务栏"
+  },
+  "Appearance": {
+    "Label": "外观"
+  },
+  "FileExplorer": {
+    "Label": "文件资源管理器"
+  },
+  "Gaming": {
+    "Label": "游戏"
+  },
+  "MultiTasking": {
+    "Label": "多任务处理"
+  },
+  "OptionalWindowsFeatures": {
+    "Label": "Windows 可选功能"
+  },
+  "Other": {
+    "Label": "其他"
+  }
+}

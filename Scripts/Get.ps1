@@ -196,13 +196,23 @@ if (Test-Path "$backupDir") {
     Remove-Item "$backupDir" -Recurse -Force
 }
 
+# Quote a value so it survives CommandLineToArgvW parsing in the child process: double any backslash run that
+# precedes a quote or the closing quote, and escape embedded quotes, before wrapping the value in quotes.
+function Format-LauncherArg([string]$Value) {
+    $escaped = $Value -replace '(\\*)"', '$1$1\"'
+    $escaped = $escaped -replace '(\\+)$', '$1$1'
+    return '"' + $escaped + '"'
+}
+
 # Make list of arguments to pass on to the script (exclude the -Dev switch, which only affects this launcher)
-$arguments = $($PSBoundParameters.GetEnumerator() | Where-Object { $_.Key -ne 'Dev' } | ForEach-Object {
-    if ($_.Value -eq $true) {
-        "-$($_.Key)"
-    } 
+$arguments = @($PSBoundParameters.GetEnumerator() | Where-Object { $_.Key -ne 'Dev' } | ForEach-Object {
+    if ($_.Value -is [System.Management.Automation.SwitchParameter]) {
+        if ($_.Value.IsPresent) {
+            "-$($_.Key)"
+        }
+    }
     else {
-         "-$($_.Key) ""$($_.Value)"""
+        "-$($_.Key) $(Format-LauncherArg ([string]$_.Value))"
     }
 })
 

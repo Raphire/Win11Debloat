@@ -140,6 +140,7 @@
   "ApplyCompletionTitleErrors": "Alterações aplicadas com erros",
   "ApplyCompletionMessageVerificationUnavailable": "Todas as alterações foram aplicadas sem erros, mas o Win11Debloat não conseguiu confirmar que todos os apps selecionados foram desinstalados com sucesso.",
   "WingetUserScopeUninstallDeferred": "O WinGet não conseguiu desinstalar {0} com privilégios de administrador porque ele está instalado para o usuário. Reinicie o PC ou saia e entre novamente como {1} para concluir a remoção.",
+  "WingetAllUsersUninstallDeferred": "O WinGet não conseguiu desinstalar {0} com privilégios de administrador porque ele está instalado para o usuário. A desinstalação será executada quando cada perfil existente entrar e no primeiro acesso dos novos perfis.",
   "ApplyCompletionMessageFailures_one": "{0} alteração falhou. Veja o console para detalhes.",
   "ApplyCompletionMessageFailures_other": "{0} alterações falharam. Veja o console para detalhes.",
   "ApplyCompletionMessageFailures_many": "{0} de alterações falharam. Veja o console para detalhes.",

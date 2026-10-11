@@ -153,6 +153,16 @@ Describe 'Get-NormalizedRegistryValueName' {
     }
 }
 
+Describe 'Test-RegistryValueKindNameSupported' {
+    It 'rejects unsupported kind <KindName>' -ForEach @('99', '-2', 'Unknown', 'None', '') {
+        Test-RegistryValueKindNameSupported -KindName $_ | Should -BeFalse
+    }
+
+    It 'accepts defined kind <KindName>' -ForEach @('String', 'expandstring', 'Binary', 'DWord', 'QWord', 'MultiString', '1') {
+        Test-RegistryValueKindNameSupported -KindName $_ | Should -BeTrue
+    }
+}
+
 Describe 'Normalize-RegistryKeySnapshot' {
     It 'normalizes nested snapshots and supplies value defaults' {
         $snapshot = [PSCustomObject]@{

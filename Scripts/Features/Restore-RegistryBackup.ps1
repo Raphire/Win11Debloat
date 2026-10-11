@@ -137,7 +137,22 @@ function ConvertTo-NormalizedRegistryBackup {
     }
     else {
         try {
-            $allowListValidationErrors = @(Test-RegistryBackupMatchesSelectedFeatures -SelectedFeatureIds @($selectedFeatures) -SelectedUndoFeatureIds @($selectedUndoFeatures) -Target $normalizedTarget -RegistryKeys @($normalizedKeys))
+            $planErrors = New-Object System.Collections.Generic.List[string]
+            $planMap = Get-RegistryBackupValidationPlanMap -SelectedFeatureIds @($selectedFeatures) -SelectedUndoFeatureIds @($selectedUndoFeatures) -Target $normalizedTarget -Errors $planErrors
+            foreach ($planError in $planErrors) {
+                $errors.Add($planError)
+            }
+
+            if ($planErrors.Count -eq 0) {
+                $normalizedKeys = @(ConvertTo-CompatibleRegistryKeySnapshots -RegistryKeys @($normalizedKeys) -PlanMap $planMap)
+                $allowListValidationErrors = @(Test-RegistryBackupAgainstAllowList -RegistryKeys @($normalizedKeys) -PlanMap $planMap)
+                if ($allowListValidationErrors.Count -eq 0) {
+                    Test-RegistryBackupSnapshotsCanBeRestored -RegistryKeys @($normalizedKeys)
+                }
+            }
+            else {
+                $allowListValidationErrors = @()
+            }
             foreach ($allowListValidationError in $allowListValidationErrors) {
                 $errors.Add([string]$allowListValidationError)
             }
@@ -208,6 +223,8 @@ function Restore-RegistryBackupState {
             Restore-RegistryKeySnapshot -Snapshot $rootSnapshot
         }
     }
+
+    Test-RegistryBackupSnapshotsCanBeRestored -RegistryKeys @($Backup.RegistryKeys)
 
     Write-Host "Starting restore for $friendlyTarget."
 

@@ -15,6 +15,7 @@ Describe 'Test-RegistryBackupMatchesSelectedFeatures' {
             ApplyFeature = [PSCustomObject]@{ RegistryKey = 'apply.reg'; RegistryUndoKey = 'undo.reg' }
         }
         $script:CapturePlanCalls = [System.Collections.Generic.List[bool]]::new()
+        Mock Get-RegistryBackupTrustedValueMap { @{} }
         Mock Get-RegistryBackupCapturePlans {
             param($SelectedRegistryFeatures, $UndoRegistryFeatures, $UseSysprepRegFiles)
             $script:CapturePlanCalls.Add([bool]$UseSysprepRegFiles)

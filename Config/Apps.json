@@ -450,14 +450,6 @@
       "RemovalMethod": "Appx"
     },
     {
-      "FriendlyName": "Eclipse Manager",
-      "AppId": "EclipseManager",
-      "Description": "Often related to specific OEM software or utilities (e.g. for managing screen settings)",
-      "SelectedByDefault": true,
-      "Recommendation": "safe",
-      "RemovalMethod": "Appx"
-    },
-    {
       "FriendlyName": "Facebook",
       "AppId": "FACEBOOK.FACEBOOK",
       "Description": "Facebook social media app",

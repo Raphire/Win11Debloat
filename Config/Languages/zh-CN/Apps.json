@@ -223,10 +223,6 @@
     "FriendlyName": "多邻国（Duolingo）",
     "Description": "语言学习应用"
   },
-  "EclipseManager": {
-    "FriendlyName": "设备管理工具（Eclipse Manager）",
-    "Description": "通常与特定设备厂商的软件或实用工具有关，例如屏幕设置管理"
-  },
   "FACEBOOK.FACEBOOK": {
     "FriendlyName": "社交应用（Facebook）",
     "Description": "Facebook 社交应用"

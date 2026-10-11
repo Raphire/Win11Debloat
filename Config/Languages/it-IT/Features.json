@@ -202,6 +202,13 @@
       "UndoLabel": "Abilita le funzionalità IA in Microsoft Edge",
       "ApplyUndoText": "Abilitazione delle funzionalità IA in Microsoft Edge"
     },
+    "DisableChromeAI": {
+      "Label": "Disabilita le funzionalità IA in Google Chrome",
+      "ToolTip": "Disattiva gli strumenti e le integrazioni IA incorporati in Google Chrome, tra cui Gemini, ricerca e suggerimenti basati sull'IA, assistenza alla scrittura, compilazione automatica e altro. Rimuove anche i modelli IA locali. Questa funzionalità utilizza criteri che bloccheranno alcune impostazioni.",
+      "ApplyText": "Disabilitazione delle funzionalità IA in Google Chrome",
+      "UndoLabel": "Abilita le funzionalità IA in Google Chrome",
+      "ApplyUndoText": "Abilitazione delle funzionalità IA in Google Chrome"
+    },
     "DisablePaintAI": {
       "Label": "Disabilita le funzionalità IA in Paint",
       "ToolTip": "Disattiva le funzionalità IA in Paint, come gli strumenti basati sull'IA per la generazione e la modifica delle immagini. Questa funzionalità utilizza criteri che bloccheranno alcune impostazioni.",

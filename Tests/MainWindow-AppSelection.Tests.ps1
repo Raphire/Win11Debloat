@@ -30,19 +30,25 @@ Describe 'Invoke-AppDetailsFromJsonAsync' {
     BeforeEach { $script:GuiWindow = [PSCustomObject]@{} }
 
     It 'resolves translated FriendlyName and Description inside the background runspace' {
-        $appDefinitions = (Get-Content -LiteralPath $script:AppsListFilePath -Raw -Encoding UTF8 | ConvertFrom-Json).Apps
+        $appCatalog = Import-JsonFile -filePath $script:AppsListFilePath
         $result = @(Invoke-AppDetailsFromJsonAsync -OnlyInstalled:$false)
 
-        $result.Count | Should -Be @($appDefinitions).Count
+        $result.Count | Should -Be @($appCatalog.Apps).Count
         $clipchamp = $result | Where-Object { $_.AppId -contains 'Clipchamp.Clipchamp' }
         $clipchamp.FriendlyName | Should -Be 'Clipchamp'
         $clipchamp.Description | Should -Be 'Video editor from Microsoft'
     }
 
     It 'does not return null entries when OnlyInstalled filters the runspace results' {
-        $result = @(Invoke-AppDetailsFromJsonAsync -OnlyInstalled:$true -InstalledList @())
+        $result = Invoke-AppDetailsFromJsonAsync -OnlyInstalled:$true -InstalledList @()
 
-        @($result | Where-Object { -not $_ }).Count | Should -Be 0
+        # The async helper returns $null when no installed apps match.
+        if ($null -eq $result) {
+            $result | Should -BeNullOrEmpty
+        }
+        else {
+            @($result | Where-Object { -not $_ }).Count | Should -Be 0
+        }
     }
 }
 

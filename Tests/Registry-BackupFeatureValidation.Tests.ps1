@@ -30,6 +30,7 @@ Describe 'Test-RegistryBackupMatchesSelectedFeatures' {
     It 'derives an allow list from selected features and accepts a matching snapshot' {
         $snapshot = [PSCustomObject]@{
             Path = 'HKEY_CURRENT_USER\Software\Example'
+            Exists = $true
             Values = @([PSCustomObject]@{ Name = 'Enabled'; Exists = $true; Kind = 'DWord'; Data = 1 })
             SubKeys = @()
         }

@@ -101,9 +101,9 @@ function Get-NormalizedSelectedUndoFeatureIdsFromBackup {
         Normalizes a raw registry key snapshot into a consistent shape, recursing into sub-keys.
 
     .DESCRIPTION
-        Fills in defaults for optional properties (Exists, Values, SubKeys) so downstream
+        Fills in defaults for optional properties (Values, SubKeys) so downstream
         validation can read a predictable shape regardless of what the backup file omitted.
-        Throws if Path is missing, since every snapshot must be anchored to a real key.
+        Requires Path and a Boolean Exists to avoid interpreting missing data as deletion.
 #>
 function Normalize-RegistryKeySnapshot {
     param(
@@ -115,9 +115,8 @@ function Normalize-RegistryKeySnapshot {
         throw (Get-Translation -Key 'BackupSnapshotMissingPath')
     }
 
-    $exists = $false
-    if ($Snapshot.PSObject.Properties['Exists']) {
-        $exists = [bool]$Snapshot.Exists
+    if (-not $Snapshot.PSObject.Properties['Exists'] -or $Snapshot.Exists -isnot [bool]) {
+        throw (Get-Translation -Key 'BackupSnapshotInvalidExists' -FormatArgs @($Snapshot.Path))
     }
 
     $values = @()
@@ -146,7 +145,7 @@ function Normalize-RegistryKeySnapshot {
 
     return [PSCustomObject]@{
         Path = [string]$Snapshot.Path
-        Exists = $exists
+        Exists = $Snapshot.Exists
         Values = @($values)
         SubKeys = @($subKeys)
     }
@@ -287,6 +286,7 @@ function New-RegistryBackupAllowListPlanMap {
             NormalizedPath = $normalizedPath
             IncludeSubKeys = [bool]$plan.IncludeSubKeys
             CaptureAllValues = [bool]$plan.CaptureAllValues
+            AllowDeleteKey = [bool]$plan.AllowDeleteKey
             ValueNames = ConvertTo-RegistryValueNameSet -ValueNames @($plan.ValueNames)
         }
     }
@@ -347,6 +347,15 @@ function Test-RegistrySnapshotAgainstAllowList {
     if ($null -eq $planMatch) {
         $Errors.Add((Get-Translation -Key 'BackupUnexpectedRegistryPath' -FormatArgs @($snapshotPath)))
         return
+    }
+
+    if (-not $Snapshot.PSObject.Properties['Exists'] -or $Snapshot.Exists -isnot [bool]) {
+        $Errors.Add((Get-Translation -Key 'BackupSnapshotInvalidExists' -FormatArgs @($snapshotPath)))
+        return
+    }
+
+    if (-not $Snapshot.Exists -and -not (Test-RegistryKeyDeletionAllowed -NormalizedPath $normalizedPath -PlanMap $PlanMap)) {
+        $Errors.Add((Get-Translation -Key 'BackupUnexpectedKeyDeletion' -FormatArgs @($snapshotPath)))
     }
 
     foreach ($valueSnapshot in @($Snapshot.Values)) {
@@ -485,6 +494,34 @@ function Get-NormalizedRegistryValueName {
     }
 
     return [string]$ValueName
+}
+
+<#
+    .SYNOPSIS
+        Checks whether selected feature operations authorize deletion of a key tree.
+
+    .DESCRIPTION
+        Only DeleteKey operations grant this permission. Checks all plans so an exact
+        value-only plan cannot hide a recursive deletion allowed by an ancestor.
+#>
+function Test-RegistryKeyDeletionAllowed {
+    param(
+        [Parameter(Mandatory)]
+        [string]$NormalizedPath,
+        [Parameter(Mandatory)]
+        [hashtable]$PlanMap
+    )
+
+    foreach ($plan in $PlanMap.Values) {
+        if (-not $plan.AllowDeleteKey) { continue }
+
+        if ($NormalizedPath.Equals($plan.NormalizedPath, [System.StringComparison]::OrdinalIgnoreCase) -or
+            ($plan.IncludeSubKeys -and $NormalizedPath.StartsWith("$($plan.NormalizedPath)\", [System.StringComparison]::OrdinalIgnoreCase))) {
+            return $true
+        }
+    }
+
+    return $false
 }
 
 function Find-RegistryAllowListPlanMatch {

@@ -359,6 +359,19 @@ function Request-EdgeForceRemove {
     return $false
 }
 
+<#
+    .SYNOPSIS
+    Resolves the user scope for deferred WinGet uninstall tasks.
+
+    .DESCRIPTION
+    Uses the selected app-removal target and launch parameters to determine
+    whether tasks apply to all users or a single user, including the Default profile.
+
+    .OUTPUTS
+    System.Management.Automation.PSCustomObject. AllUsers (Boolean) indicates
+    whether to schedule for all users. UserName (String) identifies the target
+    account or Default profile when AllUsers is false.
+#>
 function Get-RunOnceWingetTarget {
     $appRemovalTarget = Get-TargetUserForAppRemoval
     $hasExplicitAppRemovalTarget = $script:Params.ContainsKey('AppRemovalTarget')
@@ -391,21 +404,34 @@ function Get-RunOnceWingetTarget {
     }
 }
 
+<#
+    .SYNOPSIS
+    Returns the profile targets for deferred AllUsers WinGet uninstall tasks.
+
+    .DESCRIPTION
+    Lists resolvable accounts with non-special profiles containing NTUSER.DAT.
+    Includes Default so the task also applies to profiles created later.
+    Profiles whose SIDs cannot be resolved are skipped with a warning.
+
+    .OUTPUTS
+    System.String[]. Account names and the Default entry. Returns an empty array
+    if profile enumeration fails, which Set-RunOnceWingetTask treats as a failure.
+#>
 function Get-RunOnceWingetTargetUserNames {
     $targetUsers = New-Object 'System.Collections.Generic.List[string]'
     $seenSids = @{}
 
     try {
-        foreach ($profile in @(Get-CimInstance -ClassName Win32_UserProfile -ErrorAction Stop)) {
-            if ($profile.Special -or [string]::IsNullOrWhiteSpace([string]$profile.SID) -or
-                [string]::IsNullOrWhiteSpace([string]$profile.LocalPath)) {
+        foreach ($userProfile in @(Get-CimInstance -ClassName Win32_UserProfile -ErrorAction Stop)) {
+            if ($userProfile.Special -or [string]::IsNullOrWhiteSpace([string]$userProfile.SID) -or
+                [string]::IsNullOrWhiteSpace([string]$userProfile.LocalPath)) {
                 continue
             }
 
-            $hivePath = Join-Path $profile.LocalPath 'NTUSER.DAT'
+            $hivePath = Join-Path $userProfile.LocalPath 'NTUSER.DAT'
             if (-not (Test-Path -LiteralPath $hivePath)) { continue }
 
-            $sid = [string]$profile.SID
+            $sid = [string]$userProfile.SID
             if ($seenSids.ContainsKey($sid)) { continue }
 
             try {

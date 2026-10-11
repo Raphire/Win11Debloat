@@ -24,8 +24,8 @@
     "Description": "Monitoraggio e notizie su salute e fitness tramite Bing (discontinuato)"
   },
   "Microsoft.BingNews": {
-    "FriendlyName": "Bing News",
-    "Description": "Aggregatore di notizie Bing (discontinuato)"
+    "FriendlyName": "Microsoft News",
+    "Description": "App di aggregazione di notizie. Riunisce le ultime notizie, feed di articoli personalizzati e notizie di attualità da tutto il mondo"
   },
   "Microsoft.BingSports": {
     "FriendlyName": "Bing Sports",
@@ -94,10 +94,6 @@
   "Microsoft.NetworkSpeedTest": {
     "FriendlyName": "Network Speed Test",
     "Description": "Utilità per testare la velocità della connessione Internet"
-  },
-  "Microsoft.News": {
-    "FriendlyName": "Microsoft News",
-    "Description": "App Microsoft News per Windows"
   },
   "Microsoft.Office.OneNote": {
     "FriendlyName": "OneNote",

@@ -24,8 +24,8 @@
     "Description": "Bing による健康・フィットネスの記録とニュースです (提供終了)"
   },
   "Microsoft.BingNews": {
-    "FriendlyName": "Bing News",
-    "Description": "Bing によるニュース アグリゲーターです (提供終了)"
+    "FriendlyName": "Microsoft ニュース",
+    "Description": "ニュースを集約するアプリです。速報、パーソナライズされた記事フィード、世界の時事ニュースをまとめて提供します"
   },
   "Microsoft.BingSports": {
     "FriendlyName": "Bing Sports",
@@ -94,10 +94,6 @@
   "Microsoft.NetworkSpeedTest": {
     "FriendlyName": "Network Speed Test",
     "Description": "インターネット接続速度のテスト ユーティリティです"
-  },
-  "Microsoft.News": {
-    "FriendlyName": "Microsoft ニュース",
-    "Description": "Windows 向け Microsoft ニュース アプリです"
   },
   "Microsoft.Office.OneNote": {
     "FriendlyName": "OneNote",

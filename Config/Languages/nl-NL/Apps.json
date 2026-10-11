@@ -24,8 +24,8 @@
     "Description": "Houdt je gezondheid en conditie bij en toont nieuws via Bing (niet meer ondersteund)"
   },
   "Microsoft.BingNews": {
-    "FriendlyName": "Bing News",
-    "Description": "Nieuws via Bing (niet meer beschikbaar)"
+    "FriendlyName": "Microsoft Nieuws",
+    "Description": "Nieuwsapp die het laatste nieuws, gepersonaliseerde artikelfeeds en actualiteiten uit de hele wereld samenbrengt"
   },
   "Microsoft.BingSports": {
     "FriendlyName": "Bing Sport",
@@ -94,10 +94,6 @@
   "Microsoft.NetworkSpeedTest": {
     "FriendlyName": "Network Speed Test",
     "Description": "Meet de snelheid van je internetverbinding"
-  },
-  "Microsoft.News": {
-    "FriendlyName": "Microsoft Nieuws",
-    "Description": "Microsoft News-app voor Windows"
   },
   "Microsoft.Office.OneNote": {
     "FriendlyName": "OneNote",

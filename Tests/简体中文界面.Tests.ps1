@@ -50,6 +50,14 @@ Describe '简体中文界面语言' {
     }
 
     It '所有界面格式占位符与英文一致' {
+        <#
+            .SYNOPSIS
+                Recursively checks non-empty translations and matching format placeholders.
+            .PARAMETER en
+                English resource object used as the reference.
+            .PARAMETER zh
+                Corresponding Simplified Chinese resource object to validate.
+        #>
         function Assert-TranslationValues($en, $zh) {
             foreach ($property in $en.PSObject.Properties) {
                 $value = $zh.($property.Name)

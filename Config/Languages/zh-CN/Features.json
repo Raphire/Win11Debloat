@@ -90,38 +90,38 @@
     },
     "DisableCopilot": {
       "Label": "禁用 Microsoft Copilot",
-      "ToolTip": "禁用并卸载 Windows 内置的 人工智能 助手 Microsoft Copilot。",
+      "ToolTip": "禁用并卸载 Windows 内置的AI助手 Microsoft Copilot。",
       "ApplyText": "正在禁用 Microsoft Copilot",
       "UndoLabel": "启用 Microsoft Copilot",
       "ApplyUndoText": "正在启用 Microsoft Copilot"
     },
     "DisableRecall": {
       "Label": "禁用 Windows 回顾（Recall）",
-      "ToolTip": "禁用 Windows 回顾（Recall）。该 人工智能 功能可快速访问最近使用的文件、应用和活动。此功能通过策略实现，会锁定部分设置。",
+      "ToolTip": "禁用 Windows 回顾（Recall）。该AI功能可快速访问最近使用的文件、应用和活动。此功能通过策略实现，会锁定部分设置。",
       "ApplyText": "正在禁用 Windows 回顾（Recall）",
       "UndoLabel": "启用 Windows 回顾（Recall）",
       "ApplyUndoText": "正在启用 Windows 回顾（Recall）"
     },
     "DisableClickToDo": {
-      "Label": "禁用“单击以执行”的 人工智能 文本与图像分析",
-      "ToolTip": "禁用“单击以执行”（Click to Do）。该功能在 Windows 中提供 人工智能 文本与图像分析。此功能通过策略实现，会锁定部分设置。",
+      "Label": "禁用“单击以执行”的AI文本与图像分析",
+      "ToolTip": "禁用“单击以执行”（Click to Do）。该功能在 Windows 中提供AI文本与图像分析。此功能通过策略实现，会锁定部分设置。",
       "ApplyText": "正在禁用“单击以执行”",
-      "UndoLabel": "启用“单击以执行”的 人工智能 文本与图像分析",
+      "UndoLabel": "启用“单击以执行”的AI文本与图像分析",
       "ApplyUndoText": "正在启用“单击以执行”"
     },
     "DisableAISvcAutoStart": {
-      "Label": "阻止 人工智能 服务自动启动",
+      "Label": "阻止AI服务自动启动",
       "ToolTip": "将 WSAIFabricSvc 服务设为手动启动，阻止它随 Windows 自动启动。",
-      "ApplyText": "正在阻止 人工智能 服务自动启动",
-      "UndoLabel": "允许 人工智能 服务自动启动",
-      "ApplyUndoText": "正在允许 人工智能 服务自动启动"
+      "ApplyText": "正在阻止AI服务自动启动",
+      "UndoLabel": "允许AI服务自动启动",
+      "ApplyUndoText": "正在允许AI服务自动启动"
     },
     "DisableDVR": {
-      "Label": "禁用 Xbox 游戏和屏幕录制",
-      "ToolTip": "禁用 Game Bar 应用提供的 Xbox 游戏和屏幕录制功能。此功能通过策略实现，会锁定部分设置。",
-      "ApplyText": "正在禁用 Xbox 游戏和屏幕录制",
-      "UndoLabel": "启用 Xbox 游戏和屏幕录制",
-      "ApplyUndoText": "正在启用 Xbox 游戏和屏幕录制"
+      "Label": "禁用 Xbox 游戏录制和屏幕录制",
+      "ToolTip": "禁用 Game Bar 应用提供的 Xbox 游戏录制和屏幕录制功能。此功能通过策略实现，会锁定部分设置。",
+      "ApplyText": "正在禁用 Xbox 游戏录制和屏幕录制",
+      "UndoLabel": "启用 Xbox 游戏录制和屏幕录制",
+      "ApplyUndoText": "正在启用 Xbox 游戏录制和屏幕录制"
     },
     "DisableGameBarIntegration": {
       "Label": "禁用 Game Bar 集成",
@@ -131,12 +131,12 @@
       "ApplyUndoText": "正在启用 Game Bar 集成"
     },
     "ClearStart": {
-      "Label": "仅移除当前用户开始菜单中的所有固定应用",
-      "ApplyText": "正在移除开始菜单中的所有固定应用"
+      "Label": "仅取消当前用户开始菜单中所有应用的固定",
+      "ApplyText": "正在取消开始菜单中所有应用的固定"
     },
     "ClearStartAllUsers": {
-      "Label": "移除所有现有用户和新用户开始菜单中的所有固定应用",
-      "ApplyText": "正在移除所有用户开始菜单中的所有固定应用"
+      "Label": "取消所有现有用户和新用户开始菜单中所有应用的固定",
+      "ApplyText": "正在取消所有用户开始菜单中所有应用的固定"
     },
     "ReplaceStart": {
       "Label": "仅使用提供的模板文件替换当前用户的开始菜单布局",
@@ -196,32 +196,32 @@
       "ApplyUndoText": "正在启用“设置”主页"
     },
     "DisableChromeAI": {
-      "Label": "禁用 Google Chrome 中的人工智能功能",
-      "ToolTip": "禁用 Google Chrome 内置的人工智能工具及集成功能，包括 Gemini、人工智能搜索与建议、写作辅助、自动填充等，同时移除本地人工智能模型。此功能通过策略实现，会锁定部分设置。",
-      "ApplyText": "正在禁用 Google Chrome 中的人工智能功能",
-      "UndoLabel": "启用 Google Chrome 中的人工智能功能",
-      "ApplyUndoText": "正在启用 Google Chrome 中的人工智能功能"
+      "Label": "禁用 Google Chrome 中的AI功能",
+      "ToolTip": "禁用 Google Chrome 内置的AI工具及集成功能，包括 Gemini、AI搜索与建议、写作辅助、自动填充等，同时移除本地AI模型。此功能通过策略实现，会锁定部分设置。",
+      "ApplyText": "正在禁用 Google Chrome 中的AI功能",
+      "UndoLabel": "启用 Google Chrome 中的AI功能",
+      "ApplyUndoText": "正在启用 Google Chrome 中的AI功能"
     },
     "DisableEdgeAI": {
-      "Label": "禁用 Microsoft Edge 中的 人工智能 功能",
-      "ToolTip": "关闭 Microsoft Edge 中的 人工智能 功能，例如 人工智能 侧边栏和 Copilot。此功能通过策略实现，会锁定部分设置。",
-      "ApplyText": "正在禁用 Microsoft Edge 中的 人工智能 功能",
-      "UndoLabel": "启用 Microsoft Edge 中的 人工智能 功能",
-      "ApplyUndoText": "正在启用 Microsoft Edge 中的 人工智能 功能"
+      "Label": "禁用 Microsoft Edge 中的AI功能",
+      "ToolTip": "关闭 Microsoft Edge 中的AI功能，例如AI侧边栏和 Copilot。此功能通过策略实现，会锁定部分设置。",
+      "ApplyText": "正在禁用 Microsoft Edge 中的AI功能",
+      "UndoLabel": "启用 Microsoft Edge 中的AI功能",
+      "ApplyUndoText": "正在启用 Microsoft Edge 中的AI功能"
     },
     "DisablePaintAI": {
-      "Label": "禁用画图中的 人工智能 功能",
-      "ToolTip": "关闭画图中的 人工智能 功能，例如 人工智能 图像生成和编辑工具。此功能通过策略实现，会锁定部分设置。",
-      "ApplyText": "正在禁用画图中的 人工智能 功能",
-      "UndoLabel": "启用画图中的 人工智能 功能",
-      "ApplyUndoText": "正在启用画图中的 人工智能 功能"
+      "Label": "禁用画图中的AI功能",
+      "ToolTip": "关闭画图中的AI功能，例如AI图像生成和编辑工具。此功能通过策略实现，会锁定部分设置。",
+      "ApplyText": "正在禁用画图中的AI功能",
+      "UndoLabel": "启用画图中的AI功能",
+      "ApplyUndoText": "正在启用画图中的AI功能"
     },
     "DisableNotepadAI": {
-      "Label": "禁用记事本中的 人工智能 功能",
-      "ToolTip": "关闭记事本中的 人工智能 功能，例如 人工智能 写作建议。此功能通过策略实现，会锁定部分设置。",
-      "ApplyText": "正在禁用记事本中的 人工智能 功能",
-      "UndoLabel": "启用记事本中的 人工智能 功能",
-      "ApplyUndoText": "正在启用记事本中的 人工智能 功能"
+      "Label": "禁用记事本中的AI功能",
+      "ToolTip": "关闭记事本中的AI功能，例如AI写作建议。此功能通过策略实现，会锁定部分设置。",
+      "ApplyText": "正在禁用记事本中的AI功能",
+      "UndoLabel": "启用记事本中的AI功能",
+      "ApplyUndoText": "正在启用记事本中的AI功能"
     },
     "EnableDarkMode": {
       "Label": "为系统和应用启用深色主题",
@@ -586,11 +586,11 @@
       "ApplyUndoText": "正在显示右键菜单中的“共享”"
     },
     "DisableBraveBloat": {
-      "Label": "禁用 Brave 浏览器中的附加功能（人工智能、加密货币等）",
-      "ToolTip": "禁用 Brave 内置的 人工智能、加密货币钱包、新闻、Rewards、Talk 和 VPN 功能。此功能通过策略实现，会锁定部分设置。",
-      "ApplyText": "正在禁用 Brave 浏览器中的 人工智能、加密货币、新闻、Rewards、Talk 和 VPN",
-      "UndoLabel": "启用 Brave 浏览器功能（人工智能、加密货币等）",
-      "ApplyUndoText": "正在启用 Brave 浏览器中的 人工智能、加密货币、新闻、Rewards、Talk 和 VPN"
+      "Label": "禁用 Brave 浏览器中的附加功能（AI、加密货币等）",
+      "ToolTip": "禁用 Brave 内置的AI、加密货币钱包、新闻、Rewards、Talk 和 VPN 功能。此功能通过策略实现，会锁定部分设置。",
+      "ApplyText": "正在禁用 Brave 浏览器中的AI、加密货币、新闻、Rewards、Talk 和 VPN",
+      "UndoLabel": "启用 Brave 浏览器功能（AI、加密货币等）",
+      "ApplyUndoText": "正在启用 Brave 浏览器中的AI、加密货币、新闻、Rewards、Talk 和 VPN"
     },
     "EnableWindowsSandbox": {
       "Label": "启用 Windows 沙盒",
@@ -700,11 +700,11 @@
       }
     },
     "ClearStart": {
-      "Label": "移除开始菜单中的固定应用",
-      "ToolTip": "快速移除开始菜单中的所有固定应用。",
+      "Label": "取消开始菜单中的应用固定",
+      "ToolTip": "快速取消开始菜单中所有应用的固定，不会卸载应用。",
       "Values": {
-        "ClearStart": "为所选用户移除",
-        "ClearStartAllUsers": "为所有用户移除"
+        "ClearStart": "为所选用户取消固定",
+        "ClearStartAllUsers": "为所有用户取消固定"
       }
     },
     "ExplorerLocation": {

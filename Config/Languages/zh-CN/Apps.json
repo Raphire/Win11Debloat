@@ -44,12 +44,12 @@
     "Description": "必应天气预报"
   },
   "XP9CXNGPPJ97XX": {
-    "FriendlyName": "人工智能助手（Microsoft Copilot）",
-    "Description": "集成在 Windows 中的人工智能助手"
+    "FriendlyName": "AI助手（Microsoft Copilot）",
+    "Description": "集成在 Windows 中的AI助手"
   },
   "Microsoft.Windows.AIHub": {
-    "FriendlyName": "Copilot+ 人工智能 中心",
-    "Description": "Copilot+ 人工智能 中心应用（Windows 11 24H2 及更高版本）"
+    "FriendlyName": "Copilot+ AI中心",
+    "Description": "Copilot+ AI中心应用（Windows 11 24H2 及更高版本）"
   },
   "Microsoft.PCManager": {
     "FriendlyName": "微软电脑管家",
@@ -464,8 +464,8 @@
     "Description": "LG 提供的显示器控制软件；连接 LG 显示器时，Windows 更新可能会自动重新安装此应用"
   },
   "AD2F1837.HPAIExperienceCenter": {
-    "FriendlyName": "HP 人工智能 体验中心",
-    "Description": "惠普预装软件，提供人工智能增强功能和支持服务"
+    "FriendlyName": "HP AI体验中心",
+    "Description": "惠普预装软件，提供AI增强功能和支持服务"
   },
   "AD2F1837.HPConnectedMusic": {
     "FriendlyName": "惠普音乐（HP Connected Music）",
@@ -480,7 +480,7 @@
     "Description": "惠普预装的桌面支持工具"
   },
   "AD2F1837.HPEasyClean": {
-    "FriendlyName": "惠普清理（HP Easy Clean）",
+    "FriendlyName": "惠普设备清洁(HP Easy Clean)",
     "Description": "暂时禁用输入设备，方便清洁设备"
   },
   "AD2F1837.HPFileViewer": {
@@ -524,8 +524,8 @@
     "Description": "惠普预装软件，提供支持、更新和故障排查功能"
   },
   "AD2F1837.HPSureShieldAI": {
-    "FriendlyName": "惠普安全防护（HP Sure Shield 人工智能）",
-    "Description": "惠普预装安全软件，可能用于基于人工智能的威胁防护"
+    "FriendlyName": "惠普安全防护（HP Sure Shield AI）",
+    "Description": "惠普预装安全软件，可能用于基于AI的威胁防护"
   },
   "AD2F1837.HPSystemInformation": {
     "FriendlyName": "HP 系统信息",
@@ -544,7 +544,7 @@
     "Description": "惠普预装的设备信息、支持和服务入口"
   },
   "E046963F.LenovoCompanion": {
-    "FriendlyName": "联想电脑管家（Lenovo Vantage）",
+    "FriendlyName": "Lenovo Vantage",
     "Description": "联想预装软件，用于管理设备设置、更新和支持服务"
   },
   "LenovoCompanyLimited.LenovoVantageService": {

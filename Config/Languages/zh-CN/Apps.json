@@ -24,8 +24,8 @@
     "Description": "必应健康与健身记录及资讯（已停止维护）"
   },
   "Microsoft.BingNews": {
-    "FriendlyName": "必应资讯",
-    "Description": "通过必应聚合新闻（已停止支持）"
+    "FriendlyName": "Microsoft 资讯",
+    "Description": "新闻聚合应用，汇集突发新闻、个性化文章推送和全球时事资讯"
   },
   "Microsoft.BingSports": {
     "FriendlyName": "必应体育",
@@ -94,10 +94,6 @@
   "Microsoft.NetworkSpeedTest": {
     "FriendlyName": "网络速度测试",
     "Description": "互联网连接速度测试工具"
-  },
-  "Microsoft.News": {
-    "FriendlyName": "Microsoft 资讯",
-    "Description": "适用于 Windows 的 Microsoft 新闻应用"
   },
   "Microsoft.Office.OneNote": {
     "FriendlyName": "笔记（OneNote）",

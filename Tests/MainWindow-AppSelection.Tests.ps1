@@ -30,9 +30,10 @@ Describe 'Invoke-AppDetailsFromJsonAsync' {
     BeforeEach { $script:GuiWindow = [PSCustomObject]@{} }
 
     It 'resolves translated FriendlyName and Description inside the background runspace' {
+        $appDefinitions = (Get-Content -LiteralPath $script:AppsListFilePath -Raw -Encoding UTF8 | ConvertFrom-Json).Apps
         $result = @(Invoke-AppDetailsFromJsonAsync -OnlyInstalled:$false)
 
-        $result.Count | Should -Be 141
+        $result.Count | Should -Be @($appDefinitions).Count
         $clipchamp = $result | Where-Object { $_.AppId -contains 'Clipchamp.Clipchamp' }
         $clipchamp.FriendlyName | Should -Be 'Clipchamp'
         $clipchamp.Description | Should -Be 'Video editor from Microsoft'

@@ -206,17 +206,24 @@ function Format-LauncherArg([string]$Value) {
     return '"' + $escaped + '"'
 }
 
-# Make list of arguments to pass on to the script (exclude the -Dev switch, which only affects this launcher)
-$arguments = @($PSBoundParameters.GetEnumerator() | Where-Object { $_.Key -ne 'Dev' } | ForEach-Object {
-    if ($_.Value -is [System.Management.Automation.SwitchParameter]) {
-        if ($_.Value.IsPresent) {
-            "-$($_.Key)"
+# Build the list of arguments to pass on to the script (excludes the -Dev switch, which only affects this launcher).
+# Takes the bound parameters as input so it can be tested without running the launcher.
+function Get-LauncherArgumentList([System.Collections.IDictionary]$BoundParameters) {
+    foreach ($entry in $BoundParameters.GetEnumerator()) {
+        if ($entry.Key -eq 'Dev') { continue }
+
+        if ($entry.Value -is [System.Management.Automation.SwitchParameter]) {
+            if ($entry.Value.IsPresent) {
+                "-$($entry.Key)"
+            }
+        }
+        else {
+            "-$($entry.Key) $(Format-LauncherArg ([string]$entry.Value))"
         }
     }
-    else {
-        "-$($_.Key) $(Format-LauncherArg ([string]$_.Value))"
-    }
-})
+}
+
+$arguments = @(Get-LauncherArgumentList $PSBoundParameters)
 
 Write-Output ""
 Write-Output "> Launching Win11Debloat..."

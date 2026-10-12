@@ -23,7 +23,7 @@ BeforeAll {
                     if ($i -lt $length -and $CommandLine[$i] -eq '"') {
                         # 2n backslashes before a quote give n backslashes and the quote toggles quoting;
                         # 2n+1 give n backslashes and a literal quote.
-                        [void]$current.Append([string]::new([char]'\', [math]::Floor($backslashes / 2)))
+                        [void]$current.Append([string]::new([char]'\', [int][math]::Floor($backslashes / 2)))
                         if ($backslashes % 2 -eq 1) { [void]$current.Append('"'); $i++ }
                     }
                     else {
@@ -54,17 +54,19 @@ BeforeAll {
         , $result.ToArray()
     }
 
-    # Load only Format-LauncherArg from the launcher; dot-sourcing Get.ps1 would download and run the script.
+    # Load only the argument functions from the launcher; dot-sourcing Get.ps1 would download and run the script.
     $tokens = $null
     $parseErrors = $null
     $ast = [System.Management.Automation.Language.Parser]::ParseFile((Join-Path $PSScriptRoot '..\Scripts\Get.ps1'), [ref]$tokens, [ref]$parseErrors)
     $parseErrors | Should -BeNullOrEmpty
-    $function = $ast.Find({
-        param($node)
-        $node -is [System.Management.Automation.Language.FunctionDefinitionAst] -and $node.Name -eq 'Format-LauncherArg'
-    }, $true)
-    $function | Should -Not -BeNullOrEmpty
-    . ([scriptblock]::Create($function.Extent.Text))
+    foreach ($functionName in 'Format-LauncherArg', 'Get-LauncherArgumentList') {
+        $function = $ast.Find({
+            param($node)
+            $node -is [System.Management.Automation.Language.FunctionDefinitionAst] -and $node.Name -eq $functionName
+        }, $true)
+        $function | Should -Not -BeNullOrEmpty
+        . ([scriptblock]::Create($function.Extent.Text))
+    }
 }
 
 Describe 'Split-WindowsCommandLine (test helper)' {
@@ -101,5 +103,32 @@ Describe 'Format-LauncherArg' {
         $parsed | Should -HaveCount 3
         $parsed[1] | Should -BeExactly '-Param'
         $parsed[2] | Should -BeExactly $Value
+    }
+}
+
+Describe 'Get-LauncherArgumentList' {
+    It 'quotes string values, forwards present switches and drops absent switches and -Dev' {
+        $arguments = @(Get-LauncherArgumentList ([ordered]@{
+                    LogPath          = 'C:\Log Files\'
+                    Apps             = 'Microsoft.A, "B"'
+                    Silent           = [switch]$true
+                    DisableTelemetry = [switch]$false
+                    Dev              = [switch]$true
+                }))
+
+        $arguments | Should -HaveCount 3
+        $parsed = Split-WindowsCommandLine ('launcher.exe ' + ($arguments -join ' '))
+        $parsed | Should -HaveCount 6
+        $parsed[0] | Should -BeExactly 'launcher.exe'
+        $parsed[1] | Should -BeExactly '-LogPath'
+        $parsed[2] | Should -BeExactly 'C:\Log Files\'
+        $parsed[3] | Should -BeExactly '-Apps'
+        $parsed[4] | Should -BeExactly 'Microsoft.A, "B"'
+        $parsed[5] | Should -BeExactly '-Silent'
+        ($arguments -join ' ') | Should -Not -Match 'DisableTelemetry|Dev'
+    }
+
+    It 'returns nothing when there are no parameters' {
+        @(Get-LauncherArgumentList @{}) | Should -HaveCount 0
     }
 }

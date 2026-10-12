@@ -84,7 +84,7 @@
   "TweaksPresetAIAutomationName": "Alle AI-functies",
   "TweaksPresetAITooltip": "Alle AI-aanpassingen selecteren",
   "TweaksDetectApplied": "Toegepaste aanpassingen herkennen",
-  "TweaksDetectAppliedTooltip": "Nagaan welke aanpassingen al voor de huidige gebruiker zijn toegepast",
+  "TweaksDetectAppliedTooltip": "Aanpassingen herkennen die al voor de huidige gebruiker zijn toegepast",
   "TweaksSearchPlaceholder": "Aanpassingen zoeken...",
   "TweaksSearchAutomationName": "Aanpassingen zoeken",
   "DeployTabHeader": "Instellingen",

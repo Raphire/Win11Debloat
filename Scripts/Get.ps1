@@ -71,7 +71,7 @@ param (
     [switch]$DisablePaintAI,
     [switch]$DisableNotepadAI,
     [switch]$DisableEdgeAI,
-	[switch]$DisableChromeAI,
+    [switch]$DisableChromeAI,
     [switch]$DisableWidgets,
     [switch]$HideChat,
     [switch]$EnableEndTask,
@@ -106,6 +106,9 @@ param (
     [switch]$ShowNetworkDriveLettersFirst,
     [switch]$HideDriveLetters
 )
+
+# detect ui language before elevation (win10 ltsc loses culture in elevated proc)
+$detectedLanguage = $Language -or [System.Globalization.CultureInfo]::CurrentUICulture.Name
 
 # Check if current PowerShell environment is limited by security policies
 if ($ExecutionContext.SessionState.LanguageMode -ne "FullLanguage") {
@@ -200,11 +203,16 @@ if (Test-Path "$backupDir") {
 $arguments = $($PSBoundParameters.GetEnumerator() | Where-Object { $_.Key -ne 'Dev' } | ForEach-Object {
     if ($_.Value -eq $true) {
         "-$($_.Key)"
-    } 
+    }
     else {
          "-$($_.Key) ""$($_.Value)"""
     }
 })
+
+# pass detected language if user didn't override
+if (-not $PSBoundParameters.ContainsKey('Language')) {
+    $arguments += "-Language \"$detectedLanguage\""
+}
 
 Write-Output ""
 Write-Output "> Launching Win11Debloat..."

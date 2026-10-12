@@ -212,6 +212,8 @@ Describe 'Remove-WinGetApp' {
     }
 
     It 'defers a user-scope uninstall when WinGet returns the administrator-context error code' {
+        $script:Params = @{ AppRemovalTarget = 'CurrentUser' }
+        Mock Get-TargetUserForAppRemoval { 'CurrentUser' }
         Mock Invoke-NonBlocking { [PSCustomObject]@{ ExitCode = -1978335107; Output = @('localized WinGet error') } }
 
         Remove-WinGetApp -app 'One.App' | Should -BeTrue
@@ -377,5 +379,112 @@ Describe 'Set-RunOnceWingetTask' {
         $encodedCommand = $script:runOnceOperation.ValueData -replace '^powershell\.exe -NoProfile -EncodedCommand ', ''
         $decodedCommand = [System.Text.Encoding]::Unicode.GetString([Convert]::FromBase64String($encodedCommand))
         $decodedCommand | Should -Be "winget uninstall --accept-source-agreements --disable-interactivity --id 'Vendor.App&''Test'"
+    }
+
+    It 'schedules every resolved target but reports incomplete profile enumeration' {
+        Mock Get-RunOnceWingetTargetUserNames {
+            [PSCustomObject]@{ UserNames = @('Alice', 'Default'); Success = $false }
+        }
+
+        Set-RunOnceWingetTask -appId 'One.App' -Target ([PSCustomObject]@{ AllUsers = $true }) | Should -BeFalse
+
+        Should -Invoke Invoke-WithTargetUserHive -Times 1 -Exactly -ParameterFilter { $TargetUserName -eq 'Alice' }
+        Should -Invoke Invoke-WithTargetUserHive -Times 1 -Exactly -ParameterFilter { $TargetUserName -eq 'Default' }
+    }
+
+    It 'reports success when all profile targets are scheduled' {
+        Mock Get-RunOnceWingetTargetUserNames {
+            [PSCustomObject]@{ UserNames = @('Alice', 'Default'); Success = $true }
+        }
+
+        Set-RunOnceWingetTask -appId 'One.App' -Target ([PSCustomObject]@{ AllUsers = $true }) | Should -BeTrue
+
+        Should -Invoke Invoke-WithTargetUserHive -Times 2 -Exactly
+    }
+
+    It 'continues scheduling other profiles after a hive failure and reports failure' {
+        Mock Get-RunOnceWingetTargetUserNames {
+            [PSCustomObject]@{ UserNames = @('Alice', 'Default'); Success = $true }
+        }
+        Mock Invoke-WithTargetUserHive { throw 'hive unavailable' } -ParameterFilter { $TargetUserName -eq 'Alice' }
+        Mock Write-Error {}
+
+        Set-RunOnceWingetTask -appId 'One.App' -Target ([PSCustomObject]@{ AllUsers = $true }) | Should -BeFalse
+
+        Should -Invoke Invoke-WithTargetUserHive -Times 1 -Exactly -ParameterFilter { $TargetUserName -eq 'Default' }
+    }
+}
+
+Describe 'AllUsers deferred WinGet profile enumeration' {
+    BeforeEach {
+        $script:Params = @{}
+        $script:WingetInstalled = $true
+        $script:WingetDeferredRemovals = @{}
+        $script:AppRemovalFailures = 0
+        $script:CancelRequested = $false
+        $script:ApplySubStepCallback = $null
+        Mock Get-CimInstance {
+            @(
+                [PSCustomObject]@{ Special = $false; SID = 'S-1-5-18'; LocalPath = 'C:\Users\Resolved' }
+                [PSCustomObject]@{ Special = $false; SID = 'S-1-5-21-0-0-0-1001'; LocalPath = 'C:\Users\Unresolved' }
+            )
+        }
+        Mock Test-Path { $true }
+        Mock Write-Warning {}
+        Mock Write-Host {}
+        Mock Get-AppRemovalMethod { 'WinGet' }
+        Mock Invoke-NonBlocking { [PSCustomObject]@{ ExitCode = -1978335107; Output = @() } }
+        Mock Invoke-WithTargetUserHive {}
+        Mock Get-WingetInstalledApps { return ,@() }
+        Mock Test-AppInWingetList { $false }
+    }
+
+    It 'keeps resolved profiles and Default while returning a SID translation failure' {
+        $result = Get-RunOnceWingetTargetUserNames
+
+        $result.Success | Should -BeFalse
+        $result.UserNames.Count | Should -Be 2
+        $result.UserNames | Should -Contain 'Default'
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -like '*S-1-5-21-0-0-0-1001*will not be scheduled*' }
+    }
+
+    It 'returns failure when profile enumeration fails' {
+        Mock Get-CimInstance { throw 'enumeration failed' }
+        Mock Write-Error {}
+
+        $result = Get-RunOnceWingetTargetUserNames
+
+        $result.Success | Should -BeFalse
+        $result.UserNames.Count | Should -Be 0
+    }
+
+    It 'reports incomplete all-users removal even if the immediate inventory is empty' {
+        Remove-SelectedApps -appsList @('One.App') | Should -BeFalse
+
+        $script:AppRemovalFailures | Should -Be 1
+        $script:WingetDeferredRemovals.ContainsKey('One.App') | Should -BeFalse
+        Should -Invoke Invoke-WithTargetUserHive -Times 2 -Exactly
+        Should -Invoke Invoke-WithTargetUserHive -Times 1 -Exactly -ParameterFilter { $TargetUserName -eq 'Default' }
+        Should -Invoke Write-Host -Times 0 -Exactly -ParameterFilter { $Object -like 'WingetAllUsersUninstallDeferred*' }
+    }
+
+    It 'reports failure when required fallback scheduling throws during <Stage>' -ForEach @(
+        @{ Stage = 'target resolution' }
+        @{ Stage = 'profile enumeration' }
+        @{ Stage = 'task scheduling' }
+    ) {
+        $ErrorActionPreference = 'Stop'
+        switch ($Stage) {
+            'target resolution' { Mock Get-RunOnceWingetTarget { throw 'target unavailable' } }
+            'profile enumeration' { Mock Get-CimInstance { throw 'enumeration failed' } }
+            'task scheduling' { Mock Set-RunOnceWingetTask { throw 'scheduling failed' } }
+        }
+
+        Remove-SelectedApps -appsList @('One.App') | Should -BeFalse
+
+        $script:AppRemovalFailures | Should -Be 1
+        $script:WingetDeferredRemovals.ContainsKey('One.App') | Should -BeFalse
+        Should -Invoke Get-WingetInstalledApps -Times 1 -Exactly
+        Should -Invoke Invoke-WithTargetUserHive -Times 0 -Exactly
     }
 }

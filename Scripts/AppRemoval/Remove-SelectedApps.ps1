@@ -49,9 +49,10 @@ function Remove-SelectedApps {
         Write-Host "Removing $app"
 
         if ((Get-AppRemovalMethod $app) -eq 'WinGet') {
-            $removalSucceeded = Remove-WinGetApp -app $app
+            $schedulingFailed = $false
+            $removalSucceeded = Remove-WinGetApp -app $app -SchedulingFailed ([ref]$schedulingFailed)
             $wingetRemovedApps += $app
-            if (($script:Params.ContainsKey('User') -or $script:Params.ContainsKey('Sysprep')) -and -not $removalSucceeded) {
+            if ($schedulingFailed -or (($script:Params.ContainsKey('User') -or $script:Params.ContainsKey('Sysprep')) -and -not $removalSucceeded)) {
                 $wingetRemovalFailures[$app] = $true
             }
         }
@@ -122,6 +123,9 @@ function Remove-SelectedApps {
     Maximum time to allow the foreground WinGet uninstall to run. Defaults
     to 120 seconds.
 
+    .PARAMETER SchedulingFailed
+    Optional reference indicating that required RunOnce scheduling was incomplete.
+
     .OUTPUTS
     System.Boolean. $true unless the winget invocation threw a terminating error
     or any required RunOnce scheduling failed; otherwise $false.
@@ -129,8 +133,11 @@ function Remove-SelectedApps {
 function Remove-WinGetApp {
     param(
         [string]$app,
-        [int]$TimeoutSeconds = 120
+        [int]$TimeoutSeconds = 120,
+        [ref]$SchedulingFailed
     )
+
+    if ($null -ne $SchedulingFailed) { $SchedulingFailed.Value = $false }
 
     if (-not $script:WingetInstalled) {
         Write-Error "WinGet is either not installed or is outdated; $app could not be removed"
@@ -164,6 +171,7 @@ function Remove-WinGetApp {
             }).Count -gt 0
         }
         if ($userScopeBlocked) {
+            $scheduleSucceeded = $false
             $runOnceTarget = Get-RunOnceWingetTarget
             $targetUserName = $runOnceTarget.UserName
 
@@ -200,6 +208,7 @@ function Remove-WinGetApp {
         $scheduleSucceeded = Set-RunOnceWingetTask -appId $app -Target $runOnceTarget
     }
 
+    if ($null -ne $SchedulingFailed) { $SchedulingFailed.Value = -not $scheduleSucceeded }
     return ($uninstallCommandSucceeded -and $scheduleSucceeded)
 }
 
@@ -411,15 +420,17 @@ function Get-RunOnceWingetTarget {
     .DESCRIPTION
     Lists resolvable accounts with non-special profiles containing NTUSER.DAT.
     Includes Default so the task also applies to profiles created later.
-    Profiles whose SIDs cannot be resolved are skipped with a warning.
+    Profiles whose SIDs cannot be resolved are skipped with a warning and mark
+    the result incomplete.
 
     .OUTPUTS
-    System.String[]. Account names and the Default entry. Returns an empty array
-    if profile enumeration fails, which Set-RunOnceWingetTask treats as a failure.
+    System.Management.Automation.PSCustomObject. UserNames contains account names
+    and Default. Success is false if enumeration or any SID translation fails.
 #>
 function Get-RunOnceWingetTargetUserNames {
     $targetUsers = New-Object 'System.Collections.Generic.List[string]'
     $seenSids = @{}
+    $allSucceeded = $true
 
     try {
         foreach ($userProfile in @(Get-CimInstance -ClassName Win32_UserProfile -ErrorAction Stop)) {
@@ -440,6 +451,7 @@ function Get-RunOnceWingetTargetUserNames {
                 ).Value
             }
             catch {
+                $allSucceeded = $false
                 Write-Warning "The deferred AllUsers WinGet uninstall may be incomplete: unable to resolve account name for profile SID '$sid'. This profile will not be scheduled. $_"
                 continue
             }
@@ -450,12 +462,12 @@ function Get-RunOnceWingetTargetUserNames {
     }
     catch {
         Write-Error "Unable to enumerate user profiles for deferred WinGet uninstall: $_"
-        return @()
+        return [PSCustomObject]@{ UserNames = @(); Success = $false }
     }
 
     # RunOnce values in the Default profile are copied into profiles created later.
     $targetUsers.Add('Default')
-    return @($targetUsers)
+    return [PSCustomObject]@{ UserNames = @($targetUsers); Success = $allSucceeded }
 }
 
 <#
@@ -486,8 +498,11 @@ function Set-RunOnceWingetTask {
 
     if ($null -eq $Target) { $Target = Get-RunOnceWingetTarget }
 
+    $allSucceeded = $true
     $targetUserNames = if ($Target.AllUsers) {
-        @(Get-RunOnceWingetTargetUserNames)
+        $profileTargets = Get-RunOnceWingetTargetUserNames
+        $allSucceeded = $profileTargets.Success
+        @($profileTargets.UserNames)
     }
     else {
         @($Target.UserName)
@@ -514,7 +529,6 @@ function Set-RunOnceWingetTask {
         OperationType = 'SetValue'
     }
 
-    $allSucceeded = $true
     foreach ($targetUserName in $targetUserNames) {
         try {
             Invoke-WithTargetUserHive -TargetUserName $targetUserName -ScriptBlock {

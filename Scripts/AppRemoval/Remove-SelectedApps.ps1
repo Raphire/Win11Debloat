@@ -46,6 +46,11 @@ function Remove-SelectedApps {
             & $script:ApplySubStepCallback (Get-Translation -Key 'RemovingAppsSubStep' -FormatArgs @($appIndex, $appCount)) $appIndex $appCount
         }
 
+        if ($script:WingetDeferredRemovals.ContainsKey($app)) {
+            Write-Host "Skipping $app because its uninstall is already scheduled."
+            continue
+        }
+
         Write-Host "Removing $app"
 
         if ((Get-AppRemovalMethod $app) -eq 'WinGet') {

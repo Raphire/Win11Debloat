@@ -68,6 +68,34 @@ Describe 'Remove-SelectedApps' {
         Should -Invoke Get-WingetInstalledApps -Times 0 -Exactly
     }
 
+    It 'skips an already deferred app within a list and across removal calls' {
+        Mock Get-AppRemovalMethod { 'WinGet' }
+        Mock Remove-WinGetApp {
+            $script:WingetDeferredRemovals[$app] = 'Alice'
+            return $true
+        }
+
+        Remove-SelectedApps -appsList @('One.App', 'One.App') | Should -BeTrue
+        Remove-SelectedApps -appsList @('One.App') | Should -BeTrue
+
+        Should -Invoke Remove-WinGetApp -Times 1 -Exactly -ParameterFilter { $app -eq 'One.App' }
+        Should -Invoke Get-WingetInstalledApps -Times 0 -Exactly
+        $script:WingetDeferredRemovals['One.App'] | Should -Be 'Alice'
+        $script:AppRemovalFailures | Should -Be 0
+    }
+
+    It 'continues removing and verifying other apps while preserving deferrals' {
+        $script:WingetDeferredRemovals = @{ 'One.App' = 'Alice'; 'Other.App' = 'Bob' }
+        Mock Get-AppRemovalMethod { 'WinGet' }
+
+        Remove-SelectedApps -appsList @('One.App', 'New.App') | Should -BeTrue
+
+        Should -Invoke Remove-WinGetApp -Times 1 -Exactly -ParameterFilter { $app -eq 'New.App' }
+        Should -Invoke Test-AppInWingetList -Times 1 -Exactly -ParameterFilter { $appId -eq 'New.App' }
+        $script:WingetDeferredRemovals['One.App'] | Should -Be 'Alice'
+        $script:WingetDeferredRemovals['Other.App'] | Should -Be 'Bob'
+    }
+
     It 'stops before the first removal when cancellation is requested' {
         $script:CancelRequested = $true
         Remove-SelectedApps -appsList @('One.App')

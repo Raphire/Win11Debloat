@@ -152,6 +152,20 @@ Describe 'Test-FeatureApplied - registry state comparison' {
         $key.Closed | Should -BeTrue
     }
 
+    It 'compares binary data in order: <Case>' -ForEach @(
+        @{ Case = 'identical bytes'; Actual = @(1, 2, 3); Expected = @(1, 2, 3); Result = $true }
+        @{ Case = 'the same bytes in a different order'; Actual = @(1, 2, 3); Expected = @(3, 2, 1); Result = $false }
+        @{ Case = 'a different length'; Actual = @(1, 2, 3); Expected = @(1, 2); Result = $false }
+    ) {
+        $key = New-CurrentStateRegistryKey -Values @{ Mask = [byte[]]$Actual } -Kinds @{ Mask = [Microsoft.Win32.RegistryValueKind]::Binary }
+        $root = [PSCustomObject]@{ Key = $key }
+        $root | Add-Member ScriptMethod OpenSubKey { param($path, $writable) $this.Key }
+        Mock Get-RegistryRootKey { $root }
+        Mock Get-RegFileOperations { @([PSCustomObject]@{ OperationType = 'SetValue'; KeyPath = 'HKEY_CURRENT_USER\Software\Example'; ValueName = 'Mask'; ValueType = 'Binary'; ValueData = $Expected }) }
+
+        Test-FeatureApplied -FeatureId 'RegistryFeature' | Should -Be $Result
+    }
+
     It 'treats missing keys and values as successful delete operations' -ForEach @(
         @{ OperationType = 'DeleteKey'; ReturnKey = $false }
         @{ OperationType = 'DeleteValue'; ReturnKey = $true }

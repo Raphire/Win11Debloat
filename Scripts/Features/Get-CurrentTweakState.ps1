@@ -144,8 +144,14 @@ function Test-FeatureApplied {
 
                     $expected = $op.ValueData
 
+                    # Binary and MultiString data is an ordered sequence: compare it position by position
+                    # (Compare-Object would treat [1,2,3] and [3,2,1] as equal).
                     $match = if (($actual -is [array]) -and ($expected -is [array])) {
-                        (Compare-Object $actual $expected).Count -eq 0
+                        $sameSequence = @($actual).Count -eq @($expected).Count
+                        for ($i = 0; $sameSequence -and $i -lt @($actual).Count; $i++) {
+                            if ($actual[$i] -ne $expected[$i]) { $sameSequence = $false }
+                        }
+                        $sameSequence
                     } else {
                         $actual -eq $expected
                     }

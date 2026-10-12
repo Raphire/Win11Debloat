@@ -156,6 +156,10 @@ Describe 'Test-FeatureApplied - registry state comparison' {
         @{ Case = 'identical bytes'; Actual = @(1, 2, 3); Expected = @(1, 2, 3); Result = $true }
         @{ Case = 'the same bytes in a different order'; Actual = @(1, 2, 3); Expected = @(3, 2, 1); Result = $false }
         @{ Case = 'a different length'; Actual = @(1, 2, 3); Expected = @(1, 2); Result = $false }
+        @{ Case = 'a single byte that matches'; Actual = @(1); Expected = 1; Result = $true }
+        @{ Case = 'a single zero byte that matches'; Actual = @(0); Expected = 0; Result = $true }
+        @{ Case = 'a longer value against a single expected byte'; Actual = @(1, 2); Expected = 1; Result = $false }
+        @{ Case = 'an empty value on both sides'; Actual = @(); Expected = $null; Result = $true }
     ) {
         $key = New-CurrentStateRegistryKey -Values @{ Mask = [byte[]]$Actual } -Kinds @{ Mask = [Microsoft.Win32.RegistryValueKind]::Binary }
         $root = [PSCustomObject]@{ Key = $key }

@@ -170,6 +170,24 @@ Describe 'Test-FeatureApplied - registry state comparison' {
         Test-FeatureApplied -FeatureId 'RegistryFeature' | Should -Be $Result
     }
 
+    It 'compares multi-string data in order: <Case>' -ForEach @(
+        @{ Case = 'identical strings'; Actual = @('one', 'two'); Expected = @('one', 'two'); Result = $true }
+        @{ Case = 'the same strings in a different order'; Actual = @('one', 'two'); Expected = @('two', 'one'); Result = $false }
+        @{ Case = 'a different length'; Actual = @('one', 'two'); Expected = 'one'; Result = $false }
+        @{ Case = 'a single string that matches'; Actual = @('one'); Expected = 'one'; Result = $true }
+        @{ Case = 'single strings sharing their first character'; Actual = @('other'); Expected = 'one'; Result = $false }
+        @{ Case = 'an empty value on both sides'; Actual = @(); Expected = $null; Result = $true }
+    ) {
+        $key = New-CurrentStateRegistryKey -Values @{ Items = [string[]]$Actual } -Kinds @{ Items = [Microsoft.Win32.RegistryValueKind]::MultiString }
+        $root = [PSCustomObject]@{ Key = $key }
+        $root | Add-Member ScriptMethod OpenSubKey { param($path, $writable) $this.Key }
+        Mock Get-RegistryRootKey { $root }
+        Mock Get-RegFileOperations { @([PSCustomObject]@{ OperationType = 'SetValue'; KeyPath = 'HKEY_CURRENT_USER\Software\Example'; ValueName = 'Items'; ValueType = 'Hex7'; ValueData = $Expected }) }
+
+        Test-FeatureApplied -FeatureId 'RegistryFeature' | Should -Be $Result
+        $key.Closed | Should -BeTrue
+    }
+
     It 'treats missing keys and values as successful delete operations' -ForEach @(
         @{ OperationType = 'DeleteKey'; ReturnKey = $false }
         @{ OperationType = 'DeleteValue'; ReturnKey = $true }

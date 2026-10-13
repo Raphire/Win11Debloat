@@ -196,15 +196,32 @@ if (Test-Path "$backupDir") {
     Remove-Item "$backupDir" -Recurse -Force
 }
 
-# Make list of arguments to pass on to the script (exclude the -Dev switch, which only affects this launcher)
-$arguments = $($PSBoundParameters.GetEnumerator() | Where-Object { $_.Key -ne 'Dev' } | ForEach-Object {
-    if ($_.Value -eq $true) {
-        "-$($_.Key)"
-    } 
-    else {
-         "-$($_.Key) ""$($_.Value)"""
+# Quote a value so it survives CommandLineToArgvW parsing in the child process: double any backslash run that
+# precedes a quote or the closing quote, and escape embedded quotes, before wrapping the value in quotes.
+function Format-LauncherArg([string]$Value) {
+    $escaped = $Value -replace '(\\*)"', '$1$1\"'
+    $escaped = $escaped -replace '(\\+)$', '$1$1'
+    return '"' + $escaped + '"'
+}
+
+# Build the list of arguments to pass on to the script (excludes the -Dev switch, which only affects this launcher).
+# Takes the bound parameters as input so it can be tested without running the launcher.
+function Get-LauncherArgumentList([System.Collections.IDictionary]$BoundParameters) {
+    foreach ($entry in $BoundParameters.GetEnumerator()) {
+        if ($entry.Key -eq 'Dev') { continue }
+
+        if ($entry.Value -is [System.Management.Automation.SwitchParameter]) {
+            if ($entry.Value.IsPresent) {
+                "-$($entry.Key)"
+            }
+        }
+        else {
+            "-$($entry.Key) $(Format-LauncherArg ([string]$entry.Value))"
+        }
     }
-})
+}
+
+$arguments = @(Get-LauncherArgumentList $PSBoundParameters)
 
 Write-Output ""
 Write-Output "> Launching Win11Debloat..."

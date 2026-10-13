@@ -262,7 +262,7 @@
                                            FontWeight="SemiBold"
                                            Margin="0,0,0,8"/>
 
-                                <ItemsControl x:Name="FeaturesItemsControl" Grid.Row="1">
+                                <ItemsControl x:Name="FeaturesItemsControl" Grid.Row="1" Focusable="False" IsTabStop="False">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
                                             <StackPanel Orientation="Vertical" IsItemsHost="True"/>
@@ -299,7 +299,7 @@
                                            FontWeight="SemiBold"
                                            Margin="0,0,0,8"/>
 
-                                <ItemsControl x:Name="ReappliedFeaturesItemsControl" Grid.Row="1">
+                                <ItemsControl x:Name="ReappliedFeaturesItemsControl" Grid.Row="1" Focusable="False" IsTabStop="False">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
                                             <StackPanel Orientation="Vertical" IsItemsHost="True"/>
@@ -329,7 +329,7 @@
                                            FontWeight="SemiBold"
                                            Margin="0,0,0,8"/>
 
-                                <ItemsControl x:Name="NonRevertibleFeaturesItemsControl" Grid.Row="1">
+                                <ItemsControl x:Name="NonRevertibleFeaturesItemsControl" Grid.Row="1" Focusable="False" IsTabStop="False">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
                                             <StackPanel Orientation="Vertical" IsItemsHost="True"/>
@@ -342,14 +342,16 @@
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
 
-                                <TextBlock x:Name="NonRevertibleWikiLink"
+                                <TextBlock
                                         Grid.Row="2"
                                         Margin="0,8,0,0"
-                                        Text="%LANG:RestoreWikiLink%"
                                         FontSize="13"
                                         FontWeight="SemiBold"
-                                        Style="{DynamicResource HyperlinkStyle}"
-                                        TextWrapping="Wrap"/>
+                                        TextWrapping="Wrap">
+                                    <Hyperlink x:Name="NonRevertibleWikiLink"
+                                               Style="{DynamicResource InlineHyperlinkStyle}"
+                                               AutomationProperties.Name="%LANG:RestoreWikiLink%">%LANG:RestoreWikiLink%</Hyperlink>
+                                </TextBlock>
                             </Grid>
                         </Grid>
                     </Grid>

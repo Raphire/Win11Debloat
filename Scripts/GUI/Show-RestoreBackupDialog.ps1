@@ -406,7 +406,7 @@ function Show-RestoreBackupDialog {
             & $refreshStartMenuUi
         })
 
-        $nonRevertibleWikiLink.Add_MouseLeftButtonUp({
+        $nonRevertibleWikiLink.Add_Click({
             try {
                 Start-Process 'https://github.com/Raphire/Win11Debloat/wiki/Reverting-Changes' | Out-Null
             }

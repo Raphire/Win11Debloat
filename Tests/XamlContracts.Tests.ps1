@@ -25,17 +25,14 @@ Describe 'XAML UI contracts' {
             'Show-AppSelectionWindow.ps1' = @{ window = 'AppSelectionWindow.xaml'; 'script:GuiWindow' = 'MainWindow.xaml' }
             'Show-ApplyModal.ps1' = @{ applyWindow = 'ApplyChangesWindow.xaml'; ownerWindow = 'MainWindow.xaml' }
             'Show-SettingsDialog.ps1' = @{ dialog = 'SettingsWindow.xaml'; Owner = 'MainWindow.xaml' }
-            'Show-MessageBox.ps1' = @{ msgWindow = 'MessageBox.xaml' }
+            'Show-MessageBox.ps1' = @{
+                msgWindow = 'MessageBox.xaml'
+                ownerWindow = @('MainWindow.xaml', 'AppSelectionWindow.xaml', 'RestoreBackupWindow.xaml')
+            }
             'Show-ImportExportConfigWindow.ps1' = @{ dlg = 'ImportExportConfigWindow.xaml'; owner = 'MainWindow.xaml' }
             'Show-RestoreBackupDialog.ps1' = @{ window = 'RestoreBackupWindow.xaml'; ownerWindow = 'MainWindow.xaml' }
             'Show-Bubble.ps1' = @{ bubblePanel = 'BubbleHint.xaml' }
         }
-        # Message boxes can be owned by the restore dialog, which has no overlay.
-        # Keep exceptions limited to the exact receiver and name, not the entire script.
-        $optionalOwnerOverlays = @{
-            'Show-MessageBox.ps1' = 'ownerWindow'
-        }
-
         $schemaNames = @{}
         foreach ($xamlFile in $script:XamlFiles) {
             $names = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::Ordinal)
@@ -78,20 +75,24 @@ Describe 'XAML UI contracts' {
                     continue
                 }
                 $receiver = $call.Expression.VariablePath.UserPath
-                if ($name -ceq 'ModalOverlay' -and
-                    $optionalOwnerOverlays[$guiFile.Name] -eq $receiver) {
+                $mapping = $receiverSchemas[$guiFile.Name]
+                $schemas = if ($mapping) { $mapping[$receiver] } else { $null }
+                if (-not $schemas) {
+                    $failures += "$location has no receiver mapping"
                     continue
                 }
-                $mapping = $receiverSchemas[$guiFile.Name]
-                $schema = if ($mapping) { $mapping[$receiver] } else { $null }
-                if (-not $schema) {
-                    $failures += "$location has no receiver mapping"
-                }
-                elseif (-not $schemaNames.ContainsKey($schema)) {
-                    $failures += "$location maps to missing schema '$schema'"
-                }
-                elseif (-not $schemaNames[$schema].Contains($name)) {
-                    $failures += "$location is missing from '$schema'"
+                foreach ($schema in @($schemas)) {
+                    if (-not $schemaNames.ContainsKey($schema)) {
+                        $failures += "$location maps to missing schema '$schema'"
+                    }
+                    elseif (-not $schemaNames[$schema].Contains($name)) {
+                        # Only the restore dialog owner may omit the message box overlay.
+                        if ($guiFile.Name -eq 'Show-MessageBox.ps1' -and $receiver -eq 'ownerWindow' -and
+                            $schema -eq 'RestoreBackupWindow.xaml' -and $name -ceq 'ModalOverlay') {
+                            continue
+                        }
+                        $failures += "$location is missing from '$schema'"
+                    }
                 }
             }
         }

@@ -114,6 +114,20 @@
         </Style.Triggers>
     </Style>
 
+    <!-- Native inline links retain keyboard activation and link automation semantics. -->
+    <Style x:Key="InlineHyperlinkStyle" TargetType="Hyperlink">
+        <Setter Property="Foreground" Value="{DynamicResource ButtonBgColor}"/>
+        <Setter Property="TextDecorations" Value="{x:Null}"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="{DynamicResource ButtonHoverColor}"/>
+            </Trigger>
+            <Trigger Property="IsKeyboardFocused" Value="True">
+                <Setter Property="TextDecorations" Value="Underline"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
     <!-- ProgressBar Style -->
     <Style x:Key="ApplyProgressBarStyle" TargetType="ProgressBar">
         <Setter Property="Background" Value="{DynamicResource ButtonBorderColor}"/>

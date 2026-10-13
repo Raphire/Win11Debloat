@@ -50,6 +50,55 @@ Describe 'XAML UI contracts' {
         }
     }
 
+    It 'exposes <Schema> links as keyboard-accessible hyperlinks with automation names' -TestCases @(
+        @{ Schema = 'AboutWindow.xaml'; LinkNames = @('ProjectLink', 'KofiLink') }
+        @{ Schema = 'RestoreBackupWindow.xaml'; LinkNames = @('NonRevertibleWikiLink') }
+    ) {
+        param($Schema, $LinkNames)
+
+        Add-Type -AssemblyName PresentationFramework
+        $styles = [System.Windows.Markup.XamlReader]::Parse(
+            (Get-Content -LiteralPath (Join-Path $script:SchemaPath 'SharedStyles.xaml') -Raw))
+        $window = [System.Windows.Markup.XamlReader]::Parse(
+            (Get-Content -LiteralPath (Join-Path $script:SchemaPath $Schema) -Raw))
+        try {
+            $window.Resources.MergedDictionaries.Add($styles)
+            foreach ($name in $LinkNames) {
+                $link = $window.FindName($name)
+                $link | Should -BeOfType ([System.Windows.Documents.Hyperlink])
+                $link.Focusable | Should -BeTrue
+                [System.Windows.Input.KeyboardNavigation]::GetIsTabStop($link) | Should -BeTrue
+                $peer = [System.Windows.Automation.Peers.HyperlinkAutomationPeer]::new($link)
+                $peer.GetAutomationControlType() | Should -Be ([System.Windows.Automation.Peers.AutomationControlType]::Hyperlink)
+                $peer.GetName() | Should -Not -BeNullOrEmpty
+                $peer.GetPattern([System.Windows.Automation.Peers.PatternInterface]::Invoke) | Should -Not -BeNullOrEmpty
+            }
+            if ($Schema -eq 'AboutWindow.xaml') {
+                [System.Windows.Automation.AutomationProperties]::GetName($window.FindName('CloseButton')) |
+                    Should -Be '%LANG:TitleBarClose%'
+            }
+        }
+        finally {
+            $window.Close()
+        }
+    }
+
+    It 'keeps read-only restore feature lists out of keyboard focus' {
+        Add-Type -AssemblyName PresentationFramework
+        $window = [System.Windows.Markup.XamlReader]::Parse(
+            (Get-Content -LiteralPath (Join-Path $script:SchemaPath 'RestoreBackupWindow.xaml') -Raw))
+        try {
+            foreach ($name in @('FeaturesItemsControl', 'ReappliedFeaturesItemsControl', 'NonRevertibleFeaturesItemsControl')) {
+                $list = $window.FindName($name)
+                $list.Focusable | Should -BeFalse
+                $list.IsTabStop | Should -BeFalse
+            }
+        }
+        finally {
+            $window.Close()
+        }
+    }
+
     It 'keeps destructive modal actions accessible by automation name' {
         $applyWindow = Get-Content -LiteralPath (Join-Path $script:SchemaPath 'ApplyChangesWindow.xaml') -Raw
         $appWindow = Get-Content -LiteralPath (Join-Path $script:SchemaPath 'AppSelectionWindow.xaml') -Raw

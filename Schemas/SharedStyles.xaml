@@ -518,6 +518,13 @@
     <Style x:Key="FeatureCheckboxStyle" TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
         <Setter Property="Margin" Value="-4,-2,-4,10"/>
         <Setter Property="Padding" Value="4,2"/>
+        <Setter Property="ContentTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <TextBlock Text="{Binding}" TextTrimming="CharacterEllipsis"/>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <!-- Shared CheckBox style for app list items -->

@@ -33,6 +33,7 @@
             <Setter Property="Foreground" Value="{DynamicResource AppFgColor}"/>
             <Setter Property="FontSize" Value="13"/>
             <Setter Property="Margin" Value="0,0,0,2"/>
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
         </Style>
 
         <!-- Label Border Style for ComboBox labels -->

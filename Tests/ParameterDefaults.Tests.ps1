@@ -17,7 +17,12 @@ BeforeAll {
                 if ($null -eq $default) { continue }
 
                 $isHashtable = $parameter.StaticType -eq [hashtable]
-                $defaultIsArray = $default -is [System.Management.Automation.Language.ArrayExpressionAst]
+                $defaultExpression = $default
+                while ($defaultExpression -is [System.Management.Automation.Language.ParenExpressionAst]) {
+                    $defaultExpression = $defaultExpression.Pipeline.GetPureExpression()
+                }
+                $defaultIsArray = $defaultExpression -is [System.Management.Automation.Language.ArrayExpressionAst] -or
+                    $defaultExpression -is [System.Management.Automation.Language.ArrayLiteralAst]
 
                 if ($isHashtable -and $defaultIsArray) {
                     '{0}:{1} {2} = {3}' -f (Split-Path $file -Leaf), $parameter.Extent.StartLineNumber, $parameter.Name.Extent.Text, $default.Extent.Text
@@ -40,10 +45,12 @@ Describe 'Parameter default values' {
 
     It 'detects a mismatched default' {
         $sample = Join-Path $TestDrive 'sample.ps1'
-        Set-Content -LiteralPath $sample -Value 'function Test-Sample { param([hashtable]$A = @(), [hashtable]$B = @{}, [string[]]$C = @(), [string[]]$D = @{}) }'
+        Set-Content -LiteralPath $sample -Value 'function Test-Sample { param([hashtable]$A = @(), [hashtable]$B = @{}, [string[]]$C = @(), [string[]]$D = @{}, [hashtable]$E = (1, 2)) }'
 
         $violations = @(Get-MismatchedParameterDefaults -Path @($sample))
 
-        $violations | Should -HaveCount 1
+        $violations | Should -HaveCount 2
+        $violations | Should -Contain 'sample.ps1:1 $A = @()'
+        $violations | Should -Contain 'sample.ps1:1 $E = (1, 2)'
     }
 }

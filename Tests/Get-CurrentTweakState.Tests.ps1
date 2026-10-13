@@ -152,6 +152,42 @@ Describe 'Test-FeatureApplied - registry state comparison' {
         $key.Closed | Should -BeTrue
     }
 
+    It 'compares binary data in order: <Case>' -ForEach @(
+        @{ Case = 'identical bytes'; Actual = @(1, 2, 3); Expected = @(1, 2, 3); Result = $true }
+        @{ Case = 'the same bytes in a different order'; Actual = @(1, 2, 3); Expected = @(3, 2, 1); Result = $false }
+        @{ Case = 'a different length'; Actual = @(1, 2, 3); Expected = @(1, 2); Result = $false }
+        @{ Case = 'a single byte that matches'; Actual = @(1); Expected = 1; Result = $true }
+        @{ Case = 'a single zero byte that matches'; Actual = @(0); Expected = 0; Result = $true }
+        @{ Case = 'a longer value against a single expected byte'; Actual = @(1, 2); Expected = 1; Result = $false }
+        @{ Case = 'an empty value on both sides'; Actual = @(); Expected = $null; Result = $true }
+    ) {
+        $key = New-CurrentStateRegistryKey -Values @{ Mask = [byte[]]$Actual } -Kinds @{ Mask = [Microsoft.Win32.RegistryValueKind]::Binary }
+        $root = [PSCustomObject]@{ Key = $key }
+        $root | Add-Member ScriptMethod OpenSubKey { param($path, $writable) $this.Key }
+        Mock Get-RegistryRootKey { $root }
+        Mock Get-RegFileOperations { @([PSCustomObject]@{ OperationType = 'SetValue'; KeyPath = 'HKEY_CURRENT_USER\Software\Example'; ValueName = 'Mask'; ValueType = 'Binary'; ValueData = $Expected }) }
+
+        Test-FeatureApplied -FeatureId 'RegistryFeature' | Should -Be $Result
+    }
+
+    It 'compares multi-string data in order: <Case>' -ForEach @(
+        @{ Case = 'identical strings'; Actual = @('one', 'two'); Expected = @('one', 'two'); Result = $true }
+        @{ Case = 'the same strings in a different order'; Actual = @('one', 'two'); Expected = @('two', 'one'); Result = $false }
+        @{ Case = 'a different length'; Actual = @('one', 'two'); Expected = 'one'; Result = $false }
+        @{ Case = 'a single string that matches'; Actual = @('one'); Expected = 'one'; Result = $true }
+        @{ Case = 'single strings sharing their first character'; Actual = @('other'); Expected = 'one'; Result = $false }
+        @{ Case = 'an empty value on both sides'; Actual = @(); Expected = $null; Result = $true }
+    ) {
+        $key = New-CurrentStateRegistryKey -Values @{ Items = [string[]]$Actual } -Kinds @{ Items = [Microsoft.Win32.RegistryValueKind]::MultiString }
+        $root = [PSCustomObject]@{ Key = $key }
+        $root | Add-Member ScriptMethod OpenSubKey { param($path, $writable) $this.Key }
+        Mock Get-RegistryRootKey { $root }
+        Mock Get-RegFileOperations { @([PSCustomObject]@{ OperationType = 'SetValue'; KeyPath = 'HKEY_CURRENT_USER\Software\Example'; ValueName = 'Items'; ValueType = 'Hex7'; ValueData = $Expected }) }
+
+        Test-FeatureApplied -FeatureId 'RegistryFeature' | Should -Be $Result
+        $key.Closed | Should -BeTrue
+    }
+
     It 'treats missing keys and values as successful delete operations' -ForEach @(
         @{ OperationType = 'DeleteKey'; ReturnKey = $false }
         @{ OperationType = 'DeleteValue'; ReturnKey = $true }

@@ -21,22 +21,19 @@ Describe 'XAML UI contracts' {
             'MainWindow-Localization.ps1' = @{ window = 'MainWindow.xaml' }
             'MainWindow-Navigation.ps1' = @{ window = 'MainWindow.xaml' }
             'MainWindow-TweaksBuilder.ps1' = @{ window = 'MainWindow.xaml' }
-            'Show-AboutDialog.ps1' = @{ aboutWindow = 'AboutWindow.xaml' }
+            'Show-AboutDialog.ps1' = @{ aboutWindow = 'AboutWindow.xaml'; ownerWindow = 'MainWindow.xaml' }
             'Show-AppSelectionWindow.ps1' = @{ window = 'AppSelectionWindow.xaml'; 'script:GuiWindow' = 'MainWindow.xaml' }
-            'Show-ApplyModal.ps1' = @{ applyWindow = 'ApplyChangesWindow.xaml' }
+            'Show-ApplyModal.ps1' = @{ applyWindow = 'ApplyChangesWindow.xaml'; ownerWindow = 'MainWindow.xaml' }
             'Show-SettingsDialog.ps1' = @{ dialog = 'SettingsWindow.xaml'; Owner = 'MainWindow.xaml' }
             'Show-MessageBox.ps1' = @{ msgWindow = 'MessageBox.xaml' }
             'Show-ImportExportConfigWindow.ps1' = @{ dlg = 'ImportExportConfigWindow.xaml'; owner = 'MainWindow.xaml' }
-            'Show-RestoreBackupDialog.ps1' = @{ window = 'RestoreBackupWindow.xaml' }
+            'Show-RestoreBackupDialog.ps1' = @{ window = 'RestoreBackupWindow.xaml'; ownerWindow = 'MainWindow.xaml' }
             'Show-Bubble.ps1' = @{ bubblePanel = 'BubbleHint.xaml' }
         }
-        # These owner lookups are null-checked; an owner need not provide an overlay.
+        # Message boxes can be owned by the restore dialog, which has no overlay.
         # Keep exceptions limited to the exact receiver and name, not the entire script.
         $optionalOwnerOverlays = @{
-            'Show-AboutDialog.ps1' = 'ownerWindow'
-            'Show-ApplyModal.ps1' = 'ownerWindow'
             'Show-MessageBox.ps1' = 'ownerWindow'
-            'Show-RestoreBackupDialog.ps1' = 'ownerWindow'
         }
 
         $schemaNames = @{}

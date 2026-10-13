@@ -33,7 +33,7 @@ function Show-ImportExportConfigWindow {
         [string]$Prompt,
         [string[]]$Categories = @('Applications', 'System Tweaks', 'Deployment Settings'),
         [string[]]$DisabledCategories = @(),
-        [hashtable]$CategoryDetails = @(),
+        [hashtable]$CategoryDetails = @{},
         [string]$ActionLabel = (Get-Translation -Key 'MessageBoxOk')
     )
 

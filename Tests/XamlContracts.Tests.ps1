@@ -24,7 +24,7 @@ Describe 'XAML UI contracts' {
             'Show-AboutDialog.ps1' = @{ aboutWindow = 'AboutWindow.xaml' }
             'Show-AppSelectionWindow.ps1' = @{ window = 'AppSelectionWindow.xaml'; 'script:GuiWindow' = 'MainWindow.xaml' }
             'Show-ApplyModal.ps1' = @{ applyWindow = 'ApplyChangesWindow.xaml' }
-            'Show-SettingsDialog.ps1' = @{ dialog = 'SettingsWindow.xaml' }
+            'Show-SettingsDialog.ps1' = @{ dialog = 'SettingsWindow.xaml'; Owner = 'MainWindow.xaml' }
             'Show-MessageBox.ps1' = @{ msgWindow = 'MessageBox.xaml' }
             'Show-ImportExportConfigWindow.ps1' = @{ dlg = 'ImportExportConfigWindow.xaml'; owner = 'MainWindow.xaml' }
             'Show-RestoreBackupDialog.ps1' = @{ window = 'RestoreBackupWindow.xaml' }
@@ -37,14 +37,19 @@ Describe 'XAML UI contracts' {
             'Show-ApplyModal.ps1' = 'ownerWindow'
             'Show-MessageBox.ps1' = 'ownerWindow'
             'Show-RestoreBackupDialog.ps1' = 'ownerWindow'
-            'Show-SettingsDialog.ps1' = 'Owner'
         }
 
         $schemaNames = @{}
         foreach ($xamlFile in $script:XamlFiles) {
             $names = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::Ordinal)
             [xml]$xml = Get-Content -LiteralPath $xamlFile.FullName -Raw
-            foreach ($attribute in $xml.SelectNodes('//@*')) {
+            $namespaces = [System.Xml.XmlNamespaceManager]::new($xml.NameTable)
+            $namespaces.AddNamespace('p', 'http://schemas.microsoft.com/winfx/2006/xaml/presentation')
+            # Template children belong to separate namescopes and cannot satisfy window lookups.
+            $attributes = $xml.SelectNodes(
+                '//@*[not(ancestor::p:ControlTemplate or ancestor::p:DataTemplate or ancestor::p:ItemsPanelTemplate)]',
+                $namespaces)
+            foreach ($attribute in $attributes) {
                 if ($attribute.LocalName -eq 'Name' -and
                     $attribute.NamespaceURI -in @('', 'http://schemas.microsoft.com/winfx/2006/xaml')) {
                     [void]$names.Add($attribute.Value)

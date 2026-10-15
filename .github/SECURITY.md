@@ -1,21 +1,24 @@
 # Security Policy
 
-## Supported versions
+## Supported Versions
 
-Only the latest release and the current `master` branch receive fixes. Please check that the issue still exists in the [latest release](https://github.com/Raphire/Win11Debloat/releases/latest) before reporting it.
+Only the latest release and the current `master` branch are supported. Please verify that the issue exists in the [latest release](https://github.com/Raphire/Win11Debloat/releases/latest) before reporting it.
 
-## Reporting a vulnerability
+## Reporting a Vulnerability
 
-Please do not open a public issue for a security problem. Report it privately through GitHub instead:
+If you discover a security vulnerability, please report it privately through GitHub. **Do not open a public issue.**
 
-1. Go to the [Security tab](https://github.com/Raphire/Win11Debloat/security) of this repository.
-2. Select **Report a vulnerability** and describe the problem.
+To submit a report:
 
-Useful details are the affected version, the steps to reproduce, and what an attacker could gain. Win11Debloat runs with administrator rights and changes the registry, installed apps and system settings, so anything that lets untrusted input reach those actions (for example the launcher, the downloaded archive, parameter handling, or the backup/restore files) is in scope.
+1. Go to the repository's [Security tab](https://github.com/Raphire/Win11Debloat/security).
+2. Select **Report a vulnerability**.
+3. Describe the issue, including the affected version, steps to reproduce, and potential security impact.
 
-This is a volunteer-maintained project, so there is no guaranteed response time. Reports are handled on a best-effort basis.
+Because Win11Debloat runs with administrator privileges, security issues that could allow unintended or unauthorized actions are considered in scope.
 
-## Not a vulnerability
+This project is maintained by volunteers. Security reports are handled on a best-effort basis, without guaranteed response times.
 
-- Antivirus false positives on the script. Please report these as a regular issue.
-- Changes the script makes on purpose, such as removing apps or disabling telemetry. Please open a regular issue for unexpected behaviour.
+## What Is Not a Vulnerability
+
+- **Antivirus false positives:** Report these as regular issues.
+- **Intended functionality:** Changes such as removing apps or disabling telemetry are not security vulnerabilities. Report unexpected behavior as a regular issue.

@@ -18,6 +18,14 @@ BeforeAll {
 }
 
 Describe 'Save-ToFile' {
+    It 'creates the destination directory on first use' {
+        $path = Join-Path $TestDrive 'UserData\LastUsedSettings.json'
+
+        Save-ToFile -Config @{ Setting = $true } -FilePath $path | Should -BeTrue
+
+        (Get-Content -LiteralPath $path -Raw | ConvertFrom-Json).Setting | Should -BeTrue
+    }
+
     It 'reports the write error and returns false when persistence fails' {
         Mock Set-Content { throw [System.IO.IOException]::new('Disk is full') }
         Mock Write-Error {}

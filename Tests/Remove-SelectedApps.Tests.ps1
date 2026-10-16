@@ -255,12 +255,11 @@ Describe 'Remove-WinGetApp' {
     It 'reports a timed-out winget uninstall and continues' {
         $script:Params = @{ User = 'Alice' }
         Mock Invoke-NonBlocking { throw 'Operation timed out after 120 seconds' }
-        Mock Write-Verbose {}
 
-        { Remove-WinGetApp -app 'One.App' } | Should -Not -Throw
+        Remove-WinGetApp -app 'One.App' | Should -BeFalse
         Should -Invoke Set-RunOnceWingetTask -Times 1 -Exactly
-        Should -Invoke Write-Verbose -Times 1 -Exactly -ParameterFilter {
-            $Message -like '*did not complete within 120 seconds*'
+        Should -Invoke Write-Error -Times 1 -Exactly -ParameterFilter {
+            $Message -like 'WinGet uninstall for One.App did not complete within 120 seconds:*Operation timed out after 120 seconds*'
         }
     }
 

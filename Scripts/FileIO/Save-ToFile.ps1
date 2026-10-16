@@ -27,6 +27,8 @@ function Save-ToFile {
     )
 
     try {
+        $directory = Split-Path -Parent $FilePath
+        if ($directory) { [void][System.IO.Directory]::CreateDirectory($directory) }
         $Config | ConvertTo-Json -Depth $MaxDepth | Set-Content -Path $FilePath -Encoding UTF8 -ErrorAction Stop
         return $true
     }

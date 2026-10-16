@@ -4,7 +4,7 @@
 
     .DESCRIPTION
         Resolves selected and undo features from the provided keys, captures their
-        registry state, and saves the result as a JSON file in the Backups/ folder.
+        registry state, and saves the result under %LOCALAPPDATA%\Win11Debloat\Backups.
         Returns the file path on success, $null if no registry-backed features exist.
 
     .PARAMETER ActionableKeys
@@ -28,13 +28,8 @@ function New-RegistrySettingsBackup {
     }
 
     $timestamp = Get-Date
-    $backupDirectory = $script:RegistryBackupsPath
-    if (-not (Test-Path $backupDirectory)) {
-        New-Item -ItemType Directory -Path $backupDirectory -Force | Out-Null
-    }
-
     $backupFileName = 'Win11Debloat-RegistryBackup-{0}.json' -f $timestamp.ToString('yyyyMMdd_HHmmss')
-    $backupFilePath = Join-Path $backupDirectory $backupFileName
+    $backupFilePath = Join-Path $script:RegistryBackupsPath $backupFileName
 
     $backupConfig = Get-RegistryBackupPayload -SelectedFeatures $selectedFeatures -UndoFeatures $undoFeatures -CreatedAt $timestamp
     if (-not (Save-ToFile -Config $backupConfig -FilePath $backupFilePath -MaxDepth 25)) {

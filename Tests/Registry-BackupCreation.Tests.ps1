@@ -69,11 +69,11 @@ Describe 'New-RegistrySettingsBackup' {
         $script:RegistryBackupsPath = Join-Path $TestDrive 'Backups'
         $script:Features = @{ Feature = [PSCustomObject]@{ FeatureId = 'Feature'; RegistryKey = 'feature.reg' } }
         Mock Get-RegistryBackupPayload { @{ Version = '1.0' } }
-        Mock Save-ToFile { $true }
         Mock Write-Host {}
     }
 
     It 'returns null and does not write when no selected feature has registry data' {
+        Mock Save-ToFile { $true }
         $script:Features.Feature.RegistryKey = ''
 
         New-RegistrySettingsBackup -ActionableKeys @('Feature') | Should -BeNullOrEmpty
@@ -85,7 +85,7 @@ Describe 'New-RegistrySettingsBackup' {
 
         $result | Should -Match 'Win11Debloat-RegistryBackup-\d{8}_\d{6}\.json$'
         Test-Path -LiteralPath $script:RegistryBackupsPath | Should -BeTrue
-        Should -Invoke Save-ToFile -Times 1 -Exactly -ParameterFilter { $FilePath -eq $result -and $MaxDepth -eq 25 }
+        (Get-Content -LiteralPath $result -Raw | ConvertFrom-Json).Version | Should -Be '1.0'
     }
 
     It 'throws when persistence reports failure' {

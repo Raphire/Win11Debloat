@@ -342,7 +342,14 @@ function Invoke-UndoFeatures {
 # Returns the build number of the running Windows version, or $null when it cannot be read.
 function Get-CurrentWindowsBuild {
     $build = 0
-    $currentBuild = Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' CurrentBuild -ErrorAction SilentlyContinue
+    try {
+        # Get-ItemPropertyValue reports a missing value as a terminating error, which -ErrorAction SilentlyContinue does not suppress
+        $currentBuild = Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' CurrentBuild -ErrorAction Stop
+    }
+    catch {
+        Write-Verbose "Unable to read the Windows build number: $($_.Exception.Message)"
+        return $null
+    }
     if ([int]::TryParse([string]$currentBuild, [ref]$build)) { return $build }
     return $null
 }

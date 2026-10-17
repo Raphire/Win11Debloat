@@ -542,6 +542,36 @@ Describe 'Invoke-AllChanges' {
 
 }
 
+Describe 'Get-CurrentWindowsBuild' {
+    It 'returns the build number as a number' {
+        Mock Get-ItemPropertyValue { '26100' }
+
+        Get-CurrentWindowsBuild | Should -Be 26100
+        Get-CurrentWindowsBuild | Should -BeOfType [int]
+    }
+
+    It 'returns nothing when the value is not a number' {
+        Mock Get-ItemPropertyValue { 'unknown' }
+
+        Get-CurrentWindowsBuild | Should -BeNullOrEmpty
+    }
+
+    It 'returns nothing instead of failing when reading the registry throws' {
+        Mock Get-ItemPropertyValue { throw 'Property CurrentBuild does not exist' }
+
+        { Get-CurrentWindowsBuild } | Should -Not -Throw
+        Get-CurrentWindowsBuild | Should -BeNullOrEmpty
+    }
+
+    It 'asks for a terminating error so that a missing value is caught' {
+        Mock Get-ItemPropertyValue { '19045' }
+
+        Get-CurrentWindowsBuild | Out-Null
+
+        Should -Invoke Get-ItemPropertyValue -Times 1 -Exactly -ParameterFilter { $ErrorAction -eq 'Stop' }
+    }
+}
+
 Describe 'Test-FeatureSupportedOnBuild' {
     It 'returns <Expected> for MinVersion <Min>, MaxVersion <Max> on build <Build>' -ForEach @(
         @{ Min = 22621; Max = $null; Build = 19045; Expected = $false }

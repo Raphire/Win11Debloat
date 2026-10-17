@@ -425,6 +425,7 @@ Describe 'Invoke-AllChanges' {
         $script:CancelRequested = $false
         $script:ApplyProgressCallback = $null
         Mock Test-RunningAsSystem { $false }
+        Mock Get-CurrentWindowsBuild { 26100 }
         Mock Resolve-UndoRegFilePath { param($FileName) "Undo\$FileName" }
         Mock New-RegistrySettingsBackup {}
         Mock Invoke-SystemRestorePoint { $true }
@@ -539,4 +540,159 @@ Describe 'Invoke-AllChanges' {
         Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -eq 'Unable to verify if all apps were uninstalled successfully.' }
     }
 
+}
+
+Describe 'Get-CurrentWindowsBuild' {
+    It 'returns the build number as a number' {
+        Mock Get-ItemPropertyValue { '26100' }
+
+        Get-CurrentWindowsBuild | Should -Be 26100
+        Get-CurrentWindowsBuild | Should -BeOfType [int]
+    }
+
+    It 'returns nothing when the value is not a number' {
+        Mock Get-ItemPropertyValue { 'unknown' }
+
+        Get-CurrentWindowsBuild | Should -BeNullOrEmpty
+    }
+
+    It 'returns nothing instead of failing when reading the registry throws' {
+        Mock Get-ItemPropertyValue { throw 'Property CurrentBuild does not exist' }
+
+        { Get-CurrentWindowsBuild } | Should -Not -Throw
+        Get-CurrentWindowsBuild | Should -BeNullOrEmpty
+    }
+
+    It 'asks for a terminating error so that a missing value is caught' {
+        Mock Get-ItemPropertyValue { '19045' }
+
+        Get-CurrentWindowsBuild | Out-Null
+
+        Should -Invoke Get-ItemPropertyValue -Times 1 -Exactly -ParameterFilter { $ErrorAction -eq 'Stop' }
+    }
+}
+
+Describe 'Test-FeatureSupportedOnBuild' {
+    It 'returns <Expected> for MinVersion <Min>, MaxVersion <Max> on build <Build>' -ForEach @(
+        @{ Min = 22621; Max = $null; Build = 19045; Expected = $false }
+        @{ Min = 22621; Max = $null; Build = 22620; Expected = $false }
+        @{ Min = 22621; Max = $null; Build = 22621; Expected = $true }
+        @{ Min = 22621; Max = $null; Build = 26100; Expected = $true }
+        @{ Min = $null; Max = 21999; Build = 19045; Expected = $true }
+        @{ Min = $null; Max = 21999; Build = 21999; Expected = $true }
+        @{ Min = $null; Max = 21999; Build = 22000; Expected = $false }
+        @{ Min = 22000; Max = 22631; Build = 22631; Expected = $true }
+        @{ Min = 22000; Max = 22631; Build = 26100; Expected = $false }
+        @{ Min = $null; Max = $null; Build = 10240; Expected = $true }
+    ) {
+        $feature = [PSCustomObject]@{ MinVersion = $Min; MaxVersion = $Max }
+
+        Test-FeatureSupportedOnBuild -Feature $feature -Build $Build | Should -Be $Expected
+    }
+
+    It 'does not limit a feature when the build is not known' {
+        $feature = [PSCustomObject]@{ MinVersion = 22621; MaxVersion = $null }
+
+        Test-FeatureSupportedOnBuild -Feature $feature -Build $null | Should -BeTrue
+    }
+
+    It 'does not limit an unknown feature' {
+        Test-FeatureSupportedOnBuild -Feature $null -Build 19045 | Should -BeTrue
+    }
+
+    It 'compares build numbers as numbers when the build is a string' {
+        $feature = [PSCustomObject]@{ MinVersion = 22621; MaxVersion = $null }
+
+        Test-FeatureSupportedOnBuild -Feature $feature -Build '9600' | Should -BeFalse
+    }
+}
+
+Describe 'Invoke-AllChanges build gate' {
+    BeforeEach {
+        $script:Params = @{ Modern = $true; Legacy = $true; Anyone = $true }
+        $script:UndoParams = @{ ModernUndo = $true }
+        $script:ControlParams = @('WhatIf', 'Silent', 'User', 'Sysprep')
+        $script:Features = @{
+            Modern     = [PSCustomObject]@{ RegistryKey = 'modern.reg'; MinVersion = 22621; MaxVersion = $null }
+            Legacy     = [PSCustomObject]@{ RegistryKey = 'legacy.reg'; MinVersion = $null; MaxVersion = 21999 }
+            Anyone     = [PSCustomObject]@{ RegistryKey = 'anyone.reg' }
+            ModernUndo = [PSCustomObject]@{ RegistryUndoKey = 'undo.reg'; MinVersion = 22621; MaxVersion = $null }
+        }
+        $script:CancelRequested = $false
+        $script:ApplyProgressCallback = $null
+        $warnings = [System.Collections.Generic.List[string]]::new()
+        Mock Test-RunningAsSystem { $false }
+        Mock Resolve-UndoRegFilePath { param($FileName) "Undo\$FileName" }
+        Mock New-RegistrySettingsBackup {}
+        Mock Invoke-SystemRestorePoint { $true }
+        Mock Invoke-ApplyFeatures {}
+        Mock Invoke-UndoFeatures {}
+        Mock Write-Host {}
+        Mock Write-Warning { $warnings.Add([string]$Message) }
+    }
+
+    It 'skips features that need a newer build and keeps the rest' {
+        Mock Get-CurrentWindowsBuild { 19045 }
+
+        Invoke-AllChanges
+
+        Should -Invoke Invoke-ApplyFeatures -Times 1 -Exactly -ParameterFilter {
+            @($FeatureIds).Count -eq 2 -and $FeatureIds -contains 'Legacy' -and $FeatureIds -contains 'Anyone'
+        }
+        $warnings | Should -HaveCount 1
+        $warnings[0] | Should -BeLike 'Skipping Modern: * build 22621 or newer*build 19045*'
+    }
+
+    It 'skips features that are only supported on an older build' {
+        Mock Get-CurrentWindowsBuild { 26100 }
+
+        Invoke-AllChanges
+
+        Should -Invoke Invoke-ApplyFeatures -Times 1 -Exactly -ParameterFilter {
+            @($FeatureIds).Count -eq 2 -and $FeatureIds -contains 'Modern' -and $FeatureIds -contains 'Anyone'
+        }
+        $warnings | Should -HaveCount 1
+        $warnings[0] | Should -BeLike 'Skipping Legacy: * build 21999 or older*build 26100*'
+    }
+
+    It 'does not back up the registry keys of skipped features' {
+        Mock Get-CurrentWindowsBuild { 19045 }
+
+        Invoke-AllChanges
+
+        Should -Invoke New-RegistrySettingsBackup -Times 1 -Exactly -ParameterFilter {
+            $ActionableKeys -notcontains 'Modern' -and $ActionableKeys -contains 'Legacy'
+        }
+    }
+
+    It 'does not apply anything gated when every selected feature is skipped' {
+        Mock Get-CurrentWindowsBuild { 19045 }
+        $script:Params = @{ Modern = $true }
+        $script:UndoParams = @{}
+
+        Invoke-AllChanges
+
+        Should -Invoke Invoke-ApplyFeatures -Times 0 -Exactly
+        Should -Invoke New-RegistrySettingsBackup -Times 0 -Exactly
+        $warnings | Should -HaveCount 1
+    }
+
+    It 'applies every feature when the build cannot be read' {
+        Mock Get-CurrentWindowsBuild { $null }
+
+        Invoke-AllChanges
+
+        Should -Invoke Invoke-ApplyFeatures -Times 1 -Exactly -ParameterFilter { @($FeatureIds).Count -eq 3 }
+        $warnings | Should -HaveCount 0
+    }
+
+    It 'leaves undo selections alone' {
+        Mock Get-CurrentWindowsBuild { 19045 }
+
+        Invoke-AllChanges
+
+        Should -Invoke Invoke-UndoFeatures -Times 1 -Exactly -ParameterFilter {
+            @($FeatureIds).Count -eq 1 -and $FeatureIds[0] -eq 'ModernUndo'
+        }
+    }
 }

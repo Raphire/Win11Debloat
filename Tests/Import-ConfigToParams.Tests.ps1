@@ -180,6 +180,10 @@ Describe 'ConvertTo-ConfigBoolean' {
         @{ Type = 'string'; Text = 'false with spaces'; Value = ' false '; Expected = $false }
         @{ Type = 'number'; Text = '1'; Value = 1; Expected = $true }
         @{ Type = 'number'; Text = '0'; Value = 0; Expected = $false }
+        @{ Type = 'decimal'; Text = '1.0'; Value = [decimal]1.0; Expected = $true }
+        @{ Type = 'decimal'; Text = '0.0'; Value = [decimal]0.0; Expected = $false }
+        @{ Type = 'double'; Text = '1e0'; Value = [double]1; Expected = $true }
+        @{ Type = 'double'; Text = '0e0'; Value = [double]0; Expected = $false }
     ) {
         ConvertTo-ConfigBoolean $Value | Should -Be $Expected
     }
@@ -189,6 +193,8 @@ Describe 'ConvertTo-ConfigBoolean' {
         @{ Type = 'string'; Text = 'yes'; Value = 'yes' }
         @{ Type = 'string'; Text = 'empty'; Value = '' }
         @{ Type = 'number'; Text = '2'; Value = 2 }
+        @{ Type = 'decimal'; Text = '1.5'; Value = [decimal]1.5 }
+        @{ Type = 'double'; Text = '0.5'; Value = [double]0.5 }
         @{ Type = 'null'; Text = 'null'; Value = $null }
         @{ Type = 'array'; Text = 'an array'; Value = @($true) }
     ) {
@@ -236,6 +242,9 @@ Describe 'Import-ConfigToParams deployment flags' {
     It 'turns on <Flag> for the text true and for a real boolean' -ForEach @(
         @{ Flag = 'CreateRestorePoint'; Arguments = @{ CreateRestorePoint = '"true"' } }
         @{ Flag = 'CreateRestorePoint'; Arguments = @{ CreateRestorePoint = 'true' } }
+        @{ Flag = 'CreateRestorePoint'; Arguments = @{ CreateRestorePoint = '1' } }
+        @{ Flag = 'CreateRestorePoint'; Arguments = @{ CreateRestorePoint = '1.0' } }
+        @{ Flag = 'SkipRegistryBackup'; Arguments = @{ SkipRegistryBackup = '1e0' } }
         @{ Flag = 'SkipRegistryBackup'; Arguments = @{ SkipRegistryBackup = '"True"' } }
         @{ Flag = 'SkipRegistryBackup'; Arguments = @{ SkipRegistryBackup = 'true' } }
     ) {
@@ -249,6 +258,9 @@ Describe 'Import-ConfigToParams deployment flags' {
         @{ Value = '"false"'; Expected = $true }
         @{ Value = '"False"'; Expected = $true }
         @{ Value = '0'; Expected = $true }
+        @{ Value = '0.0'; Expected = $true }
+        @{ Value = '0e0'; Expected = $true }
+        @{ Value = '1.0'; Expected = $false }
         @{ Value = 'true'; Expected = $false }
         @{ Value = '"true"'; Expected = $false }
     ) {

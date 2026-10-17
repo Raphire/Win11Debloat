@@ -3,7 +3,8 @@
         Reads a boolean deployment value from a configuration file.
 
     .DESCRIPTION
-        Returns $true or $false for a JSON boolean, for the text true or false (any case) and for the numbers 1 and 0.
+        Returns $true or $false for a JSON boolean, for the text true or false (any case) and for the numbers 1 and 0
+        in any JSON notation (1, 1.0 and 1e0 are read as different number types by ConvertFrom-Json).
         Returns $null for anything else. A plain [bool] cast cannot be used because it turns any non-empty string,
         such as "false", into $true.
 #>
@@ -17,7 +18,7 @@ function ConvertTo-ConfigBoolean {
         if ($text -ieq 'false') { return $false }
         return $null
     }
-    if ($Value -is [int] -or $Value -is [long]) {
+    if ($Value -is [int] -or $Value -is [long] -or $Value -is [decimal] -or $Value -is [double]) {
         if ($Value -eq 1) { return $true }
         if ($Value -eq 0) { return $false }
     }

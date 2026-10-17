@@ -27,6 +27,29 @@ function ConvertTo-ConfigBoolean {
 
 <#
     .SYNOPSIS
+        Reads one boolean deployment setting from the deployment values of a configuration file.
+
+    .DESCRIPTION
+        Returns $null when the setting is missing. A setting that is present but is not a boolean (see ConvertTo-ConfigBoolean)
+        also gives $null, after a warning that names the setting and the value, so it is never silently dropped.
+#>
+function Get-ConfigDeploymentFlag {
+    param(
+        [hashtable]$Lookup,
+        [string]$Name
+    )
+
+    if (-not $Lookup.ContainsKey($Name)) { return $null }
+
+    $flagValue = ConvertTo-ConfigBoolean $Lookup[$Name]
+    if ($null -eq $flagValue) {
+        Write-Warning "Ignoring deployment setting '$Name' in the config file: expected true or false, found '$($Lookup[$Name])'."
+    }
+    return $flagValue
+}
+
+<#
+    .SYNOPSIS
         Imports valid application, tweak, and deployment selections from a configuration JSON file into active parameters.
 #>
 function Import-ConfigToParams {
@@ -110,14 +133,8 @@ function Import-ConfigToParams {
 
         $deploymentFlags = @{}
         foreach ($flagName in 'CreateRestorePoint', 'SkipRegistryBackup', 'RestartExplorer') {
-            if (-not $deploymentLookup.ContainsKey($flagName)) { continue }
-
-            $flagValue = ConvertTo-ConfigBoolean $deploymentLookup[$flagName]
-            if ($null -eq $flagValue) {
-                Write-Warning "Ignoring deployment setting '$flagName' in the config file: expected true or false, found '$($deploymentLookup[$flagName])'."
-                continue
-            }
-            $deploymentFlags[$flagName] = $flagValue
+            $flagValue = Get-ConfigDeploymentFlag -Lookup $deploymentLookup -Name $flagName
+            if ($null -ne $flagValue) { $deploymentFlags[$flagName] = $flagValue }
         }
 
         if ($deploymentFlags['CreateRestorePoint'] -eq $true) {

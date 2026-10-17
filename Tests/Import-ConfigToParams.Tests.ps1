@@ -281,3 +281,32 @@ Describe 'Import-ConfigToParams deployment flags' {
         $warnings[0] | Should -BeLike "Ignoring deployment setting '$Flag'*expected true or false*"
     }
 }
+
+Describe 'Get-ConfigDeploymentFlag' {
+    BeforeEach {
+        $warnings = [System.Collections.Generic.List[string]]::new()
+        Mock Write-Warning { $warnings.Add([string]$Message) }
+    }
+
+    It 'returns nothing and does not warn when the setting is missing' {
+        Get-ConfigDeploymentFlag -Lookup @{ Other = $true } -Name 'SkipRegistryBackup' | Should -BeNullOrEmpty
+        $warnings | Should -HaveCount 0
+    }
+
+    It 'returns <Expected> for the value <Text> without a warning' -ForEach @(
+        @{ Text = 'true'; Value = $true; Expected = $true }
+        @{ Text = 'false'; Value = $false; Expected = $false }
+        @{ Text = '"false"'; Value = 'false'; Expected = $false }
+        @{ Text = '1.0'; Value = [decimal]1.0; Expected = $true }
+    ) {
+        Get-ConfigDeploymentFlag -Lookup @{ SkipRegistryBackup = $Value } -Name 'SkipRegistryBackup' | Should -Be $Expected
+        $warnings | Should -HaveCount 0
+    }
+
+    It 'returns nothing and warns with the name and the value for an unsupported value' {
+        Get-ConfigDeploymentFlag -Lookup @{ SkipRegistryBackup = 'yes' } -Name 'SkipRegistryBackup' | Should -BeNullOrEmpty
+
+        $warnings | Should -HaveCount 1
+        $warnings[0] | Should -BeLike "Ignoring deployment setting 'SkipRegistryBackup'*expected true or false, found 'yes'*"
+    }
+}

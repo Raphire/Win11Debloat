@@ -6,6 +6,7 @@ BeforeAll {
     . (Join-Path $PSScriptRoot '..\Scripts\FileIO\Import-LanguageFile.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\Helpers\Add-Parameter.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\FileIO\Save-ToFile.ps1')
+    . (Join-Path $PSScriptRoot '..\Scripts\Helpers\Windows-BuildHelpers.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\FileIO\Import-Settings.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\FileIO\Save-Settings.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\FileIO\Import-AppsFromFile.ps1')

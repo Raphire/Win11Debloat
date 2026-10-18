@@ -28,7 +28,7 @@ function Import-Settings {
         if (-not $feature) { continue }
 
         # Check version and feature compatibility using Features.json
-        if (($feature.MinVersion -and $WinVersion -lt $feature.MinVersion) -or ($feature.MaxVersion -and $WinVersion -gt $feature.MaxVersion) -or ($feature.FeatureId -eq 'DisableModernStandbyNetworking' -and (-not $script:ModernStandbySupported))) {
+        if (-not (Test-FeatureSupportedOnBuild -Feature $feature -Build $WinVersion) -or ($feature.FeatureId -eq 'DisableModernStandbyNetworking' -and (-not $script:ModernStandbySupported))) {
            continue
         }
         

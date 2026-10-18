@@ -2,6 +2,7 @@ BeforeAll {
     . (Join-Path $PSScriptRoot '..\Scripts\FileIO\Import-JsonFile.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\FileIO\Import-LanguageFile.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\Helpers\Add-Parameter.ps1')
+    . (Join-Path $PSScriptRoot '..\Scripts\Helpers\Windows-BuildHelpers.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\Helpers\Import-ConfigToParams.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\Helpers\Test-ConfigConsistency.ps1')
     $script:ConfigFixturePath = Join-Path $PSScriptRoot 'TestData\JsonFileLoading\ExportedConfig.WithSettings.json'

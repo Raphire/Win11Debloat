@@ -21,6 +21,8 @@ BeforeAll {
     function Set-StoreSearchSuggestionsDisabled { param($StoreAppsDatabase) $true }
 
     . (Join-Path $PSScriptRoot '..\Scripts\FileIO\Import-LanguageFile.ps1')
+    . (Join-Path $PSScriptRoot '..\Scripts\Helpers\Windows-BuildHelpers.ps1')
+    . (Join-Path $PSScriptRoot '..\Scripts\Helpers\Get-RebootFeatureLabels.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\Features\Invoke-Changes.ps1')
 
     # Builds a $script:Lang fixture whose Features section mirrors $script:Features exactly,
@@ -425,6 +427,7 @@ Describe 'Invoke-AllChanges' {
         $script:CancelRequested = $false
         $script:ApplyProgressCallback = $null
         Mock Test-RunningAsSystem { $false }
+        Mock Get-CurrentWindowsBuild { 26100 }
         Mock Resolve-UndoRegFilePath { param($FileName) "Undo\$FileName" }
         Mock New-RegistrySettingsBackup {}
         Mock Invoke-SystemRestorePoint { $true }
@@ -539,4 +542,120 @@ Describe 'Invoke-AllChanges' {
         Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -eq 'Unable to verify if all apps were uninstalled successfully.' }
     }
 
+}
+
+Describe 'Invoke-AllChanges build gate' {
+    BeforeEach {
+        $script:Params = @{ Modern = $true; Legacy = $true; Anyone = $true }
+        $script:UndoParams = @{ ModernUndo = $true }
+        $script:ControlParams = @('WhatIf', 'Silent', 'User', 'Sysprep')
+        $script:Features = @{
+            Modern     = [PSCustomObject]@{ RegistryKey = 'modern.reg'; MinVersion = 22621; MaxVersion = $null }
+            Legacy     = [PSCustomObject]@{ RegistryKey = 'legacy.reg'; MinVersion = $null; MaxVersion = 21999 }
+            Anyone     = [PSCustomObject]@{ RegistryKey = 'anyone.reg' }
+            ModernUndo = [PSCustomObject]@{ RegistryUndoKey = 'undo.reg'; MinVersion = 22621; MaxVersion = $null }
+        }
+        $script:CancelRequested = $false
+        $script:ApplyProgressCallback = $null
+        $warnings = [System.Collections.Generic.List[string]]::new()
+        Mock Test-RunningAsSystem { $false }
+        Mock Resolve-UndoRegFilePath { param($FileName) "Undo\$FileName" }
+        Mock New-RegistrySettingsBackup {}
+        Mock Invoke-SystemRestorePoint { $true }
+        Mock Invoke-ApplyFeatures {}
+        Mock Invoke-UndoFeatures {}
+        Mock Write-Host {}
+        Mock Write-Warning { $warnings.Add([string]$Message) }
+    }
+
+    It 'skips features that need a newer build and keeps the rest' {
+        Mock Get-CurrentWindowsBuild { 19045 }
+
+        Invoke-AllChanges
+
+        Should -Invoke Invoke-ApplyFeatures -Times 1 -Exactly -ParameterFilter {
+            @($FeatureIds).Count -eq 2 -and $FeatureIds -contains 'Legacy' -and $FeatureIds -contains 'Anyone'
+        }
+        $warnings | Should -HaveCount 1
+        $warnings[0] | Should -BeLike 'Skipping Modern: * build 22621 or newer*build 19045*'
+    }
+
+    It 'skips features that are only supported on an older build' {
+        Mock Get-CurrentWindowsBuild { 26100 }
+
+        Invoke-AllChanges
+
+        Should -Invoke Invoke-ApplyFeatures -Times 1 -Exactly -ParameterFilter {
+            @($FeatureIds).Count -eq 2 -and $FeatureIds -contains 'Modern' -and $FeatureIds -contains 'Anyone'
+        }
+        $warnings | Should -HaveCount 1
+        $warnings[0] | Should -BeLike 'Skipping Legacy: * build 21999 or older*build 26100*'
+    }
+
+    It 'does not back up the registry keys of skipped features' {
+        Mock Get-CurrentWindowsBuild { 19045 }
+
+        Invoke-AllChanges
+
+        Should -Invoke New-RegistrySettingsBackup -Times 1 -Exactly -ParameterFilter {
+            $ActionableKeys -notcontains 'Modern' -and $ActionableKeys -contains 'Legacy'
+        }
+    }
+
+    It 'does not apply anything gated when every selected feature is skipped' {
+        Mock Get-CurrentWindowsBuild { 19045 }
+        $script:Params = @{ Modern = $true }
+        $script:UndoParams = @{}
+
+        Invoke-AllChanges
+
+        Should -Invoke Invoke-ApplyFeatures -Times 0 -Exactly
+        Should -Invoke New-RegistrySettingsBackup -Times 0 -Exactly
+        $warnings | Should -HaveCount 1
+    }
+
+    It 'applies every feature when the build cannot be read' {
+        Mock Get-CurrentWindowsBuild { $null }
+
+        Invoke-AllChanges
+
+        Should -Invoke Invoke-ApplyFeatures -Times 1 -Exactly -ParameterFilter { @($FeatureIds).Count -eq 3 }
+        $warnings | Should -HaveCount 0
+    }
+
+    It 'drops skipped features from the parameters so that they are not part of the reboot advice' {
+        Mock Get-CurrentWindowsBuild { 19045 }
+        Mock Get-Translation { $Key }
+        $script:Features['Modern'] | Add-Member -NotePropertyName RequiresReboot -NotePropertyValue $true
+        $script:Features['Legacy'] | Add-Member -NotePropertyName RequiresReboot -NotePropertyValue $true
+
+        Invoke-AllChanges
+
+        $script:Params.ContainsKey('Modern') | Should -BeFalse
+        $script:Params.ContainsKey('Legacy') | Should -BeTrue
+        $labels = @(Get-RebootFeatureLabels)
+        $labels | Should -Contain 'Legacy'
+        $labels | Should -Not -Contain 'Modern'
+    }
+
+    It 'does not write anything to the output when it skips a feature' {
+        Mock Get-CurrentWindowsBuild { 19045 }
+        # $PSBoundParameters is a generic dictionary whose Remove() returns a Boolean, unlike Hashtable.Remove()
+        $script:Params = [System.Collections.Generic.Dictionary[string, object]]::new()
+        $script:Params['Modern'] = $true
+        $script:Params['Anyone'] = $true
+
+        @(Invoke-AllChanges) | Should -HaveCount 0
+        $script:Params.ContainsKey('Modern') | Should -BeFalse
+    }
+
+    It 'leaves undo selections alone' {
+        Mock Get-CurrentWindowsBuild { 19045 }
+
+        Invoke-AllChanges
+
+        Should -Invoke Invoke-UndoFeatures -Times 1 -Exactly -ParameterFilter {
+            @($FeatureIds).Count -eq 1 -and $FeatureIds[0] -eq 'ModernUndo'
+        }
+    }
 }

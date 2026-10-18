@@ -253,14 +253,47 @@ function Remove-AppxApp {
     param([string]$app, [string]$targetUser)
 
     $appPattern = '*' + $app + '*'
+    $isWindows10 = $script:WinVersion -ge 10240 -and $script:WinVersion -lt 22000
 
     try {
         $removalResult = Invoke-NonBlocking -ScriptBlock {
-            param($pattern, $target)
+            param($pattern, $target, $isWindows10)
 
             $removalErrors = @()
+            $ignoredRemovalMessages = [System.Collections.Generic.List[string]]::new()
+            $verificationWarnings = [System.Collections.Generic.List[string]]::new()
             $getPackageParams = @{ Name = $pattern; ErrorAction = 'Continue'; ErrorVariable = '+removalErrors' }
-            $removePackageParams = @{ ErrorAction = 'Continue'; ErrorVariable = '+removalErrors' }
+            $removePackageParams = @{ ErrorAction = 'Stop' }
+
+            # Windows 10 can report file-not-found after successfully removing an Appx package.
+            # Suppress it only after confirming the exact package is absent in the same scope.
+            function Test-IgnorableAppxRemovalError {
+                param($RemovalError, [string]$PackageName, [switch]$Provisioned)
+                if (-not ($isWindows10 -and ($RemovalError.Exception.HResult -eq -2147024894 -or
+                    $RemovalError.ToString() -match '\b0x80070002\b'))) {
+                    return $false
+                }
+
+                try {
+                    if ($Provisioned) {
+                        $remainingPackages = @(Get-AppxProvisionedPackage -Online -ErrorAction Stop |
+                            Where-Object { $_.PackageName -eq $PackageName })
+                    }
+                    else {
+                        $verificationParams = $getPackageParams.Clone()
+                        $verificationParams.Remove('ErrorVariable')
+                        $verificationParams.ErrorAction = 'Stop'
+                        $remainingPackages = @(Get-AppxPackage @verificationParams |
+                            Where-Object { $_.PackageFullName -eq $PackageName })
+                    }
+                    return ($remainingPackages.Count -eq 0)
+                }
+                catch {
+                    # An unsuccessful query cannot confirm removal; preserve the original error.
+                    $verificationWarnings.Add("Unable to verify removal of $PackageName (target: $target, provisioned: $Provisioned): $_")
+                    return $false
+                }
+            }
 
             switch ($target) {
                 'AllUsers' {
@@ -278,22 +311,54 @@ function Remove-AppxApp {
 
             foreach ($package in @(Get-AppxPackage @getPackageParams)) {
                 $removePackageParams.Package = $package.PackageFullName
-                $null = Remove-AppxPackage @removePackageParams
+                try {
+                    $null = Remove-AppxPackage @removePackageParams
+                }
+                catch {
+                    if (Test-IgnorableAppxRemovalError $_ -PackageName $package.PackageFullName) {
+                        $ignoredRemovalMessages.Add("Windows 10 Appx removal reported error 0x80070002 for $($package.PackageFullName), but the removal succeeded.")
+                    }
+                    else {
+                        Write-Error -ErrorRecord $_ -ErrorAction Continue -ErrorVariable +removalErrors
+                    }
+                }
             }
 
             if ($target -eq 'AllUsers') {
                 $provisionedPackages = @(Get-AppxProvisionedPackage -Online -ErrorAction Continue -ErrorVariable +removalErrors | Where-Object { $_.PackageName -like $pattern })
                 foreach ($package in $provisionedPackages) {
-                    $null = Remove-ProvisionedAppxPackage -Online -AllUsers -PackageName $package.PackageName -ErrorAction Continue -ErrorVariable +removalErrors
+                    try {
+                        $null = Remove-ProvisionedAppxPackage -Online -AllUsers -PackageName $package.PackageName -ErrorAction Stop
+                    }
+                    catch {
+                        if (Test-IgnorableAppxRemovalError $_ -PackageName $package.PackageName -Provisioned) {
+                            $ignoredRemovalMessages.Add("Windows 10 Appx removal reported error 0x80070002 for $($package.PackageName), but the removal succeeded.")
+                        }
+                        else {
+                            Write-Error -ErrorRecord $_ -ErrorAction Continue -ErrorVariable +removalErrors
+                        }
+                    }
                 }
             }
 
-            return [PSCustomObject]@{ Success = ($removalErrors.Count -eq 0) }
-        } -ArgumentList @($appPattern, $targetUser)
+            return [PSCustomObject]@{
+                Success = ($removalErrors.Count -eq 0)
+                IgnoredRemovalMessages = $ignoredRemovalMessages.ToArray()
+                VerificationWarnings = $verificationWarnings.ToArray()
+            }
+        } -ArgumentList @($appPattern, $targetUser, $isWindows10)
     }
     catch {
         Write-Error "Unable to remove $app via Appx: $_"
         return $false
+    }
+
+    # Write in the caller's runspace so the active transcript captures these messages in GUI mode too.
+    foreach ($message in @($removalResult.IgnoredRemovalMessages)) {
+        if ($message) { Write-Host $message }
+    }
+    foreach ($message in @($removalResult.VerificationWarnings)) {
+        if ($message) { Write-Warning $message }
     }
 
     return [bool]($removalResult -and $removalResult.Success)

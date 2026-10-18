@@ -638,6 +638,17 @@ Describe 'Invoke-AllChanges build gate' {
         $labels | Should -Not -Contain 'Modern'
     }
 
+    It 'does not write anything to the output when it skips a feature' {
+        Mock Get-CurrentWindowsBuild { 19045 }
+        # $PSBoundParameters is a generic dictionary whose Remove() returns a Boolean, unlike Hashtable.Remove()
+        $script:Params = [System.Collections.Generic.Dictionary[string, object]]::new()
+        $script:Params['Modern'] = $true
+        $script:Params['Anyone'] = $true
+
+        @(Invoke-AllChanges) | Should -HaveCount 0
+        $script:Params.ContainsKey('Modern') | Should -BeFalse
+    }
+
     It 'leaves undo selections alone' {
         Mock Get-CurrentWindowsBuild { 19045 }
 

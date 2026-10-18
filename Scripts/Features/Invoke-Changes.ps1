@@ -374,7 +374,7 @@ function Invoke-AllChanges {
         Write-Warning "Skipping ${id}: it is only supported on Windows $($range -join ' and '), this system runs build $currentBuild."
 
         # Also drop it from the parameters, so that later steps (such as the reboot advice) only see what was applied
-        $script:Params.Remove($id)
+        [void]$script:Params.Remove($id)
     }
     $applyIds = @($applyIds | Where-Object { $unsupportedIds -notcontains $_ })
 

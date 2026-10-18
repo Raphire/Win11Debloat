@@ -1,5 +1,55 @@
 <#
     .SYNOPSIS
+        Reads a boolean deployment value from a configuration file.
+
+    .DESCRIPTION
+        Returns $true or $false for a JSON boolean, for the text true or false (any case) and for the numbers 1 and 0
+        in any JSON notation (1, 1.0 and 1e0 are read as different number types by ConvertFrom-Json).
+        Returns $null for anything else. A plain [bool] cast cannot be used because it turns any non-empty string,
+        such as "false", into $true.
+#>
+function ConvertTo-ConfigBoolean {
+    param($Value)
+
+    if ($Value -is [bool]) { return $Value }
+    if ($Value -is [string]) {
+        $text = $Value.Trim()
+        if ($text -ieq 'true') { return $true }
+        if ($text -ieq 'false') { return $false }
+        return $null
+    }
+    if ($Value -is [int] -or $Value -is [long] -or $Value -is [decimal] -or $Value -is [double]) {
+        if ($Value -eq 1) { return $true }
+        if ($Value -eq 0) { return $false }
+    }
+    return $null
+}
+
+<#
+    .SYNOPSIS
+        Reads one boolean deployment setting from the deployment values of a configuration file.
+
+    .DESCRIPTION
+        Returns $null when the setting is missing. A setting that is present but is not a boolean (see ConvertTo-ConfigBoolean)
+        also gives $null, after a warning that names the setting and the value, so it is never silently dropped.
+#>
+function Get-ConfigDeploymentFlag {
+    param(
+        [hashtable]$Lookup,
+        [string]$Name
+    )
+
+    if (-not $Lookup.ContainsKey($Name)) { return $null }
+
+    $flagValue = ConvertTo-ConfigBoolean $Lookup[$Name]
+    if ($null -eq $flagValue) {
+        Write-Warning "Ignoring deployment setting '$Name' in the config file: expected true or false, found '$($Lookup[$Name])'."
+    }
+    return $flagValue
+}
+
+<#
+    .SYNOPSIS
         Imports valid application, tweak, and deployment selections from a configuration JSON file into active parameters.
 #>
 function Import-ConfigToParams {
@@ -81,17 +131,23 @@ function Import-ConfigToParams {
             }
         }
 
-        if ($deploymentLookup.ContainsKey('CreateRestorePoint') -and [bool]$deploymentLookup['CreateRestorePoint']) {
+        $deploymentFlags = @{}
+        foreach ($flagName in 'CreateRestorePoint', 'SkipRegistryBackup', 'RestartExplorer') {
+            $flagValue = Get-ConfigDeploymentFlag -Lookup $deploymentLookup -Name $flagName
+            if ($null -ne $flagValue) { $deploymentFlags[$flagName] = $flagValue }
+        }
+
+        if ($deploymentFlags['CreateRestorePoint'] -eq $true) {
             Add-Parameter 'CreateRestorePoint'
             $importedItems++
         }
 
-        if ($deploymentLookup.ContainsKey('SkipRegistryBackup') -and [bool]$deploymentLookup['SkipRegistryBackup']) {
+        if ($deploymentFlags['SkipRegistryBackup'] -eq $true) {
             Add-Parameter 'SkipRegistryBackup'
             $importedItems++
         }
 
-        if ($deploymentLookup.ContainsKey('RestartExplorer') -and -not [bool]$deploymentLookup['RestartExplorer']) {
+        if ($deploymentFlags['RestartExplorer'] -eq $false) {
             Add-Parameter 'SkipExplorerRestart'
             $importedItems++
         }

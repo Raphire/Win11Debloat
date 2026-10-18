@@ -261,6 +261,7 @@ function Remove-AppxApp {
 
             $removalErrors = @()
             $ignoredRemovalMessages = [System.Collections.Generic.List[string]]::new()
+            $verificationWarnings = [System.Collections.Generic.List[string]]::new()
             $getPackageParams = @{ Name = $pattern; ErrorAction = 'Continue'; ErrorVariable = '+removalErrors' }
             $removePackageParams = @{ ErrorAction = 'Stop' }
 
@@ -289,6 +290,7 @@ function Remove-AppxApp {
                 }
                 catch {
                     # An unsuccessful query cannot confirm removal; preserve the original error.
+                    $verificationWarnings.Add("Unable to verify removal of $PackageName (target: $target, provisioned: $Provisioned): $_")
                     return $false
                 }
             }
@@ -342,6 +344,7 @@ function Remove-AppxApp {
             return [PSCustomObject]@{
                 Success = ($removalErrors.Count -eq 0)
                 IgnoredRemovalMessages = $ignoredRemovalMessages.ToArray()
+                VerificationWarnings = $verificationWarnings.ToArray()
             }
         } -ArgumentList @($appPattern, $targetUser, $isWindows10)
     }
@@ -353,6 +356,9 @@ function Remove-AppxApp {
     # Write in the caller's runspace so the active transcript captures these messages in GUI mode too.
     foreach ($message in @($removalResult.IgnoredRemovalMessages)) {
         if ($message) { Write-Host $message }
+    }
+    foreach ($message in @($removalResult.VerificationWarnings)) {
+        if ($message) { Write-Warning $message }
     }
 
     return [bool]($removalResult -and $removalResult.Success)

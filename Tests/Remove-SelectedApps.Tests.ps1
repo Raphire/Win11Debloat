@@ -344,6 +344,7 @@ Describe 'Remove-AppxApp' {
         $script:WinVersion = 26100
         Mock Invoke-NonBlocking { [PSCustomObject]@{ Success = $true } }
         Mock Write-Host {}
+        Mock Write-Warning {}
     }
 
     It 'passes the wildcard and target user data for <Target>' -ForEach @(
@@ -475,6 +476,12 @@ Describe 'Remove-AppxApp' {
         $errors = @($output | Where-Object { $_ -is [System.Management.Automation.ErrorRecord] })
         $errors.Count | Should -Be $(if ($State -eq 'Absent') { 0 } else { 1 })
         if ($errors.Count) { $errors[0].ToString() | Should -Match '0x80070002' }
+        Should -Invoke Write-Warning -Times $(if ($State -eq 'QueryError') { 1 } else { 0 }) -Exactly
+        if ($State -eq 'QueryError') {
+            Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter {
+                $Message -like '*Unable to verify removal of One.App_1.0*Verification failed*'
+            }
+        }
         Should -Invoke Write-Host -Times $(if ($State -eq 'Absent') { 1 } else { 0 }) -Exactly
         if ($Operation -eq 'Provisioned') {
             Should -Invoke Get-AppxProvisionedPackage -Times 1 -Exactly -ParameterFilter {
@@ -505,6 +512,7 @@ Describe 'Remove-AppxApp' {
     It 'preserves the error handling in a background runspace on build <Build>' -ForEach @(
         @{ Build = 19045; Expected = $true }
         @{ Build = 26100; Expected = $false }
+        @{ Build = 19045; Expected = $false; VerificationFails = $true }
     ) {
         $script:WinVersion = $Build
         Mock Invoke-NonBlocking {
@@ -517,9 +525,10 @@ Describe 'Remove-AppxApp' {
         $workerPowerShell = [powershell]::Create()
         try {
             $workerSetup = {
-                param($worker, $workerArguments)
+                param($worker, $workerArguments, $verificationFails)
                 function Get-AppxPackage {
                     [CmdletBinding()] param($Name)
+                    if ($script:packageRemoved -and $verificationFails) { throw 'Verification failed' }
                     if (-not $script:packageRemoved) { [PSCustomObject]@{ PackageFullName = 'One.App_1.0' } }
                 }
                 function Remove-AppxPackage {
@@ -529,12 +538,22 @@ Describe 'Remove-AppxApp' {
                 }
                 & ([scriptblock]::Create($worker)) @workerArguments
             }
-            $null = $workerPowerShell.AddScript($workerSetup.ToString()).AddArgument($script:appxWorker).AddArgument($script:appxWorkerArguments)
+            $null = $workerPowerShell.AddScript($workerSetup.ToString()).AddArgument($script:appxWorker).AddArgument($script:appxWorkerArguments).AddArgument([bool]$VerificationFails)
             $output = @($workerPowerShell.Invoke())
 
             $output[-1].Success | Should -Be $Expected
             $workerPowerShell.Streams.Error.Count | Should -Be $(if ($Expected) { 0 } else { 1 })
             @($output[-1].IgnoredRemovalMessages).Count | Should -Be $(if ($Expected) { 1 } else { 0 })
+            @($output[-1].VerificationWarnings).Count | Should -Be $(if ($VerificationFails) { 1 } else { 0 })
+            if ($VerificationFails) {
+                $workerPowerShell.Streams.Error[0].ToString() | Should -Match '0x80070002'
+                $script:appxWorkerResult = $output[-1]
+                Mock Invoke-NonBlocking { $script:appxWorkerResult }
+                Remove-AppxApp -app 'One.App' -targetUser 'CurrentUser' | Should -BeFalse
+                Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter {
+                    $Message -like '*Unable to verify removal of One.App_1.0*Verification failed*'
+                }
+            }
             if ($Expected) {
                 # Replay the actual worker result through the caller, where transcription runs.
                 $script:appxWorkerResult = $output[-1]

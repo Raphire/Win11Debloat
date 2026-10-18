@@ -395,6 +395,8 @@ Describe 'Remove-AppxApp' {
         Mock Invoke-NonBlocking { param($ScriptBlock, $ArgumentList) & $ScriptBlock @ArgumentList }
         Mock Get-AppxPackage { [PSCustomObject]@{ PackageFullName = 'One.App_1.0' } }
         Mock Get-AppxProvisionedPackage { [PSCustomObject]@{ PackageName = 'One.App_1.0' } }
+        Mock Get-AppxPackage {} -ParameterFilter { $ErrorAction -eq 'Stop' }
+        Mock Get-AppxProvisionedPackage {} -ParameterFilter { $ErrorAction -eq 'Stop' }
         Mock Remove-AppxPackage {}
         Mock Remove-ProvisionedAppxPackage {}
         if ($Operation -eq 'Appx') {
@@ -417,12 +419,76 @@ Describe 'Remove-AppxApp' {
         $script:WinVersion = 19045
         Mock Invoke-NonBlocking { param($ScriptBlock, $ArgumentList) & $ScriptBlock @ArgumentList }
         Mock Get-AppxPackage { [PSCustomObject]@{ PackageFullName = 'One.App_1.0' } }
+        Mock Get-AppxPackage {} -ParameterFilter { $ErrorAction -eq 'Stop' }
         Mock Remove-AppxPackage { throw [System.Runtime.InteropServices.COMException]::new('Localized message', -2147024894) }
 
         $output = @(Remove-AppxApp -app 'One.App' -targetUser 'CurrentUser' 2>&1)
 
         $output | Should -HaveCount 1
         $output[0] | Should -BeTrue
+    }
+
+    It 'verifies <Operation> removal for <Target> when the query reports <State>' -ForEach @(
+        @{ Operation = 'Appx'; Target = 'CurrentUser'; State = 'Absent' }
+        @{ Operation = 'Appx'; Target = 'CurrentUser'; State = 'Present' }
+        @{ Operation = 'Appx'; Target = 'CurrentUser'; State = 'QueryError' }
+        @{ Operation = 'Appx'; Target = 'AllUsers'; State = 'Absent' }
+        @{ Operation = 'Appx'; Target = 'AllUsers'; State = 'Present' }
+        @{ Operation = 'Appx'; Target = 'AllUsers'; State = 'QueryError' }
+        @{ Operation = 'Appx'; Target = 'NamedUser'; State = 'Absent' }
+        @{ Operation = 'Appx'; Target = 'NamedUser'; State = 'Present' }
+        @{ Operation = 'Appx'; Target = 'NamedUser'; State = 'QueryError' }
+        @{ Operation = 'Provisioned'; Target = 'AllUsers'; State = 'Absent' }
+        @{ Operation = 'Provisioned'; Target = 'AllUsers'; State = 'Present' }
+        @{ Operation = 'Provisioned'; Target = 'AllUsers'; State = 'QueryError' }
+    ) {
+        $script:WinVersion = 19045
+        Mock Invoke-NonBlocking { param($ScriptBlock, $ArgumentList) & $ScriptBlock @ArgumentList }
+        Mock Get-AppxPackage {
+            if ($Operation -eq 'Appx') { [PSCustomObject]@{ PackageFullName = 'One.App_1.0' } }
+        }
+        Mock Get-AppxProvisionedPackage {
+            if ($Operation -eq 'Provisioned') { [PSCustomObject]@{ PackageName = 'One.App_1.0' } }
+        }
+        Mock Get-AppxPackage {
+            if ($State -eq 'QueryError') { Write-Error 'Verification failed' }
+            if ($State -eq 'Present') { [PSCustomObject]@{ PackageFullName = 'One.App_1.0' } }
+            [PSCustomObject]@{ PackageFullName = 'One.App_2.0' }
+        } -ParameterFilter { $ErrorAction -eq 'Stop' }
+        Mock Get-AppxProvisionedPackage {
+            if ($State -eq 'QueryError') { Write-Error 'Verification failed' }
+            if ($State -eq 'Present') { [PSCustomObject]@{ PackageName = 'One.App_1.0' } }
+            [PSCustomObject]@{ PackageName = 'One.App_2.0' }
+        } -ParameterFilter { $ErrorAction -eq 'Stop' }
+        Mock Remove-AppxPackage { Write-Error 'Deployment failed with HRESULT: 0x80070002' }
+        Mock Remove-ProvisionedAppxPackage { Write-Error 'Deployment failed with HRESULT: 0x80070002' }
+
+        $targetUser = $Target
+        if ($Target -eq 'NamedUser') {
+            $identity = [System.Security.Principal.WindowsIdentity]::GetCurrent()
+            $targetUser = $identity.Name
+            $expectedSid = $identity.User.Value
+        }
+        $output = @(Remove-AppxApp -app 'One.App' -targetUser $targetUser 2>&1)
+
+        $output[-1] | Should -Be ($State -eq 'Absent')
+        $errors = @($output | Where-Object { $_ -is [System.Management.Automation.ErrorRecord] })
+        $errors.Count | Should -Be $(if ($State -eq 'Absent') { 0 } else { 1 })
+        if ($errors.Count) { $errors[0].ToString() | Should -Match '0x80070002' }
+        Should -Invoke Write-Host -Times $(if ($State -eq 'Absent') { 1 } else { 0 }) -Exactly
+        if ($Operation -eq 'Provisioned') {
+            Should -Invoke Get-AppxProvisionedPackage -Times 1 -Exactly -ParameterFilter {
+                $Online -and $ErrorAction -eq 'Stop'
+            }
+        }
+        else {
+            Should -Invoke Get-AppxPackage -Times 1 -Exactly -ParameterFilter {
+                $Name -eq '*One.App*' -and $ErrorAction -eq 'Stop' -and -not $ErrorVariable -and
+                (($Target -eq 'AllUsers' -and $AllUsers -and -not $User) -or
+                 ($Target -eq 'CurrentUser' -and -not $AllUsers -and -not $User) -or
+                 ($Target -eq 'NamedUser' -and -not $AllUsers -and $User -eq $expectedSid))
+            }
+        }
     }
 
     It 'does not ignore Windows 10 package discovery errors with the same code' {
@@ -454,10 +520,11 @@ Describe 'Remove-AppxApp' {
                 param($worker, $workerArguments)
                 function Get-AppxPackage {
                     [CmdletBinding()] param($Name)
-                    [PSCustomObject]@{ PackageFullName = 'One.App_1.0' }
+                    if (-not $script:packageRemoved) { [PSCustomObject]@{ PackageFullName = 'One.App_1.0' } }
                 }
                 function Remove-AppxPackage {
                     [CmdletBinding()] param($Package)
+                    $script:packageRemoved = $true
                     Write-Error 'Deployment failed with HRESULT: 0x80070002'
                 }
                 & ([scriptblock]::Create($worker)) @workerArguments

@@ -265,11 +265,32 @@ function Remove-AppxApp {
             $removePackageParams = @{ ErrorAction = 'Stop' }
 
             # Windows 10 can report file-not-found after successfully removing an Appx package.
-            # Catch it before it reaches either the CLI or the GUI runspace's error stream.
+            # Suppress it only after confirming the exact package is absent in the same scope.
             function Test-IgnorableAppxRemovalError {
-                param($RemovalError)
-                return ($isWindows10 -and ($RemovalError.Exception.HResult -eq -2147024894 -or
-                    $RemovalError.ToString() -match '\b0x80070002\b'))
+                param($RemovalError, [string]$PackageName, [switch]$Provisioned)
+                if (-not ($isWindows10 -and ($RemovalError.Exception.HResult -eq -2147024894 -or
+                    $RemovalError.ToString() -match '\b0x80070002\b'))) {
+                    return $false
+                }
+
+                try {
+                    if ($Provisioned) {
+                        $remainingPackages = @(Get-AppxProvisionedPackage -Online -ErrorAction Stop |
+                            Where-Object { $_.PackageName -eq $PackageName })
+                    }
+                    else {
+                        $verificationParams = $getPackageParams.Clone()
+                        $verificationParams.Remove('ErrorVariable')
+                        $verificationParams.ErrorAction = 'Stop'
+                        $remainingPackages = @(Get-AppxPackage @verificationParams |
+                            Where-Object { $_.PackageFullName -eq $PackageName })
+                    }
+                    return ($remainingPackages.Count -eq 0)
+                }
+                catch {
+                    # An unsuccessful query cannot confirm removal; preserve the original error.
+                    return $false
+                }
             }
 
             switch ($target) {
@@ -292,7 +313,7 @@ function Remove-AppxApp {
                     $null = Remove-AppxPackage @removePackageParams
                 }
                 catch {
-                    if (Test-IgnorableAppxRemovalError $_) {
+                    if (Test-IgnorableAppxRemovalError $_ -PackageName $package.PackageFullName) {
                         $ignoredRemovalMessages.Add("Windows 10 Appx removal reported error 0x80070002 for $($package.PackageFullName), but the removal succeeded.")
                     }
                     else {
@@ -308,7 +329,7 @@ function Remove-AppxApp {
                         $null = Remove-ProvisionedAppxPackage -Online -AllUsers -PackageName $package.PackageName -ErrorAction Stop
                     }
                     catch {
-                        if (Test-IgnorableAppxRemovalError $_) {
+                        if (Test-IgnorableAppxRemovalError $_ -PackageName $package.PackageName -Provisioned) {
                             $ignoredRemovalMessages.Add("Windows 10 Appx removal reported error 0x80070002 for $($package.PackageName), but the removal succeeded.")
                         }
                         else {

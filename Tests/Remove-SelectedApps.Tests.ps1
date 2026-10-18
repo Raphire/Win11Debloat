@@ -340,7 +340,11 @@ Describe 'Remove-EdgeAutostartValue' {
 }
 
 Describe 'Remove-AppxApp' {
-    BeforeEach { Mock Invoke-NonBlocking { [PSCustomObject]@{ Success = $true } } }
+    BeforeEach {
+        $script:WinVersion = 26100
+        Mock Invoke-NonBlocking { [PSCustomObject]@{ Success = $true } }
+        Mock Write-Host {}
+    }
 
     It 'passes the wildcard and target user data for <Target>' -ForEach @(
         @{ Target = 'AllUsers' }
@@ -349,7 +353,7 @@ Describe 'Remove-AppxApp' {
     ) {
         Remove-AppxApp -app 'One.App' -targetUser $Target
         Should -Invoke Invoke-NonBlocking -Times 1 -Exactly -ParameterFilter {
-            @($ArgumentList).Count -eq 2 -and @($ArgumentList)[0] -eq '*One.App*' -and @($ArgumentList)[1] -eq $Target
+            @($ArgumentList).Count -eq 3 -and @($ArgumentList)[0] -eq '*One.App*' -and @($ArgumentList)[1] -eq $Target -and @($ArgumentList)[2] -eq $false
         }
     }
 
@@ -375,6 +379,107 @@ Describe 'Remove-AppxApp' {
         Remove-AppxApp -app 'One.App' -targetUser 'CurrentUser' | Should -BeFalse
         Should -Invoke Write-Error -Times 1 -Exactly -ParameterFilter {
             $Message -like '*Unable to remove One.App via Appx*access denied*'
+        }
+    }
+
+    It 'handles <Operation> error <Code> on build <Build> with success <Expected>' -ForEach @(
+        @{ Operation = 'Appx'; Code = '0x80070002'; Build = 19045; Expected = $true }
+        @{ Operation = 'Provisioned'; Code = '0x80070002'; Build = 19045; Expected = $true }
+        @{ Operation = 'Appx'; Code = '0x80070002'; Build = 22000; Expected = $false }
+        @{ Operation = 'Provisioned'; Code = '0x80070002'; Build = 26100; Expected = $false }
+        @{ Operation = 'Appx'; Code = '0x80070005'; Build = 19045; Expected = $false }
+        @{ Operation = 'Provisioned'; Code = '0x80070005'; Build = 19045; Expected = $false }
+        @{ Operation = 'Appx'; Code = '0x80070002'; Build = $null; Expected = $false }
+    ) {
+        $script:WinVersion = $Build
+        Mock Invoke-NonBlocking { param($ScriptBlock, $ArgumentList) & $ScriptBlock @ArgumentList }
+        Mock Get-AppxPackage { [PSCustomObject]@{ PackageFullName = 'One.App_1.0' } }
+        Mock Get-AppxProvisionedPackage { [PSCustomObject]@{ PackageName = 'One.App_1.0' } }
+        Mock Remove-AppxPackage {}
+        Mock Remove-ProvisionedAppxPackage {}
+        if ($Operation -eq 'Appx') {
+            Mock Remove-AppxPackage { Write-Error "Deployment failed with HRESULT: $Code" }
+        }
+        else {
+            Mock Remove-ProvisionedAppxPackage { Write-Error "Deployment failed with HRESULT: $Code" }
+        }
+
+        $output = @(Remove-AppxApp -app 'One.App' -targetUser 'AllUsers' 2>&1)
+
+        $output[-1] | Should -Be $Expected
+        @($output | Where-Object { $_ -is [System.Management.Automation.ErrorRecord] }).Count | Should -Be $(if ($Expected) { 0 } else { 1 })
+        Should -Invoke Write-Host -Times $(if ($Expected) { 1 } else { 0 }) -Exactly -ParameterFilter {
+            $Object -eq 'Ignoring Windows 10 Appx removal error 0x80070002 for One.App_1.0.'
+        }
+    }
+
+    It 'recognizes a Windows 10 removal HRESULT without relying on English error text' {
+        $script:WinVersion = 19045
+        Mock Invoke-NonBlocking { param($ScriptBlock, $ArgumentList) & $ScriptBlock @ArgumentList }
+        Mock Get-AppxPackage { [PSCustomObject]@{ PackageFullName = 'One.App_1.0' } }
+        Mock Remove-AppxPackage { throw [System.Runtime.InteropServices.COMException]::new('Localized message', -2147024894) }
+
+        $output = @(Remove-AppxApp -app 'One.App' -targetUser 'CurrentUser' 2>&1)
+
+        $output | Should -HaveCount 1
+        $output[0] | Should -BeTrue
+    }
+
+    It 'does not ignore Windows 10 package discovery errors with the same code' {
+        $script:WinVersion = 19045
+        Mock Invoke-NonBlocking { param($ScriptBlock, $ArgumentList) & $ScriptBlock @ArgumentList }
+        Mock Get-AppxPackage { Write-Error 'Discovery failed: 0x80070002' }
+
+        $output = @(Remove-AppxApp -app 'One.App' -targetUser 'CurrentUser' 2>&1)
+
+        $output[-1] | Should -BeFalse
+        @($output | Where-Object { $_ -is [System.Management.Automation.ErrorRecord] }) | Should -HaveCount 1
+    }
+
+    It 'preserves the error handling in a background runspace on build <Build>' -ForEach @(
+        @{ Build = 19045; Expected = $true }
+        @{ Build = 26100; Expected = $false }
+    ) {
+        $script:WinVersion = $Build
+        Mock Invoke-NonBlocking {
+            param($ScriptBlock, $ArgumentList)
+            $script:appxWorker = $ScriptBlock.ToString()
+            $script:appxWorkerArguments = $ArgumentList
+            [PSCustomObject]@{ Success = $true }
+        }
+        $null = Remove-AppxApp -app 'One.App' -targetUser 'CurrentUser'
+        $workerPowerShell = [powershell]::Create()
+        try {
+            $workerSetup = {
+                param($worker, $workerArguments)
+                function Get-AppxPackage {
+                    [CmdletBinding()] param($Name)
+                    [PSCustomObject]@{ PackageFullName = 'One.App_1.0' }
+                }
+                function Remove-AppxPackage {
+                    [CmdletBinding()] param($Package)
+                    Write-Error 'Deployment failed with HRESULT: 0x80070002'
+                }
+                & ([scriptblock]::Create($worker)) @workerArguments
+            }
+            $null = $workerPowerShell.AddScript($workerSetup.ToString()).AddArgument($script:appxWorker).AddArgument($script:appxWorkerArguments)
+            $output = @($workerPowerShell.Invoke())
+
+            $output[-1].Success | Should -Be $Expected
+            $workerPowerShell.Streams.Error.Count | Should -Be $(if ($Expected) { 0 } else { 1 })
+            @($output[-1].IgnoredRemovalMessages).Count | Should -Be $(if ($Expected) { 1 } else { 0 })
+            if ($Expected) {
+                # Replay the actual worker result through the caller, where transcription runs.
+                $script:appxWorkerResult = $output[-1]
+                Mock Invoke-NonBlocking { $script:appxWorkerResult }
+                Remove-AppxApp -app 'One.App' -targetUser 'CurrentUser' | Should -BeTrue
+                Should -Invoke Write-Host -Times 1 -Exactly -ParameterFilter {
+                    $Object -eq 'Ignoring Windows 10 Appx removal error 0x80070002 for One.App_1.0.'
+                }
+            }
+        }
+        finally {
+            $workerPowerShell.Dispose()
         }
     }
 

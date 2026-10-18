@@ -114,7 +114,7 @@ function Import-ConfigToParams {
                 continue
             }
 
-            if (($feature.MinVersion -and $CurrentBuild -lt $feature.MinVersion) -or ($feature.MaxVersion -and $CurrentBuild -gt $feature.MaxVersion) -or ($feature.FeatureId -eq 'DisableModernStandbyNetworking' -and (-not $script:ModernStandbySupported))) {
+            if (-not (Test-FeatureSupportedOnBuild -Feature $feature -Build $CurrentBuild) -or ($feature.FeatureId -eq 'DisableModernStandbyNetworking' -and (-not $script:ModernStandbySupported))) {
                 continue
             }
 

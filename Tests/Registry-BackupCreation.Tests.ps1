@@ -2,6 +2,7 @@ BeforeAll {
     . (Join-Path $PSScriptRoot '..\Scripts\Helpers\Registry-PathHelpers.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\Helpers\Get-RegFileOperations.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\Helpers\User-HiveHelpers.ps1')
+    . (Join-Path $PSScriptRoot '..\Scripts\Helpers\Windows-BuildHelpers.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\Features\Invoke-Changes.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\Features\Backup-RegistryFeatureSelection.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\FileIO\Save-ToFile.ps1')

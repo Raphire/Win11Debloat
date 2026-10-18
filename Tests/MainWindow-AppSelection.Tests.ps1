@@ -8,6 +8,7 @@ BeforeAll {
     . (Join-Path $PSScriptRoot '..\Scripts\GUI\MainWindow-AppSelection.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\GUI\MainWindow-Deployment.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\GUI\MainWindow-Navigation.ps1')
+    . (Join-Path $PSScriptRoot '..\Scripts\Helpers\Windows-BuildHelpers.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\GUI\MainWindow-TweaksBuilder.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\GUI\Set-WindowThemeResources.ps1')
     $script:LanguagesPath = Join-Path $PSScriptRoot '..\Config\Languages'

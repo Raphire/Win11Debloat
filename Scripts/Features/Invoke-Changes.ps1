@@ -339,35 +339,6 @@ function Invoke-UndoFeatures {
         Progress is reported through $script:ApplyProgressCallback when set
         (used by the GUI modal). Cancellation is checked between each step.
 #>
-# Returns the build number of the running Windows version, or $null when it cannot be read.
-function Get-CurrentWindowsBuild {
-    $build = 0
-    try {
-        # Get-ItemPropertyValue reports a missing value as a terminating error, which -ErrorAction SilentlyContinue does not suppress
-        $currentBuild = Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' CurrentBuild -ErrorAction Stop
-    }
-    catch {
-        Write-Verbose "Unable to read the Windows build number: $($_.Exception.Message)"
-        return $null
-    }
-    if ([int]::TryParse([string]$currentBuild, [ref]$build)) { return $build }
-    return $null
-}
-
-# Checks a feature's MinVersion / MaxVersion (Windows build numbers from Features.json) against a build number.
-# A feature without limits, or a build that is not known, is treated as supported.
-function Test-FeatureSupportedOnBuild {
-    param(
-        $Feature,
-        $Build
-    )
-
-    if ($null -eq $Feature -or $null -eq $Build) { return $true }
-    if ($Feature.MinVersion -and [int]$Build -lt [int]$Feature.MinVersion) { return $false }
-    if ($Feature.MaxVersion -and [int]$Build -gt [int]$Feature.MaxVersion) { return $false }
-    return $true
-}
-
 function Invoke-AllChanges {
     if ($script:CancelRequested) { return }
 
@@ -394,16 +365,18 @@ function Invoke-AllChanges {
 
     # Features passed as switches are not filtered by the GUI or the config import, so skip the ones this Windows build does not support
     $currentBuild = Get-CurrentWindowsBuild
-    $applyIds = @($applyIds | Where-Object {
-        $feature = $script:Features[$_]
-        if (Test-FeatureSupportedOnBuild -Feature $feature -Build $currentBuild) { return $true }
-
+    $unsupportedIds = @($applyIds | Where-Object { -not (Test-FeatureSupportedOnBuild -Feature $script:Features[$_] -Build $currentBuild) })
+    foreach ($id in $unsupportedIds) {
+        $feature = $script:Features[$id]
         $range = @()
         if ($feature.MinVersion) { $range += "build $($feature.MinVersion) or newer" }
         if ($feature.MaxVersion) { $range += "build $($feature.MaxVersion) or older" }
-        Write-Warning "Skipping ${_}: it is only supported on Windows $($range -join ' and '), this system runs build $currentBuild."
-        return $false
-    })
+        Write-Warning "Skipping ${id}: it is only supported on Windows $($range -join ' and '), this system runs build $currentBuild."
+
+        # Also drop it from the parameters, so that later steps (such as the reboot advice) only see what was applied
+        $script:Params.Remove($id)
+    }
+    $applyIds = @($applyIds | Where-Object { $unsupportedIds -notcontains $_ })
 
     # ---- Determine if registry backup is needed ----
     $needsBackup = $false

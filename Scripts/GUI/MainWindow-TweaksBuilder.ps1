@@ -418,7 +418,7 @@ function New-DynamicTweakControls {
             if ($feature.Category -ne $categoryName) { $featureIndex++; continue }
 
             # Check version and feature compatibility using Features.json
-            if (($feature.MinVersion -and $WinVersion -lt $feature.MinVersion) -or ($feature.MaxVersion -and $WinVersion -gt $feature.MaxVersion) -or ($feature.FeatureId -eq 'DisableModernStandbyNetworking' -and (-not $script:ModernStandbySupported))) {
+            if (-not (Test-FeatureSupportedOnBuild -Feature $feature -Build $WinVersion) -or ($feature.FeatureId -eq 'DisableModernStandbyNetworking' -and (-not $script:ModernStandbySupported))) {
                 $featureIndex++; continue
             }
 
@@ -451,7 +451,7 @@ function New-DynamicTweakControls {
                     foreach ($fid in $_.FeatureIds) {
                         if ($featureMap.ContainsKey($fid)) {
                             $f = $featureMap[$fid]
-                            if (($f.MinVersion -and $WinVersion -lt $f.MinVersion) -or ($f.MaxVersion -and $WinVersion -gt $f.MaxVersion)) {
+                            if (-not (Test-FeatureSupportedOnBuild -Feature $f -Build $WinVersion)) {
                                 $allCompatible = $false
                                 break
                             }

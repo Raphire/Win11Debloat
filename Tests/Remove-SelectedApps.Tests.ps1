@@ -409,7 +409,7 @@ Describe 'Remove-AppxApp' {
         $output[-1] | Should -Be $Expected
         @($output | Where-Object { $_ -is [System.Management.Automation.ErrorRecord] }).Count | Should -Be $(if ($Expected) { 0 } else { 1 })
         Should -Invoke Write-Host -Times $(if ($Expected) { 1 } else { 0 }) -Exactly -ParameterFilter {
-            $Object -eq 'Ignoring Windows 10 Appx removal error 0x80070002 for One.App_1.0.'
+            $Object -eq 'Windows 10 Appx removal reported error 0x80070002 for One.App_1.0, but the removal succeeded.'
         }
     }
 
@@ -474,7 +474,7 @@ Describe 'Remove-AppxApp' {
                 Mock Invoke-NonBlocking { $script:appxWorkerResult }
                 Remove-AppxApp -app 'One.App' -targetUser 'CurrentUser' | Should -BeTrue
                 Should -Invoke Write-Host -Times 1 -Exactly -ParameterFilter {
-                    $Object -eq 'Ignoring Windows 10 Appx removal error 0x80070002 for One.App_1.0.'
+                    $Object -eq 'Windows 10 Appx removal reported error 0x80070002 for One.App_1.0, but the removal succeeded.'
                 }
             }
         }

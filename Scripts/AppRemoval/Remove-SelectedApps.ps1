@@ -293,7 +293,7 @@ function Remove-AppxApp {
                 }
                 catch {
                     if (Test-IgnorableAppxRemovalError $_) {
-                        $ignoredRemovalMessages.Add("Ignoring Windows 10 Appx removal error 0x80070002 for $($package.PackageFullName).")
+                        $ignoredRemovalMessages.Add("Windows 10 Appx removal reported error 0x80070002 for $($package.PackageFullName), but the removal succeeded.")
                     }
                     else {
                         Write-Error -ErrorRecord $_ -ErrorAction Continue -ErrorVariable +removalErrors
@@ -309,7 +309,7 @@ function Remove-AppxApp {
                     }
                     catch {
                         if (Test-IgnorableAppxRemovalError $_) {
-                            $ignoredRemovalMessages.Add("Ignoring Windows 10 Appx removal error 0x80070002 for $($package.PackageName).")
+                            $ignoredRemovalMessages.Add("Windows 10 Appx removal reported error 0x80070002 for $($package.PackageName), but the removal succeeded.")
                         }
                         else {
                             Write-Error -ErrorRecord $_ -ErrorAction Continue -ErrorVariable +removalErrors

@@ -121,8 +121,12 @@ Write-Output " Win11Debloat Script"
 Write-Output "-------------------------------------------------------------------------------------------"
 
 $tempRootPath = $env:TEMP
-$tempWorkPath = Join-Path $tempRootPath 'Win11Debloat'
-$tempArchivePath = Join-Path $tempRootPath 'win11debloat.zip'
+
+# Every run gets its own folder and archive with a random name, so the files that are run elevated are never at a path that
+# is known (or can be prepared) in advance. User data lives in %LOCALAPPDATA%\Win11Debloat, not in this folder.
+$runId = [guid]::NewGuid().ToString('N')
+$tempWorkPath = Join-Path $tempRootPath "Win11Debloat-$runId"
+$tempArchivePath = Join-Path $tempRootPath "win11debloat-$runId.zip"
 
 # Read the expected SHA-256 of a file from the text of a SHA256SUMS file (lines of "<64 hex digits>  <file name>", as
 # written by sha256sum). Returns $null when the file is not listed.
@@ -159,7 +163,7 @@ try {
         $archiveAsset = @($release.assets | Where-Object { $_.name -ceq $releaseArchiveName }) | Select-Object -First 1
         $checksumsAsset = @($release.assets | Where-Object { $_.name -ceq $releaseChecksumsName }) | Select-Object -First 1
         if ($archiveAsset -and $checksumsAsset) {
-            $checksumsPath = Join-Path $tempRootPath 'win11debloat.sha256sums'
+            $checksumsPath = Join-Path $tempRootPath "win11debloat-$runId.sha256sums"
             Invoke-RestMethod $checksumsAsset.browser_download_url -OutFile $checksumsPath
             $expectedArchiveHash = Get-ExpectedFileHash ([System.IO.File]::ReadAllText($checksumsPath)) $releaseArchiveName
             Remove-Item $checksumsPath -Force
@@ -190,33 +194,6 @@ if ($expectedArchiveHash -and -not (Test-FileHashMatch $tempArchivePath $expecte
     Exit 1
 }
 
-# Remove old script folder if it exists, but keep configs, logs and backups
-if (Test-Path $tempWorkPath) {
-    Write-Output ""
-    Write-Output "> Cleaning up old script files..."
-
-    Get-ChildItem -Path $tempWorkPath -Exclude Config,Logs,Backups | Remove-Item -Recurse -Force
-}
-
-$configDir = Join-Path $tempWorkPath 'Config'
-$backupDir = Join-Path $tempWorkPath 'ConfigOld'
-
-# Temporarily move existing config files if they exist to prevent them from being overwritten by the new script files, will be moved back after the new script is unpacked
-if (Test-Path "$configDir") {
-    Write-Output ""
-    Write-Output "> Backing up existing config files..."
-
-    New-Item -ItemType Directory -Path "$backupDir" -Force | Out-Null
-
-    $filesToKeep = @(
-        'LastUsedSettings.json'
-    )
-
-    Get-ChildItem -Path "$configDir" -Recurse | Where-Object { $_.Name -in $filesToKeep } | Move-Item -Destination "$backupDir"
-
-    Remove-Item "$configDir" -Recurse -Force
-}
-
 Write-Output ""
 Write-Output "> Unpacking..."
 
@@ -228,19 +205,6 @@ Remove-Item $tempArchivePath
 
 # Move files
 Get-ChildItem -Path (Join-Path $tempWorkPath '*Win11Debloat-*') -Recurse | Move-Item -Destination $tempWorkPath
-
-# Add existing config files back to Config folder
-if (Test-Path "$backupDir") {
-    if (-not (Test-Path "$configDir")) {
-        New-Item -ItemType Directory -Path "$configDir" -Force | Out-Null
-    }
-
-    Write-Output ""
-    Write-Output "> Restoring existing config files..."
-
-    Get-ChildItem -Path "$backupDir" -Recurse | Move-Item -Destination "$configDir"
-    Remove-Item "$backupDir" -Recurse -Force
-}
 
 # Quote a value so it survives CommandLineToArgvW parsing in the child process: double any backslash run that
 # precedes a quote or the closing quote, and escape embedded quotes, before wrapping the value in quotes.
@@ -304,13 +268,12 @@ if ($null -ne $debloatProcess) {
     $exitCode = $debloatProcess.ExitCode
 }
 
-# Remove all remaining script files, except for configs, logs and backups
+# Remove the folder with the script files of this run
 if (Test-Path $tempWorkPath) {
     Write-Output ""
     Write-Output "> Cleaning up..."
 
-    # Cleanup, remove Win11Debloat directory
-    Get-ChildItem -Path $tempWorkPath -Exclude Config,Logs,Backups | Remove-Item -Recurse -Force
+    Remove-Item -Path $tempWorkPath -Recurse -Force
 }
 
 Write-Output ""

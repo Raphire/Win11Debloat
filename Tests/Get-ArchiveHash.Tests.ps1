@@ -93,7 +93,6 @@ Describe 'Launcher archive verification flow' {
     BeforeEach {
         $originalTemp = $env:TEMP
         $env:TEMP = $TestDrive
-        $archivePath = Join-Path $TestDrive 'win11debloat.zip'
 
         # Mock bodies read this table, so a test changes it instead of re-creating variables.
         $state = @{
@@ -105,13 +104,14 @@ Describe 'Launcher archive verification flow' {
                 )
             }
             SumsText  = ''
+            UnpackPaths = [System.Collections.Generic.List[string]]::new()
             ArchiveBytes = [System.Text.Encoding]::ASCII.GetBytes('abc')
         }
 
         Mock Clear-Host {}
         Mock Read-Host {}
         Mock Start-Process { throw 'The launcher must not start the script in these tests.' }
-        Mock Expand-Archive { throw 'reached extraction' }
+        Mock Expand-Archive { $state.UnpackPaths.Add([string]$DestinationPath); throw 'reached extraction' }
         Mock Invoke-RestMethod {
             switch -Regex ([string]$Uri) {
                 'releases/latest$' { return $state.Release }
@@ -133,7 +133,7 @@ Describe 'Launcher archive verification flow' {
         & $getScriptPath *> $null
 
         $global:LASTEXITCODE | Should -Be 1
-        Test-Path -LiteralPath $archivePath | Should -BeFalse
+        @(Get-ChildItem -LiteralPath $TestDrive -Filter 'win11debloat-*.zip') | Should -HaveCount 0
         Should -Invoke Invoke-RestMethod -Times 1 -Exactly -ParameterFilter { $Uri -eq $archiveUrl }
         Should -Invoke Expand-Archive -Times 0 -Exactly
         Should -Invoke Start-Process -Times 0 -Exactly
@@ -147,7 +147,7 @@ Describe 'Launcher archive verification flow' {
         & $getScriptPath *> $null
 
         $global:LASTEXITCODE | Should -Be 1
-        Test-Path -LiteralPath $archivePath | Should -BeFalse
+        @(Get-ChildItem -LiteralPath $TestDrive -Filter 'win11debloat-*.zip') | Should -HaveCount 0
         Should -Invoke Invoke-RestMethod -Times 1 -Exactly -ParameterFilter { $Uri -eq $checksumsUrl }
         Should -Invoke Invoke-RestMethod -Times 0 -Exactly -ParameterFilter { $Uri -eq $archiveUrl -or $Uri -eq $zipballUrl }
         Should -Invoke Expand-Archive -Times 0 -Exactly
@@ -173,5 +173,93 @@ Describe 'Launcher archive verification flow' {
         Should -Invoke Invoke-RestMethod -Times 1 -Exactly -ParameterFilter { $Uri -eq $zipballUrl }
         Should -Invoke Invoke-RestMethod -Times 0 -Exactly -ParameterFilter { $Uri -eq $checksumsUrl -or $Uri -eq $archiveUrl }
         Should -Invoke Expand-Archive -Times 1 -Exactly
+    }
+}
+
+Describe 'Launcher work folder' {
+    # Same setup as the verification flow above: the real Get.ps1, everything outside it mocked, TEMP in TestDrive.
+    BeforeAll {
+        $getScriptPath = Join-Path $PSScriptRoot '..\Scripts\Get.ps1'
+        $zipballUrl = 'https://example.invalid/zipball'
+    }
+
+    BeforeEach {
+        $originalTemp = $env:TEMP
+        $env:TEMP = $TestDrive
+
+        $state = @{
+            UnpackPaths = [System.Collections.Generic.List[string]]::new()
+            Unpacked    = $true
+        }
+
+        Mock Clear-Host {}
+        Mock Read-Host {}
+        Mock Start-Process {
+            $process = [pscustomobject]@{ ExitCode = 0 }
+            $process | Add-Member -MemberType ScriptMethod -Name WaitForExit -Value { }
+            return $process
+        }
+        Mock Invoke-RestMethod {
+            switch -Regex ([string]$Uri) {
+                'releases/latest$' { return [pscustomobject]@{ zipball_url = $zipballUrl; assets = @() } }
+                default { [System.IO.File]::WriteAllBytes($OutFile, [byte[]](1, 2, 3)) }
+            }
+        }
+        # Unpacks like a GitHub source archive: one top-level folder that holds the script
+        Mock Expand-Archive {
+            $state.UnpackPaths.Add([string]$DestinationPath)
+            $top = Join-Path $DestinationPath 'Raphire-Win11Debloat-0123abc'
+            New-Item -ItemType Directory -Path $top -Force | Out-Null
+            Set-Content -LiteralPath (Join-Path $top 'Win11Debloat.ps1') -Value '# stand-in'
+        }
+    }
+
+    AfterEach {
+        $env:TEMP = $originalTemp
+    }
+
+    It 'unpacks into a new folder with a random name in TEMP and runs the script from there' {
+        $global:LASTEXITCODE = 0
+        $ErrorActionPreference = 'Continue'
+
+        & $getScriptPath *> $null
+
+        $state.UnpackPaths | Should -HaveCount 1
+        $state.UnpackPaths[0] | Should -Match '^.+\\Win11Debloat-[0-9a-f]{32}$'
+        Split-Path -Parent $state.UnpackPaths[0] | Should -Be $TestDrive
+        $expectedScript = Join-Path $state.UnpackPaths[0] 'Win11Debloat.ps1'
+        Should -Invoke Start-Process -Times 1 -Exactly -ParameterFilter { ($ArgumentList -join ' ').Contains($expectedScript) }
+    }
+
+    It 'uses a different folder for every run' {
+        $ErrorActionPreference = 'Continue'
+
+        & $getScriptPath *> $null
+        & $getScriptPath *> $null
+
+        $state.UnpackPaths | Should -HaveCount 2
+        $state.UnpackPaths[0] | Should -Not -Be $state.UnpackPaths[1]
+    }
+
+    It 'removes the whole folder and the archive when it is done' {
+        $global:LASTEXITCODE = 0
+        $ErrorActionPreference = 'Continue'
+
+        & $getScriptPath *> $null
+
+        $global:LASTEXITCODE | Should -Be 0
+        Test-Path -LiteralPath $state.UnpackPaths[0] | Should -BeFalse
+        @(Get-ChildItem -LiteralPath $TestDrive -Filter 'win11debloat-*.zip') | Should -HaveCount 0
+    }
+
+    It 'leaves a Win11Debloat folder from an earlier version alone' {
+        $legacyBackups = Join-Path $TestDrive 'Win11Debloat\Backups'
+        New-Item -ItemType Directory -Path $legacyBackups -Force | Out-Null
+        Set-Content -LiteralPath (Join-Path $legacyBackups 'old-backup.json') -Value '{}'
+        $ErrorActionPreference = 'Continue'
+
+        & $getScriptPath *> $null
+
+        Test-Path -LiteralPath (Join-Path $legacyBackups 'old-backup.json') | Should -BeTrue
     }
 }

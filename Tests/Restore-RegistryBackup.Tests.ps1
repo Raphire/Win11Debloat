@@ -148,4 +148,18 @@ Describe 'Restore-RegistryBackupState' {
         Should -Invoke Restore-RegistryKeySnapshot -Times 0 -Exactly
         Should -Invoke Invoke-WithLoadedRestoreHive -Times 0 -Exactly
     }
+
+    It 'continues restoring remaining snapshots when one fails, then reports the failure' {
+        Mock Write-Warning {}
+        Mock Restore-RegistryKeySnapshot {
+            param($Snapshot)
+            if ($Snapshot.Path -eq 'HKEY_CURRENT_USER\Software\One') { throw 'access denied' }
+        }
+
+        { Restore-RegistryBackupState -Backup $script:backup } |
+            Should -Throw '*1 failed key(s)*Software\One*'
+
+        Should -Invoke Restore-RegistryKeySnapshot -Times 2 -Exactly
+        Should -Invoke Restore-RegistryKeySnapshot -Times 1 -Exactly -ParameterFilter { $Snapshot.Path -eq 'HKEY_CURRENT_USER\Software\Two' }
+    }
 }

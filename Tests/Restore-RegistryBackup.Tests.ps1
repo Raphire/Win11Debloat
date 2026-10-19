@@ -162,4 +162,22 @@ Describe 'Restore-RegistryBackupState' {
         Should -Invoke Restore-RegistryKeySnapshot -Times 2 -Exactly
         Should -Invoke Restore-RegistryKeySnapshot -Times 1 -Exactly -ParameterFilter { $Snapshot.Path -eq 'HKEY_CURRENT_USER\Software\Two' }
     }
+
+    It 'rejects a malformed backup before restoring any snapshot' {
+        $script:backup.RegistryKeys = @(
+            [PSCustomObject]@{ Path = 'HKEY_CURRENT_USER\Software\One'; Exists = $true; Values = @(); SubKeys = @() }
+            [PSCustomObject]@{
+                Path = 'HKEY_CURRENT_USER\Software\Two'; Exists = $true; Values = @()
+                SubKeys = @(
+                    [PSCustomObject]@{ Path = 'HKEY_CURRENT_USER\Software\Two\Child'; Exists = $true; Values = @(); SubKeys = @() }
+                    [PSCustomObject]@{ Path = 'HKEY_CURRENT_USER\Software\Two\Child'; Exists = $true; Values = @(); SubKeys = @() }
+                )
+            }
+        )
+
+        { Restore-RegistryBackupState -Backup $script:backup } |
+            Should -Throw '*duplicate or unsupported registry child path*'
+
+        Should -Invoke Restore-RegistryKeySnapshot -Times 0 -Exactly
+    }
 }

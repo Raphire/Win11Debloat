@@ -203,10 +203,16 @@ function Restore-RegistryBackupState {
     $restoreAction = {
         param($normalizedBackup)
 
-        Write-Host "Applying registry restore from $(@($normalizedBackup.RegistryKeys).Count) root snapshot(s)."
+        $rootSnapshots = @($normalizedBackup.RegistryKeys)
+
+        foreach ($rootSnapshot in $rootSnapshots) {
+            Test-RegistryKeySnapshotCanBeRestored -Snapshot $rootSnapshot
+        }
+
+        Write-Host "Applying registry restore from $($rootSnapshots.Count) root snapshot(s)."
         $failures = [System.Collections.Generic.List[string]]::new()
 
-        foreach ($rootSnapshot in @($normalizedBackup.RegistryKeys)) {
+        foreach ($rootSnapshot in $rootSnapshots) {
             try {
                 Restore-RegistryKeySnapshot -Snapshot $rootSnapshot
             }

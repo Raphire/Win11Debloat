@@ -259,41 +259,41 @@
       "ApplyUndoText": "Yapışkan Tuşlar kısayolu açılıyor"
     },
     "DisableWindowSnapping": {
-      "Label": "Pencere yapıştırmayı kapat",
-      "ToolTip": "Pencerelerin ekranın kenarlarına veya köşelerine yapıştırılmasını kapatır.",
-      "ApplyText": "Pencere yapıştırma kapatılıyor",
-      "UndoLabel": "Pencere yapıştırmayı aç",
-      "ApplyUndoText": "Pencere yapıştırma açılıyor"
+      "Label": "Pencere tutturmayı kapat",
+      "ToolTip": "Pencerelerin ekranın kenarlarına veya köşelerine tutturulmasını kapatır.",
+      "ApplyText": "Pencere tutturma kapatılıyor",
+      "UndoLabel": "Pencere tutturmayı aç",
+      "ApplyUndoText": "Pencere tutturma açılıyor"
     },
     "DisableSnapAssist": {
-      "Label": "Pencere yapıştırırken uygulama önerilerini kapat",
-      "ToolTip": "Pencereleri ekranın kenarlarına veya köşelerine yapıştırırken çıkan uygulama önerilerini kapatır.",
-      "ApplyText": "Yapışma Yardımı önerileri kapatılıyor",
-      "UndoLabel": "Pencere yapıştırırken uygulama önerilerini aç",
-      "ApplyUndoText": "Yapışma Yardımı önerileri açılıyor"
+      "Label": "Pencere tuttururken uygulama önerilerini kapat",
+      "ToolTip": "Pencereleri ekranın kenarlarına veya köşelerine tuttururken çıkan uygulama önerilerini kapatır.",
+      "ApplyText": "Tutturma Yardımı önerileri kapatılıyor",
+      "UndoLabel": "Pencere tuttururken uygulama önerilerini aç",
+      "ApplyUndoText": "Tutturma Yardımı önerileri açılıyor"
     },
     "DisableSnapLayouts": {
-      "Label": "Ekranın üstündeki ve ekranı kapla düğmesindeki yapışma düzeni menüsünü gizle",
-      "ToolTip": "Ekranı kapla düğmesinin üzerine gelince veya pencereyi ekranın üstüne sürükleyince çıkan yapışma düzeni menüsünü kapatır.",
-      "ApplyText": "Pencere ekranın üstüne sürüklenirken ve ekranı kapla düğmesinde yapışma düzenleri gizleniyor",
-      "UndoLabel": "Ekranın üstündeki ve ekranı kapla düğmesindeki yapışma düzeni menüsünü göster",
-      "ApplyUndoText": "Pencere ekranın üstüne sürüklenirken ve ekranı kapla düğmesinde yapışma düzenleri gösteriliyor"
+      "Label": "Ekranın üstündeki ve ekranı kapla düğmesindeki tutturma düzeni menüsünü gizle",
+      "ToolTip": "Ekranı kapla düğmesinin üzerine gelince veya pencereyi ekranın üstüne sürükleyince çıkan tutturma düzeni menüsünü kapatır.",
+      "ApplyText": "Pencere ekranın üstüne sürüklenirken ve ekranı kapla düğmesinde tutturma düzenleri gizleniyor",
+      "UndoLabel": "Ekranın üstündeki ve ekranı kapla düğmesindeki tutturma düzeni menüsünü göster",
+      "ApplyUndoText": "Pencere ekranın üstüne sürüklenirken ve ekranı kapla düğmesinde tutturma düzenleri gösteriliyor"
     },
     "HideTabsInAltTab": {
-      "Label": "Pencere yapıştırırken veya Alt+Tab'a basınca uygulama sekmelerini gizle",
-      "ApplyText": "Pencere yapıştırırken veya Alt+Tab'a basınca uygulama sekmeleri gizleniyor"
+      "Label": "Pencere tuttururken veya Alt+Tab'a basınca uygulama sekmelerini gizle",
+      "ApplyText": "Pencere tuttururken veya Alt+Tab'a basınca uygulama sekmeleri gizleniyor"
     },
     "Show3TabsInAltTab": {
-      "Label": "Pencere yapıştırırken veya Alt+Tab'a basınca uygulamalardan 3 sekme göster",
-      "ApplyText": "Pencere yapıştırırken veya Alt+Tab'a basınca uygulamalardan 3 sekme gösteriliyor"
+      "Label": "Pencere tuttururken veya Alt+Tab'a basınca uygulamalardan 3 sekme göster",
+      "ApplyText": "Pencere tuttururken veya Alt+Tab'a basınca uygulamalardan 3 sekme gösteriliyor"
     },
     "Show5TabsInAltTab": {
-      "Label": "Pencere yapıştırırken veya Alt+Tab'a basınca uygulamalardan 5 sekme göster",
-      "ApplyText": "Pencere yapıştırırken veya Alt+Tab'a basınca uygulamalardan 5 sekme gösteriliyor"
+      "Label": "Pencere tuttururken veya Alt+Tab'a basınca uygulamalardan 5 sekme göster",
+      "ApplyText": "Pencere tuttururken veya Alt+Tab'a basınca uygulamalardan 5 sekme gösteriliyor"
     },
     "Show20TabsInAltTab": {
-      "Label": "Pencere yapıştırırken veya Alt+Tab'a basınca uygulamalardan 20 sekme göster",
-      "ApplyText": "Pencere yapıştırırken veya Alt+Tab'a basınca uygulamalardan 20 sekme gösteriliyor"
+      "Label": "Pencere tuttururken veya Alt+Tab'a basınca uygulamalardan 20 sekme göster",
+      "ApplyText": "Pencere tuttururken veya Alt+Tab'a basınca uygulamalardan 20 sekme gösteriliyor"
     },
     "TaskbarAlignLeft": {
       "Label": "Görev çubuğunu sola hizala",
@@ -728,8 +728,8 @@
       }
     },
     "ShowTabsInAltTab": {
-      "Label": "Pencere yapıştırırken veya Alt+Tab'a basınca uygulama sekmelerini göster",
-      "ToolTip": "Pencere yapıştırırken veya Alt+Tab'a basınca uygulama sekmelerinin (örneğin Edge sekmeleri) gösterilip gösterilmeyeceğini seçmenizi sağlar.",
+      "Label": "Pencere tuttururken veya Alt+Tab'a basınca uygulama sekmelerini göster",
+      "ToolTip": "Pencere tuttururken veya Alt+Tab'a basınca uygulama sekmelerinin (örneğin Edge sekmeleri) gösterilip gösterilmeyeceğini seçmenizi sağlar.",
       "Values": {
         "HideTabsInAltTab": "Sekmeleri gösterme",
         "Show3TabsInAltTab": "En son 3 sekmeyi göster (Varsayılan)",

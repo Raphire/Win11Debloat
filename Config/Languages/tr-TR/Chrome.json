@@ -351,10 +351,10 @@
   "BackupValueMustNotDefineKind": "Exists false iken '{0}' yedek değeri Kind tanımlamamalıdır.",
 
   "StartMenuNoBackupFoundForUser": "{0} kullanıcısı için Başlat menüsü yedek dosyası bulunamadı.",
-  "StartMenuWhatIfRestoredForUser": "[WhatIf] {0} kullanıcısı için Başlat menüsü geri yüklendi.",
+  "StartMenuWhatIfRestoredForUser": "[WhatIf] {0} kullanıcısı için Başlat menüsü geri yüklenirdi (değişiklik yapılmadı).",
   "StartMenuRestoredForUser": "{0} kullanıcısı için Başlat menüsü geri yüklendi.",
   "StartMenuRestoreFailedForUser": "{0} kullanıcısı için Başlat menüsü geri yüklenemedi. {1}",
-  "StartMenuWhatIfRemovedDefaultProfile": "[WhatIf] Varsayılan kullanıcı profili için start2.bin kaldırıldı.",
+  "StartMenuWhatIfRemovedDefaultProfile": "[WhatIf] Varsayılan kullanıcı profili için start2.bin kaldırılırdı (değişiklik yapılmadı).",
   "StartMenuRemovedDefaultProfile": "Varsayılan kullanıcı profili için start2.bin kaldırıldı.",
   "StartMenuRemoveFailedDefaultProfile": "Varsayılan kullanıcı profili için start2.bin kaldırılamadı. {0}",
   "StartMenuNoUserLocationsFound": "Kullanıcı Başlat menüsü konumu bulunamadı."

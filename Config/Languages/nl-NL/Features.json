@@ -1,4 +1,4 @@
-{
+﻿{
   "Features": {
     "RemoveApps": {
       "Label": "Apps verwijderen die met de parameter 'Apps' zijn opgegeven",
@@ -594,7 +594,7 @@
     },
     "EnableWindowsSandbox": {
       "Label": "Windows Sandbox inschakelen",
-      "ToolTip": "Met Windows Sandbox kun je apps in een afgeschermde bureaubladomgeving uitvoeren, los van je eigen Windows-installatie. Alleen beschikbaar in de Pro-, Workstation- en Enterprise-edities van Windows 11.",
+      "ToolTip": "Met Windows Sandbox kun je apps in een afgeschermde bureaubladomgeving uitvoeren, los van je eigen Windows-installatie. Alleen beschikbaar in de Pro-, Workstation-, Enterprise- en Education-edities van Windows 11.",
       "ApplyText": "Windows Sandbox inschakelen",
       "UndoLabel": "Windows Sandbox uitschakelen",
       "ApplyUndoText": "Windows Sandbox uitschakelen"

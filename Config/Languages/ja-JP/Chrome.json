@@ -1,4 +1,4 @@
-{
+﻿{
   "TitleBarAppName": "Win11Debloat",
   "MessageBoxOk": "OK",
   "MessageBoxCancel": "キャンセル",
@@ -22,7 +22,7 @@
   "MenuExportConfig": "構成のエクスポート",
   "MenuExportConfigTooltip": "構成をエクスポートします",
   "MenuRestoreBackup": "バックアップの復元",
-  "MenuRestoreBackupTooltip": "レジストリ バックアップを復元します",
+  "MenuRestoreBackupTooltip": "レジストリまたはスタート メニューのバックアップを復元します",
   "MenuDocumentation": "ドキュメント",
   "MenuReportBug": "バグを報告",
   "MenuLogs": "ログ",
@@ -105,7 +105,7 @@
   "DeployOptionsTitle": "オプション",
   "DeployOptionRegistryBackup": "レジストリ バックアップを作成する (推奨)",
   "DeployOptionRestorePoint": "システムの復元ポイントを作成する (推奨)",
-  "DeployOptionRestartExplorer": "Windows エクスプローラーのプロセスを再起動してすべての変更をすぐに適用する",
+  "DeployOptionRestartExplorer": "Windows エクスプローラーのプロセスを再起動してほとんどの変更をすぐに適用する",
   "DeployReviewChanges": "選択した変更を確認",
   "DeployApplyChanges": "変更を適用",
 

@@ -1,4 +1,4 @@
-{
+﻿{
   "TitleBarAppName": "Win11Debloat",
   "MessageBoxOk": "确定",
   "MessageBoxCancel": "取消",
@@ -21,7 +21,7 @@
   "MenuExportConfig": "导出配置",
   "MenuExportConfigTooltip": "导出配置",
   "MenuRestoreBackup": "恢复备份",
-  "MenuRestoreBackupTooltip": "恢复注册表备份",
+  "MenuRestoreBackupTooltip": "恢复注册表或开始菜单备份",
   "MenuDocumentation": "使用文档",
   "MenuReportBug": "反馈问题",
   "MenuLogs": "日志",
@@ -100,7 +100,7 @@
   "DeployOptionsTitle": "选项",
   "DeployOptionRegistryBackup": "创建注册表备份（推荐）",
   "DeployOptionRestorePoint": "创建系统还原点（推荐）",
-  "DeployOptionRestartExplorer": "重启 Windows 资源管理器进程，使所有更改立即生效",
+  "DeployOptionRestartExplorer": "重启 Windows 资源管理器进程，使大部分更改立即生效",
   "DeployReviewChanges": "查看所选更改",
   "DeployApplyChanges": "应用更改",
   "BubbleViewChanges": "在此查看所选更改",

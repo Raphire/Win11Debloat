@@ -1,4 +1,4 @@
-{
+﻿{
   "TitleBarAppName": "Win11Debloat",
   "MessageBoxOk": "OK",
   "MessageBoxCancel": "Cancelar",
@@ -22,7 +22,7 @@
   "MenuExportConfig": "Exportar configuração",
   "MenuExportConfigTooltip": "Exportar configuração",
   "MenuRestoreBackup": "Restaurar backup",
-  "MenuRestoreBackupTooltip": "Restaurar backup do registro",
+  "MenuRestoreBackupTooltip": "Restaurar backup do registro ou do menu Iniciar",
   "MenuDocumentation": "Documentação",
   "MenuReportBug": "Reportar um bug",
   "MenuLogs": "Logs",
@@ -105,7 +105,7 @@
   "DeployOptionsTitle": "Opções",
   "DeployOptionRegistryBackup": "Criar um backup do registro (Recomendado)",
   "DeployOptionRestorePoint": "Criar um ponto de restauração do sistema (Recomendado)",
-  "DeployOptionRestartExplorer": "Reiniciar o processo do Explorador de Arquivos para aplicar todas as alterações imediatamente",
+  "DeployOptionRestartExplorer": "Reiniciar o processo do Explorador de Arquivos para aplicar a maioria das alterações imediatamente",
   "DeployReviewChanges": "Revisar alterações selecionadas",
   "DeployApplyChanges": "Aplicar alterações",
 

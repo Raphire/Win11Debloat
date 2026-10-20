@@ -1,4 +1,4 @@
-{
+﻿{
   "Clipchamp.Clipchamp": {
     "FriendlyName": "Clipchamp",
     "Description": "Editor de vídeo da Microsoft"
@@ -149,7 +149,7 @@
   },
   "Microsoft.ZuneVideo": {
     "FriendlyName": "Filmes e TV",
-    "Description": "App de reprodução de vídeos (descontinuado)"
+    "Description": "App para reproduzir vídeos comprados (novos aluguéis e compras foram descontinuados)"
   },
   "MicrosoftCorporationII.MicrosoftFamily": {
     "FriendlyName": "Microsoft Family Safety",

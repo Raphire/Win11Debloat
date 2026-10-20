@@ -1,4 +1,4 @@
-{
+﻿{
   "Clipchamp.Clipchamp": {
     "FriendlyName": "Clipchamp",
     "Description": "Microsoft のビデオ エディターです"
@@ -149,7 +149,7 @@
   },
   "Microsoft.ZuneVideo": {
     "FriendlyName": "映画 & テレビ",
-    "Description": "動画コンテンツのレンタル、購入、再生用アプリです (提供終了)"
+    "Description": "購入済みの動画コンテンツを再生するアプリです (新規のレンタルと購入は終了しました)"
   },
   "MicrosoftCorporationII.MicrosoftFamily": {
     "FriendlyName": "Microsoft Family Safety",

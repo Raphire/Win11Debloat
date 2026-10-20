@@ -1,0 +1,558 @@
+{
+  "Clipchamp.Clipchamp": {
+    "FriendlyName": "Clipchamp",
+    "Description": "Microsoft video düzenleyici"
+  },
+  "Microsoft.3DBuilder": {
+    "FriendlyName": "3B Oluşturucu",
+    "Description": "Temel 3B modelleme uygulaması"
+  },
+  "Microsoft.549981C3F5F10": {
+    "FriendlyName": "Cortana",
+    "Description": "Microsoft Cortana sesli asistan (artık desteklenmiyor)"
+  },
+  "Microsoft.BingFinance": {
+    "FriendlyName": "Bing Finans",
+    "Description": "Bing üzerinden finans haberleri ve takipler (artık desteklenmiyor)"
+  },
+  "Microsoft.BingFoodAndDrink": {
+    "FriendlyName": "Bing Yeme ve İçme",
+    "Description": "Bing üzerinden tarifler ve yemek haberleri (artık desteklenmiyor)"
+  },
+  "Microsoft.BingHealthAndFitness": {
+    "FriendlyName": "Bing Sağlık ve Fitness",
+    "Description": "Bing üzerinden sağlık ve fitness takibi ile haberler (artık desteklenmiyor)"
+  },
+  "Microsoft.BingNews": {
+    "FriendlyName": "Microsoft Haberler",
+    "Description": "Son dakika haberlerini, kişisel haber akışını ve dünyadan gelişmeleri bir araya getiren haber uygulaması"
+  },
+  "Microsoft.BingSports": {
+    "FriendlyName": "Bing Spor",
+    "Description": "Bing üzerinden spor haberleri ve skorlar (artık desteklenmiyor)"
+  },
+  "Microsoft.BingTranslator": {
+    "FriendlyName": "Bing Çeviri",
+    "Description": "Bing çeviri hizmeti"
+  },
+  "Microsoft.BingTravel": {
+    "FriendlyName": "Bing Seyahat",
+    "Description": "Bing üzerinden seyahat planlama ve haberler (artık desteklenmiyor)"
+  },
+  "Microsoft.BingWeather": {
+    "FriendlyName": "Hava Durumu",
+    "Description": "Bing üzerinden hava durumu"
+  },
+  "XP9CXNGPPJ97XX": {
+    "FriendlyName": "Microsoft Copilot",
+    "Description": "Windows'a yerleşik yapay zeka asistanı"
+  },
+  "Microsoft.Windows.AIHub": {
+    "FriendlyName": "Copilot+ AI Hub",
+    "Description": "Copilot+ AI Hub uygulaması (Windows 11 24H2+)"
+  },
+  "Microsoft.PCManager": {
+    "FriendlyName": "Microsoft PC Manager",
+    "Description": "Microsoft sistem temizleme ve iyileştirme aracı (çoğu zaman önceden yüklü gelir)"
+  },
+  "Microsoft.Getstarted": {
+    "FriendlyName": "Başlarken",
+    "Description": "Windows için ipuçları ve başlangıç rehberi (Windows 11'de kaldırılamaz)"
+  },
+  "Microsoft.Messaging": {
+    "FriendlyName": "Mesajlaşma",
+    "Description": "Çoğunlukla Skype ile bağlantılı mesajlaşma uygulaması (büyük ölçüde kullanımdan kalktı)"
+  },
+  "Microsoft.Microsoft3DViewer": {
+    "FriendlyName": "3B Görüntüleyici",
+    "Description": "3B modelleri görüntüleme uygulaması (artık desteklenmiyor)"
+  },
+  "Microsoft.MicrosoftJournal": {
+    "FriendlyName": "Microsoft Journal",
+    "Description": "Kalem girişine göre tasarlanmış dijital not uygulaması"
+  },
+  "Microsoft.MicrosoftOfficeHub": {
+    "FriendlyName": "Office Hub",
+    "Description": "Microsoft Office uygulamalarına ve belgelere erişim merkezi (Microsoft 365 uygulamasının öncülü)"
+  },
+  "Microsoft.MicrosoftPowerBIForWindows": {
+    "FriendlyName": "Power BI",
+    "Description": "İş verilerini çözümleme uygulaması"
+  },
+  "Microsoft.MicrosoftSolitaireCollection": {
+    "FriendlyName": "Solitaire Koleksiyonu",
+    "Description": "Solitaire kart oyunları derlemesi"
+  },
+  "Microsoft.MicrosoftStickyNotes": {
+    "FriendlyName": "Yapışkan Notlar",
+    "Description": "Kısa notlar oluşturup eşitleme uygulaması"
+  },
+  "Microsoft.MixedReality.Portal": {
+    "FriendlyName": "Karma Gerçeklik Portalı",
+    "Description": "Windows Karma Gerçeklik başlıkları için portal"
+  },
+  "Microsoft.NetworkSpeedTest": {
+    "FriendlyName": "Ağ Hızı Testi",
+    "Description": "İnternet bağlantısı hız testi"
+  },
+  "Microsoft.Office.OneNote": {
+    "FriendlyName": "OneNote",
+    "Description": "Dijital not uygulaması (Evrensel Windows Platformu sürümü)"
+  },
+  "Microsoft.Office.Sway": {
+    "FriendlyName": "Sway",
+    "Description": "Sunum ve hikaye anlatımı uygulaması"
+  },
+  "Microsoft.OneConnect": {
+    "FriendlyName": "One Connect",
+    "Description": "Mobil operatör yönetim uygulaması (Mobil Planlar ile değiştirildi)"
+  },
+  "Microsoft.Print3D": {
+    "FriendlyName": "3B Yazdır",
+    "Description": "3B yazdırma hazırlık uygulaması"
+  },
+  "Microsoft.PowerAutomateDesktop": {
+    "FriendlyName": "Power Automate",
+    "Description": "Masaüstü otomasyon aracı (RPA)"
+  },
+  "Microsoft.SkypeApp": {
+    "FriendlyName": "Skype (UWP)",
+    "Description": "Skype iletişim uygulaması, Evrensel Windows Platformu sürümü (artık desteklenmiyor)"
+  },
+  "Microsoft.Todos": {
+    "FriendlyName": "Microsoft To Do",
+    "Description": "Yapılacaklar listesi ve görev yönetimi uygulaması"
+  },
+  "Microsoft.Windows.DevHome": {
+    "FriendlyName": "Dev Home",
+    "Description": "Geliştirici panosu ve araç yapılandırma uygulaması (artık desteklenmiyor)"
+  },
+  "Microsoft.WindowsAlarms": {
+    "FriendlyName": "Saat",
+    "Description": "Alarm, zamanlayıcı, kronometre ve odak oturumları uygulaması"
+  },
+  "Microsoft.WindowsFeedbackHub": {
+    "FriendlyName": "Geri Bildirim Merkezi",
+    "Description": "Windows hakkında Microsoft'a geri bildirim gönderme uygulaması"
+  },
+  "Microsoft.WindowsMaps": {
+    "FriendlyName": "Windows Haritalar",
+    "Description": "Harita ve yol tarifi uygulaması (artık desteklenmiyor)"
+  },
+  "Microsoft.WindowsSoundRecorder": {
+    "FriendlyName": "Ses Kaydedici",
+    "Description": "Temel ses kayıt uygulaması"
+  },
+  "Microsoft.XboxApp": {
+    "FriendlyName": "Xbox Console Companion",
+    "Description": "Eski Xbox Console Companion uygulaması (artık desteklenmiyor)"
+  },
+  "Microsoft.ZuneVideo": {
+    "FriendlyName": "Filmler ve TV",
+    "Description": "Video içeriği kiralama, satın alma ve oynatma uygulaması (artık desteklenmiyor)"
+  },
+  "MicrosoftCorporationII.MicrosoftFamily": {
+    "FriendlyName": "Microsoft Aile Güvenliği",
+    "Description": "Aile ekran süresi, içerik filtreleri ve etkinlik raporlarını yönetme uygulaması"
+  },
+  "MicrosoftCorporationII.QuickAssist": {
+    "FriendlyName": "Hızlı Yardım",
+    "Description": "Uzaktan yardım aracı"
+  },
+  "MicrosoftTeams": {
+    "FriendlyName": "Microsoft Teams (Eski)",
+    "Description": "Eski Microsoft Teams kişisel uygulaması (Microsoft Store sürümü)"
+  },
+  "MSTeams": {
+    "FriendlyName": "Microsoft Teams (Yeni)",
+    "Description": "Yeni Microsoft Teams uygulaması (iş, okul veya kişisel)"
+  },
+  "ACGMediaPlayer": {
+    "FriendlyName": "ACG Media Player",
+    "Description": "Medya oynatıcı uygulaması"
+  },
+  "ActiproSoftwareLLC": {
+    "FriendlyName": "Actipro Software",
+    "Description": "Çoğu zaman üreticiyle gelen arabirim denetimleri veya yazılım bileşenleri"
+  },
+  "AdobeSystemsIncorporated.AdobePhotoshopExpress": {
+    "FriendlyName": "Adobe Photoshop Express",
+    "Description": "Adobe'nin temel fotoğraf düzenleme uygulaması"
+  },
+  "Amazon.com.Amazon": {
+    "FriendlyName": "Amazon",
+    "Description": "Amazon alışveriş uygulaması"
+  },
+  "AmazonVideo.PrimeVideo": {
+    "FriendlyName": "Prime Video",
+    "Description": "Amazon Prime Video yayın uygulaması"
+  },
+  "Asphalt8Airborne": {
+    "FriendlyName": "Asphalt 8",
+    "Description": "Yarış oyunu"
+  },
+  "AutodeskSketchBook": {
+    "FriendlyName": "Autodesk SketchBook",
+    "Description": "Dijital çizim ve eskiz uygulaması"
+  },
+  "CaesarsSlotsFreeCasino": {
+    "FriendlyName": "Caesars Slots",
+    "Description": "Kumarhane slot oyunu"
+  },
+  "COOKINGFEVER": {
+    "FriendlyName": "Cooking Fever",
+    "Description": "Restoran simülasyon oyunu"
+  },
+  "CyberLinkMediaSuiteEssentials": {
+    "FriendlyName": "CyberLink Media Suite",
+    "Description": "Çoklu ortam yazılım paketi (çoğu zaman üreticiyle birlikte gelir)"
+  },
+  "DisneyMagicKingdoms": {
+    "FriendlyName": "Disney Magic Kingdoms",
+    "Description": "Disney tema parkı kurma oyunu"
+  },
+  "Disney.37853FC22B2CE": {
+    "FriendlyName": "Disney+",
+    "Description": "Disney+ yayın uygulaması"
+  },
+  "DrawboardPDF": {
+    "FriendlyName": "Drawboard PDF",
+    "Description": "Kalem girişine yönelik PDF görüntüleme ve açıklama uygulaması"
+  },
+  "Duolingo-LearnLanguagesforFree": {
+    "FriendlyName": "Duolingo",
+    "Description": "Dil öğrenme uygulaması"
+  },
+  "FACEBOOK.FACEBOOK": {
+    "FriendlyName": "Facebook",
+    "Description": "Facebook sosyal medya uygulaması"
+  },
+  "FarmVille2CountryEscape": {
+    "FriendlyName": "FarmVille 2",
+    "Description": "Çiftlik simülasyon oyunu"
+  },
+  "Flipboard": {
+    "FriendlyName": "Flipboard",
+    "Description": "Dergi düzeninde haber ve sosyal ağ derleyicisi"
+  },
+  "HiddenCity": {
+    "FriendlyName": "Hidden City",
+    "Description": "Gizli nesne bulmaca macerası"
+  },
+  "HULULLC.HULUPLUS": {
+    "FriendlyName": "Hulu",
+    "Description": "Hulu yayın uygulaması"
+  },
+  "iHeartRadio": {
+    "FriendlyName": "iHeartRadio",
+    "Description": "İnternet radyosu uygulaması"
+  },
+  "Facebook.Instagram": {
+    "FriendlyName": "Instagram",
+    "Description": "Instagram sosyal medya uygulaması"
+  },
+  "king.com.BubbleWitch3Saga": {
+    "FriendlyName": "Bubble Witch 3",
+    "Description": "King'den bulmaca oyunu"
+  },
+  "king.com.CandyCrushSaga": {
+    "FriendlyName": "Candy Crush Saga",
+    "Description": "King'den bulmaca oyunu"
+  },
+  "king.com.CandyCrushSodaSaga": {
+    "FriendlyName": "Candy Crush Soda",
+    "Description": "King'den bulmaca oyunu"
+  },
+  "LinkedInforWindows": {
+    "FriendlyName": "LinkedIn",
+    "Description": "LinkedIn profesyonel ağ uygulaması"
+  },
+  "MarchofEmpires": {
+    "FriendlyName": "March of Empires",
+    "Description": "Strateji oyunu"
+  },
+  "4DF9E0F8.Netflix": {
+    "FriendlyName": "Netflix",
+    "Description": "Netflix yayın uygulaması"
+  },
+  "NYTCrossword": {
+    "FriendlyName": "NYT Crossword",
+    "Description": "New York Times çapraz bulmaca uygulaması"
+  },
+  "OneCalendar": {
+    "FriendlyName": "One Calendar",
+    "Description": "Takvimleri bir araya getiren uygulama"
+  },
+  "PandoraMediaInc": {
+    "FriendlyName": "Pandora",
+    "Description": "Pandora müzik yayını uygulaması"
+  },
+  "PhototasticCollage": {
+    "FriendlyName": "Phototastic Collage",
+    "Description": "Fotoğraf kolajı oluşturma uygulaması"
+  },
+  "PicsArt-PhotoStudio": {
+    "FriendlyName": "PicsArt",
+    "Description": "Fotoğraf düzenleme ve tasarım uygulaması"
+  },
+  "PolarrPhotoEditorAcademicEdition": {
+    "FriendlyName": "Polarr Photo Editor",
+    "Description": "Fotoğraf düzenleme uygulaması (akademik sürüm)"
+  },
+  "flaregamesGmbH.RoyalRevolt": {
+    "FriendlyName": "Royal Revolt",
+    "Description": "Kule savunma ve strateji oyunu"
+  },
+  "Sidia.LiveWallpaper": {
+    "FriendlyName": "Live Wallpaper",
+    "Description": "Canlı duvar kağıdı uygulaması"
+  },
+  "SlingTV": {
+    "FriendlyName": "Sling TV",
+    "Description": "Canlı TV yayın uygulaması"
+  },
+  "SpotifyAB.SpotifyMusic": {
+    "FriendlyName": "Spotify",
+    "Description": "Spotify müzik yayını uygulaması"
+  },
+  "BytedancePte.Ltd.TikTok": {
+    "FriendlyName": "TikTok",
+    "Description": "TikTok kısa video uygulaması"
+  },
+  "TuneInRadio": {
+    "FriendlyName": "TuneIn Radio",
+    "Description": "İnternet radyosu uygulaması"
+  },
+  "WinZipUniversal": {
+    "FriendlyName": "WinZip",
+    "Description": "Dosya sıkıştırma ve ayıklama aracı (Evrensel Windows Platformu sürümü)"
+  },
+  "Microsoft.BingSearch": {
+    "FriendlyName": "Bing Arama",
+    "Description": "Microsoft Bing web araması (Windows Arama ile tümleşik)"
+  },
+  "Microsoft.Edge": {
+    "FriendlyName": "Microsoft Edge",
+    "Description": "Windows'un varsayılan tarayıcısı. UYARI: Bu uygulama kaldırılırsa Windows Sandbox'taki tek tarayıcı da gider ve başka uygulamalar etkilenebilir"
+  },
+  "Microsoft.GamingApp": {
+    "FriendlyName": "Xbox uygulaması",
+    "Description": "Windows için Xbox oyun uygulaması. Bazı PC oyunlarını yüklemek için gereklidir"
+  },
+  "Microsoft.GetHelp": {
+    "FriendlyName": "Yardım Al",
+    "Description": "Bazı Windows 11 sorun gidericileri ve destek işlemleri için gereklidir"
+  },
+  "Microsoft.M365Companions": {
+    "FriendlyName": "Microsoft 365 Companions",
+    "Description": "Microsoft 365 (İş) Takvim, Dosyalar ve Kişiler mini uygulamaları. Microsoft 365 yöneticiniz açtıysa yeniden yüklenebilir"
+  },
+  "Microsoft.MSPaint": {
+    "FriendlyName": "Paint 3D",
+    "Description": "3B çizim uygulaması (artık desteklenmiyor)"
+  },
+  "Microsoft.OneDrive": {
+    "FriendlyName": "OneDrive",
+    "Description": "OneDrive kişisel bulut depolama istemcisi"
+  },
+  "Microsoft.OutlookForWindows": {
+    "FriendlyName": "Outlook for Windows",
+    "Description": "Yeni Windows için Outlook posta istemcisi"
+  },
+  "Microsoft.Paint": {
+    "FriendlyName": "Paint",
+    "Description": "Klasik Paint (geleneksel 2B çizim uygulaması)"
+  },
+  "Microsoft.People": {
+    "FriendlyName": "Kişiler",
+    "Description": "Posta ve Takvim için gerekli ve onunla birlikte gelir (artık desteklenmiyor)"
+  },
+  "Microsoft.RemoteDesktop": {
+    "FriendlyName": "Uzak Masaüstü",
+    "Description": "Uzak Masaüstü istemci uygulaması"
+  },
+  "Microsoft.ScreenSketch": {
+    "FriendlyName": "Ekran Alıntısı Aracı",
+    "Description": "Ekran görüntüsü alma, açıklama ekleme, kaydetme ve paylaşma"
+  },
+  "Microsoft.StartExperiencesApp": {
+    "FriendlyName": "Pencere öğeleri deneyimi",
+    "Description": "Windows pencere öğelerindeki Akışım bölümünü çalıştırır"
+  },
+  "Microsoft.Whiteboard": {
+    "FriendlyName": "Beyaz Tahta",
+    "Description": "Birlikte kullanılan dijital beyaz tahta uygulaması"
+  },
+  "Microsoft.Windows.Photos": {
+    "FriendlyName": "Fotoğraflar",
+    "Description": "Varsayılan fotoğraf görüntüleme ve temel düzenleme uygulaması"
+  },
+  "Microsoft.WindowsCalculator": {
+    "FriendlyName": "Hesap Makinesi",
+    "Description": "Hesap makinesi uygulaması"
+  },
+  "Microsoft.WindowsCamera": {
+    "FriendlyName": "Kamera",
+    "Description": "Yerleşik veya bağlı kameralar için kamera uygulaması"
+  },
+  "Microsoft.windowscommunicationsapps": {
+    "FriendlyName": "Posta ve Takvim",
+    "Description": "Posta ve Takvim uygulama paketi (artık desteklenmiyor)"
+  },
+  "Microsoft.WindowsNotepad": {
+    "FriendlyName": "Not Defteri",
+    "Description": "Not Defteri metin düzenleyici"
+  },
+  "Microsoft.WindowsStore": {
+    "FriendlyName": "Microsoft Store",
+    "Description": "Microsoft Store. UYARI: Bu uygulama kaldırılırsa kolayca yeniden yüklenemez."
+  },
+  "Microsoft.WindowsTerminal": {
+    "FriendlyName": "Windows Terminal",
+    "Description": "Windows 11'in varsayılan terminal uygulaması (Komut İstemi, PowerShell, WSL). UYARI: Win11Debloat'ı Windows Terminal'den başlattıysanız kaldırmayın, betik yarıda kalır."
+  },
+  "Microsoft.Xbox.TCUI": {
+    "FriendlyName": "Xbox TCUI Framework",
+    "Description": "Arabirim çerçevesi. Microsoft Store, Fotoğraflar ve bazı oyunlar için gerekli görünüyor"
+  },
+  "Microsoft.XboxGameOverlay": {
+    "FriendlyName": "Xbox Game Overlay",
+    "Description": "Oyun yer paylaşımı. Bazı oyunlar için gerekli veya yararlıdır (Xbox Game Bar'ın parçası). Uyarı: Bazı yeni işlemcili bilgisayarlarda bu uygulamayı kaldırmak oyun performansını düşürebilir."
+  },
+  "Microsoft.XboxGamingOverlay": {
+    "FriendlyName": "Xbox Gaming Overlay",
+    "Description": "Oyun yer paylaşımı. Bazı oyunlar için gerekli veya yararlıdır (Xbox Game Bar'ın parçası). Uyarı: Bazı yeni işlemcili bilgisayarlarda bu uygulamayı kaldırmak oyun performansını düşürebilir."
+  },
+  "Microsoft.XboxIdentityProvider": {
+    "FriendlyName": "Xbox Identity Provider",
+    "Description": "Xbox oturum açma çerçevesi. Bazı oyunlar ve Xbox hizmetleri için gereklidir"
+  },
+  "Microsoft.XboxSpeechToTextOverlay": {
+    "FriendlyName": "Xbox Speech To Text",
+    "Description": "Bazı oyunlar için gerekli erişilebilirlik özelliği. UYARI: Bu uygulama kolayca yeniden yüklenemez."
+  },
+  "Microsoft.YourPhone": {
+    "FriendlyName": "Telefon Bağlantısı",
+    "Description": "Telefon Bağlantısı (Android veya iOS telefonu bilgisayara bağlar)"
+  },
+  "Microsoft.ZuneMusic": {
+    "FriendlyName": "Medya Oynatıcı",
+    "Description": "Yeni Medya Oynatıcı (Groove Müzik'in yerini aldı, yerel ses ve videoyu oynatır)"
+  },
+  "MicrosoftWindows.CrossDevice": {
+    "FriendlyName": "Cihazlar arası deneyim",
+    "Description": "Dosya Gezgini, Kamera ve diğer yerlerde telefon tümleştirmesi (Telefon Bağlantısı özelliklerinin parçası)"
+  },
+  "MicrosoftWindows.Client.WebExperience": {
+    "FriendlyName": "Windows Web Experience Pack",
+    "Description": "Pencere öğeleri gibi bazı özelliklerin Microsoft Store üzerinden gelmesini ve güncellenmesini sağlar"
+  },
+  "Microsoft.WidgetsPlatformRuntime": {
+    "FriendlyName": "Widgets Platform Runtime",
+    "Description": "Windows pencere öğelerinin çalışması için gerekli çalışma zamanı"
+  },
+  "LGElectronics.LGMonitorApp": {
+    "FriendlyName": "LG Monitor App",
+    "Description": "LG monitörü yönetmek için üretici yazılımı. LG monitör bağlıysa Windows Update bu uygulamayı sessizce yeniden yükleyebilir"
+  },
+  "AD2F1837.HPAIExperienceCenter": {
+    "FriendlyName": "HP AI Experience Center",
+    "Description": "HP üretici yazılımı, yapay zeka özellikleri ve destek"
+  },
+  "AD2F1837.HPConnectedMusic": {
+    "FriendlyName": "HP Connected Music",
+    "Description": "HP müzik yazılımı (kullanımdan kalkmış olabilir)"
+  },
+  "AD2F1837.HPConnectedPhotopoweredbySnapfish": {
+    "FriendlyName": "HP Connected Photo",
+    "Description": "Snapfish ile tümleşik HP fotoğraf yazılımı (kullanımdan kalkmış olabilir)"
+  },
+  "AD2F1837.HPDesktopSupportUtilities": {
+    "FriendlyName": "HP Desktop Support Utilities",
+    "Description": "Masaüstü destek araçları sunan HP üretici yazılımı"
+  },
+  "AD2F1837.HPEasyClean": {
+    "FriendlyName": "HP Easy Clean",
+    "Description": "Temizlik için giriş aygıtlarını geçici olarak kapatır"
+  },
+  "AD2F1837.HPFileViewer": {
+    "FriendlyName": "HP File Viewer",
+    "Description": "Belirli dosya türlerini görüntüleyen HP üretici yazılımı"
+  },
+  "AD2F1837.HPJumpStarts": {
+    "FriendlyName": "HP JumpStarts",
+    "Description": "Öğreticiler, uygulama keşfi veya HP özelliklerine hızlı erişim için HP yazılımı"
+  },
+  "AD2F1837.HPPCHardwareDiagnosticsWindows": {
+    "FriendlyName": "HP PC Hardware Diagnostics",
+    "Description": "Bilgisayar donanım tanılaması için HP yazılımı"
+  },
+  "AD2F1837.HPPowerManager": {
+    "FriendlyName": "HP Power Manager",
+    "Description": "Güç ayarlarını ve pili yöneten HP yazılımı"
+  },
+  "AD2F1837.HPPrinterControl": {
+    "FriendlyName": "HP Printer Control",
+    "Description": "HP yazıcıları yöneten üretici yazılımı"
+  },
+  "AD2F1837.HPPrivacySettings": {
+    "FriendlyName": "HP Privacy Settings",
+    "Description": "Gizlilik ayarlarını yöneten HP yazılımı"
+  },
+  "AD2F1837.HPQuickDrop": {
+    "FriendlyName": "HP QuickDrop",
+    "Description": "Cihazlar arasında hızlı dosya aktarımı için HP yazılımı (artık desteklenmiyor)"
+  },
+  "AD2F1837.HPQuickTouch": {
+    "FriendlyName": "HP QuickTouch",
+    "Description": "Dokunmatik kısayollar veya denetimler için olabilecek HP yazılımı"
+  },
+  "AD2F1837.HPRegistration": {
+    "FriendlyName": "HP Registration",
+    "Description": "Ürün kaydı için HP yazılımı"
+  },
+  "AD2F1837.HPSupportAssistant": {
+    "FriendlyName": "HP Support Assistant",
+    "Description": "Destek, güncelleştirme ve sorun giderme için HP yazılımı"
+  },
+  "AD2F1837.HPSureShieldAI": {
+    "FriendlyName": "HP Sure Shield AI",
+    "Description": "Büyük olasılıkla yapay zeka tabanlı tehdit koruması sunan HP güvenlik yazılımı"
+  },
+  "AD2F1837.HPSystemInformation": {
+    "FriendlyName": "HP System Information",
+    "Description": "Sistem bilgilerini gösteren HP yazılımı"
+  },
+  "AD2F1837.HPWelcome": {
+    "FriendlyName": "HP Welcome",
+    "Description": "Karşılama veya ilk kurulum yardımı sunan HP yazılımı"
+  },
+  "AD2F1837.HPWorkWell": {
+    "FriendlyName": "HP WorkWell",
+    "Description": "Mola anımsatıcıları veya ergonomi ipuçları içerebilen HP iyi oluş yazılımı"
+  },
+  "AD2F1837.myHP": {
+    "FriendlyName": "myHP",
+    "Description": "Cihaz bilgisi, destek ve hizmetler için HP merkezi uygulaması"
+  },
+  "E046963F.LenovoCompanion": {
+    "FriendlyName": "Lenovo Vantage",
+    "Description": "Cihaz ayarları, güncelleştirmeler ve destek için Lenovo merkezi uygulaması"
+  },
+  "LenovoCompanyLimited.LenovoVantageService": {
+    "FriendlyName": "Lenovo Vantage Service",
+    "Description": "Lenovo Vantage için arka plan hizmeti"
+  },
+  "DellInc.DellSupportAssistforPCs": {
+    "FriendlyName": "Dell SupportAssist",
+    "Description": "Dell destek, tanılama ve güncelleştirme aracı"
+  },
+  "DellInc.DellDigitalDelivery": {
+    "FriendlyName": "Dell Digital Delivery Services",
+    "Description": "Önceden satın alınan yazılımları teslim eden Dell yazılımı"
+  },
+  "DellInc.DellMobileConnect": {
+    "FriendlyName": "Dell Mobile Connect",
+    "Description": "Android veya iOS telefonu bilgisayara bağlayan Dell uygulaması (yerini Telefon Bağlantısı aldı)"
+  }
+}

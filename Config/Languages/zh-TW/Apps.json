@@ -1,0 +1,558 @@
+﻿{
+  "Clipchamp.Clipchamp": {
+    "FriendlyName": "Clipchamp",
+    "Description": "Microsoft 提供的影片編輯器"
+  },
+  "Microsoft.3DBuilder": {
+    "FriendlyName": "3D Builder",
+    "Description": "基本 3D 建模軟體"
+  },
+  "Microsoft.549981C3F5F10": {
+    "FriendlyName": "Cortana",
+    "Description": "Microsoft Cortana 語音小幫手 (已停止提供)"
+  },
+  "Microsoft.BingFinance": {
+    "FriendlyName": "Bing 財經",
+    "Description": "透過 Bing 提供的財經新聞與追蹤 (已停止提供)"
+  },
+  "Microsoft.BingFoodAndDrink": {
+    "FriendlyName": "Bing 美食與飲品",
+    "Description": "透過 Bing 提供的食譜與美食新聞 (已停止提供)"
+  },
+  "Microsoft.BingHealthAndFitness": {
+    "FriendlyName": "Bing 健康與健身",
+    "Description": "透過 Bing 提供的健康與健身追蹤及新聞 (已停止提供)"
+  },
+  "Microsoft.BingNews": {
+    "FriendlyName": "Microsoft 新聞",
+    "Description": "新聞彙整應用程式，匯集突發新聞、個人化文章動態與全球時事"
+  },
+  "Microsoft.BingSports": {
+    "FriendlyName": "Bing 運動",
+    "Description": "透過 Bing 提供的運動新聞與比分 (已停止提供)"
+  },
+  "Microsoft.BingTranslator": {
+    "FriendlyName": "Bing 翻譯工具",
+    "Description": "透過 Bing 提供的翻譯服務"
+  },
+  "Microsoft.BingTravel": {
+    "FriendlyName": "Bing 旅遊",
+    "Description": "透過 Bing 提供的旅遊規劃與新聞 (已停止提供)"
+  },
+  "Microsoft.BingWeather": {
+    "FriendlyName": "Bing 天氣",
+    "Description": "透過 Bing 提供的天氣預報"
+  },
+  "XP9CXNGPPJ97XX": {
+    "FriendlyName": "Microsoft Copilot",
+    "Description": "整合至 Windows 的 AI 小幫手"
+  },
+  "Microsoft.Windows.AIHub": {
+    "FriendlyName": "Copilot+ AI Hub",
+    "Description": "Copilot+ AI Hub 應用程式 (Windows 11 24H2 以上版本)"
+  },
+  "Microsoft.PCManager": {
+    "FriendlyName": "Microsoft PC Manager",
+    "Description": "Microsoft PC Manager 系統清理與最佳化工具 (通常會預先安裝)"
+  },
+  "Microsoft.Getstarted": {
+    "FriendlyName": "開始使用",
+    "Description": "Windows 的提示與入門指南 (在 Windows 11 中無法解除安裝)"
+  },
+  "Microsoft.Messaging": {
+    "FriendlyName": "訊息",
+    "Description": "訊息應用程式，通常與 Skype 整合 (大多已停止提供)"
+  },
+  "Microsoft.Microsoft3DViewer": {
+    "FriendlyName": "3D 檢視器",
+    "Description": "3D 模型檢視器 (已停止提供)"
+  },
+  "Microsoft.MicrosoftJournal": {
+    "FriendlyName": "Microsoft Journal",
+    "Description": "專為手寫筆輸入最佳化的數位筆記應用程式"
+  },
+  "Microsoft.MicrosoftOfficeHub": {
+    "FriendlyName": "Office 中樞",
+    "Description": "用來存取 Microsoft Office 應用程式與文件的中樞 (Microsoft 365 應用程式的前身)"
+  },
+  "Microsoft.MicrosoftPowerBIForWindows": {
+    "FriendlyName": "Power BI",
+    "Description": "商業分析服務用戶端"
+  },
+  "Microsoft.MicrosoftSolitaireCollection": {
+    "FriendlyName": "Microsoft 接龍",
+    "Description": "接龍紙牌遊戲集合"
+  },
+  "Microsoft.MicrosoftStickyNotes": {
+    "FriendlyName": "自黏便箋",
+    "Description": "用於建立與同步自黏便箋的應用程式"
+  },
+  "Microsoft.MixedReality.Portal": {
+    "FriendlyName": "混合實境入口",
+    "Description": "Windows 混合實境頭戴式裝置的入口"
+  },
+  "Microsoft.NetworkSpeedTest": {
+    "FriendlyName": "網路速度測試",
+    "Description": "網際網路連線速度測試工具"
+  },
+  "Microsoft.Office.OneNote": {
+    "FriendlyName": "OneNote",
+    "Description": "數位筆記應用程式 (通用 Windows 平台版本)"
+  },
+  "Microsoft.Office.Sway": {
+    "FriendlyName": "Sway",
+    "Description": "簡報與說故事應用程式"
+  },
+  "Microsoft.OneConnect": {
+    "FriendlyName": "One Connect",
+    "Description": "行動電信業者管理應用程式 (已由行動方案取代)"
+  },
+  "Microsoft.Print3D": {
+    "FriendlyName": "3D 列印",
+    "Description": "3D 列印準備軟體"
+  },
+  "Microsoft.PowerAutomateDesktop": {
+    "FriendlyName": "Power Automate",
+    "Description": "桌面自動化工具 (機器人流程自動化)"
+  },
+  "Microsoft.SkypeApp": {
+    "FriendlyName": "Skype (通用 Windows 平台)",
+    "Description": "Skype 通訊應用程式，通用 Windows 平台版本 (已停止提供)"
+  },
+  "Microsoft.Todos": {
+    "FriendlyName": "Microsoft To Do",
+    "Description": "待辦事項清單與工作管理應用程式"
+  },
+  "Microsoft.Windows.DevHome": {
+    "FriendlyName": "Dev Home",
+    "Description": "開發人員儀表板與工具設定公用程式 (已停止提供)"
+  },
+  "Microsoft.WindowsAlarms": {
+    "FriendlyName": "時鐘",
+    "Description": "提供鬧鐘、計時器、碼錶與專注工作階段的應用程式"
+  },
+  "Microsoft.WindowsFeedbackHub": {
+    "FriendlyName": "意見反應中樞",
+    "Description": "向 Microsoft 提供 Windows 意見反應的應用程式"
+  },
+  "Microsoft.WindowsMaps": {
+    "FriendlyName": "Windows 地圖",
+    "Description": "地圖與導航應用程式 (已停止提供)"
+  },
+  "Microsoft.WindowsSoundRecorder": {
+    "FriendlyName": "錄音機",
+    "Description": "基本音訊錄製應用程式"
+  },
+  "Microsoft.XboxApp": {
+    "FriendlyName": "Xbox 主機小幫手",
+    "Description": "舊版 Xbox 主機小幫手應用程式 (已停止提供)"
+  },
+  "Microsoft.ZuneVideo": {
+    "FriendlyName": "電影與電視",
+    "Description": "用來租借、購買及播放影片內容的應用程式 (已停止提供)"
+  },
+  "MicrosoftCorporationII.MicrosoftFamily": {
+    "FriendlyName": "Microsoft 家庭安全",
+    "Description": "用於管理家庭螢幕時間、內容篩選與活動報告的應用程式"
+  },
+  "MicrosoftCorporationII.QuickAssist": {
+    "FriendlyName": "快速小幫手",
+    "Description": "遠端協助工具"
+  },
+  "MicrosoftTeams": {
+    "FriendlyName": "Microsoft Teams (舊版)",
+    "Description": "舊版 Microsoft Teams 個人版 (Microsoft Store 版本)"
+  },
+  "MSTeams": {
+    "FriendlyName": "Microsoft Teams (新版)",
+    "Description": "新版 Microsoft Teams 應用程式 (公司/學校或個人版)"
+  },
+  "ACGMediaPlayer": {
+    "FriendlyName": "ACG Media Player",
+    "Description": "媒體播放器應用程式"
+  },
+  "ActiproSoftwareLLC": {
+    "FriendlyName": "Actipro Software",
+    "Description": "可能是使用者介面控制項或軟體元件，通常由電腦原廠預先安裝"
+  },
+  "AdobeSystemsIncorporated.AdobePhotoshopExpress": {
+    "FriendlyName": "Adobe Photoshop Express",
+    "Description": "Adobe 提供的基本相片編輯應用程式"
+  },
+  "Amazon.com.Amazon": {
+    "FriendlyName": "Amazon",
+    "Description": "Amazon 購物應用程式"
+  },
+  "AmazonVideo.PrimeVideo": {
+    "FriendlyName": "Prime Video",
+    "Description": "Amazon Prime Video 串流服務應用程式"
+  },
+  "Asphalt8Airborne": {
+    "FriendlyName": "Asphalt 8",
+    "Description": "賽車遊戲"
+  },
+  "AutodeskSketchBook": {
+    "FriendlyName": "Autodesk SketchBook",
+    "Description": "數位繪圖與素描應用程式"
+  },
+  "CaesarsSlotsFreeCasino": {
+    "FriendlyName": "Caesars Slots",
+    "Description": "賭場吃角子老虎機遊戲"
+  },
+  "COOKINGFEVER": {
+    "FriendlyName": "Cooking Fever",
+    "Description": "餐廳模擬遊戲"
+  },
+  "CyberLinkMediaSuiteEssentials": {
+    "FriendlyName": "CyberLink Media Suite",
+    "Description": "多媒體軟體套件 (通常由電腦原廠預先安裝)"
+  },
+  "DisneyMagicKingdoms": {
+    "FriendlyName": "Disney Magic Kingdoms",
+    "Description": "迪士尼主題樂園建造遊戲"
+  },
+  "Disney.37853FC22B2CE": {
+    "FriendlyName": "Disney+",
+    "Description": "Disney+ 串流服務應用程式"
+  },
+  "DrawboardPDF": {
+    "FriendlyName": "Drawboard PDF",
+    "Description": "PDF 檢視與註釋應用程式，通常針對手寫筆輸入設計"
+  },
+  "Duolingo-LearnLanguagesforFree": {
+    "FriendlyName": "Duolingo",
+    "Description": "語言學習應用程式"
+  },
+  "FACEBOOK.FACEBOOK": {
+    "FriendlyName": "Facebook",
+    "Description": "Facebook 社群媒體應用程式"
+  },
+  "FarmVille2CountryEscape": {
+    "FriendlyName": "FarmVille 2",
+    "Description": "農場模擬遊戲"
+  },
+  "Flipboard": {
+    "FriendlyName": "Flipboard",
+    "Description": "以雜誌風格呈現的新聞與社群網路彙整應用程式"
+  },
+  "HiddenCity": {
+    "FriendlyName": "Hidden City",
+    "Description": "尋物解謎冒險遊戲"
+  },
+  "HULULLC.HULUPLUS": {
+    "FriendlyName": "Hulu",
+    "Description": "Hulu 串流服務應用程式"
+  },
+  "iHeartRadio": {
+    "FriendlyName": "iHeartRadio",
+    "Description": "網際網路廣播串流應用程式"
+  },
+  "Facebook.Instagram": {
+    "FriendlyName": "Instagram",
+    "Description": "Instagram 社群媒體應用程式"
+  },
+  "king.com.BubbleWitch3Saga": {
+    "FriendlyName": "Bubble Witch 3",
+    "Description": "King 推出的益智遊戲"
+  },
+  "king.com.CandyCrushSaga": {
+    "FriendlyName": "Candy Crush Saga",
+    "Description": "King 推出的益智遊戲"
+  },
+  "king.com.CandyCrushSodaSaga": {
+    "FriendlyName": "Candy Crush Soda",
+    "Description": "King 推出的益智遊戲"
+  },
+  "LinkedInforWindows": {
+    "FriendlyName": "LinkedIn",
+    "Description": "LinkedIn 專業人脈應用程式"
+  },
+  "MarchofEmpires": {
+    "FriendlyName": "March of Empires",
+    "Description": "策略遊戲"
+  },
+  "4DF9E0F8.Netflix": {
+    "FriendlyName": "Netflix",
+    "Description": "Netflix 串流服務應用程式"
+  },
+  "NYTCrossword": {
+    "FriendlyName": "NYT Crossword",
+    "Description": "《紐約時報》填字遊戲應用程式"
+  },
+  "OneCalendar": {
+    "FriendlyName": "One Calendar",
+    "Description": "行事曆彙整應用程式"
+  },
+  "PandoraMediaInc": {
+    "FriendlyName": "Pandora",
+    "Description": "Pandora 音樂串流應用程式"
+  },
+  "PhototasticCollage": {
+    "FriendlyName": "Phototastic Collage",
+    "Description": "相片拼貼製作應用程式"
+  },
+  "PicsArt-PhotoStudio": {
+    "FriendlyName": "PicsArt",
+    "Description": "相片編輯與創意應用程式"
+  },
+  "PolarrPhotoEditorAcademicEdition": {
+    "FriendlyName": "Polarr Photo Editor",
+    "Description": "相片編輯應用程式 (學術版)"
+  },
+  "flaregamesGmbH.RoyalRevolt": {
+    "FriendlyName": "Royal Revolt",
+    "Description": "塔防/策略遊戲"
+  },
+  "Sidia.LiveWallpaper": {
+    "FriendlyName": "Live Wallpaper",
+    "Description": "動態桌布應用程式"
+  },
+  "SlingTV": {
+    "FriendlyName": "Sling TV",
+    "Description": "直播電視串流服務應用程式"
+  },
+  "SpotifyAB.SpotifyMusic": {
+    "FriendlyName": "Spotify",
+    "Description": "Spotify 音樂串流應用程式"
+  },
+  "BytedancePte.Ltd.TikTok": {
+    "FriendlyName": "TikTok",
+    "Description": "TikTok 短影音應用程式"
+  },
+  "TuneInRadio": {
+    "FriendlyName": "TuneIn Radio",
+    "Description": "網際網路廣播串流應用程式"
+  },
+  "WinZipUniversal": {
+    "FriendlyName": "WinZip",
+    "Description": "檔案壓縮與解壓縮公用程式 (通用 Windows 平台版本)"
+  },
+  "Microsoft.BingSearch": {
+    "FriendlyName": "Bing 搜尋",
+    "Description": "Microsoft Bing 的網頁搜尋 (整合至 Windows 搜尋)"
+  },
+  "Microsoft.Edge": {
+    "FriendlyName": "Microsoft Edge",
+    "Description": "Windows 的預設瀏覽器，警告：移除此應用程式也會移除 Windows 沙箱中唯一的瀏覽器，並可能影響其他應用程式"
+  },
+  "Microsoft.GamingApp": {
+    "FriendlyName": "Xbox 遊戲應用程式",
+    "Description": "Windows 的 Xbox 遊戲應用程式，安裝某些 PC 遊戲時需要"
+  },
+  "Microsoft.GetHelp": {
+    "FriendlyName": "取得協助",
+    "Description": "某些 Windows 11 疑難排解員與支援互動需要此應用程式"
+  },
+  "Microsoft.M365Companions": {
+    "FriendlyName": "Microsoft 365 隨附應用程式",
+    "Description": "Microsoft 365 (商務用) 的行事曆、檔案與人員迷你應用程式，若您的 Microsoft 365 系統管理員啟用，這些應用程式可能會重新安裝"
+  },
+  "Microsoft.MSPaint": {
+    "FriendlyName": "小畫家 3D",
+    "Description": "3D 繪圖應用程式 (已停止提供)"
+  },
+  "Microsoft.OneDrive": {
+    "FriendlyName": "OneDrive",
+    "Description": "OneDrive 消費者雲端儲存空間用戶端"
+  },
+  "Microsoft.OutlookForWindows": {
+    "FriendlyName": "Windows 版 Outlook",
+    "Description": "新版 Windows 版 Outlook 郵件用戶端"
+  },
+  "Microsoft.Paint": {
+    "FriendlyName": "小畫家",
+    "Description": "傳統小畫家 (傳統 2D 繪圖應用程式)"
+  },
+  "Microsoft.People": {
+    "FriendlyName": "人員",
+    "Description": "郵件與行事曆所需且隨附的應用程式 (已停止提供)"
+  },
+  "Microsoft.RemoteDesktop": {
+    "FriendlyName": "遠端桌面",
+    "Description": "遠端桌面用戶端應用程式"
+  },
+  "Microsoft.ScreenSketch": {
+    "FriendlyName": "剪取工具",
+    "Description": "擷取、註釋、儲存及分享螢幕擷取畫面"
+  },
+  "Microsoft.StartExperiencesApp": {
+    "FriendlyName": "小工具體驗",
+    "Description": "此應用程式提供 Windows 小工具的「我的摘要」功能"
+  },
+  "Microsoft.Whiteboard": {
+    "FriendlyName": "Whiteboard",
+    "Description": "數位協作白板應用程式"
+  },
+  "Microsoft.Windows.Photos": {
+    "FriendlyName": "相片",
+    "Description": "預設的相片檢視與基本編輯應用程式"
+  },
+  "Microsoft.WindowsCalculator": {
+    "FriendlyName": "計算機",
+    "Description": "計算機應用程式"
+  },
+  "Microsoft.WindowsCamera": {
+    "FriendlyName": "相機",
+    "Description": "使用內建或外接相機的相機應用程式"
+  },
+  "Microsoft.windowscommunicationsapps": {
+    "FriendlyName": "郵件與行事曆",
+    "Description": "郵件與行事曆應用程式套件 (已停止提供)"
+  },
+  "Microsoft.WindowsNotepad": {
+    "FriendlyName": "記事本",
+    "Description": "記事本文字編輯器應用程式"
+  },
+  "Microsoft.WindowsStore": {
+    "FriendlyName": "Microsoft Store",
+    "Description": "Microsoft Store，警告：移除此應用程式後將不容易重新安裝！"
+  },
+  "Microsoft.WindowsTerminal": {
+    "FriendlyName": "Windows Terminal",
+    "Description": "Windows 11 的預設終端機應用程式 (命令提示字元、PowerShell、WSL)，警告：如果您是從 Windows Terminal 啟動 Win11Debloat，請勿移除，否則會導致指令碼失敗"
+  },
+  "Microsoft.Xbox.TCUI": {
+    "FriendlyName": "Xbox TCUI 架構",
+    "Description": "使用者介面架構，似乎是 Microsoft Store、相片和某些遊戲所需"
+  },
+  "Microsoft.XboxGameOverlay": {
+    "FriendlyName": "Xbox 遊戲覆疊",
+    "Description": "遊戲覆疊，某些遊戲需要或適用 (Xbox Game Bar 的一部分)。警告：解除安裝此應用程式後，配備特定新式處理器的 PC 可能會出現遊戲效能降低的情況。"
+  },
+  "Microsoft.XboxGamingOverlay": {
+    "FriendlyName": "Xbox 遊戲內覆疊",
+    "Description": "遊戲覆疊，某些遊戲需要或適用 (Xbox Game Bar 的一部分)。警告：解除安裝此應用程式後，配備特定新式處理器的 PC 可能會出現遊戲效能降低的情況。"
+  },
+  "Microsoft.XboxIdentityProvider": {
+    "FriendlyName": "Xbox 身分識別提供者",
+    "Description": "Xbox 登入架構，某些遊戲與 Xbox 服務需要"
+  },
+  "Microsoft.XboxSpeechToTextOverlay": {
+    "FriendlyName": "Xbox 語音轉文字",
+    "Description": "某些遊戲需要的協助工具功能，警告：此應用程式不容易重新安裝！"
+  },
+  "Microsoft.YourPhone": {
+    "FriendlyName": "手機連結",
+    "Description": "手機連結 (將 Android/iOS 手機連接到 PC)"
+  },
+  "Microsoft.ZuneMusic": {
+    "FriendlyName": "媒體播放器",
+    "Description": "新版媒體播放器 (取代 Groove Music，可播放本機音訊/視訊)"
+  },
+  "MicrosoftWindows.CrossDevice": {
+    "FriendlyName": "跨裝置體驗",
+    "Description": "檔案總管、相機等中的手機整合 (手機連結功能的一部分)"
+  },
+  "MicrosoftWindows.Client.WebExperience": {
+    "FriendlyName": "Windows 網頁體驗套件",
+    "Description": "協助透過 Microsoft Store 提供及更新小工具等特定功能"
+  },
+  "Microsoft.WidgetsPlatformRuntime": {
+    "FriendlyName": "小工具平台執行階段",
+    "Description": "Windows 小工具運作所需的執行階段"
+  },
+  "LGElectronics.LGMonitorApp": {
+    "FriendlyName": "LG Monitor App",
+    "Description": "LG 原廠軟體，用於控制 LG 螢幕；若連接 LG 螢幕，Windows Update 可能會默默重新安裝此應用程式"
+  },
+  "AD2F1837.HPAIExperienceCenter": {
+    "FriendlyName": "HP AI Experience Center",
+    "Description": "HP 原廠軟體，提供 AI 增強功能與支援"
+  },
+  "AD2F1837.HPConnectedMusic": {
+    "FriendlyName": "HP Connected Music",
+    "Description": "HP 原廠音樂軟體 (可能已停止提供)"
+  },
+  "AD2F1837.HPConnectedPhotopoweredbySnapfish": {
+    "FriendlyName": "HP Connected Photo",
+    "Description": "HP 原廠相片軟體，整合 Snapfish (可能已停止提供)"
+  },
+  "AD2F1837.HPDesktopSupportUtilities": {
+    "FriendlyName": "HP Desktop Support Utilities",
+    "Description": "HP 原廠軟體，提供桌面支援工具"
+  },
+  "AD2F1837.HPEasyClean": {
+    "FriendlyName": "HP Easy Clean",
+    "Description": "清潔時暫時停用輸入裝置"
+  },
+  "AD2F1837.HPFileViewer": {
+    "FriendlyName": "HP File Viewer",
+    "Description": "HP 原廠軟體，用於檢視特定檔案類型"
+  },
+  "AD2F1837.HPJumpStarts": {
+    "FriendlyName": "HP JumpStarts",
+    "Description": "HP 原廠軟體，提供教學、應用程式探索或快速存取 HP 功能"
+  },
+  "AD2F1837.HPPCHardwareDiagnosticsWindows": {
+    "FriendlyName": "HP PC Hardware Diagnostics",
+    "Description": "HP 原廠軟體，用於 PC 硬體診斷"
+  },
+  "AD2F1837.HPPowerManager": {
+    "FriendlyName": "HP Power Manager",
+    "Description": "HP 原廠軟體，用於管理電源設定與電池"
+  },
+  "AD2F1837.HPPrinterControl": {
+    "FriendlyName": "HP Printer Control",
+    "Description": "HP 原廠軟體，用於管理 HP 印表機"
+  },
+  "AD2F1837.HPPrivacySettings": {
+    "FriendlyName": "HP Privacy Settings",
+    "Description": "HP 原廠軟體，用於管理隱私權設定"
+  },
+  "AD2F1837.HPQuickDrop": {
+    "FriendlyName": "HP QuickDrop",
+    "Description": "HP 原廠軟體，用於在裝置間快速傳輸檔案 (已停止提供)"
+  },
+  "AD2F1837.HPQuickTouch": {
+    "FriendlyName": "HP QuickTouch",
+    "Description": "HP 原廠軟體，可能用於觸控專用捷徑或控制項"
+  },
+  "AD2F1837.HPRegistration": {
+    "FriendlyName": "HP Registration",
+    "Description": "HP 原廠軟體，用於產品註冊"
+  },
+  "AD2F1837.HPSupportAssistant": {
+    "FriendlyName": "HP Support Assistant",
+    "Description": "HP 原廠軟體，提供支援、更新與疑難排解"
+  },
+  "AD2F1837.HPSureShieldAI": {
+    "FriendlyName": "HP Sure Shield AI",
+    "Description": "HP 原廠安全性軟體，可能是以 AI 為基礎的威脅防護"
+  },
+  "AD2F1837.HPSystemInformation": {
+    "FriendlyName": "HP System Information",
+    "Description": "HP 原廠軟體，用於顯示系統資訊"
+  },
+  "AD2F1837.HPWelcome": {
+    "FriendlyName": "HP Welcome",
+    "Description": "HP 原廠軟體，提供歡迎體驗或初始設定說明"
+  },
+  "AD2F1837.HPWorkWell": {
+    "FriendlyName": "HP WorkWell",
+    "Description": "HP 原廠軟體，著重於身心健康，可能包含休息提醒或人體工學提示"
+  },
+  "AD2F1837.myHP": {
+    "FriendlyName": "myHP",
+    "Description": "HP 原廠中樞應用程式，提供裝置資訊、支援與服務"
+  },
+  "E046963F.LenovoCompanion": {
+    "FriendlyName": "Lenovo Vantage",
+    "Description": "Lenovo 原廠中樞應用程式，提供裝置設定、更新與支援"
+  },
+  "LenovoCompanyLimited.LenovoVantageService": {
+    "FriendlyName": "Lenovo Vantage Service",
+    "Description": "Lenovo Vantage 的背景服務元件"
+  },
+  "DellInc.DellSupportAssistforPCs": {
+    "FriendlyName": "Dell SupportAssist",
+    "Description": "Dell 原廠支援、診斷與更新工具"
+  },
+  "DellInc.DellDigitalDelivery": {
+    "FriendlyName": "Dell Digital Delivery Services",
+    "Description": "Dell 原廠軟體，用於交付預先購買的軟體"
+  },
+  "DellInc.DellMobileConnect": {
+    "FriendlyName": "Dell Mobile Connect",
+    "Description": "Dell 原廠應用程式，用於將 Android/iOS 手機連接到 PC (已由手機連結取代)"
+  }
+}

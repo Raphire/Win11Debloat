@@ -1,0 +1,38 @@
+{
+  "PrivacySuggestedContent": {
+    "Label": "隱私權與建議內容"
+  },
+  "System": {
+    "Label": "系統"
+  },
+  "StartMenuSearch": {
+    "Label": "開始功能表與搜尋"
+  },
+  "AI": {
+    "Label": "AI"
+  },
+  "WindowsUpdate": {
+    "Label": "Windows Update"
+  },
+  "Taskbar": {
+    "Label": "工作列"
+  },
+  "Appearance": {
+    "Label": "外觀"
+  },
+  "FileExplorer": {
+    "Label": "檔案總管"
+  },
+  "Gaming": {
+    "Label": "遊戲"
+  },
+  "MultiTasking": {
+    "Label": "多工作業"
+  },
+  "OptionalWindowsFeatures": {
+    "Label": "選用的 Windows 功能"
+  },
+  "Other": {
+    "Label": "其他"
+  }
+}

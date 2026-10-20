@@ -1,0 +1,38 @@
+{
+  "PrivacySuggestedContent": {
+    "Label": "Конфиденциальность и рекомендованное содержимое"
+  },
+  "System": {
+    "Label": "Система"
+  },
+  "StartMenuSearch": {
+    "Label": "Меню «Пуск» и поиск"
+  },
+  "AI": {
+    "Label": "ИИ"
+  },
+  "WindowsUpdate": {
+    "Label": "Центр обновления Windows"
+  },
+  "Taskbar": {
+    "Label": "Панель задач"
+  },
+  "Appearance": {
+    "Label": "Оформление"
+  },
+  "FileExplorer": {
+    "Label": "Проводник"
+  },
+  "Gaming": {
+    "Label": "Игры"
+  },
+  "MultiTasking": {
+    "Label": "Многозадачность"
+  },
+  "OptionalWindowsFeatures": {
+    "Label": "Дополнительные компоненты Windows"
+  },
+  "Other": {
+    "Label": "Другое"
+  }
+}

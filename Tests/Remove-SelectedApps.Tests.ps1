@@ -187,6 +187,14 @@ Describe 'Get-AppRemovalMethod' {
         Get-AppRemovalMethod -appId 'Unknown.App' | Should -Be 'Appx'
     }
 
+    It 'resolves WinGet removal for non-ASCII IDs from BOM-less UTF-8 JSON' {
+        $appId = 'Test.' + [char]0x00E9 + [char]0x4E2D + [char]0x0416
+        $json = @{ Apps = @(@{ AppId = $appId; RemovalMethod = 'WinGet' }) } | ConvertTo-Json -Depth 4
+        [System.IO.File]::WriteAllText($script:AppsListFilePath, $json, [System.Text.UTF8Encoding]::new($false))
+
+        Get-AppRemovalMethod -appId $appId | Should -Be 'WinGet'
+    }
+
     It 'warns and defaults to Appx when the catalog is malformed' {
         'not json' | Set-Content -LiteralPath $script:AppsListFilePath
         Mock Write-Warning {}

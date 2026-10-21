@@ -26,7 +26,8 @@ Describe 'Import-RegistryBackup' {
 
     It 'parses and normalizes registry snapshots from a real backup structure' {
         Mock Test-UserNameMatch { $true }
-        Mock Test-RegistryBackupMatchesSelectedFeatures { @() }
+        Mock Get-RegistryBackupValidationPlanMap { @{} }
+        Mock Test-RegistryBackupAgainstAllowList { @() }
 
         $result = Import-RegistryBackup -FilePath (Join-Path $script:JsonFixturePath 'RegistryBackup.RealStructure.json')
 
@@ -42,7 +43,7 @@ Describe 'Import-RegistryBackup' {
         $result.RegistryKeys[1].Values[0].Name | Should -Be 'EnableTransparency'
         $result.RegistryKeys[1].Values[0].Kind | Should -Be 'DWord'
         $result.RegistryKeys[1].Values[0].Data | Should -Be 0
-        Should -Invoke Test-RegistryBackupMatchesSelectedFeatures -Times 1 -Exactly
+        Should -Invoke Test-RegistryBackupAgainstAllowList -Times 1 -Exactly
     }
 
     It 'rejects <Case>' -ForEach @(
@@ -59,7 +60,8 @@ Describe 'Import-RegistryBackup' {
 Describe 'ConvertTo-NormalizedRegistryBackup' {
     BeforeEach {
         $script:Features = @{ Example = [PSCustomObject]@{ FeatureId = 'Example'; RegistryKey = 'Example.reg' } }
-        Mock Test-RegistryBackupMatchesSelectedFeatures { @() }
+        Mock Get-RegistryBackupValidationPlanMap { @{} }
+        Mock Test-RegistryBackupAgainstAllowList { @() }
         Mock Write-Error {}
     }
 
@@ -76,7 +78,7 @@ Describe 'ConvertTo-NormalizedRegistryBackup' {
         $result.SelectedFeatures -is [array] | Should -BeTrue
         $result.SelectedFeatures | Should -Be 'Example'
         $result.SelectedUndoFeatures | Should -BeNullOrEmpty
-        Should -Invoke Test-RegistryBackupMatchesSelectedFeatures -Times 1 -Exactly
+        Should -Invoke Test-RegistryBackupAgainstAllowList -Times 1 -Exactly
     }
 
     It 'aggregates invalid metadata and does not attempt allow-list validation without feature IDs' {
@@ -85,7 +87,7 @@ Describe 'ConvertTo-NormalizedRegistryBackup' {
         { ConvertTo-NormalizedRegistryBackup -Backup $backup } | Should -Throw 'Validation failed with * errors. See console output for details.'
 
         Should -Invoke Write-Error -Times 1 -Exactly
-        Should -Invoke Test-RegistryBackupMatchesSelectedFeatures -Times 0 -Exactly
+        Should -Invoke Test-RegistryBackupAgainstAllowList -Times 0 -Exactly
     }
 
     It 'reports an invalid user target as a validation failure' {
@@ -117,7 +119,17 @@ Describe 'Restore-RegistryBackupState' {
         Mock Restore-RegistryKeySnapshot {}
         Mock Invoke-WithLoadedRestoreHive {}
         Mock Write-Host {}
-        $script:backup = [PSCustomObject]@{ Target = 'CurrentUser:Tester'; RegistryKeys = @([PSCustomObject]@{ Path = 'HKEY_CURRENT_USER\Software\One' }, [PSCustomObject]@{ Path = 'HKEY_CURRENT_USER\Software\Two' }) }
+        Mock Test-UserNameMatch { $true }
+        Mock Write-Error {}
+        Mock Get-RegistryBackupValidationPlanMap { @{} }
+        Mock Test-RegistryBackupAgainstAllowList { @() }
+        $script:backup = [PSCustomObject]@{
+            Version = '1.0'; BackupType = 'RegistryState'; Target = 'CurrentUser:Tester'; SelectedFeatures = @('Example')
+            RegistryKeys = @(
+                [PSCustomObject]@{ Path = 'HKEY_CURRENT_USER\Software\One'; Exists = $true; Values = @(); SubKeys = @() }
+                [PSCustomObject]@{ Path = 'HKEY_CURRENT_USER\Software\Two'; Exists = $true; Values = @(); SubKeys = @() }
+            )
+        }
     }
 
     It 'restores every root snapshot directly for the current user' {
@@ -147,5 +159,80 @@ Describe 'Restore-RegistryBackupState' {
 
         Should -Invoke Restore-RegistryKeySnapshot -Times 0 -Exactly
         Should -Invoke Invoke-WithLoadedRestoreHive -Times 0 -Exactly
+    }
+
+    It 'rejects a malformed later root before any writes or hive loading for <Target>' -ForEach @(
+        @{ Target = 'CurrentUser:Tester'; InvalidKind = $false; ExpectedError = '*is not directly below parent*' }
+        @{ Target = 'DefaultUserProfile'; InvalidKind = $false; ExpectedError = '*is not directly below parent*' }
+        @{ Target = 'User:Alice'; InvalidKind = $false; ExpectedError = '*is not directly below parent*' }
+        @{ Target = 'DefaultUserProfile'; InvalidKind = $true; ExpectedError = '*Unsupported registry value kind*' }
+    ) {
+        Mock Test-TargetUserName { [PSCustomObject]@{ IsValid = $true } }
+        $first = [PSCustomObject]@{ Path = 'HKEY_CURRENT_USER\Software\One'; Exists = $true; Values = @(); SubKeys = @() }
+        $second = [PSCustomObject]@{ Path = 'HKEY_CURRENT_USER\Software\Two'; Exists = $true; Values = @(); SubKeys = @() }
+        if ($InvalidKind) {
+            $second.Values = @([PSCustomObject]@{ Name = 'Setting'; Exists = $true; Kind = '99'; Data = 'data' })
+        }
+        else {
+            $second.SubKeys = @([PSCustomObject]@{ Path = $first.Path; Exists = $true; Values = @(); SubKeys = @() })
+        }
+        $script:backup.Target = $Target
+        $script:backup.RegistryKeys = @($first, $second)
+
+        { Restore-RegistryBackupState -Backup $script:backup } | Should -Throw $ExpectedError
+
+        Should -Invoke Restore-RegistryKeySnapshot -Times 0 -Exactly
+        Should -Invoke Invoke-WithLoadedRestoreHive -Times 0 -Exactly
+    }
+
+    It 'rejects conflicting duplicate root snapshots before restore' {
+        $script:backup.RegistryKeys = @($script:backup.RegistryKeys[0], $script:backup.RegistryKeys[0])
+
+        { Restore-RegistryBackupState -Backup $script:backup } | Should -Throw '*duplicate registry root path*'
+
+        Should -Invoke Restore-RegistryKeySnapshot -Times 0 -Exactly
+    }
+}
+
+Describe 'Restore executable warning dialog' {
+    BeforeAll {
+        Add-Type -AssemblyName PresentationFramework
+        . (Join-Path $PSScriptRoot '..\Scripts\GUI\Show-MessageBox.ps1')
+        . (Join-Path $PSScriptRoot '..\Scripts\GUI\Show-RestoreBackupDialog.ps1')
+        . (Join-Path $PSScriptRoot '..\Scripts\GUI\Show-RestoreBackupWindow.ps1')
+    }
+
+    BeforeEach {
+        $script:Params = @{}
+        Mock Write-Host {}
+        Mock Show-RestoreBackupDialog {
+            @{ Result = 'RestoreRegistry'; Backup = [PSCustomObject]@{ Target = 'DefaultUserProfile' } }
+        }
+        Mock Restore-RegistryBackupState {
+            param($Backup, $ConfirmUntrustedValues)
+            $approved = & $ConfirmUntrustedValues @(
+                [PSCustomObject]@{ Path = 'HKEY_CLASSES_ROOT\test\shell\open\command'; Name = ''; Kind = 'String'; Data = 'custom.exe /argument' }
+            )
+            [PSCustomObject]@{ Result = $approved }
+        }
+    }
+
+    It 'offers cancellation by default and includes source and executable details' {
+        Mock Show-MessageBox { 'Cancel' }
+        $result = Show-RestoreBackupWindow
+        $result.RestoredRegistry | Should -BeFalse
+        Should -Invoke Show-MessageBox -Times 1 -Exactly -ParameterFilter {
+            $DefaultResult -eq 'Cancel' -and $Button -eq 'OKCancel' -and $Icon -eq 'Warning' -and
+            $Message -like '*Do not restore registry backups obtained from unofficial sources*' -and
+            $Message -like '*HKEY_CLASSES_ROOT\test\shell\open\command*' -and
+            $Message -like '*String*' -and $Message -like '*custom.exe /argument*'
+        }
+    }
+
+    It 'continues only when the warning is explicitly accepted' {
+        Mock Show-MessageBox { 'OK' }
+        $result = Show-RestoreBackupWindow
+        $result.RestoredRegistry | Should -BeTrue
+        Should -Invoke Show-MessageBox -Times 1 -Exactly -ParameterFilter { $DefaultResult -eq 'Cancel' }
     }
 }

@@ -106,6 +106,49 @@ function Remove-RegistrySubKeyTreeIfExists {
 
 <#
     .SYNOPSIS
+        Calls Windows' empty-only registry deletion API.
+#>
+function Invoke-RegistryEmptyKeyDeletion {
+    param($RootKey, [string]$SubKeyPath)
+
+    if (-not ('Win11Debloat.RegistryEmptyKey' -as [type])) {
+        Add-Type -Namespace Win11Debloat -Name RegistryEmptyKey -MemberDefinition @'
+        [System.Runtime.InteropServices.DllImport("shlwapi.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, ExactSpelling = true)]
+        public static extern int SHDeleteEmptyKeyW(Microsoft.Win32.SafeHandles.SafeRegistryHandle hkey, string subKey);
+'@
+    }
+    return [Win11Debloat.RegistryEmptyKey]::SHDeleteEmptyKeyW($RootKey.Handle, $SubKeyPath)
+}
+
+<#
+    .SYNOPSIS
+        Removes an empty key, retaining keys containing values or subkeys.
+#>
+function Remove-RegistryEmptyKeyIfExists {
+    param(
+        [Parameter(Mandatory)]$RootKey,
+        [Parameter(Mandatory)][string]$SubKeyPath
+    )
+
+    $status = Invoke-RegistryEmptyKeyDeletion -RootKey $RootKey -SubKeyPath $SubKeyPath
+    # Success, file not found, and path not found all satisfy cleanup.
+    if ($status -in @(0, 2, 3)) { return }
+
+    # A concurrent writer may have populated the key after the restore's initial check.
+    $key = $RootKey.OpenSubKey($SubKeyPath, $false)
+    if ($null -eq $key) { return }
+    try {
+        if (@($key.GetValueNames()).Count -gt 0 -or @($key.GetSubKeyNames()).Count -gt 0) { return }
+    }
+    finally {
+        $key.Close()
+    }
+
+    throw (New-Object System.ComponentModel.Win32Exception -ArgumentList ([int]$status))
+}
+
+<#
+    .SYNOPSIS
         Returns a feature's registry-file path, using the Sysprep layout when targeting another profile.
 #>
 function Get-RegistryFilePathForFeature {

@@ -1,3 +1,12 @@
 LastUsedSettings.json
 Logs/*
 Backups/*
+
+# 上游参考克隆（嵌套在本仓库内，不应被跟踪）
+Win11Debloat-upstream/
+
+# 交接文档（临时工作文档，不入库）
+交接文档.md
+
+# DSH 工具产生的锁文件
+.dsh-ops-update-*.lock

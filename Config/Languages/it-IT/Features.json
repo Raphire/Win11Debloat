@@ -230,13 +230,6 @@
       "UndoLabel": "Disabilita il tema scuro per sistema e app",
       "ApplyUndoText": "Disabilitazione della modalità scura per sistema e app"
     },
-    "DisableDragTray": {
-      "Label": "Disabilita 'Drag Tray' per condividere e spostare file",
-      "ToolTip": "Drag Tray è una nuova funzionalità di Windows 11 per condividere e spostare file; viene visualizzata nella parte superiore dello schermo quando trascini dei file.",
-      "ApplyText": "Disabilitazione di Drag Tray",
-      "UndoLabel": "Abilita 'Drag Tray' per condividere e spostare file",
-      "ApplyUndoText": "Abilitazione di Drag Tray"
-    },
     "RevertContextMenu": {
       "Label": "Usa lo stile del menu contestuale classico di Windows 10",
       "ToolTip": "Ripristina il menu contestuale nello stile classico di Windows 10, normalmente nascosto dietro la voce 'Mostra altre opzioni' del nuovo menu contestuale di Windows 11.",

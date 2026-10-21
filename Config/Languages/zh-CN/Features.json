@@ -230,13 +230,6 @@
       "UndoLabel": "禁用系统和应用的深色主题",
       "ApplyUndoText": "正在禁用系统和应用的深色模式"
     },
-    "DisableDragTray": {
-      "Label": "禁用用于共享和移动文件的拖放托盘",
-      "ToolTip": "拖放托盘是 Windows 11 用于共享和移动文件的新功能，会在拖动文件时出现在屏幕顶部。",
-      "ApplyText": "正在禁用拖放托盘",
-      "UndoLabel": "启用用于共享和移动文件的拖放托盘",
-      "ApplyUndoText": "正在启用拖放托盘"
-    },
     "RevertContextMenu": {
       "Label": "使用经典 Windows 10 右键菜单样式",
       "ToolTip": "恢复经典 Windows 10 风格的右键菜单。在 Windows 11 中，通常需要点击“显示更多选项”才能打开此菜单。",

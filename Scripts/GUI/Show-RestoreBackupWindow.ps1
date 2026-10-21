@@ -38,7 +38,7 @@ function Show-RestoreBackupWindow {
                     Get-Translation -Key 'BackupExecutableMismatchDetails' -FormatArgs @($_.Path, $valueName, $_.Kind, ($_.Data | ConvertTo-Json -Compress -Depth 10))
                 }) -join "`n`n"
                 $message = Get-Translation -Key 'BackupExecutableWarningMessage' -FormatArgs @($details)
-                return (Show-MessageBox -Owner $Owner -Title (Get-Translation -Key 'BackupExecutableWarningTitle') -Message $message -Button 'YesNo' -Icon 'Warning' -DefaultResult 'Cancel' -Width 700) -eq 'OK'
+                return (Show-MessageBox -Owner $Owner -Title (Get-Translation -Key 'BackupExecutableWarningTitle') -Message $message -Button 'OKCancel' -Icon 'Warning' -DefaultResult 'Cancel' -Width 700) -eq 'OK'
             }
             $restoreOpResult = Restore-RegistryBackupState -Backup $backup -ConfirmUntrustedValues $confirmUntrustedValues
             if ($restoreOpResult -and $restoreOpResult.Result) {

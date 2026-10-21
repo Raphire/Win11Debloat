@@ -269,6 +269,43 @@ Describe 'Feature state caches' {
     }
 }
 
+Describe 'Get-CachedRegistryPath' {
+    BeforeEach {
+        Reset-FeatureStateCache
+        Mock Split-RegistryPath { [PSCustomObject]@{ Hive = 'HKEY_CURRENT_USER'; SubKey = 'Software\Example' } }
+        Mock Get-RegistryRootKey { [PSCustomObject]@{ Name = 'root' } }
+    }
+
+    It 'resolves a path once per refresh' {
+        Get-CachedRegistryPath -KeyPath 'HKEY_CURRENT_USER\Software\Example' | Should -Not -BeNullOrEmpty
+        Get-CachedRegistryPath -KeyPath 'HKEY_CURRENT_USER\Software\Example' | Should -Not -BeNullOrEmpty
+        Get-CachedRegistryPath -KeyPath 'HKEY_CURRENT_USER\Software\Example' | Should -Not -BeNullOrEmpty
+
+        Should -Invoke Split-RegistryPath -Times 1 -Exactly
+        Should -Invoke Get-RegistryRootKey -Times 1 -Exactly
+    }
+
+    It 'resolves the path again after the cache is reset' {
+        Get-CachedRegistryPath -KeyPath 'HKEY_CURRENT_USER\Software\Example' | Should -Not -BeNullOrEmpty
+        Reset-FeatureStateCache
+        Get-CachedRegistryPath -KeyPath 'HKEY_CURRENT_USER\Software\Example' | Should -Not -BeNullOrEmpty
+
+        Should -Invoke Split-RegistryPath -Times 2 -Exactly
+    }
+
+    It 'returns nothing for a path that cannot be resolved' {
+        Mock Split-RegistryPath { $null }
+
+        Get-CachedRegistryPath -KeyPath 'not-a-registry-path' | Should -BeNullOrEmpty
+    }
+
+    It 'returns nothing when the hive is unknown' {
+        Mock Get-RegistryRootKey { $null }
+
+        Get-CachedRegistryPath -KeyPath 'HKEY_CURRENT_USER\Software\Example' | Should -BeNullOrEmpty
+    }
+}
+
 Describe 'Get-CurrentGroupActiveIndex' {
     BeforeEach { Mock Test-FeatureApplied { $false } }
 

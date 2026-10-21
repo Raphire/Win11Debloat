@@ -72,6 +72,50 @@ function Reset-FeatureStateCache {
     $script:RegFileOperationCache = $null
     $script:InstalledAppxNameCache = $null
     $script:FeatureAppliedCache = $null
+    $script:RegistryPathCache = $null
+}
+
+<#
+    .SYNOPSIS
+        Resolves a registry key path to its root key and sub key, cached for the current refresh.
+
+    .DESCRIPTION
+        A single .reg file can touch the same key many times, and the tweaks tab checks
+        around 240 registry operations that only cover 90 distinct key paths. Splitting the
+        path and looking up the root key for every operation is repeated work, so the
+        resolution is cached for the duration of one refresh.
+
+        Returns $null when the path cannot be resolved, which is what the callers treat as
+        a mismatch.
+#>
+function Get-CachedRegistryPath {
+    param(
+        [Parameter(Mandatory)]
+        [string]$KeyPath
+    )
+
+    if ($null -eq $script:RegistryPathCache) {
+        $script:RegistryPathCache = @{}
+    }
+
+    if ($script:RegistryPathCache.ContainsKey($KeyPath)) {
+        return $script:RegistryPathCache[$KeyPath]
+    }
+
+    $resolved = $null
+    $parts = Split-RegistryPath -path $KeyPath
+    if ($parts) {
+        $rootKey = Get-RegistryRootKey -hiveName $parts.Hive
+        if ($rootKey) {
+            $resolved = [PSCustomObject]@{
+                RootKey = $rootKey
+                SubKey  = $parts.SubKey
+            }
+        }
+    }
+
+    $script:RegistryPathCache[$KeyPath] = $resolved
+    return $resolved
 }
 
 <#
@@ -221,15 +265,12 @@ function Test-FeatureAppliedUncached {
     if ($operations.Count -eq 0) { return $false }
 
     foreach ($op in $operations) {
-        $parts = Split-RegistryPath -path $op.KeyPath
-        if (-not $parts) { return $false }
-
-        $rootKey = Get-RegistryRootKey -hiveName $parts.Hive
-        if (-not $rootKey) { return $false }
+        $registryPath = Get-CachedRegistryPath -KeyPath $op.KeyPath
+        if (-not $registryPath) { return $false }
 
         $key = $null
         try {
-            $key = $rootKey.OpenSubKey($parts.SubKey, $false)
+            $key = $registryPath.RootKey.OpenSubKey($registryPath.SubKey, $false)
 
             switch ($op.OperationType) {
                 'DeleteKey' {

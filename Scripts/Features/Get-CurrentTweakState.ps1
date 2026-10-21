@@ -144,8 +144,17 @@ function Test-FeatureApplied {
 
                     $expected = $op.ValueData
 
-                    $match = if (($actual -is [array]) -and ($expected -is [array])) {
-                        (Compare-Object $actual $expected).Count -eq 0
+                    # Binary and MultiString data is an ordered sequence. The .reg parser hands back a single-element
+                    # sequence as a scalar and an empty one as $null, so normalise both sides to arrays by kind and
+                    # compare them position by position (Compare-Object would treat [1,2,3] and [3,2,1] as equal).
+                    $match = if ($actualKind -in @([Microsoft.Win32.RegistryValueKind]::Binary, [Microsoft.Win32.RegistryValueKind]::MultiString)) {
+                        $actualItems = @(if ($null -ne $actual) { $actual })
+                        $expectedItems = @(if ($null -ne $expected) { $expected })
+                        $sameSequence = $actualItems.Count -eq $expectedItems.Count
+                        for ($i = 0; $sameSequence -and $i -lt $actualItems.Count; $i++) {
+                            if ($actualItems[$i] -ne $expectedItems[$i]) { $sameSequence = $false }
+                        }
+                        $sameSequence
                     } else {
                         $actual -eq $expected
                     }

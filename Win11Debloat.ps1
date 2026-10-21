@@ -25,7 +25,6 @@ param (
     [switch]$EnableWindowsSandbox,
     [switch]$EnableWindowsSubsystemForLinux,
     [switch]$DisableTelemetry,
-    [switch]$DisableSearchHistory,
     [switch]$DisableFastStartup,
     [switch]$DisableBitlockerAutoEncryption,
     [switch]$DisableModernStandbyNetworking,
@@ -37,7 +36,6 @@ param (
     [switch]$DisableBing,
     [switch]$DisableNotifications,
     [switch]$DisableStoreSearchSuggestions,
-    [switch]$DisableSearchHighlights,
     [switch]$DisableDesktopSpotlight,
     [switch]$HideDesktopSpotlightIcon,
     [switch]$EnableDesktopSpotlight,
@@ -176,20 +174,21 @@ if (-not $isAdmin) {
 # Define script-level variables & paths
 $script:Version = "2026.08.24"
 $configPath = Join-Path $PSScriptRoot 'Config'
-$logsPath = Join-Path $PSScriptRoot 'Logs'
+$script:UserDataPath = Join-Path $env:LOCALAPPDATA 'Win11Debloat'
+$script:LogsPath = Join-Path $script:UserDataPath 'Logs'
 $schemasPath = Join-Path $PSScriptRoot 'Schemas'
 $scriptsPath = Join-Path $PSScriptRoot 'Scripts'
 
 $script:AppsListFilePath = Join-Path $configPath 'Apps.json'
 $script:DefaultSettingsFilePath = Join-Path $configPath 'DefaultSettings.json'
 $script:FeaturesFilePath = Join-Path $configPath 'Features.json'
-$script:SavedSettingsFilePath = Join-Path $configPath 'LastUsedSettings.json'
-$script:UiPreferencesFilePath = Join-Path $env:LOCALAPPDATA 'Win11Debloat\Preferences.json'
+$script:SavedSettingsFilePath = Join-Path $script:UserDataPath 'LastUsedSettings.json'
+$script:UiPreferencesFilePath = Join-Path $script:UserDataPath 'Preferences.json'
 $script:LanguagesPath = Join-Path $configPath 'Languages'
 $script:DefaultLanguagePath = Join-Path $script:LanguagesPath 'en-US'
-$script:DefaultLogPath = Join-Path $logsPath 'Win11Debloat.log'
+$script:DefaultLogPath = Join-Path $script:LogsPath 'Win11Debloat.log'
 $script:RegfilesPath = Join-Path $PSScriptRoot 'Regfiles'
-$script:RegistryBackupsPath = Join-Path $PSScriptRoot 'Backups'
+$script:RegistryBackupsPath = Join-Path $script:UserDataPath 'Backups'
 $script:AssetsPath = Join-Path $PSScriptRoot 'Assets'
 $script:AppSelectionSchema = Join-Path $schemasPath 'AppSelectionWindow.xaml'
 $script:MainWindowSchema = Join-Path $schemasPath 'MainWindow.xaml'
@@ -438,6 +437,7 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 . "$PSScriptRoot/Scripts/Helpers/Get-FriendlyRegistryBackupTarget.ps1"
 . "$PSScriptRoot/Scripts/Helpers/Get-FriendlyTargetUserName.ps1"
 . "$PSScriptRoot/Scripts/Helpers/Get-RebootFeatureLabels.ps1"
+. "$PSScriptRoot/Scripts/Helpers/Windows-BuildHelpers.ps1"
 . "$PSScriptRoot/Scripts/Helpers/Import-ConfigToParams.ps1"
 . "$PSScriptRoot/Scripts/Helpers/Test-ConfigConsistency.ps1"
 . "$PSScriptRoot/Scripts/Helpers/Get-TargetUserForAppRemoval.ps1"

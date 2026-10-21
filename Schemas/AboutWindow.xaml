@@ -68,12 +68,14 @@
                             Text="%LANG:AboutProjectLabel%"
                             Style="{DynamicResource ModalInfoLabelTextStyle}"
                             Margin="0,0,16,0"/>
-                    <TextBlock x:Name="ProjectLink"
+                    <TextBlock
                             Grid.Row="2" Grid.Column="1"
-                            Text="https://github.com/Raphire/Win11Debloat" 
                             FontSize="13"
-                            Style="{DynamicResource HyperlinkStyle}"
-                            Margin="0,0,0,0"/>
+                            Margin="0,0,0,0">
+                        <Hyperlink x:Name="ProjectLink"
+                                   Style="{DynamicResource InlineHyperlinkStyle}"
+                                   AutomationProperties.Name="https://github.com/Raphire/Win11Debloat">https://github.com/Raphire/Win11Debloat</Hyperlink>
+                    </TextBlock>
                 </Grid>
 
                 <!-- Separator -->
@@ -110,14 +112,16 @@
                                 Foreground="{DynamicResource TitleBarCloseHoverColor}"
                                 Margin="0,0,8,0"/>
                         
-                        <TextBlock x:Name="KofiLink"
+                        <TextBlock
                                 Grid.Column="1"
                                 FontSize="16"
-                                Style="{DynamicResource HyperlinkStyle}"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
-                                FontWeight="SemiBold"
-                                Text="%LANG:AboutKofiLink%"/>
+                                FontWeight="SemiBold">
+                            <Hyperlink x:Name="KofiLink"
+                                       Style="{DynamicResource InlineHyperlinkStyle}"
+                                       AutomationProperties.Name="%LANG:AboutKofiLink%">%LANG:AboutKofiLink%</Hyperlink>
+                        </TextBlock>
                     </Grid>
                 </StackPanel>
             </Grid>
@@ -133,6 +137,7 @@
                     <Button x:Name="CloseButton"
                             Grid.Column="1"
                             Content="%LANG:TitleBarClose%"
+                            AutomationProperties.Name="%LANG:TitleBarClose%"
                             Style="{DynamicResource ModalSecondaryStretchedButtonStyle}"/>
                 </Grid>
             </Border>

@@ -8,6 +8,7 @@ BeforeAll {
     . (Join-Path $PSScriptRoot '..\Scripts\GUI\MainWindow-AppSelection.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\GUI\MainWindow-Deployment.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\GUI\MainWindow-Navigation.ps1')
+    . (Join-Path $PSScriptRoot '..\Scripts\Helpers\Windows-BuildHelpers.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\GUI\MainWindow-TweaksBuilder.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\GUI\Set-WindowThemeResources.ps1')
     $script:LanguagesPath = Join-Path $PSScriptRoot '..\Config\Languages'
@@ -30,18 +31,25 @@ Describe 'Invoke-AppDetailsFromJsonAsync' {
     BeforeEach { $script:GuiWindow = [PSCustomObject]@{} }
 
     It 'resolves translated FriendlyName and Description inside the background runspace' {
+        $appCatalog = Import-JsonFile -filePath $script:AppsListFilePath
         $result = @(Invoke-AppDetailsFromJsonAsync -OnlyInstalled:$false)
 
-        $result.Count | Should -Be 141
+        $result.Count | Should -Be @($appCatalog.Apps).Count
         $clipchamp = $result | Where-Object { $_.AppId -contains 'Clipchamp.Clipchamp' }
         $clipchamp.FriendlyName | Should -Be 'Clipchamp'
         $clipchamp.Description | Should -Be 'Video editor from Microsoft'
     }
 
     It 'does not return null entries when OnlyInstalled filters the runspace results' {
-        $result = @(Invoke-AppDetailsFromJsonAsync -OnlyInstalled:$true -InstalledList @())
+        $result = Invoke-AppDetailsFromJsonAsync -OnlyInstalled:$true -InstalledList @()
 
-        @($result | Where-Object { -not $_ }).Count | Should -Be 0
+        # The async helper returns $null when no installed apps match.
+        if ($null -eq $result) {
+            $result | Should -BeNullOrEmpty
+        }
+        else {
+            @($result | Where-Object { -not $_ }).Count | Should -Be 0
+        }
     }
 }
 

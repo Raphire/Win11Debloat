@@ -114,6 +114,20 @@
         </Style.Triggers>
     </Style>
 
+    <!-- Native inline links retain keyboard activation and link automation semantics. -->
+    <Style x:Key="InlineHyperlinkStyle" TargetType="Hyperlink">
+        <Setter Property="Foreground" Value="{DynamicResource ButtonBgColor}"/>
+        <Setter Property="TextDecorations" Value="{x:Null}"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="{DynamicResource ButtonHoverColor}"/>
+            </Trigger>
+            <Trigger Property="IsKeyboardFocused" Value="True">
+                <Setter Property="TextDecorations" Value="Underline"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
     <!-- ProgressBar Style -->
     <Style x:Key="ApplyProgressBarStyle" TargetType="ProgressBar">
         <Setter Property="Background" Value="{DynamicResource ButtonBorderColor}"/>
@@ -518,6 +532,13 @@
     <Style x:Key="FeatureCheckboxStyle" TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
         <Setter Property="Margin" Value="-4,-2,-4,10"/>
         <Setter Property="Padding" Value="4,2"/>
+        <Setter Property="ContentTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <TextBlock Text="{Binding}" TextTrimming="CharacterEllipsis"/>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <!-- Shared CheckBox style for app list items -->

@@ -1,4 +1,4 @@
-{
+﻿{
   "Clipchamp.Clipchamp": {
     "FriendlyName": "Clipchamp",
     "Description": "Videobewerker van Microsoft"
@@ -24,8 +24,8 @@
     "Description": "Houdt je gezondheid en conditie bij en toont nieuws via Bing (niet meer ondersteund)"
   },
   "Microsoft.BingNews": {
-    "FriendlyName": "Bing News",
-    "Description": "Nieuws via Bing (niet meer beschikbaar)"
+    "FriendlyName": "Microsoft Nieuws",
+    "Description": "Nieuwsapp die het laatste nieuws, gepersonaliseerde artikelfeeds en actualiteiten uit de hele wereld samenbrengt"
   },
   "Microsoft.BingSports": {
     "FriendlyName": "Bing Sport",
@@ -95,10 +95,6 @@
     "FriendlyName": "Network Speed Test",
     "Description": "Meet de snelheid van je internetverbinding"
   },
-  "Microsoft.News": {
-    "FriendlyName": "Microsoft Nieuws",
-    "Description": "Microsoft News-app voor Windows"
-  },
   "Microsoft.Office.OneNote": {
     "FriendlyName": "OneNote",
     "Description": "Digitale notitie-app (UWP-versie)"
@@ -153,7 +149,7 @@
   },
   "Microsoft.ZuneVideo": {
     "FriendlyName": "Films en tv",
-    "Description": "App voor het huren, kopen en afspelen van video's (niet meer ondersteund)"
+    "Description": "App voor het afspelen van gekochte video's (nieuw huren en kopen is stopgezet)"
   },
   "MicrosoftCorporationII.MicrosoftFamily": {
     "FriendlyName": "Microsoft Family Safety",
@@ -226,10 +222,6 @@
   "Duolingo-LearnLanguagesforFree": {
     "FriendlyName": "Duolingo",
     "Description": "App om talen te leren"
-  },
-  "EclipseManager": {
-    "FriendlyName": "Eclipse Manager",
-    "Description": "Meestal gekoppeld aan software of hulpmiddelen van de fabrikant, bijvoorbeeld voor beeldscherminstellingen"
   },
   "FACEBOOK.FACEBOOK": {
     "FriendlyName": "Facebook",

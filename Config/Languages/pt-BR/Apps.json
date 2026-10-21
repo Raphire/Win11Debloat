@@ -1,4 +1,4 @@
-{
+﻿{
   "Clipchamp.Clipchamp": {
     "FriendlyName": "Clipchamp",
     "Description": "Editor de vídeo da Microsoft"
@@ -24,8 +24,8 @@
     "Description": "Acompanhamento de saúde e condicionamento físico, além de notícias, pelo Bing (descontinuado)"
   },
   "Microsoft.BingNews": {
-    "FriendlyName": "Bing News",
-    "Description": "Agregador de notícias pelo Bing (substituído por Microsoft News/Start)"
+    "FriendlyName": "Microsoft News",
+    "Description": "App agregador de notícias. Reúne notícias de última hora, feeds personalizados de artigos e acontecimentos atuais de todo o mundo"
   },
   "Microsoft.BingSports": {
     "FriendlyName": "Bing Sports",
@@ -95,10 +95,6 @@
     "FriendlyName": "Network Speed Test",
     "Description": "Utilitário para testar a velocidade da conexão com a internet"
   },
-  "Microsoft.News": {
-    "FriendlyName": "Microsoft News",
-    "Description": "Agregador de notícias (substituiu o Bing News, agora integrado ao Microsoft Start)"
-  },
   "Microsoft.Office.OneNote": {
     "FriendlyName": "OneNote",
     "Description": "App de anotações digitais (versão da Plataforma Universal do Windows)"
@@ -153,7 +149,7 @@
   },
   "Microsoft.ZuneVideo": {
     "FriendlyName": "Filmes e TV",
-    "Description": "App de reprodução de vídeos (descontinuado)"
+    "Description": "App para reproduzir vídeos comprados (novos aluguéis e compras foram descontinuados)"
   },
   "MicrosoftCorporationII.MicrosoftFamily": {
     "FriendlyName": "Microsoft Family Safety",
@@ -226,10 +222,6 @@
   "Duolingo-LearnLanguagesforFree": {
     "FriendlyName": "Duolingo",
     "Description": "App de aprendizado de idiomas"
-  },
-  "EclipseManager": {
-    "FriendlyName": "Eclipse Manager",
-    "Description": "Geralmente relacionado a softwares ou utilitários específicos de OEM (por exemplo, para gerenciar configurações de tela)"
   },
   "FACEBOOK.FACEBOOK": {
     "FriendlyName": "Facebook",

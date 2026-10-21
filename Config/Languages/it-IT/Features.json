@@ -1,4 +1,4 @@
-{
+﻿{
   "Features": {
     "RemoveApps": {
       "Label": "Rimuovi le app specificate con il parametro 'Apps'",
@@ -201,6 +201,13 @@
       "ApplyText": "Disabilitazione delle funzionalità IA in Microsoft Edge",
       "UndoLabel": "Abilita le funzionalità IA in Microsoft Edge",
       "ApplyUndoText": "Abilitazione delle funzionalità IA in Microsoft Edge"
+    },
+    "DisableChromeAI": {
+      "Label": "Disabilita le funzionalità IA in Google Chrome",
+      "ToolTip": "Disattiva gli strumenti e le integrazioni IA incorporati in Google Chrome, tra cui Gemini, ricerca e suggerimenti basati sull'IA, assistenza alla scrittura, compilazione automatica e altro. Rimuove anche i modelli IA locali. Questa funzionalità utilizza criteri che bloccheranno alcune impostazioni.",
+      "ApplyText": "Disabilitazione delle funzionalità IA in Google Chrome",
+      "UndoLabel": "Abilita le funzionalità IA in Google Chrome",
+      "ApplyUndoText": "Abilitazione delle funzionalità IA in Google Chrome"
     },
     "DisablePaintAI": {
       "Label": "Disabilita le funzionalità IA in Paint",
@@ -587,7 +594,7 @@
     },
     "EnableWindowsSandbox": {
       "Label": "Abilita Windows Sandbox",
-      "ToolTip": "Windows Sandbox è un ambiente desktop leggero per eseguire applicazioni in modo sicuro e isolato. Il software installato nell'ambiente Windows Sandbox rimane isolato e viene eseguito separatamente dalla macchina host. Supportato solo nelle edizioni Windows 11 Pro, Workstation ed Enterprise.",
+      "ToolTip": "Windows Sandbox è un ambiente desktop leggero per eseguire applicazioni in modo sicuro e isolato. Il software installato nell'ambiente Windows Sandbox rimane isolato e viene eseguito separatamente dalla macchina host. Supportato solo nelle edizioni Windows 11 Pro, Workstation, Enterprise ed Education.",
       "ApplyText": "Abilitazione di Windows Sandbox",
       "UndoLabel": "Disabilita Windows Sandbox",
       "ApplyUndoText": "Disabilitazione di Windows Sandbox"

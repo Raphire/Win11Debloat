@@ -9,6 +9,11 @@ BeforeAll {
 }
 
 Describe 'Get-StartMenuUserNameFromPath' {
+    BeforeEach {
+        # Restore copies are named to the second; clear them so tests sharing $TestDrive cannot see each other's copy
+        Get-ChildItem -LiteralPath $TestDrive -Filter 'Win11Debloat-StartRestore-*.bak' | Remove-Item -Force
+    }
+
     It 'extracts a user name from a start-menu path and falls back for unknown paths' {
         Get-StartMenuUserNameFromPath -StartMenuBinFile 'C:\Users\Alice\AppData\Local\Packages\Start\start2.bin' | Should -Be 'Alice'
         Get-StartMenuUserNameFromPath -StartMenuBinFile 'C:\Temp\start2.bin' | Should -Be 'unknown'

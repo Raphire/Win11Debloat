@@ -50,9 +50,9 @@
       "RemovalMethod": "Appx"
     },
     {
-      "FriendlyName": "Bing News",
+      "FriendlyName": "Microsoft News",
       "AppId": "Microsoft.BingNews",
-      "Description": "News aggregator via Bing (discontinued)",
+      "Description": "News aggregator app. Brings together breaking news, personalized article feeds, and global current events",
       "SelectedByDefault": true,
       "Recommendation": "safe",
       "RemovalMethod": "Appx"
@@ -189,14 +189,6 @@
       "FriendlyName": "Network Speed Test",
       "AppId": "Microsoft.NetworkSpeedTest",
       "Description": "Internet connection speed test utility",
-      "SelectedByDefault": true,
-      "Recommendation": "safe",
-      "RemovalMethod": "Appx"
-    },
-    {
-      "FriendlyName": "Microsoft News",
-      "AppId": "Microsoft.News",
-      "Description": "Microsoft News app for Windows",
       "SelectedByDefault": true,
       "Recommendation": "safe",
       "RemovalMethod": "Appx"
@@ -453,14 +445,6 @@
       "FriendlyName": "Duolingo",
       "AppId": "Duolingo-LearnLanguagesforFree",
       "Description": "Language learning app",
-      "SelectedByDefault": true,
-      "Recommendation": "safe",
-      "RemovalMethod": "Appx"
-    },
-    {
-      "FriendlyName": "Eclipse Manager",
-      "AppId": "EclipseManager",
-      "Description": "Often related to specific OEM software or utilities (e.g. for managing screen settings)",
       "SelectedByDefault": true,
       "Recommendation": "safe",
       "RemovalMethod": "Appx"

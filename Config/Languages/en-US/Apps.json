@@ -1,4 +1,4 @@
-{
+﻿{
   "Clipchamp.Clipchamp": {
     "FriendlyName": "Clipchamp",
     "Description": "Video editor from Microsoft"
@@ -24,8 +24,8 @@
     "Description": "Health and fitness tracking/news via Bing (discontinued)"
   },
   "Microsoft.BingNews": {
-    "FriendlyName": "Bing News",
-    "Description": "News aggregator via Bing (discontinued)"
+    "FriendlyName": "Microsoft News",
+    "Description": "News aggregator app. Brings together breaking news, personalized article feeds, and global current events"
   },
   "Microsoft.BingSports": {
     "FriendlyName": "Bing Sports",
@@ -95,10 +95,6 @@
     "FriendlyName": "Network Speed Test",
     "Description": "Internet connection speed test utility"
   },
-  "Microsoft.News": {
-    "FriendlyName": "Microsoft News",
-    "Description": "Microsoft News app for Windows"
-  },
   "Microsoft.Office.OneNote": {
     "FriendlyName": "OneNote",
     "Description": "Digital note-taking app (Universal Windows Platform version)"
@@ -153,7 +149,7 @@
   },
   "Microsoft.ZuneVideo": {
     "FriendlyName": "Movies & TV",
-    "Description": "App for renting/buying/playing video content (discontinued)"
+    "Description": "App for playing purchased video content (new rentals and purchases have been discontinued)"
   },
   "MicrosoftCorporationII.MicrosoftFamily": {
     "FriendlyName": "Microsoft Family Safety",
@@ -226,10 +222,6 @@
   "Duolingo-LearnLanguagesforFree": {
     "FriendlyName": "Duolingo",
     "Description": "Language learning app"
-  },
-  "EclipseManager": {
-    "FriendlyName": "Eclipse Manager",
-    "Description": "Often related to specific OEM software or utilities (e.g. for managing screen settings)"
   },
   "FACEBOOK.FACEBOOK": {
     "FriendlyName": "Facebook",

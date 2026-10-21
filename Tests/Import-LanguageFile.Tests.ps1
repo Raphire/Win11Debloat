@@ -124,6 +124,29 @@ Describe 'Get-PluralCategory' {
     ) {
         Get-PluralCategory -LanguageCode 'en-US' -Count $Count | Should -Be $Expected
     }
+
+    It 'returns other for <LanguageCode> with a count of <Count>' -ForEach @(
+        foreach ($languageCode in @('ja-JP', 'zh-CN')) {
+            foreach ($count in @(0, 1, 2, 5, 100)) {
+                @{ LanguageCode = $languageCode; Count = $count }
+            }
+        }
+    ) {
+        Get-PluralCategory -LanguageCode $LanguageCode -Count $Count | Should -Be 'other'
+    }
+
+    It 'returns <Expected> for a Portuguese count of <Count>' -ForEach @(
+        @{ Count = 0; Expected = 'one' }
+        @{ Count = 1; Expected = 'one' }
+        @{ Count = 2; Expected = 'other' }
+        @{ Count = 100; Expected = 'other' }
+        @{ Count = 999999; Expected = 'other' }
+        @{ Count = 1000000; Expected = 'many' }
+        @{ Count = 1000001; Expected = 'other' }
+        @{ Count = 2000000; Expected = 'many' }
+    ) {
+        Get-PluralCategory -LanguageCode 'pt-BR' -Count $Count | Should -Be $Expected
+    }
 }
 
 Describe 'Get-Translation' {

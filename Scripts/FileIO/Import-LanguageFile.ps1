@@ -135,6 +135,7 @@ function Get-PluralCategory {
     $languagePrefix = ($LanguageCode -split '-')[0].ToLowerInvariant()
 
     switch ($languagePrefix) {
+        'zh' { return 'other' }
         # Portuguese CLDR rule: 'one' for 0 and 1, 'many' for positive multiples
         # of 1,000,000, and 'other' for every remaining count.
         'pt' {
@@ -146,6 +147,10 @@ function Get-PluralCategory {
                 return 'many'
             }
 
+            return 'other'
+        }
+        # Japanese CLDR rule: no grammatical plural, every count is 'other'.
+        'ja' {
             return 'other'
         }
         # English CLDR rule: singular only for exactly 1, plural otherwise. Also correct for Dutch/German.

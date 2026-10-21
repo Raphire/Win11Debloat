@@ -1,4 +1,4 @@
-{
+﻿{
   "Features": {
     "RemoveApps": {
       "Label": "Remover os apps especificados com o parâmetro 'Apps'",
@@ -201,6 +201,13 @@
       "ApplyText": "Desabilitando funcionalidades de IA no Microsoft Edge",
       "UndoLabel": "Habilitar funcionalidades de IA no Microsoft Edge",
       "ApplyUndoText": "Habilitando funcionalidades de IA no Microsoft Edge"
+    },
+    "DisableChromeAI": {
+      "Label": "Desabilitar funcionalidades de IA no Google Chrome",
+      "ToolTip": "Desabilita as ferramentas e integrações de IA incorporadas ao Google Chrome, incluindo Gemini, pesquisa e sugestões com IA, assistência à escrita, preenchimento automático e muito mais. Também remove os modelos locais de IA. Esta funcionalidade usa políticas, que bloqueiam certas configurações.",
+      "ApplyText": "Desabilitando funcionalidades de IA no Google Chrome",
+      "UndoLabel": "Habilitar funcionalidades de IA no Google Chrome",
+      "ApplyUndoText": "Habilitando funcionalidades de IA no Google Chrome"
     },
     "DisablePaintAI": {
       "Label": "Desabilitar funcionalidades de IA no Paint",
@@ -587,7 +594,7 @@
     },
     "EnableWindowsSandbox": {
       "Label": "Habilitar Windows Sandbox",
-      "ToolTip": "O Windows Sandbox é um ambiente de área de trabalho leve para executar aplicativos com segurança em isolamento. O software instalado dentro do ambiente Windows Sandbox permanece 'em sandbox' e é executado separadamente da máquina host. Suportado apenas nas edições Windows 11 Pro, Workstation e Enterprise.",
+      "ToolTip": "O Windows Sandbox é um ambiente de área de trabalho leve para executar aplicativos com segurança em isolamento. O software instalado dentro do ambiente Windows Sandbox permanece 'em sandbox' e é executado separadamente da máquina host. Suportado apenas nas edições Windows 11 Pro, Workstation, Enterprise e Education.",
       "ApplyText": "Habilitando Windows Sandbox",
       "UndoLabel": "Desabilitar Windows Sandbox",
       "ApplyUndoText": "Desabilitando Windows Sandbox"

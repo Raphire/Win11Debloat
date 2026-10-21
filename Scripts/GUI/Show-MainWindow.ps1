@@ -98,7 +98,7 @@ function Show-MainWindow {
     $menuReportBug.Add_Click({ Start-Process "https://github.com/Raphire/Win11Debloat/issues" })
 
     $menuLogs.Add_Click({
-        $logsFolder = Join-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) 'Logs'
+        $logsFolder = Split-Path -Parent $script:DefaultLogPath
         if (Test-Path $logsFolder) {
             Start-Process "explorer.exe" -ArgumentList $logsFolder
         }

@@ -363,6 +363,21 @@ function Invoke-AllChanges {
     }
     $undoIds = @($script:UndoParams.Keys)
 
+    # Features passed as switches are not filtered by the GUI or the config import, so skip the ones this Windows build does not support
+    $currentBuild = Get-CurrentWindowsBuild
+    $unsupportedIds = @($applyIds | Where-Object { -not (Test-FeatureSupportedOnBuild -Feature $script:Features[$_] -Build $currentBuild) })
+    foreach ($id in $unsupportedIds) {
+        $feature = $script:Features[$id]
+        $range = @()
+        if ($feature.MinVersion) { $range += "build $($feature.MinVersion) or newer" }
+        if ($feature.MaxVersion) { $range += "build $($feature.MaxVersion) or older" }
+        Write-Warning "Skipping ${id}: it is only supported on Windows $($range -join ' and '), this system runs build $currentBuild."
+
+        # Also drop it from the parameters, so that later steps (such as the reboot advice) only see what was applied
+        [void]$script:Params.Remove($id)
+    }
+    $applyIds = @($applyIds | Where-Object { $unsupportedIds -notcontains $_ })
+
     # ---- Determine if registry backup is needed ----
     $needsBackup = $false
     foreach ($id in $applyIds) {

@@ -33,7 +33,7 @@ function Show-ImportExportConfigWindow {
         [string]$Prompt,
         [string[]]$Categories = @('Applications', 'System Tweaks', 'Deployment Settings'),
         [string[]]$DisabledCategories = @(),
-        [hashtable]$CategoryDetails = @(),
+        [hashtable]$CategoryDetails = @{},
         [string]$ActionLabel = (Get-Translation -Key 'MessageBoxOk')
     )
 
@@ -305,9 +305,11 @@ function Get-DeploymentCategoryDetailString {
     }
 
     $options = @()
-    if ($lookup.ContainsKey('CreateRestorePoint') -and [bool]$lookup['CreateRestorePoint']) { $options += Get-Translation -Key 'ImportExportOptionRestorePoint' }
-    if (-not ($lookup.ContainsKey('SkipRegistryBackup') -and [bool]$lookup['SkipRegistryBackup'])) { $options += Get-Translation -Key 'ImportExportOptionRegistryBackup' }
-    if ($lookup.ContainsKey('RestartExplorer')    -and [bool]$lookup['RestartExplorer'])    { $options += Get-Translation -Key 'ImportExportOptionRestartExplorer' }
+    if ((ConvertTo-ConfigBoolean $lookup['CreateRestorePoint']) -eq $true) { $options += Get-Translation -Key 'ImportExportOptionRestorePoint' }
+    # Registry backup is on unless it is skipped; a value that is not a boolean is ignored by the import, so it is not listed
+    $skipRegistryBackup = ConvertTo-ConfigBoolean $lookup['SkipRegistryBackup']
+    if ($skipRegistryBackup -eq $false -or -not $lookup.ContainsKey('SkipRegistryBackup')) { $options += Get-Translation -Key 'ImportExportOptionRegistryBackup' }
+    if ((ConvertTo-ConfigBoolean $lookup['RestartExplorer']) -eq $true) { $options += Get-Translation -Key 'ImportExportOptionRestartExplorer' }
 
     $lines = @()
     if ($line1.Count -gt 0)   { $lines += $line1 -join ', ' }
@@ -413,21 +415,23 @@ function Set-ImportedDeploymentSettings {
         $appRemovalScopeCombo.SelectedIndex = [int]$lookup['AppRemovalScopeIndex']
     }
 
+    # A value that is not a boolean (see ConvertTo-ConfigBoolean) leaves the checkbox as it is, after a warning
     $restorePointCheckBox = $Owner.FindName('RestorePointCheckBox')
-    if ($lookup.ContainsKey('CreateRestorePoint') -and $restorePointCheckBox) {
-        $restorePointCheckBox.IsChecked = [bool]$lookup['CreateRestorePoint']
+    $createRestorePoint = Get-ConfigDeploymentFlag -Lookup $lookup -Name 'CreateRestorePoint'
+    if ($null -ne $createRestorePoint -and $restorePointCheckBox) {
+        $restorePointCheckBox.IsChecked = $createRestorePoint
     }
 
     $registryBackupCheckBox = $Owner.FindName('RegistryBackupCheckBox')
-    if ($registryBackupCheckBox) {
-        if ($lookup.ContainsKey('SkipRegistryBackup')) {
-            $registryBackupCheckBox.IsChecked = -not [bool]$lookup['SkipRegistryBackup']
-        }
+    $skipRegistryBackup = Get-ConfigDeploymentFlag -Lookup $lookup -Name 'SkipRegistryBackup'
+    if ($null -ne $skipRegistryBackup -and $registryBackupCheckBox) {
+        $registryBackupCheckBox.IsChecked = -not $skipRegistryBackup
     }
 
     $restartExplorerCheckBox = $Owner.FindName('RestartExplorerCheckBox')
-    if ($lookup.ContainsKey('RestartExplorer') -and $restartExplorerCheckBox) {
-        $restartExplorerCheckBox.IsChecked = [bool]$lookup['RestartExplorer']
+    $restartExplorer = Get-ConfigDeploymentFlag -Lookup $lookup -Name 'RestartExplorer'
+    if ($null -ne $restartExplorer -and $restartExplorerCheckBox) {
+        $restartExplorerCheckBox.IsChecked = $restartExplorer
     }
 }
 

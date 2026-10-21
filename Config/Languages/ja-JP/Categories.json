@@ -1,0 +1,38 @@
+{
+  "PrivacySuggestedContent": {
+    "Label": "プライバシーとおすすめコンテンツ"
+  },
+  "System": {
+    "Label": "システム"
+  },
+  "StartMenuSearch": {
+    "Label": "スタート メニューと検索"
+  },
+  "AI": {
+    "Label": "AI"
+  },
+  "WindowsUpdate": {
+    "Label": "Windows Update"
+  },
+  "Taskbar": {
+    "Label": "タスク バー"
+  },
+  "Appearance": {
+    "Label": "外観"
+  },
+  "FileExplorer": {
+    "Label": "エクスプローラー"
+  },
+  "Gaming": {
+    "Label": "ゲーム"
+  },
+  "MultiTasking": {
+    "Label": "マルチタスク"
+  },
+  "OptionalWindowsFeatures": {
+    "Label": "Windows のオプション機能"
+  },
+  "Other": {
+    "Label": "その他"
+  }
+}

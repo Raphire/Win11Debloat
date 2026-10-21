@@ -1,4 +1,4 @@
-{
+﻿{
   "Features": {
     "RemoveApps": {
       "Label": "Remove the apps specified with the 'Apps' parameter",
@@ -201,6 +201,13 @@
       "ApplyText": "Disabling AI features in Microsoft Edge",
       "UndoLabel": "Enable AI features in Microsoft Edge",
       "ApplyUndoText": "Enabling AI features in Microsoft Edge"
+    },
+    "DisableChromeAI": {
+      "Label": "Disable AI features in Google Chrome",
+      "ToolTip": "Disables Google Chrome's built-in AI tools and integrations, including Gemini, AI search & suggestions, writing assistance, autofill and more. It also removes local AI models. This feature uses policies, which will lock down certain settings.",
+      "ApplyText": "Disabling AI features in Google Chrome",
+      "UndoLabel": "Enable AI features in Google Chrome",
+      "ApplyUndoText": "Enabling AI features in Google Chrome"
     },
     "DisablePaintAI": {
       "Label": "Disable AI features in Paint",
@@ -415,8 +422,8 @@
       "ApplyText": "Setting the taskbar to show app icons on all taskbars"
     },
     "MMTaskbarModeMainActive": {
-      "Label": "Show app icons on main taskbar and on taskbar where the windows is open",
-      "ApplyText": "Setting the taskbar to show app icons on main taskbar and on taskbar where the windows is open",
+      "Label": "Show app icons on main taskbar and on taskbar where the window is open",
+      "ApplyText": "Setting the taskbar to show app icons on main taskbar and on taskbar where the window is open",
       "UndoLabel": "Show app icons on all taskbars",
       "ApplyUndoText": "Setting the taskbar to show app icons on all taskbars"
     },
@@ -473,14 +480,14 @@
       "Label": "Hide 'Home' from navigation pane",
       "ToolTip": "Hides the 'Home' section from the File Explorer navigation pane. Warning: This may prevent Quick access links from updating until you restart your PC or Windows Explorer.",
       "ApplyText": "Hiding the 'Home' section from the File Explorer navigation pane",
-      "UndoLabel": "Show 'Home' from navigation pane",
+      "UndoLabel": "Show 'Home' in navigation pane",
       "ApplyUndoText": "Showing the 'Home' section from the File Explorer navigation pane"
     },
     "HideGallery": {
       "Label": "Hide 'Gallery' from navigation pane",
       "ToolTip": "Hides the 'Gallery' section from the File Explorer navigation pane.",
       "ApplyText": "Hiding the 'Gallery' section from the File Explorer navigation pane",
-      "UndoLabel": "Show 'Gallery' from navigation pane",
+      "UndoLabel": "Show 'Gallery' in navigation pane",
       "ApplyUndoText": "Showing the 'Gallery' section from the File Explorer navigation pane"
     },
     "DisableTransparency": {
@@ -533,7 +540,7 @@
       "Label": "Hide 'OneDrive' from navigation pane",
       "ToolTip": "Hides the 'OneDrive' section from the File Explorer navigation pane.",
       "ApplyText": "Hiding the 'OneDrive' section from the File Explorer navigation pane",
-      "UndoLabel": "Show 'OneDrive' from navigation pane",
+      "UndoLabel": "Show 'OneDrive' in navigation pane",
       "ApplyUndoText": "Showing the 'OneDrive' section from the File Explorer navigation pane"
     },
     "Hide3dObjects": {
@@ -554,8 +561,8 @@
       "Label": "Add common folders back to 'This PC' page",
       "ToolTip": "This setting will add common folders like Desktop, Documents, Downloads, Music, Pictures and Videos back to the 'This PC' page in File Explorer.",
       "ApplyText": "Adding all common folders (Desktop, Downloads, etc.) back to 'This PC' in File Explorer",
-      "UndoLabel": "Remove common folders back to 'This PC' page",
-      "ApplyUndoText": "Removing all common folders (Desktop, Downloads, etc.) back to 'This PC' in File Explorer"
+      "UndoLabel": "Remove common folders from 'This PC' page",
+      "ApplyUndoText": "Removing all common folders (Desktop, Downloads, etc.) from 'This PC' in File Explorer"
     },
     "HideIncludeInLibrary": {
       "Label": "Hide 'Include in library' option in the context menu",
@@ -587,7 +594,7 @@
     },
     "EnableWindowsSandbox": {
       "Label": "Enable Windows Sandbox",
-      "ToolTip": "Windows Sandbox is a lightweight desktop environment for safely running applications in isolation. Software installed inside the Windows Sandbox environment remains 'sandboxed' and runs separately from the host machine. Only supported on Windows 11 Pro, Workstation, and Enterprise editions.",
+      "ToolTip": "Windows Sandbox is a lightweight desktop environment for safely running applications in isolation. Software installed inside the Windows Sandbox environment remains 'sandboxed' and runs separately from the host machine. Only supported on Windows 11 Pro, Workstation, Enterprise, and Education editions.",
       "ApplyText": "Enabling Windows Sandbox",
       "UndoLabel": "Disable Windows Sandbox",
       "ApplyUndoText": "Disabling Windows Sandbox"

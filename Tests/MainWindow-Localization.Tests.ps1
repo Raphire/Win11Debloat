@@ -5,7 +5,7 @@ BeforeAll {
     foreach ($file in @('FileIO/Import-JsonFile', 'FileIO/Import-LanguageFile',
         'GUI/Ui-Preferences', 'GUI/Show-SettingsDialog', 'GUI/Set-WindowThemeResources',
         'GUI/MainWindow-Localization', 'GUI/MainWindow-TweaksBuilder', 'GUI/MainWindow-AppSelection',
-        'GUI/MainWindow-Deployment', 'GUI/Show-Bubble', 'Helpers/Get-UserName')) {
+        'GUI/MainWindow-Deployment', 'GUI/Show-Bubble', 'Helpers/Get-UserName', 'Helpers/Windows-BuildHelpers')) {
         . "$script:RepoRoot/Scripts/$file.ps1"
     }
     $script:LanguagesPath = Join-Path $script:RepoRoot 'Config/Languages'

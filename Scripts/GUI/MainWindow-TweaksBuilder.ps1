@@ -517,50 +517,11 @@ function Update-CurrentTweakSystemState {
         }
     }
 
-    # Registry files and the Appx package list are read through a per-refresh cache, so the
-    # features shared by several controls (and by UiGroup options) are only read once.
+    # Drop the caches from the previous refresh so registry files, the Appx package list and
+    # per-feature results are all read fresh. Test-FeatureApplied then caches each feature's
+    # state for this refresh, which is what keeps the shared features from being read once
+    # per control.
     Reset-FeatureStateCache
-
-    # A feature can back both a checkbox and a UiGroup option, and several group options can
-    # share a feature, so resolve each feature's state once instead of once per control.
-    $appliedStateCache = @{}
-    $resolveApplied = {
-        param([string]$FeatureId)
-
-        if ($appliedStateCache.ContainsKey($FeatureId)) { return $appliedStateCache[$FeatureId] }
-
-        $applied = $false
-        try { $applied = [bool](Test-FeatureApplied -FeatureId $FeatureId) } catch {}
-        $appliedStateCache[$FeatureId] = $applied
-        return $applied
-    }
-
-    $groupIndexCache = @{}
-    $resolveGroupIndex = {
-        param([string]$GroupId)
-
-        if ($groupIndexCache.ContainsKey($GroupId)) { return $groupIndexCache[$GroupId] }
-
-        $activeIndex = 0
-        try {
-            $group = $groupMap[$GroupId]
-            $activeIndex = 1
-            $matched = $false
-            foreach ($value in $group.Values) {
-                $allApplied = $true
-                foreach ($featureId in $value.FeatureIds) {
-                    if (-not (& $resolveApplied $featureId)) { $allApplied = $false; break }
-                }
-                if ($allApplied) { $matched = $true; break }
-                $activeIndex++
-            }
-            if (-not $matched) { $activeIndex = 0 }
-        }
-        catch { $activeIndex = 0 }
-
-        $groupIndexCache[$GroupId] = $activeIndex
-        return $activeIndex
-    }
 
     foreach ($controlName in $script:UiControlMappings.Keys) {
         $control = $Window.FindName($controlName)
@@ -568,7 +529,8 @@ function Update-CurrentTweakSystemState {
         $mapping = $script:UiControlMappings[$controlName]
 
         if ($control -is [System.Windows.Controls.CheckBox] -and $mapping.Type -eq 'feature') {
-            $applied = [bool](& $resolveApplied $mapping.FeatureId)
+            $applied = $false
+            try { $applied = [bool](Test-FeatureApplied -FeatureId $mapping.FeatureId) } catch {}
             $featureObj = $script:Features[$mapping.FeatureId]
             $disableWhenApplied = $featureObj -and $featureObj.DisableWhenApplied -eq $true
             Add-Member -InputObject $control -MemberType NoteProperty -Name 'SystemState' -Value $applied -Force
@@ -585,7 +547,7 @@ function Update-CurrentTweakSystemState {
             if ($controlName -match '^Group_(.+)Combo$') { $groupId = $matches[1] }
             $activeIndex = 0
             if ($groupId -and $groupMap.ContainsKey($groupId)) {
-                $activeIndex = & $resolveGroupIndex $groupId
+                try { $activeIndex = Get-CurrentGroupActiveIndex -Group $groupMap[$groupId] } catch {}
             }
             Add-Member -InputObject $control -MemberType NoteProperty -Name 'SystemIndex' -Value $activeIndex -Force
 

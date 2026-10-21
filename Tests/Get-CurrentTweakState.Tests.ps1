@@ -218,8 +218,7 @@ Describe 'Feature state caches' {
     BeforeEach {
         $script:Params = @{}
         $script:RegfilesPath = $TestDrive
-        $script:RegFileOperationCache = $null
-        $script:InstalledAppxNameCache = $null
+        Reset-FeatureStateCache
         $script:Features = @{ RegistryFeature = [PSCustomObject]@{ RegistryKey = 'feature.reg' } }
         '' | Set-Content -LiteralPath (Join-Path $TestDrive 'feature.reg')
         Mock Split-RegistryPath { [PSCustomObject]@{ Hive = 'HKEY_CURRENT_USER'; SubKey = 'Software\Example' } }
@@ -257,6 +256,7 @@ Describe 'Feature state caches' {
     }
 
     It 'falls back to a per-package query when the enumeration fails' {
+        Reset-FeatureStateCache
         $script:Features['DisableWidgets'] = [PSCustomObject]@{}
         Mock Get-AppxPackage {
             param($Name, [switch]$AllUsers)

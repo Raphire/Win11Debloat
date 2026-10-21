@@ -71,6 +71,7 @@ function Get-InstalledAppxNameSet {
 function Reset-FeatureStateCache {
     $script:RegFileOperationCache = $null
     $script:InstalledAppxNameCache = $null
+    $script:FeatureAppliedCache = $null
 }
 
 <#
@@ -103,6 +104,41 @@ function Get-CachedRegFileOperations {
 
 <#
     .SYNOPSIS
+        Tests whether a feature is applied, caching the answer for the current refresh.
+
+    .DESCRIPTION
+        A feature can back a checkbox and several UiGroup options, and the tweaks tab asks
+        for the same state more than once per refresh. This caches the result of
+        Test-FeatureAppliedUncached per FeatureId for the duration of one refresh, so the
+        registry is read once per feature instead of once per control.
+
+        The cache is dropped by Reset-FeatureStateCache, which runs before each refresh, so
+        a change made outside Win11Debloat is picked up next time.
+
+    .PARAMETER FeatureId
+        The feature identifier to test.
+#>
+function Test-FeatureApplied {
+    param (
+        [Parameter(Mandatory)]
+        [string]$FeatureId
+    )
+
+    if ($null -eq $script:FeatureAppliedCache) {
+        $script:FeatureAppliedCache = @{}
+    }
+
+    if ($script:FeatureAppliedCache.ContainsKey($FeatureId)) {
+        return $script:FeatureAppliedCache[$FeatureId]
+    }
+
+    $applied = [bool](Test-FeatureAppliedUncached -FeatureId $FeatureId)
+    $script:FeatureAppliedCache[$FeatureId] = $applied
+    return $applied
+}
+
+<#
+    .SYNOPSIS
         Tests whether a feature's registry operations currently match the live registry.
 
     .DESCRIPTION
@@ -111,10 +147,13 @@ function Get-CachedRegFileOperations {
         missing, or any operation mismatches. Special-cased features (Widgets, Store
         suggestions, Windows Sandbox, WSL) bypass .reg checking entirely.
 
+        Callers go through Test-FeatureApplied, which adds the per-refresh cache; this
+        function always reads the live state.
+
     .PARAMETER FeatureId
         The feature identifier to test.
 #>
-function Test-FeatureApplied {
+function Test-FeatureAppliedUncached {
     param (
         [Parameter(Mandatory)]
         [string]$FeatureId

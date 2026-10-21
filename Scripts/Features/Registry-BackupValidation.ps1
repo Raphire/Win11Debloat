@@ -146,6 +146,7 @@ function Normalize-RegistryKeySnapshot {
     return [PSCustomObject]@{
         Path = [string]$Snapshot.Path
         Exists = $Snapshot.Exists
+        OriginallyAbsent = ($Snapshot.OriginallyAbsent -is [bool] -and $Snapshot.OriginallyAbsent)
         Values = @($values)
         SubKeys = @($subKeys)
     }
@@ -195,6 +196,8 @@ function Test-RegistryBackupMatchesSelectedFeatures {
     .DESCRIPTION
         Internal helper shared by feature-based validation and the import workflow.
         The plan map must come from Get-RegistryBackupValidationPlanMap, never backup data.
+        When ExecutableValueWarnings is supplied, executable content mismatches are collected
+        for confirmation instead of blocking import. All other validation errors remain blocking.
 #>
 function Test-RegistryBackupAgainstAllowList {
     param(
@@ -202,7 +205,9 @@ function Test-RegistryBackupAgainstAllowList {
         [AllowEmptyCollection()]
         [object[]]$RegistryKeys,
         [Parameter(Mandatory)]
-        [hashtable]$PlanMap
+        [hashtable]$PlanMap,
+        [AllowEmptyCollection()]
+        [System.Collections.Generic.List[object]]$ExecutableValueWarnings
     )
 
     $errors = New-Object System.Collections.Generic.List[string]
@@ -212,7 +217,7 @@ function Test-RegistryBackupAgainstAllowList {
     }
 
     foreach ($rootSnapshot in @($RegistryKeys)) {
-        Test-RegistrySnapshotAgainstAllowList -Snapshot $rootSnapshot -PlanMap $PlanMap -Errors $errors
+        Test-RegistrySnapshotAgainstAllowList -Snapshot $rootSnapshot -PlanMap $PlanMap -Errors $errors -ExecutableValueWarnings $ExecutableValueWarnings
     }
 
     return $errors.ToArray()
@@ -253,7 +258,8 @@ function Get-RegistryBackupValidationPlanMap {
 
     $planMap = New-RegistryBackupAllowListPlanMap -CapturePlans @($capturePlans)
     if ($planMap.Count -gt 0) {
-        $trustedValueMap = Get-RegistryBackupTrustedValueMap -Features (@($selectedRegistryFeatures) + @($undoRegistryFeatures)) -UseSysprepRegFiles:$useSysprepRegFiles
+        # Catalog data supplies trusted content only; selected plans still authorize locations and operations.
+        $trustedValueMap = Get-RegistryBackupTrustedValueMap -Features @($script:Features.Values) -UseSysprepRegFiles:$useSysprepRegFiles
         foreach ($plan in $planMap.Values) {
             $plan | Add-Member -MemberType NoteProperty -Name TrustedValueMap -Value $trustedValueMap
         }
@@ -263,7 +269,7 @@ function Get-RegistryBackupValidationPlanMap {
 
 <#
     .SYNOPSIS
-        Reads trusted executable value data from both directions of selected features.
+        Reads trusted executable value data from both directions of catalog features.
 
     .DESCRIPTION
         This supplies data comparisons only; the selected operation's capture plan still
@@ -311,6 +317,7 @@ function Test-RegistryValueMayExecuteCode {
     if (-not $parts) { return $false }
     return $parts.SubKey -match '(?i)(?:^|\\)(?:Run|RunOnce|RunOnceEx|InprocServer(?:32)?|InprocHandler(?:32)?|LocalServer(?:32)?|TreatAs|AutoTreatAs|AutoConvertTo|ScriptletURL)(?:\\|$)' -or
         $parts.SubKey -match '(?i)\\shell\\[^\\]+\\(?:command|ddeexec)(?:\\|$)' -or
+        ($ValueName -eq '' -and $parts.SubKey -match '(?i)\\shellex\\ContextMenuHandlers\\[^\\]+$') -or
         # COM activation can use string indirections outside InprocServer32. Numeric settings are not server paths.
         ($KindName -notin @('DWord', 'QWord') -and $parts.SubKey -match '(?i)(?:^|\\)CLSID\\[^\\]+(?:\\|$)') -or
         $ValueName -match '^(?i:DelegateExecute|ExplorerCommandHandler|ScriptletURL|DllSurrogate|DllSurrogateExecutable)$'
@@ -362,9 +369,19 @@ function ConvertTo-CompatibleRegistryKeySnapshots {
             $plan.ValueNames.Count -gt 0 -and
             -not (Test-RegistryKeyDeletionAllowed -NormalizedPath $normalizedPath -PlanMap $PlanMap)
 
+        $originallyAbsent = $convertAbsentKey -or ($snapshot.OriginallyAbsent -is [bool] -and $snapshot.OriginallyAbsent)
+        # Absence is backup data; permission to clean up comes from an exact, nonrecursive plan.
+        # RemoveEmptyKey is derived here and is deliberately not read by normalization.
+        $removeEmptyKey = $originallyAbsent -and ($snapshot.Exists -or $convertAbsentKey) -and
+            $null -ne $plan -and -not $plan.CaptureAllValues -and -not $plan.IncludeSubKeys -and
+            @($snapshot.SubKeys).Count -eq 0 -and
+            @($snapshot.Values | Where-Object { [bool]$_.Exists }).Count -eq 0
+
         [PSCustomObject]@{
             Path = $snapshot.Path
             Exists = if ($convertAbsentKey) { $true } else { $snapshot.Exists }
+            OriginallyAbsent = $originallyAbsent
+            RemoveEmptyKey = $removeEmptyKey
             Values = @(
                 if ($convertAbsentKey) {
                     foreach ($valueName in @($plan.ValueNames | Sort-Object)) {
@@ -505,7 +522,9 @@ function Test-RegistrySnapshotAgainstAllowList {
         [hashtable]$PlanMap,
         [Parameter(Mandatory)]
         [AllowEmptyCollection()]
-        [System.Collections.Generic.List[string]]$Errors
+        [System.Collections.Generic.List[string]]$Errors,
+        [AllowEmptyCollection()]
+        [System.Collections.Generic.List[object]]$ExecutableValueWarnings
     )
 
     $snapshotPath = [string]$Snapshot.Path
@@ -548,7 +567,17 @@ function Test-RegistrySnapshotAgainstAllowList {
                 $Errors.Add((Get-Translation -Key 'BackupInvalidValueData' -FormatArgs @($kindName, $valueReference)))
             }
             elseif (-not (Test-RegistryExecutableValueDataAllowed -Snapshot $valueSnapshot -Path $snapshotPath -TrustedValueMap $planMatch.TrustedValueMap)) {
-                $Errors.Add((Get-Translation -Key 'BackupUnsafeExecutableValue' -FormatArgs @($valueReference)))
+                if ($null -eq $ExecutableValueWarnings) {
+                    $Errors.Add((Get-Translation -Key 'BackupUnsafeExecutableValue' -FormatArgs @($valueReference)))
+                }
+                else {
+                    $ExecutableValueWarnings.Add([PSCustomObject]@{
+                        Path = $snapshotPath
+                        Name = $valueName
+                        Kind = $kindName
+                        Data = $valueSnapshot.Data
+                    })
+                }
             }
         }
         elseif (-not [string]::IsNullOrWhiteSpace($kindName)) {
@@ -557,7 +586,7 @@ function Test-RegistrySnapshotAgainstAllowList {
     }
 
     foreach ($subKeySnapshot in @($Snapshot.SubKeys)) {
-        Test-RegistrySnapshotAgainstAllowList -Snapshot $subKeySnapshot -PlanMap $PlanMap -Errors $Errors
+        Test-RegistrySnapshotAgainstAllowList -Snapshot $subKeySnapshot -PlanMap $PlanMap -Errors $Errors -ExecutableValueWarnings $ExecutableValueWarnings
     }
 }
 

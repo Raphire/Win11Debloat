@@ -119,7 +119,17 @@ Describe 'Restore-RegistryBackupState' {
         Mock Restore-RegistryKeySnapshot {}
         Mock Invoke-WithLoadedRestoreHive {}
         Mock Write-Host {}
-        $script:backup = [PSCustomObject]@{ Target = 'CurrentUser:Tester'; RegistryKeys = @([PSCustomObject]@{ Path = 'HKEY_CURRENT_USER\Software\One' }, [PSCustomObject]@{ Path = 'HKEY_CURRENT_USER\Software\Two' }) }
+        Mock Test-UserNameMatch { $true }
+        Mock Write-Error {}
+        Mock Get-RegistryBackupValidationPlanMap { @{} }
+        Mock Test-RegistryBackupAgainstAllowList { @() }
+        $script:backup = [PSCustomObject]@{
+            Version = '1.0'; BackupType = 'RegistryState'; Target = 'CurrentUser:Tester'; SelectedFeatures = @('Example')
+            RegistryKeys = @(
+                [PSCustomObject]@{ Path = 'HKEY_CURRENT_USER\Software\One'; Exists = $true; Values = @(); SubKeys = @() }
+                [PSCustomObject]@{ Path = 'HKEY_CURRENT_USER\Software\Two'; Exists = $true; Values = @(); SubKeys = @() }
+            )
+        }
     }
 
     It 'restores every root snapshot directly for the current user' {
@@ -180,5 +190,48 @@ Describe 'Restore-RegistryBackupState' {
         { Restore-RegistryBackupState -Backup $script:backup } | Should -Throw '*duplicate registry root path*'
 
         Should -Invoke Restore-RegistryKeySnapshot -Times 0 -Exactly
+    }
+}
+
+Describe 'Restore executable warning dialog' {
+    BeforeAll {
+        Add-Type -AssemblyName PresentationFramework
+        . (Join-Path $PSScriptRoot '..\Scripts\GUI\Show-MessageBox.ps1')
+        . (Join-Path $PSScriptRoot '..\Scripts\GUI\Show-RestoreBackupDialog.ps1')
+        . (Join-Path $PSScriptRoot '..\Scripts\GUI\Show-RestoreBackupWindow.ps1')
+    }
+
+    BeforeEach {
+        $script:Params = @{}
+        Mock Write-Host {}
+        Mock Show-RestoreBackupDialog {
+            @{ Result = 'RestoreRegistry'; Backup = [PSCustomObject]@{ Target = 'DefaultUserProfile' } }
+        }
+        Mock Restore-RegistryBackupState {
+            param($Backup, $ConfirmUntrustedValues)
+            $approved = & $ConfirmUntrustedValues @(
+                [PSCustomObject]@{ Path = 'HKEY_CLASSES_ROOT\test\shell\open\command'; Name = ''; Kind = 'String'; Data = 'custom.exe /argument' }
+            )
+            [PSCustomObject]@{ Result = $approved }
+        }
+    }
+
+    It 'offers cancellation by default and includes source and executable details' {
+        Mock Show-MessageBox { 'Cancel' }
+        $result = Show-RestoreBackupWindow
+        $result.RestoredRegistry | Should -BeFalse
+        Should -Invoke Show-MessageBox -Times 1 -Exactly -ParameterFilter {
+            $DefaultResult -eq 'Cancel' -and $Button -eq 'OKCancel' -and $Icon -eq 'Warning' -and
+            $Message -like '*Do not restore registry backups obtained from unofficial sources*' -and
+            $Message -like '*HKEY_CLASSES_ROOT\test\shell\open\command*' -and
+            $Message -like '*String*' -and $Message -like '*custom.exe /argument*'
+        }
+    }
+
+    It 'continues only when the warning is explicitly accepted' {
+        Mock Show-MessageBox { 'OK' }
+        $result = Show-RestoreBackupWindow
+        $result.RestoredRegistry | Should -BeTrue
+        Should -Invoke Show-MessageBox -Times 1 -Exactly -ParameterFilter { $DefaultResult -eq 'Cancel' }
     }
 }

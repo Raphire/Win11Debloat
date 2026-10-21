@@ -154,9 +154,6 @@ function Remove-WinGetApp {
     $userScopeBlocked = $false
     $scheduleSucceeded = $true
     $runOnceTarget = $null
-    $userScopeBlocked = $false
-    $scheduleSucceeded = $true
-    $runOnceTarget = $null
     try {
         $uninstallResult = Invoke-NonBlocking -ScriptBlock {
             param($appId)
@@ -441,79 +438,6 @@ function Request-EdgeForceRemove {
     return $false
 }
 
-function Get-RunOnceWingetTarget {
-    $appRemovalTarget = Get-TargetUserForAppRemoval
-    $hasExplicitAppRemovalTarget = $script:Params.ContainsKey('AppRemovalTarget')
-    $allUsers = $appRemovalTarget -eq 'AllUsers' -and (
-        $hasExplicitAppRemovalTarget -or
-        -not ($script:Params.ContainsKey('User') -or $script:Params.ContainsKey('Sysprep'))
-    )
-
-    $userName = if ($allUsers) {
-        Get-UserName
-    }
-    elseif ($hasExplicitAppRemovalTarget) {
-        if ($appRemovalTarget -ieq 'CurrentUser' -or $appRemovalTarget -ieq 'AllUsers') {
-            Get-UserName
-        }
-        else {
-            $appRemovalTarget
-        }
-    }
-    elseif ($script:Params.ContainsKey('Sysprep')) {
-        'Default'
-    }
-    else {
-        Get-UserName
-    }
-
-    return [PSCustomObject]@{
-        AllUsers = [bool]$allUsers
-        UserName = [string]$userName
-    }
-}
-
-function Get-RunOnceWingetTargetUserNames {
-    $targetUsers = New-Object 'System.Collections.Generic.List[string]'
-    $seenSids = @{}
-
-    try {
-        foreach ($profile in @(Get-CimInstance -ClassName Win32_UserProfile -ErrorAction Stop)) {
-            if ($profile.Special -or [string]::IsNullOrWhiteSpace([string]$profile.SID) -or
-                [string]::IsNullOrWhiteSpace([string]$profile.LocalPath)) {
-                continue
-            }
-
-            $hivePath = Join-Path $profile.LocalPath 'NTUSER.DAT'
-            if (-not (Test-Path -LiteralPath $hivePath)) { continue }
-
-            $sid = [string]$profile.SID
-            if ($seenSids.ContainsKey($sid)) { continue }
-
-            try {
-                $accountName = ([System.Security.Principal.SecurityIdentifier]$sid).Translate(
-                    [System.Security.Principal.NTAccount]
-                ).Value
-            }
-            catch {
-                Write-Warning "The deferred AllUsers WinGet uninstall may be incomplete: unable to resolve account name for profile SID '$sid'. This profile will not be scheduled. $_"
-                continue
-            }
-
-            $seenSids[$sid] = $true
-            $targetUsers.Add($accountName)
-        }
-    }
-    catch {
-        Write-Error "Unable to enumerate user profiles for deferred WinGet uninstall: $_"
-        return @()
-    }
-
-    # RunOnce values in the Default profile are copied into profiles created later.
-    $targetUsers.Add('Default')
-    return @($targetUsers)
-}
-
 <#
     .SYNOPSIS
     Resolves the user scope for deferred WinGet uninstall tasks.
@@ -687,8 +611,6 @@ function Set-RunOnceWingetTask {
             $allSucceeded = $false
         }
     }
-
-    return $allSucceeded
 
     return $allSucceeded
 }

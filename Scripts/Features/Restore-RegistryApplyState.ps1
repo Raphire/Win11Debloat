@@ -166,6 +166,8 @@ function Get-DirectRegistrySnapshotChildName {
     .DESCRIPTION
         Writes only values and descendants represented by the backup. Existing keys are
         retained so their security descriptors and unrelated data are not destroyed.
+        A key recorded as originally absent is removed only if trusted validation
+        authorized cleanup and no values or subkeys remain.
 #>
 function Restore-RegistryKeySnapshotAtPath {
     param(
@@ -184,7 +186,7 @@ function Restore-RegistryKeySnapshotAtPath {
 
     $onlyDeletesValues = @($Snapshot.SubKeys).Count -eq 0 -and
         @($Snapshot.Values | Where-Object { [bool]$_.Exists }).Count -eq 0
-    if ($onlyDeletesValues -and @($Snapshot.Values).Count -gt 0) {
+    if ($onlyDeletesValues -and (@($Snapshot.Values).Count -gt 0 -or $Snapshot.RemoveEmptyKey)) {
         # An absent value-only key already has the requested state.
         $key = $RootKey.OpenSubKey($SubKeyPath, $true)
         if ($null -eq $key) { return }
@@ -196,13 +198,21 @@ function Restore-RegistryKeySnapshotAtPath {
         throw "Unable to create or open registry key '$($Snapshot.Path)'"
     }
 
+    $removeEmptyKey = $false
     try {
         foreach ($valueSnapshot in @($Snapshot.Values)) {
             Restore-RegistryValueSnapshot -RegistryKey $key -Snapshot $valueSnapshot
         }
+        if ($Snapshot.RemoveEmptyKey -and $onlyDeletesValues) {
+            $removeEmptyKey = @($key.GetValueNames()).Count -eq 0 -and @($key.GetSubKeyNames()).Count -eq 0
+        }
     }
     finally {
         $key.Close()
+    }
+
+    if ($removeEmptyKey) {
+        Remove-RegistryEmptyKeyIfExists -RootKey $RootKey -SubKeyPath $SubKeyPath
     }
 
     foreach ($subKeySnapshot in @($Snapshot.SubKeys)) {

@@ -129,7 +129,7 @@ Describe 'Executable registry backup values' {
         Mock Invoke-WithLoadedRestoreHive {}
     }
 
-    It 'rejects a doctored <Case> before any restore calls' -ForEach @(
+    It 'requires confirmation or blocks a doctored <Case> before any restore calls' -ForEach @(
         @{ Case = 'Game Bar command'; FeatureId = 'DisableGameBarIntegration'; Undo = $false; Path = 'HKEY_CLASSES_ROOT\ms-gamebar\shell\open\command'; Name = ''; Kind = 'String'; Data = 'cmd.exe /c echo doctored' }
         @{ Case = 'Game Bar services command'; FeatureId = 'DisableGameBarIntegration'; Undo = $false; Path = 'HKEY_CLASSES_ROOT\ms-gamebarservices\shell\open\command'; Name = ''; Kind = 'String'; Data = 'cmd.exe /c echo doctored' }
         @{ Case = 'undo command'; FeatureId = 'DisableGameBarIntegration'; Undo = $true; Path = 'HKEY_CLASSES_ROOT\ms-gamebar\shell\open\command'; Name = ''; Kind = 'String'; Data = 'cmd.exe /c echo doctored' }
@@ -143,8 +143,8 @@ Describe 'Executable registry backup values' {
         $filePath = Join-Path $TestDrive 'doctored.json'
         [PSCustomObject]@{
             Version = '1.0'; BackupType = 'RegistryState'; Target = 'DefaultUserProfile'
-            SelectedFeatures = if ($Undo) { @() } else { @($FeatureId) }
-            SelectedUndoFeatures = if ($Undo) { @($FeatureId) } else { @() }
+            SelectedFeatures = @(if (-not $Undo) { $FeatureId })
+            SelectedUndoFeatures = @(if ($Undo) { $FeatureId })
             RegistryKeys = @([PSCustomObject]@{
                 Path = $Path; Exists = $true; Values = @([PSCustomObject]@{ Name = $Name; Exists = $true; Kind = $Kind; Data = $Data }); SubKeys = @()
             })
@@ -152,7 +152,14 @@ Describe 'Executable registry backup values' {
             TrustedValueMap = @{ Command = $Data }
         } | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $filePath -Encoding UTF8
 
-        { Restore-RegistryBackupState -Backup (Import-RegistryBackup -FilePath $filePath) } | Should -Throw '*Validation failed*'
+        if ($Case -eq 'undefined value kind') {
+            { Import-RegistryBackup -FilePath $filePath } | Should -Throw '*Validation failed*'
+        }
+        else {
+            $normalized = Import-RegistryBackup -FilePath $filePath
+            $normalized.ExecutableValueWarnings | Should -HaveCount 1
+            { Restore-RegistryBackupState -Backup $normalized } | Should -Throw '*requires explicit confirmation*'
+        }
 
         Should -Invoke Restore-RegistryKeySnapshot -Times 0 -Exactly
         Should -Invoke Invoke-WithLoadedRestoreHive -Times 0 -Exactly
@@ -166,8 +173,8 @@ Describe 'Executable registry backup values' {
     ) {
         $backup = [PSCustomObject]@{
             Version = '1.0'; BackupType = 'RegistryState'; Target = 'DefaultUserProfile'
-            SelectedFeatures = if ($Undo) { @() } else { @('DisableGameBarIntegration') }
-            SelectedUndoFeatures = if ($Undo) { @('DisableGameBarIntegration') } else { @() }
+            SelectedFeatures = @(if (-not $Undo) { 'DisableGameBarIntegration' })
+            SelectedUndoFeatures = @(if ($Undo) { 'DisableGameBarIntegration' })
             RegistryKeys = @([PSCustomObject]@{
                 Path = 'HKEY_CLASSES_ROOT\ms-gamebar\shell\open\command'; Exists = $true
                 Values = @([PSCustomObject]@{ Name = ''; Exists = $Exists; Kind = if ($Exists) { 'String' } else { $null }; Data = $Data }); SubKeys = @()
@@ -428,6 +435,8 @@ Describe 'Absent keys in value-only backups' {
         }
         $script:FakeRoot.Key | Add-Member ScriptMethod DeleteValue { param($name, $throwOnMissing) $this.Values.Remove($name) }
         $script:FakeRoot.Key | Add-Member ScriptMethod Close {}
+        $script:FakeRoot.Key | Add-Member ScriptMethod GetValueNames { @($this.Values.Keys) }
+        $script:FakeRoot.Key | Add-Member ScriptMethod GetSubKeyNames { @($this.Children) }
 
         Restore-RegistryKeySnapshot -Snapshot $normalized.RegistryKeys[0]
 
@@ -476,6 +485,8 @@ Describe 'Absent keys in value-only backups' {
         $script:FakeRoot.Key = [PSCustomObject]@{ Values = @{ UserPreferencesMask = 'applied'; Wallpaper = 'keep' }; Children = @('UnrelatedChild') }
         $script:FakeRoot.Key | Add-Member ScriptMethod DeleteValue { param($name, $throwOnMissing) $this.Values.Remove($name) }
         $script:FakeRoot.Key | Add-Member ScriptMethod Close {}
+        $script:FakeRoot.Key | Add-Member ScriptMethod GetValueNames { @($this.Values.Keys) }
+        $script:FakeRoot.Key | Add-Member ScriptMethod GetSubKeyNames { @($this.Children) }
 
         Restore-RegistryKeySnapshot -Snapshot $snapshot
 
@@ -484,5 +495,325 @@ Describe 'Absent keys in value-only backups' {
         $script:FakeRoot.Key.Children | Should -Be @('UnrelatedChild')
         $script:FakeRoot.CreatedKeys | Should -HaveCount 0
         $script:FakeRoot.DeletedTrees | Should -HaveCount 0
+    }
+}
+
+Describe 'Executable registry restore confirmation' {
+    BeforeAll {
+        function New-ExecutableTestBackup {
+            param($FeatureId = 'DisableGameBarIntegration', $Path = 'HKEY_CLASSES_ROOT\ms-gamebar\shell\open\command', $Name = '', $Data = 'cmd.exe /c echo custom', $Kind = 'String', $Target = 'DefaultUserProfile')
+            [PSCustomObject]@{
+                Version = '1.0'; BackupType = 'RegistryState'; Target = $Target
+                SelectedFeatures = @($FeatureId); SelectedUndoFeatures = @()
+                RegistryKeys = @([PSCustomObject]@{
+                    Path = $Path; Exists = $true; SubKeys = @()
+                    Values = @([PSCustomObject]@{ Name = $Name; Exists = $true; Kind = $Kind; Data = $Data })
+                })
+                # These untrusted fields must never bypass validation or confirmation.
+                ExecutableValueWarnings = @(); Approved = $true
+            }
+        }
+    }
+
+    BeforeEach {
+        $script:Params = @{}
+        $script:RegfilesPath = Join-Path $PSScriptRoot '..\Regfiles'
+        $script:Features = @{}
+        foreach ($feature in $script:FeatureCatalog.Features) { $script:Features[$feature.FeatureId] = $feature }
+        Mock Write-Error {}
+        Mock Restore-RegistryKeySnapshot {}
+        Mock Invoke-WithLoadedRestoreHive {
+            param($Target, $ScriptBlock, $ArgumentObject)
+            & $ScriptBlock $ArgumentObject
+        }
+    }
+
+    It 'accepts the shipped <File> search command for a HideSearchTb backup' -ForEach @(
+        @{ File = 'Hide_Search_Taskbar.reg' }
+        @{ File = 'Show_Search_Icon.reg' }
+        @{ File = 'Show_Search_Icon_And_Label.reg' }
+        @{ File = 'Show_Search_Box.reg' }
+    ) {
+        $op = @(Get-RegFileOperations -regFilePath (Join-Path $script:RegfilesPath "Sysprep\$File") | Where-Object ValueName -eq 'SetTaskbarSearchbox')[0]
+        $backup = New-ExecutableTestBackup -FeatureId 'HideSearchTb' -Path $op.KeyPath -Name $op.ValueName -Data $op.ValueData
+        $normalized = ConvertTo-NormalizedRegistryBackup -Backup $backup
+        $normalized.ExecutableValueWarnings | Should -HaveCount 0
+        (Restore-RegistryBackupState -Backup $normalized -ConfirmUntrustedValues { throw 'Unexpected prompt' }).Result | Should -BeTrue
+    }
+
+    It 'validates shipped and altered handlers for <FeatureId>' -ForEach @(
+        @{ FeatureId = 'HideShare' }
+        @{ FeatureId = 'HideGiveAccessTo' }
+        @{ FeatureId = 'HideIncludeInLibrary' }
+    ) {
+        $file = Resolve-RegistryBackupUndoFilePath -Feature $script:Features[$FeatureId]
+        foreach ($op in @(Get-RegFileOperations -regFilePath $file | Where-Object OperationType -eq 'SetValue')) {
+            Test-RegistryValueMayExecuteCode -Path $op.KeyPath -ValueName $op.ValueName -KindName $op.ValueType | Should -BeTrue
+            $backup = New-ExecutableTestBackup -FeatureId $FeatureId -Path $op.KeyPath -Name $op.ValueName -Data $op.ValueData
+            (ConvertTo-NormalizedRegistryBackup -Backup $backup).ExecutableValueWarnings | Should -HaveCount 0
+            $backup.RegistryKeys[0].Values[0].Data = '{00000000-0000-0000-0000-000000000001}'
+            (ConvertTo-NormalizedRegistryBackup -Backup $backup).ExecutableValueWarnings | Should -HaveCount 1
+        }
+    }
+
+    It 'cancels without writes or hive loading when the callback returns <Response>' -ForEach @(
+        @{ Response = $false }
+        @{ Response = $null }
+        @{ Response = 'true' }
+    ) {
+        Mock Write-Host {}
+        $backup = New-ExecutableTestBackup
+        (Restore-RegistryBackupState -Backup $backup -ConfirmUntrustedValues { $Response }).Result | Should -BeFalse
+        Should -Invoke Write-Host -Times 1 -Exactly -ParameterFilter { $Object -like 'Registry restore canceled:*' }
+        Should -Invoke Restore-RegistryKeySnapshot -Times 0 -Exactly
+        Should -Invoke Invoke-WithLoadedRestoreHive -Times 0 -Exactly
+    }
+
+    It 'shows all mismatches before writes and restores only after explicit approval' {
+        Mock Write-Host {}
+        $backup = New-ExecutableTestBackup
+        $backup.RegistryKeys += (New-ExecutableTestBackup -Path 'HKEY_CLASSES_ROOT\ms-gamebarservices\shell\open\command' -Data 'custom.exe').RegistryKeys
+        $script:confirmationCount = 0
+        $confirm = {
+            param($mismatches)
+            $script:confirmationCount++
+            $mismatches | Should -HaveCount 2
+            $mismatches[0].Path | Should -Be 'HKEY_CLASSES_ROOT\ms-gamebar\shell\open\command'
+            $mismatches[0].Name | Should -Be ''
+            $mismatches[0].Kind | Should -Be 'String'
+            $mismatches[0].Data | Should -Be 'cmd.exe /c echo custom'
+            Should -Invoke Restore-RegistryKeySnapshot -Times 0 -Exactly
+            Should -Invoke Invoke-WithLoadedRestoreHive -Times 0 -Exactly
+            return $true
+        }
+        (Restore-RegistryBackupState -Backup $backup -ConfirmUntrustedValues $confirm).Result | Should -BeTrue
+        $script:confirmationCount | Should -Be 1
+        Should -Invoke Write-Host -Times 2 -Exactly -ParameterFilter { $Object -like 'Unrecognized executable registry setting:*' }
+        Should -Invoke Write-Host -Times 1 -Exactly -ParameterFilter { $Object -eq 'User approved restoring the unrecognized executable settings.' }
+        Should -Invoke Restore-RegistryKeySnapshot -Times 2 -Exactly
+        Should -Invoke Invoke-WithLoadedRestoreHive -Times 1 -Exactly
+    }
+
+    It 'requires fresh confirmation on every restore even when backup flags claim approval' {
+        $backup = ConvertTo-NormalizedRegistryBackup -Backup (New-ExecutableTestBackup)
+        $backup.ExecutableValueWarnings = @()
+        { Restore-RegistryBackupState -Backup $backup } | Should -Throw '*requires explicit confirmation*'
+        Should -Invoke Restore-RegistryKeySnapshot -Times 0 -Exactly
+        Should -Invoke Invoke-WithLoadedRestoreHive -Times 0 -Exactly
+    }
+
+    It 'does not permit overriding <Case>' -ForEach @(
+        @{ Case = 'an unauthorized path' }
+        @{ Case = 'an unauthorized value name' }
+        @{ Case = 'an unauthorized tree deletion' }
+        @{ Case = 'an invalid kind' }
+        @{ Case = 'a misplaced child' }
+    ) {
+        $backup = New-ExecutableTestBackup
+        switch ($Case) {
+            'an unauthorized path' { $backup.RegistryKeys[0].Path = 'HKEY_LOCAL_MACHINE\Software\Unrelated' }
+            'an unauthorized value name' { $backup.RegistryKeys[0].Values[0].Name = 'Unrelated' }
+            'an unauthorized tree deletion' { $backup.RegistryKeys[0].Exists = $false }
+            'an invalid kind' { $backup.RegistryKeys[0].Values[0].Kind = '99' }
+            'a misplaced child' { $backup.RegistryKeys[0].SubKeys = (New-ExecutableTestBackup -Path 'HKEY_CLASSES_ROOT\ms-gamebarservices\shell\open\command').RegistryKeys }
+        }
+        { Restore-RegistryBackupState -Backup $backup -ConfirmUntrustedValues { throw 'Confirmation must not be reached' } } | Should -Throw '*Validation failed*'
+        Should -Invoke Restore-RegistryKeySnapshot -Times 0 -Exactly
+        Should -Invoke Invoke-WithLoadedRestoreHive -Times 0 -Exactly
+    }
+
+    It 'honors WhatIf without prompting, writes, or hive loading' {
+        $script:Params = @{ WhatIf = $true }
+        (Restore-RegistryBackupState -Backup (New-ExecutableTestBackup) -ConfirmUntrustedValues { throw 'Unexpected prompt' }).Result | Should -BeTrue
+        Should -Invoke Restore-RegistryKeySnapshot -Times 0 -Exactly
+        Should -Invoke Invoke-WithLoadedRestoreHive -Times 0 -Exactly
+    }
+}
+
+Describe 'Trusted empty-key cleanup' {
+    BeforeEach {
+        function Test-RunningAsSystem { $false }
+        Mock Test-TargetUserName { [PSCustomObject]@{ IsValid = $true } }
+        $script:Params = @{}
+        $script:RegfilesPath = Join-Path $PSScriptRoot '..\Regfiles'
+        $script:Features = @{}
+        foreach ($feature in $script:FeatureCatalog.Features) { $script:Features[$feature.FeatureId] = $feature }
+        $script:CleanupRoot = [PSCustomObject]@{
+            Key = $null
+            DeletedKeys = [System.Collections.Generic.List[string]]::new()
+        }
+        $script:CleanupRoot | Add-Member ScriptMethod OpenSubKey { param($path, $writable) $this.Key }
+        $script:CleanupRoot | Add-Member ScriptMethod DeleteSubKey { param($path, $throwOnMissing) $this.DeletedKeys.Add($path) }
+        $script:CleanupRoot | Add-Member ScriptMethod DeleteSubKeyTree { throw 'Recursive deletion must not be used' }
+        $script:CleanupRoot | Add-Member ScriptMethod CreateSubKey { throw 'Absent cleanup must not create keys' }
+        Mock Invoke-RegistryEmptyKeyDeletion {
+            param($RootKey, $SubKeyPath)
+            if ($RootKey.Key.Values.Count -gt 0 -or $RootKey.Key.Children) { return 145 }
+            $RootKey.DeletedKeys.Add($SubKeyPath)
+            return 0
+        }
+        Mock Get-RegistryRootKey { $script:CleanupRoot }
+        Mock Write-Error {}
+    }
+
+    It 'removes an originally absent context-menu key after JSON import and revalidation for <Target>' -ForEach @(
+        @{ Target = 'DefaultUserProfile'; Hive = 'HKEY_USERS\Default' }
+        @{ Target = 'User:Alice'; Hive = 'HKEY_USERS\Default' }
+        @{ Target = 'CurrentUser'; Hive = 'HKEY_CURRENT_USER' }
+    ) {
+        $path = "$Hive\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32"
+        $snapshot = Get-RegistryKeySnapshot -KeyPath $path -ValueNames @('')
+        $snapshot.OriginallyAbsent | Should -BeTrue
+        $backup = [PSCustomObject]@{
+            Version = '1.0'; BackupType = 'RegistryState'
+            Target = if ($Target -eq 'CurrentUser') { "CurrentUser:$env:USERNAME" } else { $Target }
+            SelectedFeatures = @('RevertContextMenu'); RegistryKeys = @($snapshot)
+        } | ConvertTo-Json -Depth 10 | ConvertFrom-Json
+        $normalized = ConvertTo-NormalizedRegistryBackup -Backup $backup
+        $normalized = ConvertTo-NormalizedRegistryBackup -Backup $normalized
+        $normalized.RegistryKeys[0].RemoveEmptyKey | Should -BeTrue
+        $script:CleanupRoot.Key = [PSCustomObject]@{ Values = @{ '' = '' } }
+        $script:CleanupRoot.Key | Add-Member ScriptMethod DeleteValue { param($name, $throwOnMissing) $this.Values.Remove($name) }
+        $script:CleanupRoot.Key | Add-Member ScriptMethod GetValueNames { @($this.Values.Keys) }
+        $script:CleanupRoot.Key | Add-Member ScriptMethod GetSubKeyNames { @() }
+        $script:CleanupRoot.Key | Add-Member ScriptMethod Close {}
+
+        Restore-RegistryKeySnapshot -Snapshot $normalized.RegistryKeys[0]
+
+        $script:CleanupRoot.Key.Values.Count | Should -Be 0
+        $script:CleanupRoot.DeletedKeys | Should -HaveCount 1
+        $script:CleanupRoot.DeletedKeys[0] | Should -BeLike '*\InprocServer32'
+    }
+
+    It 'preserves a key with <Case>' -ForEach @(
+        @{ Case = 'an unrelated value'; ExtraValue = $true; Child = $false }
+        @{ Case = 'an unrelated child'; ExtraValue = $false; Child = $true }
+    ) {
+        $path = 'HKEY_CURRENT_USER\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32'
+        $snapshot = Get-RegistryKeySnapshot -KeyPath $path -ValueNames @('')
+        $errors = New-Object 'System.Collections.Generic.List[string]'
+        $plans = Get-RegistryBackupValidationPlanMap -SelectedFeatureIds @('RevertContextMenu') -SelectedUndoFeatureIds @() -Target 'CurrentUser' -Errors $errors
+        $snapshot = @(ConvertTo-CompatibleRegistryKeySnapshots -RegistryKeys @([PSCustomObject]$snapshot) -PlanMap $plans)[0]
+        $script:CleanupRoot.Key = [PSCustomObject]@{ Values = @{ '' = '' }; Children = @(if ($Child) { 'KeepChild' }) }
+        if ($ExtraValue) { $script:CleanupRoot.Key.Values['KeepValue'] = 'keep' }
+        $script:CleanupRoot.Key | Add-Member ScriptMethod DeleteValue { param($name, $throwOnMissing) $this.Values.Remove($name) }
+        $script:CleanupRoot.Key | Add-Member ScriptMethod GetValueNames { @($this.Values.Keys) }
+        $script:CleanupRoot.Key | Add-Member ScriptMethod GetSubKeyNames { @($this.Children) }
+        $script:CleanupRoot.Key | Add-Member ScriptMethod Close {}
+
+        Restore-RegistryKeySnapshot -Snapshot $snapshot
+
+        $script:CleanupRoot.Key.Values.ContainsKey('') | Should -BeFalse
+        if ($ExtraValue) { $script:CleanupRoot.Key.Values['KeepValue'] | Should -Be 'keep' }
+        if ($Child) { $script:CleanupRoot.Key.Children | Should -Be 'KeepChild' }
+        $script:CleanupRoot.DeletedKeys | Should -HaveCount 0
+    }
+
+    It 'derives legacy absent-key cleanup from the trusted plan' {
+        $path = 'HKEY_CURRENT_USER\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32'
+        $errors = New-Object 'System.Collections.Generic.List[string]'
+        $plans = Get-RegistryBackupValidationPlanMap -SelectedFeatureIds @('RevertContextMenu') -SelectedUndoFeatureIds @() -Target 'CurrentUser' -Errors $errors
+        $snapshot = [PSCustomObject]@{ Path = $path; Exists = $false; Values = @(); SubKeys = @() }
+        $normalized = @(ConvertTo-CompatibleRegistryKeySnapshots -RegistryKeys @($snapshot) -PlanMap $plans)[0]
+        $normalized.RemoveEmptyKey | Should -BeTrue
+        $normalized.OriginallyAbsent | Should -BeTrue
+    }
+
+    It 'does not trust a backup-supplied cleanup flag for an originally existing key' {
+        $path = 'HKEY_CURRENT_USER\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32'
+        $snapshot = [PSCustomObject]@{
+            Path = $path; Exists = $true; RemoveEmptyKey = $true
+            Values = @([PSCustomObject]@{ Name = ''; Exists = $false }); SubKeys = @()
+        }
+        $backup = [PSCustomObject]@{
+            Version = '1.0'; BackupType = 'RegistryState'; Target = "CurrentUser:$env:USERNAME"
+            SelectedFeatures = @('RevertContextMenu'); RegistryKeys = @($snapshot)
+        }
+        $normalized = ConvertTo-NormalizedRegistryBackup -Backup $backup
+        $normalized.RegistryKeys[0].RemoveEmptyKey | Should -BeFalse
+        $script:CleanupRoot.Key = [PSCustomObject]@{ Values = @{} }
+        $script:CleanupRoot.Key | Add-Member ScriptMethod DeleteValue { param($name, $throwOnMissing) $this.Values.Remove($name) }
+        $script:CleanupRoot.Key | Add-Member ScriptMethod Close {}
+
+        Restore-RegistryKeySnapshot -Snapshot $normalized.RegistryKeys[0]
+
+        $script:CleanupRoot.DeletedKeys | Should -HaveCount 0
+    }
+
+    It 'does not authorize cleanup for a descendant of a recursive plan' {
+        $path = 'HKEY_CURRENT_USER\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\TreatAs'
+        $snapshot = [PSCustomObject]@{ Path = $path; Exists = $true; OriginallyAbsent = $true; Values = @(); SubKeys = @() }
+        $errors = New-Object 'System.Collections.Generic.List[string]'
+        $plans = Get-RegistryBackupValidationPlanMap -SelectedFeatureIds @() -SelectedUndoFeatureIds @('RevertContextMenu') -Target 'CurrentUser' -Errors $errors
+        $normalized = @(ConvertTo-CompatibleRegistryKeySnapshots -RegistryKeys @($snapshot) -PlanMap $plans)[0]
+        $normalized.RemoveEmptyKey | Should -BeFalse
+    }
+}
+
+Describe 'Empty-key cleanup when registry contents change' {
+    BeforeEach {
+        . (Join-Path $PSScriptRoot '..\Scripts\Helpers\Registry-PathHelpers.ps1')
+        $script:ConcurrentKey = [PSCustomObject]@{ Values = @{}; Children = @(); Closed = $false }
+        $script:ConcurrentKey | Add-Member ScriptMethod GetValueNames { @($this.Values.Keys) }
+        $script:ConcurrentKey | Add-Member ScriptMethod GetSubKeyNames { @($this.Children) }
+        $script:ConcurrentKey | Add-Member ScriptMethod DeleteValue { param($name, $missing) $this.Values.Remove($name) }
+        $script:ConcurrentKey | Add-Member ScriptMethod Close { $this.Closed = $true }
+        $script:ConcurrentRoot = [PSCustomObject]@{ Key = $script:ConcurrentKey }
+        $script:ConcurrentRoot | Add-Member ScriptMethod OpenSubKey { param($path, $writable) $this.Key }
+        $script:ConcurrentRoot | Add-Member ScriptMethod DeleteSubKey { throw 'Unconditional key deletion must not be used' }
+        Mock Invoke-RegistryEmptyKeyDeletion { 0 }
+    }
+
+    It 'retains a value added after the restore emptiness check' {
+        $script:ConcurrentKey.Values[''] = 'applied'
+        $script:ConcurrentKey | Add-Member ScriptMethod Close { $this.Values['KeepValue'] = 'concurrent data' } -Force
+        Mock Invoke-RegistryEmptyKeyDeletion {
+            $script:ConcurrentKey.Values['KeepValue'] | Should -Be 'concurrent data'
+            return 145
+        }
+        $snapshot = [PSCustomObject]@{
+            Path = 'HKEY_CURRENT_USER\Software\Example'; Exists = $true; RemoveEmptyKey = $true
+            Values = @([PSCustomObject]@{ Name = ''; Exists = $false }); SubKeys = @()
+        }
+
+        Restore-RegistryKeySnapshotAtPath -Snapshot $snapshot -RootKey $script:ConcurrentRoot -SubKeyPath 'Software\Example'
+
+        $script:ConcurrentKey.Values['KeepValue'] | Should -Be 'concurrent data'
+        Should -Invoke Invoke-RegistryEmptyKeyDeletion -Times 1 -Exactly
+    }
+
+    It 'retains a child key added before empty-only deletion' {
+        $script:ConcurrentKey.Children = @('KeepChild')
+        Mock Invoke-RegistryEmptyKeyDeletion { 145 }
+
+        { Remove-RegistryEmptyKeyIfExists -RootKey $script:ConcurrentRoot -SubKeyPath 'Software\Example' } | Should -Not -Throw
+
+        $script:ConcurrentKey.Children | Should -Be 'KeepChild'
+        $script:ConcurrentKey.Closed | Should -BeTrue
+    }
+
+    It 'accepts native status <Status> without reopening the key' -ForEach @(
+        @{ Status = 0 }
+        @{ Status = 2 }
+        @{ Status = 3 }
+    ) {
+        Mock Invoke-RegistryEmptyKeyDeletion { $Status }
+        $script:ConcurrentRoot | Add-Member ScriptMethod OpenSubKey { throw 'Key should not be reopened' } -Force
+
+        { Remove-RegistryEmptyKeyIfExists -RootKey $script:ConcurrentRoot -SubKeyPath 'Software\Example' } | Should -Not -Throw
+    }
+
+    It 'does not hide a native error when the key is still empty' {
+        Mock Invoke-RegistryEmptyKeyDeletion { 5 }
+
+        { Remove-RegistryEmptyKeyIfExists -RootKey $script:ConcurrentRoot -SubKeyPath 'Software\Example' } | Should -Throw
+        $script:ConcurrentKey.Closed | Should -BeTrue
+    }
+
+    It 'accepts a key that disappears after the native call' {
+        Mock Invoke-RegistryEmptyKeyDeletion { 145 }
+        $script:ConcurrentRoot.Key = $null
+
+        { Remove-RegistryEmptyKeyIfExists -RootKey $script:ConcurrentRoot -SubKeyPath 'Software\Example' } | Should -Not -Throw
     }
 }

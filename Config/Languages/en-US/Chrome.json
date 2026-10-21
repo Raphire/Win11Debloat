@@ -351,6 +351,10 @@
   "BackupUnsupportedValueKind": "Backup contains unsupported registry value kind '{0}' for '{1}'.",
   "BackupInvalidValueData": "Backup contains invalid registry data for kind '{0}' at '{1}'.",
   "BackupUnsafeExecutableValue": "Backup contains an untrusted command or DLL-loading value at '{0}'. Only empty values or exact matches to trusted feature data can be restored.",
+  "BackupExecutableConfirmationRequired": "Restoring unrecognized executable registry settings requires explicit confirmation.",
+  "BackupExecutableWarningTitle": "Restore unrecognized executable settings?",
+  "BackupExecutableWarningMessage": "This backup contains executable registry settings that do not match the script's files. These could cause Windows or applications to potentially load malicious code.\n\nDo not restore registry backups obtained from unofficial sources. Continue only if you created this backup yourself and have reviewed the settings below.\n\n{0}",
+  "BackupExecutableMismatchDetails": "Path: {0}\nValue name: {1}\nKind: {2}\nData: {3}",
   "BackupValueMustNotDefineKind": "Backup value '{0}' must not define Kind when Exists is false.",
 
   "StartMenuNoBackupFoundForUser": "No start menu backup file found for user {0}.",

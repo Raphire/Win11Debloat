@@ -184,10 +184,11 @@ function Get-RegistryKeySnapshot {
     $key = $rootKey.OpenSubKey($subKeyPath, $false)
     if ($null -eq $key) {
         # Value-only plans restore missing values, never the absence of the whole key.
-        # Exists=true keeps restore within that scope, even if other data appears later.
+        # Preserve absence separately so trusted validation can authorize empty-key cleanup.
         return @{
             Path = $KeyPath
             Exists = -not $AllowDeleteKey
+            OriginallyAbsent = $true
             Values = @(
                 if (-not $AllowDeleteKey) {
                     foreach ($valueName in @($ValueNames | Sort-Object -Unique)) {

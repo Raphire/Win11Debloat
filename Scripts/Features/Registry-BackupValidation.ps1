@@ -1,5 +1,22 @@
 <#
     .SYNOPSIS
+        Defines retired features and the exact registry values to ignore in old backups.
+
+    .DESCRIPTION
+        Add future retired feature IDs here, with their original apply and Sysprep paths.
+        These definitions only discard obsolete data; they never authorize restoration.
+#>
+function Get-RetiredRegistryFeatures {
+    return @{
+        DisableDragTray = @(
+            @{ Path = 'HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\CDP'; ValueNames = @('DragTrayEnabled') }
+            @{ Path = 'HKEY_USERS\Default\Software\Microsoft\Windows\CurrentVersion\CDP'; ValueNames = @('DragTrayEnabled') }
+        )
+    }
+}
+
+<#
+    .SYNOPSIS
         Extracts and deduplicates the SelectedFeatures list from a backup, validating each entry.
 
     .DESCRIPTION
@@ -141,6 +158,21 @@ function Normalize-RegistryKeySnapshot {
         foreach ($subKeySnapshot in @($Snapshot.SubKeys)) {
             $subKeys += @(Normalize-RegistryKeySnapshot -Snapshot $subKeySnapshot)
         }
+    }
+
+    # Remove only explicitly retired values, preserving unrelated values and subkeys.
+    $snapshotPath = Get-NormalizedRegistryPathKey -Path $Snapshot.Path
+    $matchesRetiredPath = $false
+    foreach ($rules in (Get-RetiredRegistryFeatures).Values) {
+        foreach ($rule in $rules) {
+            if ($snapshotPath -eq (Get-NormalizedRegistryPathKey -Path $rule.Path)) {
+                $matchesRetiredPath = $true
+                $values = @($values | Where-Object { $rule.ValueNames -notcontains $_.Name })
+            }
+        }
+    }
+    if ($matchesRetiredPath -and $values.Count -eq 0 -and $subKeys.Count -eq 0) {
+        return
     }
 
     return [PSCustomObject]@{
@@ -422,7 +454,10 @@ function Get-SelectedRegistryFeaturesForBackupValidation {
     # wrong collection type), not a condition a user's backup file can trigger.
 
     $selectedRegistryFeatures = New-Object System.Collections.Generic.List[object]
+    $retiredFeatures = Get-RetiredRegistryFeatures
     foreach ($featureId in @($SelectedFeatureIds)) {
+        # Normalization already discards the registry values of explicitly retired features.
+        if ($retiredFeatures.ContainsKey($featureId)) { continue }
         if (-not $script:Features.ContainsKey($featureId)) {
             $Errors.Add((Get-Translation -Key 'BackupFeatureNotInCatalog' -FormatArgs @($featureId)))
             continue

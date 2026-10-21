@@ -26,6 +26,70 @@ Describe 'Registry backup deletion permissions' {
         }
     }
 
+    It 'skips retired Drag Tray data in an existing backup (undo: <Undo>, absent key: <Absent>)' -ForEach @(
+        @{ Undo = $false; Absent = $false }
+        @{ Undo = $true; Absent = $false }
+        @{ Undo = $false; Absent = $true }
+    ) {
+        $backup = [PSCustomObject]@{
+            Version = '1.0'; BackupType = 'RegistryState'; Target = 'DefaultUserProfile'
+            SelectedFeatures = @(if (-not $Undo) { 'DisableDragTray' })
+            SelectedUndoFeatures = @(if ($Undo) { 'DisableDragTray' })
+            RegistryKeys = @([PSCustomObject]@{
+                Path = 'HKEY_USERS\Default\Software\Microsoft\Windows\CurrentVersion\CDP'
+                Exists = -not $Absent
+                Values = @(if (-not $Absent) { [PSCustomObject]@{ Name = 'DragTrayEnabled'; Exists = $true; Kind = 'DWord'; Data = 1 } })
+                SubKeys = @()
+            })
+        }
+
+        $normalized = ConvertTo-NormalizedRegistryBackup -Backup $backup
+
+        $normalized.RegistryKeys | Should -BeNullOrEmpty
+        # Restore normalizes a second time, so skipping must be idempotent.
+        (ConvertTo-NormalizedRegistryBackup -Backup $normalized).RegistryKeys | Should -BeNullOrEmpty
+    }
+
+    It 'retains validation of unrelated data beside the retired value' {
+        $snapshot = [PSCustomObject]@{
+            Path = 'HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\CDP'
+            Exists = $true
+            Values = @(
+                [PSCustomObject]@{ Name = 'DragTrayEnabled'; Exists = $true; Kind = 'DWord'; Data = 1 }
+                [PSCustomObject]@{ Name = 'OtherValue'; Exists = $true; Kind = 'DWord'; Data = 1 }
+            )
+            SubKeys = @()
+        }
+
+        $normalized = @(Normalize-RegistryKeySnapshot -Snapshot $snapshot)
+
+        $normalized | Should -HaveCount 1
+        $normalized[0].Values | Should -HaveCount 1
+        $normalized[0].Values[0].Name | Should -Be 'OtherValue'
+        @(Test-RegistryBackupMatchesSelectedFeatures -SelectedFeatureIds @('DisableDragTray') -SelectedUndoFeatureIds @() -Target 'CurrentUser' -RegistryKeys $normalized) | Should -Not -BeNullOrEmpty
+    }
+
+    It 'handles additional retired features through definitions alone' {
+        Mock Get-RetiredRegistryFeatures {
+            @{
+                RetiredOne = @(@{ Path = 'HKEY_USERS\Default\Software\Retired'; ValueNames = @('First', 'Second') })
+                RetiredTwo = @(@{ Path = 'HKEY_USERS\Default\Software\Retired'; ValueNames = @('Third') })
+            }
+        }
+        $backup = [PSCustomObject]@{
+            Version = '1.0'; BackupType = 'RegistryState'; Target = 'DefaultUserProfile'
+            SelectedFeatures = @('RetiredOne'); SelectedUndoFeatures = @('RetiredTwo')
+            RegistryKeys = @([PSCustomObject]@{
+                Path = 'HKEY_USERS\Default\Software\Retired'; Exists = $true; SubKeys = @()
+                Values = @('First', 'Second', 'Third' | ForEach-Object {
+                    [PSCustomObject]@{ Name = $_; Exists = $true; Kind = 'DWord'; Data = 1 }
+                })
+            })
+        }
+
+        (ConvertTo-NormalizedRegistryBackup -Backup $backup).RegistryKeys | Should -BeNullOrEmpty
+    }
+
     It 'rejects deletion of a key that <FeatureId> only changes values under' -ForEach @(
         @{ FeatureId = 'DisableAnimations'; Path = 'HKEY_USERS\Default\Control Panel\Desktop' }
         @{ FeatureId = 'DisableLocationServices'; Path = 'HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\LocationAndSensors' }

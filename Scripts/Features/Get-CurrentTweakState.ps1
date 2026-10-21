@@ -24,6 +24,85 @@ function Get-ExpectedRegistryValueKind {
 
 <#
     .SYNOPSIS
+        Returns the set of installed Appx package names, cached for the current refresh.
+
+    .DESCRIPTION
+        `Get-AppxPackage -Name <id> -AllUsers` costs roughly 60 ms per call, and the
+        Widgets check needs three of them. A single `-AllUsers` enumeration costs about
+        the same as one name query and answers all three, so the names are collected once
+        and reused. The cache is cleared by Reset-FeatureStateCache so a later refresh
+        still sees packages installed or removed in the meantime.
+
+        Returns $null when the enumeration fails, which lets the caller fall back to the
+        per-name query instead of reporting a wrong state.
+#>
+function Get-InstalledAppxNameSet {
+    if ($null -ne $script:InstalledAppxNameCache) {
+        # The unary comma keeps an empty set from being unrolled into nothing by the pipeline,
+        # which the caller would see as a failed enumeration.
+        return ,$script:InstalledAppxNameCache
+    }
+
+    try {
+        $names = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+        foreach ($package in @(Get-AppxPackage -AllUsers -ErrorAction Stop)) {
+            if ($package.Name -is [string]) { [void]$names.Add($package.Name) }
+        }
+        $script:InstalledAppxNameCache = $names
+    }
+    catch {
+        # Leave the cache empty so the caller falls back to the per-name query.
+        $script:InstalledAppxNameCache = $null
+        return $null
+    }
+
+    return ,$script:InstalledAppxNameCache
+}
+
+<#
+    .SYNOPSIS
+        Drops the per-refresh caches used while reading the current tweak state.
+
+    .DESCRIPTION
+        Call this before a refresh so registry files and Appx package lists are read fresh.
+        The caches only live for one refresh, so changes made outside Win11Debloat are
+        picked up by the next one.
+#>
+function Reset-FeatureStateCache {
+    $script:RegFileOperationCache = $null
+    $script:InstalledAppxNameCache = $null
+}
+
+<#
+    .SYNOPSIS
+        Returns the parsed operations of a .reg file, cached for the current refresh.
+
+    .DESCRIPTION
+        Parsing a .reg file costs a few milliseconds and the same file is read for every
+        feature that references it, on every refresh. The parsed operations depend only on
+        the file contents, which do not change while the window is open, so they are cached
+        per refresh and invalidated by Reset-FeatureStateCache.
+#>
+function Get-CachedRegFileOperations {
+    param(
+        [Parameter(Mandatory)]
+        [string]$RegFilePath
+    )
+
+    if ($null -eq $script:RegFileOperationCache) {
+        $script:RegFileOperationCache = @{}
+    }
+
+    $cached = $script:RegFileOperationCache[$RegFilePath]
+    if ($null -ne $cached) { return $cached }
+
+    $operations = @(Get-RegFileOperations -regFilePath $RegFilePath)
+    $script:RegFileOperationCache[$RegFilePath] = $operations
+    return $operations
+}
+
+<#
+    .SYNOPSIS
         Tests whether a feature's registry operations currently match the live registry.
 
     .DESCRIPTION
@@ -53,6 +132,16 @@ function Test-FeatureApplied {
                 'Microsoft.WidgetsPlatformRuntime'
             )
 
+            $installedNames = Get-InstalledAppxNameSet
+            if ($null -ne $installedNames) {
+                foreach ($appId in $widgetAppIds) {
+                    if ($installedNames.Contains($appId)) { return $false }
+                }
+
+                return $true
+            }
+
+            # The single enumeration failed; fall back to one query per package.
             foreach ($appId in $widgetAppIds) {
                 if (Get-AppxPackage -Name $appId -AllUsers -ErrorAction SilentlyContinue) {
                     return $false
@@ -86,7 +175,7 @@ function Test-FeatureApplied {
     if (-not (Test-Path $regFilePath)) { return $false }
 
     try {
-        $operations = @(Get-RegFileOperations -regFilePath $regFilePath)
+        $operations = @(Get-CachedRegFileOperations -RegFilePath $regFilePath)
     }
     catch { return $false }
 

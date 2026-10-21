@@ -238,6 +238,15 @@ Describe 'Test-LanguageKeyCoverage' {
         $coverage.ExtraKeys | Should -BeNullOrEmpty
     }
 
+    It 'requires the shipped zh-CN catalogs to have every English key and no extra keys' {
+        $languagesPath = Join-Path $PSScriptRoot '..\Config\Languages'
+        $coverage = Test-LanguageKeyCoverage -LanguageCode 'zh-CN' -LanguagesPath $languagesPath
+
+        $coverage.ResolvedLanguageCode | Should -Be 'zh-CN'
+        $coverage.MissingKeys | Should -BeNullOrEmpty
+        $coverage.ExtraKeys | Should -BeNullOrEmpty
+    }
+
     It 'flags every key missing from a partially translated language' {
         $coverage = Test-LanguageKeyCoverage -LanguageCode 'es-ES'
 

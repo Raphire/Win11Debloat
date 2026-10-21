@@ -353,6 +353,13 @@
   "BackupUnexpectedValue": "O backup contém valor inesperado '{0}' sob '{1}'.",
   "BackupUnsupportedValueKind": "O backup contém tipo de valor de registro não suportado '{0}' para '{1}'.",
   "BackupInvalidValueData": "O backup contém dados de registro inválidos para o tipo '{0}' em '{1}'.",
+  "BackupSnapshotInvalidExists": "Falha na validação do backup: o instantâneo da chave do Registro '{0}' deve definir Exists como um valor booleano.",
+  "BackupUnexpectedKeyDeletion": "O backup contém uma exclusão não autorizada de uma chave do Registro: '{0}'.",
+  "BackupUnsafeExecutableValue": "O backup contém um comando ou valor de carregamento de DLL não confiável em '{0}'. Só é possível restaurar valores vazios ou que correspondam exatamente aos dados confiáveis das funcionalidades.",
+  "BackupExecutableConfirmationRequired": "A restauração de configurações executáveis do Registro não reconhecidas exige confirmação explícita.",
+  "BackupExecutableWarningTitle": "Restaurar configurações executáveis não reconhecidas?",
+  "BackupExecutableWarningMessage": "Este backup contém configurações executáveis do Registro que não correspondem aos arquivos do script. Elas podem fazer com que o Windows ou os aplicativos carreguem código mal-intencionado.\n\nNão restaure backups do Registro obtidos de fontes não oficiais. Continue somente se você criou este backup e revisou as configurações abaixo.\n\n{0}",
+  "BackupExecutableMismatchDetails": "Caminho: {0}\nNome do valor: {1}\nTipo: {2}\nDados: {3}",
   "BackupValueMustNotDefineKind": "O valor do backup '{0}' não deve definir Kind quando Exists é falso.",
 
   "StartMenuNoBackupFoundForUser": "Nenhum arquivo de backup do Menu Iniciar encontrado para o usuário {0}.",

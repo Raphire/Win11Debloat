@@ -1,4 +1,4 @@
-{
+﻿{
   "TitleBarAppName": "Win11Debloat",
   "MessageBoxOk": "OK",
   "MessageBoxCancel": "Annuleren",
@@ -21,7 +21,7 @@
   "MenuExportConfig": "Configuratie exporteren",
   "MenuExportConfigTooltip": "Configuratie exporteren",
   "MenuRestoreBackup": "Back-up terugzetten",
-  "MenuRestoreBackupTooltip": "Registerback-up terugzetten",
+  "MenuRestoreBackupTooltip": "Register- of Startmenu-back-up terugzetten",
   "MenuDocumentation": "Documentatie",
   "MenuReportBug": "Probleem melden",
   "MenuLogs": "Logboeken",
@@ -100,7 +100,7 @@
   "DeployOptionsTitle": "Opties",
   "DeployOptionRegistryBackup": "Registerback-up maken (aanbevolen)",
   "DeployOptionRestorePoint": "Systeemherstelpunt maken (aanbevolen)",
-  "DeployOptionRestartExplorer": "Verkenner opnieuw starten om wijzigingen direct toe te passen",
+  "DeployOptionRestartExplorer": "Verkenner opnieuw starten om de meeste wijzigingen direct toe te passen",
   "DeployReviewChanges": "Geselecteerde wijzigingen bekijken",
   "DeployApplyChanges": "Wijzigingen toepassen",
   "BubbleViewChanges": "Bekijk hier de geselecteerde wijzigingen",

@@ -1,4 +1,4 @@
-{
+﻿{
   "Clipchamp.Clipchamp": {
     "FriendlyName": "视频编辑器（Clipchamp）",
     "Description": "微软出品的视频编辑器"
@@ -149,7 +149,7 @@
   },
   "Microsoft.ZuneVideo": {
     "FriendlyName": "电影和电视",
-    "Description": "用于租借、购买和播放视频内容（已停止支持）"
+    "Description": "用于播放已购买视频内容的应用（新的租借与购买已停止）"
   },
   "MicrosoftCorporationII.MicrosoftFamily": {
     "FriendlyName": "Microsoft 家庭安全",

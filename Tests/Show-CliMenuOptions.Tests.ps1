@@ -7,6 +7,10 @@ BeforeAll {
     function Wait-ForKeyPress {}
     function Show-AppSelectionWindow { $false }
 
+    . (Join-Path $PSScriptRoot '..\Scripts\FileIO\Import-JsonFile.ps1')
+    . (Join-Path $PSScriptRoot '..\Scripts\FileIO\Import-LanguageFile.ps1')
+    $script:Lang = Import-LanguageFile -LanguageCode 'en-US' -LanguagesPath (Join-Path $PSScriptRoot '..\Config\Languages')
+
     . (Join-Path $PSScriptRoot '..\Scripts\CLI\Write-CliHeader.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\CLI\Write-PendingChanges.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\CLI\Show-CliAppRemoval.ps1')
@@ -20,7 +24,7 @@ Describe 'Show-CliMenuOptions' {
     BeforeEach {
         $script:Params = @{}
         $script:ControlParams = @('WhatIf', 'Silent')
-        $script:Features = @{ DisableTelemetry = [PSCustomObject]@{ Label = 'Disable telemetry' }; CreateRestorePoint = [PSCustomObject]@{ Label = 'Create restore point' } }
+        $script:Features = @{ DisableTelemetry = [PSCustomObject]@{ FeatureId = 'DisableTelemetry' }; CreateRestorePoint = [PSCustomObject]@{ FeatureId = 'CreateRestorePoint' } }
         $script:SelectedApps = @('One.App', 'Two.App')
         $script:SavedSettingsFilePath = 'C:\Settings\LastUsedSettings.json'
         $script:DefaultSettingsFilePath = 'C:\Settings\DefaultSettings.json'
@@ -62,6 +66,9 @@ Describe 'Show-CliMenuOptions' {
         Should -Invoke Generate-AppsList -Times 1 -Exactly
         Should -Invoke Read-Host -Times 1 -Exactly
         Should -Invoke Write-Output -Times 2 -ParameterFilter { $InputObject -like '- *' }
+        Should -Invoke Write-Output -Times 1 -Exactly -ParameterFilter {
+            $InputObject -eq "- $(Get-Translation -Key 'DisableTelemetry' -Field 'Label' -Section 'Features')"
+        }
     }
 
     It 'returns the saved-settings menu option only when the file is available' {

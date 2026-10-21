@@ -291,7 +291,7 @@ function Get-Translation {
 
 <#
     .SYNOPSIS
-        Looks up a translated label for one value of a UiGroup, falling back to en-US, then to the raw label.
+        Looks up a translated label for one value of a UiGroup, falling back to en-US, then to the feature ID.
 
     .DESCRIPTION
         UiGroups[GroupId].Values in the language files is a FeatureId -> Label map, one level deeper
@@ -304,13 +304,11 @@ function Get-GroupValueTranslation {
         [string]$GroupId,
         [Parameter(Mandatory)]
         [string]$FeatureId,
-        [Parameter(Mandatory)]
-        [string]$FallbackLabel,
         [object]$Lang = $script:Lang
     )
 
     if (-not $Lang) {
-        return $FallbackLabel
+        return $FeatureId
     }
 
     foreach ($candidateLang in (Get-LanguageFallbackChain -Lang $Lang)) {
@@ -325,7 +323,7 @@ function Get-GroupValueTranslation {
         }
     }
 
-    return $FallbackLabel
+    return $FeatureId
 }
 
 <#

@@ -11,7 +11,7 @@
 
     .PARAMETER Mapping
         A control mapping with Type and either FeatureId or GroupId and Values. Group values
-        contain FeatureIds and fallback Label text.
+        contain FeatureIds.
 
     .PARAMETER Features
         The feature definitions keyed by FeatureId. Defaults to $script:Features.
@@ -30,7 +30,7 @@ function Get-TweakControlText {
         $label = Get-Translation -Key $Mapping.GroupId -Field 'Label' -Section 'UiGroups'
         $tooltip = Get-Translation -Key $Mapping.GroupId -Field 'ToolTip' -Section 'UiGroups'
         $options += @($Mapping.Values | ForEach-Object {
-            Get-GroupValueTranslation -GroupId $Mapping.GroupId -FeatureId $_.FeatureIds[0] -FallbackLabel $_.Label
+            Get-GroupValueTranslation -GroupId $Mapping.GroupId -FeatureId $_.FeatureIds[0]
         })
     }
     else {
@@ -66,8 +66,9 @@ function Update-FeatureLabelLookup {
     $script:UndoFeatureLabelLookup = @{}
     foreach ($feature in $Features) {
         $script:FeatureLabelLookup[$feature.FeatureId] = Get-Translation -Key $feature.FeatureId -Field 'Label' -Section 'Features'
-        if ($feature.UndoLabel) {
-            $script:UndoFeatureLabelLookup[$feature.FeatureId] = Get-Translation -Key $feature.FeatureId -Field 'UndoLabel' -Section 'Features'
+        $undoLabel = Get-Translation -Key $feature.FeatureId -Field 'UndoLabel' -Section 'Features'
+        if ($undoLabel -ne $feature.FeatureId) {
+            $script:UndoFeatureLabelLookup[$feature.FeatureId] = $undoLabel
         }
     }
 }
@@ -244,7 +245,7 @@ function New-DynamicTweakControls {
         $text = Get-TweakControlText -Mapping $mapping -Features $featureMap
         $controlName = ("Feature_{0}_Combo" -f $feature.FeatureId) -replace '[^a-zA-Z0-9_]', ''
         $control = New-LabeledCombo -parent $parent -labelText $text.Label -comboName $controlName -items $text.Options
-        if ($feature.ToolTip -or $feature.DisableWhenApplied -eq $true) {
+        if ($text.ToolTip -and $text.ToolTip -ne $feature.FeatureId) {
             Set-TweakControlToolTip -control $control -tooltipText $text.ToolTip -ShowOnDisabled
         }
         $script:UiControlMappings[$controlName] = $mapping
@@ -482,7 +483,7 @@ function New-DynamicTweakControls {
                 $comboName = 'Group_{0}Combo' -f $group.GroupId
                 if (-not $panel) { $panel = Get-OrCreateCategoryCard -categoryObj $categoryObj }
                 $combo = New-LabeledCombo -parent $panel -labelText $text.Label -comboName $comboName -items $text.Options
-                if ($group.ToolTip) {
+                if ($text.ToolTip -and $text.ToolTip -ne $group.GroupId) {
                     Set-TweakControlToolTip -control $combo -tooltipText $text.ToolTip
                 }
                 $script:UiControlMappings[$comboName] = $mapping

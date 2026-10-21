@@ -13,9 +13,9 @@ function Get-RebootFeatureLabels {
 
     foreach ($paramKey in $candidateParamKeys) {
         if ($script:Features.ContainsKey($paramKey) -and $script:Features[$paramKey].RequiresReboot -eq $true) {
-            $feature = $script:Features[$paramKey]
             $isUndo = $script:UndoParams.ContainsKey($paramKey)
-            $displayLabel = if ($isUndo -and $feature.UndoLabel) { Get-Translation -Key $paramKey -Field 'UndoLabel' -Section 'Features' } else { Get-Translation -Key $paramKey -Field 'Label' -Section 'Features' }
+            $undoLabel = Get-Translation -Key $paramKey -Field 'UndoLabel' -Section 'Features'
+            $displayLabel = if ($isUndo -and $undoLabel -ne $paramKey) { $undoLabel } else { Get-Translation -Key $paramKey -Field 'Label' -Section 'Features' }
 
             if (-not [string]::IsNullOrWhiteSpace([string]$displayLabel)) {
                 [void]$rebootFeatureLabels.Add([string]$displayLabel)

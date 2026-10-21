@@ -315,8 +315,8 @@ $script:Features = @{}
 try {
     $featuresData = Get-Content -Path $script:FeaturesFilePath -Raw | ConvertFrom-Json
     foreach ($feature in $featuresData.Features) {
-        if ([string]::IsNullOrWhiteSpace([string]$feature.FeatureId) -or [string]::IsNullOrWhiteSpace([string]$feature.Label) -or [string]::IsNullOrWhiteSpace([string]$feature.ApplyText)) {
-            Write-Warning "Feature '$($feature.FeatureId)' is missing a FeatureId, Label, or ApplyText in Features.json and will be skipped."
+        if ([string]::IsNullOrWhiteSpace([string]$feature.FeatureId)) {
+            Write-Warning "Feature '$($feature.FeatureId)' is missing a FeatureId in Features.json and will be skipped."
             continue
         }
         $script:Features[$feature.FeatureId] = $feature
@@ -469,8 +469,8 @@ $WinVersion = Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\Current
 # Check if the machine supports Modern Standby, this is used to determine if the DisableModernStandbyNetworking option can be used
 $script:ModernStandbySupported = Test-ModernStandbySupport
 
-# Explicit -Language takes precedence over saved UI preferences and the system culture.
-Initialize-UiPreferences -Language $Language
+# Keep CLI output in English until the console interface is fully localized.
+$script:Lang = Import-LanguageFile -LanguageCode 'en-US'
 
 $script:Params = $PSBoundParameters
 $script:UndoParams = @{}
@@ -567,6 +567,8 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
         }
         else {
             try {
+                # Explicit -Language takes precedence over saved UI preferences and the system culture.
+                Initialize-UiPreferences -Language $Language
                 $result = Show-MainWindow
             
                 try {
@@ -577,6 +579,7 @@ if ((-not $script:Params.Count) -or $RunDefaults -or $RunDefaultsLite -or $RunSa
                 Exit
             }
             catch {
+                $script:Lang = Import-LanguageFile -LanguageCode 'en-US'
                 Write-Warning "The graphical interface could not start: $($_.Exception.Message)"
                 Write-Verbose "GUI Failure details: $($_.Exception.ToString())"
                 if (-not $Silent) {

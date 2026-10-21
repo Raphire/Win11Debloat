@@ -20,7 +20,7 @@ function Invoke-FeatureApply {
     try {
         # Resolve feature metadata from Features.json
         $feature = $script:Features[$FeatureId]
-        $applyText = $feature.ApplyText
+        $applyText = Get-Translation -Key $FeatureId -Field 'ApplyText' -Section 'Features'
 
     # ---- Registry-backed features: import .reg file, then handle additional tasks ----
     if ($feature.RegistryKey) {
@@ -162,7 +162,7 @@ function Invoke-FeatureUndo {
         return $false
     }
 
-    $undoText = if ($feature.ApplyUndoText) { $feature.ApplyUndoText } elseif ($feature.UndoLabel) { $feature.UndoLabel } else { $FeatureId }
+    $undoText = Get-Translation -Key $FeatureId -Field 'ApplyUndoText' -Section 'Features'
 
     try {
         # ---- Registry-backed features: import undo data, then handle additional tasks ----
@@ -308,9 +308,7 @@ function Invoke-UndoFeatures {
     foreach ($featureId in $FeatureIds) {
         if ($script:CancelRequested) { return }
 
-        $f = if ($script:Features.ContainsKey($featureId)) { $script:Features[$featureId] } else { $null }
-        $undoLabel = if ($f -and $f.UndoLabel) { Get-Translation -Key $featureId -Field 'UndoLabel' -Section 'Features' } else { $featureId }
-        $undoText = if ($f -and $f.ApplyUndoText) { Get-Translation -Key $featureId -Field 'ApplyUndoText' -Section 'Features' } else { $undoLabel }
+        $undoText = Get-Translation -Key $featureId -Field 'ApplyUndoText' -Section 'Features'
 
         if ($script:ApplyProgressCallback) {
             & $script:ApplyProgressCallback $step $TotalSteps $undoText

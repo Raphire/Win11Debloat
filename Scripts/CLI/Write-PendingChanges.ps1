@@ -6,8 +6,7 @@
         Iterates over every non-control parameter in $script:Params and emits a
         human-readable line for each change that will be applied. For the
         'RemoveApps' parameter the list of targeted app names is displayed
-        inline. Feature labels are resolved from Features.json when available;
-        otherwise the raw parameter name is used as a fallback.
+        inline. Feature labels are resolved from the language catalogs.
 
         After printing the summary the function pauses until the user presses
         Enter, giving them an opportunity to review and cancel via Ctrl+C.
@@ -16,7 +15,7 @@ function Write-PendingChanges {
     Write-Output "Win11Debloat will make the following changes:"
 
     if ($script:Params['CreateRestorePoint']) {
-        Write-Output "- $($script:Features['CreateRestorePoint'].Label)"
+        Write-Output "- $(Get-Translation -Key 'CreateRestorePoint' -Field 'Label' -Section 'Features')"
     }
     foreach ($parameterName in $script:Params.Keys) {
         if ($script:ControlParams -contains $parameterName) {
@@ -45,7 +44,7 @@ function Write-PendingChanges {
                 continue
             }
             default {
-                $message = $script:Features[$parameterName].Label
+                $message = Get-Translation -Key $parameterName -Field 'Label' -Section 'Features'
                 Write-Output "- $message"
                 continue
             }

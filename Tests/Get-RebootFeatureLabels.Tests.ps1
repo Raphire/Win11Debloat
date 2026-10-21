@@ -63,6 +63,19 @@ Describe 'Get-RebootFeatureLabels' {
         $result | Should -Contain 'Apply feature'
     }
 
+    It 'resolves undo labels when feature metadata contains no display text' {
+        $script:Features = @{
+            ApplyFeature = [PSCustomObject]@{ RequiresReboot = $true }
+            UndoFeature = [PSCustomObject]@{ RequiresReboot = $true }
+        }
+
+        $result = @(Get-RebootFeatureLabels)
+
+        $result | Should -HaveCount 2
+        $result | Should -Contain 'Undo apply feature'
+        $result | Should -Contain 'Undo feature'
+    }
+
     It 'falls back to the regular label when an undo selection has no undo label' {
         $script:Params = @{}
         $script:UndoParams = @{ ApplyFeature = $true }

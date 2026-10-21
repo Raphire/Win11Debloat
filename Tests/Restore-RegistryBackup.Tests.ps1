@@ -162,11 +162,12 @@ Describe 'Restore-RegistryBackupState' {
     }
 
     It 'rejects a malformed later root before any writes or hive loading for <Target>' -ForEach @(
-        @{ Target = 'CurrentUser:Tester'; InvalidKind = $false }
-        @{ Target = 'DefaultUserProfile'; InvalidKind = $false }
-        @{ Target = 'User:Alice'; InvalidKind = $false }
-        @{ Target = 'DefaultUserProfile'; InvalidKind = $true }
+        @{ Target = 'CurrentUser:Tester'; InvalidKind = $false; ExpectedError = '*is not directly below parent*' }
+        @{ Target = 'DefaultUserProfile'; InvalidKind = $false; ExpectedError = '*is not directly below parent*' }
+        @{ Target = 'User:Alice'; InvalidKind = $false; ExpectedError = '*is not directly below parent*' }
+        @{ Target = 'DefaultUserProfile'; InvalidKind = $true; ExpectedError = '*Unsupported registry value kind*' }
     ) {
+        Mock Test-TargetUserName { [PSCustomObject]@{ IsValid = $true } }
         $first = [PSCustomObject]@{ Path = 'HKEY_CURRENT_USER\Software\One'; Exists = $true; Values = @(); SubKeys = @() }
         $second = [PSCustomObject]@{ Path = 'HKEY_CURRENT_USER\Software\Two'; Exists = $true; Values = @(); SubKeys = @() }
         if ($InvalidKind) {
@@ -178,7 +179,7 @@ Describe 'Restore-RegistryBackupState' {
         $script:backup.Target = $Target
         $script:backup.RegistryKeys = @($first, $second)
 
-        { Restore-RegistryBackupState -Backup $script:backup } | Should -Throw
+        { Restore-RegistryBackupState -Backup $script:backup } | Should -Throw $ExpectedError
 
         Should -Invoke Restore-RegistryKeySnapshot -Times 0 -Exactly
         Should -Invoke Invoke-WithLoadedRestoreHive -Times 0 -Exactly

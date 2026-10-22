@@ -183,7 +183,7 @@ catch {
 # Do not use an archive that differs from the checksum published with the release
 if ($expectedArchiveHash -and -not (Test-FileHashMatch $tempArchivePath $expectedArchiveHash)) {
     Remove-Item $tempArchivePath -Force
-    Write-Host "The downloaded Win11Debloat archive does not match the SHA-256 checksum published with the release, so it was not used." -ForegroundColor Red
+    Write-Host "The downloaded Win11Debloat archive does not match the SHA-256 checksum published with the release." -ForegroundColor Red
     Write-Output ""
     Write-Output "Press enter to exit..."
     Read-Host | Out-Null

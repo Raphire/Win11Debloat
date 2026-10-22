@@ -38,6 +38,8 @@ jobs:
           $ErrorActionPreference = 'Stop'
           if ($env:RELEASE_TAG -notmatch '^\d{4}\.\d{2}\.\d{2}$') { throw 'Expected a YYYY.MM.DD tag.' }
           $null = [datetime]::ParseExact($env:RELEASE_TAG, 'yyyy.MM.dd', [cultureinfo]::InvariantCulture)
+          gh auth setup-git
+          if ($LASTEXITCODE -ne 0) { throw 'Unable to configure Git authentication.' }
           $existingTag = git ls-remote --tags origin "refs/tags/$env:RELEASE_TAG"
           if ($LASTEXITCODE -ne 0) { throw 'Unable to check release tags.' }
           if ($existingTag) { throw 'This tag already exists. Use a new release version.' }
@@ -71,8 +73,6 @@ jobs:
           } elseif ($LASTEXITCODE -ne 0) { throw 'Unable to check version changes.' }
           git tag $env:RELEASE_TAG
           if ($LASTEXITCODE -ne 0) { throw 'Unable to create release tag.' }
-          gh auth setup-git
-          if ($LASTEXITCODE -ne 0) { throw 'Unable to configure push authentication.' }
           git push --atomic origin HEAD:refs/heads/master "refs/tags/$env:RELEASE_TAG"
           if ($LASTEXITCODE -ne 0) { throw 'Unable to push version commit and tag. Check branch/tag permissions.' }
 
@@ -81,7 +81,7 @@ jobs:
         run: |
           $sourceCommit = git rev-parse HEAD
           if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve release commit.' }
-          curl.exe --fail --location --retry 3 --output source.zip "https://api.github.com/repos/$env:GH_REPO/zipball/$sourceCommit"
+          curl.exe --fail --location --retry 3 --header "Authorization: Bearer $env:GH_TOKEN" --output source.zip "https://api.github.com/repos/$env:GH_REPO/zipball/$sourceCommit"
           if ($LASTEXITCODE -ne 0) { throw 'Unable to download release source.' }
           Expand-Archive -LiteralPath source.zip -DestinationPath release-source
 

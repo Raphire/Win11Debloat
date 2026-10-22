@@ -1,5 +1,6 @@
 BeforeAll {
     $repositoryRoot = Split-Path -Parent $PSScriptRoot
+    $gitExecutable = (Get-Command git -CommandType Application).Source
     $workflow = Get-Content -LiteralPath (Join-Path $repositoryRoot '.github/workflows/release.yml') -Raw
     $workflowBlocks = @([regex]::Matches($workflow, '(?m)^        run: \|\r?\n(?<body>(?:          [^\r\n]*(?:\r?\n|$))+)') | ForEach-Object {
         [scriptblock]::Create(($_.Groups['body'].Value -replace '(?m)^          ', ''))
@@ -11,6 +12,7 @@ Describe 'Release workflow version commit' {
         $locationPushed = $false
         $originalTag = $env:RELEASE_TAG
         $originalSummary = $env:GITHUB_STEP_SUMMARY
+        $originalToken = $env:GH_TOKEN
         $testRoot = Join-Path $TestDrive ([guid]::NewGuid().ToString('N'))
         $checkoutPath = Join-Path $testRoot 'checkout'
         $remotePath = Join-Path $testRoot 'origin.git'
@@ -40,12 +42,25 @@ $global:LASTEXITCODE = 0
         $initialCommit = git -C $checkoutPath rev-parse HEAD
         $env:RELEASE_TAG = '2026.10.23'
         $env:GITHUB_STEP_SUMMARY = Join-Path $testRoot 'summary.txt'
+        $env:GH_TOKEN = 'release-workflow-test-token'
         $script:uploadedFiles = @()
+        $script:gitAuthenticationConfigured = $false
+
+        function git {
+            if ($args[0] -eq 'ls-remote' -and -not $script:gitAuthenticationConfigured) {
+                throw 'Git authentication must be configured before querying remote tags.'
+            }
+            & $gitExecutable @args
+            $global:LASTEXITCODE = $LASTEXITCODE
+        }
 
         # Real local Git commits/pushes; all GitHub operations stay inside this fixture.
         function gh {
             $global:LASTEXITCODE = 0
-            if ($args[0] -eq 'auth') { return }
+            if ($args[0] -eq 'auth' -and $args[1] -eq 'setup-git') {
+                $script:gitAuthenticationConfigured = $true
+                return
+            }
             if ($args[1] -eq 'create') { return }
             if ($args[1] -eq 'view') { return '{"isDraft":true}' }
             if ($args[1] -eq 'upload') {
@@ -58,6 +73,10 @@ $global:LASTEXITCODE = 0
             throw 'Unexpected GitHub CLI operation.'
         }
         function curl.exe {
+            $headerIndex = [array]::IndexOf($args, '--header')
+            if ($headerIndex -lt 0 -or $args[$headerIndex + 1] -cne "Authorization: Bearer $env:GH_TOKEN") {
+                throw 'The source download must authenticate with GH_TOKEN.'
+            }
             $outputIndex = [array]::IndexOf($args, '--output') + 1
             $commit = ($args[-1] -split '/')[-1]
             git archive --format=zip --prefix=tagged-source/ -o $args[$outputIndex] $commit
@@ -71,6 +90,7 @@ $global:LASTEXITCODE = 0
         if ($locationPushed) { Pop-Location }
         $env:RELEASE_TAG = $originalTag
         $env:GITHUB_STEP_SUMMARY = $originalSummary
+        $env:GH_TOKEN = $originalToken
     }
 
     It 'commits the source version before tagging and packages that same commit' {

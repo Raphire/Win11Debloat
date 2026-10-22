@@ -1,4 +1,4 @@
-{
+﻿{
   "Features": {
     "RemoveApps": {
       "Label": "卸载通过 Apps 参数指定的应用",
@@ -594,7 +594,7 @@
     },
     "EnableWindowsSandbox": {
       "Label": "启用 Windows 沙盒",
-      "ToolTip": "Windows 沙盒是轻量级桌面环境，可在隔离环境中安全运行应用。安装在其中的软件与主机相互隔离。仅支持 Windows 11 专业版、专业工作站版和企业版。",
+      "ToolTip": "Windows 沙盒是轻量级桌面环境，可在隔离环境中安全运行应用。安装在其中的软件与主机相互隔离。仅支持 Windows 11 专业版、专业工作站版、企业版和教育版。",
       "ApplyText": "正在启用 Windows 沙盒",
       "UndoLabel": "禁用 Windows 沙盒",
       "ApplyUndoText": "正在禁用 Windows 沙盒"

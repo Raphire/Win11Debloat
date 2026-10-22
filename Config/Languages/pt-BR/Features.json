@@ -1,4 +1,4 @@
-{
+﻿{
   "Features": {
     "RemoveApps": {
       "Label": "Remover os apps especificados com o parâmetro 'Apps'",
@@ -594,7 +594,7 @@
     },
     "EnableWindowsSandbox": {
       "Label": "Habilitar Windows Sandbox",
-      "ToolTip": "O Windows Sandbox é um ambiente de área de trabalho leve para executar aplicativos com segurança em isolamento. O software instalado dentro do ambiente Windows Sandbox permanece 'em sandbox' e é executado separadamente da máquina host. Suportado apenas nas edições Windows 11 Pro, Workstation e Enterprise.",
+      "ToolTip": "O Windows Sandbox é um ambiente de área de trabalho leve para executar aplicativos com segurança em isolamento. O software instalado dentro do ambiente Windows Sandbox permanece 'em sandbox' e é executado separadamente da máquina host. Suportado apenas nas edições Windows 11 Pro, Workstation, Enterprise e Education.",
       "ApplyText": "Habilitando Windows Sandbox",
       "UndoLabel": "Desabilitar Windows Sandbox",
       "ApplyUndoText": "Desabilitando Windows Sandbox"

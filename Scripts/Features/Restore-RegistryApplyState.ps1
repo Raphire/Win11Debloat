@@ -103,6 +103,27 @@ function Test-RegistryKeySnapshotCanBeRestored {
 
 <#
     .SYNOPSIS
+        Preflights every root snapshot before any registry changes or hive loading.
+#>
+function Test-RegistryBackupSnapshotsCanBeRestored {
+    param([Parameter(Mandatory)][AllowEmptyCollection()][object[]]$RegistryKeys)
+
+    $rootPaths = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
+    foreach ($snapshot in $RegistryKeys) {
+        $parts = Split-RegistryPath -path $snapshot.Path
+        if (-not $parts -or [string]::IsNullOrWhiteSpace($parts.SubKey) -or
+            $parts.Hive -notin @('HKEY_CURRENT_USER', 'HKEY_LOCAL_MACHINE', 'HKEY_CLASSES_ROOT', 'HKEY_USERS', 'HKEY_CURRENT_CONFIG')) {
+            throw "Unsupported registry path in backup: $($snapshot.Path)"
+        }
+        if (-not $rootPaths.Add("$($parts.Hive)\$($parts.SubKey)")) {
+            throw "Backup contains duplicate registry root path: $($snapshot.Path)"
+        }
+        Test-RegistryKeySnapshotCanBeRestored -Snapshot $snapshot
+    }
+}
+
+<#
+    .SYNOPSIS
         Returns a snapshot child's name only when it is directly below its parent.
 
     .PARAMETER ParentPath
@@ -145,6 +166,8 @@ function Get-DirectRegistrySnapshotChildName {
     .DESCRIPTION
         Writes only values and descendants represented by the backup. Existing keys are
         retained so their security descriptors and unrelated data are not destroyed.
+        A key recorded as originally absent is removed only if trusted validation
+        authorized cleanup and no values or subkeys remain.
 #>
 function Restore-RegistryKeySnapshotAtPath {
     param(
@@ -161,18 +184,35 @@ function Restore-RegistryKeySnapshotAtPath {
         return
     }
 
-    $key = $RootKey.CreateSubKey($SubKeyPath)
+    $onlyDeletesValues = @($Snapshot.SubKeys).Count -eq 0 -and
+        @($Snapshot.Values | Where-Object { [bool]$_.Exists }).Count -eq 0
+    if ($onlyDeletesValues -and (@($Snapshot.Values).Count -gt 0 -or $Snapshot.RemoveEmptyKey)) {
+        # An absent value-only key already has the requested state.
+        $key = $RootKey.OpenSubKey($SubKeyPath, $true)
+        if ($null -eq $key) { return }
+    }
+    else {
+        $key = $RootKey.CreateSubKey($SubKeyPath)
+    }
     if ($null -eq $key) {
         throw "Unable to create or open registry key '$($Snapshot.Path)'"
     }
 
+    $removeEmptyKey = $false
     try {
         foreach ($valueSnapshot in @($Snapshot.Values)) {
             Restore-RegistryValueSnapshot -RegistryKey $key -Snapshot $valueSnapshot
         }
+        if ($Snapshot.RemoveEmptyKey -and $onlyDeletesValues) {
+            $removeEmptyKey = @($key.GetValueNames()).Count -eq 0 -and @($key.GetSubKeyNames()).Count -eq 0
+        }
     }
     finally {
         $key.Close()
+    }
+
+    if ($removeEmptyKey) {
+        Remove-RegistryEmptyKeyIfExists -RootKey $RootKey -SubKeyPath $SubKeyPath
     }
 
     foreach ($subKeySnapshot in @($Snapshot.SubKeys)) {
@@ -244,7 +284,12 @@ function Convert-RegistryValueKindFromBackup {
     }
 
     try {
-        return [System.Enum]::Parse([Microsoft.Win32.RegistryValueKind], $KindName, $true)
+        $kind = [System.Enum]::Parse([Microsoft.Win32.RegistryValueKind], $KindName, $true)
+        if (-not [System.Enum]::IsDefined([Microsoft.Win32.RegistryValueKind], $kind) -or
+            $kind -in @([Microsoft.Win32.RegistryValueKind]::Unknown, [Microsoft.Win32.RegistryValueKind]::None)) {
+            throw "Unsupported registry value kind in backup: $KindName"
+        }
+        return $kind
     }
     catch {
         throw "Unsupported registry value kind in backup: $KindName"

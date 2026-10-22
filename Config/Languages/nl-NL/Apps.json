@@ -1,4 +1,4 @@
-{
+﻿{
   "Clipchamp.Clipchamp": {
     "FriendlyName": "Clipchamp",
     "Description": "Videobewerker van Microsoft"
@@ -149,7 +149,7 @@
   },
   "Microsoft.ZuneVideo": {
     "FriendlyName": "Films en tv",
-    "Description": "App voor het huren, kopen en afspelen van video's (niet meer ondersteund)"
+    "Description": "App voor het afspelen van gekochte video's (nieuw huren en kopen is stopgezet)"
   },
   "MicrosoftCorporationII.MicrosoftFamily": {
     "FriendlyName": "Microsoft Family Safety",

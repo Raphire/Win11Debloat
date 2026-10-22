@@ -5,7 +5,7 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory)]
-    [ValidatePattern('^\d{4}\.\d{2}\.\d{2}$')]
+    [ValidatePattern('^\d{4}\.\d{2}\.\d{2}(?:-r[1-9]\d*)?$')]
     [string]$Version,
     [Parameter(Mandatory)]
     [string]$OutputDirectory,
@@ -13,7 +13,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
-$null = [datetime]::ParseExact($Version, 'yyyy.MM.dd', [cultureinfo]::InvariantCulture)
+$null = [datetime]::ParseExact($Version.Substring(0, 10), 'yyyy.MM.dd', [cultureinfo]::InvariantCulture)
 $outputPath = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutputDirectory)
 New-Item -ItemType Directory -Path $outputPath -Force | Out-Null
 foreach ($name in 'Win11Debloat.zip', 'SHA256SUMS', 'Get.ps1') {

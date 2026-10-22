@@ -2,7 +2,7 @@ BeforeAll {
     $repositoryRoot = Split-Path -Parent $PSScriptRoot
     $buildScript = Join-Path $repositoryRoot 'Scripts/Build-Release.ps1'
     $releasePath = Join-Path $TestDrive 'release'
-    $version = '2026.10.22'
+    $version = '2026.10.22-r2'
     $originalScript = [IO.File]::ReadAllBytes((Join-Path $repositoryRoot 'Win11Debloat.ps1'))
     Push-Location $TestDrive
     try { & $buildScript -SourcePath $repositoryRoot -Version $version -OutputDirectory 'release' }
@@ -14,7 +14,7 @@ BeforeAll {
 
 Describe 'Release packaging' {
     It 'stamps only the packaged version and preserves runtime resources' {
-        [IO.File]::ReadAllText((Join-Path $packagePath 'Win11Debloat.ps1')) | Should -Match '\$script:Version = "2026\.10\.22"'
+        [IO.File]::ReadAllText((Join-Path $packagePath 'Win11Debloat.ps1')) | Should -Match '\$script:Version = "2026\.10\.22-r2"'
         [Convert]::ToBase64String([IO.File]::ReadAllBytes((Join-Path $repositoryRoot 'Win11Debloat.ps1'))) |
             Should -BeExactly ([Convert]::ToBase64String($originalScript))
         foreach ($directory in 'Assets', 'Config', 'Regfiles', 'Schemas') {
@@ -67,6 +67,9 @@ Describe 'Release packaging' {
     It 'rejects invalid version input and refuses to overwrite output' {
         { & $buildScript -Version '../2026' -OutputDirectory (Join-Path $TestDrive 'invalid') } | Should -Throw
         { & $buildScript -Version '2026.02.30' -OutputDirectory (Join-Path $TestDrive 'invalid-date') } | Should -Throw
+        foreach ($invalidVersion in '2026.02.30-r2', '2026.10.22-r0', '2026.10.22-r', '2026.10.22-r2-extra') {
+            { & $buildScript -Version $invalidVersion -OutputDirectory (Join-Path $TestDrive 'invalid-revision') } | Should -Throw
+        }
         { & $buildScript -Version $version -OutputDirectory $releasePath } | Should -Throw '*Output already exists*'
     }
 }
@@ -100,7 +103,7 @@ Describe 'Packaged archive through the launcher' {
             { & (Join-Path $releasePath 'Get.ps1') -CLI } | Should -Throw '*Reached launch with real extraction*'
             $mainScript = Join-Path $launcherTemp 'Win11Debloat/Win11Debloat.ps1'
             Test-Path -LiteralPath $mainScript | Should -BeTrue
-            [IO.File]::ReadAllText($mainScript) | Should -Match '\$script:Version = "2026\.10\.22"'
+            [IO.File]::ReadAllText($mainScript) | Should -Match '\$script:Version = "2026\.10\.22-r2"'
             Test-Path -LiteralPath (Join-Path $launcherTemp 'Win11Debloat/Schemas/MainWindow.xaml') | Should -BeTrue
             Should -Invoke Start-Process -Times 1 -Exactly -ParameterFilter { $ArgumentList -like '*Win11Debloat.ps1*' }
         }

@@ -92,21 +92,38 @@ if ($text -notmatch [regex]::Escape($env:RELEASE_TAG)) { throw 'Tests did not se
         $env:GH_TOKEN = $originalToken
     }
 
-    It 'commits the source version before tagging and packages that same commit' {
+    It 'commits and packages release version <ReleaseVersion> from the same tagged commit' -ForEach @(
+        @{ ReleaseVersion = '2026.10.23' }
+        @{ ReleaseVersion = '2026.10.23-r2' }
+        @{ ReleaseVersion = '2026.10.23-r10' }
+    ) {
+        $env:RELEASE_TAG = $ReleaseVersion
         foreach ($block in $workflowBlocks) { & $block }
         $releaseCommit = git rev-parse HEAD
         $releaseCommit | Should -Not -Be $initialCommit
         (git --git-dir $remotePath rev-parse refs/heads/master) | Should -Be $releaseCommit
         (git --git-dir $remotePath rev-parse "refs/tags/$env:RELEASE_TAG") | Should -Be $releaseCommit
-        (git show HEAD:Win11Debloat.ps1) | Should -Match '\$script:Version = "2026\.10\.23"'
+        $versionPattern = '\$script:Version = "' + [regex]::Escape($ReleaseVersion) + '"'
+        (git show HEAD:Win11Debloat.ps1) | Should -Match $versionPattern
         $script:uploadedFiles | Should -HaveCount 3
         $summaryBytes = [IO.File]::ReadAllBytes($env:GITHUB_STEP_SUMMARY)
         $summaryBytes[0] | Should -Be ([byte][char]'P')
         $summaryBytes | Should -Not -Contain 0
         $unpacked = Join-Path $testRoot 'unpacked'
         Expand-Archive -LiteralPath release-assets/Win11Debloat.zip -DestinationPath $unpacked
-        [IO.File]::ReadAllText((Join-Path $unpacked 'Win11Debloat-2026.10.23/Win11Debloat.ps1')) |
-            Should -Match '\$script:Version = "2026\.10\.23"'
+        [IO.File]::ReadAllText((Join-Path $unpacked "Win11Debloat-$ReleaseVersion/Win11Debloat.ps1")) |
+            Should -Match $versionPattern
+    }
+
+    It 'rejects invalid release version <InvalidVersion> before changing the source' -ForEach @(
+        @{ InvalidVersion = '2026.02.30-r2' }
+        @{ InvalidVersion = '2026.10.23-r0' }
+        @{ InvalidVersion = '2026.10.23-r' }
+        @{ InvalidVersion = '2026.10.23-r2-extra' }
+    ) {
+        $env:RELEASE_TAG = $InvalidVersion
+        { & $workflowBlocks[0] } | Should -Throw
+        [IO.File]::ReadAllText((Join-Path $checkoutPath 'Win11Debloat.ps1')) | Should -Match '2026\.08\.24'
     }
 
     It 'does not commit or push a release when tests fail' {

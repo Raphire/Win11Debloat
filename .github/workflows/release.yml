@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'New release version and tag (YYYY.MM.DD)'
+        description: 'New release version and tag (YYYY.MM.DD or YYYY.MM.DD-rN)'
         required: true
         type: string
 
@@ -36,8 +36,8 @@ jobs:
         shell: powershell
         run: |
           $ErrorActionPreference = 'Stop'
-          if ($env:RELEASE_TAG -notmatch '^\d{4}\.\d{2}\.\d{2}$') { throw 'Expected a YYYY.MM.DD tag.' }
-          $null = [datetime]::ParseExact($env:RELEASE_TAG, 'yyyy.MM.dd', [cultureinfo]::InvariantCulture)
+          if ($env:RELEASE_TAG -notmatch '^\d{4}\.\d{2}\.\d{2}(?:-r[1-9]\d*)?$') { throw 'Expected a YYYY.MM.DD tag with an optional -rN revision suffix (positive integer).' }
+          $null = [datetime]::ParseExact($env:RELEASE_TAG.Substring(0, 10), 'yyyy.MM.dd', [cultureinfo]::InvariantCulture)
           gh auth setup-git
           if ($LASTEXITCODE -ne 0) { throw 'Unable to configure Git authentication.' }
           $existingTag = git ls-remote --tags origin "refs/tags/$env:RELEASE_TAG"

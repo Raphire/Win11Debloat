@@ -1,0 +1,103 @@
+BeforeAll {
+    $repositoryRoot = Split-Path -Parent $PSScriptRoot
+    $workflow = Get-Content -LiteralPath (Join-Path $repositoryRoot '.github/workflows/release.yml') -Raw
+    $workflowBlocks = @([regex]::Matches($workflow, '(?m)^        run: \|\r?\n(?<body>(?:          [^\r\n]*(?:\r?\n|$))+)') | ForEach-Object {
+        [scriptblock]::Create(($_.Groups['body'].Value -replace '(?m)^          ', ''))
+    })
+}
+
+Describe 'Release workflow version commit' {
+    BeforeEach {
+        $locationPushed = $false
+        $originalTag = $env:RELEASE_TAG
+        $originalSummary = $env:GITHUB_STEP_SUMMARY
+        $testRoot = Join-Path $TestDrive ([guid]::NewGuid().ToString('N'))
+        $checkoutPath = Join-Path $testRoot 'checkout'
+        $remotePath = Join-Path $testRoot 'origin.git'
+        New-Item -ItemType Directory -Path (Join-Path $checkoutPath 'Scripts') -Force | Out-Null
+        git init --bare --quiet $remotePath
+        git init --quiet --initial-branch master $checkoutPath
+        git -C $checkoutPath config user.name 'Release test'
+        git -C $checkoutPath config user.email 'release-test@example.invalid'
+        git -C $checkoutPath config commit.gpgsign false
+        git -C $checkoutPath config tag.gpgsign false
+        git -C $checkoutPath config core.autocrlf false
+        [IO.File]::WriteAllText((Join-Path $checkoutPath 'Win11Debloat.ps1'), '$script:Version = "2026.08.24"')
+        foreach ($name in 'Build-Release.ps1', 'Get.ps1') {
+            Copy-Item -LiteralPath (Join-Path $repositoryRoot "Scripts/$name") -Destination (Join-Path $checkoutPath "Scripts/$name")
+        }
+        [IO.File]::WriteAllText((Join-Path $checkoutPath 'Scripts/Run-Tests.ps1'), @'
+param([switch]$Bootstrap)
+$text = [IO.File]::ReadAllText((Join-Path $PSScriptRoot '../Win11Debloat.ps1'))
+if ($text -notmatch [regex]::Escape($env:RELEASE_TAG)) { throw 'Tests did not see the updated version.' }
+$global:LASTEXITCODE = 0
+'@)
+        git -C $checkoutPath add .
+        git -C $checkoutPath commit --quiet -m initial
+        git -C $checkoutPath remote add origin $remotePath
+        git -C $checkoutPath push --quiet origin master
+        if ($LASTEXITCODE -ne 0) { throw 'Unable to prepare isolated Git fixture.' }
+        $initialCommit = git -C $checkoutPath rev-parse HEAD
+        $env:RELEASE_TAG = '2026.10.23'
+        $env:GITHUB_STEP_SUMMARY = Join-Path $testRoot 'summary.txt'
+        $script:uploadedFiles = @()
+
+        # Real local Git commits/pushes; all GitHub operations stay inside this fixture.
+        function gh {
+            $global:LASTEXITCODE = 0
+            if ($args[0] -eq 'auth') { return }
+            if ($args[1] -eq 'create') { return }
+            if ($args[1] -eq 'view') { return '{"isDraft":true}' }
+            if ($args[1] -eq 'upload') {
+                $script:uploadedFiles = @($args | Select-Object -Skip 3)
+                foreach ($file in $script:uploadedFiles) {
+                    if (-not (Test-Path -LiteralPath $file)) { throw "Missing upload: $file" }
+                }
+                return
+            }
+            throw 'Unexpected GitHub CLI operation.'
+        }
+        function curl.exe {
+            $outputIndex = [array]::IndexOf($args, '--output') + 1
+            $commit = ($args[-1] -split '/')[-1]
+            git archive --format=zip --prefix=tagged-source/ -o $args[$outputIndex] $commit
+            if ($LASTEXITCODE -ne 0) { throw 'Unable to prepare mock source download.' }
+        }
+        Push-Location $checkoutPath
+        $locationPushed = $true
+    }
+
+    AfterEach {
+        if ($locationPushed) { Pop-Location }
+        $env:RELEASE_TAG = $originalTag
+        $env:GITHUB_STEP_SUMMARY = $originalSummary
+    }
+
+    It 'commits the source version before tagging and packages that same commit' {
+        foreach ($block in $workflowBlocks) { & $block }
+        $releaseCommit = git rev-parse HEAD
+        $releaseCommit | Should -Not -Be $initialCommit
+        (git --git-dir $remotePath rev-parse refs/heads/master) | Should -Be $releaseCommit
+        (git --git-dir $remotePath rev-parse "refs/tags/$env:RELEASE_TAG") | Should -Be $releaseCommit
+        (git show HEAD:Win11Debloat.ps1) | Should -Match '\$script:Version = "2026\.10\.23"'
+        $script:uploadedFiles | Should -HaveCount 3
+        $unpacked = Join-Path $testRoot 'unpacked'
+        Expand-Archive -LiteralPath release-assets/Win11Debloat.zip -DestinationPath $unpacked
+        [IO.File]::ReadAllText((Join-Path $unpacked 'Win11Debloat-2026.10.23/Win11Debloat.ps1')) |
+            Should -Match '\$script:Version = "2026\.10\.23"'
+    }
+
+    It 'does not commit or push a release when tests fail' {
+        [IO.File]::WriteAllText((Join-Path $checkoutPath 'Scripts/Run-Tests.ps1'), 'exit 1')
+        { foreach ($block in $workflowBlocks) { & $block } } | Should -Throw '*Release tests failed*'
+        (git --git-dir $remotePath rev-parse refs/heads/master) | Should -Be $initialCommit
+        (git ls-remote --tags origin "refs/tags/$env:RELEASE_TAG") | Should -BeNullOrEmpty
+    }
+
+    It 'rejects an existing tag before modifying the source version' {
+        git tag $env:RELEASE_TAG
+        git push --quiet origin "refs/tags/$env:RELEASE_TAG"
+        { & $workflowBlocks[0] } | Should -Throw '*tag already exists*'
+        [IO.File]::ReadAllText((Join-Path $checkoutPath 'Win11Debloat.ps1')) | Should -Match '2026\.08\.24'
+    }
+}

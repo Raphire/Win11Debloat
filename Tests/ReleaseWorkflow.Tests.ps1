@@ -32,7 +32,6 @@ Describe 'Release workflow version commit' {
 param([switch]$Bootstrap)
 $text = [IO.File]::ReadAllText((Join-Path $PSScriptRoot '../Win11Debloat.ps1'))
 if ($text -notmatch [regex]::Escape($env:RELEASE_TAG)) { throw 'Tests did not see the updated version.' }
-$global:LASTEXITCODE = 0
 '@)
         git -C $checkoutPath add .
         git -C $checkoutPath commit --quiet -m initial
@@ -101,6 +100,9 @@ $global:LASTEXITCODE = 0
         (git --git-dir $remotePath rev-parse "refs/tags/$env:RELEASE_TAG") | Should -Be $releaseCommit
         (git show HEAD:Win11Debloat.ps1) | Should -Match '\$script:Version = "2026\.10\.23"'
         $script:uploadedFiles | Should -HaveCount 3
+        $summaryBytes = [IO.File]::ReadAllBytes($env:GITHUB_STEP_SUMMARY)
+        $summaryBytes[0] | Should -Be ([byte][char]'P')
+        $summaryBytes | Should -Not -Contain 0
         $unpacked = Join-Path $testRoot 'unpacked'
         Expand-Archive -LiteralPath release-assets/Win11Debloat.zip -DestinationPath $unpacked
         [IO.File]::ReadAllText((Join-Path $unpacked 'Win11Debloat-2026.10.23/Win11Debloat.ps1')) |
@@ -112,6 +114,13 @@ $global:LASTEXITCODE = 0
         { foreach ($block in $workflowBlocks) { & $block } } | Should -Throw '*Release tests failed*'
         (git --git-dir $remotePath rev-parse refs/heads/master) | Should -Be $initialCommit
         (git ls-remote --tags origin "refs/tags/$env:RELEASE_TAG") | Should -BeNullOrEmpty
+    }
+
+    It 'clears a stale native exit code before running successful tests' {
+        & $workflowBlocks[0]
+        $global:LASTEXITCODE = 7
+        { & $workflowBlocks[1] } | Should -Not -Throw
+        $LASTEXITCODE | Should -Be 0
     }
 
     It 'rejects an existing tag before modifying the source version' {

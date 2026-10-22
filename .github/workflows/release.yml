@@ -53,6 +53,7 @@ jobs:
       - name: Test the release source
         shell: powershell
         run: |
+          $global:LASTEXITCODE = 0
           ./Scripts/Run-Tests.ps1 -Bootstrap
           if ($LASTEXITCODE -ne 0) { throw 'Release tests failed.' }
 
@@ -107,4 +108,4 @@ jobs:
           if (-not $release.isDraft) { throw 'Release was published before preparation finished.' }
           gh release upload $env:RELEASE_TAG release-assets/Win11Debloat.zip release-assets/SHA256SUMS release-assets/Get.ps1
           if ($LASTEXITCODE -ne 0) { throw 'Upload failed. Finish the draft manually, or remove the unpublished draft and its tag before retrying.' }
-          "Prepared $env:RELEASE_TAG. Review its three assets, then publish the draft release." >> $env:GITHUB_STEP_SUMMARY
+          "Prepared $env:RELEASE_TAG. Review its three assets, then publish the draft release." | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding ascii

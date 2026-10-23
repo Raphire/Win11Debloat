@@ -158,7 +158,7 @@ Describe 'Launcher archive verification flow' {
         $state.SumsText = 'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad  Win11Debloat.zip'
         $ErrorActionPreference = 'Continue'
 
-        { & $getScriptPath *> $null } | Should -Throw '*reached extraction*'
+        & $getScriptPath *> $null
 
         Should -Invoke Invoke-RestMethod -Times 1 -Exactly -ParameterFilter { $Uri -eq $archiveUrl }
         Should -Invoke Expand-Archive -Times 1 -Exactly
@@ -168,7 +168,7 @@ Describe 'Launcher archive verification flow' {
         $state.Release.assets = @($state.Release.assets | Where-Object { $_.name -ne 'SHA256SUMS' })
         $ErrorActionPreference = 'Continue'
 
-        { & $getScriptPath *> $null } | Should -Throw '*reached extraction*'
+        & $getScriptPath *> $null
 
         Should -Invoke Invoke-RestMethod -Times 1 -Exactly -ParameterFilter { $Uri -eq $zipballUrl }
         Should -Invoke Invoke-RestMethod -Times 0 -Exactly -ParameterFilter { $Uri -eq $checksumsUrl -or $Uri -eq $archiveUrl }
@@ -261,5 +261,51 @@ Describe 'Launcher work folder' {
         & $getScriptPath *> $null
 
         Test-Path -LiteralPath (Join-Path $legacyBackups 'old-backup.json') | Should -BeTrue
+    }
+}
+
+Describe 'Launcher when unpacking fails' {
+    BeforeAll {
+        $getScriptPath = Join-Path $PSScriptRoot '..\Scripts\Get.ps1'
+    }
+
+    BeforeEach {
+        $originalTemp = $env:TEMP
+        $env:TEMP = $TestDrive
+
+        Mock Clear-Host {}
+        Mock Read-Host {}
+        Mock Start-Process { throw 'The launcher must not start the script in these tests.' }
+        Mock Invoke-RestMethod {
+            switch -Regex ([string]$Uri) {
+                'releases/latest$' { return [pscustomobject]@{ zipball_url = 'https://example.invalid/zipball'; assets = @() } }
+                default { [System.IO.File]::WriteAllBytes($OutFile, [byte[]](1, 2, 3)) }
+            }
+        }
+        # Leaves a partly unpacked folder behind, then fails like a damaged archive or a blocked file would
+        Mock Expand-Archive {
+            New-Item -ItemType Directory -Path $DestinationPath -Force | Out-Null
+            Set-Content -LiteralPath (Join-Path $DestinationPath 'partial.txt') -Value 'partial'
+            throw 'The archive is damaged.'
+        }
+    }
+
+    AfterEach {
+        $env:TEMP = $originalTemp
+    }
+
+    It 'removes the archive and the partly unpacked folder and exits with 1 when <Case>' -ForEach @(
+        @{ Case = 'errors are non-terminating'; Preference = 'Continue' }
+        @{ Case = 'the caller stops on errors'; Preference = 'Stop' }
+    ) {
+        $global:LASTEXITCODE = 0
+        $ErrorActionPreference = $Preference
+
+        & $getScriptPath *> $null
+
+        $global:LASTEXITCODE | Should -Be 1
+        @(Get-ChildItem -LiteralPath $TestDrive -Filter 'win11debloat-*.zip') | Should -HaveCount 0
+        @(Get-ChildItem -LiteralPath $TestDrive -Directory -Filter 'Win11Debloat-*') | Should -HaveCount 0
+        Should -Invoke Start-Process -Times 0 -Exactly
     }
 }

@@ -198,7 +198,19 @@ Write-Output ""
 Write-Output "> Unpacking..."
 
 # Unzip archive to Win11Debloat folder
-Expand-Archive $tempArchivePath $tempWorkPath
+try {
+    Expand-Archive $tempArchivePath $tempWorkPath -ErrorAction Stop
+}
+catch {
+    # Do not leave the archive and a partly unpacked folder of this run behind
+    Remove-Item -Path $tempArchivePath, $tempWorkPath -Recurse -Force -ErrorAction SilentlyContinue
+    Write-Host "Unable to unpack the downloaded Win11Debloat archive." -ForegroundColor Red
+    Write-Error -ErrorRecord $_ -ErrorAction Continue
+    Write-Output ""
+    Write-Output "Press enter to exit..."
+    Read-Host | Out-Null
+    Exit 1
+}
 
 # Remove archive
 Remove-Item $tempArchivePath

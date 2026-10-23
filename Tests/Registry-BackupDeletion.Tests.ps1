@@ -497,7 +497,8 @@ Describe 'Legacy absent-key backup compatibility' {
         Should -Invoke Get-RegistryBackupCapturePlans -Times 1 -Exactly
     }
 
-    It 'rejects an absent value-only key containing subkeys' {
+    It 'skips an unknown child and its emptied absent parent without requesting deletion' {
+        Mock Write-Warning {}
         $path = 'HKEY_USERS\Default\Control Panel\Desktop'
         $backup = [PSCustomObject]@{
             Version = '1.0'; BackupType = 'RegistryState'; Target = 'DefaultUserProfile'
@@ -508,8 +509,11 @@ Describe 'Legacy absent-key backup compatibility' {
             })
         }
 
-        { ConvertTo-NormalizedRegistryBackup -Backup $backup } | Should -Throw '*Validation failed*'
-        Should -Invoke Write-Error -Times 1 -Exactly -ParameterFilter { $Message -like '*unauthorized registry key deletion*' }
+        $normalized = ConvertTo-NormalizedRegistryBackup -Backup $backup
+
+        $normalized.RegistryKeys | Should -BeNullOrEmpty
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -eq "Skipping unknown backup registry key '$path\Child'." }
+        Should -Invoke Write-Error -Times 0 -Exactly
     }
 }
 
@@ -715,17 +719,35 @@ Describe 'Executable registry restore confirmation' {
         Should -Invoke Invoke-WithLoadedRestoreHive -Times 0 -Exactly
     }
 
-    It 'does not permit overriding <Case>' -ForEach @(
+    It 'skips <Case> with a warning and never restores it or asks for confirmation' -ForEach @(
         @{ Case = 'an unauthorized path' }
         @{ Case = 'an unauthorized value name' }
+    ) {
+        Mock Write-Warning {}
+        $backup = New-ExecutableTestBackup
+        if ($Case -eq 'an unauthorized path') {
+            $backup.RegistryKeys[0].Path = 'HKEY_LOCAL_MACHINE\Software\Unrelated'
+        }
+        else {
+            $backup.RegistryKeys[0].Values[0].Name = 'Unrelated'
+        }
+
+        $result = Restore-RegistryBackupState -Backup $backup -ConfirmUntrustedValues { throw 'Confirmation must not be reached' }
+
+        $result.Result | Should -BeTrue
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -like 'Skipping unknown backup registry value *Unrelated*' }
+        Should -Invoke Write-Error -Times 0 -Exactly
+        Should -Invoke Restore-RegistryKeySnapshot -Times 0 -Exactly
+        Should -Invoke Invoke-WithLoadedRestoreHive -Times 1 -Exactly -ParameterFilter { @($ArgumentObject.RegistryKeys).Count -eq 0 }
+    }
+
+    It 'does not permit overriding <Case>' -ForEach @(
         @{ Case = 'an unauthorized tree deletion' }
         @{ Case = 'an invalid kind' }
         @{ Case = 'a misplaced child' }
     ) {
         $backup = New-ExecutableTestBackup
         switch ($Case) {
-            'an unauthorized path' { $backup.RegistryKeys[0].Path = 'HKEY_LOCAL_MACHINE\Software\Unrelated' }
-            'an unauthorized value name' { $backup.RegistryKeys[0].Values[0].Name = 'Unrelated' }
             'an unauthorized tree deletion' { $backup.RegistryKeys[0].Exists = $false }
             'an invalid kind' { $backup.RegistryKeys[0].Values[0].Kind = '99' }
             'a misplaced child' { $backup.RegistryKeys[0].SubKeys = (New-ExecutableTestBackup -Path 'HKEY_CLASSES_ROOT\ms-gamebarservices\shell\open\command').RegistryKeys }

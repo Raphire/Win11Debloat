@@ -1,6 +1,6 @@
 BeforeAll {
     $repositoryRoot = Split-Path -Parent $PSScriptRoot
-    $gitExecutable = (Get-Command git -CommandType Application).Source
+    $gitExecutable = (Get-Command git -CommandType Application | Select-Object -First 1).Source
     $workflow = Get-Content -LiteralPath (Join-Path $repositoryRoot '.github/workflows/release.yml') -Raw
     $workflowBlocks = @([regex]::Matches($workflow, '(?m)^        run: \|\r?\n(?<body>(?:          [^\r\n]*(?:\r?\n|$))+)') | ForEach-Object {
         [scriptblock]::Create(($_.Groups['body'].Value -replace '(?m)^          ', ''))

@@ -230,13 +230,6 @@
       "UndoLabel": "Disable dark theme for system and apps",
       "ApplyUndoText": "Disabling dark mode for system and apps"
     },
-    "DisableDragTray": {
-      "Label": "Disable 'Drag Tray' for sharing & moving files",
-      "ToolTip": "The Drag Tray is a new feature for sharing & moving files in Windows 11, it appears at the top of the screen when dragging files.",
-      "ApplyText": "Disabling Drag Tray",
-      "UndoLabel": "Enable 'Drag Tray' for sharing & moving files",
-      "ApplyUndoText": "Enabling Drag Tray"
-    },
     "RevertContextMenu": {
       "Label": "Use classic Windows 10 context menu style",
       "ToolTip": "This will restore the classic Windows 10 style context menu, which is normally hidden behind the 'Show more options' entry in the new Windows 11 context menu.",

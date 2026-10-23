@@ -49,10 +49,12 @@ Describe 'Test-RegistryBackupMatchesSelectedFeatures' {
         $script:CapturePlanCalls | Should -Be @($true)
     }
 
-    It 'reports unknown selected features without deriving capture plans' {
+    It 'warns and skips unknown selected features without deriving capture plans' {
+        Mock Write-Warning {}
         $errors = @(Test-RegistryBackupMatchesSelectedFeatures -SelectedFeatureIds @('UnknownFeature') -SelectedUndoFeatureIds @() -Target 'CurrentUser' -RegistryKeys @())
 
-        $errors | Should -Contain "Selected feature 'UnknownFeature' was not found in the current feature catalog."
+        $errors | Should -BeNullOrEmpty
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -like '*UnknownFeature*' }
         $script:CapturePlanCalls | Should -BeNullOrEmpty
     }
 

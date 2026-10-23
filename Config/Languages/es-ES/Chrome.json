@@ -1,4 +1,4 @@
-{
+﻿{
   "TitleBarAppName": "Win11Debloat",
   "MessageBoxOk": "Aceptar",
   "MessageBoxCancel": "Cancelar",
@@ -332,5 +332,12 @@
   "StartMenuWhatIfRemovedDefaultProfile": "[WhatIf] Se ha quitado start2.bin del perfil de usuario predeterminado.",
   "StartMenuRemovedDefaultProfile": "Se ha quitado start2.bin del perfil de usuario predeterminado.",
   "StartMenuRemoveFailedDefaultProfile": "No se ha podido quitar start2.bin del perfil de usuario predeterminado. {0}",
-  "StartMenuNoUserLocationsFound": "No se ha encontrado ninguna ubicación del menú Inicio de usuario."
+  "StartMenuNoUserLocationsFound": "No se ha encontrado ninguna ubicación del menú Inicio de usuario.",
+  "BackupSnapshotInvalidExists": "Error de validación de la copia de seguridad: la instantánea de la clave del Registro «{0}» debe definir Exists como booleano.",
+  "BackupUnexpectedKeyDeletion": "La copia de seguridad contiene una eliminación no autorizada de una clave del Registro: «{0}».",
+  "BackupUnsafeExecutableValue": "La copia de seguridad contiene un comando o valor de carga de DLL no confiable en «{0}». Solo se pueden restaurar valores vacíos o coincidencias exactas con datos de características de confianza.",
+  "BackupExecutableConfirmationRequired": "Restaurar ajustes del Registro de ejecutables no reconocidos requiere confirmación explícita.",
+  "BackupExecutableWarningTitle": "¿Restaurar ajustes de ejecutables no reconocidos?",
+  "BackupExecutableWarningMessage": "Esta copia de seguridad contiene ajustes del Registro de ejecutables que no coinciden con los archivos del script. Esto podría provocar que Windows o las aplicaciones carguen código malicioso.\n\nNo restaure copias de seguridad del Registro obtenidas de fuentes no oficiales. Continúe solo si usted creó esta copia de seguridad y ha revisado los ajustes a continuación.\n\n{0}",
+  "BackupExecutableMismatchDetails": "Ruta: {0}\nNombre del valor: {1}\nTipo: {2}\nDatos: {3}"
 }

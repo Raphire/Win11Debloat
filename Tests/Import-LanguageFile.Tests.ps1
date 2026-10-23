@@ -147,6 +147,25 @@ Describe 'Get-PluralCategory' {
     ) {
         Get-PluralCategory -LanguageCode 'pt-BR' -Count $Count | Should -Be $Expected
     }
+
+    It 'returns <Expected> for a Russian count of <Count>' -ForEach @(
+        @{ Count = 0; Expected = 'many' }
+        @{ Count = 1; Expected = 'one' }
+        @{ Count = 2; Expected = 'few' }
+        @{ Count = 4; Expected = 'few' }
+        @{ Count = 5; Expected = 'many' }
+        @{ Count = 11; Expected = 'many' }
+        @{ Count = 12; Expected = 'many' }
+        @{ Count = 14; Expected = 'many' }
+        @{ Count = 21; Expected = 'one' }
+        @{ Count = 22; Expected = 'few' }
+        @{ Count = 25; Expected = 'many' }
+        @{ Count = 101; Expected = 'one' }
+        @{ Count = 111; Expected = 'many' }
+        @{ Count = 122; Expected = 'few' }
+    ) {
+        Get-PluralCategory -LanguageCode 'ru-RU' -Count $Count | Should -Be $Expected
+    }
 }
 
 Describe 'Get-Translation' {

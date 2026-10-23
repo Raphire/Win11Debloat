@@ -17,8 +17,8 @@
       "ApplyText": "Quitando las aplicaciones de HP"
     },
     "CreateRestorePoint": {
-      "Label": "Crear un punto de restauración del sistema",
-      "ApplyText": "Creando un punto de restauración del sistema"
+      "Label": "Crear un punto de restauración",
+      "ApplyText": "Creando un punto de restauración"
     },
     "DisableTelemetry": {
       "Label": "Deshabilitar la telemetría, el seguimiento y los anuncios personalizados",
@@ -82,7 +82,7 @@
       "ApplyUndoText": "Mostrando el acceso directo de escritorio «Más información sobre esta imagen» de la imagen destacada de Windows"
     },
     "DisableEdgeAds": {
-      "Label": "Deshabilitar los anuncios, las sugerencias y el suministro de noticias en Edge",
+      "Label": "Deshabilitar los anuncios, las sugerencias y la fuente de noticias en Edge",
       "ToolTip": "Desactivará varias distracciones de Microsoft Edge, como los anuncios, las sugerencias y la fuente de noticias de MSN. Esta función usa directivas, que bloquearán determinados ajustes.",
       "ApplyText": "Deshabilitando los anuncios, las sugerencias y la fuente de noticias de MSN en Microsoft Edge",
       "UndoLabel": "Habilitar los anuncios, las sugerencias y la fuente de noticias en Edge",
@@ -252,7 +252,7 @@
       "ApplyUndoText": "Activando la mejora de precisión del puntero"
     },
     "DisableStickyKeys": {
-      "Label": "Deshabilitar el método abreviado de teclado de Teclas de acceso rápido (Mayús 5 veces)",
+      "Label": "Deshabilitar el atajo de teclado de Teclas de acceso rápido (Mayús 5 veces)",
       "ToolTip": "Impedirá que aparezca el cuadro de diálogo de Teclas de acceso rápido al pulsar la tecla Mayús cinco veces seguidas.",
       "ApplyText": "Deshabilitando el método abreviado de teclado de Teclas de acceso rápido",
       "UndoLabel": "Habilitar el método abreviado de teclado de Teclas de acceso rápido (Mayús 5 veces)",
@@ -266,11 +266,11 @@
       "ApplyUndoText": "Habilitando el ajuste de ventanas"
     },
     "DisableSnapAssist": {
-      "Label": "Deshabilitar la muestra de sugerencias de aplicaciones al ajustar ventanas",
+      "Label": "Dejar de mostrar sugerencias de aplicaciones al ajustar ventanas",
       "ToolTip": "Desactivará las sugerencias de aplicaciones al ajustar ventanas a los lados o las esquinas de la pantalla.",
-      "ApplyText": "Deshabilitando las sugerencias de Asistente de ajuste",
-      "UndoLabel": "Habilitar la muestra de sugerencias de aplicaciones al ajustar ventanas",
-      "ApplyUndoText": "Habilitando las sugerencias de Asistente de ajuste"
+      "ApplyText": "Deshabilitando las sugerencias del Asistente de ajuste",
+      "UndoLabel": "Mostrar sugerencias de aplicaciones al ajustar ventanas",
+      "ApplyUndoText": "Habilitando las sugerencias del Asistente de ajuste"
     },
     "DisableSnapLayouts": {
       "Label": "Ocultar el panel flotante de diseños de ajuste en la parte superior de la pantalla y en el botón Maximizar",
@@ -281,19 +281,19 @@
     },
     "HideTabsInAltTab": {
       "Label": "Ocultar las pestañas de las aplicaciones al ajustar ventanas o pulsar Alt+Tab",
-      "ApplyText": "Deshabilitar la muestra de pestañas de las aplicaciones al ajustar ventanas o pulsar Alt+Tab"
+      "ApplyText": "Dejando de mostrar las pestañas de las aplicaciones al ajustar ventanas o pulsar Alt+Tab"
     },
     "Show3TabsInAltTab": {
       "Label": "Mostrar 3 pestañas de las aplicaciones al ajustar ventanas o pulsar Alt+Tab",
-      "ApplyText": "Habilitar la muestra de 3 pestañas de las aplicaciones al ajustar ventanas o pulsar Alt+Tab"
+      "ApplyText": "Mostrando 3 pestañas de las aplicaciones al ajustar ventanas o pulsar Alt+Tab"
     },
     "Show5TabsInAltTab": {
       "Label": "Mostrar 5 pestañas de las aplicaciones al ajustar ventanas o pulsar Alt+Tab",
-      "ApplyText": "Habilitar la muestra de 5 pestañas de las aplicaciones al ajustar ventanas o pulsar Alt+Tab"
+      "ApplyText": "Mostrando 5 pestañas de las aplicaciones al ajustar ventanas o pulsar Alt+Tab"
     },
     "Show20TabsInAltTab": {
       "Label": "Mostrar 20 pestañas de las aplicaciones al ajustar ventanas o pulsar Alt+Tab",
-      "ApplyText": "Habilitar la muestra de 20 pestañas de las aplicaciones al ajustar ventanas o pulsar Alt+Tab"
+      "ApplyText": "Mostrando 20 pestañas de las aplicaciones al ajustar ventanas o pulsar Alt+Tab"
     },
     "TaskbarAlignLeft": {
       "Label": "Alinear la barra de tareas a la izquierda",
@@ -558,9 +558,9 @@
       "ApplyUndoText": "Mostrando la carpeta «Música» en el panel de navegación del Explorador de archivos"
     },
     "AddFoldersToThisPC": {
-      "Label": "Volver a agregar las carpetas comunes a la página «Este equipo»",
-      "ToolTip": "Este ajuste volverá a agregar carpetas comunes como Escritorio, Documentos, Descargas, Música, Imágenes y Vídeos a la página «Este equipo» del Explorador de archivos.",
-      "ApplyText": "Volviendo a agregar todas las carpetas comunes (Escritorio, Descargas, etc.) a «Este equipo» en el Explorador de archivos",
+      "Label": "Volver a añadir las carpetas comunes a la página «Este equipo»",
+      "ToolTip": "Este ajuste volverá a añadir carpetas comunes como Escritorio, Documentos, Descargas, Música, Imágenes y Vídeos a la página «Este equipo» del Explorador de archivos.",
+      "ApplyText": "Volviendo a añadir todas las carpetas comunes (Escritorio, Descargas, etc.) a «Este equipo» en el Explorador de archivos",
       "UndoLabel": "Quitar las carpetas comunes de la página «Este equipo»",
       "ApplyUndoText": "Quitando todas las carpetas comunes (Escritorio, Descargas, etc.) de «Este equipo» en el Explorador de archivos"
     },
@@ -594,7 +594,7 @@
     },
     "EnableWindowsSandbox": {
       "Label": "Habilitar Windows Sandbox",
-      "ToolTip": "Windows Sandbox es un entorno de escritorio ligero para ejecutar aplicaciones de forma segura y aislada. El software instalado dentro del entorno de Windows Sandbox permanece en el espacio aislado y se ejecuta de forma independiente del equipo host. Solo se admite en las ediciones Windows 11 Pro, Workstation y Enterprise.",
+      "ToolTip": "Windows Sandbox es un entorno de escritorio ligero para ejecutar aplicaciones de forma segura y aislada. El software instalado dentro del entorno de Windows Sandbox permanece en el espacio aislado y se ejecuta de forma independiente del equipo host. Solo se admite en las ediciones Windows 11 Pro, Workstation, Enterprise y Education.",
       "ApplyText": "Habilitando Windows Sandbox",
       "UndoLabel": "Deshabilitar Windows Sandbox",
       "ApplyUndoText": "Deshabilitando Windows Sandbox"

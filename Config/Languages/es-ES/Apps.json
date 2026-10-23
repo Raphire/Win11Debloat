@@ -25,7 +25,7 @@
   },
   "Microsoft.BingNews": {
     "FriendlyName": "Microsoft Noticias",
-    "Description": "Aplicación de agregación de noticias. Reúne noticias de última hora, fuentes de artículos personalizadas y acontecimientos de actualidad de todo el mundo"
+    "Description": "Agregador de noticias. Reúne noticias de última hora, fuentes de artículos personalizadas y acontecimientos de actualidad de todo el mundo"
   },
   "Microsoft.BingSports": {
     "FriendlyName": "Bing Deportes",
@@ -80,7 +80,7 @@
     "Description": "Cliente del servicio de análisis empresarial"
   },
   "Microsoft.MicrosoftSolitaireCollection": {
-    "FriendlyName": "Solitario",
+    "FriendlyName": "Colección Solitario",
     "Description": "Colección de juegos de cartas de solitario"
   },
   "Microsoft.MicrosoftStickyNotes": {
@@ -108,7 +108,7 @@
     "Description": "Aplicación de administración de operadores móviles (reemplazada por Planes móviles)"
   },
   "Microsoft.Print3D": {
-    "FriendlyName": "Imprimir en 3D",
+    "FriendlyName": "Print 3D",
     "Description": "Software de preparación para la impresión 3D"
   },
   "Microsoft.PowerAutomateDesktop": {
@@ -121,7 +121,7 @@
   },
   "Microsoft.Todos": {
     "FriendlyName": "Microsoft To Do",
-    "Description": "Aplicación de listas de tareas y administración de tareas"
+    "Description": "Aplicación de listas y gestión de tareas"
   },
   "Microsoft.Windows.DevHome": {
     "FriendlyName": "Dev Home",
@@ -149,10 +149,10 @@
   },
   "Microsoft.ZuneVideo": {
     "FriendlyName": "Películas y TV",
-    "Description": "Aplicación para alquilar, comprar y reproducir contenido de vídeo (ya no disponible)"
+    "Description": "Aplicación para reproducir contenido de vídeo comprado (los nuevos alquileres y compras ya no están disponibles)"
   },
   "MicrosoftCorporationII.MicrosoftFamily": {
-    "FriendlyName": "Seguridad familiar",
+    "FriendlyName": "Seguridad familiar de Microsoft",
     "Description": "Aplicación para administrar el tiempo de pantalla familiar, los filtros de contenido y los informes de actividad"
   },
   "MicrosoftCorporationII.QuickAssist": {
@@ -281,7 +281,7 @@
   },
   "OneCalendar": {
     "FriendlyName": "One Calendar",
-    "Description": "Aplicación de agregación de calendarios"
+    "Description": "Aplicación que reúne varios calendarios"
   },
   "PandoraMediaInc": {
     "FriendlyName": "Pandora",
@@ -344,7 +344,7 @@
     "Description": "Necesaria para algunos solucionadores de problemas y para las interacciones de soporte de Windows 11"
   },
   "Microsoft.M365Companions": {
-    "FriendlyName": "Aplicaciones complementarias de Microsoft 365",
+    "FriendlyName": "Microsoft 365 Companions",
     "Description": "Miniaplicaciones Calendario, Archivos y Contactos de Microsoft 365 (empresas); es posible que se reinstalen si el administrador de Microsoft 365 lo habilita"
   },
   "Microsoft.MSPaint": {
@@ -365,7 +365,7 @@
   },
   "Microsoft.People": {
     "FriendlyName": "Contactos",
-    "Description": "Necesaria para Correo y Calendario, que la incluye (en desuso)"
+    "Description": "Necesaria para Correo y Calendario, que la incluye (descatalogada)"
   },
   "Microsoft.RemoteDesktop": {
     "FriendlyName": "Escritorio remoto",

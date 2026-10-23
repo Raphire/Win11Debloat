@@ -309,3 +309,165 @@ Describe 'Launcher when unpacking fails' {
         Should -Invoke Start-Process -Times 0 -Exactly
     }
 }
+
+Describe 'Launcher when the download fails' {
+    BeforeAll {
+        $getScriptPath = Join-Path $PSScriptRoot '..\Scripts\Get.ps1'
+        $archiveUrl = 'https://example.invalid/download/Win11Debloat.zip'
+        $checksumsUrl = 'https://example.invalid/download/SHA256SUMS'
+    }
+
+    BeforeEach {
+        $originalTemp = $env:TEMP
+        $env:TEMP = $TestDrive
+        $state = @{ FailOn = '' }
+
+        Mock Clear-Host {}
+        Mock Read-Host {}
+        Mock Start-Process { throw 'The launcher must not start the script in these tests.' }
+        Mock Expand-Archive { throw 'The launcher must not unpack in these tests.' }
+        # Writes a partial file and then fails, like a transfer that breaks halfway
+        Mock Invoke-RestMethod {
+            switch -Regex ([string]$Uri) {
+                'releases/latest$' {
+                    return [pscustomobject]@{
+                        zipball_url = 'https://example.invalid/zipball'
+                        assets      = @(
+                            [pscustomobject]@{ name = 'Win11Debloat.zip'; browser_download_url = $archiveUrl }
+                            [pscustomobject]@{ name = 'SHA256SUMS'; browser_download_url = $checksumsUrl }
+                        )
+                    }
+                }
+                default {
+                    [System.IO.File]::WriteAllBytes($OutFile, [byte[]](1, 2, 3))
+                    if ([string]$Uri -like "*$($state.FailOn)") { throw 'The connection was closed.' }
+                    if ([string]$Uri -like '*SHA256SUMS') { [System.IO.File]::WriteAllText($OutFile, ('a' * 64) + '  Win11Debloat.zip') }
+                }
+            }
+        }
+    }
+
+    AfterEach {
+        $env:TEMP = $originalTemp
+    }
+
+    It 'removes the files of this run and exits with 1 when the <Case> download fails' -ForEach @(
+        @{ Case = 'archive'; FailOn = 'Win11Debloat.zip' }
+        @{ Case = 'checksum'; FailOn = 'SHA256SUMS' }
+    ) {
+        $state.FailOn = $FailOn
+        $global:LASTEXITCODE = 0
+        $ErrorActionPreference = 'Continue'
+
+        & $getScriptPath *> $null
+
+        $global:LASTEXITCODE | Should -Be 1
+        @(Get-ChildItem -LiteralPath $TestDrive -Filter 'win11debloat-*') | Should -HaveCount 0
+        Should -Invoke Expand-Archive -Times 0 -Exactly
+    }
+}
+
+Describe 'Launcher with a real archive' {
+    # Real Compress-Archive/Expand-Archive and file moves; only the elevated start is mocked, because the
+    # elevation prompt cannot be answered in a test. The mock records what the launcher left for the script.
+    BeforeAll {
+        $getScriptPath = Join-Path $PSScriptRoot '..\Scripts\Get.ps1'
+        $fixtureRoot = Join-Path $TestDrive 'fixture'
+        $top = Join-Path $fixtureRoot 'Raphire-Win11Debloat-0123abc'
+        New-Item -ItemType Directory -Path (Join-Path $top 'Config') -Force | Out-Null
+        Set-Content -LiteralPath (Join-Path $top 'Win11Debloat.ps1') -Value '# stand-in'
+        Set-Content -LiteralPath (Join-Path $top 'Config\Apps.json') -Value '{}'
+        $fixtureZip = Join-Path $TestDrive 'fixture.zip'
+        Compress-Archive -Path $top -DestinationPath $fixtureZip
+    }
+
+    BeforeEach {
+        $originalTemp = $env:TEMP
+        $env:TEMP = Join-Path $TestDrive 'temp'
+        New-Item -ItemType Directory -Path $env:TEMP -Force | Out-Null
+        $state = @{ Launched = $false; ScriptExists = $false; NestedConfigExists = $false; ScriptPath = '' }
+
+        Mock Clear-Host {}
+        Mock Read-Host {}
+        Mock Invoke-RestMethod {
+            switch -Regex ([string]$Uri) {
+                'releases/latest$' { return [pscustomobject]@{ zipball_url = 'https://example.invalid/zipball'; assets = @() } }
+                default { Copy-Item -LiteralPath $fixtureZip -Destination $OutFile }
+            }
+        }
+        Mock Start-Process {
+            $state.Launched = $true
+            if (($ArgumentList -join ' ') -match '-File "([^"]+)"') {
+                $state.ScriptPath = $Matches[1]
+                $state.ScriptExists = Test-Path -LiteralPath $Matches[1]
+                $state.NestedConfigExists = Test-Path -LiteralPath (Join-Path (Split-Path -Parent $Matches[1]) 'Config\Apps.json')
+            }
+            $process = [pscustomobject]@{ ExitCode = 0 }
+            $process | Add-Member -MemberType ScriptMethod -Name WaitForExit -Value { }
+            return $process
+        }
+    }
+
+    AfterEach {
+        $env:TEMP = $originalTemp
+    }
+
+    It 'unpacks for real, starts the script from the unpacked folder and removes everything afterwards' {
+        $global:LASTEXITCODE = 0
+        $ErrorActionPreference = 'Continue'
+
+        & $getScriptPath *> $null
+
+        $state.Launched | Should -BeTrue
+        $state.ScriptPath | Should -Match 'Win11Debloat-[0-9a-f]{32}\\Win11Debloat\.ps1$'
+        $state.ScriptExists | Should -BeTrue
+        $state.NestedConfigExists | Should -BeTrue
+        $global:LASTEXITCODE | Should -Be 0
+        @(Get-ChildItem -LiteralPath $env:TEMP -Force) | Should -HaveCount 0
+    }
+}
+
+Describe 'Launcher when the script cannot be started' {
+    BeforeAll {
+        $getScriptPath = Join-Path $PSScriptRoot '..\Scripts\Get.ps1'
+    }
+
+    BeforeEach {
+        $originalTemp = $env:TEMP
+        $env:TEMP = $TestDrive
+
+        Mock Clear-Host {}
+        Mock Read-Host {}
+        Mock Invoke-RestMethod {
+            switch -Regex ([string]$Uri) {
+                'releases/latest$' { return [pscustomobject]@{ zipball_url = 'https://example.invalid/zipball'; assets = @() } }
+                default { [System.IO.File]::WriteAllBytes($OutFile, [byte[]](1, 2, 3)) }
+            }
+        }
+        Mock Expand-Archive {
+            $top = Join-Path $DestinationPath 'Raphire-Win11Debloat-0123abc'
+            New-Item -ItemType Directory -Path $top -Force | Out-Null
+            Set-Content -LiteralPath (Join-Path $top 'Win11Debloat.ps1') -Value '# stand-in'
+        }
+        # The elevation prompt was declined
+        Mock Start-Process { throw 'The operation was canceled by the user.' }
+    }
+
+    AfterEach {
+        $env:TEMP = $originalTemp
+    }
+
+    It 'removes the folder and exits with 1 when <Case>' -ForEach @(
+        @{ Case = 'errors are non-terminating'; Preference = 'Continue' }
+        @{ Case = 'the caller stops on errors'; Preference = 'Stop' }
+    ) {
+        $global:LASTEXITCODE = 0
+        $ErrorActionPreference = $Preference
+
+        & $getScriptPath *> $null
+
+        $global:LASTEXITCODE | Should -Be 1
+        @(Get-ChildItem -LiteralPath $TestDrive -Directory -Filter 'Win11Debloat-*') | Should -HaveCount 0
+        @(Get-ChildItem -LiteralPath $TestDrive -Filter 'win11debloat-*.zip') | Should -HaveCount 0
+    }
+}

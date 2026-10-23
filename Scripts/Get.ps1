@@ -127,6 +127,7 @@ $tempRootPath = $env:TEMP
 $runId = [guid]::NewGuid().ToString('N')
 $tempWorkPath = Join-Path $tempRootPath "Win11Debloat-$runId"
 $tempArchivePath = Join-Path $tempRootPath "win11debloat-$runId.zip"
+$tempChecksumsPath = Join-Path $tempRootPath "win11debloat-$runId.sha256sums"
 
 # Read the expected SHA-256 of a file from the text of a SHA256SUMS file (lines of "<64 hex digits>  <file name>", as
 # written by sha256sum). Returns $null when the file is not listed.
@@ -163,10 +164,9 @@ try {
         $archiveAsset = @($release.assets | Where-Object { $_.name -ceq $releaseArchiveName }) | Select-Object -First 1
         $checksumsAsset = @($release.assets | Where-Object { $_.name -ceq $releaseChecksumsName }) | Select-Object -First 1
         if ($archiveAsset -and $checksumsAsset) {
-            $checksumsPath = Join-Path $tempRootPath "win11debloat-$runId.sha256sums"
-            Invoke-RestMethod $checksumsAsset.browser_download_url -OutFile $checksumsPath
-            $expectedArchiveHash = Get-ExpectedFileHash ([System.IO.File]::ReadAllText($checksumsPath)) $releaseArchiveName
-            Remove-Item $checksumsPath -Force
+            Invoke-RestMethod $checksumsAsset.browser_download_url -OutFile $tempChecksumsPath
+            $expectedArchiveHash = Get-ExpectedFileHash ([System.IO.File]::ReadAllText($tempChecksumsPath)) $releaseArchiveName
+            Remove-Item $tempChecksumsPath -Force
             if (-not $expectedArchiveHash) {
                 throw "$releaseChecksumsName does not list $releaseArchiveName."
             }
@@ -176,6 +176,8 @@ try {
     Invoke-RestMethod $sourceUri -OutFile $tempArchivePath
 }
 catch {
+    # Do not leave the archive or checksum file of this run behind after a failed download
+    Remove-Item -Path $tempArchivePath, $tempChecksumsPath -Force -ErrorAction SilentlyContinue
     Write-Host "Unable to fetch required files from GitHub. Please check your internet connection and try again." -ForegroundColor Red
     Write-Error -ErrorRecord $_
     Write-Output ""
@@ -271,7 +273,7 @@ try {
 }
 catch {
     $exitCode = 1
-    Write-Error "Failed to start Win11Debloat: $_"
+    Write-Error "Failed to start Win11Debloat: $_" -ErrorAction Continue
 }
 
 # Wait for the process to finish before continuing

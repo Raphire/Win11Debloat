@@ -64,7 +64,7 @@
     "Description": "Приложение для обмена сообщениями, часто интегрируется со Skype (в основном устарело)"
   },
   "Microsoft.Microsoft3DViewer": {
-    "FriendlyName": "3D Viewer",
+    "FriendlyName": "Просмотр 3D-моделей",
     "Description": "Просмотр 3D-моделей (снято с поддержки)"
   },
   "Microsoft.MicrosoftJournal": {
@@ -128,7 +128,7 @@
     "Description": "Панель разработчика и утилита настройки инструментов (снято с поддержки)"
   },
   "Microsoft.WindowsAlarms": {
-    "FriendlyName": "Clock",
+    "FriendlyName": "Часы",
     "Description": "Приложение для будильников, таймеров, секундомера и сеансов сосредоточенности"
   },
   "Microsoft.WindowsFeedbackHub": {
@@ -152,7 +152,7 @@
     "Description": "Приложение для аренды, покупки и просмотра видео (снято с поддержки)"
   },
   "MicrosoftCorporationII.MicrosoftFamily": {
-    "FriendlyName": "Microsoft Family Safety",
+    "FriendlyName": "Безопасность семьи Microsoft",
     "Description": "Приложение для управления экранным временем, фильтрами содержимого и отчётами об активности семьи"
   },
   "MicrosoftCorporationII.QuickAssist": {
@@ -336,7 +336,7 @@
     "Description": "Браузер Windows по умолчанию. ВНИМАНИЕ! Удаление этого приложения также удалит единственный браузер в Песочнице Windows и может повлиять на другие приложения"
   },
   "Microsoft.GamingApp": {
-    "FriendlyName": "Xbox app",
+    "FriendlyName": "Приложение Xbox",
     "Description": "Игровое приложение Xbox для Windows, требуется для установки некоторых игр"
   },
   "Microsoft.GetHelp": {
@@ -368,7 +368,7 @@
     "Description": "Необходимо для приложений «Почта и календарь» и входит в них (работа прекращена)"
   },
   "Microsoft.RemoteDesktop": {
-    "FriendlyName": "Удаленный рабочий стол",
+    "FriendlyName": "Удалённый рабочий стол",
     "Description": "Клиент удалённого рабочего стола"
   },
   "Microsoft.ScreenSketch": {

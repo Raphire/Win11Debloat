@@ -12,15 +12,15 @@
     "Description": "Голосовой помощник Microsoft Cortana (больше не поддерживается)"
   },
   "Microsoft.BingFinance": {
-    "FriendlyName": "Bing Finance",
+    "FriendlyName": "Финансы",
     "Description": "Новости и отслеживание финансов через Bing (больше не поддерживается)"
   },
   "Microsoft.BingFoodAndDrink": {
-    "FriendlyName": "Bing Food And Drink",
+    "FriendlyName": "Еда и напитки",
     "Description": "Рецепты и новости о еде через Bing (больше не поддерживается)"
   },
   "Microsoft.BingHealthAndFitness": {
-    "FriendlyName": "Bing Health And Fitness",
+    "FriendlyName": "Здоровье и фитнес",
     "Description": "Отслеживание здоровья и фитнеса, новости о них через Bing (больше не поддерживается)"
   },
   "Microsoft.BingNews": {
@@ -28,15 +28,15 @@
     "Description": "Агрегатор новостей. Объединяет последние новости, персонализированные ленты статей и мировые события"
   },
   "Microsoft.BingSports": {
-    "FriendlyName": "Bing Sports",
+    "FriendlyName": "Спорт",
     "Description": "Спортивные новости и результаты матчей через Bing (больше не поддерживается)"
   },
   "Microsoft.BingTranslator": {
-    "FriendlyName": "Bing Translator",
+    "FriendlyName": "Переводчик Bing",
     "Description": "Служба перевода через Bing"
   },
   "Microsoft.BingTravel": {
-    "FriendlyName": "Bing Travel",
+    "FriendlyName": "Путешествия",
     "Description": "Планирование поездок и новости о путешествиях через Bing (больше не поддерживается)"
   },
   "Microsoft.BingWeather": {
@@ -336,7 +336,7 @@
     "Description": "Браузер Windows по умолчанию. ВНИМАНИЕ: удаление этого приложения также удалит единственный браузер из Песочницы Windows и может повлиять на работу других приложений"
   },
   "Microsoft.GamingApp": {
-    "FriendlyName": "Xbox app",
+    "FriendlyName": "Приложение Xbox",
     "Description": "Игровое приложение Xbox для Windows, необходимо для установки некоторых игр для ПК"
   },
   "Microsoft.GetHelp": {
@@ -396,7 +396,7 @@
     "Description": "Приложение для работы со встроенными или подключенными камерами"
   },
   "Microsoft.windowscommunicationsapps": {
-    "FriendlyName": "Почта и Календарь",
+    "FriendlyName": "Почта и календарь",
     "Description": "Набор приложений «Почта» и «Календарь» (больше не поддерживается)"
   },
   "Microsoft.WindowsNotepad": {
@@ -436,7 +436,7 @@
     "Description": "Приложение «Связь с телефоном» (подключает телефон Android/iOS к компьютеру)"
   },
   "Microsoft.ZuneMusic": {
-    "FriendlyName": "Медиаплеер",
+    "FriendlyName": "Проигрыватель мультимедиа",
     "Description": "Современный медиаплеер (заменил Музыка Groove, воспроизводит локальные аудио- и видеофайлы)"
   },
   "MicrosoftWindows.CrossDevice": {

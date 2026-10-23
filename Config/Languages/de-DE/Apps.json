@@ -152,7 +152,7 @@
     "Description": "App zum Ausleihen, Kaufen und Abspielen von Videoinhalten (eingestellt)"
   },
   "MicrosoftCorporationII.MicrosoftFamily": {
-    "FriendlyName": "Familien-Sicherheit",
+    "FriendlyName": "Microsoft-Familien-Sicherheit",
     "Description": "App zum Verwalten von Bildschirmzeit, Inhaltsfiltern und Aktivitätsberichten für die Familie"
   },
   "MicrosoftCorporationII.QuickAssist": {
@@ -345,7 +345,7 @@
   },
   "Microsoft.M365Companions": {
     "FriendlyName": "Microsoft 365 Companions",
-    "Description": "Mini-Apps „Kalender“, „Dateien“ und „Personen“ von Microsoft 365 (Business); diese Apps werden möglicherweise erneut installiert, wenn Ihr Microsoft 365-Administrator dies zulässt"
+    "Description": "Mini-Apps „Kalender“, „Dateien“ und „Kontakte“ von Microsoft 365 (Business); diese Apps werden möglicherweise erneut installiert, wenn Ihr Microsoft 365-Administrator dies zulässt"
   },
   "Microsoft.MSPaint": {
     "FriendlyName": "Paint 3D",

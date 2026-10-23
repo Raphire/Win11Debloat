@@ -225,10 +225,10 @@
     },
     "EnableDarkMode": {
       "Label": "Dunkles Design für System und Apps aktivieren",
-      "ToolTip": "Hiermit wird das Design für Apps und System auf den dunklen Modus festgelegt.",
-      "ApplyText": "Dunkler Modus für System und Apps wird aktiviert",
+      "ToolTip": "Hiermit wird das Design für Apps und System auf Dunkel festgelegt.",
+      "ApplyText": "Dunkles Design für System und Apps wird aktiviert",
       "UndoLabel": "Dunkles Design für System und Apps deaktivieren",
-      "ApplyUndoText": "Dunkler Modus für System und Apps wird deaktiviert"
+      "ApplyUndoText": "Dunkles Design für System und Apps wird deaktiviert"
     },
     "DisableDragTray": {
       "Label": "„Ziehbereich“ zum Freigeben und Verschieben von Dateien deaktivieren",
@@ -245,11 +245,11 @@
       "ApplyUndoText": "Kontextmenü im Windows 11-Stil wird wiederhergestellt"
     },
     "DisableMouseAcceleration": {
-      "Label": "Zeigerpräzision verbessern (Mausbeschleunigung) deaktivieren",
+      "Label": "„Zeigerpräzision erhöhen“ (Mausbeschleunigung) deaktivieren",
       "ToolTip": "Hiermit wird die Mausbeschleunigung deaktiviert, die in Windows standardmäßig aktiviert ist. Dadurch wird die Mausbewegung gleichmäßiger und vorhersehbarer.",
-      "ApplyText": "Zeigerpräzision verbessern wird ausgeschaltet",
-      "UndoLabel": "Zeigerpräzision verbessern (Mausbeschleunigung) aktivieren",
-      "ApplyUndoText": "Zeigerpräzision verbessern wird eingeschaltet"
+      "ApplyText": "„Zeigerpräzision erhöhen“ wird ausgeschaltet",
+      "UndoLabel": "„Zeigerpräzision erhöhen“ (Mausbeschleunigung) aktivieren",
+      "ApplyUndoText": "„Zeigerpräzision erhöhen“ wird eingeschaltet"
     },
     "DisableStickyKeys": {
       "Label": "Tastenkombination für Einrastfunktion deaktivieren (5-mal Umschalt)",
@@ -344,11 +344,11 @@
       "ApplyUndoText": "Chat-Symbol wird in der Taskleiste angezeigt"
     },
     "DisableStorageSense": {
-      "Label": "Automatische Datenträgerbereinigung „Speicheroptimierung“ deaktivieren",
+      "Label": "Automatische Speicheroptimierung deaktivieren",
       "ToolTip": "Hiermit wird die Speicheroptimierung deaktiviert, die automatisch Speicherplatz freigibt, indem temporäre Dateien gelöscht, der Papierkorb geleert und Dateien im Ordner „Downloads“ bereinigt werden.",
-      "ApplyText": "Automatische Datenträgerbereinigung „Speicheroptimierung“ wird deaktiviert",
-      "UndoLabel": "Automatische Datenträgerbereinigung „Speicheroptimierung“ aktivieren",
-      "ApplyUndoText": "Automatische Datenträgerbereinigung „Speicheroptimierung“ wird aktiviert"
+      "ApplyText": "Automatische Speicheroptimierung wird deaktiviert",
+      "UndoLabel": "Automatische Speicheroptimierung aktivieren",
+      "ApplyUndoText": "Automatische Speicheroptimierung wird aktiviert"
     },
     "DisableFastStartup": {
       "Label": "Schnellstart deaktivieren",
@@ -507,7 +507,7 @@
     "DisableUpdateASAP": {
       "Label": "Updates nicht sofort nach Verfügbarkeit erhalten",
       "ToolTip": "Hiermit wird verhindert, dass Ihr PC zu den ersten gehört, die neue nicht sicherheitsrelevante Updates erhalten. Ihr PC erhält diese Updates trotzdem irgendwann.",
-      "ApplyText": "Windows erhält Updates nicht mehr sofort nach Verfügbarkeit",
+      "ApplyText": "Windows erhält Updates nicht sofort nach Verfügbarkeit",
       "UndoLabel": "Updates sofort nach Verfügbarkeit zulassen",
       "ApplyUndoText": "Windows erhält Updates sofort nach Verfügbarkeit"
     },
@@ -594,7 +594,7 @@
     },
     "EnableWindowsSandbox": {
       "Label": "Windows-Sandbox aktivieren",
-      "ToolTip": "Die Windows-Sandbox ist eine schlanke Desktopumgebung, in der Anwendungen sicher isoliert ausgeführt werden können. Software, die in der Windows-Sandbox installiert wird, bleibt isoliert und wird getrennt vom Hostcomputer ausgeführt. Wird nur in den Editionen Windows 11 Pro, Workstation und Enterprise unterstützt.",
+      "ToolTip": "Die Windows-Sandbox ist eine schlanke Desktopumgebung, in der Anwendungen sicher isoliert ausgeführt werden können. Software, die in der Windows-Sandbox installiert wird, bleibt isoliert und wird getrennt vom Hostcomputer ausgeführt. Wird nur in den Editionen Windows 11 Pro, Workstation, Enterprise und Education unterstützt.",
       "ApplyText": "Windows-Sandbox wird aktiviert",
       "UndoLabel": "Windows-Sandbox deaktivieren",
       "ApplyUndoText": "Windows-Sandbox wird deaktiviert"

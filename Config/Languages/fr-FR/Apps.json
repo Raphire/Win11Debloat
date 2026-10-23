@@ -12,7 +12,7 @@
     "Description": "Assistant vocal Microsoft Cortana (abandonné)"
   },
   "Microsoft.BingFinance": {
-    "FriendlyName": "Bing Finance",
+    "FriendlyName": "Bing Finances",
     "Description": "Actualités et suivi financiers via Bing (abandonné)"
   },
   "Microsoft.BingFoodAndDrink": {
@@ -333,7 +333,7 @@
   },
   "Microsoft.Edge": {
     "FriendlyName": "Microsoft Edge",
-    "Description": "Navigateur par défaut de Windows. AVERTISSEMENT : la suppression de cette application retire aussi le seul navigateur de Windows Sandbox et pourrait affecter d'autres applications"
+    "Description": "Navigateur par défaut de Windows. AVERTISSEMENT : la suppression de cette application retire aussi le seul navigateur de Windows Sandbox et pourrait affecter d'autres applications"
   },
   "Microsoft.GamingApp": {
     "FriendlyName": "Application Xbox",
@@ -345,7 +345,7 @@
   },
   "Microsoft.M365Companions": {
     "FriendlyName": "Microsoft 365 Companions",
-    "Description": "Applications annexes Calendrier, Fichiers et Contacts de Microsoft 365 (Entreprise) ; elles peuvent être réinstallées si votre administrateur Microsoft 365 les active"
+    "Description": "Applications annexes Calendrier, Fichiers et Contacts de Microsoft 365 (Entreprise) ; elles peuvent être réinstallées si votre administrateur Microsoft 365 les active"
   },
   "Microsoft.MSPaint": {
     "FriendlyName": "Paint 3D",
@@ -365,7 +365,7 @@
   },
   "Microsoft.People": {
     "FriendlyName": "Contacts",
-    "Description": "Nécessaire à Courrier et Calendrier, et inclus avec eux (abandonné)"
+    "Description": "Requis par Courrier et Calendrier, et fourni avec eux (abandonné)"
   },
   "Microsoft.RemoteDesktop": {
     "FriendlyName": "Bureau à distance",
@@ -405,11 +405,11 @@
   },
   "Microsoft.WindowsStore": {
     "FriendlyName": "Microsoft Store",
-    "Description": "Microsoft Store. AVERTISSEMENT : cette application ne peut pas être réinstallée facilement si elle est supprimée !"
+    "Description": "Microsoft Store. AVERTISSEMENT : cette application ne peut pas être réinstallée facilement si elle est supprimée !"
   },
   "Microsoft.WindowsTerminal": {
     "FriendlyName": "Windows Terminal",
-    "Description": "Application de terminal par défaut de Windows 11 (Invite de commandes, PowerShell, WSL). AVERTISSEMENT : ne la supprimez pas si vous avez lancé Win11Debloat depuis Windows Terminal, car le script échouerait."
+    "Description": "Application de terminal par défaut de Windows 11 (Invite de commandes, PowerShell, WSL). AVERTISSEMENT : ne la supprimez pas si vous avez lancé Win11Debloat depuis Windows Terminal, car le script échouerait."
   },
   "Microsoft.Xbox.TCUI": {
     "FriendlyName": "Xbox TCUI Framework",
@@ -417,11 +417,11 @@
   },
   "Microsoft.XboxGameOverlay": {
     "FriendlyName": "Xbox Game Overlay",
-    "Description": "Superposition de jeu, requise ou utile pour certains jeux (fait partie de la Barre de jeu Xbox). Avertissement : la désinstallation de cette application peut réduire les performances des jeux sur les PC équipés de certains processeurs modernes."
+    "Description": "Superposition de jeu, requise ou utile pour certains jeux (fait partie de la Barre de jeu Xbox). Avertissement : la désinstallation de cette application peut réduire les performances des jeux sur les PC équipés de certains processeurs modernes."
   },
   "Microsoft.XboxGamingOverlay": {
     "FriendlyName": "Xbox Gaming Overlay",
-    "Description": "Superposition de jeu, requise ou utile pour certains jeux (fait partie de la Barre de jeu Xbox). Avertissement : la désinstallation de cette application peut réduire les performances des jeux sur les PC équipés de certains processeurs modernes."
+    "Description": "Superposition de jeu, requise ou utile pour certains jeux (fait partie de la Barre de jeu Xbox). Avertissement : la désinstallation de cette application peut réduire les performances des jeux sur les PC équipés de certains processeurs modernes."
   },
   "Microsoft.XboxIdentityProvider": {
     "FriendlyName": "Xbox Identity Provider",
@@ -429,7 +429,7 @@
   },
   "Microsoft.XboxSpeechToTextOverlay": {
     "FriendlyName": "Xbox Speech To Text",
-    "Description": "Fonctionnalité d'accessibilité requise pour certains jeux. AVERTISSEMENT : cette application ne peut pas être réinstallée facilement !"
+    "Description": "Fonctionnalité d'accessibilité requise pour certains jeux. AVERTISSEMENT : cette application ne peut pas être réinstallée facilement !"
   },
   "Microsoft.YourPhone": {
     "FriendlyName": "Mobile connecté",

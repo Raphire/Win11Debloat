@@ -27,6 +27,7 @@ Describe 'Import-RegistryBackup' {
     It 'parses and normalizes registry snapshots from a real backup structure' {
         Mock Test-UserNameMatch { $true }
         Mock Get-RegistryBackupValidationPlanMap { @{} }
+        Mock ConvertTo-CompatibleRegistryKeySnapshots { param($RegistryKeys) $RegistryKeys }
         Mock Test-RegistryBackupAgainstAllowList { @() }
 
         $result = Import-RegistryBackup -FilePath (Join-Path $script:JsonFixturePath 'RegistryBackup.RealStructure.json')
@@ -61,6 +62,7 @@ Describe 'ConvertTo-NormalizedRegistryBackup' {
     BeforeEach {
         $script:Features = @{ Example = [PSCustomObject]@{ FeatureId = 'Example'; RegistryKey = 'Example.reg' } }
         Mock Get-RegistryBackupValidationPlanMap { @{} }
+        Mock ConvertTo-CompatibleRegistryKeySnapshots { param($RegistryKeys) $RegistryKeys }
         Mock Test-RegistryBackupAgainstAllowList { @() }
         Mock Write-Error {}
     }
@@ -122,6 +124,7 @@ Describe 'Restore-RegistryBackupState' {
         Mock Test-UserNameMatch { $true }
         Mock Write-Error {}
         Mock Get-RegistryBackupValidationPlanMap { @{} }
+        Mock ConvertTo-CompatibleRegistryKeySnapshots { param($RegistryKeys) $RegistryKeys }
         Mock Test-RegistryBackupAgainstAllowList { @() }
         $script:backup = [PSCustomObject]@{
             Version = '1.0'; BackupType = 'RegistryState'; Target = 'CurrentUser:Tester'; SelectedFeatures = @('Example')

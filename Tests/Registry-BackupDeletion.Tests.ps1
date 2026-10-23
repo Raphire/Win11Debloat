@@ -19,6 +19,7 @@ BeforeAll {
 Describe 'Registry backup deletion permissions' {
     BeforeEach {
         $script:Params = @{}
+        Mock Write-Warning {}
         $script:RegfilesPath = Join-Path $PSScriptRoot '..\Regfiles'
         $script:Features = @{}
         foreach ($feature in $script:FeatureCatalog.Features) {
@@ -50,7 +51,7 @@ Describe 'Registry backup deletion permissions' {
         (ConvertTo-NormalizedRegistryBackup -Backup $normalized).RegistryKeys | Should -BeNullOrEmpty
     }
 
-    It 'retains validation of unrelated data beside the retired value' {
+    It 'warns for each unknown value beside a retired value' {
         $snapshot = [PSCustomObject]@{
             Path = 'HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\CDP'
             Exists = $true
@@ -61,21 +62,14 @@ Describe 'Registry backup deletion permissions' {
             SubKeys = @()
         }
 
-        $normalized = @(Normalize-RegistryKeySnapshot -Snapshot $snapshot)
+        $normalized = @(ConvertTo-CompatibleRegistryKeySnapshots -RegistryKeys @($snapshot) -PlanMap @{})
 
-        $normalized | Should -HaveCount 1
-        $normalized[0].Values | Should -HaveCount 1
-        $normalized[0].Values[0].Name | Should -Be 'OtherValue'
-        @(Test-RegistryBackupMatchesSelectedFeatures -SelectedFeatureIds @('DisableDragTray') -SelectedUndoFeatureIds @() -Target 'CurrentUser' -RegistryKeys $normalized) | Should -Not -BeNullOrEmpty
+        $normalized | Should -BeNullOrEmpty
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -like '*DragTrayEnabled*' }
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -like '*OtherValue*' }
     }
 
-    It 'handles additional retired features through definitions alone' {
-        Mock Get-RetiredRegistryFeatures {
-            @{
-                RetiredOne = @(@{ Path = 'HKEY_USERS\Default\Software\Retired'; ValueNames = @('First', 'Second') })
-                RetiredTwo = @(@{ Path = 'HKEY_USERS\Default\Software\Retired'; ValueNames = @('Third') })
-            }
-        }
+    It 'ignores additional unknown features without retirement definitions' {
         $backup = [PSCustomObject]@{
             Version = '1.0'; BackupType = 'RegistryState'; Target = 'DefaultUserProfile'
             SelectedFeatures = @('RetiredOne'); SelectedUndoFeatures = @('RetiredTwo')
@@ -88,6 +82,59 @@ Describe 'Registry backup deletion permissions' {
         }
 
         (ConvertTo-NormalizedRegistryBackup -Backup $backup).RegistryKeys | Should -BeNullOrEmpty
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -like "*feature 'RetiredOne'*" }
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -like "*feature 'RetiredTwo'*" }
+        Should -Invoke Write-Warning -Times 3 -Exactly -ParameterFilter { $Message -like '*registry value*' }
+    }
+
+    It 'preserves known values while dropping unknown values and child keys' {
+        $path = 'HKEY_USERS\Default\Control Panel\Desktop'
+        $backup = [PSCustomObject]@{
+            Version = '1.0'; BackupType = 'RegistryState'; Target = 'DefaultUserProfile'
+            SelectedFeatures = @('DisableAnimations', 'UnknownFeature')
+            RegistryKeys = @([PSCustomObject]@{
+                Path = $path; Exists = $true
+                Values = @(
+                    [PSCustomObject]@{ Name = 'UserPreferencesMask'; Exists = $true; Kind = 'Binary'; Data = @(144, 18, 7, 128, 16, 0, 0, 0) }
+                    [PSCustomObject]@{ Name = 'OldSetting'; Exists = $true; Kind = 'Invalid'; Data = 'ignored' }
+                )
+                SubKeys = @([PSCustomObject]@{
+                    Path = "$path\OldChild"; Exists = $true; SubKeys = @()
+                    Values = @([PSCustomObject]@{ Name = ''; Exists = $true; Kind = 'String'; Data = 'ignored' })
+                })
+            })
+        }
+
+        $normalized = ConvertTo-NormalizedRegistryBackup -Backup $backup
+        $normalized.RegistryKeys | Should -HaveCount 1
+        $normalized.RegistryKeys[0].Values | Should -HaveCount 1
+        $normalized.RegistryKeys[0].Values[0].Name | Should -Be 'UserPreferencesMask'
+        $normalized.RegistryKeys[0].SubKeys | Should -BeNullOrEmpty
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -like '*OldSetting*' }
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -like '*OldChild*(Default)*' }
+
+        $backup.RegistryKeys[0].Values[0].Data = @(256)
+        Mock Write-Error {}
+        { ConvertTo-NormalizedRegistryBackup -Backup $backup } | Should -Throw '*Validation failed*'
+    }
+
+    It 'drops an emptied known key without creating or deleting it (exists: <Exists>)' -ForEach @(
+        @{ Exists = $true }
+        @{ Exists = $false }
+    ) {
+        $backup = [PSCustomObject]@{
+            Version = '1.0'; BackupType = 'RegistryState'; Target = 'DefaultUserProfile'
+            SelectedFeatures = @('DisableAnimations')
+            RegistryKeys = @([PSCustomObject]@{
+                Path = 'HKEY_USERS\Default\Control Panel\Desktop'; Exists = $Exists; SubKeys = @()
+                Values = @([PSCustomObject]@{ Name = 'OldSetting'; Exists = $false })
+            })
+        }
+
+        $normalized = ConvertTo-NormalizedRegistryBackup -Backup $backup
+        $normalized.RegistryKeys | Should -BeNullOrEmpty
+        (ConvertTo-NormalizedRegistryBackup -Backup $normalized).RegistryKeys | Should -BeNullOrEmpty
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -like '*OldSetting*' }
     }
 
     It 'rejects deletion of a key that <FeatureId> only changes values under' -ForEach @(
@@ -271,8 +318,8 @@ Describe 'Executable registry backup values' {
         $desktop = [PSCustomObject]@{ Path = 'HKEY_USERS\Default\Control Panel\Desktop'; Exists = $true; Values = @(); SubKeys = @() }
         $backup = [PSCustomObject]@{
             Version = '1.0'; BackupType = 'RegistryState'; Target = 'DefaultUserProfile'; SelectedFeatures = @('DisableAnimations')
-            RegistryKeys = @($desktop, [PSCustomObject]@{
-                Path = 'HKEY_USERS\Default\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce'; Exists = $true; Values = @(); SubKeys = @($desktop)
+            RegistryKeys = @([PSCustomObject]@{
+                Path = $desktop.Path; Exists = $true; Values = @(); SubKeys = @($desktop)
             })
         }
 
@@ -375,14 +422,16 @@ Describe 'Legacy absent-key backup compatibility' {
         (Get-Content -LiteralPath $filePath -Raw) | Should -Be $originalContent
     }
 
-    It 'rejects an unknown absent-key path instead of converting it' {
+    It 'ignores an unknown absent-key path instead of converting or deleting it' {
+        Mock Write-Warning {}
         $backup = [PSCustomObject]@{
             Version = '1.0'; BackupType = 'RegistryState'; Target = 'DefaultUserProfile'
             SelectedFeatures = @('DisableAnimations')
             RegistryKeys = @([PSCustomObject]@{ Path = 'HKEY_USERS\Default\Software\NotAllowedHere'; Exists = $false; Values = @(); SubKeys = @() })
         }
 
-        { ConvertTo-NormalizedRegistryBackup -Backup $backup } | Should -Throw '*unexpected registry path*'
+        (ConvertTo-NormalizedRegistryBackup -Backup $backup).RegistryKeys | Should -BeNullOrEmpty
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -like '*NotAllowedHere*' }
     }
 
     It 'imports a legacy value-only backup for <Target> using the correct profile paths' -ForEach @(

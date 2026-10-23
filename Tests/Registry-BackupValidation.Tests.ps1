@@ -79,13 +79,15 @@ Describe 'Get-SelectedRegistryFeaturesForBackupValidation' {
         $valueNames.Contains('mode') | Should -BeTrue
     }
 
-    It 'selects registry-backed apply features and reports unknown IDs' {
+    It 'selects registry-backed apply features and warns for unknown IDs' {
+        Mock Write-Warning {}
         $errors = New-Object System.Collections.Generic.List[string]
 
         $result = @(Get-SelectedRegistryFeaturesForBackupValidation -SelectedFeatureIds @('ApplyFeature', 'CustomFeature', 'MissingFeature') -IsUndoFeature:$false -Errors $errors)
 
         $result.Id | Should -Be 'ApplyFeature'
-        $errors | Should -Contain "Selected feature 'MissingFeature' was not found in the current feature catalog."
+        $errors | Should -BeNullOrEmpty
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -like '*MissingFeature*' }
     }
 
     It 'uses undo registry keys and falls back to apply keys when needed' {

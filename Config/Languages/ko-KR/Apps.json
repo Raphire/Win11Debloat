@@ -69,7 +69,7 @@
   },
   "Microsoft.MicrosoftJournal": {
     "FriendlyName": "Microsoft Journal",
-    "Description": "펜 입력에 최적화된 디지털 필기 앱입니다."
+    "Description": "펜 입력에 최적화된 디지털 노트 필기 앱입니다."
   },
   "Microsoft.MicrosoftOfficeHub": {
     "FriendlyName": "Office 허브",
@@ -97,7 +97,7 @@
   },
   "Microsoft.Office.OneNote": {
     "FriendlyName": "OneNote",
-    "Description": "UWP(유니버설 Windows 플랫폼) 버전의 디지털 필기 앱입니다."
+    "Description": "UWP(유니버설 Windows 플랫폼) 버전의 디지털 노트 필기 앱입니다."
   },
   "Microsoft.Office.Sway": {
     "FriendlyName": "Sway",
@@ -149,7 +149,7 @@
   },
   "Microsoft.ZuneVideo": {
     "FriendlyName": "영화 및 TV",
-    "Description": "지원이 중단된 동영상 콘텐츠 대여/구매/재생 앱입니다."
+    "Description": "구매한 동영상 콘텐츠를 재생하는 앱입니다(신규 대여 및 구매는 지원 중단)."
   },
   "MicrosoftCorporationII.MicrosoftFamily": {
     "FriendlyName": "Microsoft 가족 안전",
@@ -340,7 +340,7 @@
     "Description": "일부 PC 게임을 설치하는 데 필요한 Windows용 Xbox 게임 앱입니다."
   },
   "Microsoft.GetHelp": {
-    "FriendlyName": "도움말",
+    "FriendlyName": "도움말 보기",
     "Description": "일부 Windows 11 문제 해결사와 지원 상호 작용에 필요한 앱입니다."
   },
   "Microsoft.M365Companions": {
@@ -361,11 +361,11 @@
   },
   "Microsoft.Paint": {
     "FriendlyName": "그림판",
-    "Description": "전통적인 2D 그림판 앱인 클래식 그림판입니다."
+    "Description": "기존 방식의 2D 그리기 앱인 클래식 그림판입니다."
   },
   "Microsoft.People": {
     "FriendlyName": "피플",
-    "Description": "메일 및 일정에 필요하며 함께 제공되던 앱이며, 지원이 중단되었습니다."
+    "Description": "메일 및 일정 앱에 필요하며 함께 제공되던 앱입니다(지원 중단)."
   },
   "Microsoft.RemoteDesktop": {
     "FriendlyName": "원격 데스크톱",
@@ -445,7 +445,7 @@
   },
   "MicrosoftWindows.Client.WebExperience": {
     "FriendlyName": "Windows Web Experience Pack",
-    "Description": "Microsoft Store를 통해 위젯 같은 특정 기능을 제공하고 업데이트하는 데 도움이 되는 패키지입니다."
+    "Description": "Microsoft Store를 통해 위젯 같은 특정 기능을 제공하고 업데이트하는 패키지입니다."
   },
   "Microsoft.WidgetsPlatformRuntime": {
     "FriendlyName": "위젯 플랫폼 런타임",

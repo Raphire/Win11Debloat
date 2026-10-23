@@ -21,10 +21,10 @@
       "ApplyText": "시스템 복원 지점 생성 중"
     },
     "DisableTelemetry": {
-      "Label": "원격 분석, 추적 및 타기팅된 광고 사용 안 함",
-      "ToolTip": "이 설정은 원격 분석, 진단 데이터 수집, 활동 기록, 앱 실행 추적, 타기팅된 광고 등을 사용하지 않도록 설정합니다. 장치와 사용량에 대해 Microsoft로 전송되는 데이터를 제한합니다. Windows Insider인 경우 선택적 진단 데이터 수집을 다시 켤 때까지 업데이트가 차단될 수 있습니다.",
+      "Label": "원격 분석, 추적 및 맞춤형 광고 사용 안 함",
+      "ToolTip": "이 설정은 원격 분석, 진단 데이터 수집, 활동 기록, 앱 실행 추적, 맞춤형 광고 등을 사용하지 않도록 설정합니다. 장치와 사용량에 대해 Microsoft로 전송되는 데이터를 제한합니다. Windows Insider인 경우 선택적 진단 데이터 수집을 다시 켤 때까지 업데이트가 차단될 수 있습니다.",
       "ApplyText": "원격 분석 및 진단 데이터 수집 사용 안 함 설정 중",
-      "UndoLabel": "원격 분석, 추적 및 타기팅된 광고 사용",
+      "UndoLabel": "원격 분석, 추적 및 맞춤형 광고 사용",
       "ApplyUndoText": "원격 분석 및 진단 데이터 수집 사용 설정 중"
     },
     "DisableSuggestions": {
@@ -43,14 +43,14 @@
     },
     "DisableLocationServices": {
       "Label": "Windows 위치 서비스 및 앱 위치 액세스 사용 안 함",
-      "ToolTip": "Windows 위치 서비스를 끄고 앱이 위치에 액세스하지 못하도록 합니다. 이 기능은 정책을 사용하므로 일부 설정이 잠깁니다.",
+      "ToolTip": "Windows 위치 서비스를 끄고 앱이 위치에 액세스하지 못하도록 합니다. 이 기능은 정책을 사용하므로 일부 설정을 변경할 수 없게 됩니다.",
       "ApplyText": "Windows 위치 서비스 및 앱 위치 액세스 사용 안 함 설정 중",
       "UndoLabel": "Windows 위치 서비스 및 앱 위치 액세스 사용",
       "ApplyUndoText": "Windows 위치 서비스 및 앱 위치 액세스 사용 설정 중"
     },
     "DisableFindMyDevice": {
       "Label": "내 장치 찾기 위치 추적 사용 안 함",
-      "ToolTip": "주기적으로 장치 위치를 Microsoft로 보내는 '내 장치 찾기' 기능을 끕니다. 이 기능은 정책을 사용하므로 일부 설정이 잠깁니다.",
+      "ToolTip": "주기적으로 장치 위치를 Microsoft로 보내는 '내 장치 찾기' 기능을 끕니다. 이 기능은 정책을 사용하므로 일부 설정을 변경할 수 없게 됩니다.",
       "ApplyText": "내 장치 찾기 위치 추적 사용 안 함 설정 중",
       "UndoLabel": "내 장치 찾기 위치 추적 사용",
       "ApplyUndoText": "내 장치 찾기 위치 추적 사용 설정 중"
@@ -69,7 +69,7 @@
     },
     "DisableDesktopSpotlight": {
       "Label": "Windows 스포트라이트 바탕 화면 배경 사용 안 함",
-      "ToolTip": "바탕 화면 배경에 사용되는 Windows 스포트라이트를 끕니다. 이 기능은 순환 이미지를 표시하며 팁과 재미있는 사실을 보여 줄 수 있습니다. 이 기능은 정책을 사용하므로 일부 설정이 잠깁니다.",
+      "ToolTip": "바탕 화면 배경에 사용되는 Windows 스포트라이트를 끕니다. 이 기능은 순환 이미지를 표시하며 팁과 재미있는 사실을 보여 줄 수 있습니다. 이 기능은 정책을 사용하므로 일부 설정을 변경할 수 없게 됩니다.",
       "ApplyText": "Windows 스포트라이트 바탕 화면 배경 사용 안 함 설정 중",
       "UndoLabel": "Windows 스포트라이트 바탕 화면 배경 사용",
       "ApplyUndoText": "Windows 스포트라이트 바탕 화면 배경 및 바로 가기 복원 중"
@@ -77,13 +77,13 @@
     "HideDesktopSpotlightIcon": {
       "Label": "'이 사진에 대해 알아보기' 바탕 화면 바로 가기 숨기기",
       "ToolTip": "'이 사진에 대해 알아보기' 바탕 화면 바로 가기를 숨기면서 Windows 스포트라이트 배경 화면 순환은 계속 사용합니다. Windows 스포트라이트를 사용하지 않도록 설정하지는 않습니다.",
-      "ApplyText": "Windows 스포트라이트 '이 사진에 대해 알아보기' 바탕 화면 바로 가기 숨기는 중",
+      "ApplyText": "Windows 스포트라이트 '이 사진에 대해 알아보기' 바탕 화면 바로 가기를 숨기는 중",
       "UndoLabel": "'이 사진에 대해 알아보기' 바탕 화면 바로 가기 표시",
-      "ApplyUndoText": "Windows 스포트라이트 '이 사진에 대해 알아보기' 바탕 화면 바로 가기 표시하는 중"
+      "ApplyUndoText": "Windows 스포트라이트 '이 사진에 대해 알아보기' 바탕 화면 바로 가기를 표시하는 중"
     },
     "DisableEdgeAds": {
       "Label": "Edge의 광고, 추천 및 뉴스 피드 사용 안 함",
-      "ToolTip": "Microsoft Edge의 광고, 추천, MSN 뉴스 피드 같은 여러 방해 요소를 끕니다. 이 기능은 정책을 사용하므로 일부 설정이 잠깁니다.",
+      "ToolTip": "Microsoft Edge의 광고, 추천, MSN 뉴스 피드 같은 여러 방해 요소를 끕니다. 이 기능은 정책을 사용하므로 일부 설정을 변경할 수 없게 됩니다.",
       "ApplyText": "Microsoft Edge의 광고, 추천 및 MSN 뉴스 피드 사용 안 함 설정 중",
       "UndoLabel": "Edge의 광고, 추천 및 뉴스 피드 사용",
       "ApplyUndoText": "Microsoft Edge의 광고, 추천 및 MSN 뉴스 피드 사용 설정 중"
@@ -97,20 +97,20 @@
     },
     "DisableRecall": {
       "Label": "Windows Recall 사용 안 함",
-      "ToolTip": "최근에 사용한 파일, 앱 및 활동에 빠르게 액세스할 수 있는 AI 기반 기능인 Windows Recall을 사용하지 않도록 설정합니다. 이 기능은 정책을 사용하므로 일부 설정이 잠깁니다.",
+      "ToolTip": "최근에 사용한 파일, 앱 및 활동에 빠르게 액세스할 수 있는 AI 기반 기능인 Windows Recall을 사용하지 않도록 설정합니다. 이 기능은 정책을 사용하므로 일부 설정을 변경할 수 없게 됩니다.",
       "ApplyText": "Windows Recall 사용 안 함 설정 중",
       "UndoLabel": "Windows Recall 사용",
       "ApplyUndoText": "Windows Recall 사용 설정 중"
     },
     "DisableClickToDo": {
       "Label": "Click To Do(AI 텍스트 및 이미지 분석) 사용 안 함",
-      "ToolTip": "Windows에서 AI 기반 텍스트 및 이미지 분석 기능을 제공하는 Click To Do를 사용하지 않도록 설정합니다. 이 기능은 정책을 사용하므로 일부 설정이 잠깁니다.",
-      "ApplyText": "Click to Do 사용 안 함 설정 중",
+      "ToolTip": "Windows에서 AI 기반 텍스트 및 이미지 분석 기능을 제공하는 Click To Do를 사용하지 않도록 설정합니다. 이 기능은 정책을 사용하므로 일부 설정을 변경할 수 없게 됩니다.",
+      "ApplyText": "Click To Do 사용 안 함 설정 중",
       "UndoLabel": "Click To Do(AI 텍스트 및 이미지 분석) 사용",
-      "ApplyUndoText": "Click to Do 사용 설정 중"
+      "ApplyUndoText": "Click To Do 사용 설정 중"
     },
     "DisableAISvcAutoStart": {
-      "Label": "AI 서비스가 자동으로 시작되지 않도록 방지",
+      "Label": "AI 서비스 자동 시작 방지",
       "ToolTip": "WSAIFabricSvc 서비스를 수동 시작으로 설정하여 Windows와 함께 서비스가 자동으로 시작되지 않도록 합니다.",
       "ApplyText": "AI 서비스 자동 시작 방지 설정 중",
       "UndoLabel": "AI 서비스가 자동으로 시작되도록 허용",
@@ -118,7 +118,7 @@
     },
     "DisableDVR": {
       "Label": "Xbox 게임/화면 녹화 사용 안 함",
-      "ToolTip": "게임 바 앱에 포함된 Xbox 게임/화면 녹화 기능을 사용하지 않도록 설정합니다. 이 기능은 정책을 사용하므로 일부 설정이 잠깁니다.",
+      "ToolTip": "게임 바 앱에 포함된 Xbox 게임/화면 녹화 기능을 사용하지 않도록 설정합니다. 이 기능은 정책을 사용하므로 일부 설정을 변경할 수 없게 됩니다.",
       "ApplyText": "Xbox 게임/화면 녹화 사용 안 함 설정 중",
       "UndoLabel": "Xbox 게임/화면 녹화 사용",
       "ApplyUndoText": "Xbox 게임/화면 녹화 사용 설정 중"
@@ -148,14 +148,14 @@
     },
     "DisableStartRecommended": {
       "Label": "시작 메뉴의 권장 섹션 숨기기",
-      "ToolTip": "최근에 추가된 앱, 최근에 연 파일 및 앱 추천을 보여 주는 시작 메뉴의 권장 섹션을 숨깁니다. 이 기능은 정책을 사용하므로 일부 설정이 잠깁니다.",
+      "ToolTip": "최근에 추가된 앱, 최근에 연 파일 및 앱 추천을 보여 주는 시작 메뉴의 권장 섹션을 숨깁니다. 이 기능은 정책을 사용하므로 일부 설정을 변경할 수 없게 됩니다.",
       "ApplyText": "시작 메뉴 권장 섹션 사용 안 함 설정 중",
       "UndoLabel": "시작 메뉴의 권장 섹션 표시",
       "ApplyUndoText": "시작 메뉴 권장 섹션 사용 설정 중"
     },
     "DisableStartAllApps": {
       "Label": "시작 메뉴에서 '모든 앱' 섹션 숨기기",
-      "ToolTip": "설치된 모든 앱을 보여 주는 시작 메뉴의 '모든 앱' 섹션을 숨깁니다. 경고: 이 섹션을 숨기면 시스템에 설치된 앱을 찾기 어려워질 수 있습니다. 이 기능은 정책을 사용하므로 일부 설정이 잠깁니다.",
+      "ToolTip": "설치된 모든 앱을 보여 주는 시작 메뉴의 '모든 앱' 섹션을 숨깁니다. 경고: 이 섹션을 숨기면 시스템에 설치된 앱을 찾기 어려워질 수 있습니다. 이 기능은 정책을 사용하므로 일부 설정을 변경할 수 없게 됩니다.",
       "ApplyText": "시작 메뉴의 '모든 앱' 섹션 사용 안 함 설정 중",
       "UndoLabel": "시작 메뉴에서 '모든 앱' 섹션 표시",
       "ApplyUndoText": "시작 메뉴의 '모든 앱' 섹션 사용 설정 중"
@@ -169,7 +169,7 @@
     },
     "DisableBing": {
       "Label": "검색에서 Bing 웹 검색 및 Copilot 통합 사용 안 함",
-      "ToolTip": "Windows 검색 환경에서 Bing 웹 검색 결과와 Copilot 통합을 끕니다. 이 기능은 정책을 사용하므로 일부 설정이 잠깁니다.",
+      "ToolTip": "Windows 검색 환경에서 Bing 웹 검색 결과와 Copilot 통합을 끕니다. 이 기능은 정책을 사용하므로 일부 설정을 변경할 수 없게 됩니다.",
       "ApplyText": "Windows 검색의 Bing 웹 검색 및 Copilot 통합 사용 안 함 설정 중",
       "UndoLabel": "검색에서 Bing 웹 검색 및 Copilot 통합 사용",
       "ApplyUndoText": "Windows 검색의 Bing 웹 검색 및 Copilot 통합 사용 설정 중"
@@ -197,37 +197,37 @@
     },
     "DisableEdgeAI": {
       "Label": "Microsoft Edge의 AI 기능 사용 안 함",
-      "ToolTip": "Microsoft Edge의 AI 기반 사이드바 및 Copilot 기능 같은 AI 기능을 끕니다. 이 기능은 정책을 사용하므로 일부 설정이 잠깁니다.",
+      "ToolTip": "Microsoft Edge의 AI 기반 사이드바 및 Copilot 기능 같은 AI 기능을 끕니다. 이 기능은 정책을 사용하므로 일부 설정을 변경할 수 없게 됩니다.",
       "ApplyText": "Microsoft Edge의 AI 기능 사용 안 함 설정 중",
       "UndoLabel": "Microsoft Edge의 AI 기능 사용",
       "ApplyUndoText": "Microsoft Edge의 AI 기능 사용 설정 중"
     },
     "DisableChromeAI": {
       "Label": "Google Chrome의 AI 기능 사용 안 함",
-      "ToolTip": "Gemini, AI 검색 및 제안, 쓰기 지원, 자동 완성 등 Google Chrome에 기본 제공되는 AI 도구와 통합 기능을 사용하지 않도록 설정합니다. 로컬 AI 모델도 제거합니다. 이 기능은 정책을 사용하므로 일부 설정이 잠깁니다.",
-      "ApplyText": "Google Chrome의 AI 기능을 사용하지 않도록 설정하는 중",
+      "ToolTip": "Gemini, AI 검색 및 추천, 쓰기 지원, 자동 완성 등 Google Chrome에 기본 제공되는 AI 도구와 통합 기능을 사용하지 않도록 설정합니다. 로컬 AI 모델도 제거합니다. 이 기능은 정책을 사용하므로 일부 설정을 변경할 수 없게 됩니다.",
+      "ApplyText": "Google Chrome의 AI 기능 사용 안 함 설정 중",
       "UndoLabel": "Google Chrome의 AI 기능 사용",
-      "ApplyUndoText": "Google Chrome의 AI 기능을 사용하도록 설정하는 중"
+      "ApplyUndoText": "Google Chrome의 AI 기능 사용 설정 중"
     },
     "DisablePaintAI": {
       "Label": "그림판의 AI 기능 사용 안 함",
-      "ToolTip": "그림판의 AI 기반 이미지 생성 및 편집 도구 같은 AI 기능을 끕니다. 이 기능은 정책을 사용하므로 일부 설정이 잠깁니다.",
+      "ToolTip": "그림판의 AI 기반 이미지 생성 및 편집 도구 같은 AI 기능을 끕니다. 이 기능은 정책을 사용하므로 일부 설정을 변경할 수 없게 됩니다.",
       "ApplyText": "그림판의 AI 기능 사용 안 함 설정 중",
       "UndoLabel": "그림판의 AI 기능 사용",
       "ApplyUndoText": "그림판의 AI 기능 사용 설정 중"
     },
     "DisableNotepadAI": {
       "Label": "메모장의 AI 기능 사용 안 함",
-      "ToolTip": "메모장의 AI 기반 쓰기 제안 같은 AI 기능을 끕니다. 이 기능은 정책을 사용하므로 일부 설정이 잠깁니다.",
+      "ToolTip": "메모장의 AI 기반 쓰기 추천 같은 AI 기능을 끕니다. 이 기능은 정책을 사용하므로 일부 설정을 변경할 수 없게 됩니다.",
       "ApplyText": "메모장의 AI 기능 사용 안 함 설정 중",
       "UndoLabel": "메모장의 AI 기능 사용",
       "ApplyUndoText": "메모장의 AI 기능 사용 설정 중"
     },
     "EnableDarkMode": {
-      "Label": "시스템 및 앱에 어두운 테마 사용",
+      "Label": "시스템 및 앱에 어두운 모드 적용",
       "ToolTip": "앱 및 시스템 테마를 어두운 모드로 설정합니다.",
       "ApplyText": "시스템 및 앱의 어두운 모드 사용 설정 중",
-      "UndoLabel": "시스템 및 앱의 어두운 테마 사용 안 함",
+      "UndoLabel": "시스템 및 앱의 어두운 모드 사용 안 함",
       "ApplyUndoText": "시스템 및 앱의 어두운 모드 사용 안 함 설정 중"
     },
     "DisableDragTray": {
@@ -275,9 +275,9 @@
     "DisableSnapLayouts": {
       "Label": "화면 위쪽 및 최대화 단추의 스냅 레이아웃 플라이아웃 숨기기",
       "ToolTip": "최대화 단추 위로 마우스를 이동하거나 창을 화면 위쪽으로 끌 때 표시되는 스냅 레이아웃 플라이아웃을 끕니다.",
-      "ApplyText": "창을 화면 위쪽으로 끌 때 및 최대화 단추의 스냅 레이아웃 숨기는 중",
+      "ApplyText": "창을 화면 위쪽으로 끌 때 및 최대화 단추의 스냅 레이아웃을 숨기는 중",
       "UndoLabel": "화면 위쪽 및 최대화 단추의 스냅 레이아웃 플라이아웃 표시",
-      "ApplyUndoText": "창을 화면 위쪽으로 끌 때 및 최대화 단추의 스냅 레이아웃 표시하는 중"
+      "ApplyUndoText": "창을 화면 위쪽으로 끌 때 및 최대화 단추의 스냅 레이아웃을 표시하는 중"
     },
     "HideTabsInAltTab": {
       "Label": "창을 스냅하거나 Alt+Tab을 누를 때 앱의 탭 숨기기",
@@ -285,15 +285,15 @@
     },
     "Show3TabsInAltTab": {
       "Label": "창을 스냅하거나 Alt+Tab을 누를 때 앱의 탭 3개 표시",
-      "ApplyText": "창을 스냅하거나 Alt+Tab을 누를 때 앱의 탭 3개 표시 사용"
+      "ApplyText": "창을 스냅하거나 Alt+Tab을 누를 때 앱의 탭 3개 표시 설정 중"
     },
     "Show5TabsInAltTab": {
       "Label": "창을 스냅하거나 Alt+Tab을 누를 때 앱의 탭 5개 표시",
-      "ApplyText": "창을 스냅하거나 Alt+Tab을 누를 때 앱의 탭 5개 표시 사용"
+      "ApplyText": "창을 스냅하거나 Alt+Tab을 누를 때 앱의 탭 5개 표시 설정 중"
     },
     "Show20TabsInAltTab": {
       "Label": "창을 스냅하거나 Alt+Tab을 누를 때 앱의 탭 20개 표시",
-      "ApplyText": "창을 스냅하거나 Alt+Tab을 누를 때 앱의 탭 20개 표시 사용"
+      "ApplyText": "창을 스냅하거나 Alt+Tab을 누를 때 앱의 탭 20개 표시 설정 중"
     },
     "TaskbarAlignLeft": {
       "Label": "작업 표시줄을 왼쪽에 맞춤",
@@ -304,7 +304,7 @@
     },
     "HideSearchTb": {
       "Label": "작업 표시줄에서 검색 아이콘 숨기기",
-      "ApplyText": "작업 표시줄에서 검색 아이콘 숨기는 중",
+      "ApplyText": "작업 표시줄에서 검색 아이콘을 숨기는 중",
       "UndoLabel": "작업 표시줄에 검색 상자 표시",
       "ApplyUndoText": "작업 표시줄 검색을 검색 상자로 변경 중"
     },
@@ -327,9 +327,9 @@
     "HideTaskview": {
       "Label": "작업 표시줄의 '작업 보기' 단추 숨기기",
       "ToolTip": "열려 있는 모든 창과 가상 데스크톱을 볼 수 있는 작업 표시줄의 '작업 보기' 단추를 사용하지 않도록 설정합니다.",
-      "ApplyText": "작업 표시줄에서 작업 보기 단추 숨기는 중",
+      "ApplyText": "작업 표시줄에서 작업 보기 단추를 숨기는 중",
       "UndoLabel": "작업 표시줄의 '작업 보기' 단추 표시",
-      "ApplyUndoText": "작업 표시줄에서 작업 보기 단추 표시하는 중"
+      "ApplyUndoText": "작업 표시줄에서 작업 보기 단추를 표시하는 중"
     },
     "DisableWidgets": {
       "Label": "작업 표시줄 및 잠금 화면의 위젯 사용 안 함",
@@ -339,9 +339,9 @@
     "HideChat": {
       "Label": "작업 표시줄의 채팅(지금 회의) 아이콘 숨기기",
       "ToolTip": "작업 표시줄의 채팅(지금 회의) 아이콘을 사용하지 않도록 설정합니다.",
-      "ApplyText": "작업 표시줄에서 채팅 아이콘 숨기는 중",
+      "ApplyText": "작업 표시줄에서 채팅 아이콘을 숨기는 중",
       "UndoLabel": "작업 표시줄의 채팅(지금 회의) 아이콘 표시",
-      "ApplyUndoText": "작업 표시줄에서 채팅 아이콘 표시하는 중"
+      "ApplyUndoText": "작업 표시줄에서 채팅 아이콘을 표시하는 중"
     },
     "DisableStorageSense": {
       "Label": "저장 공간 센스 자동 디스크 정리 사용 안 함",
@@ -467,28 +467,28 @@
       "ToolTip": "기본적으로 Windows는 실수로 수정하거나 삭제하지 않도록 특정 파일, 폴더 및 드라이브를 숨깁니다. 이 옵션을 켜면 파일 탐색기에 모든 파일이 표시됩니다.",
       "ApplyText": "숨김 파일, 폴더 및 드라이브 숨기기 해제 중",
       "UndoLabel": "숨김 파일, 폴더 및 드라이브 숨기기",
-      "ApplyUndoText": "숨김 파일, 폴더 및 드라이브 숨기는 중"
+      "ApplyUndoText": "숨김 파일, 폴더 및 드라이브를 숨기는 중"
     },
     "HideDupliDrive": {
       "Label": "중복 이동식 드라이브 항목 숨기기",
       "ToolTip": "기본적으로 Windows는 이동식 드라이브를 '내 PC' 아래와 탐색 창에 자체 항목으로 모두 표시합니다. 이 설정을 사용하면 이동식 드라이브가 '내 PC' 아래에만 표시됩니다.",
-      "ApplyText": "파일 탐색기 탐색 창에서 중복 이동식 드라이브 항목 숨기는 중",
+      "ApplyText": "파일 탐색기 탐색 창에서 중복 이동식 드라이브 항목을 숨기는 중",
       "UndoLabel": "중복 이동식 드라이브 항목 표시",
-      "ApplyUndoText": "파일 탐색기 탐색 창에서 중복 이동식 드라이브 항목 표시하는 중"
+      "ApplyUndoText": "파일 탐색기 탐색 창에서 중복 이동식 드라이브 항목을 표시하는 중"
     },
     "HideHome": {
       "Label": "탐색 창에서 '홈' 숨기기",
       "ToolTip": "파일 탐색기 탐색 창에서 '홈' 섹션을 숨깁니다. 경고: PC나 Windows 탐색기를 다시 시작할 때까지 빠른 액세스 링크가 업데이트되지 않을 수 있습니다.",
-      "ApplyText": "파일 탐색기 탐색 창에서 '홈' 섹션 숨기는 중",
+      "ApplyText": "파일 탐색기 탐색 창에서 '홈' 섹션을 숨기는 중",
       "UndoLabel": "탐색 창에서 '홈' 표시",
-      "ApplyUndoText": "파일 탐색기 탐색 창에서 '홈' 섹션 표시하는 중"
+      "ApplyUndoText": "파일 탐색기 탐색 창에서 '홈' 섹션을 표시하는 중"
     },
     "HideGallery": {
       "Label": "탐색 창에서 '갤러리' 숨기기",
       "ToolTip": "파일 탐색기 탐색 창에서 '갤러리' 섹션을 숨깁니다.",
-      "ApplyText": "파일 탐색기 탐색 창에서 '갤러리' 섹션 숨기는 중",
+      "ApplyText": "파일 탐색기 탐색 창에서 '갤러리' 섹션을 숨기는 중",
       "UndoLabel": "탐색 창에서 '갤러리' 표시",
-      "ApplyUndoText": "파일 탐색기 탐색 창에서 '갤러리' 섹션 표시하는 중"
+      "ApplyUndoText": "파일 탐색기 탐색 창에서 '갤러리' 섹션을 표시하는 중"
     },
     "DisableTransparency": {
       "Label": "투명 효과 사용 안 함",
@@ -505,11 +505,11 @@
       "ApplyUndoText": "애니메이션 및 시각 효과 사용 설정 중"
     },
     "DisableUpdateASAP": {
-      "Label": "업데이트가 제공되는 즉시 받지 않도록 방지",
+      "Label": "업데이트 즉시 수신 방지",
       "ToolTip": "PC가 새 비보안 업데이트를 가장 먼저 받는 대상이 되지 않도록 합니다. PC는 결국 이러한 업데이트를 계속 받게 됩니다.",
-      "ApplyText": "Windows가 업데이트를 제공되는 즉시 받지 않도록 설정 중",
+      "ApplyText": "업데이트가 제공되는 즉시 받지 않도록 설정 중",
       "UndoLabel": "업데이트가 제공되는 즉시 받도록 허용",
-      "ApplyUndoText": "Windows가 업데이트를 제공되는 즉시 받도록 설정 중"
+      "ApplyUndoText": "업데이트가 제공되는 즉시 받도록 설정 중"
     },
     "PreventUpdateAutoReboot": {
       "Label": "로그인한 상태에서 업데이트 후 자동 다시 시작 방지",
@@ -526,36 +526,36 @@
       "ApplyUndoText": "다운로드한 업데이트를 다른 PC와 공유 설정 중"
     },
     "DisableDeviceAutoAppDownload": {
-      "Label": "Windows가 장치 컴패니언 앱을 자동으로 설치하지 않도록 방지",
+      "Label": "장치 컴패니언 앱 자동 설치 방지",
       "ToolTip": "LG 및 Alienware 모니터 같은 특정 장치를 연결할 때 Windows Update를 통해 장치 컴패니언 앱이 자동으로 설치되지 않도록 합니다. 이러한 장치는 정상적으로 작동하며, 동의 없이 추가 앱이 자동으로 설치되는 것만 중지합니다.",
       "ApplyText": "장치 컴패니언 앱 자동 설치 방지 설정 중",
       "UndoLabel": "장치 컴패니언 앱 자동 설치 허용",
       "ApplyUndoText": "장치 컴패니언 앱 자동 설치 허용 설정 중"
     },
     "ForceRemoveEdge": {
-      "Label": "Microsoft Edge를 강제로 제거합니다. 권장하지 않습니다!",
+      "Label": "Microsoft Edge 강제 제거(권장하지 않음)",
       "ApplyText": "Microsoft Edge 강제 제거 중"
     },
     "HideOnedrive": {
       "Label": "탐색 창에서 'OneDrive' 숨기기",
       "ToolTip": "파일 탐색기 탐색 창에서 'OneDrive' 섹션을 숨깁니다.",
-      "ApplyText": "파일 탐색기 탐색 창에서 'OneDrive' 섹션 숨기는 중",
+      "ApplyText": "파일 탐색기 탐색 창에서 'OneDrive' 섹션을 숨기는 중",
       "UndoLabel": "탐색 창에서 'OneDrive' 표시",
-      "ApplyUndoText": "파일 탐색기 탐색 창에서 'OneDrive' 섹션 표시하는 중"
+      "ApplyUndoText": "파일 탐색기 탐색 창에서 'OneDrive' 섹션을 표시하는 중"
     },
     "Hide3dObjects": {
       "Label": "'내 PC' 아래의 '3D 개체' 폴더 숨기기",
       "ToolTip": "파일 탐색기 탐색 창에서 '3D 개체' 폴더를 숨깁니다.",
-      "ApplyText": "파일 탐색기 탐색 창에서 '3D 개체' 폴더 숨기는 중",
+      "ApplyText": "파일 탐색기 탐색 창에서 '3D 개체' 폴더를 숨기는 중",
       "UndoLabel": "'내 PC' 아래의 '3D 개체' 폴더 표시",
-      "ApplyUndoText": "파일 탐색기 탐색 창에서 '3D 개체' 폴더 표시하는 중"
+      "ApplyUndoText": "파일 탐색기 탐색 창에서 '3D 개체' 폴더를 표시하는 중"
     },
     "HideMusic": {
       "Label": "'내 PC' 아래의 '음악' 폴더 숨기기",
       "ToolTip": "파일 탐색기 탐색 창에서 '음악' 폴더를 숨깁니다.",
-      "ApplyText": "파일 탐색기 탐색 창에서 '음악' 폴더 숨기는 중",
+      "ApplyText": "파일 탐색기 탐색 창에서 '음악' 폴더를 숨기는 중",
       "UndoLabel": "'내 PC' 아래의 '음악' 폴더 표시",
-      "ApplyUndoText": "파일 탐색기 탐색 창에서 '음악' 폴더 표시하는 중"
+      "ApplyUndoText": "파일 탐색기 탐색 창에서 '음악' 폴더를 표시하는 중"
     },
     "AddFoldersToThisPC": {
       "Label": "'내 PC' 페이지에 공통 폴더 다시 추가",
@@ -567,34 +567,34 @@
     "HideIncludeInLibrary": {
       "Label": "상황에 맞는 메뉴에서 '라이브러리에 포함' 옵션 숨기기",
       "ToolTip": "파일 탐색기 상황에 맞는 메뉴에서 '라이브러리에 포함' 옵션을 숨깁니다.",
-      "ApplyText": "상황에 맞는 메뉴에서 '라이브러리에 포함' 숨기는 중",
+      "ApplyText": "상황에 맞는 메뉴에서 '라이브러리에 포함'을 숨기는 중",
       "UndoLabel": "상황에 맞는 메뉴에서 '라이브러리에 포함' 옵션 표시",
-      "ApplyUndoText": "상황에 맞는 메뉴에서 '라이브러리에 포함' 표시하는 중"
+      "ApplyUndoText": "상황에 맞는 메뉴에서 '라이브러리에 포함'을 표시하는 중"
     },
     "HideGiveAccessTo": {
       "Label": "상황에 맞는 메뉴에서 '액세스 권한 부여' 옵션 숨기기",
       "ToolTip": "파일 탐색기 상황에 맞는 메뉴에서 '액세스 권한 부여' 옵션을 숨깁니다.",
-      "ApplyText": "상황에 맞는 메뉴에서 '액세스 권한 부여' 숨기는 중",
+      "ApplyText": "상황에 맞는 메뉴에서 '액세스 권한 부여'를 숨기는 중",
       "UndoLabel": "상황에 맞는 메뉴에서 '액세스 권한 부여' 옵션 표시",
-      "ApplyUndoText": "상황에 맞는 메뉴에서 '액세스 권한 부여' 표시하는 중"
+      "ApplyUndoText": "상황에 맞는 메뉴에서 '액세스 권한 부여'를 표시하는 중"
     },
     "HideShare": {
       "Label": "상황에 맞는 메뉴에서 '공유' 옵션 숨기기",
       "ToolTip": "파일 탐색기 상황에 맞는 메뉴에서 '공유' 옵션을 숨깁니다.",
-      "ApplyText": "상황에 맞는 메뉴에서 '공유' 숨기는 중",
+      "ApplyText": "상황에 맞는 메뉴에서 '공유'를 숨기는 중",
       "UndoLabel": "상황에 맞는 메뉴에서 '공유' 옵션 표시",
-      "ApplyUndoText": "상황에 맞는 메뉴에서 '공유' 표시하는 중"
+      "ApplyUndoText": "상황에 맞는 메뉴에서 '공유'를 표시하는 중"
     },
     "DisableBraveBloat": {
       "Label": "Brave 브라우저의 불필요한 기능(AI, 암호화폐 등) 사용 안 함",
-      "ToolTip": "Brave에 기본 제공되는 AI 기능, 암호화폐 지갑, 뉴스, 리워드, Talk 및 VPN을 사용하지 않도록 설정합니다. 이 기능은 정책을 사용하므로 일부 설정이 잠깁니다.",
+      "ToolTip": "Brave에 기본 제공되는 AI 기능, 암호화폐 지갑, 뉴스, 리워드, Talk 및 VPN을 사용하지 않도록 설정합니다. 이 기능은 정책을 사용하므로 일부 설정을 변경할 수 없게 됩니다.",
       "ApplyText": "Brave 브라우저의 Brave AI, 암호화폐, 뉴스, 리워드, Talk 및 VPN 사용 안 함 설정 중",
       "UndoLabel": "Brave 브라우저 기능(AI, 암호화폐 등) 사용",
       "ApplyUndoText": "Brave 브라우저의 Brave AI, 암호화폐, 뉴스, 리워드, Talk 및 VPN 사용 설정 중"
     },
     "EnableWindowsSandbox": {
       "Label": "Windows 샌드박스 사용",
-      "ToolTip": "Windows 샌드박스는 앱을 격리된 상태에서 안전하게 실행할 수 있는 경량 데스크톱 환경입니다. Windows 샌드박스 환경에 설치된 소프트웨어는 '샌드박스' 상태로 유지되며 호스트 컴퓨터와 별도로 실행됩니다. Windows 11 Pro, Workstation 및 Enterprise 버전에서만 지원됩니다.",
+      "ToolTip": "Windows 샌드박스는 앱을 격리된 상태에서 안전하게 실행할 수 있는 경량 데스크톱 환경입니다. Windows 샌드박스 환경에 설치된 소프트웨어는 '샌드박스' 상태로 유지되며 호스트 컴퓨터와 별도로 실행됩니다. Windows 11 Pro, Workstation, Enterprise 및 Education 에디션에서만 지원됩니다.",
       "ApplyText": "Windows 샌드박스 사용 설정 중",
       "UndoLabel": "Windows 샌드박스 사용 안 함",
       "ApplyUndoText": "Windows 샌드박스 사용 안 함 설정 중"
@@ -609,28 +609,28 @@
     "ShowDriveLettersFirst": {
       "Label": "드라이브 레이블 앞에 드라이브 문자 표시",
       "ToolTip": "파일 탐색기에서 드라이브 레이블 앞에 드라이브 문자를 표시합니다.",
-      "ApplyText": "드라이브 레이블 앞에 드라이브 문자 표시하는 중",
+      "ApplyText": "드라이브 레이블 앞에 드라이브 문자를 표시하는 중",
       "UndoLabel": "드라이브 레이블 뒤에 드라이브 문자 표시",
-      "ApplyUndoText": "드라이브 레이블 뒤에 드라이브 문자 표시하는 중"
+      "ApplyUndoText": "드라이브 레이블 뒤에 드라이브 문자를 표시하는 중"
     },
     "ShowDriveLettersLast": {
       "Label": "드라이브 레이블 뒤에 드라이브 문자 표시",
       "ToolTip": "파일 탐색기에서 드라이브 레이블 뒤에 드라이브 문자를 표시합니다(기본 Windows 동작).",
-      "ApplyText": "드라이브 레이블 뒤에 드라이브 문자 표시하는 중"
+      "ApplyText": "드라이브 레이블 뒤에 드라이브 문자를 표시하는 중"
     },
     "ShowNetworkDriveLettersFirst": {
       "Label": "드라이브 레이블 앞에 네트워크 드라이브 문자 표시",
       "ToolTip": "파일 탐색기에서 네트워크 드라이브 문자만 드라이브 레이블 앞에 표시합니다.",
-      "ApplyText": "드라이브 레이블 앞에 네트워크 드라이브 문자 표시하는 중",
+      "ApplyText": "드라이브 레이블 앞에 네트워크 드라이브 문자를 표시하는 중",
       "UndoLabel": "드라이브 레이블 뒤에 드라이브 문자 표시",
-      "ApplyUndoText": "드라이브 레이블 뒤에 드라이브 문자 표시하는 중"
+      "ApplyUndoText": "드라이브 레이블 뒤에 드라이브 문자를 표시하는 중"
     },
     "HideDriveLetters": {
       "Label": "모든 드라이브 문자 숨기기",
       "ToolTip": "파일 탐색기 탐색 창과 '내 PC'에서 모든 드라이브 문자를 숨깁니다.",
-      "ApplyText": "모든 드라이브 문자 숨기는 중",
+      "ApplyText": "모든 드라이브 문자를 숨기는 중",
       "UndoLabel": "드라이브 레이블 뒤에 드라이브 문자 표시",
-      "ApplyUndoText": "드라이브 레이블 뒤에 드라이브 문자 표시하는 중"
+      "ApplyUndoText": "드라이브 레이블 뒤에 드라이브 문자를 표시하는 중"
     },
     "StartAllAppsCategory": {
       "Label": "범주 보기에서 모든 앱 표시(기본값)",

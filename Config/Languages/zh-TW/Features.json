@@ -5,7 +5,7 @@
       "ApplyText": "正在移除選取的應用程式"
     },
     "Apps": {
-      "Label": "要移除的應用程式選取項目，以逗號分隔的清單指定。使用「Default」(或省略) 即可使用預設應用程式清單",
+      "Label": "要移除的應用程式選取項目，以逗號分隔的清單指定。使用「Default」（或省略）即可使用預設應用程式清單",
       "ApplyText": "正在移除選取的應用程式"
     },
     "RemoveGamingApps": {
@@ -245,10 +245,10 @@
       "ApplyUndoText": "正在還原 Windows 11 樣式的操作功能表"
     },
     "DisableMouseAcceleration": {
-      "Label": "停用「提高指標精確度」(滑鼠加速)",
+      "Label": "停用「提高指標精確度」（滑鼠加速）",
       "ToolTip": "這會停用 Windows 預設啟用的滑鼠加速，讓滑鼠移動更一致、更可預測。",
       "ApplyText": "正在關閉「提高指標精確度」",
-      "UndoLabel": "啟用「提高指標精確度」(滑鼠加速)",
+      "UndoLabel": "啟用「提高指標精確度」（滑鼠加速）",
       "ApplyUndoText": "正在開啟「提高指標精確度」"
     },
     "DisableStickyKeys": {
@@ -344,7 +344,7 @@
       "ApplyUndoText": "正在從工作列顯示聊天圖示"
     },
     "DisableStorageSense": {
-      "Label": "停用儲存空間感知器自動清理磁碟",
+      "Label": "停用儲存空間感知器的自動清理功能",
       "ToolTip": "這會停用儲存空間感知器，該功能會自動刪除暫存檔案、清空資源回收筒，並清理下載資料夾中的檔案，以釋放磁碟空間。",
       "ApplyText": "正在停用儲存空間感知器自動清理磁碟",
       "UndoLabel": "啟用儲存空間感知器自動清理磁碟",
@@ -478,17 +478,17 @@
     },
     "HideHome": {
       "Label": "從瀏覽窗格隱藏「常用」",
-      "ToolTip": "從檔案總管瀏覽窗格隱藏「常用」區段。警告：這可能會導致快速存取連結無法更新，直到您重新啟動電腦或 Windows 檔案總管。",
+      "ToolTip": "從檔案總管瀏覽窗格隱藏「常用」區段。警告：這可能會導致快速存取連結無法更新，直到您重新啟動電腦或檔案總管。",
       "ApplyText": "正在從檔案總管瀏覽窗格隱藏「常用」區段",
-      "UndoLabel": "從瀏覽窗格顯示「常用」",
-      "ApplyUndoText": "正在從檔案總管瀏覽窗格顯示「常用」區段"
+      "UndoLabel": "在瀏覽窗格中顯示「常用」",
+      "ApplyUndoText": "正在檔案總管瀏覽窗格中顯示「常用」區段"
     },
     "HideGallery": {
       "Label": "從瀏覽窗格隱藏「圖庫」",
       "ToolTip": "從檔案總管瀏覽窗格隱藏「圖庫」區段。",
       "ApplyText": "正在從檔案總管瀏覽窗格隱藏「圖庫」區段",
-      "UndoLabel": "從瀏覽窗格顯示「圖庫」",
-      "ApplyUndoText": "正在從檔案總管瀏覽窗格顯示「圖庫」區段"
+      "UndoLabel": "在瀏覽窗格中顯示「圖庫」",
+      "ApplyUndoText": "正在檔案總管瀏覽窗格中顯示「圖庫」區段"
     },
     "DisableTransparency": {
       "Label": "停用透明效果",
@@ -505,14 +505,14 @@
       "ApplyUndoText": "正在啟用動畫與視覺效果"
     },
     "DisableUpdateASAP": {
-      "Label": "避免在更新推出後立即取得",
+      "Label": "避免在更新推出後立即取得更新",
       "ToolTip": "這會避免您的 PC 成為第一批收到新非安全性更新的裝置。您的 PC 最終仍會收到這些更新。",
       "ApplyText": "正在避免 Windows 在更新推出後立即取得更新",
-      "UndoLabel": "允許在更新推出後立即取得",
+      "UndoLabel": "允許在更新推出後立即取得更新",
       "ApplyUndoText": "正在允許 Windows 在更新推出後立即取得更新"
     },
     "PreventUpdateAutoReboot": {
-      "Label": "防止登入期間更新後自動重新啟動",
+      "Label": "防止在有人登入時於更新後自動重新啟動",
       "ToolTip": "這會防止您的 PC 在有任何使用者登入時，於更新後自動重新啟動。",
       "ApplyText": "正在防止登入期間更新後自動重新啟動",
       "UndoLabel": "允許登入期間更新後自動重新啟動",
@@ -527,7 +527,7 @@
     },
     "DisableDeviceAutoAppDownload": {
       "Label": "防止 Windows 自動安裝裝置配套應用程式",
-      "ToolTip": "當您連接特定裝置 (例如 LG 和 Alienware 的螢幕) 時，這會阻止 Windows 透過 Windows Update 默默安裝裝置配套應用程式。這些裝置仍可正常運作，此設定只會阻止 Windows Update 在未經同意的情況下自動安裝額外應用程式。",
+      "ToolTip": "當您連接特定裝置 (例如 LG 和 Alienware 的螢幕) 時，這會阻止 Windows 透過 Windows Update 無聲安裝裝置配套應用程式。這些裝置仍可正常運作，此設定只會阻止 Windows Update 在未經同意的情況下自動安裝額外應用程式。",
       "ApplyText": "正在防止自動安裝裝置配套應用程式",
       "UndoLabel": "允許自動安裝裝置配套應用程式",
       "ApplyUndoText": "正在允許自動安裝裝置配套應用程式"
@@ -540,22 +540,22 @@
       "Label": "從瀏覽窗格隱藏「OneDrive」",
       "ToolTip": "從檔案總管瀏覽窗格隱藏「OneDrive」區段。",
       "ApplyText": "正在從檔案總管瀏覽窗格隱藏「OneDrive」區段",
-      "UndoLabel": "從瀏覽窗格顯示「OneDrive」",
-      "ApplyUndoText": "正在從檔案總管瀏覽窗格顯示「OneDrive」區段"
+      "UndoLabel": "在瀏覽窗格中顯示「OneDrive」",
+      "ApplyUndoText": "正在檔案總管瀏覽窗格中顯示「OneDrive」區段"
     },
     "Hide3dObjects": {
       "Label": "在「本機」下隱藏「3D 物件」資料夾",
       "ToolTip": "從檔案總管瀏覽窗格隱藏「3D 物件」資料夾。",
       "ApplyText": "正在從檔案總管瀏覽窗格隱藏「3D 物件」資料夾",
-      "UndoLabel": "在「本機」下顯示「3D 物件」資料夾",
-      "ApplyUndoText": "正在從檔案總管瀏覽窗格顯示「3D 物件」資料夾"
+      "UndoLabel": "在「本機」中顯示「3D 物件」資料夾",
+      "ApplyUndoText": "正在檔案總管瀏覽窗格中顯示「3D 物件」資料夾"
     },
     "HideMusic": {
       "Label": "在「本機」下隱藏「音樂」資料夾",
       "ToolTip": "從檔案總管瀏覽窗格隱藏「音樂」資料夾。",
       "ApplyText": "正在從檔案總管瀏覽窗格隱藏「音樂」資料夾",
-      "UndoLabel": "在「本機」下顯示「音樂」資料夾",
-      "ApplyUndoText": "正在從檔案總管瀏覽窗格顯示「音樂」資料夾"
+      "UndoLabel": "在「本機」中顯示「音樂」資料夾",
+      "ApplyUndoText": "正在檔案總管瀏覽窗格中顯示「音樂」資料夾"
     },
     "AddFoldersToThisPC": {
       "Label": "將常用資料夾加回「本機」頁面",
@@ -586,7 +586,7 @@
       "ApplyUndoText": "正在顯示操作功能表中的「共用」"
     },
     "DisableBraveBloat": {
-      "Label": "停用 Brave 瀏覽器中的多餘功能 (AI、加密貨幣等)",
+      "Label": "停用 Brave 瀏覽器中的內建多餘元件 (AI、加密貨幣等)",
       "ToolTip": "這會停用 Brave 內建的 AI 功能、加密貨幣錢包、新聞、獎勵、Talk 和 VPN。此功能會透過原則鎖定某些設定。",
       "ApplyText": "正在停用 Brave 瀏覽器中的 AI、加密貨幣、新聞、獎勵、Talk 和 VPN",
       "UndoLabel": "啟用 Brave 瀏覽器功能 (AI、加密貨幣等)",
@@ -594,7 +594,7 @@
     },
     "EnableWindowsSandbox": {
       "Label": "啟用 Windows 沙箱",
-      "ToolTip": "Windows 沙箱是輕量型桌面環境，可在隔離的環境中安全地執行應用程式。安裝在 Windows 沙箱環境中的軟體會維持「沙箱化」，並與主機分開執行。僅支援 Windows 11 專業版、工作站版和企業版。",
+      "ToolTip": "Windows 沙箱是輕量型桌面環境，可在隔離的環境中安全地執行應用程式。安裝在 Windows 沙箱環境中的軟體會維持「沙箱化」，並與主機分開執行。僅支援 Windows 11 專業版、專業工作站版、企業版和教育版。",
       "ApplyText": "正在啟用 Windows 沙箱",
       "UndoLabel": "停用 Windows 沙箱",
       "ApplyUndoText": "正在停用 Windows 沙箱"

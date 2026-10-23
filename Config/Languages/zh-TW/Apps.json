@@ -116,7 +116,7 @@
     "Description": "桌面自動化工具 (機器人流程自動化)"
   },
   "Microsoft.SkypeApp": {
-    "FriendlyName": "Skype (通用 Windows 平台)",
+    "FriendlyName": "Skype (市集版)",
     "Description": "Skype 通訊應用程式，通用 Windows 平台版本 (已停止提供)"
   },
   "Microsoft.Todos": {
@@ -149,7 +149,7 @@
   },
   "Microsoft.ZuneVideo": {
     "FriendlyName": "電影與電視",
-    "Description": "用來租借、購買及播放影片內容的應用程式 (已停止提供)"
+    "Description": "用來播放已購買影片內容的應用程式 (新的租借與購買服務已停止提供)"
   },
   "MicrosoftCorporationII.MicrosoftFamily": {
     "FriendlyName": "Microsoft 家庭安全",
@@ -409,7 +409,7 @@
   },
   "Microsoft.WindowsTerminal": {
     "FriendlyName": "Windows Terminal",
-    "Description": "Windows 11 的預設終端機應用程式 (命令提示字元、PowerShell、WSL)，警告：如果您是從 Windows Terminal 啟動 Win11Debloat，請勿移除，否則會導致指令碼失敗"
+    "Description": "Windows 11 的預設終端機應用程式 (命令提示字元、PowerShell、WSL)，警告：如果您是從 Windows Terminal 啟動 Win11Debloat，請勿移除，否則會導致指令碼失敗。"
   },
   "Microsoft.Xbox.TCUI": {
     "FriendlyName": "Xbox TCUI 架構",
@@ -453,7 +453,7 @@
   },
   "LGElectronics.LGMonitorApp": {
     "FriendlyName": "LG Monitor App",
-    "Description": "LG 原廠軟體，用於控制 LG 螢幕；若連接 LG 螢幕，Windows Update 可能會默默重新安裝此應用程式"
+    "Description": "LG 原廠軟體，用於控制 LG 螢幕；若連接 LG 螢幕，Windows Update 可能會無聲重新安裝此應用程式"
   },
   "AD2F1837.HPAIExperienceCenter": {
     "FriendlyName": "HP AI Experience Center",

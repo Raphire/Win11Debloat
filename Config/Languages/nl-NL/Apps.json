@@ -379,6 +379,10 @@
     "FriendlyName": "Start Experiences App (Widgets)",
     "Description": "Toont 'Mijn feed' in Windows Widgets"
   },
+  "Microsoft.SurfaceHub": {
+    "FriendlyName": "Surface",
+    "Description": "Apparaatinstellingen en ondersteuning voor Surface, inclusief instellingen voor slim opladen op ondersteunde modellen"
+  },
   "Microsoft.Whiteboard": {
     "FriendlyName": "Microsoft Whiteboard",
     "Description": "Digitaal whiteboard waarop je samen met anderen kunt werken"
@@ -450,6 +454,18 @@
   "Microsoft.WidgetsPlatformRuntime": {
     "FriendlyName": "Widgets Platform Runtime",
     "Description": "Vereist voor Windows Widgets"
+  },
+  "AD2F1837.OMENCommandCenter": {
+    "FriendlyName": "OMEN Gaming Hub",
+    "Description": "Gaminghub van HP voor prestatiebewaking en apparaatinstellingen"
+  },
+  "AcerIncorporated.AcerCareCenterS": {
+    "FriendlyName": "Care Center S",
+    "Description": "Apparaatinformatie, diagnostiek en onderhoudstools van Acer"
+  },
+  "B9ECED6F.ASUSPCAssistant": {
+    "FriendlyName": "MyASUS",
+    "Description": "Apparaatinstellingen, diagnostiek en ondersteuning van ASUS, inclusief batterij- en ventilatorinstellingen op ondersteunde modellen"
   },
   "LGElectronics.LGMonitorApp": {
     "FriendlyName": "LG Monitor App",

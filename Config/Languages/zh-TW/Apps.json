@@ -379,6 +379,10 @@
     "FriendlyName": "Start Experiences App (小工具)",
     "Description": "此應用程式提供 Windows 小工具的「我的摘要」功能"
   },
+  "Microsoft.SurfaceHub": {
+    "FriendlyName": "Surface",
+    "Description": "Surface 裝置設定和支援，包括支援機型的智慧充電控制"
+  },
   "Microsoft.Whiteboard": {
     "FriendlyName": "Microsoft Whiteboard",
     "Description": "數位協作白板應用程式"
@@ -450,6 +454,18 @@
   "Microsoft.WidgetsPlatformRuntime": {
     "FriendlyName": "小工具平台執行階段",
     "Description": "Windows 小工具運作所需的執行階段"
+  },
+  "AD2F1837.OMENCommandCenter": {
+    "FriendlyName": "OMEN Gaming Hub",
+    "Description": "用於效能監控和裝置設定的 HP 遊戲中心"
+  },
+  "AcerIncorporated.AcerCareCenterS": {
+    "FriendlyName": "Care Center S",
+    "Description": "Acer 裝置資訊、診斷和維護工具"
+  },
+  "B9ECED6F.ASUSPCAssistant": {
+    "FriendlyName": "MyASUS",
+    "Description": "ASUS 裝置設定、診斷和支援，包括支援機型的電池和風扇控制"
   },
   "LGElectronics.LGMonitorApp": {
     "FriendlyName": "LG Monitor App",

@@ -379,6 +379,10 @@
     "FriendlyName": "Start Experiences App (ウィジェット)",
     "Description": "このアプリは Windows ウィジェットの「マイ フィード」機能を提供します"
   },
+  "Microsoft.SurfaceHub": {
+    "FriendlyName": "Surface",
+    "Description": "Surface デバイスの設定とサポート（対応モデルのスマート充電の設定を含む）"
+  },
   "Microsoft.Whiteboard": {
     "FriendlyName": "Microsoft Whiteboard",
     "Description": "デジタル共同作業用ホワイトボード アプリです"
@@ -450,6 +454,18 @@
   "Microsoft.WidgetsPlatformRuntime": {
     "FriendlyName": "Widgets Platform Runtime",
     "Description": "Windows ウィジェットが動作するために必要なランタイムです"
+  },
+  "AD2F1837.OMENCommandCenter": {
+    "FriendlyName": "OMEN Gaming Hub",
+    "Description": "パフォーマンスの監視とデバイス設定を行う HP のゲーミングハブ"
+  },
+  "AcerIncorporated.AcerCareCenterS": {
+    "FriendlyName": "Care Center S",
+    "Description": "Acer デバイスの情報、診断、メンテナンスツール"
+  },
+  "B9ECED6F.ASUSPCAssistant": {
+    "FriendlyName": "MyASUS",
+    "Description": "ASUS デバイスの設定、診断、サポート（対応モデルのバッテリーとファンの設定を含む）"
   },
   "LGElectronics.LGMonitorApp": {
     "FriendlyName": "LG Monitor App",

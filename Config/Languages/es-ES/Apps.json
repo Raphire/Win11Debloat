@@ -379,6 +379,10 @@
     "FriendlyName": "Start Experiences App (Widgets)",
     "Description": "Esta aplicación proporciona las funciones de los widgets de Windows (Mi fuente)"
   },
+  "Microsoft.SurfaceHub": {
+    "FriendlyName": "Surface",
+    "Description": "Configuración y soporte de dispositivos Surface, incluidos los controles de carga inteligente en los modelos compatibles"
+  },
   "Microsoft.Whiteboard": {
     "FriendlyName": "Microsoft Whiteboard",
     "Description": "Aplicación de pizarra digital colaborativa"
@@ -450,6 +454,18 @@
   "Microsoft.WidgetsPlatformRuntime": {
     "FriendlyName": "Runtime de la plataforma de widgets",
     "Description": "Runtime necesario para que los widgets de Windows funcionen"
+  },
+  "AD2F1837.OMENCommandCenter": {
+    "FriendlyName": "OMEN Gaming Hub",
+    "Description": "Centro de juegos de HP para supervisar el rendimiento y configurar el dispositivo"
+  },
+  "AcerIncorporated.AcerCareCenterS": {
+    "FriendlyName": "Care Center S",
+    "Description": "Información del dispositivo y herramientas de diagnóstico y mantenimiento de Acer"
+  },
+  "B9ECED6F.ASUSPCAssistant": {
+    "FriendlyName": "MyASUS",
+    "Description": "Configuración, diagnóstico y soporte de dispositivos ASUS, incluidos los controles de batería y ventilador en los modelos compatibles"
   },
   "LGElectronics.LGMonitorApp": {
     "FriendlyName": "Aplicación LG Monitor",

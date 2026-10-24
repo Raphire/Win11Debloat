@@ -762,6 +762,14 @@
       "RemovalMethod": "Appx"
     },
     {
+      "FriendlyName": "Surface",
+      "AppId": "Microsoft.SurfaceHub",
+      "Description": "Surface device settings and support, including smart charging controls on supported models",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
       "FriendlyName": "Whiteboard",
       "AppId": "Microsoft.Whiteboard",
       "Description": "Digital collaborative whiteboard app",
@@ -901,6 +909,30 @@
       "FriendlyName": "Widgets Platform Runtime",
       "AppId": "Microsoft.WidgetsPlatformRuntime",
       "Description": "Runtime required for Windows Widgets to function",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
+      "FriendlyName": "OMEN Gaming Hub",
+      "AppId": "AD2F1837.OMENCommandCenter",
+      "Description": "HP gaming hub for performance monitoring and device settings",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
+      "FriendlyName": "Care Center S",
+      "AppId": "AcerIncorporated.AcerCareCenterS",
+      "Description": "Acer device information, diagnostics, and maintenance tools",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
+      "FriendlyName": "MyASUS",
+      "AppId": "B9ECED6F.ASUSPCAssistant",
+      "Description": "ASUS device settings, diagnostics, and support, including battery and fan controls on supported models",
       "SelectedByDefault": false,
       "Recommendation": "optional",
       "RemovalMethod": "Appx"
@@ -1124,8 +1156,11 @@
       ]
     },
     {
-      "Name": "OEM software (Dell, HP, Lenovo, LG)",
+      "Name": "OEM software (Acer, ASUS, Dell, HP, Lenovo, LG)",
       "AppIds": [
+        "AD2F1837.OMENCommandCenter",
+        "AcerIncorporated.AcerCareCenterS",
+        "B9ECED6F.ASUSPCAssistant",
         "AD2F1837.HPAIExperienceCenter",
         "AD2F1837.HPConnectedMusic",
         "AD2F1837.HPConnectedPhotopoweredbySnapfish",

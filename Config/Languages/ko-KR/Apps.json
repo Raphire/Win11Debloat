@@ -379,6 +379,10 @@
     "FriendlyName": "시작 환경 앱 (위젯)",
     "Description": "Windows 위젯의 내 피드 기능을 제공하는 앱입니다."
   },
+  "Microsoft.SurfaceHub": {
+    "FriendlyName": "Surface",
+    "Description": "Surface 장치 설정 및 지원(지원되는 모델의 스마트 충전 설정 포함)"
+  },
   "Microsoft.Whiteboard": {
     "FriendlyName": "Microsoft Whiteboard",
     "Description": "디지털 공동 작업 화이트보드 앱입니다."
@@ -450,6 +454,18 @@
   "Microsoft.WidgetsPlatformRuntime": {
     "FriendlyName": "위젯 플랫폼 런타임",
     "Description": "Windows 위젯이 작동하는 데 필요한 런타임입니다."
+  },
+  "AD2F1837.OMENCommandCenter": {
+    "FriendlyName": "OMEN Gaming Hub",
+    "Description": "성능 모니터링 및 장치 설정을 위한 HP 게임 허브"
+  },
+  "AcerIncorporated.AcerCareCenterS": {
+    "FriendlyName": "Care Center S",
+    "Description": "Acer 장치 정보, 진단 및 유지 관리 도구"
+  },
+  "B9ECED6F.ASUSPCAssistant": {
+    "FriendlyName": "MyASUS",
+    "Description": "ASUS 장치 설정, 진단 및 지원(지원되는 모델의 배터리 및 팬 설정 포함)"
   },
   "LGElectronics.LGMonitorApp": {
     "FriendlyName": "LG Monitor App",

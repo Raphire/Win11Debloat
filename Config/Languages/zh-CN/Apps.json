@@ -379,6 +379,10 @@
     "FriendlyName": "开始体验应用（小组件）",
     "Description": "为 Windows 小组件的“我的资讯”提供支持"
   },
+  "Microsoft.SurfaceHub": {
+    "FriendlyName": "Surface",
+    "Description": "Surface 设备设置和支持，包括受支持型号的智能充电控制"
+  },
   "Microsoft.Whiteboard": {
     "FriendlyName": "白板（Microsoft Whiteboard）",
     "Description": "数字协作白板应用"
@@ -450,6 +454,18 @@
   "Microsoft.WidgetsPlatformRuntime": {
     "FriendlyName": "小组件平台运行时",
     "Description": "Windows 小组件正常运行所需的组件"
+  },
+  "AD2F1837.OMENCommandCenter": {
+    "FriendlyName": "OMEN Gaming Hub",
+    "Description": "用于性能监控和设备设置的 HP 游戏中心"
+  },
+  "AcerIncorporated.AcerCareCenterS": {
+    "FriendlyName": "Care Center S",
+    "Description": "Acer 设备信息、诊断和维护工具"
+  },
+  "B9ECED6F.ASUSPCAssistant": {
+    "FriendlyName": "MyASUS",
+    "Description": "ASUS 设备设置、诊断和支持，包括受支持型号的电池和风扇控制"
   },
   "LGElectronics.LGMonitorApp": {
     "FriendlyName": "LG 显示器应用",

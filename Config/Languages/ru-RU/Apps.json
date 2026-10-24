@@ -379,6 +379,10 @@
     "FriendlyName": "Start Experiences App (Мини-приложения)",
     "Description": "Это приложение обеспечивает работу ленты My Feed в мини-приложениях Windows"
   },
+  "Microsoft.SurfaceHub": {
+    "FriendlyName": "Surface",
+    "Description": "Настройки и поддержка устройств Surface, включая управление интеллектуальной зарядкой на поддерживаемых моделях"
+  },
   "Microsoft.Whiteboard": {
     "FriendlyName": "Microsoft Whiteboard",
     "Description": "Цифровая доска для совместной работы"
@@ -450,6 +454,18 @@
   "Microsoft.WidgetsPlatformRuntime": {
     "FriendlyName": "Widgets Platform Runtime",
     "Description": "Среда выполнения, необходимая для работы мини-приложений Windows"
+  },
+  "AD2F1837.OMENCommandCenter": {
+    "FriendlyName": "OMEN Gaming Hub",
+    "Description": "Игровой центр HP для мониторинга производительности и настройки устройства"
+  },
+  "AcerIncorporated.AcerCareCenterS": {
+    "FriendlyName": "Care Center S",
+    "Description": "Сведения об устройстве, средства диагностики и обслуживания Acer"
+  },
+  "B9ECED6F.ASUSPCAssistant": {
+    "FriendlyName": "MyASUS",
+    "Description": "Настройки, диагностика и поддержка устройств ASUS, включая управление аккумулятором и вентиляторами на поддерживаемых моделях"
   },
   "LGElectronics.LGMonitorApp": {
     "FriendlyName": "LG Monitor App",

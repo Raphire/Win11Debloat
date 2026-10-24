@@ -42,3 +42,17 @@ jobs:
           Install-Module -Name PSScriptAnalyzer -Scope CurrentUser -Force -Confirm:$false
           Import-Module PSScriptAnalyzer
           Invoke-ScriptAnalyzer -Path . -Recurse -Severity Error -EnableExit
+
+  language-keys:
+    name: Language key report (informational)
+    runs-on: windows-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Report missing and extra language keys
+        shell: powershell
+        run: ./Scripts/Report-LanguageKeys.ps1

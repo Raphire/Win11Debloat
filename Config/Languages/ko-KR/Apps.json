@@ -367,6 +367,10 @@
     "FriendlyName": "Microsoft 피플",
     "Description": "메일 및 일정 앱에 필요하며 함께 제공되던 앱입니다(지원 중단)."
   },
+  "MicrosoftCorporationII.Windows365": {
+    "FriendlyName": "Windows App",
+    "Description": "원격 데스크톱 및 클라우드 PC 클라이언트(원격 데스크톱 앱 대체)"
+  },
   "Microsoft.RemoteDesktop": {
     "FriendlyName": "원격 데스크톱",
     "Description": "Microsoft Store 버전의 원격 데스크톱 클라이언트 앱입니다(지원 중단)."

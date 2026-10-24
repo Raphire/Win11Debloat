@@ -367,6 +367,10 @@
     "FriendlyName": "Microsoft Personen",
     "Description": "Vereist voor en meegeleverd met Mail en Agenda (niet meer ondersteund)"
   },
+  "MicrosoftCorporationII.Windows365": {
+    "FriendlyName": "Windows App",
+    "Description": "Client voor externe bureaubladen en cloud-pc’s (vervangt de Extern bureaublad-app)"
+  },
   "Microsoft.RemoteDesktop": {
     "FriendlyName": "Extern bureaublad",
     "Description": "Remote Desktop-clientapp (Microsoft Store-versie; niet meer ondersteund)"

@@ -738,6 +738,14 @@
       "RemovalMethod": "Appx"
     },
     {
+      "FriendlyName": "Windows App",
+      "AppId": "MicrosoftCorporationII.Windows365",
+      "Description": "Remote desktop and cloud PC client (replaces the Remote Desktop app)",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
       "FriendlyName": "Remote Desktop",
       "AppId": "Microsoft.RemoteDesktop",
       "Description": "Remote Desktop client app",

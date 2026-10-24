@@ -367,6 +367,10 @@
     "FriendlyName": "Kontakte",
     "Description": "Erforderlich für „Mail und Kalender“ und darin enthalten (eingestellt)"
   },
+  "MicrosoftCorporationII.Windows365": {
+    "FriendlyName": "Windows App",
+    "Description": "Client für Remotedesktops und Cloud-PCs (ersetzt die Remotedesktop-App)"
+  },
   "Microsoft.RemoteDesktop": {
     "FriendlyName": "Remotedesktop",
     "Description": "Remotedesktop-Client-App (Microsoft Store-Version; eingestellt)"

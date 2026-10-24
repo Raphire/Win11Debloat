@@ -367,6 +367,10 @@
     "FriendlyName": "Microsoft People",
     "Description": "メールとカレンダーに必要で、同梱されています (提供終了)"
   },
+  "MicrosoftCorporationII.Windows365": {
+    "FriendlyName": "Windows App",
+    "Description": "リモート デスクトップとクラウド PC に接続するクライアント（リモート デスクトップ アプリの後継）"
+  },
   "Microsoft.RemoteDesktop": {
     "FriendlyName": "リモート デスクトップ",
     "Description": "リモート デスクトップ クライアント アプリです (Microsoft Store 版、サポート終了)"

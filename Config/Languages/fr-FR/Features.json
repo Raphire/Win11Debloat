@@ -96,18 +96,18 @@
       "ApplyUndoText": "Activation de Microsoft Copilot"
     },
     "DisableRecall": {
-      "Label": "Désactiver Windows Recall",
-      "ToolTip": "Cela désactive Windows Recall, une fonctionnalité basée sur l'IA qui permet d'accéder rapidement aux fichiers, applications et activités récemment utilisés. Cette fonctionnalité utilise des stratégies qui verrouillent certains paramètres.",
-      "ApplyText": "Désactivation de Windows Recall",
-      "UndoLabel": "Activer Windows Recall",
-      "ApplyUndoText": "Activation de Windows Recall"
+      "Label": "Désactiver Retrouver (Recall)",
+      "ToolTip": "Cela désactive Retrouver (Recall), une fonctionnalité basée sur l'IA qui permet d'accéder rapidement aux fichiers, applications et activités récemment utilisés. Cette fonctionnalité utilise des stratégies qui verrouillent certains paramètres.",
+      "ApplyText": "Désactivation de Retrouver (Recall)",
+      "UndoLabel": "Activer Retrouver (Recall)",
+      "ApplyUndoText": "Activation de Retrouver (Recall)"
     },
     "DisableClickToDo": {
-      "Label": "Désactiver Click to Do, l'analyse de texte et d'images par IA",
-      "ToolTip": "Cela désactive Click to Do, qui fournit des fonctionnalités d'analyse de texte et d'images basées sur l'IA dans Windows. Cette fonctionnalité utilise des stratégies qui verrouillent certains paramètres.",
-      "ApplyText": "Désactivation de Click to Do",
-      "UndoLabel": "Activer Click to Do, l'analyse de texte et d'images par IA",
-      "ApplyUndoText": "Activation de Click to Do"
+      "Label": "Désactiver Actions par clic (analyse de texte et d'images par IA)",
+      "ToolTip": "Cela désactive la fonctionnalité Actions par clic, qui permet d'analyser du texte et des images à l'aide de l'IA dans Windows. Cette fonctionnalité utilise des stratégies qui verrouillent certains paramètres.",
+      "ApplyText": "Désactivation d'Actions par clic",
+      "UndoLabel": "Activer Actions par clic (analyse de texte et d'images par IA)",
+      "ApplyUndoText": "Activation d'Actions par clic"
     },
     "DisableAISvcAutoStart": {
       "Label": "Empêcher le démarrage automatique du service d'IA",
@@ -131,7 +131,7 @@
       "ApplyUndoText": "Activation de l'intégration de la Barre de jeu"
     },
     "ClearStart": {
-      "Label": "Supprimer les applications épinglées du menu Démarrer pour cet utilisateur uniquement",
+      "Label": "Supprimer toutes les applications épinglées du menu Démarrer pour cet utilisateur uniquement",
       "ApplyText": "Suppression de toutes les applications épinglées du menu Démarrer"
     },
     "ClearStartAllUsers": {
@@ -330,10 +330,10 @@
       "ApplyText": "Désactivation des widgets sur la barre des tâches et l'écran de verrouillage"
     },
     "HideChat": {
-      "Label": "Masquer l'icône Conversation (Rencontrer maintenant) dans la barre des tâches",
-      "ToolTip": "Cela désactive l'icône Conversation (Rencontrer maintenant) de la barre des tâches.",
+      "Label": "Masquer l'icône Conversation (Conférence maintenant) dans la barre des tâches",
+      "ToolTip": "Cela désactive l'icône Conversation (Conférence maintenant) de la barre des tâches.",
       "ApplyText": "Masquage de l'icône Conversation de la barre des tâches",
-      "UndoLabel": "Afficher l'icône Conversation (Rencontrer maintenant) dans la barre des tâches",
+      "UndoLabel": "Afficher l'icône Conversation (Conférence maintenant) dans la barre des tâches",
       "ApplyUndoText": "Affichage de l'icône Conversation dans la barre des tâches"
     },
     "DisableStorageSense": {

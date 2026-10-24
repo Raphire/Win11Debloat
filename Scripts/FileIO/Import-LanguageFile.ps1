@@ -149,6 +149,18 @@ function Get-PluralCategory {
 
             return 'other'
         }
+        # French CLDR rule: 'one' covers 0 and 1, 'other' every remaining count. CLDR also
+        # defines 'many' for whole multiples of 1,000,000, but it is deliberately not
+        # returned here: the catalogs ship no '_many' variants, and a category with no
+        # matching key falls through to the bare key (which does not exist) rather than
+        # to '_other', so returning 'many' would print the raw key name at that count.
+        'fr' {
+            if ($Count -le 1) {
+                return 'one'
+            }
+
+            return 'other'
+        }
         # Japanese CLDR rule: no grammatical plural, every count is 'other'.
         'ja' {
             return 'other'
@@ -169,16 +181,8 @@ function Get-PluralCategory {
 
             return 'many'
         }
-        # French CLDR rule: 'one' covers 0 and 1, 'other' every remaining count. CLDR also
-        # defines 'many' for whole multiples of 1,000,000, but it is deliberately not
-        # returned here: the catalogs ship no '_many' variants, and a category with no
-        # matching key falls through to the bare key (which does not exist) rather than
-        # to '_other', so returning 'many' would print the raw key name at that count.
-        'fr' {
-            if ($Count -le 1) {
-                return 'one'
-            }
-
+        # Korean has no grammatical plural, like Japanese, so every count is 'other'.
+        'ko' {
             return 'other'
         }
         # English CLDR rule: singular only for exactly 1, plural otherwise. Also correct for Dutch/German.

@@ -148,6 +148,19 @@ Describe 'Get-PluralCategory' {
         Get-PluralCategory -LanguageCode 'pt-BR' -Count $Count | Should -Be $Expected
     }
 
+    It 'returns <Expected> for a French count of <Count>' -ForEach @(
+        @{ Count = 0; Expected = 'one' }
+        @{ Count = 1; Expected = 'one' }
+        @{ Count = 2; Expected = 'other' }
+        @{ Count = 100; Expected = 'other' }
+        # CLDR puts whole millions in 'many'; this rule keeps them on 'other' on purpose,
+        # because the French catalogs have no '_many' keys and the loader falls back to the
+        # bare key rather than to '_other' when a category is missing.
+        @{ Count = 1000000; Expected = 'other' }
+    ) {
+        Get-PluralCategory -LanguageCode 'fr-FR' -Count $Count | Should -Be $Expected
+    }
+
     It 'returns <Expected> for a Russian count of <Count>' -ForEach @(
         @{ Count = 0; Expected = 'many' }
         @{ Count = 1; Expected = 'one' }
@@ -167,17 +180,16 @@ Describe 'Get-PluralCategory' {
         Get-PluralCategory -LanguageCode 'ru-RU' -Count $Count | Should -Be $Expected
     }
 
-    It 'returns <Expected> for a French count of <Count>' -ForEach @(
-        @{ Count = 0; Expected = 'one' }
-        @{ Count = 1; Expected = 'one' }
-        @{ Count = 2; Expected = 'other' }
-        @{ Count = 100; Expected = 'other' }
-        # CLDR puts whole millions in 'many'; this rule keeps them on 'other' on purpose,
-        # because the French catalogs have no '_many' keys and the loader falls back to the
-        # bare key rather than to '_other' when a category is missing.
-        @{ Count = 1000000; Expected = 'other' }
+    It 'returns other for a Korean count of <Count>' -ForEach @(
+        @{ Count = 0 }
+        @{ Count = 1 }
+        @{ Count = 2 }
+        @{ Count = 5 }
+        @{ Count = 11 }
+        @{ Count = 100 }
+        @{ Count = 1000000 }
     ) {
-        Get-PluralCategory -LanguageCode 'fr-FR' -Count $Count | Should -Be $Expected
+        Get-PluralCategory -LanguageCode 'ko-KR' -Count $Count | Should -Be 'other'
     }
 }
 

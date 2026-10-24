@@ -100,7 +100,7 @@
   "DeployOptionsTitle": "Options",
   "DeployOptionRegistryBackup": "Créer une sauvegarde du registre (recommandé)",
   "DeployOptionRestorePoint": "Créer un point de restauration système (recommandé)",
-  "DeployOptionRestartExplorer": "Redémarrer le processus Explorateur de Windows pour appliquer immédiatement la plupart des modifications",
+  "DeployOptionRestartExplorer": "Redémarrer le processus Explorateur Windows pour appliquer immédiatement la plupart des modifications",
   "DeployReviewChanges": "Vérifier les modifications sélectionnées",
   "DeployApplyChanges": "Appliquer les modifications",
   "BubbleViewChanges": "Affichez ici les modifications sélectionnées",
@@ -336,8 +336,8 @@
   "BackupSnapshotInvalidExists": "Échec de la validation de la sauvegarde : l'instantané de clé de registre « {0} » doit définir Exists comme un booléen.",
   "BackupUnexpectedKeyDeletion": "La sauvegarde contient une suppression non autorisée de clé de registre : « {0} ».",
   "BackupUnsafeExecutableValue": "La sauvegarde contient une commande ou une valeur de chargement de DLL non fiable à « {0} ». Seules les valeurs vides ou les correspondances exactes avec des données de fonctionnalité approuvées peuvent être restaurées.",
-  "BackupExecutableConfirmationRequired": "La restauration de paramètres de registre d'exécutables non reconnus nécessite une confirmation explicite.",
-  "BackupExecutableWarningTitle": "Restaurer des paramètres d'exécutables non reconnus ?",
-  "BackupExecutableWarningMessage": "Cette sauvegarde contient des paramètres de registre d'exécutables qui ne correspondent pas aux fichiers du script. Cela pourrait amener Windows ou des applications à charger du code malveillant.\n\nNe restaurez pas de sauvegardes de registre provenant de sources non officielles. Ne continuez que si vous avez créé cette sauvegarde vous-même et avez examiné les paramètres ci-dessous.\n\n{0}",
+  "BackupExecutableConfirmationRequired": "La restauration de paramètres du Registre non reconnus pouvant exécuter du code nécessite une confirmation explicite.",
+  "BackupExecutableWarningTitle": "Restaurer des paramètres non reconnus pouvant exécuter du code ?",
+  "BackupExecutableWarningMessage": "Cette sauvegarde contient des paramètres du Registre qui peuvent exécuter du code et ne correspondent pas aux fichiers du script. Cela pourrait amener Windows ou des applications à charger du code malveillant.\n\nNe restaurez pas de sauvegardes de registre provenant de sources non officielles. Ne continuez que si vous avez créé cette sauvegarde vous-même et avez examiné les paramètres ci-dessous.\n\n{0}",
   "BackupExecutableMismatchDetails": "Chemin : {0}\nNom de la valeur : {1}\nType : {2}\nDonnées : {3}"
 }

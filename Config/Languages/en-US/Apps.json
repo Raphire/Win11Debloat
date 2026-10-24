@@ -73,7 +73,7 @@
   },
   "Microsoft.MicrosoftOfficeHub": {
     "FriendlyName": "Microsoft 365 Copilot (Office Hub)",
-    "Description": "Hub to access Microsoft Office 365 apps and documents"
+    "Description": "Hub to access Microsoft 365 apps and documents"
   },
   "Microsoft.MicrosoftPowerBIForWindows": {
     "FriendlyName": "Power BI",
@@ -96,7 +96,7 @@
     "Description": "Internet connection speed test utility"
   },
   "Microsoft.Office.OneNote": {
-    "FriendlyName": "OneNote for Windows 10 (Legacy) for Windows 10 (Legacy)",
+    "FriendlyName": "OneNote for Windows 10 (Legacy)",
     "Description": "Digital note-taking app (Universal Windows Platform version; discontinued)"
   },
   "Microsoft.Office.Sway": {

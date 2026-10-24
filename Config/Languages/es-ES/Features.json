@@ -57,29 +57,29 @@
     },
     "DisableLockscreenTips": {
       "Label": "Deshabilitar los consejos y trucos de la pantalla de bloqueo",
-      "ToolTip": "Desactivará la opción de imagen destacada de la pantalla de bloqueo y deshabilitará los consejos, trucos y datos curiosos que aparecen en ella.",
+      "ToolTip": "Desactivará Contenido destacado de Windows en la pantalla de bloqueo y deshabilitará los consejos, trucos y datos curiosos que aparecen en ella.",
       "ApplyText": "Deshabilitando consejos y trucos en la pantalla de bloqueo",
       "UndoLabel": "Habilitar los consejos y trucos de la pantalla de bloqueo",
       "ApplyUndoText": "Habilitando consejos y trucos en la pantalla de bloqueo"
     },
     "EnableDesktopSpotlight": {
-      "Label": "Habilitar el fondo de escritorio de imagen destacada de Windows y su acceso directo",
-      "ToolTip": "Restaura el fondo de escritorio de imagen destacada de Windows y el acceso directo «Más información sobre esta imagen».",
-      "ApplyText": "Restaurando el fondo de escritorio de imagen destacada de Windows y su acceso directo"
+      "Label": "Habilitar el fondo de escritorio de Contenido destacado de Windows y su acceso directo",
+      "ToolTip": "Restaura el fondo de escritorio de Contenido destacado de Windows y el acceso directo «Más información sobre esta imagen».",
+      "ApplyText": "Restaurando el fondo de escritorio de Contenido destacado de Windows y su acceso directo"
     },
     "DisableDesktopSpotlight": {
-      "Label": "Deshabilitar el fondo de escritorio de imagen destacada de Windows",
-      "ToolTip": "Desactiva la imagen destacada de Windows como fondo de escritorio, que muestra imágenes rotativas y puede mostrar consejos y datos curiosos. Esta función usa directivas, que bloquearán determinados ajustes.",
-      "ApplyText": "Deshabilitando el fondo de escritorio de imagen destacada de Windows",
-      "UndoLabel": "Habilitar el fondo de escritorio de imagen destacada de Windows",
-      "ApplyUndoText": "Restaurando el fondo de escritorio de imagen destacada de Windows y su acceso directo"
+      "Label": "Deshabilitar el fondo de escritorio de Contenido destacado de Windows",
+      "ToolTip": "Desactiva la Contenido destacado de Windows como fondo de escritorio, que muestra imágenes rotativas y puede mostrar consejos y datos curiosos. Esta función usa directivas, que bloquearán determinados ajustes.",
+      "ApplyText": "Deshabilitando el fondo de escritorio de Contenido destacado de Windows",
+      "UndoLabel": "Habilitar el fondo de escritorio de Contenido destacado de Windows",
+      "ApplyUndoText": "Restaurando el fondo de escritorio de Contenido destacado de Windows y su acceso directo"
     },
     "HideDesktopSpotlightIcon": {
       "Label": "Ocultar el acceso directo de escritorio «Más información sobre esta imagen»",
-      "ToolTip": "Oculta el acceso directo de escritorio «Más información sobre esta imagen» y mantiene la rotación del fondo de pantalla de imagen destacada de Windows. No deshabilita la imagen destacada de Windows.",
-      "ApplyText": "Ocultando el acceso directo de escritorio «Más información sobre esta imagen» de la imagen destacada de Windows",
+      "ToolTip": "Oculta el acceso directo de escritorio «Más información sobre esta imagen» y mantiene la rotación del fondo de pantalla de Contenido destacado de Windows. No deshabilita la Contenido destacado de Windows.",
+      "ApplyText": "Ocultando el acceso directo de escritorio «Más información sobre esta imagen» de la Contenido destacado de Windows",
       "UndoLabel": "Mostrar el acceso directo de escritorio «Más información sobre esta imagen»",
-      "ApplyUndoText": "Mostrando el acceso directo de escritorio «Más información sobre esta imagen» de la imagen destacada de Windows"
+      "ApplyUndoText": "Mostrando el acceso directo de escritorio «Más información sobre esta imagen» de la Contenido destacado de Windows"
     },
     "DisableEdgeAds": {
       "Label": "Deshabilitar los anuncios, las sugerencias y la fuente de noticias en Edge",
@@ -96,18 +96,18 @@
       "ApplyUndoText": "Habilitando Microsoft Copilot"
     },
     "DisableRecall": {
-      "Label": "Deshabilitar Windows Recall",
-      "ToolTip": "Deshabilitará Windows Recall, una función basada en IA que proporciona acceso rápido a los archivos, aplicaciones y actividades usados recientemente. Esta función usa directivas, que bloquearán determinados ajustes.",
-      "ApplyText": "Deshabilitando Windows Recall",
-      "UndoLabel": "Habilitar Windows Recall",
-      "ApplyUndoText": "Habilitando Windows Recall"
+      "Label": "Deshabilitar Recuerdos (Recall)",
+      "ToolTip": "Deshabilitará Recuerdos (Recall), una función basada en IA que proporciona acceso rápido a los archivos, aplicaciones y actividades usados recientemente. Esta función usa directivas, que bloquearán determinados ajustes.",
+      "ApplyText": "Deshabilitando Recuerdos (Recall)",
+      "UndoLabel": "Habilitar Recuerdos (Recall)",
+      "ApplyUndoText": "Habilitando Recuerdos (Recall)"
     },
     "DisableClickToDo": {
-      "Label": "Deshabilitar Click To Do, el análisis de texto e imágenes con IA",
-      "ToolTip": "Deshabilitará Click To Do, que ofrece funciones de análisis de texto e imágenes basadas en IA en Windows. Esta función usa directivas, que bloquearán determinados ajustes.",
-      "ApplyText": "Deshabilitando Click To Do",
-      "UndoLabel": "Habilitar Click To Do, el análisis de texto e imágenes con IA",
-      "ApplyUndoText": "Habilitando Click To Do"
+      "Label": "Deshabilitar Hacer clic para hacer (Click to Do), el análisis de texto e imágenes con IA",
+      "ToolTip": "Deshabilitará Hacer clic para hacer (Click to Do), que ofrece funciones de análisis de texto e imágenes basadas en IA en Windows. Esta función usa directivas, que bloquearán determinados ajustes.",
+      "ApplyText": "Deshabilitando Hacer clic para hacer (Click to Do)",
+      "UndoLabel": "Habilitar Hacer clic para hacer (Click to Do), el análisis de texto e imágenes con IA",
+      "ApplyUndoText": "Habilitando Hacer clic para hacer (Click to Do)"
     },
     "DisableAISvcAutoStart": {
       "Label": "Impedir que el servicio de IA se inicie automáticamente",
@@ -161,11 +161,11 @@
       "ApplyUndoText": "Habilitando la sección «Todas las aplicaciones» del menú Inicio"
     },
     "DisableStartPhoneLink": {
-      "Label": "Deshabilitar la integración de Vínculo con el teléfono en el menú Inicio",
-      "ToolTip": "Quitará la integración de Vínculo con el teléfono del menú Inicio cuando haya un dispositivo móvil vinculado al equipo.",
-      "ApplyText": "Deshabilitando la integración de dispositivos móviles de Vínculo con el teléfono en el menú Inicio",
-      "UndoLabel": "Habilitar la integración de Vínculo con el teléfono en el menú Inicio",
-      "ApplyUndoText": "Habilitando la integración de dispositivos móviles de Vínculo con el teléfono en el menú Inicio"
+      "Label": "Deshabilitar la integración de Enlace Móvil en el menú Inicio",
+      "ToolTip": "Quitará la integración de Enlace Móvil del menú Inicio cuando haya un dispositivo móvil vinculado al equipo.",
+      "ApplyText": "Deshabilitando la integración de dispositivos móviles de Enlace Móvil en el menú Inicio",
+      "UndoLabel": "Habilitar la integración de Enlace Móvil en el menú Inicio",
+      "ApplyUndoText": "Habilitando la integración de dispositivos móviles de Enlace Móvil en el menú Inicio"
     },
     "DisableBing": {
       "Label": "Deshabilitar la búsqueda web de Bing y la integración de Copilot en la búsqueda",
@@ -245,11 +245,11 @@
       "ApplyUndoText": "Activando la mejora de precisión del puntero"
     },
     "DisableStickyKeys": {
-      "Label": "Deshabilitar el atajo de teclado de Teclas de acceso rápido (Mayús 5 veces)",
-      "ToolTip": "Impedirá que aparezca el cuadro de diálogo de Teclas de acceso rápido al pulsar la tecla Mayús cinco veces seguidas.",
-      "ApplyText": "Deshabilitando el método abreviado de teclado de Teclas de acceso rápido",
-      "UndoLabel": "Habilitar el método abreviado de teclado de Teclas de acceso rápido (Mayús 5 veces)",
-      "ApplyUndoText": "Habilitando el método abreviado de teclado de Teclas de acceso rápido"
+      "Label": "Deshabilitar el atajo de teclado de Teclas especiales (Mayús 5 veces)",
+      "ToolTip": "Impedirá que aparezca el cuadro de diálogo de Teclas especiales al pulsar la tecla Mayús cinco veces seguidas.",
+      "ApplyText": "Deshabilitando el método abreviado de teclado de Teclas especiales",
+      "UndoLabel": "Habilitar el método abreviado de teclado de Teclas especiales (Mayús 5 veces)",
+      "ApplyUndoText": "Habilitando el método abreviado de teclado de Teclas especiales"
     },
     "DisableWindowSnapping": {
       "Label": "Deshabilitar el ajuste de ventanas",
@@ -647,12 +647,12 @@
   },
   "UiGroups": {
     "DesktopSpotlight": {
-      "Label": "Imagen destacada de Windows en el escritorio",
-      "ToolTip": "Este ajuste controla la opción de fondo de escritorio de imagen destacada de Windows. Mantenga el fondo de pantalla rotativo con o sin el acceso directo «Más información sobre esta imagen», o deshabilite por completo la imagen destacada de Windows.",
+      "Label": "Contenido destacado de Windows en el escritorio",
+      "ToolTip": "Este ajuste controla la opción de fondo de escritorio de Contenido destacado de Windows. Mantenga el fondo de pantalla rotativo con o sin el acceso directo «Más información sobre esta imagen», o deshabilite por completo la Contenido destacado de Windows.",
       "Values": {
         "EnableDesktopSpotlight": "Mostrar el acceso directo «Más información sobre esta imagen» (predeterminado)",
         "HideDesktopSpotlightIcon": "Ocultar el acceso directo «Más información sobre esta imagen»",
-        "DisableDesktopSpotlight": "Deshabilitar el fondo de escritorio de imagen destacada de Windows"
+        "DisableDesktopSpotlight": "Deshabilitar el fondo de escritorio de Contenido destacado de Windows"
       }
     },
     "SearchIcon": {
@@ -693,7 +693,7 @@
       }
     },
     "ClearStart": {
-      "Label": "Quitar las aplicaciones ancladas del menú Inicio",
+      "Label": "Quitar todas las aplicaciones ancladas del menú Inicio",
       "ToolTip": "Este ajuste permite quitar rápidamente todas las aplicaciones ancladas del menú Inicio.",
       "Values": {
         "ClearStart": "Quitar para el usuario seleccionado",

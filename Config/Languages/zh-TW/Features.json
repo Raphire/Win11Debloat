@@ -22,7 +22,7 @@
     },
     "DisableTelemetry": {
       "Label": "停用遙測、追蹤與目標式廣告",
-      "ToolTip": "此設定會停用遙測、診斷資料收集、活動歷程記錄、應用程式啟動追蹤、目標式廣告等。它會限制傳送給 Microsoft 的裝置與使用方式相關資料。如果您是 Windows Insider，可能會在重新開啟選擇性診斷資料收集之前被封鎖更新。",
+      "ToolTip": "此設定會停用遙測、診斷資料收集、活動歷程記錄、應用程式啟動追蹤、目標式廣告等。它會限制傳送給 Microsoft 的裝置與使用方式相關資料。如果您是 Windows 測試人員計畫的成員，可能會在重新開啟選擇性診斷資料收集之前被封鎖更新。",
       "ApplyText": "正在停用遙測與診斷資料收集",
       "UndoLabel": "啟用遙測、追蹤與目標式廣告",
       "ApplyUndoText": "正在啟用遙測與診斷資料收集"
@@ -96,15 +96,15 @@
       "ApplyUndoText": "正在啟用 Microsoft Copilot"
     },
     "DisableRecall": {
-      "Label": "停用 Windows Recall",
-      "ToolTip": "這會停用 Windows Recall，這是一項 AI 功能，可快速存取最近使用的檔案、應用程式和活動。此功能會透過原則鎖定某些設定。",
-      "ApplyText": "正在停用 Windows Recall",
-      "UndoLabel": "啟用 Windows Recall",
-      "ApplyUndoText": "正在啟用 Windows Recall"
+      "Label": "停用 Windows 回顧 (Recall)",
+      "ToolTip": "這會停用 Windows 回顧 (Recall)，這是一項 AI 功能，可快速存取最近使用的檔案、應用程式和活動。此功能會透過原則鎖定某些設定。",
+      "ApplyText": "正在停用 Windows 回顧",
+      "UndoLabel": "啟用 Windows 回顧",
+      "ApplyUndoText": "正在啟用 Windows 回顧"
     },
     "DisableClickToDo": {
-      "Label": "停用 Click to Do 的 AI 文字與影像分析",
-      "ToolTip": "這會停用 Click to Do，該功能會在 Windows 中提供 AI 文字與影像分析。此功能會透過原則鎖定某些設定。",
+      "Label": "停用「按一下執行」(Click to Do) 的 AI 文字與影像分析",
+      "ToolTip": "這會停用「按一下執行」(Click to Do)，該功能會在 Windows 中提供 AI 文字與影像分析。此功能會透過原則鎖定某些設定。",
       "ApplyText": "正在停用 Click to Do",
       "UndoLabel": "啟用 Click to Do 的 AI 文字與影像分析",
       "ApplyUndoText": "正在啟用 Click to Do"
@@ -259,10 +259,10 @@
       "ApplyUndoText": "正在啟用視窗貼齊"
     },
     "DisableSnapAssist": {
-      "Label": "停用貼齊視窗時顯示應用程式建議",
-      "ToolTip": "當您將視窗貼齊至螢幕側邊或角落時，這會關閉應用程式建議。",
+      "Label": "停用貼齊小幫手的應用程式建議",
+      "ToolTip": "當您將視窗貼齊至螢幕側邊或角落時，這會關閉貼齊小幫手的應用程式建議。",
       "ApplyText": "正在停用貼齊小幫手建議",
-      "UndoLabel": "啟用貼齊視窗時顯示應用程式建議",
+      "UndoLabel": "啟用貼齊小幫手的應用程式建議",
       "ApplyUndoText": "正在啟用貼齊小幫手建議"
     },
     "DisableSnapLayouts": {
@@ -513,7 +513,7 @@
     },
     "DisableDeliveryOptimization": {
       "Label": "停用與其他 PC 共用已下載的更新",
-      "ToolTip": "這會防止您的 PC 與區域網路或網際網路上的其他 PC 共用已下載的更新，也會防止您的 PC 從其他 PC 下載更新。",
+      "ToolTip": "這會防止您的 PC 透過「傳遞最佳化」與區域網路或網際網路上的其他 PC 共用已下載的更新，也會防止您的 PC 從其他 PC 下載更新。",
       "ApplyText": "正在停用與其他 PC 共用已下載的更新",
       "UndoLabel": "啟用與其他 PC 共用已下載的更新",
       "ApplyUndoText": "正在啟用與其他 PC 共用已下載的更新"

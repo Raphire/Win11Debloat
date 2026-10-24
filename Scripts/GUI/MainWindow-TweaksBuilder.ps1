@@ -517,6 +517,12 @@ function Update-CurrentTweakSystemState {
         }
     }
 
+    # Drop the caches from the previous refresh so registry files, the Appx package list and
+    # per-feature results are all read fresh. Test-FeatureApplied then caches each feature's
+    # state for this refresh, which is what keeps the shared features from being read once
+    # per control.
+    Reset-FeatureStateCache
+
     foreach ($controlName in $script:UiControlMappings.Keys) {
         $control = $Window.FindName($controlName)
         if (-not $control) { continue }

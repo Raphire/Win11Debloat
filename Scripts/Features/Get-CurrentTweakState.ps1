@@ -24,6 +24,165 @@ function Get-ExpectedRegistryValueKind {
 
 <#
     .SYNOPSIS
+        Returns the set of installed Appx package names, cached for the current refresh.
+
+    .DESCRIPTION
+        `Get-AppxPackage -Name <id> -AllUsers` costs roughly 60 ms per call, and the
+        Widgets check needs three of them. A single `-AllUsers` enumeration costs about
+        the same as one name query and answers all three, so the names are collected once
+        and reused. The cache is cleared by Reset-FeatureStateCache so a later refresh
+        still sees packages installed or removed in the meantime.
+
+        Returns $null when the enumeration fails, which lets the caller fall back to the
+        per-name query instead of reporting a wrong state.
+#>
+function Get-InstalledAppxNameSet {
+    if ($null -ne $script:InstalledAppxNameCache) {
+        # The unary comma keeps an empty set from being unrolled into nothing by the pipeline,
+        # which the caller would see as a failed enumeration.
+        return ,$script:InstalledAppxNameCache
+    }
+
+    try {
+        $names = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+        foreach ($package in @(Get-AppxPackage -AllUsers -ErrorAction Stop)) {
+            if ($package.Name -is [string]) { [void]$names.Add($package.Name) }
+        }
+        $script:InstalledAppxNameCache = $names
+    }
+    catch {
+        # Leave the cache empty so the caller falls back to the per-name query.
+        $script:InstalledAppxNameCache = $null
+        return $null
+    }
+
+    return ,$script:InstalledAppxNameCache
+}
+
+<#
+    .SYNOPSIS
+        Drops the per-refresh caches used while reading the current tweak state.
+
+    .DESCRIPTION
+        Call this before a refresh so registry files and Appx package lists are read fresh.
+        The caches only live for one refresh, so changes made outside Win11Debloat are
+        picked up by the next one.
+#>
+function Reset-FeatureStateCache {
+    $script:RegFileOperationCache = $null
+    $script:InstalledAppxNameCache = $null
+    $script:FeatureAppliedCache = $null
+    $script:RegistryPathCache = $null
+}
+
+<#
+    .SYNOPSIS
+        Resolves a registry key path to its root key and sub key, cached for the current refresh.
+
+    .DESCRIPTION
+        A single .reg file can touch the same key many times, and the tweaks tab checks
+        around 240 registry operations that only cover 90 distinct key paths. Splitting the
+        path and looking up the root key for every operation is repeated work, so the
+        resolution is cached for the duration of one refresh.
+
+        Returns $null when the path cannot be resolved, which is what the callers treat as
+        a mismatch.
+#>
+function Get-CachedRegistryPath {
+    param(
+        [Parameter(Mandatory)]
+        [string]$KeyPath
+    )
+
+    if ($null -eq $script:RegistryPathCache) {
+        $script:RegistryPathCache = @{}
+    }
+
+    if ($script:RegistryPathCache.ContainsKey($KeyPath)) {
+        return $script:RegistryPathCache[$KeyPath]
+    }
+
+    $resolved = $null
+    $parts = Split-RegistryPath -path $KeyPath
+    if ($parts) {
+        $rootKey = Get-RegistryRootKey -hiveName $parts.Hive
+        if ($rootKey) {
+            $resolved = [PSCustomObject]@{
+                RootKey = $rootKey
+                SubKey  = $parts.SubKey
+            }
+        }
+    }
+
+    $script:RegistryPathCache[$KeyPath] = $resolved
+    return $resolved
+}
+
+<#
+    .SYNOPSIS
+        Returns the parsed operations of a .reg file, cached for the current refresh.
+
+    .DESCRIPTION
+        Parsing a .reg file costs a few milliseconds and the same file is read for every
+        feature that references it, on every refresh. The parsed operations depend only on
+        the file contents, which do not change while the window is open, so they are cached
+        per refresh and invalidated by Reset-FeatureStateCache.
+#>
+function Get-CachedRegFileOperations {
+    param(
+        [Parameter(Mandatory)]
+        [string]$RegFilePath
+    )
+
+    if ($null -eq $script:RegFileOperationCache) {
+        $script:RegFileOperationCache = @{}
+    }
+
+    $cached = $script:RegFileOperationCache[$RegFilePath]
+    if ($null -ne $cached) { return $cached }
+
+    $operations = @(Get-RegFileOperations -regFilePath $RegFilePath)
+    $script:RegFileOperationCache[$RegFilePath] = $operations
+    return $operations
+}
+
+<#
+    .SYNOPSIS
+        Tests whether a feature is applied, caching the answer for the current refresh.
+
+    .DESCRIPTION
+        A feature can back a checkbox and several UiGroup options, and the tweaks tab asks
+        for the same state more than once per refresh. This caches the result of
+        Test-FeatureAppliedUncached per FeatureId for the duration of one refresh, so the
+        registry is read once per feature instead of once per control.
+
+        The cache is dropped by Reset-FeatureStateCache, which runs before each refresh, so
+        a change made outside Win11Debloat is picked up next time.
+
+    .PARAMETER FeatureId
+        The feature identifier to test.
+#>
+function Test-FeatureApplied {
+    param (
+        [Parameter(Mandatory)]
+        [string]$FeatureId
+    )
+
+    if ($null -eq $script:FeatureAppliedCache) {
+        $script:FeatureAppliedCache = @{}
+    }
+
+    if ($script:FeatureAppliedCache.ContainsKey($FeatureId)) {
+        return $script:FeatureAppliedCache[$FeatureId]
+    }
+
+    $applied = [bool](Test-FeatureAppliedUncached -FeatureId $FeatureId)
+    $script:FeatureAppliedCache[$FeatureId] = $applied
+    return $applied
+}
+
+<#
+    .SYNOPSIS
         Tests whether a feature's registry operations currently match the live registry.
 
     .DESCRIPTION
@@ -32,10 +191,13 @@ function Get-ExpectedRegistryValueKind {
         missing, or any operation mismatches. Special-cased features (Widgets, Store
         suggestions, Windows Sandbox, WSL) bypass .reg checking entirely.
 
+        Callers go through Test-FeatureApplied, which adds the per-refresh cache; this
+        function always reads the live state.
+
     .PARAMETER FeatureId
         The feature identifier to test.
 #>
-function Test-FeatureApplied {
+function Test-FeatureAppliedUncached {
     param (
         [Parameter(Mandatory)]
         [string]$FeatureId
@@ -53,6 +215,16 @@ function Test-FeatureApplied {
                 'Microsoft.WidgetsPlatformRuntime'
             )
 
+            $installedNames = Get-InstalledAppxNameSet
+            if ($null -ne $installedNames) {
+                foreach ($appId in $widgetAppIds) {
+                    if ($installedNames.Contains($appId)) { return $false }
+                }
+
+                return $true
+            }
+
+            # The single enumeration failed; fall back to one query per package.
             foreach ($appId in $widgetAppIds) {
                 if (Get-AppxPackage -Name $appId -AllUsers -ErrorAction SilentlyContinue) {
                     return $false
@@ -86,22 +258,19 @@ function Test-FeatureApplied {
     if (-not (Test-Path $regFilePath)) { return $false }
 
     try {
-        $operations = @(Get-RegFileOperations -regFilePath $regFilePath)
+        $operations = @(Get-CachedRegFileOperations -RegFilePath $regFilePath)
     }
     catch { return $false }
 
     if ($operations.Count -eq 0) { return $false }
 
     foreach ($op in $operations) {
-        $parts = Split-RegistryPath -path $op.KeyPath
-        if (-not $parts) { return $false }
-
-        $rootKey = Get-RegistryRootKey -hiveName $parts.Hive
-        if (-not $rootKey) { return $false }
+        $registryPath = Get-CachedRegistryPath -KeyPath $op.KeyPath
+        if (-not $registryPath) { return $false }
 
         $key = $null
         try {
-            $key = $rootKey.OpenSubKey($parts.SubKey, $false)
+            $key = $registryPath.RootKey.OpenSubKey($registryPath.SubKey, $false)
 
             switch ($op.OperationType) {
                 'DeleteKey' {

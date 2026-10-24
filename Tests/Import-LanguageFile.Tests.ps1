@@ -166,6 +166,18 @@ Describe 'Get-PluralCategory' {
     ) {
         Get-PluralCategory -LanguageCode 'ru-RU' -Count $Count | Should -Be $Expected
     }
+
+    It 'returns other for a Korean count of <Count>' -ForEach @(
+        @{ Count = 0 }
+        @{ Count = 1 }
+        @{ Count = 2 }
+        @{ Count = 5 }
+        @{ Count = 11 }
+        @{ Count = 100 }
+        @{ Count = 1000000 }
+    ) {
+        Get-PluralCategory -LanguageCode 'ko-KR' -Count $Count | Should -Be 'other'
+    }
 }
 
 Describe 'Get-Translation' {

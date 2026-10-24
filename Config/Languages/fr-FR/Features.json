@@ -230,13 +230,6 @@
       "UndoLabel": "Désactiver le thème sombre pour le système et les applications",
       "ApplyUndoText": "Désactivation du mode sombre pour le système et les applications"
     },
-    "DisableDragTray": {
-      "Label": "Désactiver la « zone de glisser » pour le partage et le déplacement de fichiers",
-      "ToolTip": "La zone de glisser est une nouvelle fonctionnalité de partage et de déplacement de fichiers dans Windows 11 ; elle s'affiche en haut de l'écran lorsque vous faites glisser des fichiers.",
-      "ApplyText": "Désactivation de la zone de glisser",
-      "UndoLabel": "Activer la « zone de glisser » pour le partage et le déplacement de fichiers",
-      "ApplyUndoText": "Activation de la zone de glisser"
-    },
     "RevertContextMenu": {
       "Label": "Utiliser le style de menu contextuel classique de Windows 10",
       "ToolTip": "Cela restaure le menu contextuel de style Windows 10 classique, qui est normalement masqué derrière l'entrée « Afficher plus d'options » du nouveau menu contextuel de Windows 11.",

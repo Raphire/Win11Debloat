@@ -210,18 +210,18 @@
       "ApplyUndoText": "正在啟用 Google Chrome 中的 AI 功能"
     },
     "DisablePaintAI": {
-      "Label": "停用小畫家中的 AI 功能",
-      "ToolTip": "這會關閉小畫家中的 AI 功能，例如 AI 影像產生和編輯工具。此功能會透過原則鎖定某些設定。",
-      "ApplyText": "正在停用小畫家中的 AI 功能",
-      "UndoLabel": "啟用小畫家中的 AI 功能",
-      "ApplyUndoText": "正在啟用小畫家中的 AI 功能"
+      "Label": "停用 Paint (小畫家) 中的 AI 功能",
+      "ToolTip": "這會關閉 Paint (小畫家) 中的 AI 功能，例如 AI 影像產生和編輯工具。此功能會透過原則鎖定某些設定。",
+      "ApplyText": "正在停用 Paint (小畫家) 中的 AI 功能",
+      "UndoLabel": "啟用 Paint (小畫家) 中的 AI 功能",
+      "ApplyUndoText": "正在啟用 Paint (小畫家) 中的 AI 功能"
     },
     "DisableNotepadAI": {
-      "Label": "停用記事本中的 AI 功能",
-      "ToolTip": "這會關閉記事本中的 AI 功能，例如 AI 寫作建議。此功能會透過原則鎖定某些設定。",
-      "ApplyText": "正在停用記事本中的 AI 功能",
-      "UndoLabel": "啟用記事本中的 AI 功能",
-      "ApplyUndoText": "正在啟用記事本中的 AI 功能"
+      "Label": "停用 Notepad (記事本) 中的 AI 功能",
+      "ToolTip": "這會關閉 Notepad (記事本) 中的 AI 功能，例如 AI 寫作建議。此功能會透過原則鎖定某些設定。",
+      "ApplyText": "正在停用 Notepad (記事本) 中的 AI 功能",
+      "UndoLabel": "啟用 Notepad (記事本) 中的 AI 功能",
+      "ApplyUndoText": "正在啟用 Notepad (記事本) 中的 AI 功能"
     },
     "EnableDarkMode": {
       "Label": "為系統與應用程式啟用深色主題",
@@ -238,11 +238,11 @@
       "ApplyUndoText": "正在還原 Windows 11 樣式的操作功能表"
     },
     "DisableMouseAcceleration": {
-      "Label": "停用「提高指標精確度」（滑鼠加速）",
+      "Label": "停用「增強指標的準確性」（滑鼠加速）",
       "ToolTip": "這會停用 Windows 預設啟用的滑鼠加速，讓滑鼠移動更一致、更可預測。",
-      "ApplyText": "正在關閉「提高指標精確度」",
-      "UndoLabel": "啟用「提高指標精確度」（滑鼠加速）",
-      "ApplyUndoText": "正在開啟「提高指標精確度」"
+      "ApplyText": "正在關閉「增強指標的準確性」",
+      "UndoLabel": "啟用「增強指標的準確性」（滑鼠加速）",
+      "ApplyUndoText": "正在開啟「增強指標的準確性」"
     },
     "DisableStickyKeys": {
       "Label": "停用相黏鍵鍵盤快速鍵 (連按 5 次 Shift)",

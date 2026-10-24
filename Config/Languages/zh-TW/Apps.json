@@ -1,6 +1,6 @@
 ﻿{
   "Clipchamp.Clipchamp": {
-    "FriendlyName": "Clipchamp",
+    "FriendlyName": "Microsoft Clipchamp",
     "Description": "Microsoft 提供的影片編輯器"
   },
   "Microsoft.3DBuilder": {
@@ -40,7 +40,7 @@
     "Description": "透過 Bing 提供的旅遊規劃與新聞 (已停止提供)"
   },
   "Microsoft.BingWeather": {
-    "FriendlyName": "Bing 天氣",
+    "FriendlyName": "MSN 天氣",
     "Description": "透過 Bing 提供的天氣預報"
   },
   "XP9CXNGPPJ97XX": {
@@ -80,11 +80,11 @@
     "Description": "商業分析服務用戶端"
   },
   "Microsoft.MicrosoftSolitaireCollection": {
-    "FriendlyName": "Microsoft 接龍",
+    "FriendlyName": "Microsoft Solitaire Collection",
     "Description": "接龍紙牌遊戲集合"
   },
   "Microsoft.MicrosoftStickyNotes": {
-    "FriendlyName": "自黏便箋",
+    "FriendlyName": "Microsoft 自黏便箋",
     "Description": "用於建立與同步自黏便箋的應用程式"
   },
   "Microsoft.MixedReality.Portal": {
@@ -128,7 +128,7 @@
     "Description": "開發人員儀表板與工具設定公用程式 (已停止提供)"
   },
   "Microsoft.WindowsAlarms": {
-    "FriendlyName": "時鐘",
+    "FriendlyName": "Windows 鬧鐘與時鐘",
     "Description": "提供鬧鐘、計時器、碼錶與專注工作階段的應用程式"
   },
   "Microsoft.WindowsFeedbackHub": {
@@ -140,7 +140,7 @@
     "Description": "地圖與導航應用程式 (已停止提供)"
   },
   "Microsoft.WindowsSoundRecorder": {
-    "FriendlyName": "錄音機",
+    "FriendlyName": "Windows 語音錄音機",
     "Description": "基本音訊錄製應用程式"
   },
   "Microsoft.XboxApp": {
@@ -156,7 +156,7 @@
     "Description": "用於管理家庭螢幕時間、內容篩選與活動報告的應用程式"
   },
   "MicrosoftCorporationII.QuickAssist": {
-    "FriendlyName": "快速小幫手",
+    "FriendlyName": "快速助手",
     "Description": "遠端協助工具"
   },
   "MicrosoftTeams": {
@@ -360,8 +360,8 @@
     "Description": "新版 Windows 版 Outlook 郵件用戶端"
   },
   "Microsoft.Paint": {
-    "FriendlyName": "小畫家",
-    "Description": "傳統小畫家 (傳統 2D 繪圖應用程式)"
+    "FriendlyName": "Paint",
+    "Description": "Paint (小畫家)，傳統 2D 繪圖應用程式"
   },
   "Microsoft.People": {
     "FriendlyName": "人員",
@@ -372,11 +372,11 @@
     "Description": "遠端桌面用戶端應用程式"
   },
   "Microsoft.ScreenSketch": {
-    "FriendlyName": "剪取工具",
+    "FriendlyName": "剪取與繪圖",
     "Description": "擷取、註釋、儲存及分享螢幕擷取畫面"
   },
   "Microsoft.StartExperiencesApp": {
-    "FriendlyName": "小工具體驗",
+    "FriendlyName": "Start Experiences App",
     "Description": "此應用程式提供 Windows 小工具的「我的摘要」功能"
   },
   "Microsoft.Whiteboard": {
@@ -384,15 +384,15 @@
     "Description": "數位協作白板應用程式"
   },
   "Microsoft.Windows.Photos": {
-    "FriendlyName": "相片",
+    "FriendlyName": "Microsoft 相片",
     "Description": "預設的相片檢視與基本編輯應用程式"
   },
   "Microsoft.WindowsCalculator": {
-    "FriendlyName": "計算機",
+    "FriendlyName": "Windows 小算盤",
     "Description": "計算機應用程式"
   },
   "Microsoft.WindowsCamera": {
-    "FriendlyName": "相機",
+    "FriendlyName": "Windows 相機",
     "Description": "使用內建或外接相機的相機應用程式"
   },
   "Microsoft.windowscommunicationsapps": {
@@ -400,8 +400,8 @@
     "Description": "郵件與行事曆應用程式套件 (已停止提供)"
   },
   "Microsoft.WindowsNotepad": {
-    "FriendlyName": "記事本",
-    "Description": "記事本文字編輯器應用程式"
+    "FriendlyName": "Windows Notepad",
+    "Description": "Notepad (記事本) 文字編輯器應用程式"
   },
   "Microsoft.WindowsStore": {
     "FriendlyName": "Microsoft Store",
@@ -436,11 +436,11 @@
     "Description": "手機連結 (將 Android/iOS 手機連接到 PC)"
   },
   "Microsoft.ZuneMusic": {
-    "FriendlyName": "媒體播放器",
+    "FriendlyName": "Windows 媒體播放器",
     "Description": "新版媒體播放器 (取代 Groove Music，可播放本機音訊/視訊)"
   },
   "MicrosoftWindows.CrossDevice": {
-    "FriendlyName": "跨裝置體驗",
+    "FriendlyName": "跨裝置體驗主機",
     "Description": "檔案總管、相機等中的手機整合 (手機連結功能的一部分)"
   },
   "MicrosoftWindows.Client.WebExperience": {

@@ -182,18 +182,18 @@
       "ApplyUndoText": "Habilitando sugestões de apps da Microsoft Store na pesquisa"
     },
     "DisableSettings365Ads": {
-      "Label": "Ocultar anúncios do Microsoft 365 Copilot na Página Inicial do Configurações",
-      "ToolTip": "Isto desabilitará os anúncios do Microsoft 365 Copilot que aparecem na página inicial do Configurações.",
-      "ApplyText": "Desabilitando anúncios do Microsoft 365 Copilot na Página Inicial do Configurações",
-      "UndoLabel": "Mostrar anúncios do Microsoft 365 Copilot na Página Inicial do Configurações",
-      "ApplyUndoText": "Habilitando anúncios do Microsoft 365 Copilot na Página Inicial do Configurações"
+      "Label": "Ocultar anúncios do Microsoft 365 Copilot na Página Inicial de Configurações",
+      "ToolTip": "Isto desabilitará os anúncios do Microsoft 365 Copilot que aparecem na página inicial de Configurações.",
+      "ApplyText": "Desabilitando anúncios do Microsoft 365 Copilot na Página Inicial de Configurações",
+      "UndoLabel": "Mostrar anúncios do Microsoft 365 Copilot na Página Inicial de Configurações",
+      "ApplyUndoText": "Habilitando anúncios do Microsoft 365 Copilot na Página Inicial de Configurações"
     },
     "DisableSettingsHome": {
-      "Label": "Ocultar página 'Inicial' do Configurações",
+      "Label": "Ocultar página 'Inicial' de Configurações",
       "ToolTip": "Remove a página 'Inicial' do app Configurações.",
-      "ApplyText": "Desabilitando a Página Inicial do Configurações",
-      "UndoLabel": "Mostrar página 'Inicial' do Configurações",
-      "ApplyUndoText": "Habilitando a Página Inicial do Configurações"
+      "ApplyText": "Desabilitando a Página Inicial de Configurações",
+      "UndoLabel": "Mostrar página 'Inicial' de Configurações",
+      "ApplyUndoText": "Habilitando a Página Inicial de Configurações"
     },
     "DisableEdgeAI": {
       "Label": "Desabilitar funcionalidades de IA no Microsoft Edge",

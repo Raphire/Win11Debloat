@@ -167,6 +167,9 @@ try {
             }
             $sourceUri = $archiveAsset.browser_download_url
         }
+        else {
+            Write-Warning 'This release does not publish both Win11Debloat.zip and SHA256SUMS. Downloading the source archive without SHA-256 verification.'
+        }
     }
     Invoke-RestMethod $sourceUri -OutFile $tempArchivePath
 }

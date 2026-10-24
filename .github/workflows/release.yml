@@ -1,0 +1,111 @@
+name: Prepare release assets
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'New release version and tag (YYYY.MM.DD or YYYY.MM.DD-rN)'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: prepare-release
+  cancel-in-progress: false
+
+jobs:
+  package:
+    if: github.ref == 'refs/heads/master'
+    runs-on: windows-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      RELEASE_TAG: ${{ inputs.tag }}
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          ref: master
+          persist-credentials: false
+
+      - name: Update source version
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ($env:RELEASE_TAG -notmatch '^\d{4}\.\d{2}\.\d{2}(?:-r[1-9]\d*)?$') { throw 'Expected a YYYY.MM.DD tag with an optional -rN revision suffix (positive integer).' }
+          $null = [datetime]::ParseExact($env:RELEASE_TAG.Substring(0, 10), 'yyyy.MM.dd', [cultureinfo]::InvariantCulture)
+          gh auth setup-git
+          if ($LASTEXITCODE -ne 0) { throw 'Unable to configure Git authentication.' }
+          $existingTag = git ls-remote --tags origin "refs/tags/$env:RELEASE_TAG"
+          if ($LASTEXITCODE -ne 0) { throw 'Unable to check release tags.' }
+          if ($existingTag) { throw 'This tag already exists. Use a new release version.' }
+          $scriptPath = Join-Path $pwd 'Win11Debloat.ps1'
+          $text = [IO.File]::ReadAllText($scriptPath)
+          $pattern = '(?m)^\$script:Version = "[^"\r\n]+"\r?$'
+          if ([regex]::Matches($text, $pattern).Count -ne 1) { throw 'Expected exactly one script version assignment.' }
+          $text = [regex]::Replace($text, $pattern, ('$script:Version = "' + $env:RELEASE_TAG + '"'))
+          [IO.File]::WriteAllText($scriptPath, $text, [Text.UTF8Encoding]::new($true))
+
+      - name: Test the release source
+        shell: powershell
+        run: |
+          $global:LASTEXITCODE = 0
+          ./Scripts/Run-Tests.ps1 -Bootstrap
+          if ($LASTEXITCODE -ne 0) { throw 'Release tests failed.' }
+
+      - name: Commit version and create release tag
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          git config user.name 'github-actions[bot]'
+          if ($LASTEXITCODE -ne 0) { throw 'Unable to configure commit author.' }
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          if ($LASTEXITCODE -ne 0) { throw 'Unable to configure commit email.' }
+          git diff --quiet -- Win11Debloat.ps1
+          if ($LASTEXITCODE -eq 1) {
+            git add -- Win11Debloat.ps1
+            if ($LASTEXITCODE -ne 0) { throw 'Unable to stage version update.' }
+            git commit -m "chore: release $env:RELEASE_TAG"
+            if ($LASTEXITCODE -ne 0) { throw 'Unable to commit version update.' }
+          } elseif ($LASTEXITCODE -ne 0) { throw 'Unable to check version changes.' }
+          git tag $env:RELEASE_TAG
+          if ($LASTEXITCODE -ne 0) { throw 'Unable to create release tag.' }
+          git push --atomic origin HEAD:refs/heads/master "refs/tags/$env:RELEASE_TAG"
+          if ($LASTEXITCODE -ne 0) { throw 'Unable to push version commit and tag. Check branch/tag permissions.' }
+
+      - name: Download committed release source
+        shell: powershell
+        run: |
+          $sourceCommit = git rev-parse HEAD
+          if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve release commit.' }
+          curl.exe --fail --location --retry 3 --header "Authorization: Bearer $env:GH_TOKEN" --output source.zip "https://api.github.com/repos/$env:GH_REPO/zipball/$sourceCommit"
+          if ($LASTEXITCODE -ne 0) { throw 'Unable to download release source.' }
+          Expand-Archive -LiteralPath source.zip -DestinationPath release-source
+
+      - name: Build release assets
+        shell: powershell
+        run: |
+          $source = @(Get-ChildItem release-source -Directory)[0].FullName
+          & (Join-Path $source 'Scripts/Build-Release.ps1') -SourcePath $source -Version $env:RELEASE_TAG -OutputDirectory release-assets
+
+      - name: Create draft release
+        shell: powershell
+        run: |
+          gh release create $env:RELEASE_TAG --verify-tag --draft --title "Release $env:RELEASE_TAG" --generate-notes
+          if ($LASTEXITCODE -ne 0) { throw 'Unable to create draft release.' }
+
+      - name: Upload assets to draft release
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $releaseJson = gh release view $env:RELEASE_TAG --json isDraft
+          if ($LASTEXITCODE -ne 0) { throw 'Unable to read release.' }
+          $release = $releaseJson | ConvertFrom-Json
+          if (-not $release.isDraft) { throw 'Release was published before preparation finished.' }
+          gh release upload $env:RELEASE_TAG release-assets/Win11Debloat.zip release-assets/SHA256SUMS release-assets/Get.ps1
+          if ($LASTEXITCODE -ne 0) { throw 'Upload failed. Finish the draft manually, or remove the unpublished draft and its tag before retrying.' }
+          "Prepared $env:RELEASE_TAG. Review its three assets, then publish the draft release." | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding ascii

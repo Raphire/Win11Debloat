@@ -174,4 +174,15 @@ Describe 'Launcher archive verification flow' {
         Should -Invoke Invoke-RestMethod -Times 0 -Exactly -ParameterFilter { $Uri -eq $checksumsUrl -or $Uri -eq $archiveUrl }
         Should -Invoke Expand-Archive -Times 1 -Exactly
     }
+
+    It 'downloads the generated source archive when the release has no archive asset' {
+        $state.Release.assets = @($state.Release.assets | Where-Object { $_.name -ne 'Win11Debloat.zip' })
+        $ErrorActionPreference = 'Continue'
+
+        { & $getScriptPath *> $null } | Should -Throw '*reached extraction*'
+
+        Should -Invoke Invoke-RestMethod -Times 1 -Exactly -ParameterFilter { $Uri -eq $zipballUrl }
+        Should -Invoke Invoke-RestMethod -Times 0 -Exactly -ParameterFilter { $Uri -eq $checksumsUrl -or $Uri -eq $archiveUrl }
+        Should -Invoke Expand-Archive -Times 1 -Exactly
+    }
 }

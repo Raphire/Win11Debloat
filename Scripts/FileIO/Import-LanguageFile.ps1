@@ -149,8 +149,40 @@ function Get-PluralCategory {
 
             return 'other'
         }
+        # French CLDR rule: 'one' covers 0 and 1, 'other' every remaining count. CLDR also
+        # defines 'many' for whole multiples of 1,000,000, but it is deliberately not
+        # returned here: the catalogs ship no '_many' variants, and a category with no
+        # matching key falls through to the bare key (which does not exist) rather than
+        # to '_other', so returning 'many' would print the raw key name at that count.
+        'fr' {
+            if ($Count -le 1) {
+                return 'one'
+            }
+
+            return 'other'
+        }
         # Japanese CLDR rule: no grammatical plural, every count is 'other'.
         'ja' {
+            return 'other'
+        }
+        # Russian CLDR rule for whole numbers: 'one' for 1, 21, 31... (not 11), 'few' for 2-4, 22-24...
+        # (not 12-14), 'many' for every other count (0, 5-20, 25-30...).
+        'ru' {
+            $absoluteCount = [Math]::Abs($Count)
+            $lastDigit = $absoluteCount % 10
+            $lastTwoDigits = $absoluteCount % 100
+            if ($lastDigit -eq 1 -and $lastTwoDigits -ne 11) {
+                return 'one'
+            }
+
+            if ($lastDigit -ge 2 -and $lastDigit -le 4 -and ($lastTwoDigits -lt 12 -or $lastTwoDigits -gt 14)) {
+                return 'few'
+            }
+
+            return 'many'
+        }
+        # Korean has no grammatical plural, like Japanese, so every count is 'other'.
+        'ko' {
             return 'other'
         }
         # English CLDR rule: singular only for exactly 1, plural otherwise. Also correct for Dutch/German.

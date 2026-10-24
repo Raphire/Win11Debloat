@@ -17,10 +17,28 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
       - name: Run tests
         shell: powershell
         run: ./Scripts/Run-Tests.ps1 -Bootstrap
+
+  psscriptanalyzer:
+    name: PSScriptAnalyzer (Error severity)
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Run PSScriptAnalyzer
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Install-Module -Name PSScriptAnalyzer -Scope CurrentUser -Force -Confirm:$false
+          Import-Module PSScriptAnalyzer
+          Invoke-ScriptAnalyzer -Path . -Recurse -Severity Error -EnableExit

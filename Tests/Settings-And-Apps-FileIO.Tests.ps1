@@ -188,9 +188,9 @@ Describe 'Import-AppDetailsFromJson' {
         $apps = @(Import-AppDetailsFromJson)
 
         $apps | Should -HaveCount 1
-        $apps[0].FriendlyName | Should -Be 'Clipchamp'
+        $apps[0].FriendlyName | Should -Be 'Microsoft Clipchamp'
         $apps[0].Description | Should -Be 'Video editor from Microsoft'
-        $apps[0].DisplayName | Should -Be 'Clipchamp (Clipchamp.Clipchamp)'
+        $apps[0].DisplayName | Should -Be 'Microsoft Clipchamp (Clipchamp.Clipchamp)'
     }
 
     It 'skips missing, blank, and non-string app IDs without failing the complete catalog' {

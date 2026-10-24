@@ -367,6 +367,10 @@
     "FriendlyName": "Microsoft People",
     "Description": "App necessaria per Posta e Calendario e inclusa nel pacchetto (discontinuata)"
   },
+  "MicrosoftCorporationII.Windows365": {
+    "FriendlyName": "Windows App",
+    "Description": "Client per desktop remoti e Cloud PC (sostituisce l’app Desktop remoto)"
+  },
   "Microsoft.RemoteDesktop": {
     "FriendlyName": "Remote Desktop",
     "Description": "App client di Desktop remoto (versione Microsoft Store; non più supportata)"

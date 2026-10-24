@@ -367,6 +367,10 @@
     "FriendlyName": "Microsoft 人脉",
     "Description": "“邮件和日历”的配套组件，其运行需要此应用（已停止维护）"
   },
+  "MicrosoftCorporationII.Windows365": {
+    "FriendlyName": "Windows App",
+    "Description": "远程桌面和云电脑客户端（替代远程桌面应用）"
+  },
   "Microsoft.RemoteDesktop": {
     "FriendlyName": "远程桌面",
     "Description": "远程桌面客户端应用（Microsoft Store 版本，已停止支持）"

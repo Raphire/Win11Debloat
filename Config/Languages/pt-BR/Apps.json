@@ -367,6 +367,10 @@
     "FriendlyName": "Microsoft Pessoas",
     "Description": "Necessário para e incluído no Email e Calendário (descontinuado)"
   },
+  "MicrosoftCorporationII.Windows365": {
+    "FriendlyName": "Windows App",
+    "Description": "Cliente de área de trabalho remota e PC na nuvem (substitui o aplicativo Área de Trabalho Remota)"
+  },
   "Microsoft.RemoteDesktop": {
     "FriendlyName": "Área de Trabalho Remota",
     "Description": "App cliente da Área de Trabalho Remota (versão da Microsoft Store; descontinuado)"

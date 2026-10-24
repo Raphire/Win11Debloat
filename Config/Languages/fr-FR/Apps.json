@@ -367,6 +367,10 @@
     "FriendlyName": "Contacts",
     "Description": "Requis par Courrier et Calendrier, et fourni avec eux (abandonné)"
   },
+  "MicrosoftCorporationII.Windows365": {
+    "FriendlyName": "Windows App",
+    "Description": "Client pour les bureaux à distance et les PC cloud (remplace l’application Bureau à distance)"
+  },
   "Microsoft.RemoteDesktop": {
     "FriendlyName": "Bureau à distance",
     "Description": "Application cliente Bureau à distance (version Microsoft Store ; abandonnée)"

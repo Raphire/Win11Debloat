@@ -367,6 +367,10 @@
     "FriendlyName": "Microsoft 人員",
     "Description": "郵件與行事曆所需且隨附的應用程式 (已停止提供)"
   },
+  "MicrosoftCorporationII.Windows365": {
+    "FriendlyName": "Windows App",
+    "Description": "遠端桌面和雲端電腦用戶端（取代遠端桌面應用程式）"
+  },
   "Microsoft.RemoteDesktop": {
     "FriendlyName": "遠端桌面",
     "Description": "遠端桌面用戶端應用程式 (Microsoft Store 版本，已停止支援)"

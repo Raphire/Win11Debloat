@@ -230,13 +230,6 @@
       "UndoLabel": "Deshabilitar el tema oscuro para el sistema y las aplicaciones",
       "ApplyUndoText": "Deshabilitando el modo oscuro para el sistema y las aplicaciones"
     },
-    "DisableDragTray": {
-      "Label": "Deshabilitar la «Bandeja de arrastre» para compartir y mover archivos",
-      "ToolTip": "La Bandeja de arrastre es una nueva función para compartir y mover archivos en Windows 11; aparece en la parte superior de la pantalla al arrastrar archivos.",
-      "ApplyText": "Deshabilitando la Bandeja de arrastre",
-      "UndoLabel": "Habilitar la «Bandeja de arrastre» para compartir y mover archivos",
-      "ApplyUndoText": "Habilitando la Bandeja de arrastre"
-    },
     "RevertContextMenu": {
       "Label": "Usar el estilo de menú contextual clásico de Windows 10",
       "ToolTip": "Restaurará el menú contextual clásico de Windows 10, que normalmente está oculto detrás de la entrada «Mostrar más opciones» del nuevo menú contextual de Windows 11.",

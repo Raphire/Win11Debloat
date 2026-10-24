@@ -230,13 +230,6 @@
       "UndoLabel": "為系統與應用程式停用深色主題",
       "ApplyUndoText": "正在為系統與應用程式停用深色模式"
     },
-    "DisableDragTray": {
-      "Label": "停用用於共用與移動檔案的「拖曳匣」",
-      "ToolTip": "拖曳匣是 Windows 11 中用於共用與移動檔案的新功能，拖曳檔案時會出現在畫面頂端。",
-      "ApplyText": "正在停用拖曳匣",
-      "UndoLabel": "啟用用於共用與移動檔案的「拖曳匣」",
-      "ApplyUndoText": "正在啟用拖曳匣"
-    },
     "RevertContextMenu": {
       "Label": "使用傳統 Windows 10 操作功能表樣式",
       "ToolTip": "這會還原傳統 Windows 10 樣式的操作功能表，該功能表原本隱藏在新版 Windows 11 操作功能表的「顯示更多選項」項目後方。",

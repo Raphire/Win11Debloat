@@ -153,6 +153,22 @@ function Get-PluralCategory {
         'ja' {
             return 'other'
         }
+        # Russian CLDR rule for whole numbers: 'one' for 1, 21, 31... (not 11), 'few' for 2-4, 22-24...
+        # (not 12-14), 'many' for every other count (0, 5-20, 25-30...).
+        'ru' {
+            $absoluteCount = [Math]::Abs($Count)
+            $lastDigit = $absoluteCount % 10
+            $lastTwoDigits = $absoluteCount % 100
+            if ($lastDigit -eq 1 -and $lastTwoDigits -ne 11) {
+                return 'one'
+            }
+
+            if ($lastDigit -ge 2 -and $lastDigit -le 4 -and ($lastTwoDigits -lt 12 -or $lastTwoDigits -gt 14)) {
+                return 'few'
+            }
+
+            return 'many'
+        }
         # English CLDR rule: singular only for exactly 1, plural otherwise. Also correct for Dutch/German.
         default {
             if ($Count -eq 1) {

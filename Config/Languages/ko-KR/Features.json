@@ -230,13 +230,6 @@
       "UndoLabel": "시스템 및 앱의 어두운 모드 사용 안 함",
       "ApplyUndoText": "시스템 및 앱의 어두운 모드 사용 안 함 설정 중"
     },
-    "DisableDragTray": {
-      "Label": "파일 공유 및 이동을 위한 '드래그 트레이' 사용 안 함",
-      "ToolTip": "드래그 트레이는 Windows 11에서 파일을 공유하고 이동하는 새로운 기능으로, 파일을 끌 때 화면 위쪽에 나타납니다.",
-      "ApplyText": "드래그 트레이 사용 안 함 설정 중",
-      "UndoLabel": "파일 공유 및 이동을 위한 '드래그 트레이' 사용",
-      "ApplyUndoText": "드래그 트레이 사용 설정 중"
-    },
     "RevertContextMenu": {
       "Label": "클래식 Windows 10 상황에 맞는 메뉴 스타일 사용",
       "ToolTip": "일반적으로 Windows 11의 새 상황에 맞는 메뉴에서 '추가 옵션 표시' 뒤에 숨어 있는 클래식 Windows 10 스타일 상황에 맞는 메뉴를 복원합니다.",

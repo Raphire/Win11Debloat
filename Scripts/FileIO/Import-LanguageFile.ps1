@@ -169,6 +169,10 @@ function Get-PluralCategory {
 
             return 'many'
         }
+        # Korean has no grammatical plural, like Japanese, so every count is 'other'.
+        'ko' {
+            return 'other'
+        }
         # English CLDR rule: singular only for exactly 1, plural otherwise. Also correct for Dutch/German.
         default {
             if ($Count -eq 1) {

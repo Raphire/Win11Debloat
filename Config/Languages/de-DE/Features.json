@@ -49,37 +49,37 @@
       "ApplyUndoText": "Windows-Standortdienste und App-Standortzugriff werden aktiviert"
     },
     "DisableFindMyDevice": {
-      "Label": "Standortnachverfolgung „Mein Gerät finden“ deaktivieren",
-      "ToolTip": "Hiermit wird die Funktion „Mein Gerät finden“ ausgeschaltet, die in regelmäßigen Abständen den Standort Ihres Geräts an Microsoft sendet. Diese Funktion verwendet Richtlinien, wodurch bestimmte Einstellungen gesperrt werden.",
-      "ApplyText": "Standortnachverfolgung „Mein Gerät finden“ wird deaktiviert",
-      "UndoLabel": "Standortnachverfolgung „Mein Gerät finden“ aktivieren",
-      "ApplyUndoText": "Standortnachverfolgung „Mein Gerät finden“ wird aktiviert"
+      "Label": "Standortnachverfolgung „Mein Gerät suchen“ deaktivieren",
+      "ToolTip": "Hiermit wird die Funktion „Mein Gerät suchen“ ausgeschaltet, die in regelmäßigen Abständen den Standort Ihres Geräts an Microsoft sendet. Diese Funktion verwendet Richtlinien, wodurch bestimmte Einstellungen gesperrt werden.",
+      "ApplyText": "Standortnachverfolgung „Mein Gerät suchen“ wird deaktiviert",
+      "UndoLabel": "Standortnachverfolgung „Mein Gerät suchen“ aktivieren",
+      "ApplyUndoText": "Standortnachverfolgung „Mein Gerät suchen“ wird aktiviert"
     },
     "DisableLockscreenTips": {
       "Label": "Tipps und Tricks auf dem Sperrbildschirm deaktivieren",
-      "ToolTip": "Hiermit wird die Option „Sperrbildschirm-Spotlight“ ausgeschaltet und die Tipps, Tricks und Fun-Facts deaktiviert, die auf dem Sperrbildschirm angezeigt werden.",
+      "ToolTip": "Hiermit wird die Option „Windows-Blickpunkt auf dem Sperrbildschirm“ ausgeschaltet und die Tipps, Tricks und Fun-Facts deaktiviert, die auf dem Sperrbildschirm angezeigt werden.",
       "ApplyText": "Tipps und Tricks auf dem Sperrbildschirm werden deaktiviert",
       "UndoLabel": "Tipps und Tricks auf dem Sperrbildschirm aktivieren",
       "ApplyUndoText": "Tipps und Tricks auf dem Sperrbildschirm werden aktiviert"
     },
     "EnableDesktopSpotlight": {
-      "Label": "Windows-Desktop-Spotlight und Verknüpfung aktivieren",
-      "ToolTip": "Stellt den Windows-Desktop-Hintergrund für Spotlight und die Verknüpfung „Infos zu diesem Bild“ wieder her.",
-      "ApplyText": "Windows-Desktop-Spotlight und Verknüpfung werden wiederhergestellt"
+      "Label": "Windows-Blickpunkt auf dem Desktop und Verknüpfung aktivieren",
+      "ToolTip": "Stellt Windows-Blickpunkt für den Desktophintergrund und die Verknüpfung „Informationen zu diesem Bild“ wieder her.",
+      "ApplyText": "Windows-Blickpunkt auf dem Desktop und Verknüpfung werden wiederhergestellt"
     },
     "DisableDesktopSpotlight": {
-      "Label": "Windows-Desktop-Spotlight deaktivieren",
-      "ToolTip": "Schaltet Windows-Spotlight für den Desktophintergrund aus, das wechselnde Bilder anzeigt und möglicherweise Tipps und Fun-Facts einblendet. Diese Funktion verwendet Richtlinien, wodurch bestimmte Einstellungen gesperrt werden.",
-      "ApplyText": "Windows-Desktop-Spotlight wird deaktiviert",
-      "UndoLabel": "Windows-Desktop-Spotlight aktivieren",
-      "ApplyUndoText": "Windows-Desktop-Spotlight und Verknüpfung werden wiederhergestellt"
+      "Label": "Windows-Blickpunkt auf dem Desktop deaktivieren",
+      "ToolTip": "Schaltet Windows-Blickpunkt für den Desktophintergrund aus, der wechselnde Bilder anzeigt und möglicherweise Tipps und Fun-Facts einblendet. Diese Funktion verwendet Richtlinien, wodurch bestimmte Einstellungen gesperrt werden.",
+      "ApplyText": "Windows-Blickpunkt auf dem Desktop wird deaktiviert",
+      "UndoLabel": "Windows-Blickpunkt auf dem Desktop aktivieren",
+      "ApplyUndoText": "Windows-Blickpunkt auf dem Desktop und Verknüpfung werden wiederhergestellt"
     },
     "HideDesktopSpotlightIcon": {
-      "Label": "Desktopverknüpfung „Infos zu diesem Bild“ ausblenden",
-      "ToolTip": "Blendet die Desktopverknüpfung „Infos zu diesem Bild“ aus, während die Spotlight-Hintergrundrotation aktiviert bleibt. Windows-Spotlight wird dadurch nicht deaktiviert.",
-      "ApplyText": "Desktopverknüpfung „Infos zu diesem Bild“ von Windows-Spotlight wird ausgeblendet",
-      "UndoLabel": "Desktopverknüpfung „Infos zu diesem Bild“ anzeigen",
-      "ApplyUndoText": "Desktopverknüpfung „Infos zu diesem Bild“ von Windows-Spotlight wird angezeigt"
+      "Label": "Desktopverknüpfung „Informationen zu diesem Bild“ ausblenden",
+      "ToolTip": "Blendet die Desktopverknüpfung „Informationen zu diesem Bild“ aus, während die Hintergrundrotation von Windows-Blickpunkt aktiviert bleibt. Windows-Blickpunkt wird dadurch nicht deaktiviert.",
+      "ApplyText": "Desktopverknüpfung „Informationen zu diesem Bild“ von Windows-Blickpunkt wird ausgeblendet",
+      "UndoLabel": "Desktopverknüpfung „Informationen zu diesem Bild“ anzeigen",
+      "ApplyUndoText": "Desktopverknüpfung „Informationen zu diesem Bild“ von Windows-Blickpunkt wird angezeigt"
     },
     "DisableEdgeAds": {
       "Label": "Werbung, Vorschläge und Newsfeed in Edge deaktivieren",
@@ -103,11 +103,11 @@
       "ApplyUndoText": "Windows Recall wird aktiviert"
     },
     "DisableClickToDo": {
-      "Label": "Click To Do sowie KI-Text- und -Bildanalyse deaktivieren",
-      "ToolTip": "Hiermit wird Click To Do deaktiviert, das KI-gestützte Text- und Bildanalysefunktionen in Windows bereitstellt. Diese Funktion verwendet Richtlinien, wodurch bestimmte Einstellungen gesperrt werden.",
-      "ApplyText": "Click To Do wird deaktiviert",
-      "UndoLabel": "Click To Do sowie KI-Text- und -Bildanalyse aktivieren",
-      "ApplyUndoText": "Click To Do wird aktiviert"
+      "Label": "Aktion per Mausklick sowie KI-Text- und -Bildanalyse deaktivieren",
+      "ToolTip": "Hiermit wird Aktion per Mausklick deaktiviert, eine Funktion, die KI-gestützte Text- und Bildanalyse in Windows bereitstellt. Diese Funktion verwendet Richtlinien, wodurch bestimmte Einstellungen gesperrt werden.",
+      "ApplyText": "Aktion per Mausklick wird deaktiviert",
+      "UndoLabel": "Aktion per Mausklick sowie KI-Text- und -Bildanalyse aktivieren",
+      "ApplyUndoText": "Aktion per Mausklick wird aktiviert"
     },
     "DisableAISvcAutoStart": {
       "Label": "Automatischen Start des KI-Diensts verhindern",
@@ -238,11 +238,11 @@
       "ApplyUndoText": "Kontextmenü im Windows 11-Stil wird wiederhergestellt"
     },
     "DisableMouseAcceleration": {
-      "Label": "„Zeigerpräzision erhöhen“ (Mausbeschleunigung) deaktivieren",
+      "Label": "„Zeigergenauigkeit verbessern“ (Mausbeschleunigung) deaktivieren",
       "ToolTip": "Hiermit wird die Mausbeschleunigung deaktiviert, die in Windows standardmäßig aktiviert ist. Dadurch wird die Mausbewegung gleichmäßiger und vorhersehbarer.",
-      "ApplyText": "„Zeigerpräzision erhöhen“ wird ausgeschaltet",
-      "UndoLabel": "„Zeigerpräzision erhöhen“ (Mausbeschleunigung) aktivieren",
-      "ApplyUndoText": "„Zeigerpräzision erhöhen“ wird eingeschaltet"
+      "ApplyText": "„Zeigergenauigkeit verbessern“ wird ausgeschaltet",
+      "UndoLabel": "„Zeigergenauigkeit verbessern“ (Mausbeschleunigung) aktivieren",
+      "ApplyUndoText": "„Zeigergenauigkeit verbessern“ wird eingeschaltet"
     },
     "DisableStickyKeys": {
       "Label": "Tastenkombination für Einrastfunktion deaktivieren (5-mal Umschalt)",
@@ -359,7 +359,7 @@
     },
     "DisableModernStandbyNetworking": {
       "Label": "Netzwerkverbindung im modernen Standbymodus deaktivieren",
-      "ToolTip": "Standardmäßig behalten Geräte, die den modernen Standbymodus unterstützen, im Ruhezustand die Netzwerkverbindung bei. Das Deaktivieren der Netzwerkverbindung während des modernen Standbymodus kann helfen, Akkuleistung zu sparen.",
+      "ToolTip": "Standardmäßig behalten Geräte, die den modernen Standbymodus unterstützen, während des modernen Standbymodus die Netzwerkverbindung bei. Das Deaktivieren der Netzwerkverbindung während des modernen Standbymodus kann helfen, Akkuleistung zu sparen.",
       "ApplyText": "Netzwerkverbindung während des modernen Standbymodus wird deaktiviert",
       "UndoLabel": "Netzwerkverbindung im modernen Standbymodus aktivieren",
       "ApplyUndoText": "Netzwerkverbindung während des modernen Standbymodus wird aktiviert"
@@ -647,12 +647,12 @@
   },
   "UiGroups": {
     "DesktopSpotlight": {
-      "Label": "Windows-Spotlight auf dem Desktop",
-      "ToolTip": "Diese Einstellung steuert die Option für den Windows-Spotlight-Desktophintergrund. Behalten Sie die wechselnde Hintergrundbildrotation mit oder ohne die Verknüpfung „Infos zu diesem Bild“ bei, oder deaktivieren Sie Windows-Spotlight vollständig.",
+      "Label": "Windows-Blickpunkt auf dem Desktop",
+      "ToolTip": "Diese Einstellung steuert die Option für den Desktophintergrund mit Windows-Blickpunkt. Behalten Sie die wechselnde Hintergrundbildrotation mit oder ohne die Verknüpfung „Informationen zu diesem Bild“ bei, oder deaktivieren Sie Windows-Blickpunkt vollständig.",
       "Values": {
-        "EnableDesktopSpotlight": "Verknüpfung „Infos zu diesem Bild“ anzeigen (Standard)",
-        "HideDesktopSpotlightIcon": "Verknüpfung „Infos zu diesem Bild“ ausblenden",
-        "DisableDesktopSpotlight": "Windows-Spotlight-Desktophintergrund deaktivieren"
+        "EnableDesktopSpotlight": "Verknüpfung „Informationen zu diesem Bild“ anzeigen (Standard)",
+        "HideDesktopSpotlightIcon": "Verknüpfung „Informationen zu diesem Bild“ ausblenden",
+        "DisableDesktopSpotlight": "Desktophintergrund mit Windows-Blickpunkt deaktivieren"
       }
     },
     "SearchIcon": {

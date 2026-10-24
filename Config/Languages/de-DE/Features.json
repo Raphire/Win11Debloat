@@ -230,13 +230,6 @@
       "UndoLabel": "Dunkles Design für System und Apps deaktivieren",
       "ApplyUndoText": "Dunkles Design für System und Apps wird deaktiviert"
     },
-    "DisableDragTray": {
-      "Label": "„Ziehbereich“ zum Freigeben und Verschieben von Dateien deaktivieren",
-      "ToolTip": "Der Ziehbereich ist eine neue Funktion zum Freigeben und Verschieben von Dateien in Windows 11; er wird beim Ziehen von Dateien oben auf dem Bildschirm angezeigt.",
-      "ApplyText": "Ziehbereich wird deaktiviert",
-      "UndoLabel": "„Ziehbereich“ zum Freigeben und Verschieben von Dateien aktivieren",
-      "ApplyUndoText": "Ziehbereich wird aktiviert"
-    },
     "RevertContextMenu": {
       "Label": "Klassisches Kontextmenü im Windows 10-Stil verwenden",
       "ToolTip": "Hiermit wird das klassische Kontextmenü im Windows 10-Stil wiederhergestellt, das im neuen Kontextmenü von Windows 11 normalerweise hinter dem Eintrag „Weitere Optionen anzeigen“ verborgen ist.",

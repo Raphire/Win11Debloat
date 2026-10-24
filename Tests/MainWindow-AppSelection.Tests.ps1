@@ -36,7 +36,7 @@ Describe 'Invoke-AppDetailsFromJsonAsync' {
 
         $result.Count | Should -Be @($appCatalog.Apps).Count
         $clipchamp = $result | Where-Object { $_.AppId -contains 'Clipchamp.Clipchamp' }
-        $clipchamp.FriendlyName | Should -Be 'Clipchamp'
+        $clipchamp.FriendlyName | Should -Be 'Microsoft Clipchamp'
         $clipchamp.Description | Should -Be 'Video editor from Microsoft'
     }
 

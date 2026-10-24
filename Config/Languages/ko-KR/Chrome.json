@@ -336,8 +336,8 @@
   "BackupSnapshotInvalidExists": "백업 유효성 검사 실패: 레지스트리 키 스냅샷 '{0}'의 Exists는 부울 값이어야 합니다.",
   "BackupUnexpectedKeyDeletion": "백업에 승인되지 않은 레지스트리 키 삭제가 포함되어 있습니다: '{0}'.",
   "BackupUnsafeExecutableValue": "백업의 '{0}'에 신뢰할 수 없는 명령 또는 DLL 로드 값이 포함되어 있습니다. 빈 값이거나 신뢰할 수 있는 기능 데이터와 정확히 일치하는 값만 복원할 수 있습니다.",
-  "BackupExecutableConfirmationRequired": "인식되지 않은 실행 파일 레지스트리 설정을 복원하려면 명시적 확인이 필요합니다.",
-  "BackupExecutableWarningTitle": "인식되지 않은 실행 파일 설정을 복원하시겠습니까?",
-  "BackupExecutableWarningMessage": "이 백업에는 스크립트 파일과 일치하지 않는 실행 파일 레지스트리 설정이 포함되어 있습니다. 이로 인해 Windows나 응용 프로그램이 악성 코드를 로드할 수 있습니다.\n\n비공식 출처에서 가져온 레지스트리 백업은 복원하지 마세요. 이 백업을 직접 만들었고 아래 설정을 검토한 경우에만 계속하세요.\n\n{0}",
+  "BackupExecutableConfirmationRequired": "코드 실행을 유발할 수 있는 인식되지 않은 레지스트리 설정을 복원하려면 명시적 확인이 필요합니다.",
+  "BackupExecutableWarningTitle": "코드 실행을 유발할 수 있는 인식되지 않은 설정을 복원하시겠습니까?",
+  "BackupExecutableWarningMessage": "이 백업에는 스크립트 파일과 일치하지 않으며 코드 실행을 유발할 수 있는 레지스트리 설정이 포함되어 있습니다. 이로 인해 Windows나 응용 프로그램이 악성 코드를 로드할 수 있습니다.\n\n비공식 출처에서 가져온 레지스트리 백업은 복원하지 마세요. 이 백업을 직접 만들었고 아래 설정을 검토한 경우에만 계속하세요.\n\n{0}",
   "BackupExecutableMismatchDetails": "경로: {0}\n값 이름: {1}\n종류: {2}\n데이터: {3}"
 }

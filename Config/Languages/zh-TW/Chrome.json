@@ -336,8 +336,8 @@
   "BackupSnapshotInvalidExists": "備份驗證失敗：登錄檔機碼快照「{0}」的 Exists 必須是布林值。",
   "BackupUnexpectedKeyDeletion": "備份包含未經授權的登錄檔機碼刪除：「{0}」。",
   "BackupUnsafeExecutableValue": "備份在「{0}」包含不受信任的命令或 DLL 載入值。只能還原空白值或與受信任功能資料完全相符的值。",
-  "BackupExecutableConfirmationRequired": "還原未識別的可執行檔登錄設定需要明確確認。",
-  "BackupExecutableWarningTitle": "要還原未識別的可執行檔設定嗎？",
-  "BackupExecutableWarningMessage": "此備份包含與指令碼檔案不符的可執行檔登錄設定。這些設定可能導致 Windows 或應用程式載入惡意程式碼。\n\n請勿還原來自非官方來源的登錄備份。只有在您自行建立此備份並已檢閱下列設定時，才可繼續。\n\n{0}",
+  "BackupExecutableConfirmationRequired": "還原可能執行程式碼的未識別登錄設定需要明確確認。",
+  "BackupExecutableWarningTitle": "要還原可能執行程式碼的未識別設定嗎？",
+  "BackupExecutableWarningMessage": "此備份包含與指令碼檔案不符且可能執行程式碼的登錄設定。這些設定可能導致 Windows 或應用程式載入惡意程式碼。\n\n請勿還原來自非官方來源的登錄備份。只有在您自行建立此備份並已檢閱下列設定時，才可繼續。\n\n{0}",
   "BackupExecutableMismatchDetails": "路徑：{0}\n值名稱：{1}\n類型：{2}\n資料：{3}"
 }

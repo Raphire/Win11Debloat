@@ -5,7 +5,7 @@
   },
   "Microsoft.3DBuilder": {
     "FriendlyName": "3D Builder",
-    "Description": "Basic 3D modeling software"
+    "Description": "Basic 3D modeling software (discontinued)"
   },
   "Microsoft.549981C3F5F10": {
     "FriendlyName": "Cortana",
@@ -96,7 +96,7 @@
     "Description": "Internet connection speed test utility"
   },
   "Microsoft.Office.OneNote": {
-    "FriendlyName": "OneNote",
+    "FriendlyName": "OneNote for Windows 10 (Legacy)",
     "Description": "Digital note-taking app (Universal Windows Platform version)"
   },
   "Microsoft.Office.Sway": {
@@ -120,7 +120,7 @@
     "Description": "Skype communication app, Universal Windows Platform version (discontinued)"
   },
   "Microsoft.Todos": {
-    "FriendlyName": "Microsoft To Do",
+    "FriendlyName": "Microsoft To Do: Lists, Tasks & Reminders",
     "Description": "To-do list and task management app"
   },
   "Microsoft.Windows.DevHome": {
@@ -176,7 +176,7 @@
     "Description": "Potentially UI controls or software components, often bundled by OEMs"
   },
   "AdobeSystemsIncorporated.AdobePhotoshopExpress": {
-    "FriendlyName": "Adobe Photoshop Express",
+    "FriendlyName": "Adobe Express Photos (formerly Photoshop Express)",
     "Description": "Basic photo editing app from Adobe"
   },
   "Amazon.com.Amazon": {
@@ -184,11 +184,11 @@
     "Description": "Amazon shopping app"
   },
   "AmazonVideo.PrimeVideo": {
-    "FriendlyName": "Prime Video",
+    "FriendlyName": "Prime Video for Windows",
     "Description": "Amazon Prime Video streaming service app"
   },
   "Asphalt8Airborne": {
-    "FriendlyName": "Asphalt 8",
+    "FriendlyName": "Asphalt 8: Airborne",
     "Description": "Racing game"
   },
   "AutodeskSketchBook": {
@@ -228,7 +228,7 @@
     "Description": "Facebook social media app"
   },
   "FarmVille2CountryEscape": {
-    "FriendlyName": "FarmVille 2",
+    "FriendlyName": "FarmVille 2: Country Escape",
     "Description": "Farming simulation game"
   },
   "Flipboard": {
@@ -236,7 +236,7 @@
     "Description": "News and social network aggregator styled as a magazine"
   },
   "HiddenCity": {
-    "FriendlyName": "Hidden City",
+    "FriendlyName": "Hidden City: Hidden Object Adventure",
     "Description": "Hidden object puzzle adventure game"
   },
   "HULULLC.HULUPLUS": {
@@ -252,7 +252,7 @@
     "Description": "Instagram social media app"
   },
   "king.com.BubbleWitch3Saga": {
-    "FriendlyName": "Bubble Witch 3",
+    "FriendlyName": "Bubble Witch 3 Saga",
     "Description": "Puzzle game from King"
   },
   "king.com.CandyCrushSaga": {
@@ -260,7 +260,7 @@
     "Description": "Puzzle game from King"
   },
   "king.com.CandyCrushSodaSaga": {
-    "FriendlyName": "Candy Crush Soda",
+    "FriendlyName": "Candy Crush Soda Saga",
     "Description": "Puzzle game from King"
   },
   "LinkedInforWindows": {
@@ -292,7 +292,7 @@
     "Description": "Photo collage creation app"
   },
   "PicsArt-PhotoStudio": {
-    "FriendlyName": "PicsArt",
+    "FriendlyName": "Picsart Photo Editor",
     "Description": "Photo editing and creative app"
   },
   "PolarrPhotoEditorAcademicEdition": {
@@ -312,7 +312,7 @@
     "Description": "Live TV streaming service app"
   },
   "SpotifyAB.SpotifyMusic": {
-    "FriendlyName": "Spotify",
+    "FriendlyName": "Spotify - Music and Podcasts",
     "Description": "Spotify music streaming app"
   },
   "BytedancePte.Ltd.TikTok": {
@@ -336,7 +336,7 @@
     "Description": "Windows' default browser, WARNING: Removing this app also removes the only browser from Windows Sandbox and could affect other apps"
   },
   "Microsoft.GamingApp": {
-    "FriendlyName": "Xbox app",
+    "FriendlyName": "XBOX",
     "Description": "Xbox gaming app for Windows, required to install some PC games"
   },
   "Microsoft.GetHelp": {
@@ -369,7 +369,7 @@
   },
   "Microsoft.RemoteDesktop": {
     "FriendlyName": "Remote Desktop",
-    "Description": "Remote Desktop client app"
+    "Description": "Remote Desktop client app (Microsoft Store version; discontinued)"
   },
   "Microsoft.ScreenSketch": {
     "FriendlyName": "Snipping Tool",
@@ -484,7 +484,7 @@
     "Description": "HP OEM software for tutorials, app discovery, or quick access to HP features"
   },
   "AD2F1837.HPPCHardwareDiagnosticsWindows": {
-    "FriendlyName": "HP PC Hardware Diagnostics",
+    "FriendlyName": "HP PC Hardware Diagnostics Windows",
     "Description": "HP OEM software for PC hardware diagnostics"
   },
   "AD2F1837.HPPowerManager": {
@@ -492,7 +492,7 @@
     "Description": "HP OEM software for managing power settings and battery"
   },
   "AD2F1837.HPPrinterControl": {
-    "FriendlyName": "HP Printer Control",
+    "FriendlyName": "HP Smart",
     "Description": "HP OEM software for managing HP printers"
   },
   "AD2F1837.HPPrivacySettings": {
@@ -548,7 +548,7 @@
     "Description": "Dell OEM support, diagnostic, and update tool"
   },
   "DellInc.DellDigitalDelivery": {
-    "FriendlyName": "Dell Digital Delivery Services",
+    "FriendlyName": "Dell Digital Delivery",
     "Description": "Dell OEM software for delivering pre-purchased software"
   },
   "DellInc.DellMobileConnect": {

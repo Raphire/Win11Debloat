@@ -161,11 +161,11 @@
       "ApplyUndoText": "Abilitazione della sezione 'Tutte le app' nel Menu Start"
     },
     "DisableStartPhoneLink": {
-      "Label": "Disabilita l'integrazione di Phone Link nel Menu Start",
-      "ToolTip": "Rimuove l'integrazione di Phone Link dal Menu Start quando hai un dispositivo mobile collegato al PC.",
-      "ApplyText": "Disabilitazione dell'integrazione dei dispositivi mobili di Phone Link nel Menu Start",
-      "UndoLabel": "Abilita l'integrazione di Phone Link nel Menu Start",
-      "ApplyUndoText": "Abilitazione dell'integrazione dei dispositivi mobili di Phone Link nel Menu Start"
+      "Label": "Disabilita l'integrazione di Collegamento al telefono nel Menu Start",
+      "ToolTip": "Rimuove l'integrazione di Collegamento al telefono dal Menu Start quando hai un dispositivo mobile collegato al PC.",
+      "ApplyText": "Disabilitazione dell'integrazione dei dispositivi mobili di Collegamento al telefono nel Menu Start",
+      "UndoLabel": "Abilita l'integrazione di Collegamento al telefono nel Menu Start",
+      "ApplyUndoText": "Abilitazione dell'integrazione dei dispositivi mobili di Collegamento al telefono nel Menu Start"
     },
     "DisableBing": {
       "Label": "Disabilita la ricerca web Bing e l'integrazione di Copilot nella ricerca",

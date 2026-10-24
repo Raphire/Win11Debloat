@@ -427,26 +427,26 @@
       "ApplyUndoText": "正在將工作列設為在所有工作列上顯示應用程式圖示"
     },
     "ExplorerToHome": {
-      "Label": "將檔案總管的預設開啟位置變更為「常用」",
-      "ApplyText": "正在將檔案總管的預設開啟位置變更為「常用」"
+      "Label": "將檔案總管的預設開啟位置變更為「首頁」",
+      "ApplyText": "正在將檔案總管的預設開啟位置變更為「首頁」"
     },
     "ExplorerToThisPC": {
       "Label": "將檔案總管的預設開啟位置變更為「本機」",
       "ApplyText": "正在將檔案總管的預設開啟位置變更為「本機」",
-      "UndoLabel": "將檔案總管的預設開啟位置變更為「常用」",
-      "ApplyUndoText": "正在將檔案總管的預設開啟位置變更為「常用」"
+      "UndoLabel": "將檔案總管的預設開啟位置變更為「首頁」",
+      "ApplyUndoText": "正在將檔案總管的預設開啟位置變更為「首頁」"
     },
     "ExplorerToDownloads": {
       "Label": "將檔案總管的預設開啟位置變更為「下載」",
       "ApplyText": "正在將檔案總管的預設開啟位置變更為「下載」",
-      "UndoLabel": "將檔案總管的預設開啟位置變更為「常用」",
-      "ApplyUndoText": "正在將檔案總管的預設開啟位置變更為「常用」"
+      "UndoLabel": "將檔案總管的預設開啟位置變更為「首頁」",
+      "ApplyUndoText": "正在將檔案總管的預設開啟位置變更為「首頁」"
     },
     "ExplorerToOneDrive": {
       "Label": "將檔案總管的預設開啟位置變更為「OneDrive」",
       "ApplyText": "正在將檔案總管的預設開啟位置變更為「OneDrive」",
-      "UndoLabel": "將檔案總管的預設開啟位置變更為「常用」",
-      "ApplyUndoText": "正在將檔案總管的預設開啟位置變更為「常用」"
+      "UndoLabel": "將檔案總管的預設開啟位置變更為「首頁」",
+      "ApplyUndoText": "正在將檔案總管的預設開啟位置變更為「首頁」"
     },
     "ShowKnownFileExt": {
       "Label": "顯示已知檔案類型的副檔名",
@@ -470,11 +470,11 @@
       "ApplyUndoText": "正在從檔案總管瀏覽窗格顯示重複的可移除磁碟機項目"
     },
     "HideHome": {
-      "Label": "從瀏覽窗格隱藏「常用」",
-      "ToolTip": "從檔案總管瀏覽窗格隱藏「常用」區段。警告：這可能會導致快速存取連結無法更新，直到您重新啟動電腦或檔案總管。",
-      "ApplyText": "正在從檔案總管瀏覽窗格隱藏「常用」區段",
-      "UndoLabel": "在瀏覽窗格中顯示「常用」",
-      "ApplyUndoText": "正在檔案總管瀏覽窗格中顯示「常用」區段"
+      "Label": "從瀏覽窗格隱藏「首頁」",
+      "ToolTip": "從檔案總管瀏覽窗格隱藏「首頁」區段。警告：這可能會導致快速存取連結無法更新，直到您重新啟動電腦或檔案總管。",
+      "ApplyText": "正在從檔案總管瀏覽窗格隱藏「首頁」區段",
+      "UndoLabel": "在瀏覽窗格中顯示「首頁」",
+      "ApplyUndoText": "正在檔案總管瀏覽窗格中顯示「首頁」區段"
     },
     "HideGallery": {
       "Label": "從瀏覽窗格隱藏「圖庫」",
@@ -704,7 +704,7 @@
       "Label": "開啟檔案總管至",
       "ToolTip": "此設定可讓您選擇檔案總管的預設開啟位置。",
       "Values": {
-        "ExplorerToHome": "常用 (預設)",
+        "ExplorerToHome": "首頁 (預設)",
         "ExplorerToThisPC": "本機",
         "ExplorerToDownloads": "下載",
         "ExplorerToOneDrive": "OneDrive"

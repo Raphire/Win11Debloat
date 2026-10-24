@@ -1,47 +1,47 @@
 ﻿{
   "Clipchamp.Clipchamp": {
-    "FriendlyName": "视频编辑器（Clipchamp）",
+    "FriendlyName": "Microsoft Clipchamp",
     "Description": "微软出品的视频编辑器"
   },
   "Microsoft.3DBuilder": {
     "FriendlyName": "三维建模（3D Builder）",
-    "Description": "基础三维建模软件"
+    "Description": "基础三维建模软件（已停止支持）"
   },
   "Microsoft.549981C3F5F10": {
     "FriendlyName": "小娜（Cortana）",
     "Description": "微软 Cortana 语音助手（已停止维护）"
   },
   "Microsoft.BingFinance": {
-    "FriendlyName": "必应财经",
-    "Description": "必应财经新闻和行情跟踪服务（已停止维护）"
+    "FriendlyName": "MSN 财经",
+    "Description": "Microsoft 提供的财经新闻和行情跟踪应用"
   },
   "Microsoft.BingFoodAndDrink": {
-    "FriendlyName": "必应美食",
-    "Description": "必应食谱和美食资讯（已停止维护）"
+    "FriendlyName": "MSN 美食",
+    "Description": "食谱和美食资讯（已停止维护）"
   },
   "Microsoft.BingHealthAndFitness": {
-    "FriendlyName": "必应健康",
-    "Description": "必应健康与健身记录及资讯（已停止维护）"
+    "FriendlyName": "MSN 健康",
+    "Description": "健康与健身记录及资讯（已停止维护）"
   },
   "Microsoft.BingNews": {
-    "FriendlyName": "Microsoft 资讯",
+    "FriendlyName": "MSN 资讯",
     "Description": "新闻聚合应用，汇集突发新闻、个性化文章推送和全球时事资讯"
   },
   "Microsoft.BingSports": {
-    "FriendlyName": "必应体育",
-    "Description": "必应体育新闻和比分服务（已停止维护）"
+    "FriendlyName": "MSN 体育",
+    "Description": "体育新闻和比分（已停止维护）"
   },
   "Microsoft.BingTranslator": {
-    "FriendlyName": "必应翻译",
-    "Description": "必应翻译服务"
+    "FriendlyName": "Microsoft 翻译",
+    "Description": "Microsoft 提供的 Windows 翻译应用（已停止维护）"
   },
   "Microsoft.BingTravel": {
-    "FriendlyName": "必应旅游",
-    "Description": "必应旅行规划和旅游资讯（已停止维护）"
+    "FriendlyName": "MSN 旅游",
+    "Description": "旅行规划和旅游资讯（已停止维护）"
   },
   "Microsoft.BingWeather": {
-    "FriendlyName": "必应天气",
-    "Description": "必应天气预报"
+    "FriendlyName": "MSN 天气",
+    "Description": "Microsoft 提供的天气预报应用"
   },
   "XP9CXNGPPJ97XX": {
     "FriendlyName": "AI助手（Microsoft Copilot）",
@@ -60,7 +60,7 @@
     "Description": "Windows 使用技巧和入门指南（在 Windows 11 中无法卸载）"
   },
   "Microsoft.Messaging": {
-    "FriendlyName": "消息",
+    "FriendlyName": "Microsoft 消息",
     "Description": "消息应用，通常与 Skype 集成（大部分功能已停止维护）"
   },
   "Microsoft.Microsoft3DViewer": {
@@ -68,23 +68,23 @@
     "Description": "用于查看 3D 模型（已停止支持）"
   },
   "Microsoft.MicrosoftJournal": {
-    "FriendlyName": "日记（Microsoft Journal）",
+    "FriendlyName": "Microsoft 日记",
     "Description": "针对触控笔输入优化的数字笔记应用"
   },
   "Microsoft.MicrosoftOfficeHub": {
-    "FriendlyName": "Office 中心",
-    "Description": "用于访问 Microsoft Office 应用和文档（Microsoft 365 应用的前身）"
+    "FriendlyName": "Microsoft 365 Copilot（Office 中心）",
+    "Description": "用于访问 Microsoft Office 365 应用和文档的中心"
   },
   "Microsoft.MicrosoftPowerBIForWindows": {
     "FriendlyName": "商业分析（Power BI）",
-    "Description": "商业分析服务客户端"
+    "Description": "商业分析服务客户端（已停止维护）"
   },
   "Microsoft.MicrosoftSolitaireCollection": {
     "FriendlyName": "Microsoft 纸牌合集",
     "Description": "多款纸牌游戏合集"
   },
   "Microsoft.MicrosoftStickyNotes": {
-    "FriendlyName": "便笺",
+    "FriendlyName": "Microsoft 便笺",
     "Description": "用于快速创建和同步便笺"
   },
   "Microsoft.MixedReality.Portal": {
@@ -100,7 +100,7 @@
     "Description": "数字笔记应用（通用 Windows 平台版本）"
   },
   "Microsoft.Office.Sway": {
-    "FriendlyName": "演示文稿（Sway）",
+    "FriendlyName": "Sway",
     "Description": "用于制作演示文稿和交互式叙事内容"
   },
   "Microsoft.OneConnect": {
@@ -112,7 +112,7 @@
     "Description": "用于准备三维打印任务的软件"
   },
   "Microsoft.PowerAutomateDesktop": {
-    "FriendlyName": "流程自动化（Power Automate）",
+    "FriendlyName": "Power Automate",
     "Description": "桌面流程自动化工具（RPA）"
   },
   "Microsoft.SkypeApp": {
@@ -120,7 +120,7 @@
     "Description": "Skype 通信应用的通用 Windows 平台版本（已停止维护）"
   },
   "Microsoft.Todos": {
-    "FriendlyName": "微软待办（Microsoft To Do）",
+    "FriendlyName": "Microsoft To Do: Lists, Tasks & Reminders",
     "Description": "待办事项和任务管理应用"
   },
   "Microsoft.Windows.DevHome": {
@@ -128,7 +128,7 @@
     "Description": "开发者仪表板和工具配置应用（已停止维护）"
   },
   "Microsoft.WindowsAlarms": {
-    "FriendlyName": "时钟",
+    "FriendlyName": "Windows 闹钟和时钟",
     "Description": "提供闹钟、计时器、秒表和专注时段功能"
   },
   "Microsoft.WindowsFeedbackHub": {
@@ -140,7 +140,7 @@
     "Description": "地图与导航应用（已停止支持）"
   },
   "Microsoft.WindowsSoundRecorder": {
-    "FriendlyName": "录音机",
+    "FriendlyName": "Windows 录音机",
     "Description": "基础录音应用"
   },
   "Microsoft.XboxApp": {
@@ -152,7 +152,7 @@
     "Description": "用于播放已购买视频内容的应用（新的租借与购买已停止）"
   },
   "MicrosoftCorporationII.MicrosoftFamily": {
-    "FriendlyName": "Microsoft 家庭安全",
+    "FriendlyName": "Microsoft Family Safety",
     "Description": "用于管理家庭屏幕使用时间、内容筛选和活动报告"
   },
   "MicrosoftCorporationII.QuickAssist": {
@@ -176,7 +176,7 @@
     "Description": "可能为界面控件或软件组件，通常由设备厂商捆绑预装"
   },
   "AdobeSystemsIncorporated.AdobePhotoshopExpress": {
-    "FriendlyName": "照片编辑（Adobe Photoshop Express）",
+    "FriendlyName": "Adobe Express Photos (原名 Photoshop Express)",
     "Description": "Adobe 出品的基础照片编辑应用"
   },
   "Amazon.com.Amazon": {
@@ -184,7 +184,7 @@
     "Description": "亚马逊购物应用"
   },
   "AmazonVideo.PrimeVideo": {
-    "FriendlyName": "亚马逊视频（Prime Video）",
+    "FriendlyName": "Prime Video for Windows",
     "Description": "亚马逊 Prime Video 流媒体视频应用"
   },
   "Asphalt8Airborne": {
@@ -228,7 +228,7 @@
     "Description": "Facebook 社交应用"
   },
   "FarmVille2CountryEscape": {
-    "FriendlyName": "农场乡村度假（FarmVille 2）",
+    "FriendlyName": "FarmVille 2: Country Escape",
     "Description": "农场经营模拟游戏"
   },
   "Flipboard": {
@@ -236,7 +236,7 @@
     "Description": "以杂志形式呈现新闻和社交网络内容的聚合应用"
   },
   "HiddenCity": {
-    "FriendlyName": "隐秘之城（Hidden City）",
+    "FriendlyName": "神秘之城：寻物历险",
     "Description": "寻找隐藏物品的解谜冒险游戏"
   },
   "HULULLC.HULUPLUS": {
@@ -252,7 +252,7 @@
     "Description": "Instagram 社交应用"
   },
   "king.com.BubbleWitch3Saga": {
-    "FriendlyName": "魔法气泡 3（Bubble Witch 3）",
+    "FriendlyName": "泡泡魔女传奇3",
     "Description": "King 出品的益智游戏"
   },
   "king.com.CandyCrushSaga": {
@@ -260,7 +260,7 @@
     "Description": "King 出品的益智游戏"
   },
   "king.com.CandyCrushSodaSaga": {
-    "FriendlyName": "糖果苏打传奇（Candy Crush Soda）",
+    "FriendlyName": "Candy Crush Soda Saga",
     "Description": "King 出品的益智游戏"
   },
   "LinkedInforWindows": {
@@ -280,7 +280,7 @@
     "Description": "《纽约时报》填字游戏应用"
   },
   "OneCalendar": {
-    "FriendlyName": "日历（One Calendar）",
+    "FriendlyName": "One Calendar",
     "Description": "用于集中管理多个日历"
   },
   "PandoraMediaInc": {
@@ -312,7 +312,7 @@
     "Description": "在线电视直播应用"
   },
   "SpotifyAB.SpotifyMusic": {
-    "FriendlyName": "音乐（Spotify）",
+    "FriendlyName": "Spotify：音乐和播客",
     "Description": "Spotify 流媒体音乐应用"
   },
   "BytedancePte.Ltd.TikTok": {
@@ -328,15 +328,15 @@
     "Description": "文件压缩和解压工具（通用 Windows 平台版本）"
   },
   "Microsoft.BingSearch": {
-    "FriendlyName": "必应搜索",
-    "Description": "微软必应网络搜索（集成在 Windows 搜索中）"
+    "FriendlyName": "Microsoft 必应（搜索）",
+    "Description": "将 Microsoft 必应网络搜索集成到 Windows 搜索中的应用"
   },
   "Microsoft.Edge": {
     "FriendlyName": "Edge 浏览器",
     "Description": "Windows 默认浏览器。警告：移除此应用也会移除 Windows 沙盒中唯一的浏览器，并且可能影响其他应用。"
   },
   "Microsoft.GamingApp": {
-    "FriendlyName": "Xbox 应用",
+    "FriendlyName": "XBOX",
     "Description": "适用于 Windows 的 Xbox 游戏应用，安装部分电脑游戏时需要"
   },
   "Microsoft.GetHelp": {
@@ -360,23 +360,23 @@
     "Description": "新版 Outlook Windows 邮件客户端"
   },
   "Microsoft.Paint": {
-    "FriendlyName": "画图",
+    "FriendlyName": "Paint",
     "Description": "经典画图应用，用于二维绘图"
   },
   "Microsoft.People": {
-    "FriendlyName": "人脉",
+    "FriendlyName": "Microsoft 人脉",
     "Description": "“邮件和日历”的配套组件，其运行需要此应用（已停止维护）"
   },
   "Microsoft.RemoteDesktop": {
     "FriendlyName": "远程桌面",
-    "Description": "远程桌面客户端应用"
+    "Description": "远程桌面客户端应用（Microsoft Store 版本，已停止支持）"
   },
   "Microsoft.ScreenSketch": {
-    "FriendlyName": "截图工具",
+    "FriendlyName": "截图和草图",
     "Description": "用于截取、批注、保存和分享屏幕截图"
   },
   "Microsoft.StartExperiencesApp": {
-    "FriendlyName": "小组件体验",
+    "FriendlyName": "开始体验应用（小组件）",
     "Description": "为 Windows 小组件的“我的资讯”提供支持"
   },
   "Microsoft.Whiteboard": {
@@ -384,15 +384,15 @@
     "Description": "数字协作白板应用"
   },
   "Microsoft.Windows.Photos": {
-    "FriendlyName": "照片",
+    "FriendlyName": "Microsoft 照片",
     "Description": "默认照片查看和基础编辑应用"
   },
   "Microsoft.WindowsCalculator": {
-    "FriendlyName": "计算器",
+    "FriendlyName": "Windows 计算器",
     "Description": "计算器应用"
   },
   "Microsoft.WindowsCamera": {
-    "FriendlyName": "相机",
+    "FriendlyName": "Windows 相机",
     "Description": "用于内置摄像头或外接摄像头的相机应用"
   },
   "Microsoft.windowscommunicationsapps": {
@@ -400,7 +400,7 @@
     "Description": "邮件和日历应用套件（已停止维护）"
   },
   "Microsoft.WindowsNotepad": {
-    "FriendlyName": "记事本",
+    "FriendlyName": "Windows Notepad",
     "Description": "记事本文本编辑器"
   },
   "Microsoft.WindowsStore": {
@@ -417,11 +417,11 @@
   },
   "Microsoft.XboxGameOverlay": {
     "FriendlyName": "Xbox 游戏覆盖层",
-    "Description": "游戏内叠加界面，部分游戏需要或可利用此功能（Xbox 游戏栏的组成部分）。警告：在搭载某些较新处理器的电脑上，卸载此应用可能降低游戏性能。"
+    "Description": "Xbox Game Bar 的游戏叠加界面组件。某些游戏需要此应用。警告：在搭载某些较新处理器的电脑上，卸载此应用可能降低游戏性能。"
   },
   "Microsoft.XboxGamingOverlay": {
-    "FriendlyName": "Xbox 游戏栏覆盖层",
-    "Description": "游戏内叠加界面，部分游戏需要或可利用此功能（Xbox 游戏栏的组成部分）。警告：在搭载某些较新处理器的电脑上，卸载此应用可能降低游戏性能。"
+    "FriendlyName": "Game Bar",
+    "Description": "提供游戏内叠加界面和 Xbox 服务集成的应用。某些游戏需要此应用。警告：在搭载某些较新处理器的电脑上，卸载此应用可能降低游戏性能。"
   },
   "Microsoft.XboxIdentityProvider": {
     "FriendlyName": "Xbox 身份验证提供程序",
@@ -436,11 +436,11 @@
     "Description": "将 Android 或 iOS 手机连接到电脑"
   },
   "Microsoft.ZuneMusic": {
-    "FriendlyName": "媒体播放器",
+    "FriendlyName": "Windows 媒体播放器",
     "Description": "新版媒体播放器，已取代 Groove 音乐，可播放本地音频和视频"
   },
   "MicrosoftWindows.CrossDevice": {
-    "FriendlyName": "跨设备体验",
+    "FriendlyName": "跨设备体验主机",
     "Description": "在文件资源管理器、“相机”等应用中提供手机集成功能（“手机连接”功能的一部分）"
   },
   "MicrosoftWindows.Client.WebExperience": {
@@ -468,7 +468,7 @@
     "Description": "惠普预装照片软件，与 Snapfish 集成（可能已停止维护）"
   },
   "AD2F1837.HPDesktopSupportUtilities": {
-    "FriendlyName": "HP 桌面支持工具",
+    "FriendlyName": "HP Desktop Support Utilities",
     "Description": "惠普预装的桌面支持工具"
   },
   "AD2F1837.HPEasyClean": {
@@ -484,7 +484,7 @@
     "Description": "惠普预装软件，提供教程、应用推荐或惠普功能快捷入口"
   },
   "AD2F1837.HPPCHardwareDiagnosticsWindows": {
-    "FriendlyName": "HP 电脑硬件诊断",
+    "FriendlyName": "HP PC Hardware Diagnostics Windows",
     "Description": "惠普预装的电脑硬件诊断工具"
   },
   "AD2F1837.HPPowerManager": {
@@ -492,7 +492,7 @@
     "Description": "惠普预装软件，用于管理电源设置和电池"
   },
   "AD2F1837.HPPrinterControl": {
-    "FriendlyName": "HP 打印机控制",
+    "FriendlyName": "HP Smart",
     "Description": "惠普预装的打印机管理软件"
   },
   "AD2F1837.HPPrivacySettings": {
@@ -520,7 +520,7 @@
     "Description": "惠普预装安全软件，可能用于基于AI的威胁防护"
   },
   "AD2F1837.HPSystemInformation": {
-    "FriendlyName": "HP 系统信息",
+    "FriendlyName": "HP System Information",
     "Description": "惠普预装的系统信息查看软件"
   },
   "AD2F1837.HPWelcome": {
@@ -548,7 +548,7 @@
     "Description": "戴尔预装的支持、诊断和更新工具"
   },
   "DellInc.DellDigitalDelivery": {
-    "FriendlyName": "戴尔数字交付（Dell Digital Delivery）",
+    "FriendlyName": "Dell Digital Delivery",
     "Description": "戴尔预装软件，用于交付已购买的软件"
   },
   "DellInc.DellMobileConnect": {

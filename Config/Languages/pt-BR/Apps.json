@@ -89,15 +89,15 @@
   },
   "Microsoft.MixedReality.Portal": {
     "FriendlyName": "Portal de Realidade Mista",
-    "Description": "Portal para visores de Realidade Mista do Windows"
+    "Description": "Portal para visores de Realidade Mista do Windows (preterido)"
   },
   "Microsoft.NetworkSpeedTest": {
     "FriendlyName": "Network Speed Test",
     "Description": "Utilitário para testar a velocidade da conexão com a internet"
   },
   "Microsoft.Office.OneNote": {
-    "FriendlyName": "OneNote",
-    "Description": "App de anotações digitais (versão da Plataforma Universal do Windows)"
+    "FriendlyName": "OneNote para Windows 10 (versão antiga)",
+    "Description": "App de anotações digitais (versão da Plataforma Universal do Windows; descontinuado)"
   },
   "Microsoft.Office.Sway": {
     "FriendlyName": "Sway",
@@ -168,12 +168,12 @@
     "Description": "Novo app Microsoft Teams (Trabalho/Escola ou Pessoal)"
   },
   "ACGMediaPlayer": {
-    "FriendlyName": "ACG Media Player",
+    "FriendlyName": "ACG Player",
     "Description": "App de reprodução de mídia"
   },
   "ActiproSoftwareLLC": {
     "FriendlyName": "Actipro Software",
-    "Description": "Potencialmente controles de interface ou componentes de software, frequentemente instalados por fabricantes de OEM"
+    "Description": "Apps da Actipro Software, incluindo o Code Writer, um editor de texto e código"
   },
   "AdobeSystemsIncorporated.AdobePhotoshopExpress": {
     "FriendlyName": "Adobe Express Photos (anteriormente chamado de Photoshop Express)",
@@ -300,7 +300,7 @@
     "Description": "App de edição de fotos (Edição Acadêmica)"
   },
   "flaregamesGmbH.RoyalRevolt": {
-    "FriendlyName": "Royal Revolt",
+    "FriendlyName": "Royal Revolt!",
     "Description": "Jogo de defesa de torres / estratégia"
   },
   "Sidia.LiveWallpaper": {
@@ -529,7 +529,7 @@
   },
   "AD2F1837.HPWorkWell": {
     "FriendlyName": "HP WorkWell",
-    "Description": "Software OEM da HP focado em bem-estar, possivelmente com lembretes de pausa ou dicas de ergonomia"
+    "Description": "Software OEM da HP focado em bem-estar, possivelmente com lembretes de pausa ou dicas de ergonomia (descontinuado)"
   },
   "AD2F1837.myHP": {
     "FriendlyName": "myHP",
@@ -549,10 +549,10 @@
   },
   "DellInc.DellDigitalDelivery": {
     "FriendlyName": "Dell Digital Delivery",
-    "Description": "Software OEM da Dell para entrega de software previamente adquirido"
+    "Description": "Software OEM da Dell para entrega de software previamente adquirido (descontinuado)"
   },
   "DellInc.DellMobileConnect": {
     "FriendlyName": "Dell Mobile Connect",
-    "Description": "App OEM da Dell para vincular um celular Android/iOS ao PC (substituído pelo Vincular ao Celular)"
+    "Description": "App OEM da Dell para vincular um celular Android/iOS ao PC (descontinuado)"
   }
 }

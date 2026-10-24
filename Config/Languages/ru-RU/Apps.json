@@ -89,15 +89,15 @@
   },
   "Microsoft.MixedReality.Portal": {
     "FriendlyName": "Портал смешанной реальности",
-    "Description": "Портал для гарнитур Windows Mixed Reality"
+    "Description": "Портал для гарнитур Windows Mixed Reality (устаревшее приложение)"
   },
   "Microsoft.NetworkSpeedTest": {
     "FriendlyName": "Network Speed Test",
     "Description": "Утилита для проверки скорости интернет-подключения"
   },
   "Microsoft.Office.OneNote": {
-    "FriendlyName": "OneNote",
-    "Description": "Приложение для цифровых заметок (версия для универсальной платформы Windows)"
+    "FriendlyName": "OneNote для Windows 10 (устаревшая версия)",
+    "Description": "Приложение для цифровых заметок (версия для универсальной платформы Windows; поддержка прекращена)"
   },
   "Microsoft.Office.Sway": {
     "FriendlyName": "Sway",
@@ -168,12 +168,12 @@
     "Description": "Новое приложение Microsoft Teams (для работы и учебы или для личного использования)"
   },
   "ACGMediaPlayer": {
-    "FriendlyName": "ACG Media Player",
+    "FriendlyName": "ACG Player",
     "Description": "Приложение-медиаплеер"
   },
   "ActiproSoftwareLLC": {
     "FriendlyName": "Actipro Software",
-    "Description": "Возможно, элементы интерфейса или программные компоненты, часто поставляются производителями компьютеров"
+    "Description": "Приложения Actipro Software, включая Code Writer — редактор текста и кода"
   },
   "AdobeSystemsIncorporated.AdobePhotoshopExpress": {
     "FriendlyName": "Adobe Photoshop Express",
@@ -300,7 +300,7 @@
     "Description": "Приложение для редактирования фотографий (версия Academic Edition)"
   },
   "flaregamesGmbH.RoyalRevolt": {
-    "FriendlyName": "Royal Revolt",
+    "FriendlyName": "Royal Revolt!",
     "Description": "Игра в жанре Tower Defense / стратегия"
   },
   "Sidia.LiveWallpaper": {
@@ -529,7 +529,7 @@
   },
   "AD2F1837.HPWorkWell": {
     "FriendlyName": "HP WorkWell",
-    "Description": "Фирменная программа HP для заботы о самочувствии, возможно, с напоминаниями о перерывах или советами по эргономике"
+    "Description": "Фирменная программа HP для заботы о самочувствии, возможно, с напоминаниями о перерывах или советами по эргономике (поддержка прекращена)"
   },
   "AD2F1837.myHP": {
     "FriendlyName": "myHP",
@@ -549,10 +549,10 @@
   },
   "DellInc.DellDigitalDelivery": {
     "FriendlyName": "Dell Digital Delivery",
-    "Description": "Фирменная программа Dell для доставки заранее купленных программ"
+    "Description": "Фирменная программа Dell для доставки заранее купленных программ (поддержка прекращена)"
   },
   "DellInc.DellMobileConnect": {
     "FriendlyName": "Dell Mobile Connect",
-    "Description": "Фирменное приложение Dell для подключения телефона Android/iOS к компьютеру (заменено приложением «Связь с телефоном»)"
+    "Description": "Фирменное приложение Dell для подключения телефона Android/iOS к компьютеру (поддержка прекращена)"
   }
 }

@@ -89,15 +89,15 @@
   },
   "Microsoft.MixedReality.Portal": {
     "FriendlyName": "混合现实门户",
-    "Description": "用于 Windows 混合现实头戴设备的门户应用"
+    "Description": "用于 Windows 混合现实头戴设备的门户应用（已弃用）"
   },
   "Microsoft.NetworkSpeedTest": {
     "FriendlyName": "网络速度测试",
     "Description": "互联网连接速度测试工具"
   },
   "Microsoft.Office.OneNote": {
-    "FriendlyName": "笔记（OneNote）",
-    "Description": "数字笔记应用（通用 Windows 平台版本）"
+    "FriendlyName": "适用于 Windows 10 的 OneNote（旧版）",
+    "Description": "数字笔记应用（通用 Windows 平台版本，已停止支持）"
   },
   "Microsoft.Office.Sway": {
     "FriendlyName": "Sway",
@@ -168,12 +168,12 @@
     "Description": "新版 Microsoft Teams 应用（工作、学校或个人账户）"
   },
   "ACGMediaPlayer": {
-    "FriendlyName": "ACG 播放器",
+    "FriendlyName": "ACG Player",
     "Description": "媒体播放器应用"
   },
   "ActiproSoftwareLLC": {
-    "FriendlyName": "界面组件（Actipro Software）",
-    "Description": "可能为界面控件或软件组件，通常由设备厂商捆绑预装"
+    "FriendlyName": "Actipro Software",
+    "Description": "Actipro Software 应用，包括文本和代码编辑器 Code Writer"
   },
   "AdobeSystemsIncorporated.AdobePhotoshopExpress": {
     "FriendlyName": "Adobe Express Photos (原名 Photoshop Express)",
@@ -300,7 +300,7 @@
     "Description": "照片编辑应用（教育版）"
   },
   "flaregamesGmbH.RoyalRevolt": {
-    "FriendlyName": "皇家起义（Royal Revolt）",
+    "FriendlyName": "皇家起义（Royal Revolt!）",
     "Description": "塔防和策略游戏"
   },
   "Sidia.LiveWallpaper": {
@@ -529,7 +529,7 @@
   },
   "AD2F1837.HPWorkWell": {
     "FriendlyName": "惠普健康办公（HP WorkWell）",
-    "Description": "惠普预装的健康办公软件，可能提供休息提醒或人体工学建议"
+    "Description": "惠普预装的健康办公软件，可能提供休息提醒或人体工学建议（已停用）"
   },
   "AD2F1837.myHP": {
     "FriendlyName": "惠普设备中心（myHP）",
@@ -549,10 +549,10 @@
   },
   "DellInc.DellDigitalDelivery": {
     "FriendlyName": "Dell Digital Delivery",
-    "Description": "戴尔预装软件，用于交付已购买的软件"
+    "Description": "戴尔预装软件，用于交付已购买的软件（已停用）"
   },
   "DellInc.DellMobileConnect": {
     "FriendlyName": "戴尔移动连接（Dell Mobile Connect）",
-    "Description": "戴尔预装软件，用于将 Android 或 iOS 手机连接到电脑（已由“手机连接”取代）"
+    "Description": "戴尔预装软件，用于将 Android 或 iOS 手机连接到电脑（已停用）"
   }
 }

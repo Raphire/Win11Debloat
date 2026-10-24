@@ -89,15 +89,15 @@
   },
   "Microsoft.MixedReality.Portal": {
     "FriendlyName": "Mixed Reality-portaal",
-    "Description": "App voor het gebruik van Windows Mixed Reality-headsets"
+    "Description": "App voor het gebruik van Windows Mixed Reality-headsets (verouderd)"
   },
   "Microsoft.NetworkSpeedTest": {
     "FriendlyName": "Network Speed Test",
     "Description": "Meet de snelheid van je internetverbinding"
   },
   "Microsoft.Office.OneNote": {
-    "FriendlyName": "OneNote",
-    "Description": "Digitale notitie-app (UWP-versie)"
+    "FriendlyName": "OneNote voor Windows 10 (oude versie)",
+    "Description": "Digitale notitie-app (UWP-versie; niet meer ondersteund)"
   },
   "Microsoft.Office.Sway": {
     "FriendlyName": "Sway",
@@ -149,7 +149,7 @@
   },
   "Microsoft.ZuneVideo": {
     "FriendlyName": "Films en tv",
-    "Description": "App voor het afspelen van gekochte video's (nieuw huren en kopen is stopgezet)"
+    "Description": "App voor het afspelen van gekochte video's (nieuw huren en kopen wordt niet meer ondersteund)"
   },
   "MicrosoftCorporationII.MicrosoftFamily": {
     "FriendlyName": "Microsoft Family Safety",
@@ -168,12 +168,12 @@
     "Description": "Nieuwe Microsoft Teams-app voor werk, school en privégebruik"
   },
   "ACGMediaPlayer": {
-    "FriendlyName": "ACG Media Player",
+    "FriendlyName": "ACG Player",
     "Description": "Mediaspeler"
   },
   "ActiproSoftwareLLC": {
     "FriendlyName": "Actipro Software",
-    "Description": "Mogelijk onderdelen voor gebruikersinterfaces of andere softwarecomponenten, vaak meegeleverd door fabrikanten"
+    "Description": "Apps van Actipro Software, waaronder Code Writer, een tekst- en code-editor"
   },
   "AdobeSystemsIncorporated.AdobePhotoshopExpress": {
     "FriendlyName": "Adobe Express Photos (voorheen Photoshop Express)",
@@ -300,7 +300,7 @@
     "Description": "Fotobewerkingsapp (Academic Edition)"
   },
   "flaregamesGmbH.RoyalRevolt": {
-    "FriendlyName": "Royal Revolt",
+    "FriendlyName": "Royal Revolt!",
     "Description": "Strategisch verdedigingsspel (tower defense)"
   },
   "Sidia.LiveWallpaper": {
@@ -529,7 +529,7 @@
   },
   "AD2F1837.HPWorkWell": {
     "FriendlyName": "HP WorkWell",
-    "Description": "HP-software om gezond en comfortabel te werken, mogelijk met pauzeherinneringen of ergonomische tips"
+    "Description": "HP-software om gezond en comfortabel te werken, mogelijk met pauzeherinneringen of ergonomische tips (niet meer ondersteund)"
   },
   "AD2F1837.myHP": {
     "FriendlyName": "myHP",
@@ -549,10 +549,10 @@
   },
   "DellInc.DellDigitalDelivery": {
     "FriendlyName": "Dell Digital Delivery",
-    "Description": "Dell-software om vooraf aangeschafte software te downloaden en installeren"
+    "Description": "Dell-software om vooraf aangeschafte software te downloaden en installeren (niet meer ondersteund)"
   },
   "DellInc.DellMobileConnect": {
     "FriendlyName": "Dell Mobile Connect",
-    "Description": "Dell-app om een Android- of iOS-telefoon aan je pc te koppelen (opgevolgd door Telefoonkoppeling)"
+    "Description": "Dell-app om een Android- of iOS-telefoon aan je pc te koppelen (niet meer ondersteund)"
   }
 }

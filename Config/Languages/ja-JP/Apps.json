@@ -89,15 +89,15 @@
   },
   "Microsoft.MixedReality.Portal": {
     "FriendlyName": "Mixed Reality ポータル",
-    "Description": "Windows Mixed Reality ヘッドセット用ポータルです"
+    "Description": "Windows Mixed Reality ヘッドセット用ポータルです (非推奨)"
   },
   "Microsoft.NetworkSpeedTest": {
     "FriendlyName": "Network Speed Test",
     "Description": "インターネット接続速度のテスト ユーティリティです"
   },
   "Microsoft.Office.OneNote": {
-    "FriendlyName": "OneNote",
-    "Description": "デジタル ノート アプリです (ユニバーサル Windows プラットフォーム版)"
+    "FriendlyName": "OneNote for Windows 10 (旧バージョン)",
+    "Description": "デジタル ノート アプリです (ユニバーサル Windows プラットフォーム版、サポート終了)"
   },
   "Microsoft.Office.Sway": {
     "FriendlyName": "Sway",
@@ -168,12 +168,12 @@
     "Description": "新しい Microsoft Teams アプリです (職場/学校用または個人用)"
   },
   "ACGMediaPlayer": {
-    "FriendlyName": "ACG Media Player",
+    "FriendlyName": "ACG Player",
     "Description": "メディア プレーヤー アプリです"
   },
   "ActiproSoftwareLLC": {
     "FriendlyName": "Actipro Software",
-    "Description": "UI コントロールまたはソフトウェア コンポーネントの可能性があり、OEM によってバンドルされることが多いです"
+    "Description": "テキストおよびコード エディターの Code Writer などの Actipro Software アプリです"
   },
   "AdobeSystemsIncorporated.AdobePhotoshopExpress": {
     "FriendlyName": "Adobe Express Photos (旧Photoshop Express)",
@@ -300,7 +300,7 @@
     "Description": "写真編集アプリです (アカデミック版)"
   },
   "flaregamesGmbH.RoyalRevolt": {
-    "FriendlyName": "Royal Revolt",
+    "FriendlyName": "Royal Revolt!",
     "Description": "タワー ディフェンス / ストラテジー ゲームです"
   },
   "Sidia.LiveWallpaper": {
@@ -529,7 +529,7 @@
   },
   "AD2F1837.HPWorkWell": {
     "FriendlyName": "HP WorkWell",
-    "Description": "健康維持に焦点を当てた HP OEM ソフトウェアです。休憩のリマインダーや人間工学のヒントが含まれる可能性があります"
+    "Description": "健康維持に焦点を当てた HP OEM ソフトウェアです。休憩のリマインダーや人間工学のヒントが含まれる可能性があります (サポート終了)"
   },
   "AD2F1837.myHP": {
     "FriendlyName": "myHP",
@@ -549,10 +549,10 @@
   },
   "DellInc.DellDigitalDelivery": {
     "FriendlyName": "Dell Digital Delivery",
-    "Description": "事前購入されたソフトウェアを配信するための Dell OEM ソフトウェアです"
+    "Description": "事前購入されたソフトウェアを配信するための Dell OEM ソフトウェアです (サポート終了)"
   },
   "DellInc.DellMobileConnect": {
     "FriendlyName": "Dell Mobile Connect",
-    "Description": "Android/iOS スマートフォンを PC に連携するための Dell OEM アプリです (スマートフォン連携に置き換えられました)"
+    "Description": "Android/iOS スマートフォンを PC に連携するための Dell OEM アプリです (サポート終了)"
   }
 }

@@ -383,6 +383,10 @@
     "FriendlyName": "开始体验应用（小组件）",
     "Description": "为 Windows 小组件的“我的资讯”提供支持"
   },
+  "Microsoft.SurfaceHub": {
+    "FriendlyName": "Surface",
+    "Description": "Surface 设备设置和支持，包括受支持型号的智能充电控制"
+  },
   "Microsoft.Whiteboard": {
     "FriendlyName": "白板（Microsoft Whiteboard）",
     "Description": "数字协作白板应用"
@@ -454,6 +458,90 @@
   "Microsoft.WidgetsPlatformRuntime": {
     "FriendlyName": "小组件平台运行时",
     "Description": "Windows 小组件正常运行所需的组件"
+  },
+  "AD2F1837.OMENCommandCenter": {
+    "FriendlyName": "HP OMEN Gaming Hub",
+    "Description": "用于性能监控和设备设置的 HP 游戏中心"
+  },
+  "AcerIncorporated.AcerCareCenterS": {
+    "FriendlyName": "Acer Care Center S",
+    "Description": "Acer 设备信息、诊断和维护工具"
+  },
+  "B9ECED6F.ASUSPCAssistant": {
+    "FriendlyName": "MyASUS",
+    "Description": "ASUS 设备设置、诊断和支持，包括受支持型号的电池和风扇控制"
+  },
+  "B9ECED6F.Glidex": {
+    "FriendlyName": "ASUS GlideX",
+    "Description": "用于在设备之间共享屏幕和传输文件的 ASUS 应用"
+  },
+  "SAMSUNGELECTRONICSCoLtd.SamsungQuickShare": {
+    "FriendlyName": "Samsung Quick Share",
+    "Description": "用于在附近设备之间共享文件的 Samsung 应用"
+  },
+  "9426MICRO-STARINTERNATION.MSICenter": {
+    "FriendlyName": "MSI Center",
+    "Description": "MSI 设备设置和性能监控"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.PCGallery": {
+    "FriendlyName": "Samsung Gallery",
+    "Description": "Samsung 照片和视频图库"
+  },
+  "SAMSUNGELECTRONICSCoLtd.SamsungFlux": {
+    "FriendlyName": "Samsung Flow",
+    "Description": "用于连接手机与电脑、共享文件和同步通知的 Samsung 应用"
+  },
+  "SAMSUNGELECTRONICSCoLtd.SamsungNotes": {
+    "FriendlyName": "Samsung Notes",
+    "Description": "用于记笔记、手写和 PDF 批注的 Samsung 应用"
+  },
+  "B9ECED6F.ScreenPadMaster": {
+    "FriendlyName": "ASUS ScreenXpert",
+    "Description": "ASUS 窗口管理和受支持型号的 ScreenPad 控制"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.SamsungStudio": {
+    "FriendlyName": "Samsung Studio",
+    "Description": "Samsung 视频编辑应用"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.SamsungScreenRecording": {
+    "FriendlyName": "Samsung Screen Recorder",
+    "Description": "用于录制屏幕和网络摄像头画面的 Samsung 应用"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.Bixby": {
+    "FriendlyName": "Samsung Bixby",
+    "Description": "Samsung 语音助手"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.SamsungWelcome": {
+    "FriendlyName": "Samsung Galaxy Book Experience",
+    "Description": "适用于 Galaxy Book 的 Samsung 应用启动器和功能指南"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.SmartThingsWindows": {
+    "FriendlyName": "Samsung SmartThings",
+    "Description": "用于连接、监控和控制智能家居设备的 Samsung 应用"
+  },
+  "SAMSUNGELECTRONICSCoLtd.MultiControl": {
+    "FriendlyName": "Samsung Multi control",
+    "Description": "用于在兼容的 Galaxy 设备之间共享键盘和鼠标的 Samsung 应用"
+  },
+  "SAMSUNGELECTRONICSCoLtd.SecondScreen": {
+    "FriendlyName": "Samsung Second Screen",
+    "Description": "用于将兼容的 Galaxy 平板电脑用作电脑扩展显示器的 Samsung 应用"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.PENUP": {
+    "FriendlyName": "Samsung PENUP",
+    "Description": "Samsung 绘画和涂色应用"
+  },
+  "9426MICRO-STARINTERNATION.BusinessCenter": {
+    "FriendlyName": "MSI Center Pro",
+    "Description": "MSI 设备设置、诊断和性能优化"
+  },
+  "AcerIncorporated.AcerRegistration": {
+    "FriendlyName": "Acer Product Registration",
+    "Description": "Acer 产品注册应用"
+  },
+  "E0469640.SmartAppearance": {
+    "FriendlyName": "Lenovo Smart Appearance",
+    "Description": "Lenovo 摄像头效果和视频通话增强功能"
   },
   "LGElectronics.LGMonitorApp": {
     "FriendlyName": "LG 显示器应用",

@@ -383,6 +383,10 @@
     "FriendlyName": "시작 환경 앱 (위젯)",
     "Description": "Windows 위젯의 내 피드 기능을 제공하는 앱입니다."
   },
+  "Microsoft.SurfaceHub": {
+    "FriendlyName": "Surface",
+    "Description": "Surface 장치 설정 및 지원(지원되는 모델의 스마트 충전 설정 포함)"
+  },
   "Microsoft.Whiteboard": {
     "FriendlyName": "Microsoft Whiteboard",
     "Description": "디지털 공동 작업 화이트보드 앱입니다."
@@ -454,6 +458,90 @@
   "Microsoft.WidgetsPlatformRuntime": {
     "FriendlyName": "위젯 플랫폼 런타임",
     "Description": "Windows 위젯이 작동하는 데 필요한 런타임입니다."
+  },
+  "AD2F1837.OMENCommandCenter": {
+    "FriendlyName": "HP OMEN Gaming Hub",
+    "Description": "성능 모니터링 및 장치 설정을 위한 HP 게임 허브"
+  },
+  "AcerIncorporated.AcerCareCenterS": {
+    "FriendlyName": "Acer Care Center S",
+    "Description": "Acer 장치 정보, 진단 및 유지 관리 도구"
+  },
+  "B9ECED6F.ASUSPCAssistant": {
+    "FriendlyName": "MyASUS",
+    "Description": "ASUS 장치 설정, 진단 및 지원(지원되는 모델의 배터리 및 팬 설정 포함)"
+  },
+  "B9ECED6F.Glidex": {
+    "FriendlyName": "ASUS GlideX",
+    "Description": "장치 간 화면 공유 및 파일 전송을 위한 ASUS 앱"
+  },
+  "SAMSUNGELECTRONICSCoLtd.SamsungQuickShare": {
+    "FriendlyName": "Samsung Quick Share",
+    "Description": "주변 장치 간 파일 공유를 위한 Samsung 앱"
+  },
+  "9426MICRO-STARINTERNATION.MSICenter": {
+    "FriendlyName": "MSI Center",
+    "Description": "MSI 장치 설정 및 성능 모니터링"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.PCGallery": {
+    "FriendlyName": "Samsung Gallery",
+    "Description": "Samsung 사진 및 동영상 갤러리"
+  },
+  "SAMSUNGELECTRONICSCoLtd.SamsungFlux": {
+    "FriendlyName": "Samsung Flow",
+    "Description": "휴대폰과 PC 연결, 파일 공유 및 알림 동기화를 위한 Samsung 앱"
+  },
+  "SAMSUNGELECTRONICSCoLtd.SamsungNotes": {
+    "FriendlyName": "Samsung Notes",
+    "Description": "메모 작성, 손글씨 및 PDF 주석을 위한 Samsung 앱"
+  },
+  "B9ECED6F.ScreenPadMaster": {
+    "FriendlyName": "ASUS ScreenXpert",
+    "Description": "ASUS 창 관리 및 지원되는 모델의 ScreenPad 제어"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.SamsungStudio": {
+    "FriendlyName": "Samsung Studio",
+    "Description": "Samsung 동영상 편집 앱"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.SamsungScreenRecording": {
+    "FriendlyName": "Samsung Screen Recorder",
+    "Description": "Samsung 화면 및 웹캠 녹화 앱"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.Bixby": {
+    "FriendlyName": "Samsung Bixby",
+    "Description": "Samsung 음성 비서"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.SamsungWelcome": {
+    "FriendlyName": "Samsung Galaxy Book Experience",
+    "Description": "Galaxy Book용 Samsung 앱 실행 및 기능 안내"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.SmartThingsWindows": {
+    "FriendlyName": "Samsung SmartThings",
+    "Description": "스마트 홈 장치 연결, 모니터링 및 제어를 위한 Samsung 앱"
+  },
+  "SAMSUNGELECTRONICSCoLtd.MultiControl": {
+    "FriendlyName": "Samsung Multi control",
+    "Description": "호환되는 Galaxy 장치 간 키보드 및 마우스 공유를 위한 Samsung 앱"
+  },
+  "SAMSUNGELECTRONICSCoLtd.SecondScreen": {
+    "FriendlyName": "Samsung Second Screen",
+    "Description": "호환되는 Galaxy 태블릿을 PC의 추가 디스플레이로 사용하는 Samsung 앱"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.PENUP": {
+    "FriendlyName": "Samsung PENUP",
+    "Description": "Samsung 그림 및 색칠 앱"
+  },
+  "9426MICRO-STARINTERNATION.BusinessCenter": {
+    "FriendlyName": "MSI Center Pro",
+    "Description": "MSI 장치 설정, 진단 및 성능 최적화"
+  },
+  "AcerIncorporated.AcerRegistration": {
+    "FriendlyName": "Acer Product Registration",
+    "Description": "Acer 제품 등록 앱"
+  },
+  "E0469640.SmartAppearance": {
+    "FriendlyName": "Lenovo Smart Appearance",
+    "Description": "Lenovo 카메라 효과 및 영상 통화 개선 기능"
   },
   "LGElectronics.LGMonitorApp": {
     "FriendlyName": "LG Monitor App",

@@ -770,6 +770,14 @@
       "RemovalMethod": "Appx"
     },
     {
+      "FriendlyName": "Surface",
+      "AppId": "Microsoft.SurfaceHub",
+      "Description": "Surface device settings and support, including smart charging controls on supported models",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
       "FriendlyName": "Whiteboard",
       "AppId": "Microsoft.Whiteboard",
       "Description": "Digital collaborative whiteboard app",
@@ -909,6 +917,174 @@
       "FriendlyName": "Widgets Platform Runtime",
       "AppId": "Microsoft.WidgetsPlatformRuntime",
       "Description": "Runtime required for Windows Widgets to function",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
+      "FriendlyName": "HP OMEN Gaming Hub",
+      "AppId": "AD2F1837.OMENCommandCenter",
+      "Description": "HP gaming hub for performance monitoring and device settings",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
+      "FriendlyName": "Acer Care Center S",
+      "AppId": "AcerIncorporated.AcerCareCenterS",
+      "Description": "Acer device information, diagnostics, and maintenance tools",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
+      "FriendlyName": "MyASUS",
+      "AppId": "B9ECED6F.ASUSPCAssistant",
+      "Description": "ASUS device settings, diagnostics, and support, including battery and fan controls on supported models",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
+      "FriendlyName": "ASUS GlideX",
+      "AppId": "B9ECED6F.Glidex",
+      "Description": "ASUS screen sharing and file transfer between devices",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
+      "FriendlyName": "Samsung Quick Share",
+      "AppId": "SAMSUNGELECTRONICSCoLtd.SamsungQuickShare",
+      "Description": "Samsung file sharing between nearby devices",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
+      "FriendlyName": "MSI Center",
+      "AppId": "9426MICRO-STARINTERNATION.MSICenter",
+      "Description": "MSI device settings and performance monitoring",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
+      "FriendlyName": "Samsung Gallery",
+      "AppId": "SAMSUNGELECTRONICSCO.LTD.PCGallery",
+      "Description": "Samsung photo and video gallery",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
+      "FriendlyName": "Samsung Flow",
+      "AppId": "SAMSUNGELECTRONICSCoLtd.SamsungFlux",
+      "Description": "Samsung phone-to-PC connectivity, file sharing, and notification syncing",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
+      "FriendlyName": "Samsung Notes",
+      "AppId": "SAMSUNGELECTRONICSCoLtd.SamsungNotes",
+      "Description": "Samsung note-taking, handwriting, and PDF annotation",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
+      "FriendlyName": "ASUS ScreenXpert",
+      "AppId": "B9ECED6F.ScreenPadMaster",
+      "Description": "ASUS window management and ScreenPad controls on supported models",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
+      "FriendlyName": "Samsung Studio",
+      "AppId": "SAMSUNGELECTRONICSCO.LTD.SamsungStudio",
+      "Description": "Samsung video editing app",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
+      "FriendlyName": "Samsung Screen Recorder",
+      "AppId": "SAMSUNGELECTRONICSCO.LTD.SamsungScreenRecording",
+      "Description": "Samsung screen and webcam recording app",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
+      "FriendlyName": "Samsung Bixby",
+      "AppId": "SAMSUNGELECTRONICSCO.LTD.Bixby",
+      "Description": "Samsung voice assistant",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
+      "FriendlyName": "Samsung Galaxy Book Experience",
+      "AppId": "SAMSUNGELECTRONICSCO.LTD.SamsungWelcome",
+      "Description": "Samsung app launcher and feature guides for Galaxy Book",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
+      "FriendlyName": "Samsung SmartThings",
+      "AppId": "SAMSUNGELECTRONICSCO.LTD.SmartThingsWindows",
+      "Description": "Samsung app for connecting, monitoring, and controlling smart home devices",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
+      "FriendlyName": "Samsung Multi control",
+      "AppId": "SAMSUNGELECTRONICSCoLtd.MultiControl",
+      "Description": "Samsung keyboard and mouse sharing across compatible Galaxy devices",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
+      "FriendlyName": "Samsung Second Screen",
+      "AppId": "SAMSUNGELECTRONICSCoLtd.SecondScreen",
+      "Description": "Samsung app for using a compatible Galaxy tablet as an additional PC display",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
+      "FriendlyName": "Samsung PENUP",
+      "AppId": "SAMSUNGELECTRONICSCO.LTD.PENUP",
+      "Description": "Samsung drawing and coloring app",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
+      "FriendlyName": "MSI Center Pro",
+      "AppId": "9426MICRO-STARINTERNATION.BusinessCenter",
+      "Description": "MSI device settings, diagnostics, and performance optimization",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
+      "FriendlyName": "Acer Product Registration",
+      "AppId": "AcerIncorporated.AcerRegistration",
+      "Description": "Acer product registration app",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
+      "FriendlyName": "Lenovo Smart Appearance",
+      "AppId": "E0469640.SmartAppearance",
+      "Description": "Lenovo camera effects and video call enhancements",
       "SelectedByDefault": false,
       "Recommendation": "optional",
       "RemovalMethod": "Appx"
@@ -1132,8 +1308,29 @@
       ]
     },
     {
-      "Name": "OEM software (Dell, HP, Lenovo, LG)",
+      "Name": "OEM software (Acer, ASUS, Dell, HP, Lenovo, LG, MSI, Samsung)",
       "AppIds": [
+        "SAMSUNGELECTRONICSCoLtd.MultiControl",
+        "SAMSUNGELECTRONICSCoLtd.SecondScreen",
+        "SAMSUNGELECTRONICSCO.LTD.PENUP",
+        "9426MICRO-STARINTERNATION.BusinessCenter",
+        "AcerIncorporated.AcerRegistration",
+        "E0469640.SmartAppearance",
+        "SAMSUNGELECTRONICSCO.LTD.SamsungStudio",
+        "SAMSUNGELECTRONICSCO.LTD.SamsungScreenRecording",
+        "SAMSUNGELECTRONICSCO.LTD.Bixby",
+        "SAMSUNGELECTRONICSCO.LTD.SamsungWelcome",
+        "SAMSUNGELECTRONICSCO.LTD.SmartThingsWindows",
+        "SAMSUNGELECTRONICSCO.LTD.PCGallery",
+        "SAMSUNGELECTRONICSCoLtd.SamsungFlux",
+        "SAMSUNGELECTRONICSCoLtd.SamsungNotes",
+        "B9ECED6F.ScreenPadMaster",
+        "B9ECED6F.Glidex",
+        "SAMSUNGELECTRONICSCoLtd.SamsungQuickShare",
+        "9426MICRO-STARINTERNATION.MSICenter",
+        "AD2F1837.OMENCommandCenter",
+        "AcerIncorporated.AcerCareCenterS",
+        "B9ECED6F.ASUSPCAssistant",
         "AD2F1837.HPAIExperienceCenter",
         "AD2F1837.HPConnectedMusic",
         "AD2F1837.HPConnectedPhotopoweredbySnapfish",

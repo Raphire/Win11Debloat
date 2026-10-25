@@ -383,6 +383,10 @@
     "FriendlyName": "Start Experiences App (ウィジェット)",
     "Description": "このアプリは Windows ウィジェットの「マイ フィード」機能を提供します"
   },
+  "Microsoft.SurfaceHub": {
+    "FriendlyName": "Surface",
+    "Description": "Surface デバイスの設定とサポート（対応モデルのスマート充電の設定を含む）"
+  },
   "Microsoft.Whiteboard": {
     "FriendlyName": "Microsoft Whiteboard",
     "Description": "デジタル共同作業用ホワイトボード アプリです"
@@ -454,6 +458,90 @@
   "Microsoft.WidgetsPlatformRuntime": {
     "FriendlyName": "Widgets Platform Runtime",
     "Description": "Windows ウィジェットが動作するために必要なランタイムです"
+  },
+  "AD2F1837.OMENCommandCenter": {
+    "FriendlyName": "HP OMEN Gaming Hub",
+    "Description": "パフォーマンスの監視とデバイス設定を行う HP のゲーミングハブ"
+  },
+  "AcerIncorporated.AcerCareCenterS": {
+    "FriendlyName": "Acer Care Center S",
+    "Description": "Acer デバイスの情報、診断、メンテナンスツール"
+  },
+  "B9ECED6F.ASUSPCAssistant": {
+    "FriendlyName": "MyASUS",
+    "Description": "ASUS デバイスの設定、診断、サポート（対応モデルのバッテリーとファンの設定を含む）"
+  },
+  "B9ECED6F.Glidex": {
+    "FriendlyName": "ASUS GlideX",
+    "Description": "デバイス間で画面共有とファイル転送を行う ASUS のアプリ"
+  },
+  "SAMSUNGELECTRONICSCoLtd.SamsungQuickShare": {
+    "FriendlyName": "Samsung Quick Share",
+    "Description": "近くのデバイス間でファイルを共有する Samsung のアプリ"
+  },
+  "9426MICRO-STARINTERNATION.MSICenter": {
+    "FriendlyName": "MSI Center",
+    "Description": "MSI デバイスの設定とパフォーマンスの監視"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.PCGallery": {
+    "FriendlyName": "Samsung Gallery",
+    "Description": "Samsung の写真とビデオのギャラリー"
+  },
+  "SAMSUNGELECTRONICSCoLtd.SamsungFlux": {
+    "FriendlyName": "Samsung Flow",
+    "Description": "スマートフォンと PC の接続、ファイル共有、通知の同期を行う Samsung のアプリ"
+  },
+  "SAMSUNGELECTRONICSCoLtd.SamsungNotes": {
+    "FriendlyName": "Samsung Notes",
+    "Description": "メモ、手書き、PDF への注釈に対応する Samsung のアプリ"
+  },
+  "B9ECED6F.ScreenPadMaster": {
+    "FriendlyName": "ASUS ScreenXpert",
+    "Description": "ASUS のウィンドウ管理と対応モデルの ScreenPad の操作"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.SamsungStudio": {
+    "FriendlyName": "Samsung Studio",
+    "Description": "Samsung の動画編集アプリ"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.SamsungScreenRecording": {
+    "FriendlyName": "Samsung Screen Recorder",
+    "Description": "画面と Web カメラの映像を録画する Samsung のアプリ"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.Bixby": {
+    "FriendlyName": "Samsung Bixby",
+    "Description": "Samsung の音声アシスタント"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.SamsungWelcome": {
+    "FriendlyName": "Samsung Galaxy Book Experience",
+    "Description": "Galaxy Book 向けの Samsung アプリランチャーと機能ガイド"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.SmartThingsWindows": {
+    "FriendlyName": "Samsung SmartThings",
+    "Description": "スマートホームデバイスの接続、監視、操作を行う Samsung のアプリ"
+  },
+  "SAMSUNGELECTRONICSCoLtd.MultiControl": {
+    "FriendlyName": "Samsung Multi control",
+    "Description": "対応する Galaxy デバイス間でキーボードとマウスを共有する Samsung のアプリ"
+  },
+  "SAMSUNGELECTRONICSCoLtd.SecondScreen": {
+    "FriendlyName": "Samsung Second Screen",
+    "Description": "対応する Galaxy タブレットを PC の追加ディスプレイとして使用する Samsung のアプリ"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.PENUP": {
+    "FriendlyName": "Samsung PENUP",
+    "Description": "Samsung の描画と塗り絵のアプリ"
+  },
+  "9426MICRO-STARINTERNATION.BusinessCenter": {
+    "FriendlyName": "MSI Center Pro",
+    "Description": "MSI デバイスの設定、診断、パフォーマンスの最適化"
+  },
+  "AcerIncorporated.AcerRegistration": {
+    "FriendlyName": "Acer Product Registration",
+    "Description": "Acer 製品登録アプリ"
+  },
+  "E0469640.SmartAppearance": {
+    "FriendlyName": "Lenovo Smart Appearance",
+    "Description": "Lenovo のカメラ効果とビデオ通話の補正機能"
   },
   "LGElectronics.LGMonitorApp": {
     "FriendlyName": "LG Monitor App",

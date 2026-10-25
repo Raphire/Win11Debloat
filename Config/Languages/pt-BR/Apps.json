@@ -383,6 +383,10 @@
     "FriendlyName": "Start Experiences App (Widgets)",
     "Description": "Este app dá suporte ao Meu Feed de Widgets do Windows"
   },
+  "Microsoft.SurfaceHub": {
+    "FriendlyName": "Surface",
+    "Description": "Configurações e suporte para dispositivos Surface, incluindo controles de carregamento inteligente nos modelos compatíveis"
+  },
   "Microsoft.Whiteboard": {
     "FriendlyName": "Microsoft Whiteboard",
     "Description": "App de quadro branco digital colaborativo"
@@ -454,6 +458,90 @@
   "Microsoft.WidgetsPlatformRuntime": {
     "FriendlyName": "Runtime da Plataforma de Widgets",
     "Description": "Runtime necessário para o funcionamento dos Widgets do Windows"
+  },
+  "AD2F1837.OMENCommandCenter": {
+    "FriendlyName": "HP OMEN Gaming Hub",
+    "Description": "Central de jogos da HP para monitoramento de desempenho e configurações do dispositivo"
+  },
+  "AcerIncorporated.AcerCareCenterS": {
+    "FriendlyName": "Acer Care Center S",
+    "Description": "Informações do dispositivo e ferramentas de diagnóstico e manutenção da Acer"
+  },
+  "B9ECED6F.ASUSPCAssistant": {
+    "FriendlyName": "MyASUS",
+    "Description": "Configurações, diagnóstico e suporte para dispositivos ASUS, incluindo controles de bateria e ventoinha nos modelos compatíveis"
+  },
+  "B9ECED6F.Glidex": {
+    "FriendlyName": "ASUS GlideX",
+    "Description": "Aplicativo da ASUS para compartilhamento de tela e transferência de arquivos entre dispositivos"
+  },
+  "SAMSUNGELECTRONICSCoLtd.SamsungQuickShare": {
+    "FriendlyName": "Samsung Quick Share",
+    "Description": "Aplicativo da Samsung para compartilhamento de arquivos entre dispositivos próximos"
+  },
+  "9426MICRO-STARINTERNATION.MSICenter": {
+    "FriendlyName": "MSI Center",
+    "Description": "Configurações do dispositivo e monitoramento de desempenho da MSI"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.PCGallery": {
+    "FriendlyName": "Samsung Gallery",
+    "Description": "Galeria de fotos e vídeos da Samsung"
+  },
+  "SAMSUNGELECTRONICSCoLtd.SamsungFlux": {
+    "FriendlyName": "Samsung Flow",
+    "Description": "Aplicativo da Samsung para conectar o telefone ao PC, compartilhar arquivos e sincronizar notificações"
+  },
+  "SAMSUNGELECTRONICSCoLtd.SamsungNotes": {
+    "FriendlyName": "Samsung Notes",
+    "Description": "Aplicativo da Samsung para notas, escrita à mão e anotações em PDF"
+  },
+  "B9ECED6F.ScreenPadMaster": {
+    "FriendlyName": "ASUS ScreenXpert",
+    "Description": "Gerenciamento de janelas da ASUS e controles do ScreenPad nos modelos compatíveis"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.SamsungStudio": {
+    "FriendlyName": "Samsung Studio",
+    "Description": "Aplicativo de edição de vídeo da Samsung"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.SamsungScreenRecording": {
+    "FriendlyName": "Samsung Screen Recorder",
+    "Description": "Aplicativo da Samsung para gravação de tela e webcam"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.Bixby": {
+    "FriendlyName": "Samsung Bixby",
+    "Description": "Assistente de voz da Samsung"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.SamsungWelcome": {
+    "FriendlyName": "Samsung Galaxy Book Experience",
+    "Description": "Iniciador de aplicativos da Samsung e guias de recursos para Galaxy Book"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.SmartThingsWindows": {
+    "FriendlyName": "Samsung SmartThings",
+    "Description": "Aplicativo da Samsung para conectar, monitorar e controlar dispositivos de casa inteligente"
+  },
+  "SAMSUNGELECTRONICSCoLtd.MultiControl": {
+    "FriendlyName": "Samsung Multi control",
+    "Description": "Aplicativo da Samsung para compartilhar teclado e mouse entre dispositivos Galaxy compatíveis"
+  },
+  "SAMSUNGELECTRONICSCoLtd.SecondScreen": {
+    "FriendlyName": "Samsung Second Screen",
+    "Description": "Aplicativo da Samsung para usar um tablet Galaxy compatível como tela adicional do PC"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.PENUP": {
+    "FriendlyName": "Samsung PENUP",
+    "Description": "Aplicativo da Samsung para desenhar e colorir"
+  },
+  "9426MICRO-STARINTERNATION.BusinessCenter": {
+    "FriendlyName": "MSI Center Pro",
+    "Description": "Configurações, diagnóstico e otimização de desempenho de dispositivos MSI"
+  },
+  "AcerIncorporated.AcerRegistration": {
+    "FriendlyName": "Acer Product Registration",
+    "Description": "Aplicativo de registro de produtos Acer"
+  },
+  "E0469640.SmartAppearance": {
+    "FriendlyName": "Lenovo Smart Appearance",
+    "Description": "Efeitos de câmera e melhorias de videochamadas da Lenovo"
   },
   "LGElectronics.LGMonitorApp": {
     "FriendlyName": "LG Monitor App",

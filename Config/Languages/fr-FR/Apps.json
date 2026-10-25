@@ -467,6 +467,18 @@
     "FriendlyName": "MyASUS",
     "Description": "Paramètres, diagnostics et assistance pour les appareils ASUS, y compris les commandes de batterie et de ventilation sur les modèles compatibles"
   },
+  "B9ECED6F.Glidex": {
+    "FriendlyName": "ASUS GlideX",
+    "Description": "Application ASUS de partage d’écran et de transfert de fichiers entre appareils"
+  },
+  "SAMSUNGELECTRONICSCoLtd.SamsungQuickShare": {
+    "FriendlyName": "Quick Share",
+    "Description": "Application Samsung de partage de fichiers entre appareils à proximité"
+  },
+  "9426MICRO-STARINTERNATION.MSICenter": {
+    "FriendlyName": "MSI Center",
+    "Description": "Paramètres de l’appareil et surveillance des performances MSI"
+  },
   "LGElectronics.LGMonitorApp": {
     "FriendlyName": "LG Monitor App",
     "Description": "Logiciel OEM LG permettant de contrôler votre moniteur LG. Windows Update peut réinstaller silencieusement cette application si un moniteur LG est connecté"

@@ -467,6 +467,18 @@
     "FriendlyName": "MyASUS",
     "Description": "ASUS device settings, diagnostics, and support, including battery and fan controls on supported models"
   },
+  "B9ECED6F.Glidex": {
+    "FriendlyName": "ASUS GlideX",
+    "Description": "ASUS app for screen sharing and file transfer between devices"
+  },
+  "SAMSUNGELECTRONICSCoLtd.SamsungQuickShare": {
+    "FriendlyName": "Quick Share",
+    "Description": "Samsung app for file sharing between nearby devices"
+  },
+  "9426MICRO-STARINTERNATION.MSICenter": {
+    "FriendlyName": "MSI Center",
+    "Description": "MSI device settings and performance monitoring"
+  },
   "LGElectronics.LGMonitorApp": {
     "FriendlyName": "LG Monitor App",
     "Description": "LG OEM software for controlling your LG monitor, Windows Update may silently reinstall this app if you have an LG monitor connected"

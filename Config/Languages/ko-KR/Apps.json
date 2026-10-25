@@ -467,6 +467,18 @@
     "FriendlyName": "MyASUS",
     "Description": "ASUS 장치 설정, 진단 및 지원(지원되는 모델의 배터리 및 팬 설정 포함)"
   },
+  "B9ECED6F.Glidex": {
+    "FriendlyName": "ASUS GlideX",
+    "Description": "장치 간 화면 공유 및 파일 전송을 위한 ASUS 앱"
+  },
+  "SAMSUNGELECTRONICSCoLtd.SamsungQuickShare": {
+    "FriendlyName": "Quick Share",
+    "Description": "주변 장치 간 파일 공유를 위한 Samsung 앱"
+  },
+  "9426MICRO-STARINTERNATION.MSICenter": {
+    "FriendlyName": "MSI Center",
+    "Description": "MSI 장치 설정 및 성능 모니터링"
+  },
   "LGElectronics.LGMonitorApp": {
     "FriendlyName": "LG Monitor App",
     "Description": "LG 모니터를 제어하는 LG OEM 소프트웨어이며, LG 모니터가 연결되어 있으면 Windows Update에서 이 앱을 자동으로 다시 설치할 수 있습니다."

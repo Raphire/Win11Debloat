@@ -467,6 +467,18 @@
     "FriendlyName": "MyASUS",
     "Description": "ASUS デバイスの設定、診断、サポート（対応モデルのバッテリーとファンの設定を含む）"
   },
+  "B9ECED6F.Glidex": {
+    "FriendlyName": "ASUS GlideX",
+    "Description": "デバイス間で画面共有とファイル転送を行う ASUS のアプリ"
+  },
+  "SAMSUNGELECTRONICSCoLtd.SamsungQuickShare": {
+    "FriendlyName": "Quick Share",
+    "Description": "近くのデバイス間でファイルを共有する Samsung のアプリ"
+  },
+  "9426MICRO-STARINTERNATION.MSICenter": {
+    "FriendlyName": "MSI Center",
+    "Description": "MSI デバイスの設定とパフォーマンスの監視"
+  },
   "LGElectronics.LGMonitorApp": {
     "FriendlyName": "LG Monitor App",
     "Description": "LG 製モニターを制御するための LG OEM ソフトウェアです。LG 製モニターが接続されている場合、Windows Update によって自動的に再インストールされることがあります"

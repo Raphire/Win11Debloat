@@ -467,6 +467,18 @@
     "FriendlyName": "MyASUS",
     "Description": "Geräteeinstellungen, Diagnose und Support von ASUS, einschließlich Akku- und Lüftersteuerung bei unterstützten Modellen"
   },
+  "B9ECED6F.Glidex": {
+    "FriendlyName": "ASUS GlideX",
+    "Description": "ASUS-App zur Bildschirmfreigabe und Dateiübertragung zwischen Geräten"
+  },
+  "SAMSUNGELECTRONICSCoLtd.SamsungQuickShare": {
+    "FriendlyName": "Quick Share",
+    "Description": "Samsung-App zur Dateifreigabe zwischen Geräten in der Nähe"
+  },
+  "9426MICRO-STARINTERNATION.MSICenter": {
+    "FriendlyName": "MSI Center",
+    "Description": "Geräteeinstellungen und Leistungsüberwachung von MSI"
+  },
   "LGElectronics.LGMonitorApp": {
     "FriendlyName": "LG Monitor App",
     "Description": "LG-OEM-Software zum Steuern Ihres LG-Monitors; Windows Update installiert diese App möglicherweise stillschweigend neu, wenn ein LG-Monitor angeschlossen ist"

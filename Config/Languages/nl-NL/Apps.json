@@ -467,6 +467,18 @@
     "FriendlyName": "MyASUS",
     "Description": "Apparaatinstellingen, diagnostiek en ondersteuning van ASUS, inclusief batterij- en ventilatorinstellingen op ondersteunde modellen"
   },
+  "B9ECED6F.Glidex": {
+    "FriendlyName": "ASUS GlideX",
+    "Description": "ASUS-app voor schermdeling en bestandsoverdracht tussen apparaten"
+  },
+  "SAMSUNGELECTRONICSCoLtd.SamsungQuickShare": {
+    "FriendlyName": "Quick Share",
+    "Description": "Samsung-app voor het delen van bestanden tussen apparaten in de buurt"
+  },
+  "9426MICRO-STARINTERNATION.MSICenter": {
+    "FriendlyName": "MSI Center",
+    "Description": "Apparaatinstellingen en prestatiebewaking van MSI"
+  },
   "LGElectronics.LGMonitorApp": {
     "FriendlyName": "LG Monitor App",
     "Description": "LG-software voor het bedienen van je LG-beeldscherm. Windows Update kan deze app ongemerkt opnieuw installeren als je een LG-beeldscherm hebt aangesloten"

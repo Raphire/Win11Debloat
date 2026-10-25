@@ -938,6 +938,30 @@
       "RemovalMethod": "Appx"
     },
     {
+      "FriendlyName": "ASUS GlideX",
+      "AppId": "B9ECED6F.Glidex",
+      "Description": "ASUS screen sharing and file transfer between devices",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
+      "FriendlyName": "Quick Share",
+      "AppId": "SAMSUNGELECTRONICSCoLtd.SamsungQuickShare",
+      "Description": "Samsung file sharing between nearby devices",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
+      "FriendlyName": "MSI Center",
+      "AppId": "9426MICRO-STARINTERNATION.MSICenter",
+      "Description": "MSI device settings and performance monitoring",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
       "FriendlyName": "LG Monitor App",
       "AppId": "LGElectronics.LGMonitorApp",
       "Description": "LG OEM software for controlling your LG monitor, Windows Update may silently reinstall this app if you have an LG monitor connected",
@@ -1156,8 +1180,11 @@
       ]
     },
     {
-      "Name": "OEM software (Acer, ASUS, Dell, HP, Lenovo, LG)",
+      "Name": "OEM software (Acer, ASUS, Dell, HP, Lenovo, LG, MSI, Samsung)",
       "AppIds": [
+        "B9ECED6F.Glidex",
+        "SAMSUNGELECTRONICSCoLtd.SamsungQuickShare",
+        "9426MICRO-STARINTERNATION.MSICenter",
         "AD2F1837.OMENCommandCenter",
         "AcerIncorporated.AcerCareCenterS",
         "B9ECED6F.ASUSPCAssistant",

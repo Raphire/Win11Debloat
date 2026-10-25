@@ -467,6 +467,18 @@
     "FriendlyName": "MyASUS",
     "Description": "Настройки, диагностика и поддержка устройств ASUS, включая управление аккумулятором и вентиляторами на поддерживаемых моделях"
   },
+  "B9ECED6F.Glidex": {
+    "FriendlyName": "ASUS GlideX",
+    "Description": "Приложение ASUS для демонстрации экрана и передачи файлов между устройствами"
+  },
+  "SAMSUNGELECTRONICSCoLtd.SamsungQuickShare": {
+    "FriendlyName": "Quick Share",
+    "Description": "Приложение Samsung для обмена файлами между устройствами поблизости"
+  },
+  "9426MICRO-STARINTERNATION.MSICenter": {
+    "FriendlyName": "MSI Center",
+    "Description": "Настройки устройства и мониторинг производительности MSI"
+  },
   "LGElectronics.LGMonitorApp": {
     "FriendlyName": "LG Monitor App",
     "Description": "Фирменная программа LG для управления монитором LG. Центр обновления Windows может без уведомления переустановить это приложение, если подключен монитор LG"

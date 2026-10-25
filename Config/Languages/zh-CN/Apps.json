@@ -467,6 +467,18 @@
     "FriendlyName": "MyASUS",
     "Description": "ASUS 设备设置、诊断和支持，包括受支持型号的电池和风扇控制"
   },
+  "B9ECED6F.Glidex": {
+    "FriendlyName": "ASUS GlideX",
+    "Description": "用于在设备之间共享屏幕和传输文件的 ASUS 应用"
+  },
+  "SAMSUNGELECTRONICSCoLtd.SamsungQuickShare": {
+    "FriendlyName": "Quick Share",
+    "Description": "用于在附近设备之间共享文件的 Samsung 应用"
+  },
+  "9426MICRO-STARINTERNATION.MSICenter": {
+    "FriendlyName": "MSI Center",
+    "Description": "MSI 设备设置和性能监控"
+  },
   "LGElectronics.LGMonitorApp": {
     "FriendlyName": "LG 显示器应用",
     "Description": "LG 提供的显示器控制软件；连接 LG 显示器时，Windows 更新可能会自动重新安装此应用"

@@ -495,6 +495,26 @@
     "FriendlyName": "ScreenXpert",
     "Description": "ASUS-Fensterverwaltung und ScreenPad-Steuerung bei unterstützten Modellen"
   },
+  "SAMSUNGELECTRONICSCO.LTD.SamsungStudio": {
+    "FriendlyName": "Samsung Studio",
+    "Description": "Videobearbeitungs-App von Samsung"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.SamsungScreenRecording": {
+    "FriendlyName": "Samsung Screen Recorder",
+    "Description": "Samsung-App zur Bildschirm- und Webcam-Aufnahme"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.Bixby": {
+    "FriendlyName": "Bixby",
+    "Description": "Sprachassistent von Samsung"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.SamsungWelcome": {
+    "FriendlyName": "Galaxy Book Experience",
+    "Description": "Samsung-App-Launcher und Funktionsanleitungen für Galaxy Book"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.SmartThingsWindows": {
+    "FriendlyName": "SmartThings",
+    "Description": "Samsung-App zum Verbinden, Überwachen und Steuern von Smart-Home-Geräten"
+  },
   "LGElectronics.LGMonitorApp": {
     "FriendlyName": "LG Monitor App",
     "Description": "LG-OEM-Software zum Steuern Ihres LG-Monitors; Windows Update installiert diese App möglicherweise stillschweigend neu, wenn ein LG-Monitor angeschlossen ist"

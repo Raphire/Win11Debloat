@@ -495,6 +495,26 @@
     "FriendlyName": "ScreenXpert",
     "Description": "Управление окнами ASUS и ScreenPad на поддерживаемых моделях"
   },
+  "SAMSUNGELECTRONICSCO.LTD.SamsungStudio": {
+    "FriendlyName": "Samsung Studio",
+    "Description": "Приложение Samsung для редактирования видео"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.SamsungScreenRecording": {
+    "FriendlyName": "Samsung Screen Recorder",
+    "Description": "Приложение Samsung для записи экрана и видео с веб-камеры"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.Bixby": {
+    "FriendlyName": "Bixby",
+    "Description": "Голосовой помощник Samsung"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.SamsungWelcome": {
+    "FriendlyName": "Galaxy Book Experience",
+    "Description": "Средство запуска приложений Samsung и руководства по функциям Galaxy Book"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.SmartThingsWindows": {
+    "FriendlyName": "SmartThings",
+    "Description": "Приложение Samsung для подключения, мониторинга и управления устройствами умного дома"
+  },
   "LGElectronics.LGMonitorApp": {
     "FriendlyName": "LG Monitor App",
     "Description": "Фирменная программа LG для управления монитором LG. Центр обновления Windows может без уведомления переустановить это приложение, если подключен монитор LG"

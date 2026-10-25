@@ -495,6 +495,26 @@
     "FriendlyName": "ScreenXpert",
     "Description": "ASUS 窗口管理和受支持型号的 ScreenPad 控制"
   },
+  "SAMSUNGELECTRONICSCO.LTD.SamsungStudio": {
+    "FriendlyName": "Samsung Studio",
+    "Description": "Samsung 视频编辑应用"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.SamsungScreenRecording": {
+    "FriendlyName": "Samsung Screen Recorder",
+    "Description": "用于录制屏幕和网络摄像头画面的 Samsung 应用"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.Bixby": {
+    "FriendlyName": "Bixby",
+    "Description": "Samsung 语音助手"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.SamsungWelcome": {
+    "FriendlyName": "Galaxy Book Experience",
+    "Description": "适用于 Galaxy Book 的 Samsung 应用启动器和功能指南"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.SmartThingsWindows": {
+    "FriendlyName": "SmartThings",
+    "Description": "用于连接、监控和控制智能家居设备的 Samsung 应用"
+  },
   "LGElectronics.LGMonitorApp": {
     "FriendlyName": "LG 显示器应用",
     "Description": "LG 提供的显示器控制软件；连接 LG 显示器时，Windows 更新可能会自动重新安装此应用"

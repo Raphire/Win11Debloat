@@ -495,6 +495,26 @@
     "FriendlyName": "ScreenXpert",
     "Description": "ASUS のウィンドウ管理と対応モデルの ScreenPad の操作"
   },
+  "SAMSUNGELECTRONICSCO.LTD.SamsungStudio": {
+    "FriendlyName": "Samsung Studio",
+    "Description": "Samsung の動画編集アプリ"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.SamsungScreenRecording": {
+    "FriendlyName": "Samsung Screen Recorder",
+    "Description": "画面と Web カメラの映像を録画する Samsung のアプリ"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.Bixby": {
+    "FriendlyName": "Bixby",
+    "Description": "Samsung の音声アシスタント"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.SamsungWelcome": {
+    "FriendlyName": "Galaxy Book Experience",
+    "Description": "Galaxy Book 向けの Samsung アプリランチャーと機能ガイド"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.SmartThingsWindows": {
+    "FriendlyName": "SmartThings",
+    "Description": "スマートホームデバイスの接続、監視、操作を行う Samsung のアプリ"
+  },
   "LGElectronics.LGMonitorApp": {
     "FriendlyName": "LG Monitor App",
     "Description": "LG 製モニターを制御するための LG OEM ソフトウェアです。LG 製モニターが接続されている場合、Windows Update によって自動的に再インストールされることがあります"

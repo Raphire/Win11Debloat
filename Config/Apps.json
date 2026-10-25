@@ -994,6 +994,46 @@
       "RemovalMethod": "Appx"
     },
     {
+      "FriendlyName": "Samsung Studio",
+      "AppId": "SAMSUNGELECTRONICSCO.LTD.SamsungStudio",
+      "Description": "Samsung video editing app",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
+      "FriendlyName": "Samsung Screen Recorder",
+      "AppId": "SAMSUNGELECTRONICSCO.LTD.SamsungScreenRecording",
+      "Description": "Samsung screen and webcam recording app",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
+      "FriendlyName": "Bixby",
+      "AppId": "SAMSUNGELECTRONICSCO.LTD.Bixby",
+      "Description": "Samsung voice assistant",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
+      "FriendlyName": "Galaxy Book Experience",
+      "AppId": "SAMSUNGELECTRONICSCO.LTD.SamsungWelcome",
+      "Description": "Samsung app launcher and feature guides for Galaxy Book",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
+      "FriendlyName": "SmartThings",
+      "AppId": "SAMSUNGELECTRONICSCO.LTD.SmartThingsWindows",
+      "Description": "Samsung app for connecting, monitoring, and controlling smart home devices",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
       "FriendlyName": "LG Monitor App",
       "AppId": "LGElectronics.LGMonitorApp",
       "Description": "LG OEM software for controlling your LG monitor, Windows Update may silently reinstall this app if you have an LG monitor connected",
@@ -1214,6 +1254,11 @@
     {
       "Name": "OEM software (Acer, ASUS, Dell, HP, Lenovo, LG, MSI, Samsung)",
       "AppIds": [
+        "SAMSUNGELECTRONICSCO.LTD.SamsungStudio",
+        "SAMSUNGELECTRONICSCO.LTD.SamsungScreenRecording",
+        "SAMSUNGELECTRONICSCO.LTD.Bixby",
+        "SAMSUNGELECTRONICSCO.LTD.SamsungWelcome",
+        "SAMSUNGELECTRONICSCO.LTD.SmartThingsWindows",
         "SAMSUNGELECTRONICSCO.LTD.PCGallery",
         "SAMSUNGELECTRONICSCoLtd.SamsungFlux",
         "SAMSUNGELECTRONICSCoLtd.SamsungNotes",

@@ -495,6 +495,26 @@
     "FriendlyName": "ScreenXpert",
     "Description": "ASUS 視窗管理和支援機型的 ScreenPad 控制"
   },
+  "SAMSUNGELECTRONICSCO.LTD.SamsungStudio": {
+    "FriendlyName": "Samsung Studio",
+    "Description": "Samsung 影片編輯應用程式"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.SamsungScreenRecording": {
+    "FriendlyName": "Samsung Screen Recorder",
+    "Description": "用於錄製螢幕和網路攝影機畫面的 Samsung 應用程式"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.Bixby": {
+    "FriendlyName": "Bixby",
+    "Description": "Samsung 語音助理"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.SamsungWelcome": {
+    "FriendlyName": "Galaxy Book Experience",
+    "Description": "適用於 Galaxy Book 的 Samsung 應用程式啟動器和功能指南"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.SmartThingsWindows": {
+    "FriendlyName": "SmartThings",
+    "Description": "用於連接、監控和控制智慧家庭裝置的 Samsung 應用程式"
+  },
   "LGElectronics.LGMonitorApp": {
     "FriendlyName": "LG Monitor App",
     "Description": "LG 原廠軟體，用於控制 LG 螢幕；若連接 LG 螢幕，Windows Update 可能會無聲重新安裝此應用程式"

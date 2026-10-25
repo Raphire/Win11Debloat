@@ -495,6 +495,26 @@
     "FriendlyName": "ScreenXpert",
     "Description": "Gestión de ventanas de ASUS y controles de ScreenPad en los modelos compatibles"
   },
+  "SAMSUNGELECTRONICSCO.LTD.SamsungStudio": {
+    "FriendlyName": "Samsung Studio",
+    "Description": "Aplicación de edición de vídeo de Samsung"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.SamsungScreenRecording": {
+    "FriendlyName": "Samsung Screen Recorder",
+    "Description": "Aplicación de Samsung para grabar la pantalla y la cámara web"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.Bixby": {
+    "FriendlyName": "Bixby",
+    "Description": "Asistente de voz de Samsung"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.SamsungWelcome": {
+    "FriendlyName": "Galaxy Book Experience",
+    "Description": "Lanzador de aplicaciones de Samsung y guías de funciones para Galaxy Book"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.SmartThingsWindows": {
+    "FriendlyName": "SmartThings",
+    "Description": "Aplicación de Samsung para conectar, supervisar y controlar dispositivos del hogar inteligente"
+  },
   "LGElectronics.LGMonitorApp": {
     "FriendlyName": "Aplicación LG Monitor",
     "Description": "Software OEM de LG para controlar el monitor LG; Windows Update puede reinstalar esta aplicación de forma silenciosa si hay un monitor LG conectado"

@@ -495,6 +495,26 @@
     "FriendlyName": "ScreenXpert",
     "Description": "ASUS 창 관리 및 지원되는 모델의 ScreenPad 제어"
   },
+  "SAMSUNGELECTRONICSCO.LTD.SamsungStudio": {
+    "FriendlyName": "Samsung Studio",
+    "Description": "Samsung 동영상 편집 앱"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.SamsungScreenRecording": {
+    "FriendlyName": "Samsung Screen Recorder",
+    "Description": "Samsung 화면 및 웹캠 녹화 앱"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.Bixby": {
+    "FriendlyName": "Bixby",
+    "Description": "Samsung 음성 비서"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.SamsungWelcome": {
+    "FriendlyName": "Galaxy Book Experience",
+    "Description": "Galaxy Book용 Samsung 앱 실행 및 기능 안내"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.SmartThingsWindows": {
+    "FriendlyName": "SmartThings",
+    "Description": "스마트 홈 장치 연결, 모니터링 및 제어를 위한 Samsung 앱"
+  },
   "LGElectronics.LGMonitorApp": {
     "FriendlyName": "LG Monitor App",
     "Description": "LG 모니터를 제어하는 LG OEM 소프트웨어이며, LG 모니터가 연결되어 있으면 Windows Update에서 이 앱을 자동으로 다시 설치할 수 있습니다."

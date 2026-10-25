@@ -48,6 +48,24 @@ Describe 'Get-PluralCategory rules' {
         @{ LanguageCode = 'zh-CN'; Count = 1; Expected = 'other' }
         @{ LanguageCode = 'zh-CN'; Count = 5; Expected = 'other' }
 
+        # French: 'one' for 0 and 1, 'other' otherwise. 'many' is deliberately not
+        # returned for whole millions, because the French catalogs ship no '_many'
+        # keys and a category with no key prints the raw key name.
+        @{ LanguageCode = 'fr-FR'; Count = 0; Expected = 'one' }
+        @{ LanguageCode = 'fr-FR'; Count = 1; Expected = 'one' }
+        @{ LanguageCode = 'fr-FR'; Count = 2; Expected = 'other' }
+        @{ LanguageCode = 'fr-FR'; Count = 100; Expected = 'other' }
+        @{ LanguageCode = 'fr-FR'; Count = 1000000; Expected = 'other' }
+
+        # Korean: no grammatical plural, so every count is 'other'.
+        @{ LanguageCode = 'ko-KR'; Count = 0; Expected = 'other' }
+        @{ LanguageCode = 'ko-KR'; Count = 1; Expected = 'other' }
+        @{ LanguageCode = 'ko-KR'; Count = 2; Expected = 'other' }
+        @{ LanguageCode = 'ko-KR'; Count = 5; Expected = 'other' }
+        @{ LanguageCode = 'ko-KR'; Count = 11; Expected = 'other' }
+        @{ LanguageCode = 'ko-KR'; Count = 100; Expected = 'other' }
+        @{ LanguageCode = 'ko-KR'; Count = 1000000; Expected = 'other' }
+
         # Russian: 'one' for 1/21/31 but not 11, 'few' for 2-4/22-24 but not 12-14,
         # 'many' for everything else including 0.
         @{ LanguageCode = 'ru-RU'; Count = 0; Expected = 'many' }

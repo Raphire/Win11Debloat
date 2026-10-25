@@ -479,6 +479,22 @@
     "FriendlyName": "MSI Center",
     "Description": "Apparaatinstellingen en prestatiebewaking van MSI"
   },
+  "SAMSUNGELECTRONICSCO.LTD.PCGallery": {
+    "FriendlyName": "Samsung Gallery",
+    "Description": "Foto- en videogalerij van Samsung"
+  },
+  "SAMSUNGELECTRONICSCoLtd.SamsungFlux": {
+    "FriendlyName": "Samsung Flow",
+    "Description": "Samsung-app voor het verbinden van telefoon en pc, bestanden delen en meldingen synchroniseren"
+  },
+  "SAMSUNGELECTRONICSCoLtd.SamsungNotes": {
+    "FriendlyName": "Samsung Notes",
+    "Description": "Samsung-app voor notities, handschrift en aantekeningen in pdf-bestanden"
+  },
+  "B9ECED6F.ScreenPadMaster": {
+    "FriendlyName": "ScreenXpert",
+    "Description": "Vensterbeheer van ASUS en ScreenPad-bediening op ondersteunde modellen"
+  },
   "LGElectronics.LGMonitorApp": {
     "FriendlyName": "LG Monitor App",
     "Description": "LG-software voor het bedienen van je LG-beeldscherm. Windows Update kan deze app ongemerkt opnieuw installeren als je een LG-beeldscherm hebt aangesloten"

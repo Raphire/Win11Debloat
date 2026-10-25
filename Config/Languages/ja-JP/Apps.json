@@ -479,6 +479,22 @@
     "FriendlyName": "MSI Center",
     "Description": "MSI デバイスの設定とパフォーマンスの監視"
   },
+  "SAMSUNGELECTRONICSCO.LTD.PCGallery": {
+    "FriendlyName": "Samsung Gallery",
+    "Description": "Samsung の写真とビデオのギャラリー"
+  },
+  "SAMSUNGELECTRONICSCoLtd.SamsungFlux": {
+    "FriendlyName": "Samsung Flow",
+    "Description": "スマートフォンと PC の接続、ファイル共有、通知の同期を行う Samsung のアプリ"
+  },
+  "SAMSUNGELECTRONICSCoLtd.SamsungNotes": {
+    "FriendlyName": "Samsung Notes",
+    "Description": "メモ、手書き、PDF への注釈に対応する Samsung のアプリ"
+  },
+  "B9ECED6F.ScreenPadMaster": {
+    "FriendlyName": "ScreenXpert",
+    "Description": "ASUS のウィンドウ管理と対応モデルの ScreenPad の操作"
+  },
   "LGElectronics.LGMonitorApp": {
     "FriendlyName": "LG Monitor App",
     "Description": "LG 製モニターを制御するための LG OEM ソフトウェアです。LG 製モニターが接続されている場合、Windows Update によって自動的に再インストールされることがあります"

@@ -962,6 +962,38 @@
       "RemovalMethod": "Appx"
     },
     {
+      "FriendlyName": "Samsung Gallery",
+      "AppId": "SAMSUNGELECTRONICSCO.LTD.PCGallery",
+      "Description": "Samsung photo and video gallery",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
+      "FriendlyName": "Samsung Flow",
+      "AppId": "SAMSUNGELECTRONICSCoLtd.SamsungFlux",
+      "Description": "Samsung phone-to-PC connectivity, file sharing, and notification syncing",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
+      "FriendlyName": "Samsung Notes",
+      "AppId": "SAMSUNGELECTRONICSCoLtd.SamsungNotes",
+      "Description": "Samsung note-taking, handwriting, and PDF annotation",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
+      "FriendlyName": "ScreenXpert",
+      "AppId": "B9ECED6F.ScreenPadMaster",
+      "Description": "ASUS window management and ScreenPad controls on supported models",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
       "FriendlyName": "LG Monitor App",
       "AppId": "LGElectronics.LGMonitorApp",
       "Description": "LG OEM software for controlling your LG monitor, Windows Update may silently reinstall this app if you have an LG monitor connected",
@@ -1182,6 +1214,10 @@
     {
       "Name": "OEM software (Acer, ASUS, Dell, HP, Lenovo, LG, MSI, Samsung)",
       "AppIds": [
+        "SAMSUNGELECTRONICSCO.LTD.PCGallery",
+        "SAMSUNGELECTRONICSCoLtd.SamsungFlux",
+        "SAMSUNGELECTRONICSCoLtd.SamsungNotes",
+        "B9ECED6F.ScreenPadMaster",
         "B9ECED6F.Glidex",
         "SAMSUNGELECTRONICSCoLtd.SamsungQuickShare",
         "9426MICRO-STARINTERNATION.MSICenter",

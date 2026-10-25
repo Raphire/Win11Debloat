@@ -479,6 +479,22 @@
     "FriendlyName": "MSI Center",
     "Description": "MSI 장치 설정 및 성능 모니터링"
   },
+  "SAMSUNGELECTRONICSCO.LTD.PCGallery": {
+    "FriendlyName": "Samsung Gallery",
+    "Description": "Samsung 사진 및 동영상 갤러리"
+  },
+  "SAMSUNGELECTRONICSCoLtd.SamsungFlux": {
+    "FriendlyName": "Samsung Flow",
+    "Description": "휴대폰과 PC 연결, 파일 공유 및 알림 동기화를 위한 Samsung 앱"
+  },
+  "SAMSUNGELECTRONICSCoLtd.SamsungNotes": {
+    "FriendlyName": "Samsung Notes",
+    "Description": "메모 작성, 손글씨 및 PDF 주석을 위한 Samsung 앱"
+  },
+  "B9ECED6F.ScreenPadMaster": {
+    "FriendlyName": "ScreenXpert",
+    "Description": "ASUS 창 관리 및 지원되는 모델의 ScreenPad 제어"
+  },
   "LGElectronics.LGMonitorApp": {
     "FriendlyName": "LG Monitor App",
     "Description": "LG 모니터를 제어하는 LG OEM 소프트웨어이며, LG 모니터가 연결되어 있으면 Windows Update에서 이 앱을 자동으로 다시 설치할 수 있습니다."

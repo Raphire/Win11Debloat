@@ -479,6 +479,22 @@
     "FriendlyName": "MSI Center",
     "Description": "Настройки устройства и мониторинг производительности MSI"
   },
+  "SAMSUNGELECTRONICSCO.LTD.PCGallery": {
+    "FriendlyName": "Samsung Gallery",
+    "Description": "Галерея фотографий и видео Samsung"
+  },
+  "SAMSUNGELECTRONICSCoLtd.SamsungFlux": {
+    "FriendlyName": "Samsung Flow",
+    "Description": "Приложение Samsung для подключения телефона к ПК, обмена файлами и синхронизации уведомлений"
+  },
+  "SAMSUNGELECTRONICSCoLtd.SamsungNotes": {
+    "FriendlyName": "Samsung Notes",
+    "Description": "Приложение Samsung для заметок, рукописного ввода и аннотаций в PDF"
+  },
+  "B9ECED6F.ScreenPadMaster": {
+    "FriendlyName": "ScreenXpert",
+    "Description": "Управление окнами ASUS и ScreenPad на поддерживаемых моделях"
+  },
   "LGElectronics.LGMonitorApp": {
     "FriendlyName": "LG Monitor App",
     "Description": "Фирменная программа LG для управления монитором LG. Центр обновления Windows может без уведомления переустановить это приложение, если подключен монитор LG"

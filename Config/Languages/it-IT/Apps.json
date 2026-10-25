@@ -479,6 +479,22 @@
     "FriendlyName": "MSI Center",
     "Description": "Impostazioni del dispositivo e monitoraggio delle prestazioni MSI"
   },
+  "SAMSUNGELECTRONICSCO.LTD.PCGallery": {
+    "FriendlyName": "Samsung Gallery",
+    "Description": "Galleria di foto e video Samsung"
+  },
+  "SAMSUNGELECTRONICSCoLtd.SamsungFlux": {
+    "FriendlyName": "Samsung Flow",
+    "Description": "App Samsung per collegare telefono e PC, condividere file e sincronizzare le notifiche"
+  },
+  "SAMSUNGELECTRONICSCoLtd.SamsungNotes": {
+    "FriendlyName": "Samsung Notes",
+    "Description": "App Samsung per prendere appunti, scrivere a mano e annotare PDF"
+  },
+  "B9ECED6F.ScreenPadMaster": {
+    "FriendlyName": "ScreenXpert",
+    "Description": "Gestione delle finestre ASUS e controlli ScreenPad sui modelli supportati"
+  },
   "LGElectronics.LGMonitorApp": {
     "FriendlyName": "LG Monitor App",
     "Description": "Software OEM LG per controllare il monitor LG; Windows Update potrebbe reinstallare automaticamente questa app se è collegato un monitor LG"

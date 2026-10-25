@@ -479,6 +479,22 @@
     "FriendlyName": "MSI Center",
     "Description": "MSI 设备设置和性能监控"
   },
+  "SAMSUNGELECTRONICSCO.LTD.PCGallery": {
+    "FriendlyName": "Samsung Gallery",
+    "Description": "Samsung 照片和视频图库"
+  },
+  "SAMSUNGELECTRONICSCoLtd.SamsungFlux": {
+    "FriendlyName": "Samsung Flow",
+    "Description": "用于连接手机与电脑、共享文件和同步通知的 Samsung 应用"
+  },
+  "SAMSUNGELECTRONICSCoLtd.SamsungNotes": {
+    "FriendlyName": "Samsung Notes",
+    "Description": "用于记笔记、手写和 PDF 批注的 Samsung 应用"
+  },
+  "B9ECED6F.ScreenPadMaster": {
+    "FriendlyName": "ScreenXpert",
+    "Description": "ASUS 窗口管理和受支持型号的 ScreenPad 控制"
+  },
   "LGElectronics.LGMonitorApp": {
     "FriendlyName": "LG 显示器应用",
     "Description": "LG 提供的显示器控制软件；连接 LG 显示器时，Windows 更新可能会自动重新安装此应用"

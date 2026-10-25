@@ -89,8 +89,13 @@ Describe 'Shipped plurals' {
     ) {
         $lang = Import-LanguageFile -LanguageCode $LanguageCode -LanguagesPath $script:LanguagesPath
         $lang | Should -Not -BeNullOrEmpty -Because "$LanguageCode has to load before its plurals can be checked"
+        # Import-LanguageFile silently falls back to en-US when a pack fails to load, and that
+        # fallback passes the non-null assertion above, so without this the text checks below
+        # would exercise en-US and report the wrong language's plurals.
+        $lang.LanguageCode | Should -Be $LanguageCode -Because 'a fallback to en-US would test the wrong pack'
 
-        foreach ($count in @(0, 1, 2, 4, 5, 11, 21, 100, 1000, 1000001)) {
+        # 1000000 is not redundant with 1000: pt-BR returns 'many' only for whole millions.
+        foreach ($count in @(0, 1, 2, 4, 5, 11, 21, 100, 1000, 1000000, 1000001)) {
             $category = Get-PluralCategory -LanguageCode $LanguageCode -Count $count
             $text = Get-Translation -Key 'AppSelectionStatusSelected' -Section 'Chrome' -Lang $lang -Count $count -FormatArgs @($count)
 

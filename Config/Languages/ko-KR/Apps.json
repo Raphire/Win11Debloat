@@ -124,8 +124,8 @@
     "Description": "할 일 목록과 작업을 관리하는 앱입니다."
   },
   "Microsoft.Windows.DevHome": {
-    "FriendlyName": "Windows 고급 설정 (Dev Home)",
-    "Description": "Windows 고급 설정 및 파일 탐색기의 Git 정보 제공. 이전 버전은 Dev Home 대시보드 제공"
+    "FriendlyName": "Dev Home",
+    "Description": "지원이 중단된 개발자 대시보드 및 도구 구성 유틸리티입니다."
   },
   "Microsoft.WindowsAlarms": {
     "FriendlyName": "시계",

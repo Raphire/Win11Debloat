@@ -124,8 +124,8 @@
     "Description": "Приложение для списков дел и управления задачами"
   },
   "Microsoft.Windows.DevHome": {
-    "FriendlyName": "Дополнительные настройки Windows (Dev Home)",
-    "Description": "Расширенные параметры Windows и сведения Git в Проводнике; в старых версиях была панель Dev Home"
+    "FriendlyName": "Dev Home",
+    "Description": "Панель для разработчиков и утилита настройки инструментов (больше не поддерживается)"
   },
   "Microsoft.WindowsAlarms": {
     "FriendlyName": "Часы",

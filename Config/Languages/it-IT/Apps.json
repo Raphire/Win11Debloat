@@ -124,8 +124,8 @@
     "Description": "App per elenchi di attività e gestione delle attività"
   },
   "Microsoft.Windows.DevHome": {
-    "FriendlyName": "Impostazioni avanzate di Windows (Dev Home)",
-    "Description": "Impostazioni avanzate di Windows e informazioni Git in Esplora file; le versioni precedenti offrivano la dashboard Dev Home"
+    "FriendlyName": "Dev Home",
+    "Description": "Dashboard per sviluppatori e utilità per la configurazione degli strumenti (discontinuata)"
   },
   "Microsoft.WindowsAlarms": {
     "FriendlyName": "Orologio",

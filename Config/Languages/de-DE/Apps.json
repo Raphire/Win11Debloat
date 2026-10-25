@@ -124,8 +124,8 @@
     "Description": "App für Aufgabenlisten und Aufgabenverwaltung"
   },
   "Microsoft.Windows.DevHome": {
-    "FriendlyName": "Erweiterte Einstellungen von Windows (Dev Home)",
-    "Description": "Erweiterte Windows-Einstellungen und Git-Informationen im Explorer; ältere Versionen boten das Dev Home-Dashboard"
+    "FriendlyName": "Dev Home",
+    "Description": "Entwicklerdashboard und Hilfsprogramm zur Toolkonfiguration (eingestellt)"
   },
   "Microsoft.WindowsAlarms": {
     "FriendlyName": "Uhr",

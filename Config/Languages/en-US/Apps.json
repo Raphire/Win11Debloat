@@ -124,8 +124,8 @@
     "Description": "To-do list and task management app"
   },
   "Microsoft.Windows.DevHome": {
-    "FriendlyName": "Windows Advanced Settings (Dev Home)",
-    "Description": "Advanced Windows settings and Git information in File Explorer; older versions provided the Dev Home dashboard"
+    "FriendlyName": "Dev Home",
+    "Description": "Developer dashboard and tool configuration utility (discontinued)"
   },
   "Microsoft.WindowsAlarms": {
     "FriendlyName": "Clock",

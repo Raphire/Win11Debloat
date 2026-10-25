@@ -124,8 +124,8 @@
     "Description": "App de listas de tarefas e gerenciamento de tarefas"
   },
   "Microsoft.Windows.DevHome": {
-    "FriendlyName": "Configurações Avançadas do Windows (Dev Home)",
-    "Description": "Configurações avançadas do Windows e informações do Git no Explorador de Arquivos; versões anteriores ofereciam o painel Dev Home"
+    "FriendlyName": "Dev Home",
+    "Description": "Painel do desenvolvedor e utilitário de configuração de ferramentas (descontinuado)"
   },
   "Microsoft.WindowsAlarms": {
     "FriendlyName": "Relógio",

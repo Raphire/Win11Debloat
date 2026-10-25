@@ -124,8 +124,8 @@
     "Description": "App voor takenlijsten en taakbeheer"
   },
   "Microsoft.Windows.DevHome": {
-    "FriendlyName": "Windows Advanced Settings (Dev Home)",
-    "Description": "Geavanceerde Windows-instellingen en Git-informatie in Verkenner; oudere versies boden het Dev Home-dashboard"
+    "FriendlyName": "Dev Home",
+    "Description": "Dashboard voor ontwikkelaars om ontwikkeltools in te stellen (niet meer ondersteund)"
   },
   "Microsoft.WindowsAlarms": {
     "FriendlyName": "Klok",

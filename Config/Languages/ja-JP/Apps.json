@@ -124,8 +124,8 @@
     "Description": "To-Do リストおよびタスク管理アプリです"
   },
   "Microsoft.Windows.DevHome": {
-    "FriendlyName": "Windows 高度な設定 (Dev Home)",
-    "Description": "Windows の詳細設定とエクスプローラーでの Git 情報表示。旧バージョンは Dev Home ダッシュボードを提供"
+    "FriendlyName": "Dev Home",
+    "Description": "開発者向けダッシュボードおよびツール構成ユーティリティです (提供終了)"
   },
   "Microsoft.WindowsAlarms": {
     "FriendlyName": "クロック",

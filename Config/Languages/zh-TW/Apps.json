@@ -124,8 +124,8 @@
     "Description": "待辦事項清單與工作管理應用程式"
   },
   "Microsoft.Windows.DevHome": {
-    "FriendlyName": "Windows 高級設定 (Dev Home)",
-    "Description": "提供 Windows 進階設定和檔案總管中的 Git 資訊；舊版本提供 Dev Home 儀表板"
+    "FriendlyName": "Dev Home",
+    "Description": "開發人員儀表板與工具設定公用程式 (已停止提供)"
   },
   "Microsoft.WindowsAlarms": {
     "FriendlyName": "時鐘",

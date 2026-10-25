@@ -124,8 +124,8 @@
     "Description": "Application de liste de tâches et de gestion des tâches"
   },
   "Microsoft.Windows.DevHome": {
-    "FriendlyName": "Paramètres avancés de Windows (Dev Home)",
-    "Description": "Paramètres avancés de Windows et informations Git dans l'Explorateur de fichiers ; les anciennes versions proposaient le tableau de bord Dev Home"
+    "FriendlyName": "Dev Home",
+    "Description": "Tableau de bord et utilitaire de configuration d'outils pour les développeurs (abandonné)"
   },
   "Microsoft.WindowsAlarms": {
     "FriendlyName": "Horloge",

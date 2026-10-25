@@ -37,7 +37,7 @@ Describe 'Invoke-AppDetailsFromJsonAsync' {
         $result.Count | Should -Be @($appCatalog.Apps).Count
         $clipchamp = $result | Where-Object { $_.AppId -contains 'Clipchamp.Clipchamp' }
         $clipchamp.FriendlyName | Should -Be 'Microsoft Clipchamp'
-        $clipchamp.Description | Should -Be 'Video editor from Microsoft'
+        $clipchamp.Description | Should -Be 'Create and edit videos with trimming, captions, and audio'
     }
 
     It 'does not return null entries when OnlyInstalled filters the runspace results' {

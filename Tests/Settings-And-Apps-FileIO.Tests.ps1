@@ -189,7 +189,7 @@ Describe 'Import-AppDetailsFromJson' {
 
         $apps | Should -HaveCount 1
         $apps[0].FriendlyName | Should -Be 'Microsoft Clipchamp'
-        $apps[0].Description | Should -Be 'Video editor from Microsoft'
+        $apps[0].Description | Should -Be 'Create and edit videos with trimming, captions, and audio'
         $apps[0].DisplayName | Should -Be 'Microsoft Clipchamp (Clipchamp.Clipchamp)'
     }
 
@@ -213,6 +213,18 @@ Describe 'Import-AppDetailsFromJson' {
         $apps | Should -HaveCount 1
         $apps[0].AppId | Should -Be 'Two.App'
         Should -Invoke Get-AppxPackage -Times 1 -Exactly
+    }
+
+    It 'detects the current PC Manager package while retaining its legacy ID' {
+        $script:AppsListFilePath = Join-Path $PSScriptRoot '..\Config\Apps.json'
+        Mock Get-AppxPackage { [PSCustomObject]@{ Name = 'Microsoft.MicrosoftPCManager' } }
+        Mock Test-AppInWingetList { $false }
+
+        $apps = @(Import-AppDetailsFromJson -OnlyInstalled -InstalledList @())
+
+        $apps | Should -HaveCount 1
+        $apps[0].FriendlyName | Should -Be 'Microsoft PC Manager'
+        $apps[0].AppId | Should -Be @('Microsoft.PCManager', 'Microsoft.MicrosoftPCManager')
     }
 
     It 'loads presets and preserves their ID arrays' {

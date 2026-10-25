@@ -1,7 +1,7 @@
 ﻿{
   "Clipchamp.Clipchamp": {
     "FriendlyName": "Microsoft Clipchamp",
-    "Description": "Видеоредактор от Microsoft"
+    "Description": "Создание и монтаж видео с обрезкой, субтитрами и звуком"
   },
   "Microsoft.3DBuilder": {
     "FriendlyName": "3D Builder",
@@ -25,7 +25,7 @@
   },
   "Microsoft.BingNews": {
     "FriendlyName": "Новости",
-    "Description": "Агрегатор новостей. Объединяет последние новости, персонализированные ленты статей и мировые события"
+    "Description": "Персональные новостные ленты и уведомления о срочных новостях"
   },
   "Microsoft.BingSports": {
     "FriendlyName": "MSN Спорт",
@@ -45,11 +45,11 @@
   },
   "XP9CXNGPPJ97XX": {
     "FriendlyName": "Microsoft Copilot",
-    "Description": "ИИ-помощник, встроенный в Windows"
+    "Description": "ИИ-помощник для ответов на вопросы, написания текстов и создания изображений"
   },
   "Microsoft.Windows.AIHub": {
     "FriendlyName": "Copilot+ AI Hub",
-    "Description": "Приложение Copilot+ AI Hub (Windows 11 24H2 и новее)"
+    "Description": "Знакомство с функциями и приложениями ИИ для компьютеров Copilot+"
   },
   "Microsoft.PCManager": {
     "FriendlyName": "Microsoft PC Manager",
@@ -57,23 +57,23 @@
   },
   "Microsoft.Getstarted": {
     "FriendlyName": "Советы",
-    "Description": "Советы и вводное руководство по Windows (в Windows 11 удалить невозможно)"
+    "Description": "Советы и руководства по использованию функций Windows (устарело)"
   },
   "Microsoft.Messaging": {
-    "FriendlyName": "Сообщения Microsoft",
-    "Description": "Приложение для обмена сообщениями, часто связано со Skype (в основном больше не поддерживается)"
+    "FriendlyName": "Сообщения оператора",
+    "Description": "Получение SMS о тарифах и оплате на ПК с сотовой связью; отправка сообщений недоступна"
   },
   "Microsoft.Microsoft3DViewer": {
     "FriendlyName": "Средство 3D-просмотра",
     "Description": "Просмотр 3D-моделей (больше не поддерживается)"
   },
   "Microsoft.MicrosoftJournal": {
-    "FriendlyName": "Журнал Microsoft",
-    "Description": "Приложение для рукописных заметок, оптимизированное для ввода пером"
+    "FriendlyName": "Журнал",
+    "Description": "Рукописные заметки и наброски с помощью цифрового пера"
   },
   "Microsoft.MicrosoftOfficeHub": {
-    "FriendlyName": "Microsoft 365 Copilot (Office Hub)",
-    "Description": "Центр доступа к приложениям и документам Microsoft Office 365"
+    "FriendlyName": "Microsoft 365 Copilot",
+    "Description": "Чат с ИИ, создание контента, поиск файлов и доступ к приложениям Microsoft 365"
   },
   "Microsoft.MicrosoftPowerBIForWindows": {
     "FriendlyName": "Power BI",
@@ -84,8 +84,8 @@
     "Description": "Сборник карточных пасьянсов"
   },
   "Microsoft.MicrosoftStickyNotes": {
-    "FriendlyName": "Microsoft Sticky Notes",
-    "Description": "Приложение для создания и синхронизации быстрых заметок"
+    "FriendlyName": "Записки",
+    "Description": "Создание заметок на рабочем столе и их синхронизация между устройствами"
   },
   "Microsoft.MixedReality.Portal": {
     "FriendlyName": "Портал смешанной реальности",
@@ -93,7 +93,7 @@
   },
   "Microsoft.NetworkSpeedTest": {
     "FriendlyName": "Network Speed Test",
-    "Description": "Утилита для проверки скорости интернет-подключения"
+    "Description": "Измерение скорости загрузки и отправки данных и задержки сети"
   },
   "Microsoft.Office.OneNote": {
     "FriendlyName": "OneNote для Windows 10 (устаревшая версия)",
@@ -101,34 +101,34 @@
   },
   "Microsoft.Office.Sway": {
     "FriendlyName": "Sway",
-    "Description": "Приложение для создания презентаций и историй"
+    "Description": "Создание интерактивных презентаций, отчетов и историй и предоставление доступа к ним"
   },
   "Microsoft.OneConnect": {
-    "FriendlyName": "One Connect",
-    "Description": "Приложение для управления услугами мобильного оператора (заменено приложением Mobile Plans)"
+    "FriendlyName": "Тарифные планы",
+    "Description": "Выбор тарифа мобильной передачи данных для совместимого компьютера с поддерживаемой SIM-картой"
   },
   "Microsoft.Print3D": {
     "FriendlyName": "Print 3D",
-    "Description": "Программа для подготовки к 3D-печати"
+    "Description": "Подготовка 3D-моделей к печати (устарело)"
   },
   "Microsoft.PowerAutomateDesktop": {
     "FriendlyName": "Power Automate",
-    "Description": "Средство автоматизации действий на компьютере (RPA)"
+    "Description": "Автоматизация повторяющихся задач на компьютере с помощью классических потоков"
   },
   "Microsoft.SkypeApp": {
     "FriendlyName": "Skype (UWP)",
     "Description": "Приложение Skype для общения, версия для универсальной платформы Windows (больше не поддерживается)"
   },
   "Microsoft.Todos": {
-    "FriendlyName": "Microsoft To Do: Lists, Tasks & Reminders",
+    "FriendlyName": "Microsoft To Do",
     "Description": "Приложение для списков дел и управления задачами"
   },
   "Microsoft.Windows.DevHome": {
-    "FriendlyName": "Dev Home",
-    "Description": "Панель для разработчиков и утилита настройки инструментов (больше не поддерживается)"
+    "FriendlyName": "Дополнительные настройки Windows (Dev Home)",
+    "Description": "Расширенные параметры Windows и сведения Git в Проводнике; в старых версиях была панель Dev Home"
   },
   "Microsoft.WindowsAlarms": {
-    "FriendlyName": "Будильники и часы Windows",
+    "FriendlyName": "Часы",
     "Description": "Приложение для будильников, таймеров, секундомера и сеансов фокусировки"
   },
   "Microsoft.WindowsFeedbackHub": {
@@ -140,8 +140,8 @@
     "Description": "Приложение для карт и навигации (больше не поддерживается)"
   },
   "Microsoft.WindowsSoundRecorder": {
-    "FriendlyName": "Запись голоса Windows",
-    "Description": "Простое приложение для записи звука"
+    "FriendlyName": "Звукозапись",
+    "Description": "Запись звука с микрофона и воспроизведение записей"
   },
   "Microsoft.XboxApp": {
     "FriendlyName": "Xbox Console Companion",
@@ -157,27 +157,27 @@
   },
   "MicrosoftCorporationII.QuickAssist": {
     "FriendlyName": "Быстрая поддержка",
-    "Description": "Средство удаленной помощи"
+    "Description": "Демонстрация экрана и удаленное управление для устранения проблем с компьютером"
   },
   "MicrosoftTeams": {
     "FriendlyName": "Microsoft Teams (старая версия)",
-    "Description": "Старая версия Microsoft Teams для личного использования (версия из Microsoft Store)"
+    "Description": "Старая версия Teams для личных чатов и звонков"
   },
   "MSTeams": {
     "FriendlyName": "Microsoft Teams (новая версия)",
-    "Description": "Новое приложение Microsoft Teams (для работы и учебы или для личного использования)"
+    "Description": "Чаты, звонки и собрания для рабочих, учебных и личных учетных записей"
   },
   "ACGMediaPlayer": {
     "FriendlyName": "ACG Player",
-    "Description": "Приложение-медиаплеер"
+    "Description": "Воспроизведение локальных аудио и видео с субтитрами и потоковой передачей DLNA"
   },
   "ActiproSoftwareLLC": {
-    "FriendlyName": "Actipro Software",
-    "Description": "Приложения Actipro Software, включая Code Writer — редактор текста и кода"
+    "FriendlyName": "Приложения Actipro (Code Writer)",
+    "Description": "Приложения Actipro, включая редактор текста и кода Code Writer"
   },
   "AdobeSystemsIncorporated.AdobePhotoshopExpress": {
     "FriendlyName": "Adobe Photoshop Express",
-    "Description": "Простое приложение для редактирования фотографий от Adobe"
+    "Description": "Редактирование фотографий, удаление объектов и фона, добавление пометок на снимки экрана"
   },
   "Amazon.com.Amazon": {
     "FriendlyName": "Amazon",
@@ -189,11 +189,11 @@
   },
   "Asphalt8Airborne": {
     "FriendlyName": "Asphalt 8",
-    "Description": "Гоночная игра"
+    "Description": "Аркадные гонки на автомобилях и мотоциклах с многопользовательскими заездами"
   },
   "AutodeskSketchBook": {
     "FriendlyName": "Autodesk SketchBook",
-    "Description": "Приложение для цифрового рисования и создания эскизов"
+    "Description": "Прежнее приложение Autodesk для рисования и эскизов (поддержка прекращена)"
   },
   "CaesarsSlotsFreeCasino": {
     "FriendlyName": "Caesars Slots",
@@ -201,7 +201,7 @@
   },
   "COOKINGFEVER": {
     "FriendlyName": "Cooking Fever",
-    "Description": "Симулятор ресторана"
+    "Description": "Игра о готовке и управлении временем в ресторанах"
   },
   "CyberLinkMediaSuiteEssentials": {
     "FriendlyName": "CyberLink Media Suite",
@@ -217,7 +217,7 @@
   },
   "DrawboardPDF": {
     "FriendlyName": "Drawboard PDF",
-    "Description": "Приложение для просмотра PDF и добавления пометок, часто ориентировано на ввод пером"
+    "Description": "Просмотр, редактирование и добавление пометок в PDF с помощью пера, сенсорного ввода или мыши"
   },
   "Duolingo-LearnLanguagesforFree": {
     "FriendlyName": "Duolingo",
@@ -245,7 +245,7 @@
   },
   "iHeartRadio": {
     "FriendlyName": "iHeartRadio",
-    "Description": "Приложение интернет-радио"
+    "Description": "Прослушивание радио в прямом эфире, музыки и подкастов"
   },
   "Facebook.Instagram": {
     "FriendlyName": "Instagram",
@@ -253,15 +253,15 @@
   },
   "king.com.BubbleWitch3Saga": {
     "FriendlyName": "Bubble Witch 3 Saga",
-    "Description": "Игра-головоломка от King"
+    "Description": "Головоломка со стрельбой по пузырькам и магическими испытаниями"
   },
   "king.com.CandyCrushSaga": {
     "FriendlyName": "Candy Crush Saga",
-    "Description": "Игра-головоломка от King"
+    "Description": "Головоломка «три в ряд» с конфетами"
   },
   "king.com.CandyCrushSodaSaga": {
     "FriendlyName": "Candy Crush Soda Saga",
-    "Description": "Игра-головоломка от King"
+    "Description": "Головоломки «три в ряд» с конфетами, уровнями и режимами на тему газировки"
   },
   "LinkedInforWindows": {
     "FriendlyName": "LinkedIn",
@@ -281,7 +281,7 @@
   },
   "OneCalendar": {
     "FriendlyName": "One Calendar",
-    "Description": "Приложение для объединения календарей"
+    "Description": "Просмотр и управление календарями нескольких учетных записей в одном месте"
   },
   "PandoraMediaInc": {
     "FriendlyName": "Pandora",
@@ -296,16 +296,16 @@
     "Description": "Приложение для редактирования фотографий и творчества"
   },
   "PolarrPhotoEditorAcademicEdition": {
-    "FriendlyName": "Polarr Photo Editor",
-    "Description": "Приложение для редактирования фотографий (версия Academic Edition)"
+    "FriendlyName": "Polarr Pro Photo Editor",
+    "Description": "Редактирование фотографий с фильтрами, коррекцией цвета и выборочными масками"
   },
   "flaregamesGmbH.RoyalRevolt": {
-    "FriendlyName": "Royal Revolt!",
-    "Description": "Игра в жанре Tower Defense / стратегия"
+    "FriendlyName": "Royal Revolt! / Royal Revolt 2",
+    "Description": "Управление войсками и применение заклинаний для захвата замков в стратегических сражениях"
   },
   "Sidia.LiveWallpaper": {
-    "FriendlyName": "Live Wallpaper",
-    "Description": "Приложение живых обоев"
+    "FriendlyName": "Samsung Live Wallpaper",
+    "Description": "Статичные и анимированные обои для Samsung Galaxy Book"
   },
   "SlingTV": {
     "FriendlyName": "Sling TV",
@@ -313,7 +313,7 @@
   },
   "SpotifyAB.SpotifyMusic": {
     "FriendlyName": "Spotify",
-    "Description": "Приложение музыкального стримингового сервиса Spotify"
+    "Description": "Прослушивание музыки и подкастов, управление плейлистами"
   },
   "BytedancePte.Ltd.TikTok": {
     "FriendlyName": "TikTok",
@@ -321,10 +321,10 @@
   },
   "TuneInRadio": {
     "FriendlyName": "TuneIn Radio",
-    "Description": "Приложение интернет-радио"
+    "Description": "Прослушивание радио в прямом эфире, спорта, новостей и подкастов"
   },
   "WinZipUniversal": {
-    "FriendlyName": "WinZip",
+    "FriendlyName": "WinZip Universal",
     "Description": "Утилита для сжатия и извлечения файлов (версия для универсальной платформы Windows)"
   },
   "Microsoft.BingSearch": {
@@ -345,7 +345,7 @@
   },
   "Microsoft.M365Companions": {
     "FriendlyName": "Microsoft 365 Companions",
-    "Description": "Мини-приложения «Календарь», «Файлы» и «Люди» для Microsoft 365 (для бизнеса). Эти приложения могут быть установлены повторно, если их включил ваш администратор Microsoft 365"
+    "Description": "Приложения на панели задач для календарей, контактов и файлов Microsoft 365 (скоро будет прекращена поддержка)"
   },
   "Microsoft.MSPaint": {
     "FriendlyName": "Paint 3D",
@@ -353,19 +353,19 @@
   },
   "Microsoft.OneDrive": {
     "FriendlyName": "OneDrive",
-    "Description": "Клиент облачного хранилища OneDrive для личного использования"
+    "Description": "Синхронизация и резервное копирование файлов в облачное хранилище OneDrive"
   },
   "Microsoft.OutlookForWindows": {
-    "FriendlyName": "Outlook для Windows",
-    "Description": "Новый почтовый клиент Outlook для Windows"
+    "FriendlyName": "Outlook",
+    "Description": "Почта и календарь для учетных записей Майкрософт и других поддерживаемых учетных записей"
   },
   "Microsoft.Paint": {
     "FriendlyName": "Paint",
-    "Description": "Классический Paint (традиционный редактор 2D-графики)"
+    "Description": "Рисование, обрезка, изменение размера и редактирование изображений"
   },
   "Microsoft.People": {
     "FriendlyName": "Люди (Майкрософт)",
-    "Description": "Требуется для приложения «Почта и Календарь» и входит в его состав (больше не поддерживается)"
+    "Description": "Хранение и упорядочение контактов для приложений Почта и Календарь (больше не поддерживается)"
   },
   "MicrosoftCorporationII.Windows365": {
     "FriendlyName": "Windows App",
@@ -376,7 +376,7 @@
     "Description": "Клиентское приложение для удаленного рабочего стола (версия из Microsoft Store; больше не поддерживается)"
   },
   "Microsoft.ScreenSketch": {
-    "FriendlyName": "Фрагмент и набросок",
+    "FriendlyName": "Ножницы",
     "Description": "Создание снимков экрана, добавление пометок, сохранение и отправка"
   },
   "Microsoft.StartExperiencesApp": {
@@ -392,44 +392,44 @@
     "Description": "Цифровая доска для совместной работы"
   },
   "Microsoft.Windows.Photos": {
-    "FriendlyName": "Фотографии (Майкрософт)",
-    "Description": "Стандартное приложение для просмотра и простого редактирования фотографий"
+    "FriendlyName": "Фотографии",
+    "Description": "Просмотр и упорядочение фото и видео, редактирование изображений"
   },
   "Microsoft.WindowsCalculator": {
-    "FriendlyName": "Калькулятор Windows",
-    "Description": "Приложение «Калькулятор»"
+    "FriendlyName": "Калькулятор",
+    "Description": "Обычные, инженерные и графические вычисления, преобразование единиц измерения"
   },
   "Microsoft.WindowsCamera": {
-    "FriendlyName": "Камера Windows",
-    "Description": "Приложение для работы со встроенными или подключенными камерами"
+    "FriendlyName": "Камера",
+    "Description": "Съемка фото и видео с помощью встроенной или подключенной камеры"
   },
   "Microsoft.windowscommunicationsapps": {
     "FriendlyName": "Почта и календарь",
     "Description": "Набор приложений «Почта» и «Календарь» (больше не поддерживается)"
   },
   "Microsoft.WindowsNotepad": {
-    "FriendlyName": "Windows Notepad",
-    "Description": "Текстовый редактор «Блокнот»"
+    "FriendlyName": "Блокнот",
+    "Description": "Создание и редактирование текстовых файлов, заметок и скриптов"
   },
   "Microsoft.WindowsStore": {
     "FriendlyName": "Microsoft Store",
-    "Description": "Microsoft Store. ВНИМАНИЕ: после удаления это приложение будет сложно установить заново!"
+    "Description": "Установка и обновление приложений и игр Windows. Внимание: удаление Store может затруднить установку и восстановление приложений"
   },
   "Microsoft.WindowsTerminal": {
-    "FriendlyName": "Терминал Windows",
-    "Description": "Стандартное приложение терминала в Windows 11 (командная строка, PowerShell, WSL). ВНИМАНИЕ: не удаляйте его, если вы запустили Win11Debloat из Терминала Windows, иначе работа скрипта завершится ошибкой."
+    "FriendlyName": "Терминал",
+    "Description": "Терминал с вкладками для командной строки, PowerShell и WSL. Внимание: удаление терминала, в котором запущен Win11Debloat, может закрыть его сеанс"
   },
   "Microsoft.Xbox.TCUI": {
-    "FriendlyName": "Xbox TCUI Framework",
-    "Description": "Платформа пользовательского интерфейса, по-видимому, требуется для Microsoft Store, приложения «Фотографии» и некоторых игр"
+    "FriendlyName": "Xbox Live (TCUI)",
+    "Description": "Карточки профилей Xbox, приглашения и другие интерфейсы Xbox в играх"
   },
   "Microsoft.XboxGameOverlay": {
     "FriendlyName": "Xbox Game Overlay",
-    "Description": "Игровой оверлей, входящий в состав Xbox Game Bar. Это приложение требуется для некоторых игр. Внимание: удаление этого приложения может снизить производительность в играх на компьютерах с некоторыми современными процессорами."
+    "Description": "Прежний компонент игрового оверлея Xbox. Внимание: удаление может повлиять на функции Xbox в играх"
   },
   "Microsoft.XboxGamingOverlay": {
     "FriendlyName": "Game Bar",
-    "Description": "Это приложение обеспечивает игровой оверлей и интеграцию со службами Xbox. Оно требуется для некоторых игр. Внимание: удаление этого приложения может снизить производительность в играх на компьютерах с некоторыми современными процессорами."
+    "Description": "Запись, снимки экрана, виджеты и общение Xbox в играх. Внимание: удаление Game Bar может снизить производительность некоторых систем AMD Ryzen 9 X3D"
   },
   "Microsoft.XboxIdentityProvider": {
     "FriendlyName": "Xbox Identity Provider",
@@ -437,19 +437,19 @@
   },
   "Microsoft.XboxSpeechToTextOverlay": {
     "FriendlyName": "Xbox Speech To Text",
-    "Description": "Специальная возможность, необходимая для некоторых игр. ВНИМАНИЕ: это приложение будет сложно установить заново!"
+    "Description": "Преобразование речи в текст и текста в речь для чата в поддерживаемых играх. Внимание: этот компонент Windows может быть сложно переустановить после удаления"
   },
   "Microsoft.YourPhone": {
     "FriendlyName": "Связь с телефоном",
-    "Description": "Приложение «Связь с телефоном» (подключает телефон Android/iOS к компьютеру)"
+    "Description": "Подключение телефона Android или iPhone для получения уведомлений, просмотра сообщений и звонков с компьютера"
   },
   "Microsoft.ZuneMusic": {
-    "FriendlyName": "Медиаплеер Windows",
-    "Description": "Современный медиаплеер (заменил Музыка Groove, воспроизводит локальные аудио- и видеофайлы)"
+    "FriendlyName": "Медиаплеер",
+    "Description": "Воспроизведение локальных аудио- и видеофайлов и управление музыкальной библиотекой"
   },
   "MicrosoftWindows.CrossDevice": {
-    "FriendlyName": "Cross Device Experience Host",
-    "Description": "Интеграция с телефоном в Проводнике, приложении «Камера» и других местах (часть функций приложения «Связь с телефоном»)"
+    "FriendlyName": "Мобильные устройства",
+    "Description": "Интеграция мобильных устройств с Проводником и функциями камеры"
   },
   "MicrosoftWindows.Client.WebExperience": {
     "FriendlyName": "Windows Web Experience Pack",
@@ -493,7 +493,7 @@
   },
   "SAMSUNGELECTRONICSCoLtd.SamsungNotes": {
     "FriendlyName": "Samsung Notes",
-    "Description": "Приложение Samsung для заметок, рукописного ввода и аннотаций в PDF"
+    "Description": "Заметки, рукописный ввод и аннотации PDF на поддерживаемых Galaxy Book"
   },
   "B9ECED6F.ScreenPadMaster": {
     "FriendlyName": "ASUS ScreenXpert",
@@ -505,11 +505,11 @@
   },
   "SAMSUNGELECTRONICSCO.LTD.SamsungScreenRecording": {
     "FriendlyName": "Samsung Screen Recorder",
-    "Description": "Приложение Samsung для записи экрана и видео с веб-камеры"
+    "Description": "Запись экрана и веб-камеры на поддерживаемых Galaxy Book"
   },
   "SAMSUNGELECTRONICSCO.LTD.Bixby": {
     "FriendlyName": "Samsung Bixby",
-    "Description": "Голосовой помощник Samsung"
+    "Description": "Голосовые команды для приложений, файлов и настроек на поддерживаемых Galaxy Book"
   },
   "SAMSUNGELECTRONICSCO.LTD.SamsungWelcome": {
     "FriendlyName": "Samsung Galaxy Book Experience",
@@ -544,24 +544,24 @@
     "Description": "Эффекты камеры и улучшения видеозвонков Lenovo"
   },
   "LGElectronics.LGMonitorApp": {
-    "FriendlyName": "LG Monitor App",
-    "Description": "Фирменная программа LG для управления монитором LG. Центр обновления Windows может без уведомления переустановить это приложение, если подключен монитор LG"
+    "FriendlyName": "LG Monitor App Installer",
+    "Description": "Установка совместимых утилит для мониторов LG. Центр обновления Windows может переустановить приложение при подключении монитора LG"
   },
   "AD2F1837.HPAIExperienceCenter": {
     "FriendlyName": "HP AI Experience Center",
-    "Description": "Фирменная программа HP: функции на основе ИИ и поддержка"
+    "Description": "Приложение HP, предустановленное на некоторых ПК HP с ИИ"
   },
   "AD2F1837.HPConnectedMusic": {
     "FriendlyName": "HP Connected Music",
-    "Description": "Фирменная программа HP для музыки (возможно, больше не поддерживается)"
+    "Description": "Прежнее приложение HP для локальной музыки, медиатек iTunes и потоковых сервисов"
   },
   "AD2F1837.HPConnectedPhotopoweredbySnapfish": {
     "FriendlyName": "HP Connected Photo",
-    "Description": "Фирменная программа HP для фотографий, интегрированная со Snapfish (возможно, больше не поддерживается)"
+    "Description": "Прежнее приложение HP для синхронизации фото, обмена через Snapfish и заказа печати"
   },
   "AD2F1837.HPDesktopSupportUtilities": {
     "FriendlyName": "HP Desktop Support Utilities",
-    "Description": "Фирменная программа HP со средствами поддержки для настольных компьютеров"
+    "Description": "Показывает модель, серийный номер и сведения о BIOS компьютера HP"
   },
   "AD2F1837.HPEasyClean": {
     "FriendlyName": "HP Easy Clean",
@@ -569,27 +569,27 @@
   },
   "AD2F1837.HPFileViewer": {
     "FriendlyName": "HP File Viewer",
-    "Description": "Фирменная программа HP для просмотра файлов определенных типов"
+    "Description": "Средство просмотра файлов HP; поддерживаемые форматы не подтверждены"
   },
   "AD2F1837.HPJumpStarts": {
     "FriendlyName": "HP JumpStarts",
-    "Description": "Фирменная программа HP для обучения, поиска приложений или быстрого доступа к функциям HP"
+    "Description": "Настройка ПК HP, регистрация продукта и рекомендации приложений"
   },
   "AD2F1837.HPPCHardwareDiagnosticsWindows": {
     "FriendlyName": "HP PC Hardware Diagnostics Windows",
-    "Description": "Фирменная программа HP для диагностики оборудования компьютера"
+    "Description": "Проверка оборудования компьютера, включая память и накопители, для диагностики неисправностей"
   },
   "AD2F1837.HPPowerManager": {
     "FriendlyName": "HP Power Manager",
-    "Description": "Фирменная программа HP для управления параметрами питания и батареей"
+    "Description": "Контроль состояния аккумулятора и настройка зарядки на поддерживаемых ноутбуках HP"
   },
   "AD2F1837.HPPrinterControl": {
     "FriendlyName": "HP Smart",
-    "Description": "Фирменная программа HP для управления принтерами HP"
+    "Description": "Печать, сканирование и управление поддерживаемыми принтерами HP"
   },
   "AD2F1837.HPPrivacySettings": {
-    "FriendlyName": "HP Privacy Settings",
-    "Description": "Фирменная программа HP для управления параметрами конфиденциальности"
+    "FriendlyName": "HP PC Privacy Settings",
+    "Description": "Управление настройками конфиденциальности и передачи данных в приложениях HP"
   },
   "AD2F1837.HPQuickDrop": {
     "FriendlyName": "HP QuickDrop",
@@ -597,7 +597,7 @@
   },
   "AD2F1837.HPQuickTouch": {
     "FriendlyName": "HP QuickTouch",
-    "Description": "Фирменная программа HP, возможно, для быстрых команд или элементов управления сенсорным вводом"
+    "Description": "Компонент HP QuickTouch; точное назначение не подтверждено"
   },
   "AD2F1837.HPRegistration": {
     "FriendlyName": "HP Registration",
@@ -609,23 +609,23 @@
   },
   "AD2F1837.HPSureShieldAI": {
     "FriendlyName": "HP Sure Shield AI",
-    "Description": "Фирменная программа безопасности HP, вероятно, защита от угроз на основе ИИ"
+    "Description": "Утилита HP; точное назначение не подтверждено"
   },
   "AD2F1837.HPSystemInformation": {
     "FriendlyName": "HP System Information",
-    "Description": "Фирменная программа HP для отображения сведений о системе"
+    "Description": "Показывает модель, серийный номер и сведения о BIOS компьютера HP"
   },
   "AD2F1837.HPWelcome": {
     "FriendlyName": "HP Welcome",
-    "Description": "Фирменная программа HP с приветствием или помощью при начальной настройке"
+    "Description": "Приложение приветствия и поддержки HP"
   },
   "AD2F1837.HPWorkWell": {
     "FriendlyName": "HP WorkWell",
-    "Description": "Фирменная программа HP для заботы о самочувствии, возможно, с напоминаниями о перерывах или советами по эргономике (поддержка прекращена)"
+    "Description": "Напоминания о перерывах, упражнения на растяжку и советы по здоровой работе за компьютером (поддержка прекращена)"
   },
   "AD2F1837.myHP": {
-    "FriendlyName": "myHP",
-    "Description": "Фирменный центр HP со сведениями об устройстве, поддержкой и службами"
+    "FriendlyName": "HP",
+    "Description": "Настройки устройств HP, поддержка и функции принтера на поддерживаемых устройствах"
   },
   "E046963F.LenovoCompanion": {
     "FriendlyName": "Lenovo Vantage",
@@ -645,6 +645,6 @@
   },
   "DellInc.DellMobileConnect": {
     "FriendlyName": "Dell Mobile Connect",
-    "Description": "Фирменное приложение Dell для подключения телефона Android/iOS к компьютеру (поддержка прекращена)"
+    "Description": "Подключение телефонов Android и iPhone к ПК Dell (поддержка прекращена)"
   }
 }

@@ -1,7 +1,7 @@
 ﻿{
   "Clipchamp.Clipchamp": {
     "FriendlyName": "Microsoft Clipchamp",
-    "Description": "Video editor from Microsoft"
+    "Description": "Create and edit videos with trimming, captions, and audio"
   },
   "Microsoft.3DBuilder": {
     "FriendlyName": "3D Builder",
@@ -25,7 +25,7 @@
   },
   "Microsoft.BingNews": {
     "FriendlyName": "Microsoft News",
-    "Description": "News aggregator app. Brings together breaking news, personalized article feeds, and global current events"
+    "Description": "Personalized news feeds and breaking-news alerts"
   },
   "Microsoft.BingSports": {
     "FriendlyName": "MSN Sports",
@@ -45,35 +45,35 @@
   },
   "XP9CXNGPPJ97XX": {
     "FriendlyName": "Microsoft Copilot",
-    "Description": "AI assistant integrated into Windows"
+    "Description": "AI assistant for answering questions, drafting text, and generating images"
   },
   "Microsoft.Windows.AIHub": {
     "FriendlyName": "Copilot+ AI Hub",
-    "Description": "Copilot+ AI Hub app (Windows 11 24H2+)"
+    "Description": "Explore AI features and apps for Copilot+ PCs"
   },
   "Microsoft.PCManager": {
     "FriendlyName": "Microsoft PC Manager",
     "Description": "Microsoft PC Manager system cleanup and optimization tool (often preinstalled)"
   },
   "Microsoft.Getstarted": {
-    "FriendlyName": "Get Started",
-    "Description": "Tips and introductory guide for Windows (Cannot be uninstalled in Windows 11)"
+    "FriendlyName": "Tips",
+    "Description": "Tips and guides for using Windows features (deprecated)"
   },
   "Microsoft.Messaging": {
-    "FriendlyName": "Microsoft Messaging",
-    "Description": "Messaging app, often integrates with Skype (Largely discontinued)"
+    "FriendlyName": "Operator messages",
+    "Description": "Receive data-plan and billing SMS on cellular-capable PCs; cannot send messages"
   },
   "Microsoft.Microsoft3DViewer": {
     "FriendlyName": "3D Viewer",
     "Description": "Viewer for 3D models (discontinued)"
   },
   "Microsoft.MicrosoftJournal": {
-    "FriendlyName": "Microsoft Journal",
-    "Description": "Digital note-taking app optimized for pen input"
+    "FriendlyName": "Journal",
+    "Description": "Take handwritten notes and draw sketches with a digital pen"
   },
   "Microsoft.MicrosoftOfficeHub": {
-    "FriendlyName": "Microsoft 365 Copilot (Office Hub)",
-    "Description": "Hub to access Microsoft 365 apps and documents"
+    "FriendlyName": "Microsoft 365 Copilot",
+    "Description": "AI chat, content creation, file search, and access to Microsoft 365 apps"
   },
   "Microsoft.MicrosoftPowerBIForWindows": {
     "FriendlyName": "Power BI",
@@ -84,8 +84,8 @@
     "Description": "Collection of solitaire card games"
   },
   "Microsoft.MicrosoftStickyNotes": {
-    "FriendlyName": "Microsoft Sticky Notes",
-    "Description": "App for creating and syncing quick notes"
+    "FriendlyName": "Sticky Notes",
+    "Description": "Create desktop notes and sync them across devices"
   },
   "Microsoft.MixedReality.Portal": {
     "FriendlyName": "Mixed Reality Portal",
@@ -93,7 +93,7 @@
   },
   "Microsoft.NetworkSpeedTest": {
     "FriendlyName": "Network Speed Test",
-    "Description": "Internet connection speed test utility"
+    "Description": "Measure download and upload speeds and network latency"
   },
   "Microsoft.Office.OneNote": {
     "FriendlyName": "OneNote for Windows 10 (Legacy)",
@@ -101,34 +101,34 @@
   },
   "Microsoft.Office.Sway": {
     "FriendlyName": "Sway",
-    "Description": "Presentation and storytelling app"
+    "Description": "Create and share interactive presentations, reports, and stories"
   },
   "Microsoft.OneConnect": {
-    "FriendlyName": "One Connect",
-    "Description": "Mobile Operator management app (Replaced by Mobile Plans)"
+    "FriendlyName": "Mobile Plans",
+    "Description": "Choose a mobile data plan for a compatible PC with a supported SIM"
   },
   "Microsoft.Print3D": {
     "FriendlyName": "Print 3D",
-    "Description": "3D printing preparation software"
+    "Description": "Prepare 3D models for printing (deprecated)"
   },
   "Microsoft.PowerAutomateDesktop": {
     "FriendlyName": "Power Automate",
-    "Description": "Desktop automation tool (RPA)"
+    "Description": "Automate repetitive PC tasks with desktop workflows"
   },
   "Microsoft.SkypeApp": {
     "FriendlyName": "Skype (UWP)",
     "Description": "Skype communication app, Universal Windows Platform version (discontinued)"
   },
   "Microsoft.Todos": {
-    "FriendlyName": "Microsoft To Do: Lists, Tasks & Reminders",
+    "FriendlyName": "Microsoft To Do",
     "Description": "To-do list and task management app"
   },
   "Microsoft.Windows.DevHome": {
-    "FriendlyName": "Dev Home",
-    "Description": "Developer dashboard and tool configuration utility (discontinued)"
+    "FriendlyName": "Windows Advanced Settings (Dev Home)",
+    "Description": "Advanced Windows settings and Git information in File Explorer; older versions provided the Dev Home dashboard"
   },
   "Microsoft.WindowsAlarms": {
-    "FriendlyName": "Windows Clock",
+    "FriendlyName": "Clock",
     "Description": "App for alarms, timers, stopwatch, and focus sessions"
   },
   "Microsoft.WindowsFeedbackHub": {
@@ -140,8 +140,8 @@
     "Description": "Maps and navigation app (discontinued)"
   },
   "Microsoft.WindowsSoundRecorder": {
-    "FriendlyName": "Windows Sound Recorder",
-    "Description": "Basic audio recording app"
+    "FriendlyName": "Sound Recorder",
+    "Description": "Record and play audio from a microphone"
   },
   "Microsoft.XboxApp": {
     "FriendlyName": "Xbox Console Companion",
@@ -157,27 +157,27 @@
   },
   "MicrosoftCorporationII.QuickAssist": {
     "FriendlyName": "Quick Assist",
-    "Description": "Remote assistance tool"
+    "Description": "Screen sharing and remote control for PC troubleshooting"
   },
   "MicrosoftTeams": {
     "FriendlyName": "Microsoft Teams (Old)",
-    "Description": "Old Microsoft Teams personal (MS Store version)"
+    "Description": "Legacy Teams client for personal chats and calls"
   },
   "MSTeams": {
     "FriendlyName": "Microsoft Teams (New)",
-    "Description": "New Microsoft Teams app (Work/School or Personal)"
+    "Description": "Chat, calls, and meetings for work, school, and personal accounts"
   },
   "ACGMediaPlayer": {
     "FriendlyName": "ACG Player",
-    "Description": "Media player app"
+    "Description": "Play local audio and video with subtitles and DLNA streaming"
   },
   "ActiproSoftwareLLC": {
-    "FriendlyName": "Actipro Software",
-    "Description": "Actipro Software apps, including the Code Writer text and code editor"
+    "FriendlyName": "Actipro apps (Code Writer)",
+    "Description": "Actipro apps, including the Code Writer text and code editor"
   },
   "AdobeSystemsIncorporated.AdobePhotoshopExpress": {
     "FriendlyName": "Adobe Express Photos (formerly Photoshop Express)",
-    "Description": "Basic photo editing app from Adobe"
+    "Description": "Edit photos, remove objects and backgrounds, and annotate screenshots"
   },
   "Amazon.com.Amazon": {
     "FriendlyName": "Amazon",
@@ -189,11 +189,11 @@
   },
   "Asphalt8Airborne": {
     "FriendlyName": "Asphalt 8: Airborne",
-    "Description": "Racing game"
+    "Description": "Arcade racing with cars, motorcycles, and multiplayer races"
   },
   "AutodeskSketchBook": {
     "FriendlyName": "Autodesk SketchBook",
-    "Description": "Digital drawing and sketching app"
+    "Description": "Legacy Autodesk drawing and sketching app (discontinued)"
   },
   "CaesarsSlotsFreeCasino": {
     "FriendlyName": "Caesars Slots",
@@ -201,7 +201,7 @@
   },
   "COOKINGFEVER": {
     "FriendlyName": "Cooking Fever",
-    "Description": "Restaurant simulation game"
+    "Description": "Cooking and restaurant time-management game"
   },
   "CyberLinkMediaSuiteEssentials": {
     "FriendlyName": "CyberLink Media Suite",
@@ -217,7 +217,7 @@
   },
   "DrawboardPDF": {
     "FriendlyName": "Drawboard PDF",
-    "Description": "PDF viewing and annotation app, often focused on pen input"
+    "Description": "View, edit, and annotate PDF documents with a pen, touch, or mouse"
   },
   "Duolingo-LearnLanguagesforFree": {
     "FriendlyName": "Duolingo",
@@ -245,7 +245,7 @@
   },
   "iHeartRadio": {
     "FriendlyName": "iHeartRadio",
-    "Description": "Internet radio streaming app"
+    "Description": "Stream live radio, music, and podcasts"
   },
   "Facebook.Instagram": {
     "FriendlyName": "Instagram",
@@ -253,15 +253,15 @@
   },
   "king.com.BubbleWitch3Saga": {
     "FriendlyName": "Bubble Witch 3 Saga",
-    "Description": "Puzzle game from King"
+    "Description": "Bubble-shooting puzzle game with magical challenges"
   },
   "king.com.CandyCrushSaga": {
     "FriendlyName": "Candy Crush Saga",
-    "Description": "Puzzle game from King"
+    "Description": "Match-three candy puzzle game"
   },
   "king.com.CandyCrushSodaSaga": {
     "FriendlyName": "Candy Crush Soda Saga",
-    "Description": "Puzzle game from King"
+    "Description": "Match-three candy puzzles with soda-themed levels and game modes"
   },
   "LinkedInforWindows": {
     "FriendlyName": "LinkedIn",
@@ -281,7 +281,7 @@
   },
   "OneCalendar": {
     "FriendlyName": "One Calendar",
-    "Description": "Calendar aggregation app"
+    "Description": "View and manage calendars from multiple accounts in one place"
   },
   "PandoraMediaInc": {
     "FriendlyName": "Pandora",
@@ -296,24 +296,24 @@
     "Description": "Photo editing and creative app"
   },
   "PolarrPhotoEditorAcademicEdition": {
-    "FriendlyName": "Polarr Photo Editor",
-    "Description": "Photo editing app (Academic Edition)"
+    "FriendlyName": "Polarr Pro Photo Editor",
+    "Description": "Edit photos with filters, color adjustments, and selective masks"
   },
   "flaregamesGmbH.RoyalRevolt": {
-    "FriendlyName": "Royal Revolt!",
-    "Description": "Tower defense / strategy game"
+    "FriendlyName": "Royal Revolt! / Royal Revolt 2",
+    "Description": "Lead troops and cast spells to conquer castles in action strategy battles"
   },
   "Sidia.LiveWallpaper": {
-    "FriendlyName": "Live Wallpaper",
-    "Description": "Live wallpaper app"
+    "FriendlyName": "Samsung Live Wallpaper",
+    "Description": "Static and animated wallpapers for Samsung Galaxy Books"
   },
   "SlingTV": {
     "FriendlyName": "Sling TV",
     "Description": "Live TV streaming service app"
   },
   "SpotifyAB.SpotifyMusic": {
-    "FriendlyName": "Spotify - Music and Podcasts",
-    "Description": "Spotify music streaming app"
+    "FriendlyName": "Spotify",
+    "Description": "Stream music and podcasts and manage playlists"
   },
   "BytedancePte.Ltd.TikTok": {
     "FriendlyName": "TikTok",
@@ -321,10 +321,10 @@
   },
   "TuneInRadio": {
     "FriendlyName": "TuneIn Radio",
-    "Description": "Internet radio streaming app"
+    "Description": "Stream live radio, sports, news, and podcasts"
   },
   "WinZipUniversal": {
-    "FriendlyName": "WinZip",
+    "FriendlyName": "WinZip Universal",
     "Description": "File compression and extraction utility (Universal Windows Platform version)"
   },
   "Microsoft.BingSearch": {
@@ -345,7 +345,7 @@
   },
   "Microsoft.M365Companions": {
     "FriendlyName": "Microsoft 365 Companions",
-    "Description": "Microsoft 365 (Business) Calendar, Files and People mini-apps, these apps may be reinstalled if enabled by your Microsoft 365 admin"
+    "Description": "Taskbar companions for Microsoft 365 calendars, people, and files (retiring)"
   },
   "Microsoft.MSPaint": {
     "FriendlyName": "Paint 3D",
@@ -353,19 +353,19 @@
   },
   "Microsoft.OneDrive": {
     "FriendlyName": "OneDrive",
-    "Description": "OneDrive consumer cloud storage client"
+    "Description": "Sync and back up files with OneDrive cloud storage"
   },
   "Microsoft.OutlookForWindows": {
-    "FriendlyName": "Outlook for Windows",
-    "Description": "New Outlook for Windows mail client"
+    "FriendlyName": "Outlook",
+    "Description": "Email and calendar app for Microsoft and other supported accounts"
   },
   "Microsoft.Paint": {
     "FriendlyName": "Paint",
-    "Description": "Classic Paint (Traditional 2D paint application)"
+    "Description": "Draw, crop, resize, and edit images"
   },
   "Microsoft.People": {
     "FriendlyName": "Microsoft People",
-    "Description": "Required for and included with the Mail and Calendar app (discontinued)"
+    "Description": "Stores and organizes contacts for Mail and Calendar (discontinued)"
   },
   "MicrosoftCorporationII.Windows365": {
     "FriendlyName": "Windows App",
@@ -392,64 +392,64 @@
     "Description": "Digital collaborative whiteboard app"
   },
   "Microsoft.Windows.Photos": {
-    "FriendlyName": "Microsoft Photos",
-    "Description": "Default photo viewing and basic editing app"
+    "FriendlyName": "Photos",
+    "Description": "View and organize photos and videos, and edit pictures"
   },
   "Microsoft.WindowsCalculator": {
-    "FriendlyName": "Windows Calculator",
-    "Description": "Calculator app"
+    "FriendlyName": "Calculator",
+    "Description": "Basic, scientific, and graphing calculations, plus unit conversions"
   },
   "Microsoft.WindowsCamera": {
-    "FriendlyName": "Windows Camera",
-    "Description": "Camera app for using built-in or connected cameras"
+    "FriendlyName": "Camera",
+    "Description": "Take photos and record videos with a built-in or connected camera"
   },
   "Microsoft.windowscommunicationsapps": {
     "FriendlyName": "Mail and Calendar",
     "Description": "Mail and Calendar app suite (discontinued)"
   },
   "Microsoft.WindowsNotepad": {
-    "FriendlyName": "Windows Notepad",
-    "Description": "Notepad text editor app"
+    "FriendlyName": "Notepad",
+    "Description": "Create and edit plain-text files, notes, and scripts"
   },
   "Microsoft.WindowsStore": {
     "FriendlyName": "Microsoft Store",
-    "Description": "Microsoft Store, WARNING: This app cannot be reinstalled easily if removed!"
+    "Description": "Install and update Windows apps and games. Warning: Removing the Store can make app installation and recovery more difficult"
   },
   "Microsoft.WindowsTerminal": {
-    "FriendlyName": "Windows Terminal",
-    "Description": "Default terminal app in windows 11 (Command Prompt, PowerShell, WSL), WARNING: Do not remove if you launched Win11Debloat from Windows Terminal, as this will cause the script to fail."
+    "FriendlyName": "Terminal",
+    "Description": "Tabbed terminal for Command Prompt, PowerShell, and WSL. Warning: Removing the terminal hosting Win11Debloat may close its session"
   },
   "Microsoft.Xbox.TCUI": {
-    "FriendlyName": "Xbox TCUI Framework",
-    "Description": "UI framework, seems to be required for Microsoft Store, photos and certain games"
+    "FriendlyName": "Xbox Live (TCUI)",
+    "Description": "Provides Xbox profile cards, invitations, and other in-game Xbox interfaces"
   },
   "Microsoft.XboxGameOverlay": {
     "FriendlyName": "Xbox Game Overlay",
-    "Description": "Game overlay that's part of Xbox Game Bar. This app is required for certain games. Warning: Uninstalling this app may reduce game performance on PCs with certain modern processors."
+    "Description": "Legacy Xbox in-game overlay component. Warning: Removing it may affect Xbox features in games"
   },
   "Microsoft.XboxGamingOverlay": {
     "FriendlyName": "Game Bar",
-    "Description": "This app provides an in-game overlay and integration with Xbox services. This app is required for certain games. Warning: Uninstalling this app may reduce game performance on PCs with certain modern processors."
+    "Description": "In-game recording, screenshots, widgets, and Xbox social features. Warning: Removing Game Bar can reduce performance on certain AMD Ryzen 9 X3D systems"
   },
   "Microsoft.XboxIdentityProvider": {
     "FriendlyName": "Xbox Identity Provider",
     "Description": "Xbox sign-in framework, required for some games and Xbox services"
   },
   "Microsoft.XboxSpeechToTextOverlay": {
-    "FriendlyName": "Xbox Speech To Text",
-    "Description": "Accessibility feature required for some games, WARNING: This app cannot be reinstalled easily!"
+    "FriendlyName": "Game Speech Window",
+    "Description": "Speech-to-text and text-to-speech for chat in supported games. Warning: This Windows component can be difficult to reinstall after removal"
   },
   "Microsoft.YourPhone": {
     "FriendlyName": "Phone Link",
-    "Description": "Phone link (Connects Android/iOS phone to PC)"
+    "Description": "Connect an Android phone or iPhone to receive notifications, view messages, and make calls on your PC"
   },
   "Microsoft.ZuneMusic": {
-    "FriendlyName": "Windows Media Player",
-    "Description": "Modern Media Player (Replaced Groove Music, plays local audio/video)"
+    "FriendlyName": "Media Player",
+    "Description": "Play local audio and video files and organize your music library"
   },
   "MicrosoftWindows.CrossDevice": {
-    "FriendlyName": "Cross Device Experience Host",
-    "Description": "Phone integration within File Explorer, Camera and more (Part of Phone Link features)"
+    "FriendlyName": "Mobile devices",
+    "Description": "Mobile device integration with File Explorer and camera features"
   },
   "MicrosoftWindows.Client.WebExperience": {
     "FriendlyName": "Windows Web Experience Pack",
@@ -493,7 +493,7 @@
   },
   "SAMSUNGELECTRONICSCoLtd.SamsungNotes": {
     "FriendlyName": "Samsung Notes",
-    "Description": "Samsung note-taking, handwriting, and PDF annotation"
+    "Description": "Notes, handwriting, and PDF annotation on supported Galaxy Books"
   },
   "B9ECED6F.ScreenPadMaster": {
     "FriendlyName": "ASUS ScreenXpert",
@@ -505,11 +505,11 @@
   },
   "SAMSUNGELECTRONICSCO.LTD.SamsungScreenRecording": {
     "FriendlyName": "Samsung Screen Recorder",
-    "Description": "Samsung screen and webcam recording app"
+    "Description": "Record the screen and webcam on supported Galaxy Books"
   },
   "SAMSUNGELECTRONICSCO.LTD.Bixby": {
     "FriendlyName": "Samsung Bixby",
-    "Description": "Samsung voice assistant"
+    "Description": "Voice commands for apps, files, and settings on supported Galaxy Books"
   },
   "SAMSUNGELECTRONICSCO.LTD.SamsungWelcome": {
     "FriendlyName": "Samsung Galaxy Book Experience",
@@ -544,24 +544,24 @@
     "Description": "Lenovo camera effects and video call enhancements"
   },
   "LGElectronics.LGMonitorApp": {
-    "FriendlyName": "LG Monitor App",
-    "Description": "LG OEM software for controlling your LG monitor, Windows Update may silently reinstall this app if you have an LG monitor connected"
+    "FriendlyName": "LG Monitor App Installer",
+    "Description": "Installs compatible LG monitor utilities. Windows Update may reinstall it when an LG monitor is connected"
   },
   "AD2F1837.HPAIExperienceCenter": {
     "FriendlyName": "HP AI Experience Center",
-    "Description": "HP OEM software, AI-enhanced features and support"
+    "Description": "HP app preinstalled on select HP AI PCs"
   },
   "AD2F1837.HPConnectedMusic": {
     "FriendlyName": "HP Connected Music",
-    "Description": "HP OEM software for music (Potentially discontinued)"
+    "Description": "Legacy HP app for local music, iTunes libraries, and streaming services"
   },
   "AD2F1837.HPConnectedPhotopoweredbySnapfish": {
     "FriendlyName": "HP Connected Photo",
-    "Description": "HP OEM software for photos, integrated with Snapfish (Potentially discontinued)"
+    "Description": "Legacy HP app for photo syncing, Snapfish sharing, and print orders"
   },
   "AD2F1837.HPDesktopSupportUtilities": {
     "FriendlyName": "HP Desktop Support Utilities",
-    "Description": "HP OEM software providing desktop support tools"
+    "Description": "Displays the HP PC model, serial number, and BIOS information"
   },
   "AD2F1837.HPEasyClean": {
     "FriendlyName": "HP Easy Clean",
@@ -569,27 +569,27 @@
   },
   "AD2F1837.HPFileViewer": {
     "FriendlyName": "HP File Viewer",
-    "Description": "HP OEM software for viewing specific file types"
+    "Description": "HP file viewer; supported formats are unverified"
   },
   "AD2F1837.HPJumpStarts": {
     "FriendlyName": "HP JumpStarts",
-    "Description": "HP OEM software for tutorials, app discovery, or quick access to HP features"
+    "Description": "HP PC setup, product registration, and app recommendations"
   },
   "AD2F1837.HPPCHardwareDiagnosticsWindows": {
     "FriendlyName": "HP PC Hardware Diagnostics Windows",
-    "Description": "HP OEM software for PC hardware diagnostics"
+    "Description": "Tests PC hardware, such as memory and storage, to help diagnose faults"
   },
   "AD2F1837.HPPowerManager": {
     "FriendlyName": "HP Power Manager",
-    "Description": "HP OEM software for managing power settings and battery"
+    "Description": "Monitor battery health and manage charging settings on supported HP laptops"
   },
   "AD2F1837.HPPrinterControl": {
     "FriendlyName": "HP Smart",
-    "Description": "HP OEM software for managing HP printers"
+    "Description": "Print, scan, and manage supported HP printers"
   },
   "AD2F1837.HPPrivacySettings": {
-    "FriendlyName": "HP Privacy Settings",
-    "Description": "HP OEM software for managing privacy settings"
+    "FriendlyName": "HP PC Privacy Settings",
+    "Description": "Manage privacy and data-sharing preferences for HP apps"
   },
   "AD2F1837.HPQuickDrop": {
     "FriendlyName": "HP QuickDrop",
@@ -597,7 +597,7 @@
   },
   "AD2F1837.HPQuickTouch": {
     "FriendlyName": "HP QuickTouch",
-    "Description": "HP OEM software, possibly for touch-specific shortcuts or controls"
+    "Description": "HP QuickTouch component; exact functionality is unverified"
   },
   "AD2F1837.HPRegistration": {
     "FriendlyName": "HP Registration",
@@ -609,23 +609,23 @@
   },
   "AD2F1837.HPSureShieldAI": {
     "FriendlyName": "HP Sure Shield AI",
-    "Description": "HP OEM security software, likely AI-based threat protection"
+    "Description": "HP utility; exact functionality is unverified"
   },
   "AD2F1837.HPSystemInformation": {
     "FriendlyName": "HP System Information",
-    "Description": "HP OEM software for displaying system information"
+    "Description": "Displays the HP PC model, serial number, and BIOS information"
   },
   "AD2F1837.HPWelcome": {
     "FriendlyName": "HP Welcome",
-    "Description": "HP OEM software providing a welcome experience or initial setup help"
+    "Description": "HP welcome and support app"
   },
   "AD2F1837.HPWorkWell": {
     "FriendlyName": "HP WorkWell",
-    "Description": "HP OEM software focused on well-being, possibly with break reminders or ergonomic tips (discontinued)"
+    "Description": "Break reminders, stretching exercises, and tips for healthier PC use (discontinued)"
   },
   "AD2F1837.myHP": {
-    "FriendlyName": "myHP",
-    "Description": "HP OEM central hub app for device info, support, and services"
+    "FriendlyName": "HP",
+    "Description": "HP device settings, support, and printer features on supported devices"
   },
   "E046963F.LenovoCompanion": {
     "FriendlyName": "Lenovo Vantage",
@@ -645,6 +645,6 @@
   },
   "DellInc.DellMobileConnect": {
     "FriendlyName": "Dell Mobile Connect",
-    "Description": "Dell OEM app for linking an Android/iOS phone to a PC (discontinued)"
+    "Description": "Connect Android phones and iPhones to a Dell PC (discontinued)"
   }
 }

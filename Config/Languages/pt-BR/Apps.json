@@ -1,7 +1,7 @@
 ﻿{
   "Clipchamp.Clipchamp": {
     "FriendlyName": "Microsoft Clipchamp",
-    "Description": "Editor de vídeo da Microsoft"
+    "Description": "Crie e edite vídeos com cortes, legendas e áudio"
   },
   "Microsoft.3DBuilder": {
     "FriendlyName": "3D Builder",
@@ -25,7 +25,7 @@
   },
   "Microsoft.BingNews": {
     "FriendlyName": "Microsoft Notícias",
-    "Description": "App agregador de notícias. Reúne notícias de última hora, feeds personalizados de artigos e acontecimentos atuais de todo o mundo"
+    "Description": "Feeds de notícias personalizados e alertas de notícias de última hora"
   },
   "Microsoft.BingSports": {
     "FriendlyName": "MSN Esportes",
@@ -45,35 +45,35 @@
   },
   "XP9CXNGPPJ97XX": {
     "FriendlyName": "Microsoft Copilot",
-    "Description": "Assistente de IA integrado ao Windows"
+    "Description": "Assistente de IA para responder perguntas, redigir textos e gerar imagens"
   },
   "Microsoft.Windows.AIHub": {
     "FriendlyName": "Copilot+ AI Hub",
-    "Description": "App do Hub de IA do Copilot+ (Windows 11 24H2+)"
+    "Description": "Conheça recursos e aplicativos de IA para PCs Copilot+"
   },
   "Microsoft.PCManager": {
     "FriendlyName": "Microsoft PC Manager",
     "Description": "Ferramenta da Microsoft para limpar o sistema e otimizar o desempenho do PC (frequentemente pré-instalada)"
   },
   "Microsoft.Getstarted": {
-    "FriendlyName": "Introdução",
-    "Description": "Dicas e guia introdutório do Windows (não pode ser desinstalado no Windows 11)"
+    "FriendlyName": "Dicas",
+    "Description": "Dicas e guias para usar os recursos do Windows (preterido)"
   },
   "Microsoft.Messaging": {
-    "FriendlyName": "Mensagens Microsoft",
-    "Description": "App de mensagens, geralmente integrado ao Skype (em grande parte descontinuado)"
+    "FriendlyName": "Mensagens da Operadora",
+    "Description": "Receba SMS sobre planos de dados e cobranças em PCs com conexão celular; não permite enviar mensagens"
   },
   "Microsoft.Microsoft3DViewer": {
     "FriendlyName": "Visualizador 3D",
     "Description": "Visualizador de modelos 3D (descontinuado)"
   },
   "Microsoft.MicrosoftJournal": {
-    "FriendlyName": "Diário Microsoft",
-    "Description": "App de anotações digitais otimizado para uso com caneta"
+    "FriendlyName": "Diário",
+    "Description": "Faça anotações à mão e esboços com uma caneta digital"
   },
   "Microsoft.MicrosoftOfficeHub": {
-    "FriendlyName": "Microsoft 365 Copilot (Office Hub)",
-    "Description": "Central para acessar apps e documentos do Microsoft Office 365"
+    "FriendlyName": "Microsoft 365 Copilot",
+    "Description": "Chat com IA, criação de conteúdo, pesquisa de arquivos e acesso aos aplicativos do Microsoft 365"
   },
   "Microsoft.MicrosoftPowerBIForWindows": {
     "FriendlyName": "Power BI",
@@ -84,8 +84,8 @@
     "Description": "Coleção de jogos de cartas de paciência"
   },
   "Microsoft.MicrosoftStickyNotes": {
-    "FriendlyName": "Microsoft Sticky Notes",
-    "Description": "App para criar e sincronizar notas rápidas"
+    "FriendlyName": "Notas Autoadesivas",
+    "Description": "Crie notas na área de trabalho e sincronize-as entre dispositivos"
   },
   "Microsoft.MixedReality.Portal": {
     "FriendlyName": "Portal de Realidade Mista",
@@ -93,7 +93,7 @@
   },
   "Microsoft.NetworkSpeedTest": {
     "FriendlyName": "Network Speed Test",
-    "Description": "Utilitário para testar a velocidade da conexão com a internet"
+    "Description": "Meça as velocidades de download e upload e a latência da rede"
   },
   "Microsoft.Office.OneNote": {
     "FriendlyName": "OneNote para Windows 10 (versão antiga)",
@@ -101,34 +101,34 @@
   },
   "Microsoft.Office.Sway": {
     "FriendlyName": "Sway",
-    "Description": "App de apresentações e narrativas"
+    "Description": "Crie e compartilhe apresentações, relatórios e histórias interativas"
   },
   "Microsoft.OneConnect": {
-    "FriendlyName": "One Connect",
-    "Description": "App de gerenciamento de operadoras móveis (substituído por Planos)"
+    "FriendlyName": "Planos de Celular",
+    "Description": "Escolha um plano de dados móveis para um PC compatível com um SIM aceito"
   },
   "Microsoft.Print3D": {
     "FriendlyName": "Print 3D",
-    "Description": "Software de preparação para impressão 3D"
+    "Description": "Prepare modelos 3D para impressão (preterido)"
   },
   "Microsoft.PowerAutomateDesktop": {
     "FriendlyName": "Power Automate",
-    "Description": "Ferramenta de automação para desktop (RPA)"
+    "Description": "Automatize tarefas repetitivas do PC com fluxos da área de trabalho"
   },
   "Microsoft.SkypeApp": {
     "FriendlyName": "Skype (UWP)",
     "Description": "App de comunicação do Skype, versão da Plataforma Universal do Windows (descontinuado)"
   },
   "Microsoft.Todos": {
-    "FriendlyName": "Microsoft To Do: Lists, Tasks & Reminders",
+    "FriendlyName": "Microsoft To Do",
     "Description": "App de listas de tarefas e gerenciamento de tarefas"
   },
   "Microsoft.Windows.DevHome": {
-    "FriendlyName": "Dev Home",
-    "Description": "Painel do desenvolvedor e utilitário de configuração de ferramentas (descontinuado)"
+    "FriendlyName": "Configurações Avançadas do Windows (Dev Home)",
+    "Description": "Configurações avançadas do Windows e informações do Git no Explorador de Arquivos; versões anteriores ofereciam o painel Dev Home"
   },
   "Microsoft.WindowsAlarms": {
-    "FriendlyName": "Alarmes e Relógio do Windows",
+    "FriendlyName": "Relógio",
     "Description": "App de alarmes, temporizadores, cronômetro e sessões de foco"
   },
   "Microsoft.WindowsFeedbackHub": {
@@ -140,8 +140,8 @@
     "Description": "App de mapas e navegação (descontinuado)"
   },
   "Microsoft.WindowsSoundRecorder": {
-    "FriendlyName": "Gravador de Voz do Windows",
-    "Description": "App básico de gravação de áudio"
+    "FriendlyName": "Gravador de Som",
+    "Description": "Grave áudio de um microfone e reproduza as gravações"
   },
   "Microsoft.XboxApp": {
     "FriendlyName": "Companheiro do Console Xbox",
@@ -157,27 +157,27 @@
   },
   "MicrosoftCorporationII.QuickAssist": {
     "FriendlyName": "Assistência Rápida",
-    "Description": "Ferramenta de assistência remota"
+    "Description": "Compartilhamento de tela e controle remoto para resolver problemas do PC"
   },
   "MicrosoftTeams": {
     "FriendlyName": "Microsoft Teams (antigo)",
-    "Description": "Antigo Microsoft Teams pessoal (versão da Microsoft Store)"
+    "Description": "Versão antiga do Teams para chats e chamadas pessoais"
   },
   "MSTeams": {
     "FriendlyName": "Microsoft Teams (novo)",
-    "Description": "Novo app Microsoft Teams (Trabalho/Escola ou Pessoal)"
+    "Description": "Chats, chamadas e reuniões para contas corporativas, escolares e pessoais"
   },
   "ACGMediaPlayer": {
     "FriendlyName": "ACG Player",
-    "Description": "App de reprodução de mídia"
+    "Description": "Reproduza áudio e vídeo locais com legendas e streaming DLNA"
   },
   "ActiproSoftwareLLC": {
-    "FriendlyName": "Actipro Software",
-    "Description": "Apps da Actipro Software, incluindo o Code Writer, um editor de texto e código"
+    "FriendlyName": "Aplicativos Actipro (Code Writer)",
+    "Description": "Aplicativos da Actipro, incluindo o editor de texto e código Code Writer"
   },
   "AdobeSystemsIncorporated.AdobePhotoshopExpress": {
     "FriendlyName": "Adobe Express Photos (anteriormente chamado de Photoshop Express)",
-    "Description": "App básico de edição de fotos da Adobe"
+    "Description": "Edite fotos, remova objetos e fundos e anote capturas de tela"
   },
   "Amazon.com.Amazon": {
     "FriendlyName": "Amazon",
@@ -189,11 +189,11 @@
   },
   "Asphalt8Airborne": {
     "FriendlyName": "Asphalt 8: Airborne",
-    "Description": "Jogo de corrida"
+    "Description": "Corridas arcade com carros, motos e partidas multijogador"
   },
   "AutodeskSketchBook": {
     "FriendlyName": "Autodesk SketchBook",
-    "Description": "App de desenho e esboço digital"
+    "Description": "Antigo aplicativo de desenho e esboços da Autodesk (descontinuado)"
   },
   "CaesarsSlotsFreeCasino": {
     "FriendlyName": "Caesars Slots",
@@ -201,7 +201,7 @@
   },
   "COOKINGFEVER": {
     "FriendlyName": "Cooking Fever",
-    "Description": "Jogo de simulação de restaurante"
+    "Description": "Jogo de culinária e gerenciamento de tempo em restaurantes"
   },
   "CyberLinkMediaSuiteEssentials": {
     "FriendlyName": "CyberLink Media Suite",
@@ -217,7 +217,7 @@
   },
   "DrawboardPDF": {
     "FriendlyName": "Drawboard PDF",
-    "Description": "App de visualização e anotação de PDF, com foco em uso com caneta"
+    "Description": "Veja, edite e anote documentos PDF com caneta, toque ou mouse"
   },
   "Duolingo-LearnLanguagesforFree": {
     "FriendlyName": "Duolingo",
@@ -245,7 +245,7 @@
   },
   "iHeartRadio": {
     "FriendlyName": "iHeartRadio",
-    "Description": "App de streaming de rádio pela internet"
+    "Description": "Ouça rádio ao vivo, músicas e podcasts"
   },
   "Facebook.Instagram": {
     "FriendlyName": "Instagram",
@@ -253,15 +253,15 @@
   },
   "king.com.BubbleWitch3Saga": {
     "FriendlyName": "Bubble Witch 3 Saga",
-    "Description": "Jogo de quebra-cabeças da King"
+    "Description": "Jogo de quebra-cabeças de atirar bolhas com desafios mágicos"
   },
   "king.com.CandyCrushSaga": {
     "FriendlyName": "Candy Crush Saga",
-    "Description": "Jogo de quebra-cabeças da King"
+    "Description": "Jogo de quebra-cabeças de combinar três doces"
   },
   "king.com.CandyCrushSodaSaga": {
     "FriendlyName": "Candy Crush Soda Saga",
-    "Description": "Jogo de quebra-cabeças da King"
+    "Description": "Quebra-cabeças de combinar três doces com fases e modos de jogo temáticos de refrigerante"
   },
   "LinkedInforWindows": {
     "FriendlyName": "LinkedIn",
@@ -281,7 +281,7 @@
   },
   "OneCalendar": {
     "FriendlyName": "One Calendar",
-    "Description": "App agregador de calendários"
+    "Description": "Veja e gerencie calendários de várias contas em um só lugar"
   },
   "PandoraMediaInc": {
     "FriendlyName": "Pandora",
@@ -296,24 +296,24 @@
     "Description": "App de edição de fotos e criatividade"
   },
   "PolarrPhotoEditorAcademicEdition": {
-    "FriendlyName": "Polarr Photo Editor",
-    "Description": "App de edição de fotos (Edição Acadêmica)"
+    "FriendlyName": "Polarr Pro Photo Editor",
+    "Description": "Edite fotos com filtros, ajustes de cor e máscaras seletivas"
   },
   "flaregamesGmbH.RoyalRevolt": {
-    "FriendlyName": "Royal Revolt!",
-    "Description": "Jogo de defesa de torres / estratégia"
+    "FriendlyName": "Royal Revolt! / Royal Revolt 2",
+    "Description": "Lidere tropas e lance feitiços para conquistar castelos em batalhas de ação e estratégia"
   },
   "Sidia.LiveWallpaper": {
-    "FriendlyName": "Live Wallpaper",
-    "Description": "App de papel de parede animado"
+    "FriendlyName": "Samsung Live Wallpaper",
+    "Description": "Papéis de parede estáticos e animados para Samsung Galaxy Book"
   },
   "SlingTV": {
     "FriendlyName": "Sling TV",
     "Description": "App do serviço de streaming de TV ao vivo"
   },
   "SpotifyAB.SpotifyMusic": {
-    "FriendlyName": "Spotify ‑ Músicas e Podcasts",
-    "Description": "App de streaming de música do Spotify"
+    "FriendlyName": "Spotify",
+    "Description": "Ouça músicas e podcasts e gerencie playlists"
   },
   "BytedancePte.Ltd.TikTok": {
     "FriendlyName": "TikTok",
@@ -321,10 +321,10 @@
   },
   "TuneInRadio": {
     "FriendlyName": "TuneIn Radio",
-    "Description": "App de streaming de rádio pela internet"
+    "Description": "Ouça rádio ao vivo, esportes, notícias e podcasts"
   },
   "WinZipUniversal": {
-    "FriendlyName": "WinZip",
+    "FriendlyName": "WinZip Universal",
     "Description": "Utilitário de compactação e extração de arquivos (versão da Plataforma Universal do Windows)"
   },
   "Microsoft.BingSearch": {
@@ -345,7 +345,7 @@
   },
   "Microsoft.M365Companions": {
     "FriendlyName": "Microsoft 365 Companions",
-    "Description": "Miniaplicativos Calendário, Arquivos e Pessoas do Microsoft 365 (Business); esses aplicativos podem ser reinstalados se estiverem habilitados pelo administrador do Microsoft 365"
+    "Description": "Aplicativos da barra de tarefas para calendários, contatos e arquivos do Microsoft 365 (em processo de descontinuação)"
   },
   "Microsoft.MSPaint": {
     "FriendlyName": "Paint 3D",
@@ -353,19 +353,19 @@
   },
   "Microsoft.OneDrive": {
     "FriendlyName": "OneDrive",
-    "Description": "Cliente de armazenamento em nuvem do OneDrive para contas pessoais"
+    "Description": "Sincronize e faça backup de arquivos com o armazenamento em nuvem do OneDrive"
   },
   "Microsoft.OutlookForWindows": {
-    "FriendlyName": "Outlook para Windows",
-    "Description": "Novo cliente de e-mail do Outlook para Windows"
+    "FriendlyName": "Outlook",
+    "Description": "Aplicativo de email e calendário para contas Microsoft e outras contas compatíveis"
   },
   "Microsoft.Paint": {
     "FriendlyName": "Paint",
-    "Description": "Paint clássico (aplicativo de desenho tradicional em 2D)"
+    "Description": "Desenhe, recorte, redimensione e edite imagens"
   },
   "Microsoft.People": {
     "FriendlyName": "Microsoft Pessoas",
-    "Description": "Necessário para e incluído no Email e Calendário (descontinuado)"
+    "Description": "Armazena e organiza contatos para Email e Calendário (descontinuado)"
   },
   "MicrosoftCorporationII.Windows365": {
     "FriendlyName": "Windows App",
@@ -376,7 +376,7 @@
     "Description": "App cliente da Área de Trabalho Remota (versão da Microsoft Store; descontinuado)"
   },
   "Microsoft.ScreenSketch": {
-    "FriendlyName": "Captura e Esboço",
+    "FriendlyName": "Ferramenta de Captura",
     "Description": "Permite capturar imagens da tela, fazer anotações, salvar e compartilhar"
   },
   "Microsoft.StartExperiencesApp": {
@@ -392,44 +392,44 @@
     "Description": "App de quadro branco digital colaborativo"
   },
   "Microsoft.Windows.Photos": {
-    "FriendlyName": "Fotos Microsoft",
-    "Description": "App padrão de visualização e edição básica de fotos"
+    "FriendlyName": "Fotos",
+    "Description": "Veja e organize fotos e vídeos e edite imagens"
   },
   "Microsoft.WindowsCalculator": {
-    "FriendlyName": "Calculadora Windows",
-    "Description": "App de calculadora"
+    "FriendlyName": "Calculadora",
+    "Description": "Cálculos básicos, científicos e gráficos e conversão de unidades"
   },
   "Microsoft.WindowsCamera": {
-    "FriendlyName": "Câmera do Windows",
-    "Description": "App de câmera para usar câmeras integradas ou conectadas"
+    "FriendlyName": "Câmera",
+    "Description": "Tire fotos e grave vídeos com uma câmera integrada ou conectada"
   },
   "Microsoft.windowscommunicationsapps": {
     "FriendlyName": "Email e Calendário",
     "Description": "Suíte de apps Email e Calendário (descontinuado)"
   },
   "Microsoft.WindowsNotepad": {
-    "FriendlyName": "Windows Notepad",
-    "Description": "App de editor de texto Bloco de Notas"
+    "FriendlyName": "Bloco de notas",
+    "Description": "Crie e edite arquivos de texto simples, anotações e scripts"
   },
   "Microsoft.WindowsStore": {
     "FriendlyName": "Microsoft Store",
-    "Description": "Microsoft Store, AVISO: este app não pode ser reinstalado facilmente após a remoção!"
+    "Description": "Instale e atualize aplicativos e jogos do Windows. Aviso: remover a Store pode dificultar a instalação e recuperação de aplicativos"
   },
   "Microsoft.WindowsTerminal": {
-    "FriendlyName": "Windows Terminal",
-    "Description": "App de terminal padrão do Windows 11 (Prompt de Comando, PowerShell, WSL), AVISO: não remova se você iniciou o Win11Debloat pelo Windows Terminal, pois isso fará o script falhar."
+    "FriendlyName": "Terminal",
+    "Description": "Terminal com abas para Prompt de Comando, PowerShell e WSL. Aviso: remover o terminal que executa o Win11Debloat pode encerrar a sessão"
   },
   "Microsoft.Xbox.TCUI": {
-    "FriendlyName": "Framework do Xbox TCUI",
-    "Description": "Framework de interface, aparentemente necessário para o Microsoft Store, as Fotos e alguns jogos"
+    "FriendlyName": "Xbox Live (TCUI)",
+    "Description": "Fornece cartões de perfil do Xbox, convites e outras interfaces do Xbox nos jogos"
   },
   "Microsoft.XboxGameOverlay": {
     "FriendlyName": "Xbox Game Overlay",
-    "Description": "Sobreposição de jogos que faz parte da Xbox Game Bar. Este app é necessário para determinados jogos. Aviso: desinstalá-lo pode reduzir o desempenho em jogos em PCs com determinados processadores modernos."
+    "Description": "Componente antigo de sobreposição Xbox em jogos. Aviso: removê-lo pode afetar os recursos Xbox nos jogos"
   },
   "Microsoft.XboxGamingOverlay": {
     "FriendlyName": "Game Bar",
-    "Description": "Este app oferece uma sobreposição dentro dos jogos e integração com os serviços Xbox. É necessário para determinados jogos. Aviso: desinstalá-lo pode reduzir o desempenho em jogos em PCs com determinados processadores modernos."
+    "Description": "Gravação, capturas, widgets e recursos sociais Xbox em jogos. Aviso: remover Game Bar pode reduzir o desempenho em certos sistemas AMD Ryzen 9 X3D"
   },
   "Microsoft.XboxIdentityProvider": {
     "FriendlyName": "Provedor de Identidade do Xbox",
@@ -437,19 +437,19 @@
   },
   "Microsoft.XboxSpeechToTextOverlay": {
     "FriendlyName": "Xbox Speech To Text",
-    "Description": "Recurso de acessibilidade necessário para alguns jogos, AVISO: este app não pode ser reinstalado facilmente!"
+    "Description": "Conversão entre fala e texto no chat de jogos compatíveis. Aviso: pode ser difícil reinstalar este componente do Windows após removê-lo"
   },
   "Microsoft.YourPhone": {
     "FriendlyName": "Vincular ao Celular",
-    "Description": "Vincular ao Celular (conecta um celular Android/iOS ao PC)"
+    "Description": "Conecte um celular Android ou iPhone para receber notificações, ver mensagens e fazer chamadas no PC"
   },
   "Microsoft.ZuneMusic": {
-    "FriendlyName": "Reprodutor Multimídia do Windows",
-    "Description": "Media Player moderno (substituiu o Groove Music, reproduz áudio e vídeo locais)"
+    "FriendlyName": "Reprodutor Multimídia",
+    "Description": "Reproduza arquivos locais de áudio e vídeo e organize sua biblioteca de músicas"
   },
   "MicrosoftWindows.CrossDevice": {
-    "FriendlyName": "Host de Experiência entre Dispositivos",
-    "Description": "Integração do celular no Explorador de Arquivos, na Câmera e em outros locais (faz parte dos recursos do Vincular ao Celular)"
+    "FriendlyName": "Dispositivos móveis",
+    "Description": "Integração de dispositivos móveis com o Explorador de Arquivos e recursos de câmera"
   },
   "MicrosoftWindows.Client.WebExperience": {
     "FriendlyName": "Windows Web Experience Pack",
@@ -493,7 +493,7 @@
   },
   "SAMSUNGELECTRONICSCoLtd.SamsungNotes": {
     "FriendlyName": "Samsung Notes",
-    "Description": "Aplicativo da Samsung para notas, escrita à mão e anotações em PDF"
+    "Description": "Notas, escrita à mão e anotações em PDF em Galaxy Books compatíveis"
   },
   "B9ECED6F.ScreenPadMaster": {
     "FriendlyName": "ASUS ScreenXpert",
@@ -505,11 +505,11 @@
   },
   "SAMSUNGELECTRONICSCO.LTD.SamsungScreenRecording": {
     "FriendlyName": "Samsung Screen Recorder",
-    "Description": "Aplicativo da Samsung para gravação de tela e webcam"
+    "Description": "Grave a tela e a webcam em Galaxy Books compatíveis"
   },
   "SAMSUNGELECTRONICSCO.LTD.Bixby": {
     "FriendlyName": "Samsung Bixby",
-    "Description": "Assistente de voz da Samsung"
+    "Description": "Comandos de voz para aplicativos, arquivos e configurações em Galaxy Books compatíveis"
   },
   "SAMSUNGELECTRONICSCO.LTD.SamsungWelcome": {
     "FriendlyName": "Samsung Galaxy Book Experience",
@@ -544,24 +544,24 @@
     "Description": "Efeitos de câmera e melhorias de videochamadas da Lenovo"
   },
   "LGElectronics.LGMonitorApp": {
-    "FriendlyName": "LG Monitor App",
-    "Description": "Software OEM da LG para controlar seu monitor LG; o Windows Update pode reinstalar este app silenciosamente se você tiver um monitor LG conectado"
+    "FriendlyName": "LG Monitor App Installer",
+    "Description": "Instala utilitários para monitores LG compatíveis. O Windows Update pode reinstalar o aplicativo quando um monitor LG estiver conectado"
   },
   "AD2F1837.HPAIExperienceCenter": {
     "FriendlyName": "HP AI Experience Center",
-    "Description": "Software OEM da HP, com recursos com IA e suporte"
+    "Description": "Aplicativo HP pré-instalado em determinados PCs HP com IA"
   },
   "AD2F1837.HPConnectedMusic": {
     "FriendlyName": "HP Connected Music",
-    "Description": "Software OEM da HP para música (possivelmente descontinuado)"
+    "Description": "Antigo aplicativo HP para músicas locais, bibliotecas do iTunes e serviços de streaming"
   },
   "AD2F1837.HPConnectedPhotopoweredbySnapfish": {
     "FriendlyName": "HP Connected Photo",
-    "Description": "Software OEM da HP para fotos, integrado ao Snapfish (possivelmente descontinuado)"
+    "Description": "Antigo aplicativo HP para sincronizar fotos, compartilhar pelo Snapfish e encomendar impressões"
   },
   "AD2F1837.HPDesktopSupportUtilities": {
     "FriendlyName": "HP Desktop Support Utilities",
-    "Description": "Software OEM da HP que fornece ferramentas de suporte ao PC"
+    "Description": "Exibe o modelo, o número de série e as informações do BIOS do PC HP"
   },
   "AD2F1837.HPEasyClean": {
     "FriendlyName": "HP Easy Clean",
@@ -569,27 +569,27 @@
   },
   "AD2F1837.HPFileViewer": {
     "FriendlyName": "HP File Viewer",
-    "Description": "Software OEM da HP para visualizar tipos de arquivo específicos"
+    "Description": "Visualizador de arquivos HP; formatos compatíveis não confirmados"
   },
   "AD2F1837.HPJumpStarts": {
     "FriendlyName": "HP JumpStarts",
-    "Description": "Software OEM da HP para tutoriais, descoberta de apps ou acesso rápido aos recursos da HP"
+    "Description": "Configuração do PC HP, registro do produto e recomendações de aplicativos"
   },
   "AD2F1837.HPPCHardwareDiagnosticsWindows": {
     "FriendlyName": "HP PC Hardware Diagnostics Windows",
-    "Description": "Software OEM da HP para diagnóstico de hardware do PC"
+    "Description": "Testa o hardware do PC, como memória e armazenamento, para ajudar a diagnosticar falhas"
   },
   "AD2F1837.HPPowerManager": {
     "FriendlyName": "HP Power Manager",
-    "Description": "Software OEM da HP para gerenciar configurações de energia e bateria"
+    "Description": "Monitore a integridade da bateria e gerencie a carga em notebooks HP compatíveis"
   },
   "AD2F1837.HPPrinterControl": {
     "FriendlyName": "HP Smart",
-    "Description": "Software OEM da HP para gerenciar impressoras HP"
+    "Description": "Imprima, digitalize e gerencie impressoras HP compatíveis"
   },
   "AD2F1837.HPPrivacySettings": {
-    "FriendlyName": "HP Privacy Settings",
-    "Description": "Software OEM da HP para gerenciar configurações de privacidade"
+    "FriendlyName": "HP PC Privacy Settings",
+    "Description": "Gerencie as preferências de privacidade e compartilhamento de dados dos aplicativos HP"
   },
   "AD2F1837.HPQuickDrop": {
     "FriendlyName": "HP QuickDrop",
@@ -597,7 +597,7 @@
   },
   "AD2F1837.HPQuickTouch": {
     "FriendlyName": "HP QuickTouch",
-    "Description": "Software OEM da HP, possivelmente para atalhos ou controles específicos de toque"
+    "Description": "Componente HP QuickTouch; função exata não confirmada"
   },
   "AD2F1837.HPRegistration": {
     "FriendlyName": "HP Registration",
@@ -609,23 +609,23 @@
   },
   "AD2F1837.HPSureShieldAI": {
     "FriendlyName": "HP Sure Shield AI",
-    "Description": "Software de segurança OEM da HP, provavelmente proteção contra ameaças baseada em IA"
+    "Description": "Utilitário HP; função exata não confirmada"
   },
   "AD2F1837.HPSystemInformation": {
     "FriendlyName": "HP System Information",
-    "Description": "Software OEM da HP para exibir informações do sistema"
+    "Description": "Exibe o modelo, o número de série e as informações do BIOS do PC HP"
   },
   "AD2F1837.HPWelcome": {
     "FriendlyName": "HP Welcome",
-    "Description": "Software OEM da HP que oferece uma experiência de boas-vindas ou ajuda na configuração inicial"
+    "Description": "Aplicativo de boas-vindas e suporte da HP"
   },
   "AD2F1837.HPWorkWell": {
     "FriendlyName": "HP WorkWell",
-    "Description": "Software OEM da HP focado em bem-estar, possivelmente com lembretes de pausa ou dicas de ergonomia (descontinuado)"
+    "Description": "Lembretes de pausas, exercícios de alongamento e dicas para usar o PC de forma mais saudável (descontinuado)"
   },
   "AD2F1837.myHP": {
-    "FriendlyName": "myHP",
-    "Description": "App central da HP para informações do dispositivo, suporte e serviços"
+    "FriendlyName": "HP",
+    "Description": "Configurações de dispositivos HP, suporte e recursos de impressão em dispositivos compatíveis"
   },
   "E046963F.LenovoCompanion": {
     "FriendlyName": "Lenovo Vantage",
@@ -645,6 +645,6 @@
   },
   "DellInc.DellMobileConnect": {
     "FriendlyName": "Dell Mobile Connect",
-    "Description": "App OEM da Dell para vincular um celular Android/iOS ao PC (descontinuado)"
+    "Description": "Conecte celulares Android e iPhones a um PC Dell (descontinuado)"
   }
 }

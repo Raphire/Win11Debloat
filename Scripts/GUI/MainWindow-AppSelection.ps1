@@ -436,6 +436,7 @@ function Add-AppsToMainWindow {
         $row.Style = $Window.Resources['AppTableRowStyle']
         $c0 = New-Object System.Windows.Controls.ColumnDefinition; $c0.Width = $Window.Resources['AppTableDotColWidth']
         $c1 = New-Object System.Windows.Controls.ColumnDefinition; $c1.Width = $Window.Resources['AppTableNameColWidth']
+        $c1.SharedSizeGroup = 'AppTableName'
         $c2 = New-Object System.Windows.Controls.ColumnDefinition; $c2.Width = $Window.Resources['AppTableDescColWidth']
         $c3 = New-Object System.Windows.Controls.ColumnDefinition; $c3.Width = $Window.Resources['AppTableIdColWidth']
         $row.ColumnDefinitions.Add($c0); $row.ColumnDefinitions.Add($c1)

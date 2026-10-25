@@ -456,11 +456,11 @@
     "Description": "Windows 위젯이 작동하는 데 필요한 런타임입니다."
   },
   "AD2F1837.OMENCommandCenter": {
-    "FriendlyName": "OMEN Gaming Hub",
+    "FriendlyName": "HP OMEN Gaming Hub",
     "Description": "성능 모니터링 및 장치 설정을 위한 HP 게임 허브"
   },
   "AcerIncorporated.AcerCareCenterS": {
-    "FriendlyName": "Care Center S",
+    "FriendlyName": "Acer Care Center S",
     "Description": "Acer 장치 정보, 진단 및 유지 관리 도구"
   },
   "B9ECED6F.ASUSPCAssistant": {
@@ -472,7 +472,7 @@
     "Description": "장치 간 화면 공유 및 파일 전송을 위한 ASUS 앱"
   },
   "SAMSUNGELECTRONICSCoLtd.SamsungQuickShare": {
-    "FriendlyName": "Quick Share",
+    "FriendlyName": "Samsung Quick Share",
     "Description": "주변 장치 간 파일 공유를 위한 Samsung 앱"
   },
   "9426MICRO-STARINTERNATION.MSICenter": {
@@ -492,7 +492,7 @@
     "Description": "메모 작성, 손글씨 및 PDF 주석을 위한 Samsung 앱"
   },
   "B9ECED6F.ScreenPadMaster": {
-    "FriendlyName": "ScreenXpert",
+    "FriendlyName": "ASUS ScreenXpert",
     "Description": "ASUS 창 관리 및 지원되는 모델의 ScreenPad 제어"
   },
   "SAMSUNGELECTRONICSCO.LTD.SamsungStudio": {
@@ -504,16 +504,40 @@
     "Description": "Samsung 화면 및 웹캠 녹화 앱"
   },
   "SAMSUNGELECTRONICSCO.LTD.Bixby": {
-    "FriendlyName": "Bixby",
+    "FriendlyName": "Samsung Bixby",
     "Description": "Samsung 음성 비서"
   },
   "SAMSUNGELECTRONICSCO.LTD.SamsungWelcome": {
-    "FriendlyName": "Galaxy Book Experience",
+    "FriendlyName": "Samsung Galaxy Book Experience",
     "Description": "Galaxy Book용 Samsung 앱 실행 및 기능 안내"
   },
   "SAMSUNGELECTRONICSCO.LTD.SmartThingsWindows": {
-    "FriendlyName": "SmartThings",
+    "FriendlyName": "Samsung SmartThings",
     "Description": "스마트 홈 장치 연결, 모니터링 및 제어를 위한 Samsung 앱"
+  },
+  "SAMSUNGELECTRONICSCoLtd.MultiControl": {
+    "FriendlyName": "Samsung Multi control",
+    "Description": "호환되는 Galaxy 장치 간 키보드 및 마우스 공유를 위한 Samsung 앱"
+  },
+  "SAMSUNGELECTRONICSCoLtd.SecondScreen": {
+    "FriendlyName": "Samsung Second Screen",
+    "Description": "호환되는 Galaxy 태블릿을 PC의 추가 디스플레이로 사용하는 Samsung 앱"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.PENUP": {
+    "FriendlyName": "Samsung PENUP",
+    "Description": "Samsung 그림 및 색칠 앱"
+  },
+  "9426MICRO-STARINTERNATION.BusinessCenter": {
+    "FriendlyName": "MSI Center Pro",
+    "Description": "MSI 장치 설정, 진단 및 성능 최적화"
+  },
+  "AcerIncorporated.AcerRegistration": {
+    "FriendlyName": "Acer Product Registration",
+    "Description": "Acer 제품 등록 앱"
+  },
+  "E0469640.SmartAppearance": {
+    "FriendlyName": "Lenovo Smart Appearance",
+    "Description": "Lenovo 카메라 효과 및 영상 통화 개선 기능"
   },
   "LGElectronics.LGMonitorApp": {
     "FriendlyName": "LG Monitor App",

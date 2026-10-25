@@ -456,11 +456,11 @@
     "Description": "Runtime necesario para que los widgets de Windows funcionen"
   },
   "AD2F1837.OMENCommandCenter": {
-    "FriendlyName": "OMEN Gaming Hub",
+    "FriendlyName": "HP OMEN Gaming Hub",
     "Description": "Centro de juegos de HP para supervisar el rendimiento y configurar el dispositivo"
   },
   "AcerIncorporated.AcerCareCenterS": {
-    "FriendlyName": "Care Center S",
+    "FriendlyName": "Acer Care Center S",
     "Description": "Información del dispositivo y herramientas de diagnóstico y mantenimiento de Acer"
   },
   "B9ECED6F.ASUSPCAssistant": {
@@ -472,7 +472,7 @@
     "Description": "Aplicación de ASUS para compartir pantallas y transferir archivos entre dispositivos"
   },
   "SAMSUNGELECTRONICSCoLtd.SamsungQuickShare": {
-    "FriendlyName": "Quick Share",
+    "FriendlyName": "Samsung Quick Share",
     "Description": "Aplicación de Samsung para compartir archivos entre dispositivos cercanos"
   },
   "9426MICRO-STARINTERNATION.MSICenter": {
@@ -492,7 +492,7 @@
     "Description": "Aplicación de Samsung para tomar notas, escribir a mano y anotar PDF"
   },
   "B9ECED6F.ScreenPadMaster": {
-    "FriendlyName": "ScreenXpert",
+    "FriendlyName": "ASUS ScreenXpert",
     "Description": "Gestión de ventanas de ASUS y controles de ScreenPad en los modelos compatibles"
   },
   "SAMSUNGELECTRONICSCO.LTD.SamsungStudio": {
@@ -504,16 +504,40 @@
     "Description": "Aplicación de Samsung para grabar la pantalla y la cámara web"
   },
   "SAMSUNGELECTRONICSCO.LTD.Bixby": {
-    "FriendlyName": "Bixby",
+    "FriendlyName": "Samsung Bixby",
     "Description": "Asistente de voz de Samsung"
   },
   "SAMSUNGELECTRONICSCO.LTD.SamsungWelcome": {
-    "FriendlyName": "Galaxy Book Experience",
+    "FriendlyName": "Samsung Galaxy Book Experience",
     "Description": "Lanzador de aplicaciones de Samsung y guías de funciones para Galaxy Book"
   },
   "SAMSUNGELECTRONICSCO.LTD.SmartThingsWindows": {
-    "FriendlyName": "SmartThings",
+    "FriendlyName": "Samsung SmartThings",
     "Description": "Aplicación de Samsung para conectar, supervisar y controlar dispositivos del hogar inteligente"
+  },
+  "SAMSUNGELECTRONICSCoLtd.MultiControl": {
+    "FriendlyName": "Samsung Multi control",
+    "Description": "Aplicación de Samsung para compartir teclado y ratón entre dispositivos Galaxy compatibles"
+  },
+  "SAMSUNGELECTRONICSCoLtd.SecondScreen": {
+    "FriendlyName": "Samsung Second Screen",
+    "Description": "Aplicación de Samsung para usar una tableta Galaxy compatible como pantalla adicional del PC"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.PENUP": {
+    "FriendlyName": "Samsung PENUP",
+    "Description": "Aplicación de Samsung para dibujar y colorear"
+  },
+  "9426MICRO-STARINTERNATION.BusinessCenter": {
+    "FriendlyName": "MSI Center Pro",
+    "Description": "Configuración, diagnóstico y optimización del rendimiento de dispositivos MSI"
+  },
+  "AcerIncorporated.AcerRegistration": {
+    "FriendlyName": "Acer Product Registration",
+    "Description": "Aplicación de registro de productos Acer"
+  },
+  "E0469640.SmartAppearance": {
+    "FriendlyName": "Lenovo Smart Appearance",
+    "Description": "Efectos de cámara y mejoras para videollamadas de Lenovo"
   },
   "LGElectronics.LGMonitorApp": {
     "FriendlyName": "Aplicación LG Monitor",

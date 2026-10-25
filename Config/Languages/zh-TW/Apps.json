@@ -456,11 +456,11 @@
     "Description": "Windows 小工具運作所需的執行階段"
   },
   "AD2F1837.OMENCommandCenter": {
-    "FriendlyName": "OMEN Gaming Hub",
+    "FriendlyName": "HP OMEN Gaming Hub",
     "Description": "用於效能監控和裝置設定的 HP 遊戲中心"
   },
   "AcerIncorporated.AcerCareCenterS": {
-    "FriendlyName": "Care Center S",
+    "FriendlyName": "Acer Care Center S",
     "Description": "Acer 裝置資訊、診斷和維護工具"
   },
   "B9ECED6F.ASUSPCAssistant": {
@@ -472,7 +472,7 @@
     "Description": "用於在裝置之間共用螢幕和傳輸檔案的 ASUS 應用程式"
   },
   "SAMSUNGELECTRONICSCoLtd.SamsungQuickShare": {
-    "FriendlyName": "Quick Share",
+    "FriendlyName": "Samsung Quick Share",
     "Description": "用於在附近裝置之間共用檔案的 Samsung 應用程式"
   },
   "9426MICRO-STARINTERNATION.MSICenter": {
@@ -492,7 +492,7 @@
     "Description": "用於筆記、手寫和 PDF 註解的 Samsung 應用程式"
   },
   "B9ECED6F.ScreenPadMaster": {
-    "FriendlyName": "ScreenXpert",
+    "FriendlyName": "ASUS ScreenXpert",
     "Description": "ASUS 視窗管理和支援機型的 ScreenPad 控制"
   },
   "SAMSUNGELECTRONICSCO.LTD.SamsungStudio": {
@@ -504,16 +504,40 @@
     "Description": "用於錄製螢幕和網路攝影機畫面的 Samsung 應用程式"
   },
   "SAMSUNGELECTRONICSCO.LTD.Bixby": {
-    "FriendlyName": "Bixby",
+    "FriendlyName": "Samsung Bixby",
     "Description": "Samsung 語音助理"
   },
   "SAMSUNGELECTRONICSCO.LTD.SamsungWelcome": {
-    "FriendlyName": "Galaxy Book Experience",
+    "FriendlyName": "Samsung Galaxy Book Experience",
     "Description": "適用於 Galaxy Book 的 Samsung 應用程式啟動器和功能指南"
   },
   "SAMSUNGELECTRONICSCO.LTD.SmartThingsWindows": {
-    "FriendlyName": "SmartThings",
+    "FriendlyName": "Samsung SmartThings",
     "Description": "用於連接、監控和控制智慧家庭裝置的 Samsung 應用程式"
+  },
+  "SAMSUNGELECTRONICSCoLtd.MultiControl": {
+    "FriendlyName": "Samsung Multi control",
+    "Description": "用於在相容的 Galaxy 裝置之間共用鍵盤和滑鼠的 Samsung 應用程式"
+  },
+  "SAMSUNGELECTRONICSCoLtd.SecondScreen": {
+    "FriendlyName": "Samsung Second Screen",
+    "Description": "用於將相容的 Galaxy 平板電腦用作電腦延伸顯示器的 Samsung 應用程式"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.PENUP": {
+    "FriendlyName": "Samsung PENUP",
+    "Description": "Samsung 繪圖和著色應用程式"
+  },
+  "9426MICRO-STARINTERNATION.BusinessCenter": {
+    "FriendlyName": "MSI Center Pro",
+    "Description": "MSI 裝置設定、診斷和效能最佳化"
+  },
+  "AcerIncorporated.AcerRegistration": {
+    "FriendlyName": "Acer Product Registration",
+    "Description": "Acer 產品註冊應用程式"
+  },
+  "E0469640.SmartAppearance": {
+    "FriendlyName": "Lenovo Smart Appearance",
+    "Description": "Lenovo 攝影機效果和視訊通話增強功能"
   },
   "LGElectronics.LGMonitorApp": {
     "FriendlyName": "LG Monitor App",

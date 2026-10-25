@@ -914,7 +914,7 @@
       "RemovalMethod": "Appx"
     },
     {
-      "FriendlyName": "OMEN Gaming Hub",
+      "FriendlyName": "HP OMEN Gaming Hub",
       "AppId": "AD2F1837.OMENCommandCenter",
       "Description": "HP gaming hub for performance monitoring and device settings",
       "SelectedByDefault": false,
@@ -922,7 +922,7 @@
       "RemovalMethod": "Appx"
     },
     {
-      "FriendlyName": "Care Center S",
+      "FriendlyName": "Acer Care Center S",
       "AppId": "AcerIncorporated.AcerCareCenterS",
       "Description": "Acer device information, diagnostics, and maintenance tools",
       "SelectedByDefault": false,
@@ -946,7 +946,7 @@
       "RemovalMethod": "Appx"
     },
     {
-      "FriendlyName": "Quick Share",
+      "FriendlyName": "Samsung Quick Share",
       "AppId": "SAMSUNGELECTRONICSCoLtd.SamsungQuickShare",
       "Description": "Samsung file sharing between nearby devices",
       "SelectedByDefault": false,
@@ -986,7 +986,7 @@
       "RemovalMethod": "Appx"
     },
     {
-      "FriendlyName": "ScreenXpert",
+      "FriendlyName": "ASUS ScreenXpert",
       "AppId": "B9ECED6F.ScreenPadMaster",
       "Description": "ASUS window management and ScreenPad controls on supported models",
       "SelectedByDefault": false,
@@ -1010,7 +1010,7 @@
       "RemovalMethod": "Appx"
     },
     {
-      "FriendlyName": "Bixby",
+      "FriendlyName": "Samsung Bixby",
       "AppId": "SAMSUNGELECTRONICSCO.LTD.Bixby",
       "Description": "Samsung voice assistant",
       "SelectedByDefault": false,
@@ -1018,7 +1018,7 @@
       "RemovalMethod": "Appx"
     },
     {
-      "FriendlyName": "Galaxy Book Experience",
+      "FriendlyName": "Samsung Galaxy Book Experience",
       "AppId": "SAMSUNGELECTRONICSCO.LTD.SamsungWelcome",
       "Description": "Samsung app launcher and feature guides for Galaxy Book",
       "SelectedByDefault": false,
@@ -1026,9 +1026,57 @@
       "RemovalMethod": "Appx"
     },
     {
-      "FriendlyName": "SmartThings",
+      "FriendlyName": "Samsung SmartThings",
       "AppId": "SAMSUNGELECTRONICSCO.LTD.SmartThingsWindows",
       "Description": "Samsung app for connecting, monitoring, and controlling smart home devices",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
+      "FriendlyName": "Samsung Multi control",
+      "AppId": "SAMSUNGELECTRONICSCoLtd.MultiControl",
+      "Description": "Samsung keyboard and mouse sharing across compatible Galaxy devices",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
+      "FriendlyName": "Samsung Second Screen",
+      "AppId": "SAMSUNGELECTRONICSCoLtd.SecondScreen",
+      "Description": "Samsung app for using a compatible Galaxy tablet as an additional PC display",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
+      "FriendlyName": "Samsung PENUP",
+      "AppId": "SAMSUNGELECTRONICSCO.LTD.PENUP",
+      "Description": "Samsung drawing and coloring app",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
+      "FriendlyName": "MSI Center Pro",
+      "AppId": "9426MICRO-STARINTERNATION.BusinessCenter",
+      "Description": "MSI device settings, diagnostics, and performance optimization",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
+      "FriendlyName": "Acer Product Registration",
+      "AppId": "AcerIncorporated.AcerRegistration",
+      "Description": "Acer product registration app",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
+      "FriendlyName": "Lenovo Smart Appearance",
+      "AppId": "E0469640.SmartAppearance",
+      "Description": "Lenovo camera effects and video call enhancements",
       "SelectedByDefault": false,
       "Recommendation": "optional",
       "RemovalMethod": "Appx"
@@ -1254,6 +1302,12 @@
     {
       "Name": "OEM software (Acer, ASUS, Dell, HP, Lenovo, LG, MSI, Samsung)",
       "AppIds": [
+        "SAMSUNGELECTRONICSCoLtd.MultiControl",
+        "SAMSUNGELECTRONICSCoLtd.SecondScreen",
+        "SAMSUNGELECTRONICSCO.LTD.PENUP",
+        "9426MICRO-STARINTERNATION.BusinessCenter",
+        "AcerIncorporated.AcerRegistration",
+        "E0469640.SmartAppearance",
         "SAMSUNGELECTRONICSCO.LTD.SamsungStudio",
         "SAMSUNGELECTRONICSCO.LTD.SamsungScreenRecording",
         "SAMSUNGELECTRONICSCO.LTD.Bixby",

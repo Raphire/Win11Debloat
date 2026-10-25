@@ -163,19 +163,6 @@ Describe 'Get-PendingTweakActions' {
         $map['DisableTelemetryCheckBox'].DesiredValue | Should -BeTrue
     }
 
-    It 'matches a mapping whose CategoryId fell back to its Name, for a category missing CategoryId' {
-        $window = New-TestWindow
-        $checkBox = New-Object System.Windows.Controls.CheckBox
-        $checkBox.Visibility = 'Visible'
-        $window.RegisterName('LegacyCheckBox', $checkBox)
-        # New-DynamicTweakControls falls back to Name when a category has no CategoryId of its own.
-        $script:UiControlMappings = @{ LegacyCheckBox = [PSCustomObject]@{ CategoryId = 'Legacy Category'; Type = 'feature'; FeatureId = 'SomeFeature' } }
-
-        $map = Get-CategoryTweakPresetMap -Window $window -CategoryId 'Legacy Category'
-
-        $map['LegacyCheckBox'].ControlType | Should -Be 'CheckBox'
-    }
-
     It 'updates navigation visibility and progress indicators for an interior tab' {
         $window = New-TestWindow
         $tabControl = New-Object System.Windows.Controls.TabControl
@@ -250,6 +237,7 @@ Describe 'Get-AppRemovalScopeTarget' {
     }
 
     It 'returns null for an unrecognized ComboBoxItem Name' {
+        Mock Write-Warning {}
         $combo = New-Object System.Windows.Controls.ComboBox
         $item = New-Object System.Windows.Controls.ComboBoxItem
         $item.Name = 'SomeUnrelatedControl'

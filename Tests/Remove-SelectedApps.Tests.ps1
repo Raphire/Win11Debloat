@@ -370,7 +370,7 @@ Describe 'Remove-AppxApp' {
         Mock Invoke-NonBlocking { param($ScriptBlock, $ArgumentList) & $ScriptBlock @ArgumentList }
         Mock Get-AppxPackage { Write-Error 'access denied' }
 
-        Remove-AppxApp -app 'One.App' -targetUser 'CurrentUser' | Should -BeFalse
+        Remove-AppxApp -app 'One.App' -targetUser 'CurrentUser' 2>$null | Should -BeFalse
     }
 
     It 'returns false when package removal reports a non-terminating error' {
@@ -378,7 +378,7 @@ Describe 'Remove-AppxApp' {
         Mock Get-AppxPackage { [PSCustomObject]@{ PackageFullName = 'One.App_1.0' } }
         Mock Remove-AppxPackage { Write-Error 'access denied' }
 
-        Remove-AppxApp -app 'One.App' -targetUser 'CurrentUser' | Should -BeFalse
+        Remove-AppxApp -app 'One.App' -targetUser 'CurrentUser' 2>$null | Should -BeFalse
     }
 
     It 'returns false and reports a terminating Appx failure' {

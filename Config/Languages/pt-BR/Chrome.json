@@ -342,7 +342,7 @@
   "BackupMissingSelectedFeatures": "O backup deve conter pelo menos um ID de funcionalidade em SelectedFeatures ou SelectedUndoFeatures.",
   "BackupAllowlistValidationFailed": "Falha ao validar o backup: {0}",
   "BackupSnapshotMissingPath": "Falha na validação do backup: O snapshot do registro está sem o Path.",
-  "BackupFeatureCatalogNotLoaded": "Não é possível validar a lista de permitidos do backup do registro porque as configurações de funcionalidades não estão carregadas.",
+  "BackupFeatureCatalogNotLoaded": "Não é possível validar a lista de permitidos do backup do registro porque as definições de funcionalidades não estão carregadas.",
   "BackupNoAllowedRegistryPaths": "O backup contém snapshots de registro, mas nenhum caminho de registro permitido foi derivado das funcionalidades selecionadas.",
   "BackupFeatureNotInCatalog": "A funcionalidade selecionada '{0}' não foi encontrada no catálogo de funcionalidades atual.",
   "BackupUnsupportedRegistryPath": "O backup contém caminho de registro não suportado '{0}'.",

@@ -9,7 +9,7 @@
       "ApplyText": "Seçilen uygulamalar kaldırılıyor"
     },
     "RemoveGamingApps": {
-      "Label": "Xbox uygulamasını ve Xbox Game Bar'ı kaldır",
+      "Label": "Xbox uygulamasını ve Oyun Çubuğu'nu kaldır",
       "ApplyText": "Oyunla ilgili uygulamalar kaldırılıyor"
     },
     "RemoveHPApps": {
@@ -57,29 +57,29 @@
     },
     "DisableLockscreenTips": {
       "Label": "Kilit ekranındaki ipuçlarını ve püf noktalarını kapat",
-      "ToolTip": "Kilit ekranı Spotlight seçeneğini kapatır ve kilit ekranında görünen ipuçlarını, püf noktalarını ve ilginç bilgileri devre dışı bırakır.",
+      "ToolTip": "Kilit ekranı spot ışığı seçeneğini kapatır ve kilit ekranında görünen ipuçlarını, püf noktalarını ve ilginç bilgileri devre dışı bırakır.",
       "ApplyText": "Kilit ekranındaki ipuçları ve püf noktaları kapatılıyor",
       "UndoLabel": "Kilit ekranındaki ipuçlarını ve püf noktalarını aç",
       "ApplyUndoText": "Kilit ekranındaki ipuçları ve püf noktaları açılıyor"
     },
     "EnableDesktopSpotlight": {
-      "Label": "Masaüstünde Windows Spotlight arka planını ve kısayolunu aç",
-      "ToolTip": "Windows Spotlight masaüstü arka planını ve 'Bu resim hakkında bilgi edinin' kısayolunu geri getirir.",
-      "ApplyText": "Windows Spotlight masaüstü arka planı ve kısayolu geri getiriliyor"
+      "Label": "Masaüstünde Windows spot ışığı arka planını ve kısayolunu aç",
+      "ToolTip": "Windows spot ışığı masaüstü arka planını ve 'Bu resim hakkında bilgi edinin' kısayolunu geri getirir.",
+      "ApplyText": "Windows spot ışığı masaüstü arka planı ve kısayolu geri getiriliyor"
     },
     "DisableDesktopSpotlight": {
-      "Label": "Masaüstünde Windows Spotlight arka planını kapat",
-      "ToolTip": "Dönen görseller gösteren ve ipucu ya da ilginç bilgi çıkarabilen Windows Spotlight masaüstü arka planını kapatır. Bu özellik ilkeler kullanır ve bazı ayarları kilitler.",
-      "ApplyText": "Windows Spotlight masaüstü arka planı kapatılıyor",
-      "UndoLabel": "Masaüstünde Windows Spotlight arka planını aç",
-      "ApplyUndoText": "Windows Spotlight masaüstü arka planı ve kısayolu geri getiriliyor"
+      "Label": "Masaüstünde Windows spot ışığı arka planını kapat",
+      "ToolTip": "Dönen görseller gösteren ve ipucu ya da ilginç bilgi çıkarabilen Windows spot ışığı masaüstü arka planını kapatır. Bu özellik ilkeler kullanır ve bazı ayarları kilitler.",
+      "ApplyText": "Windows spot ışığı masaüstü arka planı kapatılıyor",
+      "UndoLabel": "Masaüstünde Windows spot ışığı arka planını aç",
+      "ApplyUndoText": "Windows spot ışığı masaüstü arka planı ve kısayolu geri getiriliyor"
     },
     "HideDesktopSpotlightIcon": {
       "Label": "'Bu resim hakkında bilgi edinin' masaüstü kısayolunu gizle",
-      "ToolTip": "Windows Spotlight duvar kağıdının değişmeye devam etmesini sağlar, yalnızca 'Bu resim hakkında bilgi edinin' kısayolunu gizler. Windows Spotlight'ı kapatmaz.",
-      "ApplyText": "Windows Spotlight 'Bu resim hakkında bilgi edinin' masaüstü kısayolu gizleniyor",
+      "ToolTip": "Windows spot ışığı duvar kağıdının değişmeye devam etmesini sağlar, yalnızca 'Bu resim hakkında bilgi edinin' kısayolunu gizler. Windows spot ışığını kapatmaz.",
+      "ApplyText": "Windows spot ışığı 'Bu resim hakkında bilgi edinin' masaüstü kısayolu gizleniyor",
       "UndoLabel": "'Bu resim hakkında bilgi edinin' masaüstü kısayolunu göster",
-      "ApplyUndoText": "Windows Spotlight 'Bu resim hakkında bilgi edinin' masaüstü kısayolu gösteriliyor"
+      "ApplyUndoText": "Windows spot ışığı 'Bu resim hakkında bilgi edinin' masaüstü kısayolu gösteriliyor"
     },
     "DisableEdgeAds": {
       "Label": "Edge'deki reklamları, önerileri ve haber akışını kapat",
@@ -96,11 +96,11 @@
       "ApplyUndoText": "Microsoft Copilot açılıyor"
     },
     "DisableRecall": {
-      "Label": "Windows Recall'u kapat",
-      "ToolTip": "Yakın zamanda kullanılan dosyalara, uygulamalara ve etkinliklere hızlı erişim veren yapay zeka özelliği Windows Recall'u kapatır. Bu özellik ilkeler kullanır ve bazı ayarları kilitler.",
-      "ApplyText": "Windows Recall kapatılıyor",
-      "UndoLabel": "Windows Recall'u aç",
-      "ApplyUndoText": "Windows Recall açılıyor"
+      "Label": "Hatırlama (Recall) özelliğini kapat",
+      "ToolTip": "Yakın zamanda kullanılan dosyalara, uygulamalara ve etkinliklere hızlı erişim veren yapay zeka özelliği Hatırlama'yı (Recall) kapatır. Bu özellik ilkeler kullanır ve bazı ayarları kilitler.",
+      "ApplyText": "Hatırlama (Recall) kapatılıyor",
+      "UndoLabel": "Hatırlama (Recall) özelliğini aç",
+      "ApplyUndoText": "Hatırlama (Recall) açılıyor"
     },
     "DisableClickToDo": {
       "Label": "Click to Do'yu, yapay zeka metin ve görüntü analizini kapat",
@@ -230,26 +230,19 @@
       "UndoLabel": "Sistem ve uygulamalar için koyu temayı kapat",
       "ApplyUndoText": "Sistem ve uygulamalar için koyu tema kapatılıyor"
     },
-    "DisableDragTray": {
-      "Label": "Dosya paylaşma ve taşıma için 'Sürükleme tepsisi'ni kapat",
-      "ToolTip": "Sürükleme tepsisi (Drag Tray), Windows 11'de dosya paylaşma ve taşıma özelliğidir. Dosya sürüklerken ekranın üstünde belirir.",
-      "ApplyText": "Sürükleme tepsisi kapatılıyor",
-      "UndoLabel": "Dosya paylaşma ve taşıma için 'Sürükleme tepsisi'ni aç",
-      "ApplyUndoText": "Sürükleme tepsisi açılıyor"
-    },
     "RevertContextMenu": {
       "Label": "Klasik Windows 10 sağ tık menüsünü kullan",
-      "ToolTip": "Windows 11 sağ tık menüsünde 'Diğer seçenekleri göster' arkasında kalan klasik Windows 10 sağ tık menüsünü geri getirir.",
+      "ToolTip": "Windows 11 sağ tık menüsünde 'Daha fazla seçenek göster' arkasında kalan klasik Windows 10 sağ tık menüsünü geri getirir.",
       "ApplyText": "Klasik Windows 10 sağ tık menüsü geri getiriliyor",
       "UndoLabel": "Windows 11 sağ tık menüsünü kullan",
       "ApplyUndoText": "Windows 11 sağ tık menüsü geri getiriliyor"
     },
     "DisableMouseAcceleration": {
-      "Label": "İşaretçi duyarlılığını artır özelliğini kapat (fare ivmesi)",
+      "Label": "İşaretçi hassasiyetini geliştir özelliğini kapat (fare ivmesi)",
       "ToolTip": "Windows'ta varsayılan olarak açık olan fare ivmesini kapatır. Fare hareketi daha tutarlı ve öngörülebilir olur.",
-      "ApplyText": "İşaretçi duyarlılığını artır kapatılıyor",
-      "UndoLabel": "İşaretçi duyarlılığını artır özelliğini aç (fare ivmesi)",
-      "ApplyUndoText": "İşaretçi duyarlılığını artır açılıyor"
+      "ApplyText": "'İşaretçi hassasiyetini geliştir' kapatılıyor",
+      "UndoLabel": "İşaretçi hassasiyetini geliştir özelliğini aç (fare ivmesi)",
+      "ApplyUndoText": "'İşaretçi hassasiyetini geliştir' açılıyor"
     },
     "DisableStickyKeys": {
       "Label": "Yapışkan Tuşlar kısayolunu kapat (5 kez Shift)",
@@ -337,18 +330,18 @@
       "ApplyText": "Görev çubuğu ve kilit ekranındaki pencere öğeleri kapatılıyor"
     },
     "HideChat": {
-      "Label": "Görev çubuğundaki Sohbet (şimdi toplantı) simgesini gizle",
-      "ToolTip": "Görev çubuğundaki Sohbet (şimdi toplantı) simgesini kapatır.",
+      "Label": "Görev çubuğundaki Sohbet (Meet Now) simgesini gizle",
+      "ToolTip": "Görev çubuğundaki Sohbet (Meet Now) simgesini kapatır.",
       "ApplyText": "Görev çubuğundaki sohbet simgesi gizleniyor",
-      "UndoLabel": "Görev çubuğundaki Sohbet (şimdi toplantı) simgesini göster",
+      "UndoLabel": "Görev çubuğundaki Sohbet (Meet Now) simgesini göster",
       "ApplyUndoText": "Görev çubuğundaki sohbet simgesi gösteriliyor"
     },
     "DisableStorageSense": {
-      "Label": "Depolama Algılayıcısı otomatik disk temizliğini kapat",
-      "ToolTip": "Geçici dosyaları silerek, Geri Dönüşüm Kutusu'nu boşaltarak ve İndirilenler klasörünü temizleyerek disk alanı açan Depolama Algılayıcısı'nı kapatır.",
-      "ApplyText": "Depolama Algılayıcısı otomatik disk temizliği kapatılıyor",
-      "UndoLabel": "Depolama Algılayıcısı otomatik disk temizliğini aç",
-      "ApplyUndoText": "Depolama Algılayıcısı otomatik disk temizliği açılıyor"
+      "Label": "Akıllı Depolama otomatik disk temizliğini kapat",
+      "ToolTip": "Geçici dosyaları silerek, Geri Dönüşüm Kutusu'nu boşaltarak ve İndirilenler klasörünü temizleyerek disk alanı açan Akıllı Depolama'yı kapatır.",
+      "ApplyText": "Akıllı Depolama otomatik disk temizliği kapatılıyor",
+      "UndoLabel": "Akıllı Depolama otomatik disk temizliğini aç",
+      "ApplyUndoText": "Akıllı Depolama otomatik disk temizliği açılıyor"
     },
     "DisableFastStartup": {
       "Label": "Hızlı başlatmayı kapat",
@@ -593,11 +586,11 @@
       "ApplyUndoText": "Brave tarayıcısında yapay zeka, kripto, Haberler, Ödüller, Talk ve VPN açılıyor"
     },
     "EnableWindowsSandbox": {
-      "Label": "Windows Sandbox'ı etkinleştir",
-      "ToolTip": "Windows Sandbox, uygulamaları yalıtılmış ortamda güvenle çalıştırmak için hafif bir masaüstüdür. İçine yüklenen yazılım ana bilgisayardan ayrı çalışır. Yalnızca Windows 11 Pro, Workstation ve Enterprise sürümlerinde desteklenir.",
-      "ApplyText": "Windows Sandbox etkinleştiriliyor",
-      "UndoLabel": "Windows Sandbox'ı devre dışı bırak",
-      "ApplyUndoText": "Windows Sandbox devre dışı bırakılıyor"
+      "Label": "Windows Korumalı Alanı'nı etkinleştir",
+      "ToolTip": "Windows Korumalı Alanı (Windows Sandbox), uygulamaları yalıtılmış ortamda güvenle çalıştırmak için hafif bir masaüstüdür. İçine yüklenen yazılım ana bilgisayardan ayrı çalışır. Yalnızca Windows 11 Pro, Workstation, Enterprise ve Education sürümlerinde desteklenir.",
+      "ApplyText": "Windows Korumalı Alanı etkinleştiriliyor",
+      "UndoLabel": "Windows Korumalı Alanı'nı devre dışı bırak",
+      "ApplyUndoText": "Windows Korumalı Alanı devre dışı bırakılıyor"
     },
     "EnableWindowsSubsystemForLinux": {
       "Label": "Linux için Windows Alt Sistemi'ni etkinleştir",
@@ -654,12 +647,12 @@
   },
   "UiGroups": {
     "DesktopSpotlight": {
-      "Label": "Masaüstünde Windows Spotlight",
-      "ToolTip": "Windows Spotlight masaüstü arka planını yönetir. Dönen duvar kağıdını 'Bu resim hakkında bilgi edinin' kısayoluyla veya kısayolsuz tutabilir ya da Windows Spotlight'ı tamamen kapatabilirsiniz.",
+      "Label": "Masaüstünde Windows spot ışığı",
+      "ToolTip": "Windows spot ışığı masaüstü arka planını yönetir. Dönen duvar kağıdını 'Bu resim hakkında bilgi edinin' kısayoluyla veya kısayolsuz tutabilir ya da Windows spot ışığını tamamen kapatabilirsiniz.",
       "Values": {
         "EnableDesktopSpotlight": "'Bu resim hakkında bilgi edinin' kısayolunu göster (Varsayılan)",
         "HideDesktopSpotlightIcon": "'Bu resim hakkında bilgi edinin' kısayolunu gizle",
-        "DisableDesktopSpotlight": "Windows Spotlight masaüstü arka planını kapat"
+        "DisableDesktopSpotlight": "Windows spot ışığı masaüstü arka planını kapat"
       }
     },
     "SearchIcon": {

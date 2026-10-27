@@ -25,3 +25,25 @@ function Get-RebootFeatureLabels {
 
     return $rebootFeatureLabels
 }
+
+<#
+    .SYNOPSIS
+        Resolves one deferred-removal display label per catalog app, grouping its package IDs.
+#>
+function Get-DeferredAppRemovalLabels {
+    if (-not $script:WingetDeferredRemovals -or $script:WingetDeferredRemovals.Count -eq 0) { return }
+
+    $catalog = Import-JsonFile -filePath $script:AppsListFilePath
+    $primaryIds = @{}
+    foreach ($app in $catalog.Apps) {
+        $ids = @($app.AppId)
+        foreach ($id in $ids) { $primaryIds[$id] = $ids[0] }
+    }
+
+    $deferredPrimaryIds = foreach ($appId in $script:WingetDeferredRemovals.Keys) {
+        if ($primaryIds.ContainsKey($appId)) { $primaryIds[$appId] } else { $appId }
+    }
+    foreach ($appId in @($deferredPrimaryIds | Sort-Object -Unique)) {
+        Get-Translation -Key $appId -Field 'FriendlyName' -Section 'Apps'
+    }
+}

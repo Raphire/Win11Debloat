@@ -80,7 +80,7 @@
     "Description": "Client del servizio di analisi aziendale (discontinuato)"
   },
   "Microsoft.MicrosoftSolitaireCollection": {
-    "FriendlyName": "Microsoft Solitaire Collection",
+    "FriendlyName": "Solitaire & Casual Games",
     "Description": "Raccolta di giochi di solitario"
   },
   "Microsoft.MicrosoftStickyNotes": {
@@ -96,7 +96,7 @@
     "Description": "Misura la velocità di download e upload e la latenza di rete"
   },
   "Microsoft.Office.OneNote": {
-    "FriendlyName": "OneNote per Windows 10 (versione precedente)",
+    "FriendlyName": "OneNote for Windows 10",
     "Description": "App per prendere appunti digitali (versione Universal Windows Platform; non più supportata)"
   },
   "Microsoft.Office.Sway": {
@@ -116,7 +116,7 @@
     "Description": "Automatizza le attività ripetitive del PC con flussi desktop"
   },
   "Microsoft.SkypeApp": {
-    "FriendlyName": "Skype (UWP)",
+    "FriendlyName": "Skype",
     "Description": "App di comunicazione Skype, versione Universal Windows Platform (discontinuata)"
   },
   "Microsoft.Todos": {
@@ -152,7 +152,7 @@
     "Description": "App per riprodurre contenuti video acquistati (nuovi noleggi e acquisti non più disponibili)"
   },
   "MicrosoftCorporationII.MicrosoftFamily": {
-    "FriendlyName": "Microsoft Family Safety",
+    "FriendlyName": "Family",
     "Description": "App per gestire il tempo di utilizzo dello schermo, i filtri dei contenuti e i report sulle attività della famiglia"
   },
   "MicrosoftCorporationII.QuickAssist": {
@@ -176,7 +176,7 @@
     "Description": "App Actipro, incluso l'editor di testo e codice Code Writer"
   },
   "AdobeSystemsIncorporated.AdobePhotoshopExpress": {
-    "FriendlyName": "Adobe Express Photos (ex Photoshop Express)",
+    "FriendlyName": "Adobe Express Photos",
     "Description": "Modifica foto, rimuovi oggetti e sfondi e annota screenshot"
   },
   "Amazon.com.Amazon": {
@@ -184,7 +184,7 @@
     "Description": "App per gli acquisti su Amazon"
   },
   "AmazonVideo.PrimeVideo": {
-    "FriendlyName": "Prime Video per Windows",
+    "FriendlyName": "Prime Video",
     "Description": "App del servizio di streaming Amazon Prime Video"
   },
   "Asphalt8Airborne": {
@@ -196,7 +196,7 @@
     "Description": "App precedente di Autodesk per disegnare e creare schizzi (non più supportato)"
   },
   "CaesarsSlotsFreeCasino": {
-    "FriendlyName": "Caesars Slots",
+    "FriendlyName": "Caesars Casino - Casino Slots Game",
     "Description": "Gioco di slot machine da casinò"
   },
   "COOKINGFEVER": {
@@ -244,7 +244,7 @@
     "Description": "App del servizio di streaming Hulu"
   },
   "iHeartRadio": {
-    "FriendlyName": "iHeartRadio",
+    "FriendlyName": "iHeart: Radio, Music, Podcasts",
     "Description": "Ascolta radio in diretta, musica e podcast"
   },
   "Facebook.Instagram": {
@@ -292,7 +292,7 @@
     "Description": "App per creare collage fotografici"
   },
   "PicsArt-PhotoStudio": {
-    "FriendlyName": "Picsart Photo Editor",
+    "FriendlyName": "Picsart - Photo Studio",
     "Description": "App per la modifica delle foto e la creatività"
   },
   "PolarrPhotoEditorAcademicEdition": {
@@ -417,7 +417,7 @@
   },
   "Microsoft.WindowsTerminal": {
     "FriendlyName": "Terminale",
-    "Description": "Terminale a schede per Prompt dei comandi, PowerShell e WSL. Attenzione: rimuovere il terminale che ospita Win11Debloat può chiudere la sessione"
+    "Description": "App terminale predefinita in Windows 11 (Prompt dei comandi, PowerShell, WSL). ATTENZIONE: non rimuoverla se hai avviato Win11Debloat da Terminale Windows, poiché ciò causerà il fallimento dello script."
   },
   "Microsoft.Xbox.TCUI": {
     "FriendlyName": "Xbox Live (TCUI)",
@@ -425,11 +425,11 @@
   },
   "Microsoft.XboxGameOverlay": {
     "FriendlyName": "Xbox Game Overlay",
-    "Description": "Componente precedente di sovrapposizione Xbox nei giochi. Attenzione: rimuoverlo può influire sulle funzionalità Xbox nei giochi"
+    "Description": "Overlay di gioco che fa parte di Xbox Game Bar. Questa app è necessaria per alcuni giochi. Attenzione: la disinstallazione di questa app può ridurre le prestazioni di gioco sui PC con determinati processori moderni."
   },
   "Microsoft.XboxGamingOverlay": {
     "FriendlyName": "Game Bar",
-    "Description": "Registrazione, screenshot, widget e funzionalità social Xbox nei giochi. Attenzione: rimuovere Game Bar può ridurre le prestazioni di alcuni sistemi AMD Ryzen 9 X3D"
+    "Description": "Questa app fornisce un overlay di gioco e l’integrazione con i servizi Xbox. Questa app è necessaria per alcuni giochi. Attenzione: la disinstallazione di questa app può ridurre le prestazioni di gioco sui PC con determinati processori moderni."
   },
   "Microsoft.XboxIdentityProvider": {
     "FriendlyName": "Xbox Identity Provider",
@@ -464,7 +464,7 @@
     "Description": "Hub di gioco HP per monitorare le prestazioni e gestire le impostazioni del dispositivo"
   },
   "AcerIncorporated.AcerCareCenterS": {
-    "FriendlyName": "Acer Care Center S",
+    "FriendlyName": "Acer Care Center",
     "Description": "Informazioni sul dispositivo e strumenti di diagnostica e manutenzione Acer"
   },
   "B9ECED6F.ASUSPCAssistant": {

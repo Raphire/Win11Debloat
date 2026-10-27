@@ -4,7 +4,7 @@
     "Description": "创建和编辑视频，支持剪辑、字幕和音频"
   },
   "Microsoft.3DBuilder": {
-    "FriendlyName": "三维建模（3D Builder）",
+    "FriendlyName": "3D Builder",
     "Description": "基础三维建模软件（已停止支持）"
   },
   "Microsoft.549981C3F5F10": {
@@ -12,7 +12,7 @@
     "Description": "微软 Cortana 语音助手（已停止维护）"
   },
   "Microsoft.BingFinance": {
-    "FriendlyName": "MSN 财经",
+    "FriendlyName": "财经",
     "Description": "Microsoft 提供的财经新闻和行情跟踪应用"
   },
   "Microsoft.BingFoodAndDrink": {
@@ -24,7 +24,7 @@
     "Description": "健康与健身记录及资讯（已停止维护）"
   },
   "Microsoft.BingNews": {
-    "FriendlyName": "MSN 资讯",
+    "FriendlyName": "资讯",
     "Description": "个性化新闻订阅源和突发新闻提醒"
   },
   "Microsoft.BingSports": {
@@ -40,7 +40,7 @@
     "Description": "旅行规划和旅游资讯（已停止维护）"
   },
   "Microsoft.BingWeather": {
-    "FriendlyName": "MSN 天气",
+    "FriendlyName": "天气",
     "Description": "Microsoft 提供的天气预报应用"
   },
   "XP9CXNGPPJ97XX": {
@@ -52,7 +52,7 @@
     "Description": "了解 Copilot+ 电脑的 AI 功能和应用"
   },
   "Microsoft.PCManager": {
-    "FriendlyName": "微软电脑管家",
+    "FriendlyName": "电脑管家",
     "Description": "微软提供的系统清理和优化工具，通常为预装应用"
   },
   "Microsoft.Getstarted": {
@@ -64,7 +64,7 @@
     "Description": "在支持蜂窝网络的电脑上接收数据套餐和账单短信；无法发送消息"
   },
   "Microsoft.Microsoft3DViewer": {
-    "FriendlyName": "三维查看器",
+    "FriendlyName": "3D 查看器",
     "Description": "用于查看 3D 模型（已停止支持）"
   },
   "Microsoft.MicrosoftJournal": {
@@ -80,7 +80,7 @@
     "Description": "商业分析服务客户端（已停止维护）"
   },
   "Microsoft.MicrosoftSolitaireCollection": {
-    "FriendlyName": "Microsoft Solitaire Collection",
+    "FriendlyName": "Solitaire & Casual Games",
     "Description": "多款纸牌游戏合集"
   },
   "Microsoft.MicrosoftStickyNotes": {
@@ -92,11 +92,11 @@
     "Description": "用于 Windows 混合现实头戴设备的门户应用（已弃用）"
   },
   "Microsoft.NetworkSpeedTest": {
-    "FriendlyName": "网络速度测试",
+    "FriendlyName": "Network Speed Test",
     "Description": "测量下载速度、上传速度和网络延迟"
   },
   "Microsoft.Office.OneNote": {
-    "FriendlyName": "适用于 Windows 10 的 OneNote（旧版）",
+    "FriendlyName": "OneNote for Windows 10",
     "Description": "数字笔记应用（通用 Windows 平台版本，已停止支持）"
   },
   "Microsoft.Office.Sway": {
@@ -116,7 +116,7 @@
     "Description": "通过桌面流自动执行重复的电脑任务"
   },
   "Microsoft.SkypeApp": {
-    "FriendlyName": "Skype（UWP 版）",
+    "FriendlyName": "Skype",
     "Description": "Skype 通信应用的通用 Windows 平台版本（已停止维护）"
   },
   "Microsoft.Todos": {
@@ -136,7 +136,7 @@
     "Description": "用于向微软提交 Windows 使用反馈"
   },
   "Microsoft.WindowsMaps": {
-    "FriendlyName": "Windows 地图",
+    "FriendlyName": "地图",
     "Description": "地图与导航应用（已停止支持）"
   },
   "Microsoft.WindowsSoundRecorder": {
@@ -152,7 +152,7 @@
     "Description": "用于播放已购买视频内容的应用（新的租借与购买已停止）"
   },
   "MicrosoftCorporationII.MicrosoftFamily": {
-    "FriendlyName": "Microsoft Family Safety",
+    "FriendlyName": "Family",
     "Description": "用于管理家庭屏幕使用时间、内容筛选和活动报告"
   },
   "MicrosoftCorporationII.QuickAssist": {
@@ -168,7 +168,7 @@
     "Description": "支持工作、学校和个人帐户的聊天、通话和会议"
   },
   "ACGMediaPlayer": {
-    "FriendlyName": "ACG Player",
+    "FriendlyName": "ACG 播放器",
     "Description": "播放本地音频和视频，支持字幕和 DLNA 串流"
   },
   "ActiproSoftwareLLC": {
@@ -176,7 +176,7 @@
     "Description": "Actipro 应用，包括文本和代码编辑器 Code Writer"
   },
   "AdobeSystemsIncorporated.AdobePhotoshopExpress": {
-    "FriendlyName": "Adobe Express Photos (原名 Photoshop Express)",
+    "FriendlyName": "Adobe Express Photos",
     "Description": "编辑照片、移除对象和背景，并批注屏幕截图"
   },
   "Amazon.com.Amazon": {
@@ -184,11 +184,11 @@
     "Description": "亚马逊购物应用"
   },
   "AmazonVideo.PrimeVideo": {
-    "FriendlyName": "Prime Video for Windows",
+    "FriendlyName": "Prime Video",
     "Description": "亚马逊 Prime Video 流媒体视频应用"
   },
   "Asphalt8Airborne": {
-    "FriendlyName": "狂野飙车 8",
+    "FriendlyName": "狂野飙车8：极速凌云",
     "Description": "包含汽车、摩托车和多人竞速的街机赛车游戏"
   },
   "AutodeskSketchBook": {
@@ -196,11 +196,11 @@
     "Description": "Autodesk 旧版绘画和素描应用 (已停止维护)"
   },
   "CaesarsSlotsFreeCasino": {
-    "FriendlyName": "凯撒老虎机（Caesars Slots）",
+    "FriendlyName": "Caesars Casino - Casino Slots Game",
     "Description": "模拟赌场老虎机游戏"
   },
   "COOKINGFEVER": {
-    "FriendlyName": "烹饪发烧友（Cooking Fever）",
+    "FriendlyName": "Cooking Fever",
     "Description": "烹饪和餐厅时间管理游戏"
   },
   "CyberLinkMediaSuiteEssentials": {
@@ -208,23 +208,23 @@
     "Description": "多媒体软件套件，通常由设备厂商预装"
   },
   "DisneyMagicKingdoms": {
-    "FriendlyName": "迪士尼梦幻王国（Disney Magic Kingdoms）",
+    "FriendlyName": "迪士尼梦幻王国",
     "Description": "迪士尼主题乐园建造游戏"
   },
   "Disney.37853FC22B2CE": {
-    "FriendlyName": "迪士尼视频（Disney+）",
+    "FriendlyName": "Disney+",
     "Description": "Disney+ 流媒体视频应用"
   },
   "DrawboardPDF": {
-    "FriendlyName": "PDF 批注（Drawboard PDF）",
+    "FriendlyName": "Drawboard PDF",
     "Description": "使用笔、触控或鼠标查看、编辑和批注 PDF 文档"
   },
   "Duolingo-LearnLanguagesforFree": {
-    "FriendlyName": "多邻国（Duolingo）",
+    "FriendlyName": "Duolingo",
     "Description": "语言学习应用"
   },
   "FACEBOOK.FACEBOOK": {
-    "FriendlyName": "社交应用（Facebook）",
+    "FriendlyName": "Facebook",
     "Description": "Facebook 社交应用"
   },
   "FarmVille2CountryEscape": {
@@ -236,19 +236,19 @@
     "Description": "以杂志形式呈现新闻和社交网络内容的聚合应用"
   },
   "HiddenCity": {
-    "FriendlyName": "神秘之城：寻物历险",
+    "FriendlyName": "神秘之城: 寻物历险",
     "Description": "寻找隐藏物品的解谜冒险游戏"
   },
   "HULULLC.HULUPLUS": {
-    "FriendlyName": "视频（Hulu）",
+    "FriendlyName": "Hulu",
     "Description": "Hulu 流媒体视频应用"
   },
   "iHeartRadio": {
-    "FriendlyName": "网络电台（iHeartRadio）",
+    "FriendlyName": "iHeart: Radio, Music, Podcasts",
     "Description": "收听直播电台、音乐和播客"
   },
   "Facebook.Instagram": {
-    "FriendlyName": "图片社交（Instagram）",
+    "FriendlyName": "Instagram",
     "Description": "Instagram 社交应用"
   },
   "king.com.BubbleWitch3Saga": {
@@ -256,7 +256,7 @@
     "Description": "带有魔法挑战的泡泡射击益智游戏"
   },
   "king.com.CandyCrushSaga": {
-    "FriendlyName": "糖果传奇（Candy Crush Saga）",
+    "FriendlyName": "Candy Crush Saga",
     "Description": "糖果三消益智游戏"
   },
   "king.com.CandyCrushSodaSaga": {
@@ -264,7 +264,7 @@
     "Description": "包含汽水主题关卡和游戏模式的糖果三消益智游戏"
   },
   "LinkedInforWindows": {
-    "FriendlyName": "领英（LinkedIn）",
+    "FriendlyName": "LinkedIn",
     "Description": "领英职业社交应用"
   },
   "MarchofEmpires": {
@@ -272,7 +272,7 @@
     "Description": "策略游戏"
   },
   "4DF9E0F8.Netflix": {
-    "FriendlyName": "奈飞（Netflix）",
+    "FriendlyName": "Netflix",
     "Description": "Netflix 流媒体视频应用"
   },
   "NYTCrossword": {
@@ -284,19 +284,19 @@
     "Description": "集中查看和管理多个帐户的日历"
   },
   "PandoraMediaInc": {
-    "FriendlyName": "音乐（Pandora）",
+    "FriendlyName": "Pandora",
     "Description": "Pandora 流媒体音乐应用"
   },
   "PhototasticCollage": {
-    "FriendlyName": "照片拼贴（Phototastic Collage）",
+    "FriendlyName": "Phototastic Collage",
     "Description": "照片拼贴制作应用"
   },
   "PicsArt-PhotoStudio": {
-    "FriendlyName": "照片创作（PicsArt）",
+    "FriendlyName": "Picsart - Photo Studio",
     "Description": "照片编辑和创意制作应用"
   },
   "PolarrPhotoEditorAcademicEdition": {
-    "FriendlyName": "泼辣修图专业版",
+    "FriendlyName": "Polarr Pro Photo Editor",
     "Description": "使用滤镜、色彩调整和局部蒙版编辑照片"
   },
   "flaregamesGmbH.RoyalRevolt": {
@@ -316,11 +316,11 @@
     "Description": "收听音乐和播客并管理播放列表"
   },
   "BytedancePte.Ltd.TikTok": {
-    "FriendlyName": "短视频（TikTok）",
+    "FriendlyName": "TikTok",
     "Description": "TikTok 短视频应用"
   },
   "TuneInRadio": {
-    "FriendlyName": "网络电台（TuneIn Radio）",
+    "FriendlyName": "TuneIn Radio",
     "Description": "收听直播电台、体育、新闻和播客"
   },
   "WinZipUniversal": {
@@ -328,7 +328,7 @@
     "Description": "文件压缩和解压工具（通用 Windows 平台版本）"
   },
   "Microsoft.BingSearch": {
-    "FriendlyName": "Microsoft 必应（搜索）",
+    "FriendlyName": "Microsoft 必应",
     "Description": "将 Microsoft 必应网络搜索集成到 Windows 搜索中的应用"
   },
   "Microsoft.Edge": {
@@ -364,7 +364,7 @@
     "Description": "绘制、裁剪、调整大小和编辑图像"
   },
   "Microsoft.People": {
-    "FriendlyName": "Microsoft 人脉",
+    "FriendlyName": "人脉",
     "Description": "存储和整理邮件和日历应用的联系人 （已停止维护）"
   },
   "MicrosoftCorporationII.Windows365": {
@@ -380,7 +380,7 @@
     "Description": "用于截取、批注、保存和分享屏幕截图"
   },
   "Microsoft.StartExperiencesApp": {
-    "FriendlyName": "开始体验应用（小组件）",
+    "FriendlyName": "“开始体验”应用",
     "Description": "为 Windows 小组件的“我的资讯”提供支持"
   },
   "Microsoft.SurfaceHub": {
@@ -388,7 +388,7 @@
     "Description": "Surface 设备设置和支持，包括受支持型号的智能充电控制"
   },
   "Microsoft.Whiteboard": {
-    "FriendlyName": "白板（Microsoft Whiteboard）",
+    "FriendlyName": "Microsoft Whiteboard",
     "Description": "数字协作白板应用"
   },
   "Microsoft.Windows.Photos": {
@@ -417,7 +417,7 @@
   },
   "Microsoft.WindowsTerminal": {
     "FriendlyName": "终端",
-    "Description": "适用于命令提示符、PowerShell 和 WSL 的多标签终端。警告：移除运行 Win11Debloat 的终端可能关闭其会话"
+    "Description": "Windows 11 中的默认终端应用（命令提示符、PowerShell、WSL）。警告：如果你从 Windows 终端启动了 Win11Debloat，请勿移除此应用，否则将导致脚本运行失败。"
   },
   "Microsoft.Xbox.TCUI": {
     "FriendlyName": "Xbox Live (TCUI)",
@@ -425,11 +425,11 @@
   },
   "Microsoft.XboxGameOverlay": {
     "FriendlyName": "Xbox 游戏覆盖层",
-    "Description": "旧版 Xbox 游戏内覆盖组件。警告：移除可能影响游戏中的 Xbox 功能"
+    "Description": "Xbox Game Bar 的游戏内覆盖层组件。某些游戏需要此应用。警告：卸载此应用可能会降低搭载某些现代处理器的电脑的游戏性能。"
   },
   "Microsoft.XboxGamingOverlay": {
     "FriendlyName": "Game Bar",
-    "Description": "游戏内录制、截图、小组件和 Xbox 社交功能。警告：移除 Game Bar 可能降低部分 AMD Ryzen 9 X3D 系统的性能"
+    "Description": "此应用提供游戏内覆盖层以及 Xbox 服务集成。某些游戏需要此应用。警告：卸载此应用可能会降低搭载某些现代处理器的电脑的游戏性能。"
   },
   "Microsoft.XboxIdentityProvider": {
     "FriendlyName": "Xbox 身份验证提供程序",
@@ -452,7 +452,7 @@
     "Description": "将移动设备与文件资源管理器和相机功能集成"
   },
   "MicrosoftWindows.Client.WebExperience": {
-    "FriendlyName": "Windows Web 体验包",
+    "FriendlyName": "Windows 小组件",
     "Description": "通过 Microsoft Store 提供和更新小组件等部分功能"
   },
   "Microsoft.WidgetsPlatformRuntime": {
@@ -464,7 +464,7 @@
     "Description": "用于性能监控和设备设置的 HP 游戏中心"
   },
   "AcerIncorporated.AcerCareCenterS": {
-    "FriendlyName": "Acer Care Center S",
+    "FriendlyName": "Acer Care Center",
     "Description": "Acer 设备信息、诊断和维护工具"
   },
   "B9ECED6F.ASUSPCAssistant": {
@@ -484,15 +484,15 @@
     "Description": "MSI 设备设置和性能监控"
   },
   "SAMSUNGELECTRONICSCO.LTD.PCGallery": {
-    "FriendlyName": "Samsung Gallery",
+    "FriendlyName": "Samsung 相册",
     "Description": "Samsung 照片和视频图库"
   },
   "SAMSUNGELECTRONICSCoLtd.SamsungFlux": {
-    "FriendlyName": "Samsung Flow",
+    "FriendlyName": "三星多屏联动",
     "Description": "用于连接手机与电脑、共享文件和同步通知的 Samsung 应用"
   },
   "SAMSUNGELECTRONICSCoLtd.SamsungNotes": {
-    "FriendlyName": "Samsung Notes",
+    "FriendlyName": "三星笔记",
     "Description": "在支持的 Galaxy Book 上记笔记、手写和批注 PDF"
   },
   "B9ECED6F.ScreenPadMaster": {
@@ -500,11 +500,11 @@
     "Description": "ASUS 窗口管理和受支持型号的 ScreenPad 控制"
   },
   "SAMSUNGELECTRONICSCO.LTD.SamsungStudio": {
-    "FriendlyName": "Samsung Studio",
+    "FriendlyName": "Samsung 工作室",
     "Description": "Samsung 视频编辑应用"
   },
   "SAMSUNGELECTRONICSCO.LTD.SamsungScreenRecording": {
-    "FriendlyName": "Samsung Screen Recorder",
+    "FriendlyName": "Samsung 录屏工具",
     "Description": "在支持的 Galaxy Book 上录制屏幕和网络摄像头"
   },
   "SAMSUNGELECTRONICSCO.LTD.Bixby": {
@@ -520,11 +520,11 @@
     "Description": "用于连接、监控和控制智能家居设备的 Samsung 应用"
   },
   "SAMSUNGELECTRONICSCoLtd.MultiControl": {
-    "FriendlyName": "Samsung Multi control",
+    "FriendlyName": "Samsung 多重控制",
     "Description": "用于在兼容的 Galaxy 设备之间共享键盘和鼠标的 Samsung 应用"
   },
   "SAMSUNGELECTRONICSCoLtd.SecondScreen": {
-    "FriendlyName": "Samsung Second Screen",
+    "FriendlyName": "Samsung 第二个屏幕",
     "Description": "用于将兼容的 Galaxy 平板电脑用作电脑扩展显示器的 Samsung 应用"
   },
   "SAMSUNGELECTRONICSCO.LTD.PENUP": {
@@ -564,7 +564,7 @@
     "Description": "显示 HP 电脑的型号、序列号和 BIOS 信息"
   },
   "AD2F1837.HPEasyClean": {
-    "FriendlyName": "惠普设备清洁(HP Easy Clean)",
+    "FriendlyName": "HP Easy Clean",
     "Description": "暂时禁用输入设备，方便清洁设备"
   },
   "AD2F1837.HPFileViewer": {

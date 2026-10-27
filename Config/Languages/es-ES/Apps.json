@@ -12,7 +12,7 @@
     "Description": "Asistente de voz Microsoft Cortana (ya no disponible)"
   },
   "Microsoft.BingFinance": {
-    "FriendlyName": "MSN Dinero",
+    "FriendlyName": "Dinero",
     "Description": "Aplicación de noticias financieras y seguimiento de los mercados de Microsoft"
   },
   "Microsoft.BingFoodAndDrink": {
@@ -24,7 +24,7 @@
     "Description": "Aplicación de seguimiento y noticias de salud y bienestar (descatalogada)"
   },
   "Microsoft.BingNews": {
-    "FriendlyName": "Microsoft News",
+    "FriendlyName": "Noticias",
     "Description": "Noticias personalizadas y alertas de última hora"
   },
   "Microsoft.BingSports": {
@@ -40,7 +40,7 @@
     "Description": "Aplicación de planificación de viajes y noticias turísticas (descatalogada)"
   },
   "Microsoft.BingWeather": {
-    "FriendlyName": "MSN El Tiempo",
+    "FriendlyName": "El Tiempo",
     "Description": "Aplicación de previsión meteorológica de Microsoft"
   },
   "XP9CXNGPPJ97XX": {
@@ -56,7 +56,7 @@
     "Description": "Herramienta de limpieza y optimización del sistema Microsoft PC Manager (a menudo preinstalada)"
   },
   "Microsoft.Getstarted": {
-    "FriendlyName": "Sugerencias",
+    "FriendlyName": "Recomendaciones",
     "Description": "Consejos y guías para usar las funciones de Windows (en desuso)"
   },
   "Microsoft.Messaging": {
@@ -80,7 +80,7 @@
     "Description": "Aplicación de Windows del servicio de análisis empresarial Power BI (descatalogada)"
   },
   "Microsoft.MicrosoftSolitaireCollection": {
-    "FriendlyName": "Microsoft Solitaire Collection",
+    "FriendlyName": "Solitaire & Casual Games",
     "Description": "Colección de juegos de cartas de solitario"
   },
   "Microsoft.MicrosoftStickyNotes": {
@@ -96,7 +96,7 @@
     "Description": "Mide las velocidades de descarga y subida y la latencia de la red"
   },
   "Microsoft.Office.OneNote": {
-    "FriendlyName": "OneNote para Windows 10 (versión anterior)",
+    "FriendlyName": "OneNote for Windows 10",
     "Description": "Aplicación de toma de notas digital (versión de la Plataforma universal de Windows; descatalogada)"
   },
   "Microsoft.Office.Sway": {
@@ -116,7 +116,7 @@
     "Description": "Automatiza tareas repetitivas del PC con flujos de escritorio"
   },
   "Microsoft.SkypeApp": {
-    "FriendlyName": "Skype (UWP)",
+    "FriendlyName": "Skype",
     "Description": "Aplicación de comunicación Skype, versión de la Plataforma universal de Windows (ya no disponible)"
   },
   "Microsoft.Todos": {
@@ -136,7 +136,7 @@
     "Description": "Aplicación para enviar comentarios a Microsoft sobre Windows"
   },
   "Microsoft.WindowsMaps": {
-    "FriendlyName": "Mapas de Windows",
+    "FriendlyName": "Mapas",
     "Description": "Aplicación de mapas y navegación (ya no disponible)"
   },
   "Microsoft.WindowsSoundRecorder": {
@@ -152,7 +152,7 @@
     "Description": "Aplicación para reproducir contenido de vídeo comprado (los nuevos alquileres y compras ya no están disponibles)"
   },
   "MicrosoftCorporationII.MicrosoftFamily": {
-    "FriendlyName": "Microsoft Family Safety",
+    "FriendlyName": "Family",
     "Description": "Aplicación para administrar el tiempo de pantalla familiar, los filtros de contenido y los informes de actividad"
   },
   "MicrosoftCorporationII.QuickAssist": {
@@ -176,7 +176,7 @@
     "Description": "Aplicaciones de Actipro, incluido el editor de texto y código Code Writer"
   },
   "AdobeSystemsIncorporated.AdobePhotoshopExpress": {
-    "FriendlyName": "Adobe Express Photos (antes Photoshop Express)",
+    "FriendlyName": "Adobe Express Photos",
     "Description": "Edita fotos, elimina objetos y fondos y anota capturas de pantalla"
   },
   "Amazon.com.Amazon": {
@@ -184,7 +184,7 @@
     "Description": "Aplicación de compras de Amazon"
   },
   "AmazonVideo.PrimeVideo": {
-    "FriendlyName": "Prime Video para Windows",
+    "FriendlyName": "Prime Video",
     "Description": "Aplicación del servicio de streaming Amazon Prime Video"
   },
   "Asphalt8Airborne": {
@@ -196,7 +196,7 @@
     "Description": "Antigua aplicación de dibujo y bocetos de Autodesk (descatalogado)"
   },
   "CaesarsSlotsFreeCasino": {
-    "FriendlyName": "Caesars Slots",
+    "FriendlyName": "Caesars Casino - Casino Slots Game",
     "Description": "Juego de máquinas tragaperras de casino"
   },
   "COOKINGFEVER": {
@@ -244,7 +244,7 @@
     "Description": "Aplicación del servicio de streaming Hulu"
   },
   "iHeartRadio": {
-    "FriendlyName": "iHeartRadio",
+    "FriendlyName": "iHeart: Radio, Music, Podcasts",
     "Description": "Escucha radio en directo, música y pódcasts"
   },
   "Facebook.Instagram": {
@@ -292,7 +292,7 @@
     "Description": "Aplicación para crear collages de fotos"
   },
   "PicsArt-PhotoStudio": {
-    "FriendlyName": "Picsart Photo Editor",
+    "FriendlyName": "Picsart - Photo Studio",
     "Description": "Aplicación de edición creativa de fotos"
   },
   "PolarrPhotoEditorAcademicEdition": {
@@ -328,7 +328,7 @@
     "Description": "Utilidad de compresión y extracción de archivos (versión de la Plataforma universal de Windows)"
   },
   "Microsoft.BingSearch": {
-    "FriendlyName": "Microsoft Bing (Búsqueda)",
+    "FriendlyName": "Microsoft Bing",
     "Description": "Esta aplicación integra la búsqueda web de Microsoft Bing en la búsqueda de Windows"
   },
   "Microsoft.Edge": {
@@ -380,7 +380,7 @@
     "Description": "Capturar, anotar, guardar y compartir capturas de pantalla"
   },
   "Microsoft.StartExperiencesApp": {
-    "FriendlyName": "Start Experiences App (Widgets)",
+    "FriendlyName": "Aplicación Experiencias de inicio",
     "Description": "Esta aplicación proporciona las funciones de los widgets de Windows (Mi fuente)"
   },
   "Microsoft.SurfaceHub": {
@@ -417,7 +417,7 @@
   },
   "Microsoft.WindowsTerminal": {
     "FriendlyName": "Terminal",
-    "Description": "Terminal con pestañas para Símbolo del sistema, PowerShell y WSL. Advertencia: quitar el terminal que ejecuta Win11Debloat puede cerrar su sesión"
+    "Description": "Aplicación de terminal predeterminada en Windows 11 (Símbolo del sistema, PowerShell, WSL). ADVERTENCIA: no la desinstales si has iniciado Win11Debloat desde Terminal Windows, ya que esto hará que el script falle."
   },
   "Microsoft.Xbox.TCUI": {
     "FriendlyName": "Xbox Live (TCUI)",
@@ -425,11 +425,11 @@
   },
   "Microsoft.XboxGameOverlay": {
     "FriendlyName": "Xbox Game Overlay",
-    "Description": "Antiguo componente de superposición de Xbox. Advertencia: quitarlo puede afectar a las funciones de Xbox en juegos"
+    "Description": "Superposición para juegos que forma parte de Xbox Game Bar. Esta aplicación es necesaria para determinados juegos. Advertencia: desinstalar esta aplicación puede reducir el rendimiento de los juegos en equipos con ciertos procesadores modernos."
   },
   "Microsoft.XboxGamingOverlay": {
     "FriendlyName": "Game Bar",
-    "Description": "Grabación, capturas, widgets y funciones sociales de Xbox en juegos. Advertencia: quitar Game Bar puede reducir el rendimiento en ciertos sistemas AMD Ryzen 9 X3D"
+    "Description": "Esta aplicación proporciona una superposición dentro del juego e integración con los servicios de Xbox. Esta aplicación es necesaria para determinados juegos. Advertencia: desinstalar esta aplicación puede reducir el rendimiento de los juegos en equipos con ciertos procesadores modernos."
   },
   "Microsoft.XboxIdentityProvider": {
     "FriendlyName": "Xbox Identity Provider",
@@ -452,7 +452,7 @@
     "Description": "Integración de dispositivos móviles con funciones del Explorador de archivos y de cámara"
   },
   "MicrosoftWindows.Client.WebExperience": {
-    "FriendlyName": "Paquete de experiencias web de Windows",
+    "FriendlyName": "Widgets de Windows",
     "Description": "Ayuda a ofrecer y actualizar determinadas funciones, como los widgets, a través de Microsoft Store"
   },
   "Microsoft.WidgetsPlatformRuntime": {
@@ -464,7 +464,7 @@
     "Description": "Centro de juegos de HP para supervisar el rendimiento y configurar el dispositivo"
   },
   "AcerIncorporated.AcerCareCenterS": {
-    "FriendlyName": "Acer Care Center S",
+    "FriendlyName": "Acer Care Center",
     "Description": "Información del dispositivo y herramientas de diagnóstico y mantenimiento de Acer"
   },
   "B9ECED6F.ASUSPCAssistant": {
@@ -484,7 +484,7 @@
     "Description": "Configuración del dispositivo y supervisión del rendimiento de MSI"
   },
   "SAMSUNGELECTRONICSCO.LTD.PCGallery": {
-    "FriendlyName": "Samsung Gallery",
+    "FriendlyName": "Samsung Galería",
     "Description": "Galería de fotos y vídeos de Samsung"
   },
   "SAMSUNGELECTRONICSCoLtd.SamsungFlux": {
@@ -500,11 +500,11 @@
     "Description": "Gestión de ventanas de ASUS y controles de ScreenPad en los modelos compatibles"
   },
   "SAMSUNGELECTRONICSCO.LTD.SamsungStudio": {
-    "FriendlyName": "Samsung Studio",
+    "FriendlyName": "Samsung Estudio",
     "Description": "Aplicación de edición de vídeo de Samsung"
   },
   "SAMSUNGELECTRONICSCO.LTD.SamsungScreenRecording": {
-    "FriendlyName": "Samsung Screen Recorder",
+    "FriendlyName": "Samsung Grabadora de pantalla",
     "Description": "Graba la pantalla y la cámara web en Galaxy Book compatibles"
   },
   "SAMSUNGELECTRONICSCO.LTD.Bixby": {
@@ -520,11 +520,11 @@
     "Description": "Aplicación de Samsung para conectar, supervisar y controlar dispositivos del hogar inteligente"
   },
   "SAMSUNGELECTRONICSCoLtd.MultiControl": {
-    "FriendlyName": "Samsung Multi control",
+    "FriendlyName": "Samsung Multicontrol",
     "Description": "Aplicación de Samsung para compartir teclado y ratón entre dispositivos Galaxy compatibles"
   },
   "SAMSUNGELECTRONICSCoLtd.SecondScreen": {
-    "FriendlyName": "Samsung Second Screen",
+    "FriendlyName": "Samsung Segunda pantalla",
     "Description": "Aplicación de Samsung para usar una tableta Galaxy compatible como pantalla adicional del PC"
   },
   "SAMSUNGELECTRONICSCO.LTD.PENUP": {
@@ -612,7 +612,7 @@
     "Description": "Utilidad de HP; función exacta sin confirmar"
   },
   "AD2F1837.HPSystemInformation": {
-    "FriendlyName": "Información del sistema de HP",
+    "FriendlyName": "HP System Information",
     "Description": "Muestra el modelo, número de serie e información del BIOS del PC HP"
   },
   "AD2F1837.HPWelcome": {

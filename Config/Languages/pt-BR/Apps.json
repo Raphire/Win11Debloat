@@ -12,7 +12,7 @@
     "Description": "Assistente de voz Cortana da Microsoft (descontinuado)"
   },
   "Microsoft.BingFinance": {
-    "FriendlyName": "MSN Dinheiro",
+    "FriendlyName": "Dinheiro",
     "Description": "App de notícias e acompanhamento financeiro da Microsoft"
   },
   "Microsoft.BingFoodAndDrink": {
@@ -24,7 +24,7 @@
     "Description": "Acompanhamento de saúde e condicionamento físico, além de notícias (descontinuado)"
   },
   "Microsoft.BingNews": {
-    "FriendlyName": "Microsoft Notícias",
+    "FriendlyName": "Notícias",
     "Description": "Feeds de notícias personalizados e alertas de notícias de última hora"
   },
   "Microsoft.BingSports": {
@@ -40,7 +40,7 @@
     "Description": "Planejamento de viagens e notícias (descontinuado)"
   },
   "Microsoft.BingWeather": {
-    "FriendlyName": "MSN Clima",
+    "FriendlyName": "Clima",
     "Description": "App de previsão do tempo da Microsoft"
   },
   "XP9CXNGPPJ97XX": {
@@ -80,7 +80,7 @@
     "Description": "Cliente do serviço de análise de negócios (descontinuado)"
   },
   "Microsoft.MicrosoftSolitaireCollection": {
-    "FriendlyName": "Microsoft Solitaire Collection",
+    "FriendlyName": "Solitaire & Casual Games",
     "Description": "Coleção de jogos de cartas de paciência"
   },
   "Microsoft.MicrosoftStickyNotes": {
@@ -96,7 +96,7 @@
     "Description": "Meça as velocidades de download e upload e a latência da rede"
   },
   "Microsoft.Office.OneNote": {
-    "FriendlyName": "OneNote para Windows 10 (versão antiga)",
+    "FriendlyName": "OneNote for Windows 10",
     "Description": "App de anotações digitais (versão da Plataforma Universal do Windows; descontinuado)"
   },
   "Microsoft.Office.Sway": {
@@ -116,7 +116,7 @@
     "Description": "Automatize tarefas repetitivas do PC com fluxos da área de trabalho"
   },
   "Microsoft.SkypeApp": {
-    "FriendlyName": "Skype (UWP)",
+    "FriendlyName": "Skype",
     "Description": "App de comunicação do Skype, versão da Plataforma Universal do Windows (descontinuado)"
   },
   "Microsoft.Todos": {
@@ -152,7 +152,7 @@
     "Description": "App para reproduzir vídeos comprados (novos aluguéis e compras foram descontinuados)"
   },
   "MicrosoftCorporationII.MicrosoftFamily": {
-    "FriendlyName": "Microsoft Family Safety",
+    "FriendlyName": "Family",
     "Description": "App para gerenciar o tempo de tela, os filtros de conteúdo e os relatórios de atividade da família"
   },
   "MicrosoftCorporationII.QuickAssist": {
@@ -176,7 +176,7 @@
     "Description": "Aplicativos da Actipro, incluindo o editor de texto e código Code Writer"
   },
   "AdobeSystemsIncorporated.AdobePhotoshopExpress": {
-    "FriendlyName": "Adobe Express Photos (anteriormente chamado de Photoshop Express)",
+    "FriendlyName": "Adobe Express Photos",
     "Description": "Edite fotos, remova objetos e fundos e anote capturas de tela"
   },
   "Amazon.com.Amazon": {
@@ -184,7 +184,7 @@
     "Description": "App de compras da Amazon"
   },
   "AmazonVideo.PrimeVideo": {
-    "FriendlyName": "Prime Video for Windows",
+    "FriendlyName": "Prime Video",
     "Description": "App do serviço de streaming Amazon Prime Video"
   },
   "Asphalt8Airborne": {
@@ -196,7 +196,7 @@
     "Description": "Antigo aplicativo de desenho e esboços da Autodesk (descontinuado)"
   },
   "CaesarsSlotsFreeCasino": {
-    "FriendlyName": "Caesars Slots",
+    "FriendlyName": "Caesars Casino - Casino Slots Game",
     "Description": "Jogo de cassino de caça-níqueis"
   },
   "COOKINGFEVER": {
@@ -208,7 +208,7 @@
     "Description": "Pacote de software multimídia (frequentemente pré-instalado por fabricantes de OEM)"
   },
   "DisneyMagicKingdoms": {
-    "FriendlyName": "Disney Magic Kingdoms",
+    "FriendlyName": "O Reino Mágico da Disney",
     "Description": "Jogo de construção de parques temáticos da Disney"
   },
   "Disney.37853FC22B2CE": {
@@ -236,7 +236,7 @@
     "Description": "Agregador de notícias e redes sociais em formato de revista"
   },
   "HiddenCity": {
-    "FriendlyName": "Hidden City: Aventura de objetos ocultos",
+    "FriendlyName": "Hidden City: Aventura de Objetos Ocultos",
     "Description": "Jogo de aventura e quebra-cabeças de objetos escondidos"
   },
   "HULULLC.HULUPLUS": {
@@ -244,7 +244,7 @@
     "Description": "App do serviço de streaming Hulu"
   },
   "iHeartRadio": {
-    "FriendlyName": "iHeartRadio",
+    "FriendlyName": "iHeart: Radio, Music, Podcasts",
     "Description": "Ouça rádio ao vivo, músicas e podcasts"
   },
   "Facebook.Instagram": {
@@ -292,7 +292,7 @@
     "Description": "App de criação de colagens de fotos"
   },
   "PicsArt-PhotoStudio": {
-    "FriendlyName": "Picsart AI Photo Editor",
+    "FriendlyName": "Picsart - Photo Studio",
     "Description": "App de edição de fotos e criatividade"
   },
   "PolarrPhotoEditorAcademicEdition": {
@@ -328,7 +328,7 @@
     "Description": "Utilitário de compactação e extração de arquivos (versão da Plataforma Universal do Windows)"
   },
   "Microsoft.BingSearch": {
-    "FriendlyName": "Microsoft Bing (Pesquisa)",
+    "FriendlyName": "Microsoft Bing",
     "Description": "Este app integra a pesquisa na Web do Microsoft Bing à Pesquisa do Windows"
   },
   "Microsoft.Edge": {
@@ -364,7 +364,7 @@
     "Description": "Desenhe, recorte, redimensione e edite imagens"
   },
   "Microsoft.People": {
-    "FriendlyName": "Microsoft Pessoas",
+    "FriendlyName": "Pessoas",
     "Description": "Armazena e organiza contatos para Email e Calendário (descontinuado)"
   },
   "MicrosoftCorporationII.Windows365": {
@@ -380,7 +380,7 @@
     "Description": "Permite capturar imagens da tela, fazer anotações, salvar e compartilhar"
   },
   "Microsoft.StartExperiencesApp": {
-    "FriendlyName": "Start Experiences App (Widgets)",
+    "FriendlyName": "Aplicativo Start Experiences",
     "Description": "Este app dá suporte ao Meu Feed de Widgets do Windows"
   },
   "Microsoft.SurfaceHub": {
@@ -417,7 +417,7 @@
   },
   "Microsoft.WindowsTerminal": {
     "FriendlyName": "Terminal",
-    "Description": "Terminal com abas para Prompt de Comando, PowerShell e WSL. Aviso: remover o terminal que executa o Win11Debloat pode encerrar a sessão"
+    "Description": "Aplicativo de terminal padrão do Windows 11 (Prompt de Comando, PowerShell, WSL). AVISO: não remova este aplicativo se você iniciou o Win11Debloat pelo Terminal do Windows, pois isso causará uma falha no script."
   },
   "Microsoft.Xbox.TCUI": {
     "FriendlyName": "Xbox Live (TCUI)",
@@ -425,11 +425,11 @@
   },
   "Microsoft.XboxGameOverlay": {
     "FriendlyName": "Xbox Game Overlay",
-    "Description": "Componente antigo de sobreposição Xbox em jogos. Aviso: removê-lo pode afetar os recursos Xbox nos jogos"
+    "Description": "Sobreposição de jogo que faz parte da Xbox Game Bar. Este aplicativo é necessário para determinados jogos. Aviso: desinstalar este aplicativo pode reduzir o desempenho dos jogos em PCs com determinados processadores modernos."
   },
   "Microsoft.XboxGamingOverlay": {
     "FriendlyName": "Game Bar",
-    "Description": "Gravação, capturas, widgets e recursos sociais Xbox em jogos. Aviso: remover Game Bar pode reduzir o desempenho em certos sistemas AMD Ryzen 9 X3D"
+    "Description": "Este aplicativo oferece uma sobreposição no jogo e integração com os serviços do Xbox. Este aplicativo é necessário para determinados jogos. Aviso: desinstalar este aplicativo pode reduzir o desempenho dos jogos em PCs com determinados processadores modernos."
   },
   "Microsoft.XboxIdentityProvider": {
     "FriendlyName": "Provedor de Identidade do Xbox",
@@ -452,7 +452,7 @@
     "Description": "Integração de dispositivos móveis com o Explorador de Arquivos e recursos de câmera"
   },
   "MicrosoftWindows.Client.WebExperience": {
-    "FriendlyName": "Windows Web Experience Pack",
+    "FriendlyName": "Windows Widgets",
     "Description": "Ajuda a entregar e atualizar determinados recursos, como os Widgets, por meio do Microsoft Store"
   },
   "Microsoft.WidgetsPlatformRuntime": {
@@ -464,7 +464,7 @@
     "Description": "Central de jogos da HP para monitoramento de desempenho e configurações do dispositivo"
   },
   "AcerIncorporated.AcerCareCenterS": {
-    "FriendlyName": "Acer Care Center S",
+    "FriendlyName": "Acer Care Center",
     "Description": "Informações do dispositivo e ferramentas de diagnóstico e manutenção da Acer"
   },
   "B9ECED6F.ASUSPCAssistant": {
@@ -484,7 +484,7 @@
     "Description": "Configurações do dispositivo e monitoramento de desempenho da MSI"
   },
   "SAMSUNGELECTRONICSCO.LTD.PCGallery": {
-    "FriendlyName": "Samsung Gallery",
+    "FriendlyName": "Samsung Galeria",
     "Description": "Galeria de fotos e vídeos da Samsung"
   },
   "SAMSUNGELECTRONICSCoLtd.SamsungFlux": {
@@ -500,11 +500,11 @@
     "Description": "Gerenciamento de janelas da ASUS e controles do ScreenPad nos modelos compatíveis"
   },
   "SAMSUNGELECTRONICSCO.LTD.SamsungStudio": {
-    "FriendlyName": "Samsung Studio",
+    "FriendlyName": "Samsung Estúdio",
     "Description": "Aplicativo de edição de vídeo da Samsung"
   },
   "SAMSUNGELECTRONICSCO.LTD.SamsungScreenRecording": {
-    "FriendlyName": "Samsung Screen Recorder",
+    "FriendlyName": "Samsung Gravador de tela",
     "Description": "Grave a tela e a webcam em Galaxy Books compatíveis"
   },
   "SAMSUNGELECTRONICSCO.LTD.Bixby": {
@@ -520,11 +520,11 @@
     "Description": "Aplicativo da Samsung para conectar, monitorar e controlar dispositivos de casa inteligente"
   },
   "SAMSUNGELECTRONICSCoLtd.MultiControl": {
-    "FriendlyName": "Samsung Multi control",
+    "FriendlyName": "Samsung Multicontrole",
     "Description": "Aplicativo da Samsung para compartilhar teclado e mouse entre dispositivos Galaxy compatíveis"
   },
   "SAMSUNGELECTRONICSCoLtd.SecondScreen": {
-    "FriendlyName": "Samsung Second Screen",
+    "FriendlyName": "Samsung Segunda tela",
     "Description": "Aplicativo da Samsung para usar um tablet Galaxy compatível como tela adicional do PC"
   },
   "SAMSUNGELECTRONICSCO.LTD.PENUP": {

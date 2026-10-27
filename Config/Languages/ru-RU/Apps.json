@@ -12,7 +12,7 @@
     "Description": "Голосовой помощник Microsoft Cortana (больше не поддерживается)"
   },
   "Microsoft.BingFinance": {
-    "FriendlyName": "MSN Финансы",
+    "FriendlyName": "Финансы",
     "Description": "Приложение Microsoft для финансовых новостей и отслеживания рынков"
   },
   "Microsoft.BingFoodAndDrink": {
@@ -40,7 +40,7 @@
     "Description": "Планирование поездок и новости о путешествиях (больше не поддерживается)"
   },
   "Microsoft.BingWeather": {
-    "FriendlyName": "MSN Погода",
+    "FriendlyName": "Погода",
     "Description": "Приложение Microsoft для прогноза погоды"
   },
   "XP9CXNGPPJ97XX": {
@@ -80,7 +80,7 @@
     "Description": "Клиент службы бизнес-аналитики (больше не поддерживается)"
   },
   "Microsoft.MicrosoftSolitaireCollection": {
-    "FriendlyName": "Microsoft Solitaire Collection",
+    "FriendlyName": "Solitaire & Casual Games",
     "Description": "Сборник карточных пасьянсов"
   },
   "Microsoft.MicrosoftStickyNotes": {
@@ -96,7 +96,7 @@
     "Description": "Измерение скорости загрузки и отправки данных и задержки сети"
   },
   "Microsoft.Office.OneNote": {
-    "FriendlyName": "OneNote для Windows 10 (устаревшая версия)",
+    "FriendlyName": "OneNote for Windows 10",
     "Description": "Приложение для цифровых заметок (версия для универсальной платформы Windows; поддержка прекращена)"
   },
   "Microsoft.Office.Sway": {
@@ -116,7 +116,7 @@
     "Description": "Автоматизация повторяющихся задач на компьютере с помощью классических потоков"
   },
   "Microsoft.SkypeApp": {
-    "FriendlyName": "Skype (UWP)",
+    "FriendlyName": "Skype",
     "Description": "Приложение Skype для общения, версия для универсальной платформы Windows (больше не поддерживается)"
   },
   "Microsoft.Todos": {
@@ -136,7 +136,7 @@
     "Description": "Приложение для отправки отзывов о Windows в Microsoft"
   },
   "Microsoft.WindowsMaps": {
-    "FriendlyName": "Карты Windows",
+    "FriendlyName": "Карты",
     "Description": "Приложение для карт и навигации (больше не поддерживается)"
   },
   "Microsoft.WindowsSoundRecorder": {
@@ -152,7 +152,7 @@
     "Description": "Приложение для просмотра купленного видео (новая аренда и покупки больше недоступны)"
   },
   "MicrosoftCorporationII.MicrosoftFamily": {
-    "FriendlyName": "Microsoft Family Safety",
+    "FriendlyName": "Family",
     "Description": "Приложение для управления экранным временем членов семьи, фильтрами содержимого и отчетами о действиях"
   },
   "MicrosoftCorporationII.QuickAssist": {
@@ -176,7 +176,7 @@
     "Description": "Приложения Actipro, включая редактор текста и кода Code Writer"
   },
   "AdobeSystemsIncorporated.AdobePhotoshopExpress": {
-    "FriendlyName": "Adobe Photoshop Express",
+    "FriendlyName": "Adobe Express Photos",
     "Description": "Редактирование фотографий, удаление объектов и фона, добавление пометок на снимки экрана"
   },
   "Amazon.com.Amazon": {
@@ -188,7 +188,7 @@
     "Description": "Приложение стримингового сервиса Amazon Prime Video"
   },
   "Asphalt8Airborne": {
-    "FriendlyName": "Asphalt 8",
+    "FriendlyName": "Asphalt 8: На взлет",
     "Description": "Аркадные гонки на автомобилях и мотоциклах с многопользовательскими заездами"
   },
   "AutodeskSketchBook": {
@@ -196,7 +196,7 @@
     "Description": "Прежнее приложение Autodesk для рисования и эскизов (поддержка прекращена)"
   },
   "CaesarsSlotsFreeCasino": {
-    "FriendlyName": "Caesars Slots",
+    "FriendlyName": "Caesars Casino - Casino Slots Game",
     "Description": "Игра-казино с игровыми автоматами"
   },
   "COOKINGFEVER": {
@@ -208,7 +208,7 @@
     "Description": "Набор мультимедийных программ (часто предустанавливается производителями компьютеров)"
   },
   "DisneyMagicKingdoms": {
-    "FriendlyName": "Disney Magic Kingdoms",
+    "FriendlyName": "Волшебные королевства Disney",
     "Description": "Игра о строительстве тематического парка Disney"
   },
   "Disney.37853FC22B2CE": {
@@ -236,7 +236,7 @@
     "Description": "Агрегатор новостей и социальных сетей в формате журнала"
   },
   "HiddenCity": {
-    "FriendlyName": "Hidden City",
+    "FriendlyName": "Hidden City: Поиск скрытых предметов",
     "Description": "Приключенческая игра-головоломка с поиском предметов"
   },
   "HULULLC.HULUPLUS": {
@@ -244,7 +244,7 @@
     "Description": "Приложение стримингового сервиса Hulu"
   },
   "iHeartRadio": {
-    "FriendlyName": "iHeartRadio",
+    "FriendlyName": "iHeart: Radio, Music, Podcasts",
     "Description": "Прослушивание радио в прямом эфире, музыки и подкастов"
   },
   "Facebook.Instagram": {
@@ -292,7 +292,7 @@
     "Description": "Приложение для создания фотоколлажей"
   },
   "PicsArt-PhotoStudio": {
-    "FriendlyName": "Picsart AI Photo Editor",
+    "FriendlyName": "Picsart - Photo Studio",
     "Description": "Приложение для редактирования фотографий и творчества"
   },
   "PolarrPhotoEditorAcademicEdition": {
@@ -328,7 +328,7 @@
     "Description": "Утилита для сжатия и извлечения файлов (версия для универсальной платформы Windows)"
   },
   "Microsoft.BingSearch": {
-    "FriendlyName": "Microsoft Bing (Поиск)",
+    "FriendlyName": "Microsoft Bing",
     "Description": "Это приложение встраивает веб-поиск Microsoft Bing в поиск Windows"
   },
   "Microsoft.Edge": {
@@ -364,7 +364,7 @@
     "Description": "Рисование, обрезка, изменение размера и редактирование изображений"
   },
   "Microsoft.People": {
-    "FriendlyName": "Люди (Майкрософт)",
+    "FriendlyName": "Люди",
     "Description": "Хранение и упорядочение контактов для приложений Почта и Календарь (больше не поддерживается)"
   },
   "MicrosoftCorporationII.Windows365": {
@@ -380,7 +380,7 @@
     "Description": "Создание снимков экрана, добавление пометок, сохранение и отправка"
   },
   "Microsoft.StartExperiencesApp": {
-    "FriendlyName": "Start Experiences App (Мини-приложения)",
+    "FriendlyName": "Приложение Start Experiences",
     "Description": "Это приложение обеспечивает работу ленты My Feed в мини-приложениях Windows"
   },
   "Microsoft.SurfaceHub": {
@@ -417,7 +417,7 @@
   },
   "Microsoft.WindowsTerminal": {
     "FriendlyName": "Терминал",
-    "Description": "Терминал с вкладками для командной строки, PowerShell и WSL. Внимание: удаление терминала, в котором запущен Win11Debloat, может закрыть его сеанс"
+    "Description": "Приложение терминала по умолчанию в Windows 11 (командная строка, PowerShell, WSL). ВНИМАНИЕ: не удаляйте его, если вы запустили Win11Debloat из Терминала Windows, так как это приведёт к сбою скрипта."
   },
   "Microsoft.Xbox.TCUI": {
     "FriendlyName": "Xbox Live (TCUI)",
@@ -425,11 +425,11 @@
   },
   "Microsoft.XboxGameOverlay": {
     "FriendlyName": "Xbox Game Overlay",
-    "Description": "Прежний компонент игрового оверлея Xbox. Внимание: удаление может повлиять на функции Xbox в играх"
+    "Description": "Игровой оверлей, входящий в состав Xbox Game Bar. Это приложение необходимо для некоторых игр. Внимание: удаление этого приложения может снизить производительность игр на ПК с некоторыми современными процессорами."
   },
   "Microsoft.XboxGamingOverlay": {
     "FriendlyName": "Game Bar",
-    "Description": "Запись, снимки экрана, виджеты и общение Xbox в играх. Внимание: удаление Game Bar может снизить производительность некоторых систем AMD Ryzen 9 X3D"
+    "Description": "Это приложение предоставляет игровой оверлей и интеграцию со службами Xbox. Это приложение необходимо для некоторых игр. Внимание: удаление этого приложения может снизить производительность игр на ПК с некоторыми современными процессорами."
   },
   "Microsoft.XboxIdentityProvider": {
     "FriendlyName": "Xbox Identity Provider",
@@ -452,7 +452,7 @@
     "Description": "Интеграция мобильных устройств с Проводником и функциями камеры"
   },
   "MicrosoftWindows.Client.WebExperience": {
-    "FriendlyName": "Windows Web Experience Pack",
+    "FriendlyName": "Мини-приложения Windows",
     "Description": "Помогает доставлять и обновлять некоторые функции, например мини-приложения, через Microsoft Store"
   },
   "Microsoft.WidgetsPlatformRuntime": {
@@ -464,7 +464,7 @@
     "Description": "Игровой центр HP для мониторинга производительности и настройки устройства"
   },
   "AcerIncorporated.AcerCareCenterS": {
-    "FriendlyName": "Acer Care Center S",
+    "FriendlyName": "Acer Care Center",
     "Description": "Сведения об устройстве, средства диагностики и обслуживания Acer"
   },
   "B9ECED6F.ASUSPCAssistant": {
@@ -476,7 +476,7 @@
     "Description": "Приложение ASUS для демонстрации экрана и передачи файлов между устройствами"
   },
   "SAMSUNGELECTRONICSCoLtd.SamsungQuickShare": {
-    "FriendlyName": "Samsung Quick Share",
+    "FriendlyName": "Samsung Быстрая отправка",
     "Description": "Приложение Samsung для обмена файлами между устройствами поблизости"
   },
   "9426MICRO-STARINTERNATION.MSICenter": {
@@ -484,7 +484,7 @@
     "Description": "Настройки устройства и мониторинг производительности MSI"
   },
   "SAMSUNGELECTRONICSCO.LTD.PCGallery": {
-    "FriendlyName": "Samsung Gallery",
+    "FriendlyName": "Samsung Галерея",
     "Description": "Галерея фотографий и видео Samsung"
   },
   "SAMSUNGELECTRONICSCoLtd.SamsungFlux": {
@@ -500,11 +500,11 @@
     "Description": "Управление окнами ASUS и ScreenPad на поддерживаемых моделях"
   },
   "SAMSUNGELECTRONICSCO.LTD.SamsungStudio": {
-    "FriendlyName": "Samsung Studio",
+    "FriendlyName": "Samsung Студия",
     "Description": "Приложение Samsung для редактирования видео"
   },
   "SAMSUNGELECTRONICSCO.LTD.SamsungScreenRecording": {
-    "FriendlyName": "Samsung Screen Recorder",
+    "FriendlyName": "Samsung Запись экрана",
     "Description": "Запись экрана и веб-камеры на поддерживаемых Galaxy Book"
   },
   "SAMSUNGELECTRONICSCO.LTD.Bixby": {
@@ -520,11 +520,11 @@
     "Description": "Приложение Samsung для подключения, мониторинга и управления устройствами умного дома"
   },
   "SAMSUNGELECTRONICSCoLtd.MultiControl": {
-    "FriendlyName": "Samsung Multi control",
+    "FriendlyName": "Samsung Управление несколькими устройствами",
     "Description": "Приложение Samsung для совместного использования клавиатуры и мыши на совместимых устройствах Galaxy"
   },
   "SAMSUNGELECTRONICSCoLtd.SecondScreen": {
-    "FriendlyName": "Samsung Second Screen",
+    "FriendlyName": "Samsung Второй экран",
     "Description": "Приложение Samsung для использования совместимого планшета Galaxy в качестве дополнительного экрана ПК"
   },
   "SAMSUNGELECTRONICSCO.LTD.PENUP": {

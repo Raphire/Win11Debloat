@@ -223,7 +223,7 @@ Describe 'Import-AppDetailsFromJson' {
         $apps = @(Import-AppDetailsFromJson -OnlyInstalled -InstalledList @())
 
         $apps | Should -HaveCount 1
-        $apps[0].FriendlyName | Should -Be 'Microsoft PC Manager'
+        $apps[0].FriendlyName | Should -Be 'PC Manager'
         $apps[0].AppId | Should -Be @('Microsoft.PCManager', 'Microsoft.MicrosoftPCManager')
     }
 

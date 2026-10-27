@@ -12,7 +12,7 @@
     "Description": "Microsoft Cortana 音声アシスタントです (提供終了)"
   },
   "Microsoft.BingFinance": {
-    "FriendlyName": "MSN マネー",
+    "FriendlyName": "マネー",
     "Description": "Microsoft の金融ニュースと市場追跡アプリです"
   },
   "Microsoft.BingFoodAndDrink": {
@@ -24,7 +24,7 @@
     "Description": "健康・フィットネスの記録とニュースです (提供終了)"
   },
   "Microsoft.BingNews": {
-    "FriendlyName": "Microsoft ニュース",
+    "FriendlyName": "ニュース",
     "Description": "個人向けニュース フィードと速報通知"
   },
   "Microsoft.BingSports": {
@@ -40,7 +40,7 @@
     "Description": "旅行計画と旅行ニュースです (提供終了)"
   },
   "Microsoft.BingWeather": {
-    "FriendlyName": "MSN 天気",
+    "FriendlyName": "天気",
     "Description": "Microsoft の天気予報アプリです"
   },
   "XP9CXNGPPJ97XX": {
@@ -52,7 +52,7 @@
     "Description": "Copilot+ PC 向けの AI 機能やアプリを紹介"
   },
   "Microsoft.PCManager": {
-    "FriendlyName": "Microsoft PC Manager",
+    "FriendlyName": "PC Manager",
     "Description": "Microsoft PC Manager システム クリーンアップおよび最適化ツールです (プリインストールされている場合が多いです)"
   },
   "Microsoft.Getstarted": {
@@ -80,7 +80,7 @@
     "Description": "ビジネス分析サービスのクライアントです (提供終了)"
   },
   "Microsoft.MicrosoftSolitaireCollection": {
-    "FriendlyName": "Microsoft Solitaire Collection",
+    "FriendlyName": "Solitaire & Casual Games",
     "Description": "ソリティア カード ゲームのコレクションです"
   },
   "Microsoft.MicrosoftStickyNotes": {
@@ -96,7 +96,7 @@
     "Description": "ダウンロード速度、アップロード速度、ネットワークの遅延を測定"
   },
   "Microsoft.Office.OneNote": {
-    "FriendlyName": "OneNote for Windows 10 (旧バージョン)",
+    "FriendlyName": "OneNote for Windows 10",
     "Description": "デジタル ノート アプリです (ユニバーサル Windows プラットフォーム版、サポート終了)"
   },
   "Microsoft.Office.Sway": {
@@ -116,7 +116,7 @@
     "Description": "デスクトップ フローで PC の繰り返し作業を自動化"
   },
   "Microsoft.SkypeApp": {
-    "FriendlyName": "Skype (UWP)",
+    "FriendlyName": "Skype",
     "Description": "Skype 通信アプリ、ユニバーサル Windows プラットフォーム版です (提供終了)"
   },
   "Microsoft.Todos": {
@@ -136,7 +136,7 @@
     "Description": "Windows に関するフィードバックを Microsoft に送信するためのアプリです"
   },
   "Microsoft.WindowsMaps": {
-    "FriendlyName": "Windows マップ",
+    "FriendlyName": "マップ",
     "Description": "マップおよびナビゲーション アプリです (提供終了)"
   },
   "Microsoft.WindowsSoundRecorder": {
@@ -152,7 +152,7 @@
     "Description": "購入済みの動画コンテンツを再生するアプリです (新規のレンタルと購入は終了しました)"
   },
   "MicrosoftCorporationII.MicrosoftFamily": {
-    "FriendlyName": "Microsoft Family Safety",
+    "FriendlyName": "Family",
     "Description": "家族のスクリーン タイム、コンテンツ フィルター、アクティビティ レポートを管理するためのアプリです"
   },
   "MicrosoftCorporationII.QuickAssist": {
@@ -168,7 +168,7 @@
     "Description": "職場、学校、個人用アカウントでのチャット、通話、会議"
   },
   "ACGMediaPlayer": {
-    "FriendlyName": "ACG Player",
+    "FriendlyName": "ACG プレイヤー",
     "Description": "字幕付きのローカル音声・動画再生と DLNA ストリーミング"
   },
   "ActiproSoftwareLLC": {
@@ -176,7 +176,7 @@
     "Description": "テキスト・コード エディター Code Writer などの Actipro アプリ"
   },
   "AdobeSystemsIncorporated.AdobePhotoshopExpress": {
-    "FriendlyName": "Adobe Express Photos (旧Photoshop Express)",
+    "FriendlyName": "Adobe Express Photos",
     "Description": "写真の編集、オブジェクトや背景の削除、スクリーンショットへの注釈"
   },
   "Amazon.com.Amazon": {
@@ -184,11 +184,11 @@
     "Description": "Amazon ショッピング アプリです"
   },
   "AmazonVideo.PrimeVideo": {
-    "FriendlyName": "Windows用Prime Video",
+    "FriendlyName": "Prime Video",
     "Description": "Amazon Prime Video ストリーミング サービス アプリです"
   },
   "Asphalt8Airborne": {
-    "FriendlyName": "Asphalt 8: Airborne",
+    "FriendlyName": "アスファルト8：Airborne",
     "Description": "車やバイクで競うマルチプレイヤー対応のアーケード レース"
   },
   "AutodeskSketchBook": {
@@ -196,7 +196,7 @@
     "Description": "Autodesk の旧描画・スケッチ アプリ (サポート終了)"
   },
   "CaesarsSlotsFreeCasino": {
-    "FriendlyName": "Caesars Slots",
+    "FriendlyName": "Caesars Casino - Casino Slots Game",
     "Description": "カジノ スロット マシン ゲームです"
   },
   "COOKINGFEVER": {
@@ -208,7 +208,7 @@
     "Description": "マルチメディア ソフトウェア スイートです (OEM によってプリインストールされていることが多いです)"
   },
   "DisneyMagicKingdoms": {
-    "FriendlyName": "Disney Magic Kingdoms",
+    "FriendlyName": "ディズニー：マジック キングダムズ",
     "Description": "ディズニー テーマ パーク建設ゲームです"
   },
   "Disney.37853FC22B2CE": {
@@ -244,7 +244,7 @@
     "Description": "Hulu ストリーミング サービス アプリです"
   },
   "iHeartRadio": {
-    "FriendlyName": "iHeartRadio",
+    "FriendlyName": "iHeart: Radio, Music, Podcasts",
     "Description": "ライブ ラジオ、音楽、ポッドキャストを再生"
   },
   "Facebook.Instagram": {
@@ -292,7 +292,7 @@
     "Description": "写真コラージュ作成アプリです"
   },
   "PicsArt-PhotoStudio": {
-    "FriendlyName": "Picsart Photo Editor",
+    "FriendlyName": "Picsart - Photo Studio",
     "Description": "写真編集およびクリエイティブ アプリです"
   },
   "PolarrPhotoEditorAcademicEdition": {
@@ -328,7 +328,7 @@
     "Description": "ファイル圧縮・展開ユーティリティです (ユニバーサル Windows プラットフォーム版)"
   },
   "Microsoft.BingSearch": {
-    "FriendlyName": "Microsoft Bing (検索)",
+    "FriendlyName": "Microsoft Bing",
     "Description": "Microsoft Bing による Web 検索を Windows 検索に統合するアプリです"
   },
   "Microsoft.Edge": {
@@ -364,7 +364,7 @@
     "Description": "画像の描画、トリミング、サイズ変更、編集"
   },
   "Microsoft.People": {
-    "FriendlyName": "Microsoft People",
+    "FriendlyName": "People",
     "Description": "メールとカレンダーで使う連絡先を保存して整理 (提供終了)"
   },
   "MicrosoftCorporationII.Windows365": {
@@ -380,7 +380,7 @@
     "Description": "スクリーンショットの撮影、注釈の追加、保存、共有を行います"
   },
   "Microsoft.StartExperiencesApp": {
-    "FriendlyName": "Start Experiences App (ウィジェット)",
+    "FriendlyName": "Start エクスペリエンス アプリ",
     "Description": "このアプリは Windows ウィジェットの「マイ フィード」機能を提供します"
   },
   "Microsoft.SurfaceHub": {
@@ -417,7 +417,7 @@
   },
   "Microsoft.WindowsTerminal": {
     "FriendlyName": "ターミナル",
-    "Description": "コマンド プロンプト、PowerShell、WSL 用のタブ付きターミナル。警告: Win11Debloat を実行中のターミナルを削除するとセッションが閉じる場合があります"
+    "Description": "Windows 11 の既定のターミナル アプリ (コマンド プロンプト、PowerShell、WSL)。警告: Windows ターミナルから Win11Debloat を起動した場合は削除しないでください。削除するとスクリプトが失敗します。"
   },
   "Microsoft.Xbox.TCUI": {
     "FriendlyName": "Xbox Live (TCUI)",
@@ -425,11 +425,11 @@
   },
   "Microsoft.XboxGameOverlay": {
     "FriendlyName": "Xbox Game Overlay",
-    "Description": "旧 Xbox ゲーム内オーバーレイ。警告: 削除するとゲーム内の Xbox 機能に影響する場合があります"
+    "Description": "Xbox Game Bar の一部であるゲーム内オーバーレイ。このアプリは一部のゲームで必要です。警告: このアプリをアンインストールすると、特定の最新プロセッサを搭載した PC でゲームのパフォーマンスが低下する場合があります。"
   },
   "Microsoft.XboxGamingOverlay": {
     "FriendlyName": "Game Bar",
-    "Description": "ゲーム内録画、スクリーンショット、ウィジェット、Xbox ソーシャル機能。警告: Game Bar の削除で一部の AMD Ryzen 9 X3D システムの性能が低下する場合があります"
+    "Description": "ゲーム内オーバーレイと Xbox サービスとの連携を提供するアプリ。このアプリは一部のゲームで必要です。警告: このアプリをアンインストールすると、特定の最新プロセッサを搭載した PC でゲームのパフォーマンスが低下する場合があります。"
   },
   "Microsoft.XboxIdentityProvider": {
     "FriendlyName": "Xbox Identity Provider",
@@ -452,7 +452,7 @@
     "Description": "エクスプローラーやカメラ機能とモバイル デバイスの連携"
   },
   "MicrosoftWindows.Client.WebExperience": {
-    "FriendlyName": "Windows Web Experience Pack",
+    "FriendlyName": "Windows ウィジェット",
     "Description": "Microsoft Store を通じてウィジェットなどの特定の機能を提供および更新するのに役立ちます"
   },
   "Microsoft.WidgetsPlatformRuntime": {
@@ -464,7 +464,7 @@
     "Description": "パフォーマンスの監視とデバイス設定を行う HP のゲーミングハブ"
   },
   "AcerIncorporated.AcerCareCenterS": {
-    "FriendlyName": "Acer Care Center S",
+    "FriendlyName": "Acer Care Center",
     "Description": "Acer デバイスの情報、診断、メンテナンスツール"
   },
   "B9ECED6F.ASUSPCAssistant": {
@@ -476,7 +476,7 @@
     "Description": "デバイス間で画面共有とファイル転送を行う ASUS のアプリ"
   },
   "SAMSUNGELECTRONICSCoLtd.SamsungQuickShare": {
-    "FriendlyName": "Samsung Quick Share",
+    "FriendlyName": "Samsung クイック共有",
     "Description": "近くのデバイス間でファイルを共有する Samsung のアプリ"
   },
   "9426MICRO-STARINTERNATION.MSICenter": {
@@ -484,7 +484,7 @@
     "Description": "MSI デバイスの設定とパフォーマンスの監視"
   },
   "SAMSUNGELECTRONICSCO.LTD.PCGallery": {
-    "FriendlyName": "Samsung Gallery",
+    "FriendlyName": "Samsung ギャラリー",
     "Description": "Samsung の写真とビデオのギャラリー"
   },
   "SAMSUNGELECTRONICSCoLtd.SamsungFlux": {
@@ -520,11 +520,11 @@
     "Description": "スマートホームデバイスの接続、監視、操作を行う Samsung のアプリ"
   },
   "SAMSUNGELECTRONICSCoLtd.MultiControl": {
-    "FriendlyName": "Samsung Multi control",
+    "FriendlyName": "Samsung マルチコントロール",
     "Description": "対応する Galaxy デバイス間でキーボードとマウスを共有する Samsung のアプリ"
   },
   "SAMSUNGELECTRONICSCoLtd.SecondScreen": {
-    "FriendlyName": "Samsung Second Screen",
+    "FriendlyName": "Samsung 2番目の画面",
     "Description": "対応する Galaxy タブレットを PC の追加ディスプレイとして使用する Samsung のアプリ"
   },
   "SAMSUNGELECTRONICSCO.LTD.PENUP": {

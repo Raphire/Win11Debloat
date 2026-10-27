@@ -417,7 +417,7 @@
   },
   "Microsoft.WindowsTerminal": {
     "FriendlyName": "Terminal",
-    "Description": "Komut İstemi, PowerShell ve WSL için sekmeli terminal. Uyarı: Win11Debloat'ın çalıştığı terminal kaldırılırsa oturum kapanabilir"
+    "Description": "Windows 11\u0027in varsayılan terminal uygulaması (Komut İstemi, PowerShell, WSL). UYARI: Win11Debloat\u0027ı Windows Terminal\u0027den başlattıysanız bu uygulamayı kaldırmayın; kaldırılması betiğin başarısız olmasına neden olur."
   },
   "Microsoft.Xbox.TCUI": {
     "FriendlyName": "Xbox Live (TCUI)",
@@ -425,11 +425,11 @@
   },
   "Microsoft.XboxGameOverlay": {
     "FriendlyName": "Xbox Game Overlay",
-    "Description": "Oyun Çubuğu'nun eski oyun içi arabirim bileşeni. Uyarı: Kaldırılması oyunlardaki Xbox özelliklerini etkileyebilir"
+    "Description": "Xbox Game Bar\u0027ın bir parçası olan oyun içi arabirim. Bu uygulama bazı oyunlar için gereklidir. Uyarı: Bu uygulamayı kaldırmak, belirli modern işlemcilere sahip bilgisayarlarda oyun performansını düşürebilir."
   },
   "Microsoft.XboxGamingOverlay": {
     "FriendlyName": "Game Bar",
-    "Description": "Oyun içi kayıt, ekran görüntüleri, pencere öğeleri ve Xbox sosyal özellikleri. Uyarı: Oyun Çubuğu'nu kaldırmak bazı AMD Ryzen 9 X3D sistemlerde performansı düşürebilir"
+    "Description": "Bu uygulama oyun içi arabirim ve Xbox hizmetleriyle bütünleştirme sağlar. Bu uygulama bazı oyunlar için gereklidir. Uyarı: Bu uygulamayı kaldırmak, belirli modern işlemcilere sahip bilgisayarlarda oyun performansını düşürebilir."
   },
   "Microsoft.XboxIdentityProvider": {
     "FriendlyName": "Xbox Identity Provider",

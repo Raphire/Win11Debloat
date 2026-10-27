@@ -12,7 +12,7 @@
     "Description": "Spraakassistent van Microsoft (niet meer ondersteund)"
   },
   "Microsoft.BingFinance": {
-    "FriendlyName": "MSN geldzaken",
+    "FriendlyName": "Geldzaken",
     "Description": "App van Microsoft voor financieel nieuws en het volgen van de financiële markten"
   },
   "Microsoft.BingFoodAndDrink": {
@@ -24,7 +24,7 @@
     "Description": "Houdt je gezondheid en conditie bij en toont nieuws (niet meer ondersteund)"
   },
   "Microsoft.BingNews": {
-    "FriendlyName": "Microsoft Nieuws",
+    "FriendlyName": "Nieuws",
     "Description": "Gepersonaliseerde nieuwsfeeds en meldingen van het laatste nieuws"
   },
   "Microsoft.BingSports": {
@@ -40,7 +40,7 @@
     "Description": "Reisplanning en reisnieuws (niet meer ondersteund)"
   },
   "Microsoft.BingWeather": {
-    "FriendlyName": "MSN weer",
+    "FriendlyName": "Weer",
     "Description": "Weerapp van Microsoft"
   },
   "XP9CXNGPPJ97XX": {
@@ -80,7 +80,7 @@
     "Description": "App voor het analyseren van bedrijfsgegevens (niet meer ondersteund)"
   },
   "Microsoft.MicrosoftSolitaireCollection": {
-    "FriendlyName": "Microsoft Solitaire Collection",
+    "FriendlyName": "Solitaire & Casual Games",
     "Description": "Verzameling kaartspellen voor één speler"
   },
   "Microsoft.MicrosoftStickyNotes": {
@@ -88,7 +88,7 @@
     "Description": "Maak notities op je bureaublad en synchroniseer ze tussen apparaten"
   },
   "Microsoft.MixedReality.Portal": {
-    "FriendlyName": "Mixed Reality-portaal",
+    "FriendlyName": "Mixed Reality-portal",
     "Description": "App voor het gebruik van Windows Mixed Reality-headsets (verouderd)"
   },
   "Microsoft.NetworkSpeedTest": {
@@ -96,7 +96,7 @@
     "Description": "Meet de download- en uploadsnelheid en netwerkvertraging"
   },
   "Microsoft.Office.OneNote": {
-    "FriendlyName": "OneNote voor Windows 10 (oude versie)",
+    "FriendlyName": "OneNote for Windows 10",
     "Description": "Digitale notitie-app (UWP-versie; niet meer ondersteund)"
   },
   "Microsoft.Office.Sway": {
@@ -116,7 +116,7 @@
     "Description": "Automatiseer terugkerende pc-taken met bureaubladstromen"
   },
   "Microsoft.SkypeApp": {
-    "FriendlyName": "Skype (UWP)",
+    "FriendlyName": "Skype",
     "Description": "Skype voor chatten en bellen (UWP-versie, niet meer ondersteund)"
   },
   "Microsoft.Todos": {
@@ -136,7 +136,7 @@
     "Description": "App om Microsoft feedback over Windows te geven"
   },
   "Microsoft.WindowsMaps": {
-    "FriendlyName": "Windows Kaarten",
+    "FriendlyName": "Kaarten",
     "Description": "App voor kaarten en navigatie (niet meer ondersteund)"
   },
   "Microsoft.WindowsSoundRecorder": {
@@ -152,7 +152,7 @@
     "Description": "App voor het afspelen van gekochte video's (nieuw huren en kopen wordt niet meer ondersteund)"
   },
   "MicrosoftCorporationII.MicrosoftFamily": {
-    "FriendlyName": "Microsoft Family Safety",
+    "FriendlyName": "Family",
     "Description": "App voor het beheren van schermtijd, inhoudsfilters en activiteitenrapporten voor je gezin"
   },
   "MicrosoftCorporationII.QuickAssist": {
@@ -176,7 +176,7 @@
     "Description": "Actipro-apps, waaronder Code Writer voor tekst- en codebewerking"
   },
   "AdobeSystemsIncorporated.AdobePhotoshopExpress": {
-    "FriendlyName": "Adobe Express Photos (voorheen Photoshop Express)",
+    "FriendlyName": "Adobe Express Photos",
     "Description": "Bewerk foto's, verwijder objecten en achtergronden en maak aantekeningen op schermafbeeldingen"
   },
   "Amazon.com.Amazon": {
@@ -184,7 +184,7 @@
     "Description": "App om bij Amazon te winkelen"
   },
   "AmazonVideo.PrimeVideo": {
-    "FriendlyName": "Prime Video for Windows",
+    "FriendlyName": "Prime Video",
     "Description": "App voor de streamingdienst Amazon Prime Video"
   },
   "Asphalt8Airborne": {
@@ -196,7 +196,7 @@
     "Description": "Oudere teken- en schetsapp van Autodesk (niet meer ondersteund)"
   },
   "CaesarsSlotsFreeCasino": {
-    "FriendlyName": "Caesars Slots",
+    "FriendlyName": "Caesars Casino - Casino Slots Game",
     "Description": "Casinospel met gokkasten"
   },
   "COOKINGFEVER": {
@@ -244,7 +244,7 @@
     "Description": "App voor de streamingdienst Hulu"
   },
   "iHeartRadio": {
-    "FriendlyName": "iHeartRadio",
+    "FriendlyName": "iHeart: Radio, Music, Podcasts",
     "Description": "Luister naar live radio, muziek en podcasts"
   },
   "Facebook.Instagram": {
@@ -292,7 +292,7 @@
     "Description": "App om fotocollages te maken"
   },
   "PicsArt-PhotoStudio": {
-    "FriendlyName": "Picsart AI Photo Editor",
+    "FriendlyName": "Picsart - Photo Studio",
     "Description": "App voor fotobewerking en creatieve projecten"
   },
   "PolarrPhotoEditorAcademicEdition": {
@@ -328,7 +328,7 @@
     "Description": "Hulpmiddel waarmee je bestanden kan comprimeren en uitpakken (UWP-versie)"
   },
   "Microsoft.BingSearch": {
-    "FriendlyName": "Microsoft Bing (Zoeken)",
+    "FriendlyName": "Microsoft Bing",
     "Description": "Deze app integreert zoeken op internet met Microsoft Bing in Windows Zoeken"
   },
   "Microsoft.Edge": {
@@ -364,7 +364,7 @@
     "Description": "Teken en bewerk afbeeldingen, snijd ze bij en pas het formaat aan"
   },
   "Microsoft.People": {
-    "FriendlyName": "Microsoft Personen",
+    "FriendlyName": "Personen",
     "Description": "Bewaar en beheer contactpersonen voor Mail en Agenda (niet meer ondersteund)"
   },
   "MicrosoftCorporationII.Windows365": {
@@ -380,7 +380,7 @@
     "Description": "Schermafbeeldingen maken, annoteren, opslaan en delen"
   },
   "Microsoft.StartExperiencesApp": {
-    "FriendlyName": "Start Experiences App (Widgets)",
+    "FriendlyName": "Ervaringen-app starten",
     "Description": "Toont 'Mijn feed' in Windows Widgets"
   },
   "Microsoft.SurfaceHub": {
@@ -417,7 +417,7 @@
   },
   "Microsoft.WindowsTerminal": {
     "FriendlyName": "Terminal",
-    "Description": "Terminal met tabbladen voor Opdrachtprompt, PowerShell en WSL. Waarschuwing: verwijdering van de terminal waarin Win11Debloat draait kan de sessie sluiten"
+    "Description": "Standaardterminal-app in Windows 11 (Opdrachtprompt, PowerShell, WSL). WAARSCHUWING: verwijder deze app niet als je Win11Debloat vanuit Windows Terminal hebt gestart, want hierdoor zal het script mislukken."
   },
   "Microsoft.Xbox.TCUI": {
     "FriendlyName": "Xbox Live (TCUI)",
@@ -425,11 +425,11 @@
   },
   "Microsoft.XboxGameOverlay": {
     "FriendlyName": "Xbox Game Overlay",
-    "Description": "Ouder Xbox-overlayonderdeel voor games. Waarschuwing: verwijdering kan Xbox-functies in games beïnvloeden"
+    "Description": "Game-overlay die deel uitmaakt van Xbox Game Bar. Deze app is vereist voor bepaalde games. Waarschuwing: het verwijderen van deze app kan de gameprestaties verminderen op pc’s met bepaalde moderne processors."
   },
   "Microsoft.XboxGamingOverlay": {
     "FriendlyName": "Game Bar",
-    "Description": "Opnamen, schermafbeeldingen, widgets en sociale Xbox-functies in games. Waarschuwing: Game Bar verwijderen kan de prestaties op bepaalde AMD Ryzen 9 X3D-systemen verminderen"
+    "Description": "Deze app biedt een overlay in games en integratie met Xbox-services. Deze app is vereist voor bepaalde games. Waarschuwing: het verwijderen van deze app kan de gameprestaties verminderen op pc’s met bepaalde moderne processors."
   },
   "Microsoft.XboxIdentityProvider": {
     "FriendlyName": "Xbox Identity Provider",
@@ -452,7 +452,7 @@
     "Description": "Integratie van mobiele apparaten met Verkenner- en camerafuncties"
   },
   "MicrosoftWindows.Client.WebExperience": {
-    "FriendlyName": "Windows Web Experience Pack",
+    "FriendlyName": "Windows Widgets",
     "Description": "Levert functies zoals Widgets en werkt ze bij via de Microsoft Store"
   },
   "Microsoft.WidgetsPlatformRuntime": {
@@ -464,7 +464,7 @@
     "Description": "Gaminghub van HP voor prestatiebewaking en apparaatinstellingen"
   },
   "AcerIncorporated.AcerCareCenterS": {
-    "FriendlyName": "Acer Care Center S",
+    "FriendlyName": "Acer Care Center",
     "Description": "Apparaatinformatie, diagnostiek en onderhoudstools van Acer"
   },
   "B9ECED6F.ASUSPCAssistant": {
@@ -484,7 +484,7 @@
     "Description": "Apparaatinstellingen en prestatiebewaking van MSI"
   },
   "SAMSUNGELECTRONICSCO.LTD.PCGallery": {
-    "FriendlyName": "Samsung Gallery",
+    "FriendlyName": "Samsung Galerij",
     "Description": "Foto- en videogalerij van Samsung"
   },
   "SAMSUNGELECTRONICSCoLtd.SamsungFlux": {
@@ -504,7 +504,7 @@
     "Description": "Videobewerkingsapp van Samsung"
   },
   "SAMSUNGELECTRONICSCO.LTD.SamsungScreenRecording": {
-    "FriendlyName": "Samsung Screen Recorder",
+    "FriendlyName": "Samsung Scherm recorder",
     "Description": "Neem het scherm en de webcam op ondersteunde Galaxy Books op"
   },
   "SAMSUNGELECTRONICSCO.LTD.Bixby": {
@@ -520,11 +520,11 @@
     "Description": "Samsung-app voor het verbinden, bewaken en bedienen van smarthomeapparaten"
   },
   "SAMSUNGELECTRONICSCoLtd.MultiControl": {
-    "FriendlyName": "Samsung Multi control",
+    "FriendlyName": "Samsung Multi-control",
     "Description": "Samsung-app voor het delen van toetsenbord en muis tussen compatibele Galaxy-apparaten"
   },
   "SAMSUNGELECTRONICSCoLtd.SecondScreen": {
-    "FriendlyName": "Samsung Second Screen",
+    "FriendlyName": "Samsung Tweede scherm",
     "Description": "Samsung-app om een compatibele Galaxy-tablet als extra pc-scherm te gebruiken"
   },
   "SAMSUNGELECTRONICSCO.LTD.PENUP": {
@@ -612,7 +612,7 @@
     "Description": "HP-hulpprogramma; exacte functie is niet bevestigd"
   },
   "AD2F1837.HPSystemInformation": {
-    "FriendlyName": "HP Systeeminformatie",
+    "FriendlyName": "HP System Information",
     "Description": "Toont het model, serienummer en BIOS-informatie van je HP-pc"
   },
   "AD2F1837.HPWelcome": {

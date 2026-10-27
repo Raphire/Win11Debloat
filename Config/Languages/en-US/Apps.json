@@ -12,7 +12,7 @@
     "Description": "Microsoft Cortana voice assistant (discontinued)"
   },
   "Microsoft.BingFinance": {
-    "FriendlyName": "MSN Money",
+    "FriendlyName": "Money",
     "Description": "Finance news and tracking app from Microsoft"
   },
   "Microsoft.BingFoodAndDrink": {
@@ -24,7 +24,7 @@
     "Description": "Health and fitness tracking/news (discontinued)"
   },
   "Microsoft.BingNews": {
-    "FriendlyName": "Microsoft News",
+    "FriendlyName": "News",
     "Description": "Personalized news feeds and breaking-news alerts"
   },
   "Microsoft.BingSports": {
@@ -40,7 +40,7 @@
     "Description": "Travel planning and news (discontinued)"
   },
   "Microsoft.BingWeather": {
-    "FriendlyName": "MSN Weather",
+    "FriendlyName": "Weather",
     "Description": "Weather forecast app from Microsoft"
   },
   "XP9CXNGPPJ97XX": {
@@ -52,7 +52,7 @@
     "Description": "Explore AI features and apps for Copilot+ PCs"
   },
   "Microsoft.PCManager": {
-    "FriendlyName": "Microsoft PC Manager",
+    "FriendlyName": "PC Manager",
     "Description": "Microsoft PC Manager system cleanup and optimization tool (often preinstalled)"
   },
   "Microsoft.Getstarted": {
@@ -80,7 +80,7 @@
     "Description": "Business analytics service client (discontinued)"
   },
   "Microsoft.MicrosoftSolitaireCollection": {
-    "FriendlyName": "Microsoft Solitaire Collection",
+    "FriendlyName": "Solitaire & Casual Games",
     "Description": "Collection of solitaire card games"
   },
   "Microsoft.MicrosoftStickyNotes": {
@@ -96,7 +96,7 @@
     "Description": "Measure download and upload speeds and network latency"
   },
   "Microsoft.Office.OneNote": {
-    "FriendlyName": "OneNote for Windows 10 (Legacy)",
+    "FriendlyName": "OneNote for Windows 10",
     "Description": "Digital note-taking app (Universal Windows Platform version; discontinued)"
   },
   "Microsoft.Office.Sway": {
@@ -116,7 +116,7 @@
     "Description": "Automate repetitive PC tasks with desktop workflows"
   },
   "Microsoft.SkypeApp": {
-    "FriendlyName": "Skype (UWP)",
+    "FriendlyName": "Skype",
     "Description": "Skype communication app, Universal Windows Platform version (discontinued)"
   },
   "Microsoft.Todos": {
@@ -136,7 +136,7 @@
     "Description": "App for providing feedback to Microsoft on Windows"
   },
   "Microsoft.WindowsMaps": {
-    "FriendlyName": "Windows Maps",
+    "FriendlyName": "Maps",
     "Description": "Maps and navigation app (discontinued)"
   },
   "Microsoft.WindowsSoundRecorder": {
@@ -152,7 +152,7 @@
     "Description": "App for playing purchased video content (new rentals and purchases have been discontinued)"
   },
   "MicrosoftCorporationII.MicrosoftFamily": {
-    "FriendlyName": "Microsoft Family Safety",
+    "FriendlyName": "Family",
     "Description": "App for managing family screen time, content filters, and activity reports"
   },
   "MicrosoftCorporationII.QuickAssist": {
@@ -176,7 +176,7 @@
     "Description": "Actipro apps, including the Code Writer text and code editor"
   },
   "AdobeSystemsIncorporated.AdobePhotoshopExpress": {
-    "FriendlyName": "Adobe Express Photos (formerly Photoshop Express)",
+    "FriendlyName": "Adobe Express Photos",
     "Description": "Edit photos, remove objects and backgrounds, and annotate screenshots"
   },
   "Amazon.com.Amazon": {
@@ -184,7 +184,7 @@
     "Description": "Amazon shopping app"
   },
   "AmazonVideo.PrimeVideo": {
-    "FriendlyName": "Prime Video for Windows",
+    "FriendlyName": "Prime Video",
     "Description": "Amazon Prime Video streaming service app"
   },
   "Asphalt8Airborne": {
@@ -196,7 +196,7 @@
     "Description": "Legacy Autodesk drawing and sketching app (discontinued)"
   },
   "CaesarsSlotsFreeCasino": {
-    "FriendlyName": "Caesars Slots",
+    "FriendlyName": "Caesars Casino - Casino Slots Game",
     "Description": "Casino slot machine game"
   },
   "COOKINGFEVER": {
@@ -244,7 +244,7 @@
     "Description": "Hulu streaming service app"
   },
   "iHeartRadio": {
-    "FriendlyName": "iHeartRadio",
+    "FriendlyName": "iHeart: Radio, Music, Podcasts",
     "Description": "Stream live radio, music, and podcasts"
   },
   "Facebook.Instagram": {
@@ -292,7 +292,7 @@
     "Description": "Photo collage creation app"
   },
   "PicsArt-PhotoStudio": {
-    "FriendlyName": "Picsart Photo Editor",
+    "FriendlyName": "Picsart - Photo Studio",
     "Description": "Photo editing and creative app"
   },
   "PolarrPhotoEditorAcademicEdition": {
@@ -328,7 +328,7 @@
     "Description": "File compression and extraction utility (Universal Windows Platform version)"
   },
   "Microsoft.BingSearch": {
-    "FriendlyName": "Microsoft Bing (Search)",
+    "FriendlyName": "Microsoft Bing",
     "Description": "This app integrates Web Search from Microsoft Bing into Windows Search"
   },
   "Microsoft.Edge": {
@@ -364,7 +364,7 @@
     "Description": "Draw, crop, resize, and edit images"
   },
   "Microsoft.People": {
-    "FriendlyName": "Microsoft People",
+    "FriendlyName": "People",
     "Description": "Stores and organizes contacts for Mail and Calendar (discontinued)"
   },
   "MicrosoftCorporationII.Windows365": {
@@ -380,7 +380,7 @@
     "Description": "Capture, annotate, save, and share screenshots"
   },
   "Microsoft.StartExperiencesApp": {
-    "FriendlyName": "Start Experiences App (Widgets)",
+    "FriendlyName": "Start Experiences App",
     "Description": "This app powers Windows Widgets (My Feed)"
   },
   "Microsoft.SurfaceHub": {
@@ -417,7 +417,7 @@
   },
   "Microsoft.WindowsTerminal": {
     "FriendlyName": "Terminal",
-    "Description": "Tabbed terminal for Command Prompt, PowerShell, and WSL. Warning: Removing the terminal hosting Win11Debloat may close its session"
+    "Description": "Default terminal app in windows 11 (Command Prompt, PowerShell, WSL), WARNING: Do not remove if you launched Win11Debloat from Windows Terminal, as this will cause the script to fail."
   },
   "Microsoft.Xbox.TCUI": {
     "FriendlyName": "Xbox Live (TCUI)",
@@ -425,11 +425,11 @@
   },
   "Microsoft.XboxGameOverlay": {
     "FriendlyName": "Xbox Game Overlay",
-    "Description": "Legacy Xbox in-game overlay component. Warning: Removing it may affect Xbox features in games"
+    "Description": "Game overlay that's part of Xbox Game Bar. This app is required for certain games. Warning: Uninstalling this app may reduce game performance on PCs with certain modern processors."
   },
   "Microsoft.XboxGamingOverlay": {
     "FriendlyName": "Game Bar",
-    "Description": "In-game recording, screenshots, widgets, and Xbox social features. Warning: Removing Game Bar can reduce performance on certain AMD Ryzen 9 X3D systems"
+    "Description": "This app provides an in-game overlay and integration with Xbox services. This app is required for certain games. Warning: Uninstalling this app may reduce game performance on PCs with certain modern processors."
   },
   "Microsoft.XboxIdentityProvider": {
     "FriendlyName": "Xbox Identity Provider",
@@ -452,7 +452,7 @@
     "Description": "Mobile device integration with File Explorer and camera features"
   },
   "MicrosoftWindows.Client.WebExperience": {
-    "FriendlyName": "Windows Web Experience Pack",
+    "FriendlyName": "Windows Widgets",
     "Description": "Helps deliver and update certain features, like Widgets, through the Microsoft Store"
   },
   "Microsoft.WidgetsPlatformRuntime": {
@@ -464,7 +464,7 @@
     "Description": "HP gaming hub for performance monitoring and device settings"
   },
   "AcerIncorporated.AcerCareCenterS": {
-    "FriendlyName": "Acer Care Center S",
+    "FriendlyName": "Acer Care Center",
     "Description": "Acer device information, diagnostics, and maintenance tools"
   },
   "B9ECED6F.ASUSPCAssistant": {
@@ -504,7 +504,7 @@
     "Description": "Samsung video editing app"
   },
   "SAMSUNGELECTRONICSCO.LTD.SamsungScreenRecording": {
-    "FriendlyName": "Samsung Screen Recorder",
+    "FriendlyName": "Samsung Screen recorder",
     "Description": "Record the screen and webcam on supported Galaxy Books"
   },
   "SAMSUNGELECTRONICSCO.LTD.Bixby": {
@@ -524,7 +524,7 @@
     "Description": "Samsung keyboard and mouse sharing across compatible Galaxy devices"
   },
   "SAMSUNGELECTRONICSCoLtd.SecondScreen": {
-    "FriendlyName": "Samsung Second Screen",
+    "FriendlyName": "Samsung Second screen",
     "Description": "Samsung app for using a compatible Galaxy tablet as an additional PC display"
   },
   "SAMSUNGELECTRONICSCO.LTD.PENUP": {

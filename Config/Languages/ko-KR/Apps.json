@@ -4,7 +4,7 @@
     "Description": "동영상을 만들고 편집하며 자르기, 자막 및 오디오 추가"
   },
   "Microsoft.3DBuilder": {
-    "FriendlyName": "3D 빌더",
+    "FriendlyName": "3D Builder",
     "Description": "지원이 중단된 기본 3D 모델링 소프트웨어입니다."
   },
   "Microsoft.549981C3F5F10": {
@@ -12,7 +12,7 @@
     "Description": "지원이 중단된 Microsoft Cortana 음성 도우미입니다."
   },
   "Microsoft.BingFinance": {
-    "FriendlyName": "MSN 금융",
+    "FriendlyName": "금융",
     "Description": "Microsoft에서 제공하는 금융 뉴스 및 시세 추적 앱입니다."
   },
   "Microsoft.BingFoodAndDrink": {
@@ -24,7 +24,7 @@
     "Description": "지원이 중단된 건강 및 피트니스 추적/뉴스 앱입니다."
   },
   "Microsoft.BingNews": {
-    "FriendlyName": "Microsoft 뉴스",
+    "FriendlyName": "뉴스",
     "Description": "맞춤 뉴스 피드 및 속보 알림"
   },
   "Microsoft.BingSports": {
@@ -40,7 +40,7 @@
     "Description": "지원이 중단된 여행 계획 및 뉴스 앱입니다."
   },
   "Microsoft.BingWeather": {
-    "FriendlyName": "MSN 날씨",
+    "FriendlyName": "날씨",
     "Description": "Microsoft에서 제공하는 일기 예보 앱입니다."
   },
   "XP9CXNGPPJ97XX": {
@@ -52,7 +52,7 @@
     "Description": "Copilot+ PC용 AI 기능 및 앱 살펴보기"
   },
   "Microsoft.PCManager": {
-    "FriendlyName": "Microsoft PC Manager",
+    "FriendlyName": "PC Manager",
     "Description": "Microsoft의 시스템 정리 및 최적화 도구로, 사전 설치되는 경우가 많습니다."
   },
   "Microsoft.Getstarted": {
@@ -80,7 +80,7 @@
     "Description": "지원이 중단된 비즈니스 분석 서비스 클라이언트입니다."
   },
   "Microsoft.MicrosoftSolitaireCollection": {
-    "FriendlyName": "Microsoft 솔리테어 컬렉션",
+    "FriendlyName": "Solitaire & Casual Games",
     "Description": "여러 가지 솔리테어 카드 게임을 모은 앱입니다."
   },
   "Microsoft.MicrosoftStickyNotes": {
@@ -88,15 +88,15 @@
     "Description": "바탕 화면 메모 만들기 및 장치 간 동기화"
   },
   "Microsoft.MixedReality.Portal": {
-    "FriendlyName": "혼합 현실 포털",
+    "FriendlyName": "Mixed Reality 포털",
     "Description": "Windows Mixed Reality 헤드셋용 포털입니다. (사용 중단 예정)"
   },
   "Microsoft.NetworkSpeedTest": {
-    "FriendlyName": "네트워크 속도 테스트",
+    "FriendlyName": "Network Speed Test",
     "Description": "다운로드 및 업로드 속도와 네트워크 지연 시간 측정"
   },
   "Microsoft.Office.OneNote": {
-    "FriendlyName": "OneNote",
+    "FriendlyName": "OneNote for Windows 10",
     "Description": "UWP(유니버설 Windows 플랫폼) 버전의 디지털 노트 필기 앱입니다."
   },
   "Microsoft.Office.Sway": {
@@ -116,7 +116,7 @@
     "Description": "데스크톱 흐름으로 반복적인 PC 작업 자동화"
   },
   "Microsoft.SkypeApp": {
-    "FriendlyName": "Skype(UWP)",
+    "FriendlyName": "Skype",
     "Description": "지원이 중단된 Skype 통신 앱의 UWP(유니버설 Windows 플랫폼) 버전입니다."
   },
   "Microsoft.Todos": {
@@ -136,7 +136,7 @@
     "Description": "Windows에 대한 의견을 Microsoft에 보낼 수 있는 앱입니다."
   },
   "Microsoft.WindowsMaps": {
-    "FriendlyName": "Windows 지도",
+    "FriendlyName": "지도",
     "Description": "지원이 중단된 지도 및 내비게이션 앱입니다."
   },
   "Microsoft.WindowsSoundRecorder": {
@@ -152,7 +152,7 @@
     "Description": "구매한 동영상 콘텐츠를 재생하는 앱입니다(신규 대여 및 구매는 지원 중단)."
   },
   "MicrosoftCorporationII.MicrosoftFamily": {
-    "FriendlyName": "Microsoft Family Safety",
+    "FriendlyName": "Family",
     "Description": "가족의 화면 시간, 콘텐츠 필터, 활동 보고서를 관리하는 앱입니다."
   },
   "MicrosoftCorporationII.QuickAssist": {
@@ -176,7 +176,7 @@
     "Description": "텍스트 및 코드 편집기 Code Writer를 포함한 Actipro 앱"
   },
   "AdobeSystemsIncorporated.AdobePhotoshopExpress": {
-    "FriendlyName": "Adobe Express Photos (이전 명칭 Photoshop Express)",
+    "FriendlyName": "Adobe Express Photos",
     "Description": "사진 편집, 개체 및 배경 제거, 스크린샷 주석 추가"
   },
   "Amazon.com.Amazon": {
@@ -184,11 +184,11 @@
     "Description": "Amazon 쇼핑 앱입니다."
   },
   "AmazonVideo.PrimeVideo": {
-    "FriendlyName": "윈도우용 프라임 비디오",
+    "FriendlyName": "Prime Video",
     "Description": "Amazon Prime Video 스트리밍 서비스 앱입니다."
   },
   "Asphalt8Airborne": {
-    "FriendlyName": "Asphalt 8: Airborne",
+    "FriendlyName": "아스팔트 8: 에어본",
     "Description": "자동차, 오토바이 및 멀티플레이 경주를 제공하는 아케이드 레이싱"
   },
   "AutodeskSketchBook": {
@@ -196,7 +196,7 @@
     "Description": "Autodesk의 기존 드로잉 및 스케치 앱 (지원 중단)"
   },
   "CaesarsSlotsFreeCasino": {
-    "FriendlyName": "Caesars Slots",
+    "FriendlyName": "Caesars Casino - Casino Slots Game",
     "Description": "카지노 슬롯머신 게임입니다."
   },
   "COOKINGFEVER": {
@@ -208,7 +208,7 @@
     "Description": "멀티미디어 소프트웨어 제품군이며, OEM에서 사전 설치하는 경우가 많습니다."
   },
   "DisneyMagicKingdoms": {
-    "FriendlyName": "Disney Magic Kingdoms",
+    "FriendlyName": "디즈니 매직 킹덤",
     "Description": "디즈니 테마 파크를 건설하는 게임입니다."
   },
   "Disney.37853FC22B2CE": {
@@ -228,7 +228,7 @@
     "Description": "Facebook 소셜 미디어 앱입니다."
   },
   "FarmVille2CountryEscape": {
-    "FriendlyName": "FarmVille 2",
+    "FriendlyName": "FarmVille 2: Country Escape",
     "Description": "농장 시뮬레이션 게임입니다."
   },
   "Flipboard": {
@@ -236,7 +236,7 @@
     "Description": "잡지 형식의 뉴스 및 소셜 네트워크 수집 앱입니다."
   },
   "HiddenCity": {
-    "FriendlyName": "Hidden City",
+    "FriendlyName": "Hidden City: 숨은물건찾기 모험",
     "Description": "숨은 물건 찾기 퍼즐 어드벤처 게임입니다."
   },
   "HULULLC.HULUPLUS": {
@@ -244,7 +244,7 @@
     "Description": "Hulu 스트리밍 서비스 앱입니다."
   },
   "iHeartRadio": {
-    "FriendlyName": "iHeartRadio",
+    "FriendlyName": "iHeart: Radio, Music, Podcasts",
     "Description": "실시간 라디오, 음악 및 팟캐스트 스트리밍"
   },
   "Facebook.Instagram": {
@@ -260,7 +260,7 @@
     "Description": "사탕을 세 개씩 맞추는 퍼즐 게임"
   },
   "king.com.CandyCrushSodaSaga": {
-    "FriendlyName": "Candy Crush Soda",
+    "FriendlyName": "Candy Crush Soda Saga",
     "Description": "소다 테마의 레벨과 게임 모드에서 사탕을 세 개씩 맞추는 퍼즐"
   },
   "LinkedInforWindows": {
@@ -292,7 +292,7 @@
     "Description": "사진 콜라주를 만드는 앱입니다."
   },
   "PicsArt-PhotoStudio": {
-    "FriendlyName": "Picsart Photo Editor",
+    "FriendlyName": "Picsart - Photo Studio",
     "Description": "사진 편집과 창작을 위한 앱입니다."
   },
   "PolarrPhotoEditorAcademicEdition": {
@@ -304,7 +304,7 @@
     "Description": "부대를 이끌고 주문을 사용해 성을 정복하는 액션 전략 게임"
   },
   "Sidia.LiveWallpaper": {
-    "FriendlyName": "Samsung Live Wallpaper",
+    "FriendlyName": "Samsung 라이브 배경화면",
     "Description": "Samsung Galaxy Book용 정적 및 애니메이션 배경 화면"
   },
   "SlingTV": {
@@ -328,7 +328,7 @@
     "Description": "UWP 버전의 파일 압축 및 압축 풀기 유틸리티입니다."
   },
   "Microsoft.BingSearch": {
-    "FriendlyName": "Microsoft Bing (검색)",
+    "FriendlyName": "Microsoft Bing",
     "Description": "Microsoft Bing 웹 검색을 Windows 검색에 통합하는 앱입니다."
   },
   "Microsoft.Edge": {
@@ -348,7 +348,7 @@
     "Description": "Microsoft 365 일정, 연락처 및 파일을 위한 작업 표시줄 앱 (지원 종료 예정)"
   },
   "Microsoft.MSPaint": {
-    "FriendlyName": "Paint 3D",
+    "FriendlyName": "그림판 3D",
     "Description": "지원이 중단된 3D 그리기 앱입니다."
   },
   "Microsoft.OneDrive": {
@@ -364,7 +364,7 @@
     "Description": "이미지 그리기, 자르기, 크기 조정 및 편집"
   },
   "Microsoft.People": {
-    "FriendlyName": "Microsoft 피플",
+    "FriendlyName": "피플",
     "Description": "메일 및 일정용 연락처 저장 및 정리 (지원 중단)."
   },
   "MicrosoftCorporationII.Windows365": {
@@ -380,7 +380,7 @@
     "Description": "스크린샷을 캡처하고 주석을 추가하며 저장 및 공유할 수 있습니다."
   },
   "Microsoft.StartExperiencesApp": {
-    "FriendlyName": "시작 환경 앱 (위젯)",
+    "FriendlyName": "Start Experiences 앱",
     "Description": "Windows 위젯의 내 피드 기능을 제공하는 앱입니다."
   },
   "Microsoft.SurfaceHub": {
@@ -417,7 +417,7 @@
   },
   "Microsoft.WindowsTerminal": {
     "FriendlyName": "터미널",
-    "Description": "명령 프롬프트, PowerShell 및 WSL용 탭 터미널. 경고: Win11Debloat를 실행 중인 터미널을 제거하면 세션이 닫힐 수 있음"
+    "Description": "Windows 11의 기본 터미널 앱(명령 프롬프트, PowerShell, WSL). 경고: Windows 터미널에서 Win11Debloat를 실행한 경우 이 앱을 제거하지 마세요. 제거하면 스크립트가 실패합니다."
   },
   "Microsoft.Xbox.TCUI": {
     "FriendlyName": "Xbox Live (TCUI)",
@@ -425,11 +425,11 @@
   },
   "Microsoft.XboxGameOverlay": {
     "FriendlyName": "Xbox Game Overlay",
-    "Description": "기존 Xbox 게임 내 오버레이 구성 요소. 경고: 제거하면 게임의 Xbox 기능에 영향을 줄 수 있음"
+    "Description": "Xbox Game Bar의 일부인 게임 내 오버레이. 이 앱은 일부 게임에 필요합니다. 경고: 이 앱을 제거하면 특정 최신 프로세서가 탑재된 PC에서 게임 성능이 저하될 수 있습니다."
   },
   "Microsoft.XboxGamingOverlay": {
     "FriendlyName": "Game Bar",
-    "Description": "게임 내 녹화, 스크린샷, 위젯 및 Xbox 소셜 기능. 경고: Game Bar를 제거하면 일부 AMD Ryzen 9 X3D 시스템의 성능이 저하될 수 있음"
+    "Description": "게임 내 오버레이와 Xbox 서비스 연동을 제공하는 앱. 이 앱은 일부 게임에 필요합니다. 경고: 이 앱을 제거하면 특정 최신 프로세서가 탑재된 PC에서 게임 성능이 저하될 수 있습니다."
   },
   "Microsoft.XboxIdentityProvider": {
     "FriendlyName": "Xbox Identity Provider",
@@ -452,7 +452,7 @@
     "Description": "파일 탐색기 및 카메라 기능과 모바일 장치 통합"
   },
   "MicrosoftWindows.Client.WebExperience": {
-    "FriendlyName": "Windows Web Experience Pack",
+    "FriendlyName": "Windows 위젯",
     "Description": "Microsoft Store를 통해 위젯 같은 특정 기능을 제공하고 업데이트하는 패키지입니다."
   },
   "Microsoft.WidgetsPlatformRuntime": {
@@ -464,7 +464,7 @@
     "Description": "성능 모니터링 및 장치 설정을 위한 HP 게임 허브"
   },
   "AcerIncorporated.AcerCareCenterS": {
-    "FriendlyName": "Acer Care Center S",
+    "FriendlyName": "Acer Care Center",
     "Description": "Acer 장치 정보, 진단 및 유지 관리 도구"
   },
   "B9ECED6F.ASUSPCAssistant": {
@@ -484,15 +484,15 @@
     "Description": "MSI 장치 설정 및 성능 모니터링"
   },
   "SAMSUNGELECTRONICSCO.LTD.PCGallery": {
-    "FriendlyName": "Samsung Gallery",
+    "FriendlyName": "Samsung 갤러리",
     "Description": "Samsung 사진 및 동영상 갤러리"
   },
   "SAMSUNGELECTRONICSCoLtd.SamsungFlux": {
-    "FriendlyName": "Samsung Flow",
+    "FriendlyName": "삼성 플로우",
     "Description": "휴대폰과 PC 연결, 파일 공유 및 알림 동기화를 위한 Samsung 앱"
   },
   "SAMSUNGELECTRONICSCoLtd.SamsungNotes": {
-    "FriendlyName": "Samsung Notes",
+    "FriendlyName": "삼성 노트",
     "Description": "지원되는 Galaxy Book에서 메모, 필기 및 PDF 주석 작성"
   },
   "B9ECED6F.ScreenPadMaster": {
@@ -500,31 +500,31 @@
     "Description": "ASUS 창 관리 및 지원되는 모델의 ScreenPad 제어"
   },
   "SAMSUNGELECTRONICSCO.LTD.SamsungStudio": {
-    "FriendlyName": "Samsung Studio",
+    "FriendlyName": "Samsung 스튜디오",
     "Description": "Samsung 동영상 편집 앱"
   },
   "SAMSUNGELECTRONICSCO.LTD.SamsungScreenRecording": {
-    "FriendlyName": "Samsung Screen Recorder",
+    "FriendlyName": "Samsung 화면 녹화",
     "Description": "지원되는 Galaxy Book에서 화면 및 웹캠 녹화"
   },
   "SAMSUNGELECTRONICSCO.LTD.Bixby": {
-    "FriendlyName": "Samsung Bixby",
+    "FriendlyName": "Samsung 빅스비",
     "Description": "지원되는 Galaxy Book에서 앱, 파일 및 설정을 위한 음성 명령"
   },
   "SAMSUNGELECTRONICSCO.LTD.SamsungWelcome": {
-    "FriendlyName": "Samsung Galaxy Book Experience",
+    "FriendlyName": "Samsung 갤럭시 북 익스피리언스",
     "Description": "Galaxy Book용 Samsung 앱 실행 및 기능 안내"
   },
   "SAMSUNGELECTRONICSCO.LTD.SmartThingsWindows": {
-    "FriendlyName": "Samsung SmartThings",
+    "FriendlyName": "Samsung 스마트싱스",
     "Description": "스마트 홈 장치 연결, 모니터링 및 제어를 위한 Samsung 앱"
   },
   "SAMSUNGELECTRONICSCoLtd.MultiControl": {
-    "FriendlyName": "Samsung Multi control",
+    "FriendlyName": "Samsung 멀티 컨트롤",
     "Description": "호환되는 Galaxy 장치 간 키보드 및 마우스 공유를 위한 Samsung 앱"
   },
   "SAMSUNGELECTRONICSCoLtd.SecondScreen": {
-    "FriendlyName": "Samsung Second Screen",
+    "FriendlyName": "Samsung 세컨드 스크린",
     "Description": "호환되는 Galaxy 태블릿을 PC의 추가 디스플레이로 사용하는 Samsung 앱"
   },
   "SAMSUNGELECTRONICSCO.LTD.PENUP": {

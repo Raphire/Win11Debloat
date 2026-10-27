@@ -40,7 +40,7 @@
     "Description": "旅遊規劃與新聞 (已停止提供)"
   },
   "Microsoft.BingWeather": {
-    "FriendlyName": "MSN 天氣",
+    "FriendlyName": "天氣",
     "Description": "Microsoft 提供的天氣預報應用程式"
   },
   "XP9CXNGPPJ97XX": {
@@ -52,7 +52,7 @@
     "Description": "探索 Copilot+ PC 的 AI 功能和應用程式"
   },
   "Microsoft.PCManager": {
-    "FriendlyName": "Microsoft PC Manager",
+    "FriendlyName": "電腦管家",
     "Description": "Microsoft PC Manager 系統清理與最佳化工具 (通常會預先安裝)"
   },
   "Microsoft.Getstarted": {
@@ -80,7 +80,7 @@
     "Description": "商業分析服務用戶端 (已停止提供)"
   },
   "Microsoft.MicrosoftSolitaireCollection": {
-    "FriendlyName": "Microsoft Solitaire Collection",
+    "FriendlyName": "Solitaire & Casual Games",
     "Description": "接龍紙牌遊戲集合"
   },
   "Microsoft.MicrosoftStickyNotes": {
@@ -92,11 +92,11 @@
     "Description": "Windows 混合實境頭戴式裝置的入口 (已淘汰)"
   },
   "Microsoft.NetworkSpeedTest": {
-    "FriendlyName": "網路速度測試",
+    "FriendlyName": "Network Speed Test",
     "Description": "測量下載速度、上傳速度和網路延遲"
   },
   "Microsoft.Office.OneNote": {
-    "FriendlyName": "OneNote",
+    "FriendlyName": "OneNote for Windows 10",
     "Description": "數位筆記應用程式 (通用 Windows 平台版本)"
   },
   "Microsoft.Office.Sway": {
@@ -116,7 +116,7 @@
     "Description": "透過桌面流程自動執行重複的電腦工作"
   },
   "Microsoft.SkypeApp": {
-    "FriendlyName": "Skype (市集版)",
+    "FriendlyName": "Skype",
     "Description": "Skype 通訊應用程式，通用 Windows 平台版本 (已停止提供)"
   },
   "Microsoft.Todos": {
@@ -136,7 +136,7 @@
     "Description": "向 Microsoft 提供 Windows 意見反應的應用程式"
   },
   "Microsoft.WindowsMaps": {
-    "FriendlyName": "Windows 地圖",
+    "FriendlyName": "地圖",
     "Description": "地圖與導航應用程式 (已停止提供)"
   },
   "Microsoft.WindowsSoundRecorder": {
@@ -152,7 +152,7 @@
     "Description": "用來播放已購買影片內容的應用程式 (新的租借與購買服務已停止提供)"
   },
   "MicrosoftCorporationII.MicrosoftFamily": {
-    "FriendlyName": "Microsoft Family Safety",
+    "FriendlyName": "Family",
     "Description": "用於管理家庭螢幕時間、內容篩選與活動報告的應用程式"
   },
   "MicrosoftCorporationII.QuickAssist": {
@@ -176,7 +176,7 @@
     "Description": "Actipro 應用程式，包括文字與程式碼編輯器 Code Writer"
   },
   "AdobeSystemsIncorporated.AdobePhotoshopExpress": {
-    "FriendlyName": "Adobe Express Photos (先前稱為 Photoshop Express)",
+    "FriendlyName": "Adobe Express Photos",
     "Description": "編輯相片、移除物件和背景，並註解螢幕擷取畫面"
   },
   "Amazon.com.Amazon": {
@@ -184,11 +184,11 @@
     "Description": "Amazon 購物應用程式"
   },
   "AmazonVideo.PrimeVideo": {
-    "FriendlyName": "Prime Video for Windows",
+    "FriendlyName": "Prime Video",
     "Description": "Amazon Prime Video 串流服務應用程式"
   },
   "Asphalt8Airborne": {
-    "FriendlyName": "Asphalt 8: Airborne",
+    "FriendlyName": "狂野飆車8：極速凌雲",
     "Description": "包含汽車、機車及多人競速的街機賽車遊戲"
   },
   "AutodeskSketchBook": {
@@ -196,7 +196,7 @@
     "Description": "Autodesk 舊版繪圖及素描應用程式 (已停止提供)"
   },
   "CaesarsSlotsFreeCasino": {
-    "FriendlyName": "Caesars Slots",
+    "FriendlyName": "Caesars Casino - Casino Slots Game",
     "Description": "賭場吃角子老虎機遊戲"
   },
   "COOKINGFEVER": {
@@ -208,7 +208,7 @@
     "Description": "多媒體軟體套件 (通常由電腦原廠預先安裝)"
   },
   "DisneyMagicKingdoms": {
-    "FriendlyName": "Disney Magic Kingdoms",
+    "FriendlyName": "迪士尼夢幻王國",
     "Description": "迪士尼主題樂園建造遊戲"
   },
   "Disney.37853FC22B2CE": {
@@ -236,7 +236,7 @@
     "Description": "以雜誌風格呈現的新聞與社群網路彙整應用程式"
   },
   "HiddenCity": {
-    "FriendlyName": "隱秘城市：尋物冒險",
+    "FriendlyName": "隱秘城市: 尋物冒險",
     "Description": "尋物解謎冒險遊戲"
   },
   "HULULLC.HULUPLUS": {
@@ -244,7 +244,7 @@
     "Description": "Hulu 串流服務應用程式"
   },
   "iHeartRadio": {
-    "FriendlyName": "iHeartRadio",
+    "FriendlyName": "iHeart: Radio, Music, Podcasts",
     "Description": "收聽直播電台、音樂及 Podcast"
   },
   "Facebook.Instagram": {
@@ -292,11 +292,11 @@
     "Description": "相片拼貼製作應用程式"
   },
   "PicsArt-PhotoStudio": {
-    "FriendlyName": "Picsart Photo Editor",
+    "FriendlyName": "Picsart - Photo Studio",
     "Description": "相片編輯與創意應用程式"
   },
   "PolarrPhotoEditorAcademicEdition": {
-    "FriendlyName": "潑辣修圖專業版",
+    "FriendlyName": "Polarr Pro Photo Editor",
     "Description": "使用濾鏡、色彩調整及局部遮色片編輯相片"
   },
   "flaregamesGmbH.RoyalRevolt": {
@@ -328,7 +328,7 @@
     "Description": "檔案壓縮與解壓縮公用程式 (通用 Windows 平台版本)"
   },
   "Microsoft.BingSearch": {
-    "FriendlyName": "Microsoft Bing (搜尋)",
+    "FriendlyName": "Microsoft Bing",
     "Description": "將 Microsoft Bing 網頁搜尋整合至 Windows 搜尋的應用程式"
   },
   "Microsoft.Edge": {
@@ -364,7 +364,7 @@
     "Description": "繪製、裁剪、調整大小及編輯影像"
   },
   "Microsoft.People": {
-    "FriendlyName": "Microsoft 人員",
+    "FriendlyName": "連絡人",
     "Description": "儲存及整理郵件與行事曆應用程式的連絡人 (已停止提供)"
   },
   "MicrosoftCorporationII.Windows365": {
@@ -380,7 +380,7 @@
     "Description": "擷取、註釋、儲存及分享螢幕擷取畫面"
   },
   "Microsoft.StartExperiencesApp": {
-    "FriendlyName": "Start Experiences App (小工具)",
+    "FriendlyName": "開始體驗應用程式",
     "Description": "此應用程式提供 Windows 小工具的「我的摘要」功能"
   },
   "Microsoft.SurfaceHub": {
@@ -417,7 +417,7 @@
   },
   "Microsoft.WindowsTerminal": {
     "FriendlyName": "終端機",
-    "Description": "適用於命令提示字元、PowerShell 及 WSL 的索引標籤終端機。警告：移除執行 Win11Debloat 的終端機可能關閉其工作階段"
+    "Description": "Windows 11 的預設終端機應用程式（命令提示字元、PowerShell、WSL）。警告：如果你從 Windows 終端機啟動 Win11Debloat，請勿移除此應用程式，否則將導致指令碼執行失敗。"
   },
   "Microsoft.Xbox.TCUI": {
     "FriendlyName": "Xbox Live (TCUI)",
@@ -425,11 +425,11 @@
   },
   "Microsoft.XboxGameOverlay": {
     "FriendlyName": "Xbox 遊戲覆疊",
-    "Description": "舊版 Xbox 遊戲內覆蓋元件。警告：移除可能影響遊戲中的 Xbox 功能"
+    "Description": "Xbox Game Bar 的遊戲內覆疊元件。某些遊戲需要此應用程式。警告：解除安裝此應用程式可能降低搭載某些現代處理器的電腦的遊戲效能。"
   },
   "Microsoft.XboxGamingOverlay": {
     "FriendlyName": "Game Bar",
-    "Description": "遊戲內錄影、螢幕擷取畫面、小工具及 Xbox 社交功能。警告：移除 Game Bar 可能降低部分 AMD Ryzen 9 X3D 系統的效能"
+    "Description": "此應用程式提供遊戲內覆疊及 Xbox 服務整合。某些遊戲需要此應用程式。警告：解除安裝此應用程式可能降低搭載某些現代處理器的電腦的遊戲效能。"
   },
   "Microsoft.XboxIdentityProvider": {
     "FriendlyName": "Xbox 身分識別提供者",
@@ -452,7 +452,7 @@
     "Description": "將行動裝置與檔案總管及相機功能整合"
   },
   "MicrosoftWindows.Client.WebExperience": {
-    "FriendlyName": "Windows 網頁體驗套件",
+    "FriendlyName": "Windows 小工具",
     "Description": "協助透過 Microsoft Store 提供及更新小工具等特定功能"
   },
   "Microsoft.WidgetsPlatformRuntime": {
@@ -464,7 +464,7 @@
     "Description": "用於效能監控和裝置設定的 HP 遊戲中心"
   },
   "AcerIncorporated.AcerCareCenterS": {
-    "FriendlyName": "Acer Care Center S",
+    "FriendlyName": "Acer Care Center",
     "Description": "Acer 裝置資訊、診斷和維護工具"
   },
   "B9ECED6F.ASUSPCAssistant": {
@@ -476,7 +476,7 @@
     "Description": "用於在裝置之間共用螢幕和傳輸檔案的 ASUS 應用程式"
   },
   "SAMSUNGELECTRONICSCoLtd.SamsungQuickShare": {
-    "FriendlyName": "Samsung Quick Share",
+    "FriendlyName": "Samsung 快速分享",
     "Description": "用於在附近裝置之間共用檔案的 Samsung 應用程式"
   },
   "9426MICRO-STARINTERNATION.MSICenter": {
@@ -484,7 +484,7 @@
     "Description": "MSI 裝置設定和效能監控"
   },
   "SAMSUNGELECTRONICSCO.LTD.PCGallery": {
-    "FriendlyName": "Samsung Gallery",
+    "FriendlyName": "Samsung 媒體瀏覽器",
     "Description": "Samsung 相片和影片媒體庫"
   },
   "SAMSUNGELECTRONICSCoLtd.SamsungFlux": {
@@ -520,11 +520,11 @@
     "Description": "用於連接、監控和控制智慧家庭裝置的 Samsung 應用程式"
   },
   "SAMSUNGELECTRONICSCoLtd.MultiControl": {
-    "FriendlyName": "Samsung Multi control",
+    "FriendlyName": "Samsung 多功能操控",
     "Description": "用於在相容的 Galaxy 裝置之間共用鍵盤和滑鼠的 Samsung 應用程式"
   },
   "SAMSUNGELECTRONICSCoLtd.SecondScreen": {
-    "FriendlyName": "Samsung Second Screen",
+    "FriendlyName": "Samsung 第二螢幕",
     "Description": "用於將相容的 Galaxy 平板電腦用作電腦延伸顯示器的 Samsung 應用程式"
   },
   "SAMSUNGELECTRONICSCO.LTD.PENUP": {

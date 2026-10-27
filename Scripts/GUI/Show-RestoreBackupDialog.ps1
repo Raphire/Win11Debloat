@@ -331,6 +331,7 @@ function Show-RestoreBackupDialog {
                 }
             }
             catch {
+                Write-Error "Failed to load registry backup '$($openDialog.FileName)': $($_.Exception.Message)" -ErrorAction Continue
                 Show-MessageBox -Owner $window -Title (Get-Translation -Key 'RestoreInvalidBackupTitle') -Message (Get-Translation -Key 'RestoreInvalidBackupMessage' -FormatArgs @($_.Exception.Message)) -Button 'OK' -Icon 'Error' | Out-Null
                 return
             }

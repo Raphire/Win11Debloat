@@ -2,7 +2,7 @@
 function Show-CliDefaultModeAppRemovalOptions {
     Write-CliHeader 'Default Mode'
 
-    Write-Host "Please note: The default selection of apps includes Microsoft Teams, Spotify, Sticky Notes and more. Select option 2 to verify and change what apps are removed by the script" -ForegroundColor DarkGray
+    Write-Host "Please note: The default selection of apps includes Microsoft Teams, Spotify, Microsoft Sticky Notes and more. Select option 2 to verify and change what apps are removed by the script" -ForegroundColor DarkGray
     Write-Host ""
 
     Do {

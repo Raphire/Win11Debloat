@@ -1,4 +1,4 @@
-{
+﻿{
   "Features": {
     "RemoveApps": {
       "Label": "Rimuovi le app specificate con il parametro 'Apps'",
@@ -161,11 +161,11 @@
       "ApplyUndoText": "Abilitazione della sezione 'Tutte le app' nel Menu Start"
     },
     "DisableStartPhoneLink": {
-      "Label": "Disabilita l'integrazione di Phone Link nel Menu Start",
-      "ToolTip": "Rimuove l'integrazione di Phone Link dal Menu Start quando hai un dispositivo mobile collegato al PC.",
-      "ApplyText": "Disabilitazione dell'integrazione dei dispositivi mobili di Phone Link nel Menu Start",
-      "UndoLabel": "Abilita l'integrazione di Phone Link nel Menu Start",
-      "ApplyUndoText": "Abilitazione dell'integrazione dei dispositivi mobili di Phone Link nel Menu Start"
+      "Label": "Disabilita l'integrazione di Collegamento al telefono nel Menu Start",
+      "ToolTip": "Rimuove l'integrazione di Collegamento al telefono dal Menu Start quando hai un dispositivo mobile collegato al PC.",
+      "ApplyText": "Disabilitazione dell'integrazione dei dispositivi mobili di Collegamento al telefono nel Menu Start",
+      "UndoLabel": "Abilita l'integrazione di Collegamento al telefono nel Menu Start",
+      "ApplyUndoText": "Abilitazione dell'integrazione dei dispositivi mobili di Collegamento al telefono nel Menu Start"
     },
     "DisableBing": {
       "Label": "Disabilita la ricerca web Bing e l'integrazione di Copilot nella ricerca",
@@ -229,13 +229,6 @@
       "ApplyText": "Abilitazione della modalità scura per sistema e app",
       "UndoLabel": "Disabilita il tema scuro per sistema e app",
       "ApplyUndoText": "Disabilitazione della modalità scura per sistema e app"
-    },
-    "DisableDragTray": {
-      "Label": "Disabilita 'Drag Tray' per condividere e spostare file",
-      "ToolTip": "Drag Tray è una nuova funzionalità di Windows 11 per condividere e spostare file; viene visualizzata nella parte superiore dello schermo quando trascini dei file.",
-      "ApplyText": "Disabilitazione di Drag Tray",
-      "UndoLabel": "Abilita 'Drag Tray' per condividere e spostare file",
-      "ApplyUndoText": "Abilitazione di Drag Tray"
     },
     "RevertContextMenu": {
       "Label": "Usa lo stile del menu contestuale classico di Windows 10",
@@ -594,7 +587,7 @@
     },
     "EnableWindowsSandbox": {
       "Label": "Abilita Windows Sandbox",
-      "ToolTip": "Windows Sandbox è un ambiente desktop leggero per eseguire applicazioni in modo sicuro e isolato. Il software installato nell'ambiente Windows Sandbox rimane isolato e viene eseguito separatamente dalla macchina host. Supportato solo nelle edizioni Windows 11 Pro, Workstation ed Enterprise.",
+      "ToolTip": "Windows Sandbox è un ambiente desktop leggero per eseguire applicazioni in modo sicuro e isolato. Il software installato nell'ambiente Windows Sandbox rimane isolato e viene eseguito separatamente dalla macchina host. Supportato solo nelle edizioni Windows 11 Pro, Workstation, Enterprise ed Education.",
       "ApplyText": "Abilitazione di Windows Sandbox",
       "UndoLabel": "Disabilita Windows Sandbox",
       "ApplyUndoText": "Disabilitazione di Windows Sandbox"

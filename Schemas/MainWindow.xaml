@@ -147,7 +147,6 @@
 
         <!-- TextBlock style for App Name column in apps table -->
         <Style x:Key="AppNameTextStyle" TargetType="TextBlock">
-            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
 
@@ -160,7 +159,7 @@
 
         <!-- Column widths for the app table rows and header (indicator | name | description | id) -->
         <GridLength x:Key="AppTableDotColWidth">16</GridLength>
-        <GridLength x:Key="AppTableNameColWidth">180</GridLength>
+        <GridLength x:Key="AppTableNameColWidth">Auto</GridLength>
         <GridLength x:Key="AppTableDescColWidth">1*</GridLength>
         <GridLength x:Key="AppTableIdColWidth">261</GridLength>
 
@@ -650,7 +649,7 @@
                             </Grid.RowDefinitions>
                             
                             <!-- Apps List -->
-                            <Grid Grid.Row="0" Margin="20,0,20,10">
+                            <Grid Grid.Row="0" Margin="20,0,20,10" Grid.IsSharedSizeScope="True">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="*"/>
@@ -660,7 +659,7 @@
                                     <Grid Margin="42,6,23,8">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="{StaticResource AppTableDotColWidth}"/>
-                                            <ColumnDefinition Width="{StaticResource AppTableNameColWidth}"/>
+                                            <ColumnDefinition Width="{StaticResource AppTableNameColWidth}" SharedSizeGroup="AppTableName"/>
                                             <ColumnDefinition Width="{StaticResource AppTableDescColWidth}"/>
                                             <ColumnDefinition Width="{StaticResource AppTableIdColWidth}"/>
                                         </Grid.ColumnDefinitions>

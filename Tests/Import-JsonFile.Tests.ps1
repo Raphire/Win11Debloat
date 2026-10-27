@@ -15,14 +15,21 @@ Describe 'Import-JsonFile' {
         $result.Name | Should -Be 'Example configuration'
     }
 
-    It 'parses the <Kind> settings fixture' -ForEach @(
-        @{ Kind = 'default'; FileName = 'DefaultSettings.Valid.json' }
-        @{ Kind = 'last-used'; FileName = 'LastUsedSettings.Valid.json' }
-    ) {
-        $result = Import-JsonFile -filePath (Join-Path $script:FixturePath $FileName) -expectedVersion '1.0'
+    It 'parses the default settings fixture' {
+        $result = Import-JsonFile -filePath (Join-Path $script:FixturePath 'DefaultSettings.Valid.json') -expectedVersion '1.0'
 
         $result.Settings | Should -Not -BeNullOrEmpty
         $result.Settings[0].Name | Should -Be 'Supported'
+    }
+
+    It 'parses a single last-used setting and preserves its Boolean value' {
+        $result = Import-JsonFile -filePath (Join-Path $script:FixturePath 'LastUsedSettings.Valid.json') -expectedVersion '1.0'
+
+        $result.Settings | Should -HaveCount 1
+        $result.Settings[0].Name | Should -Be 'Supported'
+        $result.Settings[0].Value | Should -BeOfType ([bool])
+        $result.Settings[0].Value | Should -BeTrue
+        Should -Invoke Write-Error -Times 0 -Exactly
     }
 
     It 'returns null and reports an error for <Case>' -ForEach @(

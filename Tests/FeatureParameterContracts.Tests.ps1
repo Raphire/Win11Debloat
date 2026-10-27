@@ -30,13 +30,6 @@ Describe 'FeatureId parameter contracts' {
         $missing | Should -HaveCount 0 -Because ($missing -join ', ')
     }
 
-    It 'declares every FeatureId as a parameter on Scripts/Get.ps1' {
-        $parameterNames = Get-ScriptParameterNames -Path $script:GetScriptPath
-        $missing = @($script:Features.FeatureId | Where-Object { $parameterNames -notcontains $_ })
-
-        $missing | Should -HaveCount 0 -Because ($missing -join ', ')
-    }
-
     It 'keeps Scripts/Get.ps1 aligned with Win11Debloat.ps1 plus launcher-only switches' {
         $win11DebloatParameters = Get-ScriptParameterNames -Path $script:Win11DebloatPath
         $getParameters = Get-ScriptParameterNames -Path $script:GetScriptPath

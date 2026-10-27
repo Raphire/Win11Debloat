@@ -1,4 +1,4 @@
-{
+﻿{
   "Features": {
     "RemoveApps": {
       "Label": "Remover os apps especificados com o parâmetro 'Apps'",
@@ -9,7 +9,7 @@
       "ApplyText": "Removendo apps selecionados"
     },
     "RemoveGamingApps": {
-      "Label": "Remover o App Xbox e o Xbox Gamebar",
+      "Label": "Remover o App Xbox e o Xbox Game Bar",
       "ApplyText": "Removendo apps relacionados a jogos"
     },
     "RemoveHPApps": {
@@ -161,11 +161,11 @@
       "ApplyUndoText": "Habilitando a seção 'Todos os Apps' no Menu Iniciar"
     },
     "DisableStartPhoneLink": {
-      "Label": "Desabilitar integração do Phone Link no Menu Iniciar",
-      "ToolTip": "Isto removerá a integração do Phone Link no Menu Iniciar quando você tiver um dispositivo móvel conectado ao seu PC.",
-      "ApplyText": "Desabilitando a integração de dispositivos móveis do Phone Link no Menu Iniciar",
-      "UndoLabel": "Habilitar integração do Phone Link no Menu Iniciar",
-      "ApplyUndoText": "Habilitando a integração de dispositivos móveis do Phone Link no Menu Iniciar"
+      "Label": "Desabilitar integração do Vincular ao Celular no Menu Iniciar",
+      "ToolTip": "Isto removerá a integração do Vincular ao Celular no Menu Iniciar quando você tiver um dispositivo móvel conectado ao seu PC.",
+      "ApplyText": "Desabilitando a integração de dispositivos móveis do Vincular ao Celular no Menu Iniciar",
+      "UndoLabel": "Habilitar integração do Vincular ao Celular no Menu Iniciar",
+      "ApplyUndoText": "Habilitando a integração de dispositivos móveis do Vincular ao Celular no Menu Iniciar"
     },
     "DisableBing": {
       "Label": "Desabilitar pesquisa web do Bing e integração do Copilot na pesquisa",
@@ -182,18 +182,18 @@
       "ApplyUndoText": "Habilitando sugestões de apps da Microsoft Store na pesquisa"
     },
     "DisableSettings365Ads": {
-      "Label": "Ocultar anúncios do Microsoft 365 Copilot na Página Inicial do Configurações",
-      "ToolTip": "Isto desabilitará os anúncios do Microsoft 365 Copilot que aparecem na página inicial do Configurações.",
-      "ApplyText": "Desabilitando anúncios do Microsoft 365 Copilot na Página Inicial do Configurações",
-      "UndoLabel": "Mostrar anúncios do Microsoft 365 Copilot na Página Inicial do Configurações",
-      "ApplyUndoText": "Habilitando anúncios do Microsoft 365 Copilot na Página Inicial do Configurações"
+      "Label": "Ocultar anúncios do Microsoft 365 Copilot na Página Inicial de Configurações",
+      "ToolTip": "Isto desabilitará os anúncios do Microsoft 365 Copilot que aparecem na página inicial de Configurações.",
+      "ApplyText": "Desabilitando anúncios do Microsoft 365 Copilot na Página Inicial de Configurações",
+      "UndoLabel": "Mostrar anúncios do Microsoft 365 Copilot na Página Inicial de Configurações",
+      "ApplyUndoText": "Habilitando anúncios do Microsoft 365 Copilot na Página Inicial de Configurações"
     },
     "DisableSettingsHome": {
-      "Label": "Ocultar página 'Inicial' do Configurações",
+      "Label": "Ocultar página 'Inicial' de Configurações",
       "ToolTip": "Remove a página 'Inicial' do app Configurações.",
-      "ApplyText": "Desabilitando a Página Inicial do Configurações",
-      "UndoLabel": "Mostrar página 'Inicial' do Configurações",
-      "ApplyUndoText": "Habilitando a Página Inicial do Configurações"
+      "ApplyText": "Desabilitando a Página Inicial de Configurações",
+      "UndoLabel": "Mostrar página 'Inicial' de Configurações",
+      "ApplyUndoText": "Habilitando a Página Inicial de Configurações"
     },
     "DisableEdgeAI": {
       "Label": "Desabilitar funcionalidades de IA no Microsoft Edge",
@@ -217,11 +217,11 @@
       "ApplyUndoText": "Habilitando funcionalidades de IA no Paint"
     },
     "DisableNotepadAI": {
-      "Label": "Desabilitar funcionalidades de IA no Notepad",
-      "ToolTip": "Isto desabilitará funcionalidades de IA no Notepad, como as sugestões de escrita com IA. Esta funcionalidade usa políticas, que bloqueiam certas configurações.",
-      "ApplyText": "Desabilitando funcionalidades de IA no Notepad",
-      "UndoLabel": "Habilitar funcionalidades de IA no Notepad",
-      "ApplyUndoText": "Habilitando funcionalidades de IA no Notepad"
+      "Label": "Desabilitar funcionalidades de IA no Bloco de Notas",
+      "ToolTip": "Isto desabilitará funcionalidades de IA no Bloco de Notas, como as sugestões de escrita com IA. Esta funcionalidade usa políticas, que bloqueiam certas configurações.",
+      "ApplyText": "Desabilitando funcionalidades de IA no Bloco de Notas",
+      "UndoLabel": "Habilitar funcionalidades de IA no Bloco de Notas",
+      "ApplyUndoText": "Habilitando funcionalidades de IA no Bloco de Notas"
     },
     "EnableDarkMode": {
       "Label": "Habilitar tema escuro para o sistema e apps",
@@ -229,13 +229,6 @@
       "ApplyText": "Habilitando modo escuro para o sistema e apps",
       "UndoLabel": "Desabilitar tema escuro para o sistema e apps",
       "ApplyUndoText": "Desabilitando modo escuro para o sistema e apps"
-    },
-    "DisableDragTray": {
-      "Label": "Desabilitar 'Drag Tray' para compartilhar e mover arquivos",
-      "ToolTip": "O Drag Tray é uma nova funcionalidade para compartilhar e mover arquivos no Windows 11, aparece no topo da tela ao arrastar arquivos.",
-      "ApplyText": "Desabilitando Drag Tray",
-      "UndoLabel": "Habilitar 'Drag Tray' para compartilhar e mover arquivos",
-      "ApplyUndoText": "Habilitando Drag Tray"
     },
     "RevertContextMenu": {
       "Label": "Usar estilo clássico de menu de contexto do Windows 10",
@@ -259,11 +252,11 @@
       "ApplyUndoText": "Habilitando o atalho de teclado das Teclas de Aderência"
     },
     "DisableWindowSnapping": {
-      "Label": "Desabilitar snapping de janelas",
+      "Label": "Desabilitar encaixe de janelas",
       "ToolTip": "Isto desabilitará a capacidade de encaixar janelas nas laterais ou cantos da tela.",
-      "ApplyText": "Desabilitando snapping de janelas",
-      "UndoLabel": "Habilitar snapping de janelas",
-      "ApplyUndoText": "Habilitando snapping de janelas"
+      "ApplyText": "Desabilitando encaixe de janelas",
+      "UndoLabel": "Habilitar encaixe de janelas",
+      "ApplyUndoText": "Habilitando encaixe de janelas"
     },
     "DisableSnapAssist": {
       "Label": "Desabilitar sugestões de apps ao encaixar janelas",
@@ -344,11 +337,11 @@
       "ApplyUndoText": "Mostrando o ícone do chat da barra de tarefas"
     },
     "DisableStorageSense": {
-      "Label": "Desabilitar limpeza automática de disco do Storage Sense",
-      "ToolTip": "Isto desabilitará o Storage Sense, que automaticamente libera espaço em disco deletando arquivos temporários, esvaziando a lixeira e limpando arquivos na pasta de Downloads.",
-      "ApplyText": "Desabilitando limpeza automática de disco do Storage Sense",
-      "UndoLabel": "Habilitar limpeza automática de disco do Storage Sense",
-      "ApplyUndoText": "Habilitando limpeza automática de disco do Storage Sense"
+      "Label": "Desabilitar limpeza automática de disco do Sensor de Armazenamento",
+      "ToolTip": "Isto desabilitará o Sensor de Armazenamento, que automaticamente libera espaço em disco deletando arquivos temporários, esvaziando a lixeira e limpando arquivos na pasta de Downloads.",
+      "ApplyText": "Desabilitando limpeza automática de disco do Sensor de Armazenamento",
+      "UndoLabel": "Habilitar limpeza automática de disco do Sensor de Armazenamento",
+      "ApplyUndoText": "Habilitando limpeza automática de disco do Sensor de Armazenamento"
     },
     "DisableFastStartup": {
       "Label": "Desabilitar inicialização rápida",
@@ -594,17 +587,17 @@
     },
     "EnableWindowsSandbox": {
       "Label": "Habilitar Windows Sandbox",
-      "ToolTip": "O Windows Sandbox é um ambiente de área de trabalho leve para executar aplicativos com segurança em isolamento. O software instalado dentro do ambiente Windows Sandbox permanece 'em sandbox' e é executado separadamente da máquina host. Suportado apenas nas edições Windows 11 Pro, Workstation e Enterprise.",
+      "ToolTip": "O Windows Sandbox é um ambiente de área de trabalho leve para executar aplicativos com segurança em isolamento. O software instalado dentro do ambiente Windows Sandbox permanece 'em sandbox' e é executado separadamente da máquina host. Suportado apenas nas edições Windows 11 Pro, Workstation, Enterprise e Education.",
       "ApplyText": "Habilitando Windows Sandbox",
       "UndoLabel": "Desabilitar Windows Sandbox",
       "ApplyUndoText": "Desabilitando Windows Sandbox"
     },
     "EnableWindowsSubsystemForLinux": {
-      "Label": "Habilitar Windows Subsystem for Linux",
-      "ToolTip": "O Windows Subsystem for Linux permite que você execute um ambiente Linux diretamente no Windows sem a necessidade de uma máquina virtual.",
-      "ApplyText": "Habilitando Windows Subsystem for Linux",
-      "UndoLabel": "Desabilitar Windows Subsystem for Linux",
-      "ApplyUndoText": "Desabilitando Windows Subsystem for Linux"
+      "Label": "Habilitar Subsistema do Windows para Linux",
+      "ToolTip": "O Subsistema do Windows para Linux permite que você execute um ambiente Linux diretamente no Windows sem a necessidade de uma máquina virtual.",
+      "ApplyText": "Habilitando Subsistema do Windows para Linux",
+      "UndoLabel": "Desabilitar Subsistema do Windows para Linux",
+      "ApplyUndoText": "Desabilitando Subsistema do Windows para Linux"
     },
     "ShowDriveLettersFirst": {
       "Label": "Mostrar letras de unidade antes da etiqueta da unidade",

@@ -29,7 +29,7 @@ Describe 'Resolve-LanguageFolder' {
         @{ Case = 'an exact match'; LanguageCode = 'en-US'; Expected = 'en-US' }
         @{ Case = 'a second exact match'; LanguageCode = 'es-ES'; Expected = 'es-ES' }
         @{ Case = 'a language-prefix match when no exact folder exists'; LanguageCode = 'es-AR'; Expected = 'es-ES' }
-        @{ Case = 'an unrelated locale to the en-US fallback'; LanguageCode = 'fr-FR'; Expected = 'en-US' }
+        @{ Case = 'an unrelated locale to the en-US fallback'; LanguageCode = 'zz-ZZ'; Expected = 'en-US' }
     ) {
         Resolve-LanguageFolder -LanguageCode $LanguageCode | Should -Be $Expected
     }
@@ -64,7 +64,7 @@ Describe 'Import-LanguageFile' {
         # so there's no real fallback to warn about here, unlike the broken-folder case below.
         Mock Write-Warning {}
 
-        $lang = Import-LanguageFile -LanguageCode 'fr-FR'
+        $lang = Import-LanguageFile -LanguageCode 'zz-ZZ'
 
         $lang.LanguageCode | Should -Be 'en-US'
         Should -Invoke Write-Warning -Times 0 -Exactly
@@ -146,6 +146,50 @@ Describe 'Get-PluralCategory' {
         @{ Count = 2000000; Expected = 'many' }
     ) {
         Get-PluralCategory -LanguageCode 'pt-BR' -Count $Count | Should -Be $Expected
+    }
+
+    It 'returns <Expected> for a French count of <Count>' -ForEach @(
+        @{ Count = 0; Expected = 'one' }
+        @{ Count = 1; Expected = 'one' }
+        @{ Count = 2; Expected = 'other' }
+        @{ Count = 100; Expected = 'other' }
+        # CLDR puts whole millions in 'many'; this rule keeps them on 'other' on purpose,
+        # because the French catalogs have no '_many' keys and the loader falls back to the
+        # bare key rather than to '_other' when a category is missing.
+        @{ Count = 1000000; Expected = 'other' }
+    ) {
+        Get-PluralCategory -LanguageCode 'fr-FR' -Count $Count | Should -Be $Expected
+    }
+
+    It 'returns <Expected> for a Russian count of <Count>' -ForEach @(
+        @{ Count = 0; Expected = 'many' }
+        @{ Count = 1; Expected = 'one' }
+        @{ Count = 2; Expected = 'few' }
+        @{ Count = 4; Expected = 'few' }
+        @{ Count = 5; Expected = 'many' }
+        @{ Count = 11; Expected = 'many' }
+        @{ Count = 12; Expected = 'many' }
+        @{ Count = 14; Expected = 'many' }
+        @{ Count = 21; Expected = 'one' }
+        @{ Count = 22; Expected = 'few' }
+        @{ Count = 25; Expected = 'many' }
+        @{ Count = 101; Expected = 'one' }
+        @{ Count = 111; Expected = 'many' }
+        @{ Count = 122; Expected = 'few' }
+    ) {
+        Get-PluralCategory -LanguageCode 'ru-RU' -Count $Count | Should -Be $Expected
+    }
+
+    It 'returns other for a Korean count of <Count>' -ForEach @(
+        @{ Count = 0 }
+        @{ Count = 1 }
+        @{ Count = 2 }
+        @{ Count = 5 }
+        @{ Count = 11 }
+        @{ Count = 100 }
+        @{ Count = 1000000 }
+    ) {
+        Get-PluralCategory -LanguageCode 'ko-KR' -Count $Count | Should -Be 'other'
     }
 }
 

@@ -81,7 +81,6 @@ param (
     [switch]$ClearStartAllUsers,
     [string]$ReplaceStartAllUsers,
     [switch]$RevertContextMenu,
-    [switch]$DisableDragTray,
     [switch]$DisableMouseAcceleration,
     [switch]$DisableStickyKeys,
     [switch]$DisableWindowSnapping,
@@ -124,6 +123,28 @@ $tempRootPath = $env:TEMP
 $tempWorkPath = Join-Path $tempRootPath 'Win11Debloat'
 $tempArchivePath = Join-Path $tempRootPath 'win11debloat.zip'
 
+# Read the expected SHA-256 of a file from the text of a SHA256SUMS file (lines of "<64 hex digits>  <file name>", as
+# written by sha256sum). Returns $null when the file is not listed.
+function Get-ExpectedFileHash([string]$SumsText, [string]$FileName) {
+    foreach ($line in ($SumsText -split "`r?`n")) {
+        if ($line -match '^([0-9a-fA-F]{64})\s+\*?(.+?)\s*$' -and $Matches[2] -ceq $FileName) {
+            return $Matches[1].ToLowerInvariant()
+        }
+    }
+    return $null
+}
+
+# Check a file against an expected SHA-256 value (hex digits, any case).
+function Test-FileHashMatch([string]$Path, [string]$ExpectedHash) {
+    return (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash -ieq $ExpectedHash
+}
+
+# Names of the release assets the archive is verified with. When a release does not publish both, the source archive
+# GitHub generates for the release is downloaded as before, without a checksum to compare it to.
+$releaseArchiveName = 'Win11Debloat.zip'
+$releaseChecksumsName = 'SHA256SUMS'
+$expectedArchiveHash = $null
+
 # Download Win11Debloat from GitHub as a zip archive.
 try {
     if ($Dev) {
@@ -131,13 +152,37 @@ try {
         $sourceUri = "https://github.com/Raphire/Win11Debloat/archive/refs/heads/master.zip"
     } else {
         Write-Output "> Downloading Win11Debloat..."
-        $sourceUri = (Invoke-RestMethod https://api.github.com/repos/Raphire/Win11Debloat/releases/latest).zipball_url
+        $release = Invoke-RestMethod https://api.github.com/repos/Raphire/Win11Debloat/releases/latest
+        $sourceUri = $release.zipball_url
+
+        $archiveAsset = @($release.assets | Where-Object { $_.name -ceq $releaseArchiveName }) | Select-Object -First 1
+        $checksumsAsset = @($release.assets | Where-Object { $_.name -ceq $releaseChecksumsName }) | Select-Object -First 1
+        if ($archiveAsset -and $checksumsAsset) {
+            $checksumsPath = Join-Path $tempRootPath 'win11debloat.sha256sums'
+            Invoke-RestMethod $checksumsAsset.browser_download_url -OutFile $checksumsPath
+            $expectedArchiveHash = Get-ExpectedFileHash ([System.IO.File]::ReadAllText($checksumsPath)) $releaseArchiveName
+            Remove-Item $checksumsPath -Force
+            if (-not $expectedArchiveHash) {
+                throw "$releaseChecksumsName does not list $releaseArchiveName."
+            }
+            $sourceUri = $archiveAsset.browser_download_url
+        }
     }
     Invoke-RestMethod $sourceUri -OutFile $tempArchivePath
 }
 catch {
     Write-Host "Unable to fetch required files from GitHub. Please check your internet connection and try again." -ForegroundColor Red
     Write-Error -ErrorRecord $_
+    Write-Output ""
+    Write-Output "Press enter to exit..."
+    Read-Host | Out-Null
+    Exit 1
+}
+
+# Do not use an archive that differs from the checksum published with the release
+if ($expectedArchiveHash -and -not (Test-FileHashMatch $tempArchivePath $expectedArchiveHash)) {
+    Remove-Item $tempArchivePath -Force
+    Write-Host "The downloaded Win11Debloat archive does not match the SHA-256 checksum published with the release." -ForegroundColor Red
     Write-Output ""
     Write-Output "Press enter to exit..."
     Read-Host | Out-Null

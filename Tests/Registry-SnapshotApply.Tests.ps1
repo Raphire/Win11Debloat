@@ -133,12 +133,12 @@ Describe 'Get-RegistryKeySnapshot' {
         Mock Split-RegistryPath { [PSCustomObject]@{ Hive = 'HKEY_CURRENT_USER'; SubKey = 'Software\Example' } }
     }
 
-    It 'returns an explicit non-existent snapshot when the key is absent' {
+    It 'returns an explicit non-existent snapshot when key deletion is allowed' {
         $root = [PSCustomObject]@{}
         $root | Add-Member ScriptMethod OpenSubKey { $null }
         Mock Get-RegistryRootKey { $root }
 
-        $snapshot = Get-RegistryKeySnapshot -KeyPath 'HKEY_CURRENT_USER\Software\Example'
+        $snapshot = Get-RegistryKeySnapshot -KeyPath 'HKEY_CURRENT_USER\Software\Example' -AllowDeleteKey:$true
         $snapshot.Exists | Should -BeFalse
         $snapshot.Values | Should -HaveCount 0
     }

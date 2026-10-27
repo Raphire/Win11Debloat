@@ -1,4 +1,4 @@
-{
+﻿{
   "Features": {
     "RemoveApps": {
       "Label": "「Apps」パラメーターで指定されたアプリを削除する",
@@ -229,13 +229,6 @@
       "ApplyText": "システムとアプリのダーク モードを有効にしています",
       "UndoLabel": "システムとアプリでダーク テーマを無効にする",
       "ApplyUndoText": "システムとアプリのダーク モードを無効にしています"
-    },
-    "DisableDragTray": {
-      "Label": "ファイルの共有と移動用の「Drag Tray」を無効にする",
-      "ToolTip": "Drag Tray は Windows 11 でファイルを共有および移動するための新機能であり、ファイルをドラッグしたときに画面上部に表示されます。",
-      "ApplyText": "Drag Tray を無効にしています",
-      "UndoLabel": "ファイルの共有と移動用の「Drag Tray」を有効にする",
-      "ApplyUndoText": "Drag Tray を有効にしています"
     },
     "RevertContextMenu": {
       "Label": "従来の Windows 10 スタイルのコンテキスト メニューを使用する",
@@ -594,7 +587,7 @@
     },
     "EnableWindowsSandbox": {
       "Label": "Windows サンドボックスを有効にする",
-      "ToolTip": "Windows サンドボックスは、アプリケーションを安全に分離して実行するための軽量デスクトップ環境です。Windows サンドボックス環境内にインストールされたソフトウェアはサンドボックス内に保持され、ホスト マシンから分離して実行されます。Windows 11 Pro、Workstation、Enterprise エディションでのみサポートされています。",
+      "ToolTip": "Windows サンドボックスは、アプリケーションを安全に分離して実行するための軽量デスクトップ環境です。Windows サンドボックス環境内にインストールされたソフトウェアはサンドボックス内に保持され、ホスト マシンから分離して実行されます。Windows 11 Pro、Workstation、Enterprise、Education エディションでのみサポートされています。",
       "ApplyText": "Windows サンドボックスを有効にしています",
       "UndoLabel": "Windows サンドボックスを無効にする",
       "ApplyUndoText": "Windows サンドボックスを無効にしています"

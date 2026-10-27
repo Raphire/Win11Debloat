@@ -1,0 +1,650 @@
+﻿{
+  "Clipchamp.Clipchamp": {
+    "FriendlyName": "Microsoft Clipchamp",
+    "Description": "동영상을 만들고 편집하며 자르기, 자막 및 오디오 추가"
+  },
+  "Microsoft.3DBuilder": {
+    "FriendlyName": "3D 빌더",
+    "Description": "지원이 중단된 기본 3D 모델링 소프트웨어입니다."
+  },
+  "Microsoft.549981C3F5F10": {
+    "FriendlyName": "Cortana",
+    "Description": "지원이 중단된 Microsoft Cortana 음성 도우미입니다."
+  },
+  "Microsoft.BingFinance": {
+    "FriendlyName": "MSN 금융",
+    "Description": "Microsoft에서 제공하는 금융 뉴스 및 시세 추적 앱입니다."
+  },
+  "Microsoft.BingFoodAndDrink": {
+    "FriendlyName": "MSN 음식 및 음료",
+    "Description": "지원이 중단된 요리법 및 음식 뉴스 앱입니다."
+  },
+  "Microsoft.BingHealthAndFitness": {
+    "FriendlyName": "MSN 건강 및 피트니스",
+    "Description": "지원이 중단된 건강 및 피트니스 추적/뉴스 앱입니다."
+  },
+  "Microsoft.BingNews": {
+    "FriendlyName": "Microsoft 뉴스",
+    "Description": "맞춤 뉴스 피드 및 속보 알림"
+  },
+  "Microsoft.BingSports": {
+    "FriendlyName": "MSN 스포츠",
+    "Description": "지원이 중단된 스포츠 뉴스 및 점수 앱입니다."
+  },
+  "Microsoft.BingTranslator": {
+    "FriendlyName": "Microsoft 번역기",
+    "Description": "지원이 중단된 Microsoft 번역 앱입니다."
+  },
+  "Microsoft.BingTravel": {
+    "FriendlyName": "MSN 여행",
+    "Description": "지원이 중단된 여행 계획 및 뉴스 앱입니다."
+  },
+  "Microsoft.BingWeather": {
+    "FriendlyName": "MSN 날씨",
+    "Description": "Microsoft에서 제공하는 일기 예보 앱입니다."
+  },
+  "XP9CXNGPPJ97XX": {
+    "FriendlyName": "Microsoft Copilot",
+    "Description": "질문에 답하고 글을 작성하며 이미지를 생성하는 AI 도우미"
+  },
+  "Microsoft.Windows.AIHub": {
+    "FriendlyName": "Copilot+ AI Hub",
+    "Description": "Copilot+ PC용 AI 기능 및 앱 살펴보기"
+  },
+  "Microsoft.PCManager": {
+    "FriendlyName": "Microsoft PC Manager",
+    "Description": "Microsoft의 시스템 정리 및 최적화 도구로, 사전 설치되는 경우가 많습니다."
+  },
+  "Microsoft.Getstarted": {
+    "FriendlyName": "팁",
+    "Description": "Windows 기능 사용을 위한 팁 및 안내 (사용 중단 예정)"
+  },
+  "Microsoft.Messaging": {
+    "FriendlyName": "통신사 메시지",
+    "Description": "셀룰러 지원 PC에서 데이터 요금제 및 청구 SMS 수신(메시지 전송 불가)"
+  },
+  "Microsoft.Microsoft3DViewer": {
+    "FriendlyName": "3D 뷰어",
+    "Description": "지원이 중단된 3D 모델 뷰어입니다."
+  },
+  "Microsoft.MicrosoftJournal": {
+    "FriendlyName": "저널",
+    "Description": "디지털 펜으로 필기 메모 및 스케치 작성"
+  },
+  "Microsoft.MicrosoftOfficeHub": {
+    "FriendlyName": "Microsoft 365 Copilot",
+    "Description": "AI 채팅, 콘텐츠 만들기, 파일 검색 및 Microsoft 365 앱 액세스"
+  },
+  "Microsoft.MicrosoftPowerBIForWindows": {
+    "FriendlyName": "Power BI",
+    "Description": "지원이 중단된 비즈니스 분석 서비스 클라이언트입니다."
+  },
+  "Microsoft.MicrosoftSolitaireCollection": {
+    "FriendlyName": "Microsoft 솔리테어 컬렉션",
+    "Description": "여러 가지 솔리테어 카드 게임을 모은 앱입니다."
+  },
+  "Microsoft.MicrosoftStickyNotes": {
+    "FriendlyName": "스티커 메모",
+    "Description": "바탕 화면 메모 만들기 및 장치 간 동기화"
+  },
+  "Microsoft.MixedReality.Portal": {
+    "FriendlyName": "혼합 현실 포털",
+    "Description": "Windows Mixed Reality 헤드셋용 포털입니다. (사용 중단 예정)"
+  },
+  "Microsoft.NetworkSpeedTest": {
+    "FriendlyName": "네트워크 속도 테스트",
+    "Description": "다운로드 및 업로드 속도와 네트워크 지연 시간 측정"
+  },
+  "Microsoft.Office.OneNote": {
+    "FriendlyName": "OneNote",
+    "Description": "UWP(유니버설 Windows 플랫폼) 버전의 디지털 노트 필기 앱입니다."
+  },
+  "Microsoft.Office.Sway": {
+    "FriendlyName": "Sway",
+    "Description": "대화형 프레젠테이션, 보고서 및 스토리 만들기와 공유"
+  },
+  "Microsoft.OneConnect": {
+    "FriendlyName": "모바일 요금제",
+    "Description": "지원되는 SIM이 있는 호환 PC용 모바일 데이터 요금제 선택"
+  },
+  "Microsoft.Print3D": {
+    "FriendlyName": "3D 인쇄",
+    "Description": "3D 모델 인쇄 준비 (사용 중단 예정)"
+  },
+  "Microsoft.PowerAutomateDesktop": {
+    "FriendlyName": "Power Automate",
+    "Description": "데스크톱 흐름으로 반복적인 PC 작업 자동화"
+  },
+  "Microsoft.SkypeApp": {
+    "FriendlyName": "Skype(UWP)",
+    "Description": "지원이 중단된 Skype 통신 앱의 UWP(유니버설 Windows 플랫폼) 버전입니다."
+  },
+  "Microsoft.Todos": {
+    "FriendlyName": "Microsoft To Do",
+    "Description": "할 일 목록과 작업을 관리하는 앱입니다."
+  },
+  "Microsoft.Windows.DevHome": {
+    "FriendlyName": "Dev Home",
+    "Description": "지원이 중단된 개발자 대시보드 및 도구 구성 유틸리티입니다."
+  },
+  "Microsoft.WindowsAlarms": {
+    "FriendlyName": "시계",
+    "Description": "알람, 타이머, 스톱워치, 집중 세션을 위한 앱입니다."
+  },
+  "Microsoft.WindowsFeedbackHub": {
+    "FriendlyName": "피드백 허브",
+    "Description": "Windows에 대한 의견을 Microsoft에 보낼 수 있는 앱입니다."
+  },
+  "Microsoft.WindowsMaps": {
+    "FriendlyName": "Windows 지도",
+    "Description": "지원이 중단된 지도 및 내비게이션 앱입니다."
+  },
+  "Microsoft.WindowsSoundRecorder": {
+    "FriendlyName": "Windows 녹음기",
+    "Description": "마이크 오디오 녹음 및 재생"
+  },
+  "Microsoft.XboxApp": {
+    "FriendlyName": "Xbox Console Companion",
+    "Description": "지원이 중단된 이전 Xbox Console Companion 앱입니다."
+  },
+  "Microsoft.ZuneVideo": {
+    "FriendlyName": "영화 및 TV",
+    "Description": "구매한 동영상 콘텐츠를 재생하는 앱입니다(신규 대여 및 구매는 지원 중단)."
+  },
+  "MicrosoftCorporationII.MicrosoftFamily": {
+    "FriendlyName": "Microsoft Family Safety",
+    "Description": "가족의 화면 시간, 콘텐츠 필터, 활동 보고서를 관리하는 앱입니다."
+  },
+  "MicrosoftCorporationII.QuickAssist": {
+    "FriendlyName": "빠른 지원",
+    "Description": "PC 문제 해결을 위한 화면 공유 및 원격 제어"
+  },
+  "MicrosoftTeams": {
+    "FriendlyName": "Microsoft Teams(이전)",
+    "Description": "개인용 채팅 및 통화를 위한 이전 Teams 앱"
+  },
+  "MSTeams": {
+    "FriendlyName": "Microsoft Teams(신규)",
+    "Description": "회사, 학교 및 개인 계정용 채팅, 통화 및 모임"
+  },
+  "ACGMediaPlayer": {
+    "FriendlyName": "ACG 미디어 플레이어",
+    "Description": "자막을 지원하는 로컬 오디오 및 동영상 재생과 DLNA 스트리밍"
+  },
+  "ActiproSoftwareLLC": {
+    "FriendlyName": "Actipro 앱 (Code Writer)",
+    "Description": "텍스트 및 코드 편집기 Code Writer를 포함한 Actipro 앱"
+  },
+  "AdobeSystemsIncorporated.AdobePhotoshopExpress": {
+    "FriendlyName": "Adobe Express Photos (이전 명칭 Photoshop Express)",
+    "Description": "사진 편집, 개체 및 배경 제거, 스크린샷 주석 추가"
+  },
+  "Amazon.com.Amazon": {
+    "FriendlyName": "Amazon",
+    "Description": "Amazon 쇼핑 앱입니다."
+  },
+  "AmazonVideo.PrimeVideo": {
+    "FriendlyName": "윈도우용 프라임 비디오",
+    "Description": "Amazon Prime Video 스트리밍 서비스 앱입니다."
+  },
+  "Asphalt8Airborne": {
+    "FriendlyName": "Asphalt 8: Airborne",
+    "Description": "자동차, 오토바이 및 멀티플레이 경주를 제공하는 아케이드 레이싱"
+  },
+  "AutodeskSketchBook": {
+    "FriendlyName": "Autodesk SketchBook",
+    "Description": "Autodesk의 기존 드로잉 및 스케치 앱 (지원 중단)"
+  },
+  "CaesarsSlotsFreeCasino": {
+    "FriendlyName": "Caesars Slots",
+    "Description": "카지노 슬롯머신 게임입니다."
+  },
+  "COOKINGFEVER": {
+    "FriendlyName": "Cooking Fever",
+    "Description": "요리와 식당 시간 관리 게임"
+  },
+  "CyberLinkMediaSuiteEssentials": {
+    "FriendlyName": "CyberLink Media Suite",
+    "Description": "멀티미디어 소프트웨어 제품군이며, OEM에서 사전 설치하는 경우가 많습니다."
+  },
+  "DisneyMagicKingdoms": {
+    "FriendlyName": "Disney Magic Kingdoms",
+    "Description": "디즈니 테마 파크를 건설하는 게임입니다."
+  },
+  "Disney.37853FC22B2CE": {
+    "FriendlyName": "Disney+",
+    "Description": "Disney+ 스트리밍 서비스 앱입니다."
+  },
+  "DrawboardPDF": {
+    "FriendlyName": "Drawboard PDF",
+    "Description": "펜, 터치 또는 마우스로 PDF 문서 보기, 편집 및 주석 추가"
+  },
+  "Duolingo-LearnLanguagesforFree": {
+    "FriendlyName": "Duolingo",
+    "Description": "언어 학습 앱입니다."
+  },
+  "FACEBOOK.FACEBOOK": {
+    "FriendlyName": "Facebook",
+    "Description": "Facebook 소셜 미디어 앱입니다."
+  },
+  "FarmVille2CountryEscape": {
+    "FriendlyName": "FarmVille 2",
+    "Description": "농장 시뮬레이션 게임입니다."
+  },
+  "Flipboard": {
+    "FriendlyName": "Flipboard",
+    "Description": "잡지 형식의 뉴스 및 소셜 네트워크 수집 앱입니다."
+  },
+  "HiddenCity": {
+    "FriendlyName": "Hidden City",
+    "Description": "숨은 물건 찾기 퍼즐 어드벤처 게임입니다."
+  },
+  "HULULLC.HULUPLUS": {
+    "FriendlyName": "Hulu",
+    "Description": "Hulu 스트리밍 서비스 앱입니다."
+  },
+  "iHeartRadio": {
+    "FriendlyName": "iHeartRadio",
+    "Description": "실시간 라디오, 음악 및 팟캐스트 스트리밍"
+  },
+  "Facebook.Instagram": {
+    "FriendlyName": "Instagram",
+    "Description": "Instagram 소셜 미디어 앱입니다."
+  },
+  "king.com.BubbleWitch3Saga": {
+    "FriendlyName": "버블위치사가3",
+    "Description": "마법의 도전이 있는 버블 슈팅 퍼즐 게임"
+  },
+  "king.com.CandyCrushSaga": {
+    "FriendlyName": "Candy Crush Saga",
+    "Description": "사탕을 세 개씩 맞추는 퍼즐 게임"
+  },
+  "king.com.CandyCrushSodaSaga": {
+    "FriendlyName": "Candy Crush Soda",
+    "Description": "소다 테마의 레벨과 게임 모드에서 사탕을 세 개씩 맞추는 퍼즐"
+  },
+  "LinkedInforWindows": {
+    "FriendlyName": "LinkedIn",
+    "Description": "LinkedIn 전문가 네트워킹 앱입니다."
+  },
+  "MarchofEmpires": {
+    "FriendlyName": "March of Empires",
+    "Description": "전략 게임입니다."
+  },
+  "4DF9E0F8.Netflix": {
+    "FriendlyName": "Netflix",
+    "Description": "Netflix 스트리밍 서비스 앱입니다."
+  },
+  "NYTCrossword": {
+    "FriendlyName": "NYT Crossword",
+    "Description": "New York Times 십자말풀이 앱입니다."
+  },
+  "OneCalendar": {
+    "FriendlyName": "One Calendar",
+    "Description": "여러 계정의 일정을 한곳에서 보고 관리"
+  },
+  "PandoraMediaInc": {
+    "FriendlyName": "Pandora",
+    "Description": "Pandora 음악 스트리밍 앱입니다."
+  },
+  "PhototasticCollage": {
+    "FriendlyName": "Phototastic Collage",
+    "Description": "사진 콜라주를 만드는 앱입니다."
+  },
+  "PicsArt-PhotoStudio": {
+    "FriendlyName": "Picsart Photo Editor",
+    "Description": "사진 편집과 창작을 위한 앱입니다."
+  },
+  "PolarrPhotoEditorAcademicEdition": {
+    "FriendlyName": "Polarr Pro Photo Editor",
+    "Description": "필터, 색상 조정 및 선택 마스크로 사진 편집"
+  },
+  "flaregamesGmbH.RoyalRevolt": {
+    "FriendlyName": "Royal Revolt! / Royal Revolt 2",
+    "Description": "부대를 이끌고 주문을 사용해 성을 정복하는 액션 전략 게임"
+  },
+  "Sidia.LiveWallpaper": {
+    "FriendlyName": "Samsung Live Wallpaper",
+    "Description": "Samsung Galaxy Book용 정적 및 애니메이션 배경 화면"
+  },
+  "SlingTV": {
+    "FriendlyName": "Sling TV",
+    "Description": "실시간 TV 스트리밍 서비스 앱입니다."
+  },
+  "SpotifyAB.SpotifyMusic": {
+    "FriendlyName": "Spotify",
+    "Description": "음악 및 팟캐스트 스트리밍과 재생 목록 관리"
+  },
+  "BytedancePte.Ltd.TikTok": {
+    "FriendlyName": "TikTok",
+    "Description": "TikTok 짧은 동영상 앱입니다."
+  },
+  "TuneInRadio": {
+    "FriendlyName": "TuneIn Radio",
+    "Description": "실시간 라디오, 스포츠, 뉴스 및 팟캐스트 스트리밍"
+  },
+  "WinZipUniversal": {
+    "FriendlyName": "WinZip Universal",
+    "Description": "UWP 버전의 파일 압축 및 압축 풀기 유틸리티입니다."
+  },
+  "Microsoft.BingSearch": {
+    "FriendlyName": "Microsoft Bing (검색)",
+    "Description": "Microsoft Bing 웹 검색을 Windows 검색에 통합하는 앱입니다."
+  },
+  "Microsoft.Edge": {
+    "FriendlyName": "Microsoft Edge",
+    "Description": "Windows의 기본 브라우저입니다. 경고: 이 앱을 제거하면 Windows 샌드박스에서 유일한 브라우저도 사라지고 다른 앱에 영향을 줄 수 있습니다."
+  },
+  "Microsoft.GamingApp": {
+    "FriendlyName": "XBOX",
+    "Description": "일부 PC 게임을 설치하는 데 필요한 Windows용 Xbox 게임 앱입니다."
+  },
+  "Microsoft.GetHelp": {
+    "FriendlyName": "도움말",
+    "Description": "일부 Windows 11 문제 해결사와 지원 상호 작용에 필요한 앱입니다."
+  },
+  "Microsoft.M365Companions": {
+    "FriendlyName": "Microsoft 365 컴패니언",
+    "Description": "Microsoft 365 일정, 연락처 및 파일을 위한 작업 표시줄 앱 (지원 종료 예정)"
+  },
+  "Microsoft.MSPaint": {
+    "FriendlyName": "Paint 3D",
+    "Description": "지원이 중단된 3D 그리기 앱입니다."
+  },
+  "Microsoft.OneDrive": {
+    "FriendlyName": "OneDrive",
+    "Description": "OneDrive 클라우드 저장소로 파일 동기화 및 백업"
+  },
+  "Microsoft.OutlookForWindows": {
+    "FriendlyName": "Outlook",
+    "Description": "Microsoft 계정 및 기타 지원 계정용 메일 및 일정 앱"
+  },
+  "Microsoft.Paint": {
+    "FriendlyName": "그림판",
+    "Description": "이미지 그리기, 자르기, 크기 조정 및 편집"
+  },
+  "Microsoft.People": {
+    "FriendlyName": "Microsoft 피플",
+    "Description": "메일 및 일정용 연락처 저장 및 정리 (지원 중단)."
+  },
+  "MicrosoftCorporationII.Windows365": {
+    "FriendlyName": "Windows App",
+    "Description": "원격 데스크톱 및 클라우드 PC 클라이언트(원격 데스크톱 앱 대체)"
+  },
+  "Microsoft.RemoteDesktop": {
+    "FriendlyName": "원격 데스크톱",
+    "Description": "Microsoft Store 버전의 원격 데스크톱 클라이언트 앱입니다(지원 중단)."
+  },
+  "Microsoft.ScreenSketch": {
+    "FriendlyName": "캡처 도구",
+    "Description": "스크린샷을 캡처하고 주석을 추가하며 저장 및 공유할 수 있습니다."
+  },
+  "Microsoft.StartExperiencesApp": {
+    "FriendlyName": "시작 환경 앱 (위젯)",
+    "Description": "Windows 위젯의 내 피드 기능을 제공하는 앱입니다."
+  },
+  "Microsoft.SurfaceHub": {
+    "FriendlyName": "Surface",
+    "Description": "Surface 장치 설정 및 지원(지원되는 모델의 스마트 충전 설정 포함)"
+  },
+  "Microsoft.Whiteboard": {
+    "FriendlyName": "Microsoft Whiteboard",
+    "Description": "디지털 공동 작업 화이트보드 앱입니다."
+  },
+  "Microsoft.Windows.Photos": {
+    "FriendlyName": "사진",
+    "Description": "사진 및 동영상 보기와 정리, 이미지 편집"
+  },
+  "Microsoft.WindowsCalculator": {
+    "FriendlyName": "계산기",
+    "Description": "기본 계산, 공학용 계산, 그래프 및 단위 변환"
+  },
+  "Microsoft.WindowsCamera": {
+    "FriendlyName": "카메라",
+    "Description": "내장 또는 연결된 카메라로 사진 촬영 및 동영상 녹화"
+  },
+  "Microsoft.windowscommunicationsapps": {
+    "FriendlyName": "메일 및 일정",
+    "Description": "지원이 중단된 메일 및 일정 앱 제품군입니다."
+  },
+  "Microsoft.WindowsNotepad": {
+    "FriendlyName": "메모장",
+    "Description": "일반 텍스트 파일, 메모 및 스크립트 만들기와 편집"
+  },
+  "Microsoft.WindowsStore": {
+    "FriendlyName": "Microsoft Store",
+    "Description": "Windows 앱과 게임 설치 및 업데이트. 경고: Store를 제거하면 앱 설치 및 복구가 더 어려워질 수 있음"
+  },
+  "Microsoft.WindowsTerminal": {
+    "FriendlyName": "터미널",
+    "Description": "명령 프롬프트, PowerShell 및 WSL용 탭 터미널. 경고: Win11Debloat를 실행 중인 터미널을 제거하면 세션이 닫힐 수 있음"
+  },
+  "Microsoft.Xbox.TCUI": {
+    "FriendlyName": "Xbox Live (TCUI)",
+    "Description": "게임 내 Xbox 프로필 카드, 초대 및 기타 Xbox 인터페이스 제공"
+  },
+  "Microsoft.XboxGameOverlay": {
+    "FriendlyName": "Xbox Game Overlay",
+    "Description": "기존 Xbox 게임 내 오버레이 구성 요소. 경고: 제거하면 게임의 Xbox 기능에 영향을 줄 수 있음"
+  },
+  "Microsoft.XboxGamingOverlay": {
+    "FriendlyName": "Game Bar",
+    "Description": "게임 내 녹화, 스크린샷, 위젯 및 Xbox 소셜 기능. 경고: Game Bar를 제거하면 일부 AMD Ryzen 9 X3D 시스템의 성능이 저하될 수 있음"
+  },
+  "Microsoft.XboxIdentityProvider": {
+    "FriendlyName": "Xbox Identity Provider",
+    "Description": "일부 게임과 Xbox 서비스에 필요한 Xbox 로그인 프레임워크입니다."
+  },
+  "Microsoft.XboxSpeechToTextOverlay": {
+    "FriendlyName": "Xbox Speech To Text",
+    "Description": "지원되는 게임 채팅의 음성-텍스트 및 텍스트-음성 변환. 경고: 이 Windows 구성 요소는 제거 후 다시 설치하기 어려울 수 있음"
+  },
+  "Microsoft.YourPhone": {
+    "FriendlyName": "휴대폰과 연결",
+    "Description": "Android 휴대폰 또는 iPhone을 연결하여 PC에서 알림 받기, 메시지 보기 및 통화"
+  },
+  "Microsoft.ZuneMusic": {
+    "FriendlyName": "미디어 플레이어",
+    "Description": "로컬 오디오 및 동영상 파일 재생과 음악 라이브러리 정리"
+  },
+  "MicrosoftWindows.CrossDevice": {
+    "FriendlyName": "모바일 장치",
+    "Description": "파일 탐색기 및 카메라 기능과 모바일 장치 통합"
+  },
+  "MicrosoftWindows.Client.WebExperience": {
+    "FriendlyName": "Windows Web Experience Pack",
+    "Description": "Microsoft Store를 통해 위젯 같은 특정 기능을 제공하고 업데이트하는 패키지입니다."
+  },
+  "Microsoft.WidgetsPlatformRuntime": {
+    "FriendlyName": "위젯 플랫폼 런타임",
+    "Description": "Windows 위젯이 작동하는 데 필요한 런타임입니다."
+  },
+  "AD2F1837.OMENCommandCenter": {
+    "FriendlyName": "HP OMEN Gaming Hub",
+    "Description": "성능 모니터링 및 장치 설정을 위한 HP 게임 허브"
+  },
+  "AcerIncorporated.AcerCareCenterS": {
+    "FriendlyName": "Acer Care Center S",
+    "Description": "Acer 장치 정보, 진단 및 유지 관리 도구"
+  },
+  "B9ECED6F.ASUSPCAssistant": {
+    "FriendlyName": "MyASUS",
+    "Description": "ASUS 장치 설정, 진단 및 지원(지원되는 모델의 배터리 및 팬 설정 포함)"
+  },
+  "B9ECED6F.Glidex": {
+    "FriendlyName": "ASUS GlideX",
+    "Description": "장치 간 화면 공유 및 파일 전송을 위한 ASUS 앱"
+  },
+  "SAMSUNGELECTRONICSCoLtd.SamsungQuickShare": {
+    "FriendlyName": "Samsung Quick Share",
+    "Description": "주변 장치 간 파일 공유를 위한 Samsung 앱"
+  },
+  "9426MICRO-STARINTERNATION.MSICenter": {
+    "FriendlyName": "MSI Center",
+    "Description": "MSI 장치 설정 및 성능 모니터링"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.PCGallery": {
+    "FriendlyName": "Samsung Gallery",
+    "Description": "Samsung 사진 및 동영상 갤러리"
+  },
+  "SAMSUNGELECTRONICSCoLtd.SamsungFlux": {
+    "FriendlyName": "Samsung Flow",
+    "Description": "휴대폰과 PC 연결, 파일 공유 및 알림 동기화를 위한 Samsung 앱"
+  },
+  "SAMSUNGELECTRONICSCoLtd.SamsungNotes": {
+    "FriendlyName": "Samsung Notes",
+    "Description": "지원되는 Galaxy Book에서 메모, 필기 및 PDF 주석 작성"
+  },
+  "B9ECED6F.ScreenPadMaster": {
+    "FriendlyName": "ASUS ScreenXpert",
+    "Description": "ASUS 창 관리 및 지원되는 모델의 ScreenPad 제어"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.SamsungStudio": {
+    "FriendlyName": "Samsung Studio",
+    "Description": "Samsung 동영상 편집 앱"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.SamsungScreenRecording": {
+    "FriendlyName": "Samsung Screen Recorder",
+    "Description": "지원되는 Galaxy Book에서 화면 및 웹캠 녹화"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.Bixby": {
+    "FriendlyName": "Samsung Bixby",
+    "Description": "지원되는 Galaxy Book에서 앱, 파일 및 설정을 위한 음성 명령"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.SamsungWelcome": {
+    "FriendlyName": "Samsung Galaxy Book Experience",
+    "Description": "Galaxy Book용 Samsung 앱 실행 및 기능 안내"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.SmartThingsWindows": {
+    "FriendlyName": "Samsung SmartThings",
+    "Description": "스마트 홈 장치 연결, 모니터링 및 제어를 위한 Samsung 앱"
+  },
+  "SAMSUNGELECTRONICSCoLtd.MultiControl": {
+    "FriendlyName": "Samsung Multi control",
+    "Description": "호환되는 Galaxy 장치 간 키보드 및 마우스 공유를 위한 Samsung 앱"
+  },
+  "SAMSUNGELECTRONICSCoLtd.SecondScreen": {
+    "FriendlyName": "Samsung Second Screen",
+    "Description": "호환되는 Galaxy 태블릿을 PC의 추가 디스플레이로 사용하는 Samsung 앱"
+  },
+  "SAMSUNGELECTRONICSCO.LTD.PENUP": {
+    "FriendlyName": "Samsung PENUP",
+    "Description": "Samsung 그림 및 색칠 앱"
+  },
+  "9426MICRO-STARINTERNATION.BusinessCenter": {
+    "FriendlyName": "MSI Center Pro",
+    "Description": "MSI 장치 설정, 진단 및 성능 최적화"
+  },
+  "AcerIncorporated.AcerRegistration": {
+    "FriendlyName": "Acer Product Registration",
+    "Description": "Acer 제품 등록 앱"
+  },
+  "E0469640.SmartAppearance": {
+    "FriendlyName": "Lenovo Smart Appearance",
+    "Description": "Lenovo 카메라 효과 및 영상 통화 개선 기능"
+  },
+  "LGElectronics.LGMonitorApp": {
+    "FriendlyName": "LG Monitor App Installer",
+    "Description": "호환되는 LG 모니터 유틸리티 설치. LG 모니터 연결 시 Windows 업데이트가 이 앱을 다시 설치할 수 있음"
+  },
+  "AD2F1837.HPAIExperienceCenter": {
+    "FriendlyName": "HP AI Experience Center",
+    "Description": "일부 HP AI PC에 사전 설치된 HP 앱"
+  },
+  "AD2F1837.HPConnectedMusic": {
+    "FriendlyName": "HP Connected Music",
+    "Description": "로컬 음악, iTunes 보관함 및 스트리밍 서비스를 위한 기존 HP 앱"
+  },
+  "AD2F1837.HPConnectedPhotopoweredbySnapfish": {
+    "FriendlyName": "HP Connected Photo",
+    "Description": "사진 동기화, Snapfish 공유 및 인화 주문을 위한 기존 HP 앱"
+  },
+  "AD2F1837.HPDesktopSupportUtilities": {
+    "FriendlyName": "HP Desktop Support Utilities",
+    "Description": "HP PC 모델, 일련 번호 및 BIOS 정보 표시"
+  },
+  "AD2F1837.HPEasyClean": {
+    "FriendlyName": "HP Easy Clean",
+    "Description": "청소를 위해 입력 장치를 일시적으로 사용하지 않도록 설정합니다."
+  },
+  "AD2F1837.HPFileViewer": {
+    "FriendlyName": "HP File Viewer",
+    "Description": "HP 파일 뷰어(지원 형식 미확인)"
+  },
+  "AD2F1837.HPJumpStarts": {
+    "FriendlyName": "HP JumpStarts",
+    "Description": "HP PC 설정, 제품 등록 및 앱 추천"
+  },
+  "AD2F1837.HPPCHardwareDiagnosticsWindows": {
+    "FriendlyName": "HP PC Hardware Diagnostics Windows",
+    "Description": "메모리 및 저장 장치 등 PC 하드웨어를 테스트하여 오류 진단"
+  },
+  "AD2F1837.HPPowerManager": {
+    "FriendlyName": "HP Power Manager",
+    "Description": "지원되는 HP 노트북에서 배터리 상태 모니터링 및 충전 설정 관리"
+  },
+  "AD2F1837.HPPrinterControl": {
+    "FriendlyName": "HP Smart",
+    "Description": "지원되는 HP 프린터로 인쇄, 스캔 및 프린터 관리"
+  },
+  "AD2F1837.HPPrivacySettings": {
+    "FriendlyName": "HP PC Privacy Settings",
+    "Description": "HP 앱의 개인 정보 및 데이터 공유 기본 설정 관리"
+  },
+  "AD2F1837.HPQuickDrop": {
+    "FriendlyName": "HP QuickDrop",
+    "Description": "지원이 중단된, 장치 간 빠른 파일 전송을 위한 HP OEM 소프트웨어입니다."
+  },
+  "AD2F1837.HPQuickTouch": {
+    "FriendlyName": "HP QuickTouch",
+    "Description": "HP QuickTouch 구성 요소(정확한 기능 미확인)"
+  },
+  "AD2F1837.HPRegistration": {
+    "FriendlyName": "HP Registration",
+    "Description": "제품 등록을 위한 HP OEM 소프트웨어입니다."
+  },
+  "AD2F1837.HPSupportAssistant": {
+    "FriendlyName": "HP Support Assistant",
+    "Description": "지원, 업데이트 및 문제 해결을 위한 HP OEM 소프트웨어입니다."
+  },
+  "AD2F1837.HPSureShieldAI": {
+    "FriendlyName": "HP Sure Shield AI",
+    "Description": "HP 유틸리티(정확한 기능 미확인)"
+  },
+  "AD2F1837.HPSystemInformation": {
+    "FriendlyName": "HP System Information",
+    "Description": "HP PC 모델, 일련 번호 및 BIOS 정보 표시"
+  },
+  "AD2F1837.HPWelcome": {
+    "FriendlyName": "HP Welcome",
+    "Description": "HP 시작 안내 및 지원 앱"
+  },
+  "AD2F1837.HPWorkWell": {
+    "FriendlyName": "HP WorkWell",
+    "Description": "휴식 알림, 스트레칭 운동 및 건강한 PC 사용을 위한 팁 (지원 중단)"
+  },
+  "AD2F1837.myHP": {
+    "FriendlyName": "HP",
+    "Description": "지원되는 장치의 HP 장치 설정, 지원 및 프린터 기능"
+  },
+  "E046963F.LenovoCompanion": {
+    "FriendlyName": "Lenovo Vantage",
+    "Description": "장치 설정, 업데이트 및 지원을 제공하는 Lenovo OEM 허브 앱입니다."
+  },
+  "LenovoCompanyLimited.LenovoVantageService": {
+    "FriendlyName": "Lenovo Vantage Service",
+    "Description": "Lenovo Vantage의 백그라운드 서비스 구성 요소입니다."
+  },
+  "DellInc.DellSupportAssistforPCs": {
+    "FriendlyName": "Dell SupportAssist",
+    "Description": "지원, 진단 및 업데이트를 제공하는 Dell OEM 도구입니다."
+  },
+  "DellInc.DellDigitalDelivery": {
+    "FriendlyName": "Dell Digital Delivery",
+    "Description": "미리 구매한 소프트웨어를 제공하는 Dell OEM 소프트웨어입니다. (지원 중단)"
+  },
+  "DellInc.DellMobileConnect": {
+    "FriendlyName": "Dell Mobile Connect",
+    "Description": "Android 휴대폰 및 iPhone을 Dell PC에 연결 (지원 중단)"
+  }
+}

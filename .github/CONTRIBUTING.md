@@ -203,7 +203,7 @@ Avoid these common mistakes when contributing:
 ### Adding Support for a New App
 
 > [!NOTE]
-> The script automatically generates the app options for the GUI from the app information in the Apps.json file.
+> The script generates the GUI app options from `Config/Apps.json`, using names and descriptions from `Config/Languages/<locale>/Apps.json` with English fallback.
 
 To add a new app that can be removed via Win11Debloat:
 
@@ -219,9 +219,7 @@ To add a new app that can be removed via Win11Debloat:
 
    ```json
    {
-     "FriendlyName": "Display Name",
      "AppId": "AppPackageIdentifier",
-     "Description": "Brief description of the app",
      "SelectedByDefault": false,
      "Recommendation": "optional",
      "RemovalMethod": "Appx"
@@ -230,12 +228,10 @@ To add a new app that can be removed via Win11Debloat:
 
    **Field Descriptions**:
 
-   - `FriendlyName`: Display name shown in the GUI.
    - `AppId`: The package name from `Get-AppxPackage` or the `Id` from
      `winget list`, depending on removal method. Use an array when one app
      requires multiple identifiers. The GUI looks up the translation entry by
      the first ID in the array, key `Apps.json` by that one.
-   - `Description`: Brief description of the app shown in the GUI.
    - `SelectedByDefault`: Set to `true` only for apps that are largely considered bloatware, otherwise set to `false`.
    - `Recommendation`: Indicates how strongly the app is recommended for removal. One of:
      - `safe` — safe to remove for most users
@@ -245,7 +241,16 @@ To add a new app that can be removed via Win11Debloat:
      - `Appx` — remove as a standard Appx package via `Remove-AppxPackage` (most apps)
      - `WinGet` — remove via WinGet (`winget uninstall`). Use for non-Appx apps such as Microsoft Copilot.
 
-3. **Add the English Translation Entry**: Add a matching entry for your `AppId` to `Config/Languages/en-US/Apps.json` (see [Localizing UI Text](#localizing-ui-text)) with `FriendlyName` and `Description` matching what you set above, so the GUI shows them instead of the raw `AppId`.
+3. **Add the English Translation Entry**: Add a matching entry for your `AppId` to `Config/Languages/en-US/Apps.json` (see [Localizing UI Text](#localizing-ui-text)). Names and descriptions belong only in the language catalogs:
+
+   ```json
+   "AppPackageIdentifier": {
+     "FriendlyName": "Display Name",
+     "Description": "Brief description of the app"
+   }
+   ```
+
+   Add translations to the other shipped language catalogs. Missing translations fall back to English; a missing English entry displays the raw `AppId`.
 
 4. **Follow the Guidelines**:
 

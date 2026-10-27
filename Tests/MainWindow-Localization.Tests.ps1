@@ -43,6 +43,30 @@ BeforeAll {
     }
 }
 
+Describe 'Legacy tweak categories' {
+    It 'uses the category Name as CategoryId when building controls without a CategoryId' {
+        $script:Lang = Import-LanguageFile -LanguageCode 'en-US'
+        $feature = $script:Features['DisableTelemetry'] | Select-Object *
+        $feature.Category = 'Legacy Category'
+        $legacyCatalog = [PSCustomObject]@{
+            Categories = @([PSCustomObject]@{ Name = 'Legacy Category'; Icon = '&#xE72E;' })
+            Features = @($feature)
+        }
+        Mock Import-JsonFile { $legacyCatalog } -ParameterFilter { $filePath -eq $script:FeaturesFilePath }
+        $window = New-LanguageTestWindow
+
+        New-DynamicTweakControls -Window $window -WinVersion 26100
+
+        $controlName = 'Feature_DisableTelemetry_Combo'
+        $script:UiControlMappings.Count | Should -Be 1
+        $script:UiControlMappings[$controlName].CategoryId | Should -Be 'Legacy Category'
+        $map = Get-CategoryTweakPresetMap -Window $window -CategoryId 'Legacy Category'
+        $map.Count | Should -Be 1
+        $map[$controlName].Control | Should -Be ($window.FindName($controlName))
+        $map[$controlName].DesiredValue | Should -BeTrue
+    }
+}
+
 Describe 'Language changes on existing controls' {
     BeforeEach {
         $script:Lang = Import-LanguageFile -LanguageCode 'en-US'

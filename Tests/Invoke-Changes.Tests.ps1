@@ -106,6 +106,7 @@ Describe 'Invoke-FeatureApply' {
         Mock Get-Process { @() }
         Mock Stop-Process { param($InputObject) }
         Mock Write-Host {}
+        Mock Write-Warning {}
     }
 
     It 'imports a registry-backed feature' {
@@ -164,7 +165,6 @@ Describe 'Invoke-FeatureApply' {
 
     It 'returns false when applying a feature throws' {
         Mock Invoke-ForceRemoveEdge { throw 'access denied' }
-        Mock Write-Warning {}
 
         Invoke-FeatureApply -FeatureId 'ForceRemoveEdge' | Should -BeFalse
 
@@ -172,8 +172,6 @@ Describe 'Invoke-FeatureApply' {
     }
 
     It 'returns false for an unknown feature' {
-        Mock Write-Warning {}
-
         Invoke-FeatureApply -FeatureId 'Unknown' | Should -BeFalse
 
         Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -match "Unknown feature 'Unknown'.*could not be applied" }
@@ -195,21 +193,16 @@ Describe 'Invoke-FeatureApply' {
         Should -Invoke Stop-Process -Times 0 -Exactly
     }
 
-    It 'stops widget processes before removing widget packages' {
-        $widget = [PSCustomObject]@{ Name = 'WidgetService' }
-        Mock Get-Process { $widget }
-
-        Invoke-FeatureApply -FeatureId 'DisableWidgets'
-
-        Should -Invoke Stop-Process -Times 1 -Exactly
-    }
-
-    It 'stops widget processes without a confirmation prompt' {
+    It 'stops widget processes without a confirmation prompt before removing widget packages' {
+        $calls = [System.Collections.Generic.List[string]]::new()
         Mock Get-Process { [PSCustomObject]@{ Name = 'Widgets' } }
+        Mock Stop-Process { $calls.Add('Stop') }
+        Mock Remove-SelectedApps { $calls.Add('Remove'); $true }
 
         Invoke-FeatureApply -FeatureId 'DisableWidgets'
 
         Should -Invoke Stop-Process -Times 1 -Exactly -ParameterFilter { $Force -and $ErrorAction -eq 'SilentlyContinue' }
+        @($calls) | Should -Be @('Stop', 'Remove')
     }
 
     It 'enables the expected optional Windows features' {
@@ -535,7 +528,6 @@ Describe 'Invoke-AllChanges' {
         $script:Params = @{ CustomApply = $true }
         $script:UndoParams = @{}
         Mock Invoke-ApplyFeatures { $script:AppRemovalVerificationUnavailable = $true }
-        Mock Write-Warning {}
 
         Invoke-AllChanges
 

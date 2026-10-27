@@ -1,4 +1,4 @@
-{
+﻿{
   "Features": {
     "RemoveApps": {
       "Label": "Remove the apps specified with the 'Apps' parameter",
@@ -9,7 +9,7 @@
       "ApplyText": "Removing selected apps"
     },
     "RemoveGamingApps": {
-      "Label": "Remove the Xbox App and Xbox Gamebar",
+      "Label": "Remove the Xbox App and Xbox Game Bar",
       "ApplyText": "Removing gaming related apps"
     },
     "RemoveHPApps": {
@@ -229,13 +229,6 @@
       "ApplyText": "Enabling dark mode for system and apps",
       "UndoLabel": "Disable dark theme for system and apps",
       "ApplyUndoText": "Disabling dark mode for system and apps"
-    },
-    "DisableDragTray": {
-      "Label": "Disable 'Drag Tray' for sharing & moving files",
-      "ToolTip": "The Drag Tray is a new feature for sharing & moving files in Windows 11, it appears at the top of the screen when dragging files.",
-      "ApplyText": "Disabling Drag Tray",
-      "UndoLabel": "Enable 'Drag Tray' for sharing & moving files",
-      "ApplyUndoText": "Enabling Drag Tray"
     },
     "RevertContextMenu": {
       "Label": "Use classic Windows 10 context menu style",
@@ -594,7 +587,7 @@
     },
     "EnableWindowsSandbox": {
       "Label": "Enable Windows Sandbox",
-      "ToolTip": "Windows Sandbox is a lightweight desktop environment for safely running applications in isolation. Software installed inside the Windows Sandbox environment remains 'sandboxed' and runs separately from the host machine. Only supported on Windows 11 Pro, Workstation, and Enterprise editions.",
+      "ToolTip": "Windows Sandbox is a lightweight desktop environment for safely running applications in isolation. Software installed inside the Windows Sandbox environment remains 'sandboxed' and runs separately from the host machine. Only supported on Windows 11 Pro, Workstation, Enterprise, and Education editions.",
       "ApplyText": "Enabling Windows Sandbox",
       "UndoLabel": "Disable Windows Sandbox",
       "ApplyUndoText": "Disabling Windows Sandbox"

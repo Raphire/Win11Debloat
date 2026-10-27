@@ -79,7 +79,6 @@ param (
     [switch]$ClearStartAllUsers,
     [string]$ReplaceStartAllUsers,
     [switch]$RevertContextMenu,
-    [switch]$DisableDragTray,
     [switch]$DisableMouseAcceleration,
     [switch]$DisableStickyKeys,
     [switch]$DisableWindowSnapping,
@@ -174,7 +173,13 @@ if (-not $isAdmin) {
 # Define script-level variables & paths
 $script:Version = "2026.08.24"
 $configPath = Join-Path $PSScriptRoot 'Config'
-$script:UserDataPath = Join-Path $env:LOCALAPPDATA 'Win11Debloat'
+# Deployment environments such as SCCM task sequences may not define LOCALAPPDATA.
+if ([string]::IsNullOrWhiteSpace($env:LOCALAPPDATA)) {
+    $script:UserDataPath = $PSScriptRoot
+}
+else {
+    $script:UserDataPath = Join-Path $env:LOCALAPPDATA 'Win11Debloat'
+}
 $script:LogsPath = Join-Path $script:UserDataPath 'Logs'
 $schemasPath = Join-Path $PSScriptRoot 'Schemas'
 $scriptsPath = Join-Path $PSScriptRoot 'Scripts'

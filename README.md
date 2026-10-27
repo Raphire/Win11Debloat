@@ -98,7 +98,6 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 
 #### System
 
-- Disable the Drag Tray for sharing & moving files.
 - Restore the old Windows 10 style context menu.
 - Turn off Enhance Pointer Precision (mouse acceleration).
 - Disable the Sticky Keys keyboard shortcut.

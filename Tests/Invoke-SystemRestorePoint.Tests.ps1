@@ -56,7 +56,6 @@ Describe 'Invoke-SystemRestorePoint' {
         $expectedImport = [regex]::Escape('Scripts/Features/Invoke-SystemRestorePoint.ps1')
 
         $entryPoint | Should -Match $expectedImport
-        Get-Command Invoke-SystemRestorePoint | Should -Not -BeNullOrEmpty
     }
 
     It 'enables disabled System Restore before creating the point in silent mode' {

@@ -60,7 +60,7 @@
     "Description": "Windows özelliklerini kullanmaya yönelik ipuçları ve kılavuzlar (kullanımdan kaldırıldı)"
   },
   "Microsoft.Messaging": {
-    "FriendlyName": "Microsoft Mesajlaşma",
+    "FriendlyName": "Operatör mesajları",
     "Description": "Hücresel bağlantılı bilgisayarlarda veri paketi ve fatura SMS'lerini alır; mesaj gönderemez"
   },
   "Microsoft.Microsoft3DViewer": {
@@ -124,8 +124,8 @@
     "Description": "Yapılacaklar listesi ve görev yönetimi uygulaması"
   },
   "Microsoft.Windows.DevHome": {
-    "FriendlyName": "Windows Advanced Settings (eski Dev Home)",
-    "Description": "Windows gelişmiş ayarları ve geliştirici araçları uygulaması (eski adı Dev Home)"
+    "FriendlyName": "Dev Home",
+    "Description": "Geliştirici panosu ve araç yapılandırma uygulaması (artık desteklenmiyor)"
   },
   "Microsoft.WindowsAlarms": {
     "FriendlyName": "Saat",
@@ -424,7 +424,7 @@
     "Description": "Xbox profil kartları, davetler ve oyun içi Xbox arabirimlerini sağlayan bileşen"
   },
   "Microsoft.XboxGameOverlay": {
-    "FriendlyName": "Xbox Game Bar Plugin",
+    "FriendlyName": "Xbox Game Overlay",
     "Description": "Oyun Çubuğu'nun eski oyun içi arabirim bileşeni. Uyarı: Kaldırılması oyunlardaki Xbox özelliklerini etkileyebilir"
   },
   "Microsoft.XboxGamingOverlay": {
@@ -520,11 +520,11 @@
     "Description": "Akıllı ev cihazlarını bağlamak, izlemek ve denetlemek için Samsung uygulaması"
   },
   "SAMSUNGELECTRONICSCoLtd.MultiControl": {
-    "FriendlyName": "Çoklu kontrol",
-    "Description": "Uyumlu Galaxy cihazları arasında Samsung klavye ve fare paylaşımı"
+    "FriendlyName": "Samsung Multi control",
+    "Description": "Uyumlu Galaxy cihazları arasında klavye ve fare paylaşımı için Samsung uygulaması"
   },
   "SAMSUNGELECTRONICSCoLtd.SecondScreen": {
-    "FriendlyName": "İkinci ekran",
+    "FriendlyName": "Samsung Second Screen",
     "Description": "Uyumlu bir Galaxy tableti ek bilgisayar ekranı olarak kullanmak için Samsung uygulaması"
   },
   "SAMSUNGELECTRONICSCO.LTD.PENUP": {

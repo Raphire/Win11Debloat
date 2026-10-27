@@ -83,7 +83,7 @@
     },
     "DisableEdgeAds": {
       "Label": "Edge'deki reklamları, önerileri ve haber akışını kapat",
-      "ToolTip": "Microsoft Edge'deki reklamlar, öneriler ve MSN haber akışı gibi dikkat dağıtıcı öğeleri kapatır. Bu ayar ilke aracılığıyla uygulanır ve Windows Ayarları'ndaki bazı seçenekleri kilitler.",
+      "ToolTip": "Microsoft Edge'deki reklamlar, öneriler ve MSN haber akışı gibi dikkat dağıtıcı öğeleri kapatır. Bu ayar ilke aracılığıyla uygulanır ve bazı seçenekleri kilitler.",
       "ApplyText": "Microsoft Edge'deki reklamlar, öneriler ve MSN haber akışı kapatılıyor",
       "UndoLabel": "Edge'deki reklamları, önerileri ve haber akışını aç",
       "ApplyUndoText": "Microsoft Edge'deki reklamlar, öneriler ve MSN haber akışı açılıyor"
@@ -103,10 +103,10 @@
       "ApplyUndoText": "Hatırlama (Recall) açılıyor"
     },
     "DisableClickToDo": {
-      "Label": "Click to Do özelliğini kapat",
+      "Label": "Click to Do'yu (yapay zeka destekli metin ve görüntü analizi) kapat",
       "ToolTip": "Windows'ta yapay zeka destekli metin ve görüntü analizi sunan Click to Do'yu kapatır. Bu ayar ilke aracılığıyla uygulanır ve Windows Ayarları'ndaki bazı seçenekleri kilitler.",
       "ApplyText": "Click to Do kapatılıyor",
-      "UndoLabel": "Click to Do özelliğini aç",
+      "UndoLabel": "Click to Do'yu (yapay zeka destekli metin ve görüntü analizi) aç",
       "ApplyUndoText": "Click to Do açılıyor"
     },
     "DisableAISvcAutoStart": {
@@ -197,28 +197,28 @@
     },
     "DisableEdgeAI": {
       "Label": "Microsoft Edge'deki yapay zeka özelliklerini kapat",
-      "ToolTip": "Microsoft Edge'deki yapay zeka kenar çubuğu ve Copilot özellikleri gibi yapay zeka özelliklerini kapatır. Bu ayar ilke aracılığıyla uygulanır ve Windows Ayarları'ndaki bazı seçenekleri kilitler.",
+      "ToolTip": "Microsoft Edge'deki yapay zeka kenar çubuğu ve Copilot özellikleri gibi yapay zeka özelliklerini kapatır. Bu ayar ilke aracılığıyla uygulanır ve bazı seçenekleri kilitler.",
       "ApplyText": "Microsoft Edge'deki yapay zeka özellikleri kapatılıyor",
       "UndoLabel": "Microsoft Edge'deki yapay zeka özelliklerini aç",
       "ApplyUndoText": "Microsoft Edge'deki yapay zeka özellikleri açılıyor"
     },
     "DisableChromeAI": {
       "Label": "Google Chrome'daki yapay zeka özelliklerini kapat",
-      "ToolTip": "Gemini, yapay zeka araması ve önerileri, yazma yardımı, otomatik doldurma ve benzerleri dahil Google Chrome'un yerleşik yapay zeka araçlarını kapatır. Yerel yapay zeka modellerini de kaldırır. Bu ayar ilke aracılığıyla uygulanır ve Windows Ayarları'ndaki bazı seçenekleri kilitler.",
+      "ToolTip": "Gemini, yapay zeka araması ve önerileri, yazma yardımı, otomatik doldurma ve benzerleri dahil Google Chrome'un yerleşik yapay zeka araçlarını kapatır. Yerel yapay zeka modellerini de kaldırır. Bu ayar ilke aracılığıyla uygulanır ve bazı seçenekleri kilitler.",
       "ApplyText": "Google Chrome'daki yapay zeka özellikleri kapatılıyor",
       "UndoLabel": "Google Chrome'daki yapay zeka özelliklerini aç",
       "ApplyUndoText": "Google Chrome'daki yapay zeka özellikleri açılıyor"
     },
     "DisablePaintAI": {
       "Label": "Paint'teki yapay zeka özelliklerini kapat",
-      "ToolTip": "Paint'teki yapay zeka görüntü oluşturma ve düzenleme araçlarını kapatır. Bu ayar ilke aracılığıyla uygulanır ve Windows Ayarları'ndaki bazı seçenekleri kilitler.",
+      "ToolTip": "Paint'teki yapay zeka görüntü oluşturma ve düzenleme araçlarını kapatır. Bu ayar ilke aracılığıyla uygulanır ve bazı seçenekleri kilitler.",
       "ApplyText": "Paint'teki yapay zeka özellikleri kapatılıyor",
       "UndoLabel": "Paint'teki yapay zeka özelliklerini aç",
       "ApplyUndoText": "Paint'teki yapay zeka özellikleri açılıyor"
     },
     "DisableNotepadAI": {
       "Label": "Not Defteri'ndeki yapay zeka özelliklerini kapat",
-      "ToolTip": "Not Defteri'ndeki yapay zeka yazma önerilerini kapatır. Bu ayar ilke aracılığıyla uygulanır ve Windows Ayarları'ndaki bazı seçenekleri kilitler.",
+      "ToolTip": "Not Defteri'ndeki yapay zeka yazma önerilerini kapatır. Bu ayar ilke aracılığıyla uygulanır ve bazı seçenekleri kilitler.",
       "ApplyText": "Not Defteri'ndeki yapay zeka özellikleri kapatılıyor",
       "UndoLabel": "Not Defteri'ndeki yapay zeka özelliklerini aç",
       "ApplyUndoText": "Not Defteri'ndeki yapay zeka özellikleri açılıyor"
@@ -338,7 +338,7 @@
     },
     "DisableStorageSense": {
       "Label": "Akıllı Depolama özelliğini kapat",
-      "ToolTip": "Geçici dosyaları ve Geri Dönüşüm Kutusu'ndaki eski öğeleri otomatik temizleyen Akıllı Depolama özelliğini kapatır. İndirilenler klasöründeki dosyalar yalnızca ilgili temizleme seçeneği ayarlanmışsa silinir.",
+      "ToolTip": "Geçici dosyaları silerek, Geri Dönüşüm Kutusu'nu boşaltarak ve İndirilenler klasöründeki dosyaları temizleyerek otomatik olarak disk alanı açan Akıllı Depolama özelliğini kapatır.",
       "ApplyText": "Akıllı Depolama kapatılıyor",
       "UndoLabel": "Akıllı Depolama özelliğini aç",
       "ApplyUndoText": "Akıllı Depolama açılıyor"
@@ -513,7 +513,7 @@
     },
     "DisableDeliveryOptimization": {
       "Label": "Teslim İyileştirme ile paylaşımı kapat",
-      "ToolTip": "Teslim İyileştirme üzerinden yerel ağdaki veya internetteki diğer cihazlardan güncelleştirme indirmeyi ve bu cihazlarla güncelleştirme paylaşmayı kapatır. Windows Update üzerinden Microsoft sunucularından güncelleştirme almaya devam edebilirsiniz.",
+      "ToolTip": "Teslim İyileştirme üzerinden yerel ağdaki veya internetteki diğer cihazlardan güncelleştirme indirmeyi ve bu cihazlarla güncelleştirme paylaşmayı kapatır.",
       "ApplyText": "Teslim İyileştirme ile diğer cihazlardan indirme ve paylaşma kapatılıyor",
       "UndoLabel": "Teslim İyileştirme ile paylaşımı aç",
       "ApplyUndoText": "Teslim İyileştirme ile diğer cihazlardan indirme ve paylaşma açılıyor"
@@ -580,7 +580,7 @@
     },
     "DisableBraveBloat": {
       "Label": "Brave tarayıcısındaki gereksiz özellikleri kapat (yapay zeka, kripto vb.)",
-      "ToolTip": "Brave'in yerleşik yapay zeka özelliklerini, kripto cüzdanını, Haberler, Ödüller, Talk ve VPN'i kapatır. Bu ayar ilke aracılığıyla uygulanır ve Windows Ayarları'ndaki bazı seçenekleri kilitler.",
+      "ToolTip": "Brave'in yerleşik yapay zeka özelliklerini, kripto cüzdanını, Haberler, Ödüller, Talk ve VPN'i kapatır. Bu ayar ilke aracılığıyla uygulanır ve bazı seçenekleri kilitler.",
       "ApplyText": "Brave tarayıcısında yapay zeka, kripto, Haberler, Ödüller, Talk ve VPN kapatılıyor",
       "UndoLabel": "Brave tarayıcı özelliklerini aç (yapay zeka, kripto vb.)",
       "ApplyUndoText": "Brave tarayıcısında yapay zeka, kripto, Haberler, Ödüller, Talk ve VPN açılıyor"
@@ -701,7 +701,7 @@
       }
     },
     "ExplorerLocation": {
-      "Label": "Dosya Gezgini'ni aç",
+      "Label": "Dosya Gezgini'nin açılacağı konum",
       "ToolTip": "Dosya Gezgini'nin açıldığı varsayılan konumu seçmenizi sağlar.",
       "Values": {
         "ExplorerToHome": "Giriş (Varsayılan)",

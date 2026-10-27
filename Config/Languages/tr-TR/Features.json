@@ -1,0 +1,744 @@
+{
+  "Features": {
+    "RemoveApps": {
+      "Label": "'Apps' parametresiyle belirtilen uygulamaları kaldır",
+      "ApplyText": "Seçilen uygulamalar kaldırılıyor"
+    },
+    "Apps": {
+      "Label": "Kaldırılacak uygulamalar, virgülle ayrılmış liste olarak belirtilir. Varsayılan liste için 'Default' kullanın veya boş bırakın",
+      "ApplyText": "Seçilen uygulamalar kaldırılıyor"
+    },
+    "RemoveGamingApps": {
+      "Label": "Xbox uygulamasını ve Oyun Çubuğu'nu (Game Bar) kaldır",
+      "ApplyText": "Oyunla ilgili uygulamalar kaldırılıyor"
+    },
+    "RemoveHPApps": {
+      "Label": "HP üretici uygulamalarını kaldır",
+      "ApplyText": "HP uygulamaları kaldırılıyor"
+    },
+    "CreateRestorePoint": {
+      "Label": "Geri yükleme noktası oluştur",
+      "ApplyText": "Geri yükleme noktası oluşturuluyor"
+    },
+    "DisableTelemetry": {
+      "Label": "Telemetri, izleme ve hedefli reklamları kapat",
+      "ToolTip": "Telemetriyi, tanılama verisi toplamayı, etkinlik geçmişini, uygulama başlatma izlemesini, hedefli reklamları ve benzerlerini kapatır. Cihazınız ve kullanımınız hakkında Microsoft'a giden veriyi sınırlar. Windows Insider kullanıyorsanız isteğe bağlı tanılama verisi yeniden açılana kadar güncelleştirmeler engellenebilir.",
+      "ApplyText": "Telemetri ve tanılama verisi toplama kapatılıyor",
+      "UndoLabel": "Telemetri, izleme ve hedefli reklamları aç",
+      "ApplyUndoText": "Telemetri ve tanılama verisi toplama açılıyor"
+    },
+    "DisableSuggestions": {
+      "Label": "Windows genelindeki ipuçlarını, püf noktalarını ve önerilen içeriği kapat",
+      "ToolTip": "Windows'taki birçok dikkat dağıtıcı öğeyi kaldırır. Bildirimler, anımsatıcılar ve eşitleme sağlayıcısı reklamları buna dahildir. Önerilen uygulamaların kendiliğinden yüklenmesini de engeller.",
+      "ApplyText": "Windows genelindeki ipuçları, öneriler ve reklamlar kapatılıyor",
+      "UndoLabel": "Windows genelindeki ipuçlarını, püf noktalarını ve önerilen içeriği aç",
+      "ApplyUndoText": "Windows genelindeki ipuçları, öneriler ve reklamlar açılıyor"
+    },
+    "DisableNotifications": {
+      "Label": "Uygulamalardan ve diğer gönderenlerden gelen bildirimleri kapat",
+      "ToolTip": "Uygulamalardan ve diğer gönderenlerden gelen Windows bildirimlerini kapatır. Discord, WhatsApp, Teams ve Slack gibi uygulamaların bildirimleri de buna dahildir.",
+      "ApplyText": "Windows bildirimleri ve anımsatıcılar kapatılıyor",
+      "UndoLabel": "Uygulamalardan ve diğer gönderenlerden gelen bildirimleri aç",
+      "ApplyUndoText": "Windows bildirimleri ve anımsatıcılar açılıyor"
+    },
+    "DisableLocationServices": {
+      "Label": "Windows konum hizmetlerini ve uygulamaların konuma erişimini kapat",
+      "ToolTip": "Windows konum hizmetlerini kapatır ve uygulamaların konumunuza erişmesini engeller. Bu ayar ilke aracılığıyla uygulanır ve Windows Ayarları'ndaki bazı seçenekleri kilitler.",
+      "ApplyText": "Windows konum hizmetleri ve uygulama konum erişimi kapatılıyor",
+      "UndoLabel": "Windows konum hizmetlerini ve uygulamaların konuma erişimini aç",
+      "ApplyUndoText": "Windows konum hizmetleri ve uygulama konum erişimi açılıyor"
+    },
+    "DisableFindMyDevice": {
+      "Label": "Cihazımı Bul özelliğini kapat",
+      "ToolTip": "Cihazınızın konumunu belirli aralıklarla Microsoft'a gönderen Cihazımı Bul özelliğini kapatır. Bu ayar ilke aracılığıyla uygulanır ve Windows Ayarları'ndaki bazı seçenekleri kilitler.",
+      "ApplyText": "Cihazımı Bul kapatılıyor",
+      "UndoLabel": "Cihazımı Bul özelliğini aç",
+      "ApplyUndoText": "Cihazımı Bul açılıyor"
+    },
+    "DisableLockscreenTips": {
+      "Label": "Kilit ekranındaki ipuçlarını ve püf noktalarını kapat",
+      "ToolTip": "Kilit ekranında Windows spot ışığı (Spotlight) ile gösterilen ipuçlarını, püf noktalarını ve ilginç bilgileri kapatır.",
+      "ApplyText": "Kilit ekranındaki ipuçları ve püf noktaları kapatılıyor",
+      "UndoLabel": "Kilit ekranındaki ipuçlarını ve püf noktalarını aç",
+      "ApplyUndoText": "Kilit ekranındaki ipuçları ve püf noktaları açılıyor"
+    },
+    "EnableDesktopSpotlight": {
+      "Label": "Masaüstünde Windows spot ışığını (Spotlight) aç",
+      "ToolTip": "Windows spot ışığının masaüstü arka planını ve 'Bu resim hakkında bilgi edinin' kısayolunu geri getirir.",
+      "ApplyText": "Windows spot ışığının masaüstü arka planı ve kısayolu geri getiriliyor"
+    },
+    "DisableDesktopSpotlight": {
+      "Label": "Masaüstünde Windows spot ışığını (Spotlight) kapat",
+      "ToolTip": "Düzenli olarak değişen resimler, ipuçları ve bilgiler sunan Windows spot ışığının masaüstü arka planını kapatır. Bu ayar ilke aracılığıyla uygulanır ve Windows Ayarları'ndaki bazı seçenekleri kilitler.",
+      "ApplyText": "Windows spot ışığının masaüstü arka planı kapatılıyor",
+      "UndoLabel": "Masaüstünde Windows spot ışığını (Spotlight) aç",
+      "ApplyUndoText": "Windows spot ışığının masaüstü arka planı ve kısayolu geri getiriliyor"
+    },
+    "HideDesktopSpotlightIcon": {
+      "Label": "'Bu resim hakkında bilgi edinin' masaüstü kısayolunu gizle",
+      "ToolTip": "Windows spot ışığının arka planını değiştirmeden yalnızca 'Bu resim hakkında bilgi edinin' masaüstü kısayolunu gizler.",
+      "ApplyText": "Windows spot ışığının 'Bu resim hakkında bilgi edinin' masaüstü kısayolu gizleniyor",
+      "UndoLabel": "'Bu resim hakkında bilgi edinin' masaüstü kısayolunu göster",
+      "ApplyUndoText": "Windows spot ışığının 'Bu resim hakkında bilgi edinin' masaüstü kısayolu gösteriliyor"
+    },
+    "DisableEdgeAds": {
+      "Label": "Edge'deki reklamları, önerileri ve haber akışını kapat",
+      "ToolTip": "Microsoft Edge'deki reklamlar, öneriler ve MSN haber akışı gibi dikkat dağıtıcı öğeleri kapatır. Bu ayar ilke aracılığıyla uygulanır ve bazı seçenekleri kilitler.",
+      "ApplyText": "Microsoft Edge'deki reklamlar, öneriler ve MSN haber akışı kapatılıyor",
+      "UndoLabel": "Edge'deki reklamları, önerileri ve haber akışını aç",
+      "ApplyUndoText": "Microsoft Edge'deki reklamlar, öneriler ve MSN haber akışı açılıyor"
+    },
+    "DisableCopilot": {
+      "Label": "Microsoft Copilot'u kapat",
+      "ToolTip": "Windows'un yerleşik yapay zeka asistanı Microsoft Copilot'u kapatır ve kaldırır.",
+      "ApplyText": "Microsoft Copilot kapatılıyor",
+      "UndoLabel": "Microsoft Copilot'u aç",
+      "ApplyUndoText": "Microsoft Copilot açılıyor"
+    },
+    "DisableRecall": {
+      "Label": "Hatırlama (Recall) özelliğini kapat",
+      "ToolTip": "Yakın zamanda kullanılan dosyalara, uygulamalara ve etkinliklere hızlı erişim veren yapay zeka özelliği Hatırlama'yı (Recall) kapatır. Bu ayar ilke aracılığıyla uygulanır ve Windows Ayarları'ndaki bazı seçenekleri kilitler.",
+      "ApplyText": "Hatırlama (Recall) kapatılıyor",
+      "UndoLabel": "Hatırlama (Recall) özelliğini aç",
+      "ApplyUndoText": "Hatırlama (Recall) açılıyor"
+    },
+    "DisableClickToDo": {
+      "Label": "Click to Do'yu (yapay zeka destekli metin ve görüntü analizi) kapat",
+      "ToolTip": "Windows'ta yapay zeka destekli metin ve görüntü analizi sunan Click to Do'yu kapatır. Bu ayar ilke aracılığıyla uygulanır ve Windows Ayarları'ndaki bazı seçenekleri kilitler.",
+      "ApplyText": "Click to Do kapatılıyor",
+      "UndoLabel": "Click to Do'yu (yapay zeka destekli metin ve görüntü analizi) aç",
+      "ApplyUndoText": "Click to Do açılıyor"
+    },
+    "DisableAISvcAutoStart": {
+      "Label": "Yapay zeka hizmetinin otomatik başlatılmasını engelle",
+      "ToolTip": "WSAIFabricSvc hizmetinin başlangıç türünü El ile olarak ayarlar. Hizmet, Windows ile birlikte otomatik olarak başlatılmaz.",
+      "ApplyText": "Yapay zeka hizmetinin otomatik başlatılması engelleniyor",
+      "UndoLabel": "Yapay zeka hizmetinin otomatik başlatılmasına izin ver",
+      "ApplyUndoText": "Yapay zeka hizmetinin otomatik başlatılmasına izin veriliyor"
+    },
+    "DisableDVR": {
+      "Label": "Xbox oyun ve ekran kaydını kapat",
+      "ToolTip": "Oyun Çubuğu (Game Bar) ile gelen Xbox oyun ve ekran kaydı özelliklerini kapatır. Bu ayar ilke aracılığıyla uygulanır ve Windows Ayarları'ndaki bazı seçenekleri kilitler.",
+      "ApplyText": "Xbox oyun ve ekran kaydı kapatılıyor",
+      "UndoLabel": "Xbox oyun ve ekran kaydını aç",
+      "ApplyUndoText": "Xbox oyun ve ekran kaydı açılıyor"
+    },
+    "DisableGameBarIntegration": {
+      "Label": "Oyun Çubuğu (Game Bar) tümleştirmesini kapat",
+      "ToolTip": "Oyun Çubuğu'nun oyunlar ve denetleyicilerle tümleştirmesini kapatır. Oyun açılırken veya denetleyici bağlanırken çıkan ms-gamebar pencerelerini durdurur.",
+      "ApplyText": "Oyun Çubuğu tümleştirmesi kapatılıyor",
+      "UndoLabel": "Oyun Çubuğu (Game Bar) tümleştirmesini aç",
+      "ApplyUndoText": "Oyun Çubuğu tümleştirmesi açılıyor"
+    },
+    "ClearStart": {
+      "Label": "Başlat menüsündeki tüm uygulamaların sabitlemesini yalnızca seçilen kullanıcı için kaldır",
+      "ApplyText": "Başlat menüsündeki tüm uygulamaların sabitlemesi kaldırılıyor"
+    },
+    "ClearStartAllUsers": {
+      "Label": "Başlat menüsündeki tüm uygulamaların sabitlemesini mevcut ve yeni kullanıcılar için kaldır",
+      "ApplyText": "Başlat menüsündeki tüm uygulamaların sabitlemesi tüm kullanıcılar için kaldırılıyor"
+    },
+    "ReplaceStart": {
+      "Label": "Başlat menüsü düzenini yalnızca bu kullanıcı için verilen şablon dosyasıyla değiştir",
+      "ApplyText": "Başlat menüsü düzeni değiştiriliyor"
+    },
+    "ReplaceStartAllUsers": {
+      "Label": "Başlat menüsü düzenini mevcut ve yeni tüm kullanıcılar için verilen şablon dosyasıyla değiştir",
+      "ApplyText": "Başlat menüsü düzeni tüm kullanıcılar için değiştiriliyor"
+    },
+    "DisableStartRecommended": {
+      "Label": "Başlat menüsündeki 'Önerilen' bölümünü gizle",
+      "ToolTip": "Yeni eklenen uygulamaları, son açılan dosyaları ve uygulama önerilerini gösteren Başlat menüsündeki 'Önerilen' bölümünü gizler. Bu ayar ilke aracılığıyla uygulanır ve Windows Ayarları'ndaki bazı seçenekleri kilitler.",
+      "ApplyText": "Başlat menüsündeki 'Önerilen' bölümü gizleniyor",
+      "UndoLabel": "Başlat menüsündeki 'Önerilen' bölümünü göster",
+      "ApplyUndoText": "Başlat menüsündeki 'Önerilen' bölümü gösteriliyor"
+    },
+    "DisableStartAllApps": {
+      "Label": "Başlat menüsündeki 'Tüm uygulamalar' bölümünü gizle",
+      "ToolTip": "Yüklü uygulamaların tümünü gösteren 'Tüm uygulamalar' bölümünü Başlat menüsünden gizler. Uyarı: Bu bölüm gizlenirse yüklü uygulamaları bulmak zorlaşabilir. Bu ayar ilke aracılığıyla uygulanır ve Windows Ayarları'ndaki bazı seçenekleri kilitler.",
+      "ApplyText": "Başlat menüsündeki 'Tüm uygulamalar' bölümü gizleniyor",
+      "UndoLabel": "Başlat menüsündeki 'Tüm uygulamalar' bölümünü göster",
+      "ApplyUndoText": "Başlat menüsündeki 'Tüm uygulamalar' bölümü gösteriliyor"
+    },
+    "DisableStartPhoneLink": {
+      "Label": "Başlat menüsündeki Telefon Bağlantısı tümleştirmesini kapat",
+      "ToolTip": "Bilgisayara bağlı bir telefon varken Başlat menüsünde görünen Telefon Bağlantısı tümleştirmesini kaldırır.",
+      "ApplyText": "Başlat menüsündeki Telefon Bağlantısı mobil cihaz tümleştirmesi kapatılıyor",
+      "UndoLabel": "Başlat menüsündeki Telefon Bağlantısı tümleştirmesini aç",
+      "ApplyUndoText": "Başlat menüsündeki Telefon Bağlantısı mobil cihaz tümleştirmesi açılıyor"
+    },
+    "DisableBing": {
+      "Label": "Aramadaki Bing web aramasını ve Copilot tümleştirmesini kapat",
+      "ToolTip": "Windows aramasındaki Bing web sonuçlarını ve Copilot tümleştirmesini kapatır. Bu ayar ilke aracılığıyla uygulanır ve Windows Ayarları'ndaki bazı seçenekleri kilitler.",
+      "ApplyText": "Windows aramasındaki Bing web araması ve Copilot tümleştirmesi kapatılıyor",
+      "UndoLabel": "Aramadaki Bing web aramasını ve Copilot tümleştirmesini aç",
+      "ApplyUndoText": "Windows aramasındaki Bing web araması ve Copilot tümleştirmesi açılıyor"
+    },
+    "DisableStoreSearchSuggestions": {
+      "Label": "Aramadaki Microsoft Store uygulama önerilerini kapat",
+      "ToolTip": "Windows aramasında çıkan Microsoft Store uygulama önerilerini kapatır.",
+      "ApplyText": "Aramadaki Microsoft Store uygulama önerileri kapatılıyor",
+      "UndoLabel": "Aramadaki Microsoft Store uygulama önerilerini aç",
+      "ApplyUndoText": "Aramadaki Microsoft Store uygulama önerileri açılıyor"
+    },
+    "DisableSettings365Ads": {
+      "Label": "Ayarlar uygulamasının 'Giriş' sayfasındaki Microsoft 365 Copilot reklamlarını gizle",
+      "ToolTip": "Ayarlar uygulamasının giriş sayfasında görünen Microsoft 365 Copilot reklamlarını kapatır.",
+      "ApplyText": "Ayarlar uygulamasının 'Giriş' sayfasındaki Microsoft 365 Copilot reklamları gizleniyor",
+      "UndoLabel": "Ayarlar uygulamasının 'Giriş' sayfasındaki Microsoft 365 Copilot reklamlarını göster",
+      "ApplyUndoText": "Ayarlar uygulamasının 'Giriş' sayfasındaki Microsoft 365 Copilot reklamları gösteriliyor"
+    },
+    "DisableSettingsHome": {
+      "Label": "Ayarlar uygulamasının 'Giriş' sayfasını gizle",
+      "ToolTip": "Ayarlar uygulamasındaki 'Giriş' sayfasını kaldırır.",
+      "ApplyText": "Ayarlar uygulamasının 'Giriş' sayfası gizleniyor",
+      "UndoLabel": "Ayarlar uygulamasının 'Giriş' sayfasını göster",
+      "ApplyUndoText": "Ayarlar uygulamasının 'Giriş' sayfası gösteriliyor"
+    },
+    "DisableEdgeAI": {
+      "Label": "Microsoft Edge'deki yapay zeka özelliklerini kapat",
+      "ToolTip": "Microsoft Edge'deki yapay zeka kenar çubuğu ve Copilot özellikleri gibi yapay zeka özelliklerini kapatır. Bu ayar ilke aracılığıyla uygulanır ve bazı seçenekleri kilitler.",
+      "ApplyText": "Microsoft Edge'deki yapay zeka özellikleri kapatılıyor",
+      "UndoLabel": "Microsoft Edge'deki yapay zeka özelliklerini aç",
+      "ApplyUndoText": "Microsoft Edge'deki yapay zeka özellikleri açılıyor"
+    },
+    "DisableChromeAI": {
+      "Label": "Google Chrome'daki yapay zeka özelliklerini kapat",
+      "ToolTip": "Gemini, yapay zeka araması ve önerileri, yazma yardımı, otomatik doldurma ve benzerleri dahil Google Chrome'un yerleşik yapay zeka araçlarını kapatır. Yerel yapay zeka modellerini de kaldırır. Bu ayar ilke aracılığıyla uygulanır ve bazı seçenekleri kilitler.",
+      "ApplyText": "Google Chrome'daki yapay zeka özellikleri kapatılıyor",
+      "UndoLabel": "Google Chrome'daki yapay zeka özelliklerini aç",
+      "ApplyUndoText": "Google Chrome'daki yapay zeka özellikleri açılıyor"
+    },
+    "DisablePaintAI": {
+      "Label": "Paint'teki yapay zeka özelliklerini kapat",
+      "ToolTip": "Paint'teki yapay zeka görüntü oluşturma ve düzenleme araçlarını kapatır. Bu ayar ilke aracılığıyla uygulanır ve bazı seçenekleri kilitler.",
+      "ApplyText": "Paint'teki yapay zeka özellikleri kapatılıyor",
+      "UndoLabel": "Paint'teki yapay zeka özelliklerini aç",
+      "ApplyUndoText": "Paint'teki yapay zeka özellikleri açılıyor"
+    },
+    "DisableNotepadAI": {
+      "Label": "Not Defteri'ndeki yapay zeka özelliklerini kapat",
+      "ToolTip": "Not Defteri'ndeki yapay zeka yazma önerilerini kapatır. Bu ayar ilke aracılığıyla uygulanır ve bazı seçenekleri kilitler.",
+      "ApplyText": "Not Defteri'ndeki yapay zeka özellikleri kapatılıyor",
+      "UndoLabel": "Not Defteri'ndeki yapay zeka özelliklerini aç",
+      "ApplyUndoText": "Not Defteri'ndeki yapay zeka özellikleri açılıyor"
+    },
+    "EnableDarkMode": {
+      "Label": "Windows ve uygulamalar için koyu modu aç",
+      "ToolTip": "Windows ve uygulamaların renk modunu Koyu olarak ayarlar.",
+      "ApplyText": "Windows ve uygulamalar için koyu mod açılıyor",
+      "UndoLabel": "Windows ve uygulamalar için açık modu kullan",
+      "ApplyUndoText": "Windows ve uygulamalar için açık mod ayarlanıyor"
+    },
+    "RevertContextMenu": {
+      "Label": "Klasik Windows 10 sağ tıklama menüsünü kullan",
+      "ToolTip": "Windows 11 sağ tıklama menüsünde 'Daha fazla seçenek göster' arkasında kalan klasik Windows 10 sağ tıklama menüsünü geri getirir.",
+      "ApplyText": "Klasik Windows 10 sağ tıklama menüsü geri getiriliyor",
+      "UndoLabel": "Windows 11 sağ tıklama menüsünü kullan",
+      "ApplyUndoText": "Windows 11 sağ tıklama menüsü geri getiriliyor"
+    },
+    "DisableMouseAcceleration": {
+      "Label": "'İşaretçi hassasiyetini geliştir' seçeneğini kapat (fare ivmesi)",
+      "ToolTip": "Windows'ta varsayılan olarak açık olan fare ivmesini kapatır. Fare hareketi daha tutarlı ve öngörülebilir olur.",
+      "ApplyText": "'İşaretçi hassasiyetini geliştir' kapatılıyor",
+      "UndoLabel": "'İşaretçi hassasiyetini geliştir' seçeneğini aç (fare ivmesi)",
+      "ApplyUndoText": "'İşaretçi hassasiyetini geliştir' açılıyor"
+    },
+    "DisableStickyKeys": {
+      "Label": "Yapışkan Tuşlar kısayolunu kapat (5 kez Shift)",
+      "ToolTip": "Shift tuşuna art arda 5 kez basınca Yapışkan Tuşlar penceresinin açılmasını engeller.",
+      "ApplyText": "Yapışkan Tuşlar kısayolu kapatılıyor",
+      "UndoLabel": "Yapışkan Tuşlar kısayolunu aç (5 kez Shift)",
+      "ApplyUndoText": "Yapışkan Tuşlar kısayolu açılıyor"
+    },
+    "DisableWindowSnapping": {
+      "Label": "Pencere tutturmayı kapat",
+      "ToolTip": "Pencerelerin ekranın kenarlarına veya köşelerine tutturulmasını kapatır.",
+      "ApplyText": "Pencere tutturma kapatılıyor",
+      "UndoLabel": "Pencere tutturmayı aç",
+      "ApplyUndoText": "Pencere tutturma açılıyor"
+    },
+    "DisableSnapAssist": {
+      "Label": "Pencere tuttururken uygulama önerilerini kapat",
+      "ToolTip": "Pencereleri ekranın kenarlarına veya köşelerine tuttururken çıkan uygulama önerilerini kapatır.",
+      "ApplyText": "Tutturma Yardımı önerileri kapatılıyor",
+      "UndoLabel": "Pencere tuttururken uygulama önerilerini aç",
+      "ApplyUndoText": "Tutturma Yardımı önerileri açılıyor"
+    },
+    "DisableSnapLayouts": {
+      "Label": "Ekranın üstündeki ve ekranı kapla düğmesindeki tutturma düzeni menüsünü gizle",
+      "ToolTip": "Ekranı kapla düğmesinin üzerine gelince veya pencereyi ekranın üstüne sürükleyince çıkan tutturma düzeni menüsünü kapatır.",
+      "ApplyText": "Pencere ekranın üstüne sürüklenirken ve ekranı kapla düğmesinde tutturma düzenleri gizleniyor",
+      "UndoLabel": "Ekranın üstündeki ve ekranı kapla düğmesindeki tutturma düzeni menüsünü göster",
+      "ApplyUndoText": "Pencere ekranın üstüne sürüklenirken ve ekranı kapla düğmesinde tutturma düzenleri gösteriliyor"
+    },
+    "HideTabsInAltTab": {
+      "Label": "Pencere tuttururken veya Alt+Tab'a basınca uygulama sekmelerini gizle",
+      "ApplyText": "Pencere tuttururken veya Alt+Tab'a basınca uygulama sekmeleri gizleniyor"
+    },
+    "Show3TabsInAltTab": {
+      "Label": "Pencere tuttururken veya Alt+Tab'a basınca uygulamalardan 3 sekme göster",
+      "ApplyText": "Pencere tuttururken veya Alt+Tab'a basınca uygulamalardan 3 sekme gösteriliyor"
+    },
+    "Show5TabsInAltTab": {
+      "Label": "Pencere tuttururken veya Alt+Tab'a basınca uygulamalardan 5 sekme göster",
+      "ApplyText": "Pencere tuttururken veya Alt+Tab'a basınca uygulamalardan 5 sekme gösteriliyor"
+    },
+    "Show20TabsInAltTab": {
+      "Label": "Pencere tuttururken veya Alt+Tab'a basınca uygulamalardan 20 sekme göster",
+      "ApplyText": "Pencere tuttururken veya Alt+Tab'a basınca uygulamalardan 20 sekme gösteriliyor"
+    },
+    "TaskbarAlignLeft": {
+      "Label": "Görev çubuğunu sola hizala",
+      "ToolTip": "Windows 11'de görev çubuğu düğmeleri varsayılan olarak ortadadır. Bu ayar, düğmeleri önceki Windows sürümlerindeki gibi sola alır.",
+      "ApplyText": "Görev çubuğu düğmeleri sola hizalanıyor",
+      "UndoLabel": "Görev çubuğunu ortaya hizala",
+      "ApplyUndoText": "Görev çubuğu düğmeleri ortaya hizalanıyor"
+    },
+    "HideSearchTb": {
+      "Label": "Görev çubuğunda aramayı gizle",
+      "ApplyText": "Görev çubuğunda arama gizleniyor",
+      "UndoLabel": "Görev çubuğunda arama kutusunu göster",
+      "ApplyUndoText": "Görev çubuğunda arama kutusu gösteriliyor"
+    },
+    "ShowSearchIconTb": {
+      "Label": "Görev çubuğunda arama simgesini göster",
+      "ApplyText": "Görev çubuğunda yalnızca arama simgesi gösteriliyor",
+      "UndoLabel": "Görev çubuğunda arama kutusunu göster",
+      "ApplyUndoText": "Görev çubuğunda arama kutusu gösteriliyor"
+    },
+    "ShowSearchLabelTb": {
+      "Label": "Görev çubuğunda arama simgesini ve etiketini göster",
+      "ApplyText": "Görev çubuğunda arama simgesi ve etiketi gösteriliyor",
+      "UndoLabel": "Görev çubuğunda arama kutusunu göster",
+      "ApplyUndoText": "Görev çubuğunda arama kutusu gösteriliyor"
+    },
+    "ShowSearchBoxTb": {
+      "Label": "Görev çubuğunda arama kutusunu göster",
+      "ApplyText": "Görev çubuğunda arama kutusu gösteriliyor"
+    },
+    "HideTaskview": {
+      "Label": "Görev çubuğundaki 'Görev görünümü' düğmesini gizle",
+      "ToolTip": "Açık pencereleri ve sanal masaüstlerini gösteren 'Görev görünümü' düğmesini görev çubuğundan kaldırır.",
+      "ApplyText": "Görev çubuğundaki görev görünümü düğmesi gizleniyor",
+      "UndoLabel": "Görev çubuğundaki 'Görev görünümü' düğmesini göster",
+      "ApplyUndoText": "Görev çubuğundaki görev görünümü düğmesi gösteriliyor"
+    },
+    "DisableWidgets": {
+      "Label": "Görev çubuğu ve kilit ekranındaki pencere öğelerini kapat",
+      "ToolTip": "Görev çubuğundaki pencere öğeleri düğmesi ve kilit ekranında görünebilen pencere öğeleri dahil Windows pencere öğelerini kapatır.",
+      "ApplyText": "Görev çubuğu ve kilit ekranındaki pencere öğeleri kapatılıyor"
+    },
+    "HideChat": {
+      "Label": "Görev çubuğundaki Sohbet (Meet Now) simgesini gizle",
+      "ToolTip": "Görev çubuğundaki Sohbet (Meet Now) simgesini kapatır.",
+      "ApplyText": "Görev çubuğundaki sohbet simgesi gizleniyor",
+      "UndoLabel": "Görev çubuğundaki Sohbet (Meet Now) simgesini göster",
+      "ApplyUndoText": "Görev çubuğundaki sohbet simgesi gösteriliyor"
+    },
+    "DisableStorageSense": {
+      "Label": "Akıllı Depolama özelliğini kapat",
+      "ToolTip": "Geçici dosyaları silerek, Geri Dönüşüm Kutusu'nu boşaltarak ve İndirilenler klasöründeki dosyaları temizleyerek otomatik olarak disk alanı açan Akıllı Depolama özelliğini kapatır.",
+      "ApplyText": "Akıllı Depolama kapatılıyor",
+      "UndoLabel": "Akıllı Depolama özelliğini aç",
+      "ApplyUndoText": "Akıllı Depolama açılıyor"
+    },
+    "DisableFastStartup": {
+      "Label": "Hızlı başlatmayı kapat",
+      "ToolTip": "Hızlı başlatma, kapatma sırasında bir sistem görüntüsü kaydederek bilgisayarın daha çabuk açılmasını sağlar. Kapatmak bazı sorunları giderebilir ancak açılış biraz uzayabilir.",
+      "ApplyText": "Hızlı başlatma kapatılıyor",
+      "UndoLabel": "Hızlı başlatmayı aç",
+      "ApplyUndoText": "Hızlı başlatma açılıyor"
+    },
+    "DisableBitlockerAutoEncryption": {
+      "Label": "BitLocker otomatik cihaz şifrelemesini kapat",
+      "ToolTip": "Destekleyen cihazlarda Windows 11, BitLocker cihaz şifrelemesini kendiliğinden açar. Bu ayar otomatik şifrelemeyi kapatır; isterseniz BitLocker'ı elle açmaya devam edebilirsiniz. Zaten BitLocker ile şifrelenmiş sürücüler şifreli kalır.",
+      "ApplyText": "BitLocker otomatik cihaz şifrelemesi kapatılıyor",
+      "UndoLabel": "BitLocker otomatik cihaz şifrelemesini aç",
+      "ApplyUndoText": "BitLocker otomatik cihaz şifrelemesi açılıyor"
+    },
+    "DisableModernStandbyNetworking": {
+      "Label": "Modern Bekleme ağ bağlantısını kapat",
+      "ToolTip": "Modern Bekleme'yi destekleyen cihazlar, uyku modundayken varsayılan olarak ağa bağlı kalır. Bu bağlantıyı kapatmak pil ömrünü uzatabilir.",
+      "ApplyText": "Modern Bekleme sırasındaki ağ bağlantısı kapatılıyor",
+      "UndoLabel": "Modern Bekleme ağ bağlantısını aç",
+      "ApplyUndoText": "Modern Bekleme sırasındaki ağ bağlantısı açılıyor"
+    },
+    "EnableEndTask": {
+      "Label": "Görev çubuğu sağ tıklama menüsünde 'Görevi sonlandır' seçeneğini göster",
+      "ToolTip": "Açıkken, görev çubuğundaki uygulamaların sağ tıklama menüsüne 'Görevi sonlandır' ekler. Uygulamaları buradan zorla kapatabilirsiniz.",
+      "ApplyText": "Görev çubuğu sağ tıklama menüsündeki 'Görevi sonlandır' seçeneği gösteriliyor",
+      "UndoLabel": "Görev çubuğu sağ tıklama menüsündeki 'Görevi sonlandır' seçeneğini gizle",
+      "ApplyUndoText": "Görev çubuğu sağ tıklama menüsündeki 'Görevi sonlandır' seçeneği gizleniyor"
+    },
+    "EnableLastActiveClick": {
+      "Label": "Görev çubuğu uygulamalarında son etkin pencereye geçişi aç",
+      "ToolTip": "Açıkken, görev çubuğundaki bir uygulamaya tıklamak küçük resim önizlemesi göstermek yerine o uygulamanın son etkin penceresine geçer.",
+      "ApplyText": "Görev çubuğunda son etkin pencereye geçiş açılıyor",
+      "UndoLabel": "Görev çubuğu uygulamalarında son etkin pencereye geçişi kapat",
+      "ApplyUndoText": "Görev çubuğunda son etkin pencereye geçiş kapatılıyor"
+    },
+    "CombineTaskbarAlways": {
+      "Label": "Ana ekranda görev çubuğu düğmelerini her zaman birleştir ve etiketleri gizle",
+      "ApplyText": "Ana ekrandaki görev çubuğu, düğmeleri her zaman birleştirecek ve etiketleri gizleyecek şekilde ayarlanıyor"
+    },
+    "CombineMMTaskbarAlways": {
+      "Label": "İkincil ekranlarda görev çubuğu düğmelerini her zaman birleştir ve etiketleri gizle",
+      "ApplyText": "İkincil ekranlardaki görev çubuğu, düğmeleri her zaman birleştirecek ve etiketleri gizleyecek şekilde ayarlanıyor"
+    },
+    "CombineTaskbarWhenFull": {
+      "Label": "Ana ekranda görev çubuğu doluyken düğmeleri birleştir ve etiketleri gizle",
+      "ApplyText": "Ana ekrandaki görev çubuğu, yalnızca doluyken düğmeleri birleştirecek ve etiketleri gizleyecek şekilde ayarlanıyor",
+      "UndoLabel": "Ana ekranda görev çubuğu düğmelerini her zaman birleştir ve etiketleri gizle",
+      "ApplyUndoText": "Ana ekrandaki görev çubuğu, düğmeleri her zaman birleştirecek ve etiketleri gizleyecek şekilde ayarlanıyor"
+    },
+    "CombineMMTaskbarWhenFull": {
+      "Label": "İkincil ekranlarda görev çubuğu doluyken düğmeleri birleştir ve etiketleri gizle",
+      "ApplyText": "İkincil ekranlardaki görev çubuğu, yalnızca doluyken düğmeleri birleştirecek ve etiketleri gizleyecek şekilde ayarlanıyor",
+      "UndoLabel": "İkincil ekranlarda görev çubuğu düğmelerini her zaman birleştir ve etiketleri gizle",
+      "ApplyUndoText": "İkincil ekranlardaki görev çubuğu, düğmeleri her zaman birleştirecek ve etiketleri gizleyecek şekilde ayarlanıyor"
+    },
+    "CombineTaskbarNever": {
+      "Label": "Ana ekranda görev çubuğu düğmelerini hiçbir zaman birleştirme ve etiketleri göster",
+      "ApplyText": "Ana ekrandaki görev çubuğu, düğmeleri birleştirmeyecek ve etiketleri gizlemeyecek şekilde ayarlanıyor",
+      "UndoLabel": "Ana ekranda görev çubuğu düğmelerini her zaman birleştir ve etiketleri gizle",
+      "ApplyUndoText": "Ana ekrandaki görev çubuğu, düğmeleri her zaman birleştirecek ve etiketleri gizleyecek şekilde ayarlanıyor"
+    },
+    "CombineMMTaskbarNever": {
+      "Label": "İkincil ekranlarda görev çubuğu düğmelerini hiçbir zaman birleştirme ve etiketleri göster",
+      "ApplyText": "İkincil ekranlardaki görev çubuğu, düğmeleri birleştirmeyecek ve etiketleri gizlemeyecek şekilde ayarlanıyor",
+      "UndoLabel": "İkincil ekranlarda görev çubuğu düğmelerini her zaman birleştir ve etiketleri gizle",
+      "ApplyUndoText": "İkincil ekranlardaki görev çubuğu, düğmeleri her zaman birleştirecek ve etiketleri gizleyecek şekilde ayarlanıyor"
+    },
+    "MMTaskbarModeAll": {
+      "Label": "Uygulama simgelerini tüm görev çubuklarında göster",
+      "ApplyText": "Görev çubuğu, uygulama simgelerini tüm görev çubuklarında gösterecek şekilde ayarlanıyor"
+    },
+    "MMTaskbarModeMainActive": {
+      "Label": "Uygulama simgelerini ana görev çubuğunda ve pencerenin açık olduğu görev çubuğunda göster",
+      "ApplyText": "Görev çubuğu, uygulama simgelerini ana görev çubuğunda ve pencerenin açık olduğu görev çubuğunda gösterecek şekilde ayarlanıyor",
+      "UndoLabel": "Uygulama simgelerini tüm görev çubuklarında göster",
+      "ApplyUndoText": "Görev çubuğu, uygulama simgelerini tüm görev çubuklarında gösterecek şekilde ayarlanıyor"
+    },
+    "MMTaskbarModeActive": {
+      "Label": "Uygulama simgelerini yalnızca pencerenin açık olduğu görev çubuğunda göster",
+      "ApplyText": "Görev çubuğu, uygulama simgelerini yalnızca pencerenin açık olduğu görev çubuğunda gösterecek şekilde ayarlanıyor",
+      "UndoLabel": "Uygulama simgelerini tüm görev çubuklarında göster",
+      "ApplyUndoText": "Görev çubuğu, uygulama simgelerini tüm görev çubuklarında gösterecek şekilde ayarlanıyor"
+    },
+    "ExplorerToHome": {
+      "Label": "Dosya Gezgini'nin açıldığı varsayılan konumu 'Giriş' yap",
+      "ApplyText": "Dosya Gezgini'nin açıldığı varsayılan konum 'Giriş' olarak değiştiriliyor"
+    },
+    "ExplorerToThisPC": {
+      "Label": "Dosya Gezgini'nin açıldığı varsayılan konumu 'Bu Bilgisayar' yap",
+      "ApplyText": "Dosya Gezgini'nin açıldığı varsayılan konum 'Bu Bilgisayar' olarak değiştiriliyor",
+      "UndoLabel": "Dosya Gezgini'nin açıldığı varsayılan konumu 'Giriş' yap",
+      "ApplyUndoText": "Dosya Gezgini'nin açıldığı varsayılan konum 'Giriş' olarak değiştiriliyor"
+    },
+    "ExplorerToDownloads": {
+      "Label": "Dosya Gezgini'nin açıldığı varsayılan konumu 'İndirilenler' yap",
+      "ApplyText": "Dosya Gezgini'nin açıldığı varsayılan konum 'İndirilenler' olarak değiştiriliyor",
+      "UndoLabel": "Dosya Gezgini'nin açıldığı varsayılan konumu 'Giriş' yap",
+      "ApplyUndoText": "Dosya Gezgini'nin açıldığı varsayılan konum 'Giriş' olarak değiştiriliyor"
+    },
+    "ExplorerToOneDrive": {
+      "Label": "Dosya Gezgini'nin açıldığı varsayılan konumu 'OneDrive' yap",
+      "ApplyText": "Dosya Gezgini'nin açıldığı varsayılan konum 'OneDrive' olarak değiştiriliyor",
+      "UndoLabel": "Dosya Gezgini'nin açıldığı varsayılan konumu 'Giriş' yap",
+      "ApplyUndoText": "Dosya Gezgini'nin açıldığı varsayılan konum 'Giriş' olarak değiştiriliyor"
+    },
+    "ShowKnownFileExt": {
+      "Label": "Bilinen dosya türlerinin uzantılarını göster",
+      "ToolTip": "Bilinen dosya türlerinin uzantılarını gösterir. Windows bunları varsayılan olarak gizler; bu da karışıklığa ve güvenlik riskine yol açabilir.",
+      "ApplyText": "Bilinen dosya türlerinin uzantıları gösteriliyor",
+      "UndoLabel": "Bilinen dosya türlerinin uzantılarını gizle",
+      "ApplyUndoText": "Bilinen dosya türlerinin uzantıları gizleniyor"
+    },
+    "ShowHiddenFolders": {
+      "Label": "Gizli dosyaları, klasörleri ve sürücüleri göster",
+      "ToolTip": "Windows, yanlışlıkla değiştirilmesin veya silinmesin diye bazı dosya, klasör ve sürücüleri gizler. Dosya Gezgini'nde hepsini görmek için bunu açın.",
+      "ApplyText": "Gizli dosyalar, klasörler ve sürücüler gösteriliyor",
+      "UndoLabel": "Gizli dosyaları, klasörleri ve sürücüleri gizle",
+      "ApplyUndoText": "Gizli dosyalar, klasörler ve sürücüler gizleniyor"
+    },
+    "HideDupliDrive": {
+      "Label": "Yinelenen çıkarılabilir sürücüleri gezinti bölmesinde gizle",
+      "ToolTip": "Windows, çıkarılabilir sürücüleri hem 'Bu Bilgisayar' altında hem de gezinti bölmesinde ayrı bir girdi olarak gösterir. Bu ayar, onları yalnızca 'Bu Bilgisayar' altında gösterir.",
+      "ApplyText": "Dosya Gezgini gezinti bölmesindeki yinelenen çıkarılabilir sürücü girdileri gizleniyor",
+      "UndoLabel": "Yinelenen çıkarılabilir sürücüleri gezinti bölmesinde göster",
+      "ApplyUndoText": "Dosya Gezgini gezinti bölmesindeki yinelenen çıkarılabilir sürücü girdileri gösteriliyor"
+    },
+    "HideHome": {
+      "Label": "Gezinti bölmesinden 'Giriş'i gizle",
+      "ToolTip": "Dosya Gezgini gezinti bölmesindeki 'Giriş' bölümünü gizler. Uyarı: Bilgisayarı veya Windows Gezgini'ni yeniden başlatana kadar Hızlı erişim bağlantıları güncellenmeyebilir.",
+      "ApplyText": "Dosya Gezgini gezinti bölmesindeki 'Giriş' bölümü gizleniyor",
+      "UndoLabel": "Gezinti bölmesinde 'Giriş'i göster",
+      "ApplyUndoText": "Dosya Gezgini gezinti bölmesindeki 'Giriş' bölümü gösteriliyor"
+    },
+    "HideGallery": {
+      "Label": "Gezinti bölmesinden 'Galeri'yi gizle",
+      "ToolTip": "Dosya Gezgini gezinti bölmesindeki 'Galeri' bölümünü gizler.",
+      "ApplyText": "Dosya Gezgini gezinti bölmesindeki 'Galeri' bölümü gizleniyor",
+      "UndoLabel": "Gezinti bölmesinde 'Galeri'yi göster",
+      "ApplyUndoText": "Dosya Gezgini gezinti bölmesindeki 'Galeri' bölümü gösteriliyor"
+    },
+    "DisableTransparency": {
+      "Label": "Saydamlık efektlerini kapat",
+      "ToolTip": "Windows ve arabirimlerdeki saydamlık efektlerini kapatır. Eski donanımda performansı artırabilir.",
+      "ApplyText": "Saydamlık efektleri kapatılıyor",
+      "UndoLabel": "Saydamlık efektlerini aç",
+      "ApplyUndoText": "Saydamlık efektleri açılıyor"
+    },
+    "DisableAnimations": {
+      "Label": "Animasyonları ve görsel efektleri kapat",
+      "ToolTip": "Windows'taki animasyonları ve bazı görsel efektleri kapatır. Arabirim, özellikle eski donanımda daha akıcı hissedilir.",
+      "ApplyText": "Animasyonlar ve görsel efektler kapatılıyor",
+      "UndoLabel": "Animasyonları ve görsel efektleri aç",
+      "ApplyUndoText": "Animasyonlar ve görsel efektler açılıyor"
+    },
+    "DisableUpdateASAP": {
+      "Label": "Güncelleştirmelerin hazır olur olmaz alınmasını engelle",
+      "ToolTip": "Bilgisayarınızın güvenlikle ilgili olmayan yeni güncelleştirmeleri ilk alanlar arasında olmasını engeller. Bu güncelleştirmeler yine de zamanı gelince yüklenir.",
+      "ApplyText": "Windows'un güncelleştirmeleri hazır olur olmaz alması engelleniyor",
+      "UndoLabel": "Güncelleştirmelerin hazır olur olmaz alınmasına izin ver",
+      "ApplyUndoText": "Windows'un güncelleştirmeleri hazır olur olmaz almasına izin veriliyor"
+    },
+    "PreventUpdateAutoReboot": {
+      "Label": "Oturum açıkken güncelleştirme sonrası otomatik yeniden başlatmayı engelle",
+      "ToolTip": "Herhangi bir kullanıcı oturum açmışken bilgisayarın güncelleştirme sonrası kendiliğinden yeniden başlamasını engeller.",
+      "ApplyText": "Oturum açıkken güncelleştirme sonrası otomatik yeniden başlatma engelleniyor",
+      "UndoLabel": "Oturum açıkken güncelleştirme sonrası otomatik yeniden başlatmaya izin ver",
+      "ApplyUndoText": "Oturum açıkken güncelleştirme sonrası otomatik yeniden başlatmaya izin veriliyor"
+    },
+    "DisableDeliveryOptimization": {
+      "Label": "Teslim İyileştirme ile paylaşımı kapat",
+      "ToolTip": "Teslim İyileştirme üzerinden yerel ağdaki veya internetteki diğer cihazlardan güncelleştirme indirmeyi ve bu cihazlarla güncelleştirme paylaşmayı kapatır.",
+      "ApplyText": "Teslim İyileştirme ile diğer cihazlardan indirme ve paylaşma kapatılıyor",
+      "UndoLabel": "Teslim İyileştirme ile paylaşımı aç",
+      "ApplyUndoText": "Teslim İyileştirme ile diğer cihazlardan indirme ve paylaşma açılıyor"
+    },
+    "DisableDeviceAutoAppDownload": {
+      "Label": "Windows'un cihaz yardımcı uygulamalarını kendiliğinden yüklemesini engelle",
+      "ToolTip": "LG veya Alienware monitör gibi bazı cihazları bağladığınızda Windows Update'in cihaz yardımcı uygulamalarını sessizce yüklemesini durdurur. Cihazlar çalışmaya devam eder; yalnızca izniniz olmadan ek uygulama yüklenmesi engellenir.",
+      "ApplyText": "Cihaz yardımcı uygulamalarının kendiliğinden yüklenmesi engelleniyor",
+      "UndoLabel": "Cihaz yardımcı uygulamalarının kendiliğinden yüklenmesine izin ver",
+      "ApplyUndoText": "Cihaz yardımcı uygulamalarının kendiliğinden yüklenmesine izin veriliyor"
+    },
+    "ForceRemoveEdge": {
+      "Label": "Microsoft Edge'i zorla kaldır. ÖNERİLMEZ.",
+      "ApplyText": "Microsoft Edge zorla kaldırılıyor"
+    },
+    "HideOnedrive": {
+      "Label": "Gezinti bölmesinden 'OneDrive'ı gizle",
+      "ToolTip": "Dosya Gezgini gezinti bölmesindeki 'OneDrive' bölümünü gizler.",
+      "ApplyText": "Dosya Gezgini gezinti bölmesindeki 'OneDrive' bölümü gizleniyor",
+      "UndoLabel": "Gezinti bölmesinde 'OneDrive'ı göster",
+      "ApplyUndoText": "Dosya Gezgini gezinti bölmesindeki 'OneDrive' bölümü gösteriliyor"
+    },
+    "Hide3dObjects": {
+      "Label": "'Bu Bilgisayar' altındaki '3B Nesneler' klasörünü gizle",
+      "ToolTip": "Dosya Gezgini gezinti bölmesindeki '3B Nesneler' klasörünü gizler.",
+      "ApplyText": "Dosya Gezgini gezinti bölmesindeki '3B Nesneler' klasörü gizleniyor",
+      "UndoLabel": "'Bu Bilgisayar' altındaki '3B Nesneler' klasörünü göster",
+      "ApplyUndoText": "Dosya Gezgini gezinti bölmesindeki '3B Nesneler' klasörü gösteriliyor"
+    },
+    "HideMusic": {
+      "Label": "'Bu Bilgisayar' altındaki 'Müzik' klasörünü gizle",
+      "ToolTip": "Dosya Gezgini gezinti bölmesindeki 'Müzik' klasörünü gizler.",
+      "ApplyText": "Dosya Gezgini gezinti bölmesindeki 'Müzik' klasörü gizleniyor",
+      "UndoLabel": "'Bu Bilgisayar' altındaki 'Müzik' klasörünü göster",
+      "ApplyUndoText": "Dosya Gezgini gezinti bölmesindeki 'Müzik' klasörü gösteriliyor"
+    },
+    "AddFoldersToThisPC": {
+      "Label": "Sık kullanılan klasörleri 'Bu Bilgisayar' sayfasına geri ekle",
+      "ToolTip": "Masaüstü, Belgeler, İndirilenler, Müzik, Resimler ve Videolar gibi sık kullanılan klasörleri Dosya Gezgini'ndeki 'Bu Bilgisayar' sayfasına geri ekler.",
+      "ApplyText": "Sık kullanılan klasörler (Masaüstü, İndirilenler vb.) Dosya Gezgini'ndeki 'Bu Bilgisayar'a geri ekleniyor",
+      "UndoLabel": "Sık kullanılan klasörleri 'Bu Bilgisayar' sayfasından kaldır",
+      "ApplyUndoText": "Sık kullanılan klasörler (Masaüstü, İndirilenler vb.) Dosya Gezgini'ndeki 'Bu Bilgisayar'dan kaldırılıyor"
+    },
+    "HideIncludeInLibrary": {
+      "Label": "Sağ tık menüsündeki 'Kitaplığa ekle' seçeneğini gizle",
+      "ToolTip": "Dosya Gezgini sağ tıklama menüsündeki 'Kitaplığa ekle' seçeneğini gizler.",
+      "ApplyText": "Sağ tık menüsündeki 'Kitaplığa ekle' gizleniyor",
+      "UndoLabel": "Sağ tık menüsündeki 'Kitaplığa ekle' seçeneğini göster",
+      "ApplyUndoText": "Sağ tık menüsündeki 'Kitaplığa ekle' gösteriliyor"
+    },
+    "HideGiveAccessTo": {
+      "Label": "Sağ tık menüsündeki 'Erişim ver' seçeneğini gizle",
+      "ToolTip": "Dosya Gezgini sağ tıklama menüsündeki 'Erişim ver' seçeneğini gizler.",
+      "ApplyText": "Sağ tık menüsündeki 'Erişim ver' gizleniyor",
+      "UndoLabel": "Sağ tık menüsündeki 'Erişim ver' seçeneğini göster",
+      "ApplyUndoText": "Sağ tık menüsündeki 'Erişim ver' gösteriliyor"
+    },
+    "HideShare": {
+      "Label": "Sağ tık menüsündeki 'Paylaş' seçeneğini gizle",
+      "ToolTip": "Dosya Gezgini sağ tıklama menüsündeki 'Paylaş' seçeneğini gizler.",
+      "ApplyText": "Sağ tık menüsündeki 'Paylaş' gizleniyor",
+      "UndoLabel": "Sağ tık menüsündeki 'Paylaş' seçeneğini göster",
+      "ApplyUndoText": "Sağ tık menüsündeki 'Paylaş' gösteriliyor"
+    },
+    "DisableBraveBloat": {
+      "Label": "Brave tarayıcısındaki gereksiz özellikleri kapat (yapay zeka, kripto vb.)",
+      "ToolTip": "Brave'in yerleşik yapay zeka özelliklerini, kripto cüzdanını, Haberler, Ödüller, Talk ve VPN'i kapatır. Bu ayar ilke aracılığıyla uygulanır ve bazı seçenekleri kilitler.",
+      "ApplyText": "Brave tarayıcısında yapay zeka, kripto, Haberler, Ödüller, Talk ve VPN kapatılıyor",
+      "UndoLabel": "Brave tarayıcı özelliklerini aç (yapay zeka, kripto vb.)",
+      "ApplyUndoText": "Brave tarayıcısında yapay zeka, kripto, Haberler, Ödüller, Talk ve VPN açılıyor"
+    },
+    "EnableWindowsSandbox": {
+      "Label": "Windows Korumalı Alanı'nı etkinleştir",
+      "ToolTip": "Windows Korumalı Alanı (Windows Sandbox), uygulamaları yalıtılmış ortamda güvenle çalıştırmak için hafif bir masaüstüdür. İçine yüklenen yazılım ana bilgisayardan ayrı çalışır. Yalnızca Windows 11 Pro, Workstation, Enterprise ve Education sürümlerinde desteklenir.",
+      "ApplyText": "Windows Korumalı Alanı etkinleştiriliyor",
+      "UndoLabel": "Windows Korumalı Alanı'nı devre dışı bırak",
+      "ApplyUndoText": "Windows Korumalı Alanı devre dışı bırakılıyor"
+    },
+    "EnableWindowsSubsystemForLinux": {
+      "Label": "Linux için Windows Alt Sistemi'ni etkinleştir",
+      "ToolTip": "Windows üzerinde Linux ortamlarını ve komut satırı araçlarını çalıştırmayı sağlayan Linux için Windows Alt Sistemi (WSL) özelliğini etkinleştirir.",
+      "ApplyText": "Linux için Windows Alt Sistemi etkinleştiriliyor",
+      "UndoLabel": "Linux için Windows Alt Sistemi'ni devre dışı bırak",
+      "ApplyUndoText": "Linux için Windows Alt Sistemi devre dışı bırakılıyor"
+    },
+    "ShowDriveLettersFirst": {
+      "Label": "Sürücü harflerini sürücü etiketinden önce göster",
+      "ToolTip": "Dosya Gezgini'nde sürücü harflerini sürücü etiketinden önce gösterir.",
+      "ApplyText": "Sürücü harfleri sürücü etiketinden önce gösteriliyor",
+      "UndoLabel": "Sürücü harflerini sürücü etiketinden sonra göster",
+      "ApplyUndoText": "Sürücü harfleri sürücü etiketinden sonra gösteriliyor"
+    },
+    "ShowDriveLettersLast": {
+      "Label": "Sürücü harflerini sürücü etiketinden sonra göster",
+      "ToolTip": "Dosya Gezgini'nde sürücü harflerini sürücü etiketinden sonra gösterir (Windows varsayılanı).",
+      "ApplyText": "Sürücü harfleri sürücü etiketinden sonra gösteriliyor"
+    },
+    "ShowNetworkDriveLettersFirst": {
+      "Label": "Ağ sürücüsü harflerini sürücü etiketinden önce göster",
+      "ToolTip": "Dosya Gezgini'nde yalnızca ağ sürücüsü harflerini sürücü etiketinden önce gösterir.",
+      "ApplyText": "Ağ sürücüsü harfleri sürücü etiketinden önce gösteriliyor",
+      "UndoLabel": "Sürücü harflerini sürücü etiketinden sonra göster",
+      "ApplyUndoText": "Sürücü harfleri sürücü etiketinden sonra gösteriliyor"
+    },
+    "HideDriveLetters": {
+      "Label": "Tüm sürücü harflerini gizle",
+      "ToolTip": "Dosya Gezgini gezinti bölmesindeki ve 'Bu Bilgisayar'daki tüm sürücü harflerini gizler.",
+      "ApplyText": "Tüm sürücü harfleri gizleniyor",
+      "UndoLabel": "Sürücü harflerini sürücü etiketinden sonra göster",
+      "ApplyUndoText": "Sürücü harfleri sürücü etiketinden sonra gösteriliyor"
+    },
+    "StartAllAppsCategory": {
+      "Label": "Tüm uygulamaları kategori görünümünde göster (Varsayılan)",
+      "ToolTip": "Başlat menüsündeki Tüm uygulamalar bölümünü, uygulamaları kategoriye göre gruplayacak şekilde ayarlar.",
+      "ApplyText": "Tüm uygulamalar için kategori görünümü ayarlanıyor"
+    },
+    "StartAllAppsGrid": {
+      "Label": "Tüm uygulamaları ızgara görünümünde göster",
+      "ToolTip": "Başlat menüsündeki Tüm uygulamalar bölümünü alfabetik ızgara düzeninde gösterir.",
+      "ApplyText": "Tüm uygulamalar için ızgara görünümü ayarlanıyor",
+      "UndoLabel": "Tüm uygulamaları kategori görünümünde göster",
+      "ApplyUndoText": "Tüm uygulamalar için kategori görünümü ayarlanıyor"
+    },
+    "StartAllAppsList": {
+      "Label": "Tüm uygulamaları liste görünümünde göster",
+      "ToolTip": "Başlat menüsündeki Tüm uygulamalar bölümünü alfabetik liste düzeninde gösterir.",
+      "ApplyText": "Tüm uygulamalar için liste görünümü ayarlanıyor",
+      "UndoLabel": "Tüm uygulamaları kategori görünümünde göster",
+      "ApplyUndoText": "Tüm uygulamalar için kategori görünümü ayarlanıyor"
+    }
+  },
+  "UiGroups": {
+    "DesktopSpotlight": {
+      "Label": "Masaüstünde Windows spot ışığı (Spotlight)",
+      "ToolTip": "Windows spot ışığının masaüstü arka planını yönetir. 'Bu resim hakkında bilgi edinin' kısayolunu gösterebilir veya gizleyebilir, Windows spot ışığını kapatabilirsiniz.",
+      "Values": {
+        "EnableDesktopSpotlight": "'Bu resim hakkında bilgi edinin' kısayolunu göster (Varsayılan)",
+        "HideDesktopSpotlightIcon": "'Bu resim hakkında bilgi edinin' kısayolunu gizle",
+        "DisableDesktopSpotlight": "Windows spot ışığının masaüstü arka planını kapat"
+      }
+    },
+    "SearchIcon": {
+      "Label": "Görev çubuğunda arama",
+      "ToolTip": "Görev çubuğundaki arama kutusunun görünümünü değiştirir.",
+      "Values": {
+        "ShowSearchBoxTb": "Arama kutusu (Varsayılan)",
+        "ShowSearchLabelTb": "Arama simgesi ve etiketi",
+        "ShowSearchIconTb": "Yalnızca arama simgesi",
+        "HideSearchTb": "Gizle"
+      }
+    },
+    "MultiMon": {
+      "Label": "Görev çubuğu uygulamalarını şurada göster",
+      "ToolTip": "Birden fazla monitör kullanırken görev çubuğu uygulama düğmelerinin nerede görüneceğini seçmenizi sağlar.",
+      "Values": {
+        "MMTaskbarModeAll": "Tüm görev çubukları (Varsayılan)",
+        "MMTaskbarModeMainActive": "Ana görev çubuğu ve pencerenin açık olduğu görev çubuğu",
+        "MMTaskbarModeActive": "Pencerenin açık olduğu görev çubuğu"
+      }
+    },
+    "CombineButtons": {
+      "Label": "Ana ekranda görev çubuğu düğmelerini birleştir",
+      "ToolTip": "Ana ekranda görev çubuğu düğmelerinin nasıl birleştirileceğini seçmenizi sağlar.",
+      "Values": {
+        "CombineTaskbarAlways": "Her zaman (Varsayılan)",
+        "CombineTaskbarWhenFull": "Görev çubuğu doluyken",
+        "CombineTaskbarNever": "Hiçbir zaman"
+      }
+    },
+    "CombineMMButtons": {
+      "Label": "İkincil ekranlarda görev çubuğu düğmelerini birleştir",
+      "ToolTip": "İkincil ekranlarda görev çubuğu düğmelerinin nasıl birleştirileceğini seçmenizi sağlar.",
+      "Values": {
+        "CombineMMTaskbarAlways": "Her zaman (Varsayılan)",
+        "CombineMMTaskbarWhenFull": "Görev çubuğu doluyken",
+        "CombineMMTaskbarNever": "Hiçbir zaman"
+      }
+    },
+    "ClearStart": {
+      "Label": "Başlat menüsündeki uygulamaların sabitlemesini kaldır",
+      "ToolTip": "Başlat menüsüne sabitlenmiş tüm uygulamaların sabitlemesini kaldırır. Uygulamalar bilgisayardan kaldırılmaz.",
+      "Values": {
+        "ClearStart": "Yalnızca seçilen kullanıcı için",
+        "ClearStartAllUsers": "Mevcut ve yeni tüm kullanıcılar için"
+      }
+    },
+    "ExplorerLocation": {
+      "Label": "Dosya Gezgini'nin açılacağı konum",
+      "ToolTip": "Dosya Gezgini'nin açıldığı varsayılan konumu seçmenizi sağlar.",
+      "Values": {
+        "ExplorerToHome": "Giriş (Varsayılan)",
+        "ExplorerToThisPC": "Bu Bilgisayar",
+        "ExplorerToDownloads": "İndirilenler",
+        "ExplorerToOneDrive": "OneDrive"
+      }
+    },
+    "DriveLetterPosition": {
+      "Label": "Sürücü harfi konumu",
+      "ToolTip": "Dosya Gezgini'nde sürücü harflerinin nerede görüneceğini seçmenizi sağlar.",
+      "Values": {
+        "ShowDriveLettersLast": "Sürücü harflerini etiketten sonra göster (Varsayılan)",
+        "ShowDriveLettersFirst": "Sürücü harflerini etiketten önce göster",
+        "ShowNetworkDriveLettersFirst": "Ağ sürücüsü harflerini etiketten önce göster",
+        "HideDriveLetters": "Tüm sürücü harflerini gizle"
+      }
+    },
+    "ShowTabsInAltTab": {
+      "Label": "Pencere tuttururken veya Alt+Tab'a basınca uygulama sekmelerini göster",
+      "ToolTip": "Pencere tuttururken veya Alt+Tab'a basınca uygulama sekmelerinin (örneğin Edge sekmeleri) gösterilip gösterilmeyeceğini seçmenizi sağlar.",
+      "Values": {
+        "HideTabsInAltTab": "Sekmeleri gösterme",
+        "Show3TabsInAltTab": "En son 3 sekmeyi göster (Varsayılan)",
+        "Show5TabsInAltTab": "En son 5 sekmeyi göster",
+        "Show20TabsInAltTab": "En son 20 sekmeyi göster"
+      }
+    },
+    "StartAllAppsView": {
+      "Label": "Başlat menüsü 'Tüm uygulamalar' görünümü",
+      "ToolTip": "Başlat menüsündeki 'Tüm uygulamalar' bölümünün düzenini değiştirir veya bölümü tamamen gizler. Gizlemek, yüklü uygulamaları bulmayı zorlaştırabilir. Bu ayar ilke aracılığıyla uygulanır ve Windows Ayarları'ndaki bazı seçenekleri kilitler.",
+      "Values": {
+        "DisableStartAllApps": "Gizle",
+        "StartAllAppsCategory": "Kategori (Varsayılan)",
+        "StartAllAppsGrid": "Izgara",
+        "StartAllAppsList": "Liste"
+      }
+    }
+  }
+}

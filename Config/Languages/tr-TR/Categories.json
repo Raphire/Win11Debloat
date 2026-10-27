@@ -1,0 +1,38 @@
+{
+  "PrivacySuggestedContent": {
+    "Label": "Gizlilik ve önerilen içerik"
+  },
+  "System": {
+    "Label": "Sistem"
+  },
+  "StartMenuSearch": {
+    "Label": "Başlat menüsü ve arama"
+  },
+  "AI": {
+    "Label": "Yapay zeka"
+  },
+  "WindowsUpdate": {
+    "Label": "Windows Update"
+  },
+  "Taskbar": {
+    "Label": "Görev çubuğu"
+  },
+  "Appearance": {
+    "Label": "Görünüm"
+  },
+  "FileExplorer": {
+    "Label": "Dosya Gezgini"
+  },
+  "Gaming": {
+    "Label": "Oyun"
+  },
+  "MultiTasking": {
+    "Label": "Çoklu görev"
+  },
+  "OptionalWindowsFeatures": {
+    "Label": "İsteğe bağlı özellikler"
+  },
+  "Other": {
+    "Label": "Diğer"
+  }
+}

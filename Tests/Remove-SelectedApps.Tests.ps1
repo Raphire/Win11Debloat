@@ -231,6 +231,7 @@ Describe 'Remove-WinGetApp' {
         Remove-WinGetApp -app 'One.App'
         Should -Invoke Invoke-NonBlocking -Times 1 -Exactly -ParameterFilter { $ArgumentList -eq 'One.App' }
         Should -Invoke Set-RunOnceWingetTask -Times $Scheduled -Exactly -ParameterFilter { $appId -eq 'One.App' }
+        $script:WingetDeferredRemovals.ContainsKey('One.App') | Should -Be ([bool]$Scheduled)
     }
 
     It 'limits a foreground winget uninstall to two minutes' {
@@ -293,6 +294,7 @@ Describe 'Remove-WinGetApp' {
         Mock Set-RunOnceWingetTask { $false }
 
         Remove-WinGetApp -app 'One.App' | Should -BeFalse
+        $script:WingetDeferredRemovals.ContainsKey('One.App') | Should -BeFalse
     }
 
 }
@@ -716,6 +718,23 @@ Describe 'AllUsers deferred WinGet profile enumeration' {
         Mock Invoke-WithTargetUserHive {}
         Mock Get-WingetInstalledApps { return ,@() }
         Mock Test-AppInWingetList { $false }
+    }
+
+    It 'defers both Edge IDs after successful Sysprep scheduling without immediate verification or a force-removal prompt' {
+        $script:Params = @{ Sysprep = $true; AppRemovalTarget = 'AllUsers' }
+        Mock Invoke-NonBlocking { [PSCustomObject]@{ ExitCode = 1; Output = @() } }
+        Mock Set-RunOnceWingetTask { $true }
+        Mock Request-EdgeForceRemove {}
+        Mock Test-AppInWingetList { $true }
+
+        Remove-SelectedApps -appsList @('Microsoft.Edge', 'XPFFTQ037JWMHS') | Should -BeTrue
+
+        $script:WingetDeferredRemovals.ContainsKey('Microsoft.Edge') | Should -BeTrue
+        $script:WingetDeferredRemovals.ContainsKey('XPFFTQ037JWMHS') | Should -BeTrue
+        $script:AppRemovalFailures | Should -Be 0
+        Should -Invoke Set-RunOnceWingetTask -Times 2 -Exactly -ParameterFilter { $Target.AllUsers }
+        Should -Invoke Get-WingetInstalledApps -Times 0 -Exactly
+        Should -Invoke Request-EdgeForceRemove -Times 0 -Exactly
     }
 
     It 'keeps resolved profiles and Default while returning a SID translation failure' {

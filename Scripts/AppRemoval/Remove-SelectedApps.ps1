@@ -211,6 +211,10 @@ function Remove-WinGetApp {
             else { "user $($runOnceTarget.UserName)" }
         Write-Host "Adding RunOnce uninstall for $app for $targetDescription..."
         $scheduleSucceeded = Set-RunOnceWingetTask -appId $app -Target $runOnceTarget
+        if ($scheduleSucceeded) {
+            if (-not $script:WingetDeferredRemovals) { $script:WingetDeferredRemovals = @{} }
+            $script:WingetDeferredRemovals[$app] = $runOnceTarget.UserName
+        }
     }
 
     if ($null -ne $SchedulingFailed) { $SchedulingFailed.Value = -not $scheduleSucceeded }

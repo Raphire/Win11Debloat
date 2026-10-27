@@ -211,6 +211,10 @@ function Remove-WinGetApp {
             else { "user $($runOnceTarget.UserName)" }
         Write-Host "Adding RunOnce uninstall for $app for $targetDescription..."
         $scheduleSucceeded = Set-RunOnceWingetTask -appId $app -Target $runOnceTarget
+        if ($scheduleSucceeded) {
+            if (-not $script:WingetDeferredRemovals) { $script:WingetDeferredRemovals = @{} }
+            $script:WingetDeferredRemovals[$app] = $runOnceTarget.UserName
+        }
     }
 
     if ($null -ne $SchedulingFailed) { $SchedulingFailed.Value = -not $scheduleSucceeded }
@@ -549,10 +553,9 @@ function Get-RunOnceWingetTargetUserNames {
     which handles hive loading and HKEY_USERS\Default → SID remapping.
     Used instead of static .reg files to avoid file dependency for each WinGet app.
 
-    The winget command is Base64-encoded and invoked via powershell.exe -EncodedCommand
-    rather than interpolated directly into cmd.exe /c. This prevents shell metacharacters
-    (such as &, |, <, >, ^, ") in the app ID from being interpreted as command syntax,
-    even if future catalog updates introduce IDs containing those characters.
+    Invokes winget.exe directly with a quoted app ID, without a shell wrapper.
+    Escapes embedded quotes and trailing backslashes for native argument parsing,
+    and rejects commands exceeding RunOnce's 260-character limit.
 
     .PARAMETER appId
     The winget package ID to schedule for uninstall (e.g. 'XP9CXNGPPJ97XX').
@@ -584,18 +587,20 @@ function Set-RunOnceWingetTask {
 
     $taskName = "Uninstall_$safeAppId"
 
-    # Escape single quotes in appId, then wrap in single quotes so cmd/pwsh metacharacters
-    # like & | < > ^ " are treated as literals. Base64-encode the whole command so the
-    # RunOnce value contains only [A-Za-z0-9+/=] — safe in any shell parser.
-    $escapedAppId = $appId.Replace("'", "''")
-    $wingetCommand = "winget uninstall --accept-source-agreements --disable-interactivity --id '$escapedAppId'"
-    $encodedWingetCommand = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($wingetCommand))
+    # Preserve the ID as one native argument. No cmd.exe or PowerShell interprets its contents.
+    $escapedAppId = $appId -replace '(\\*)"', '$1$1\"'
+    $escapedAppId = $escapedAppId -replace '(\\+)$', '$1$1'
+    $wingetCommand = "winget.exe uninstall --accept-source-agreements --disable-interactivity --id `"$escapedAppId`""
+    if ($wingetCommand.Length -gt 260) {
+        Write-Error "Failed to schedule uninstall task for $($appId): the RunOnce command exceeds 260 characters."
+        return $false
+    }
 
     $operation = [PSCustomObject]@{
         KeyPath       = 'HKEY_USERS\Default\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce'
         ValueName     = $taskName
         ValueType     = 'String'
-        ValueData     = "powershell.exe -NoProfile -EncodedCommand $encodedWingetCommand"
+        ValueData     = $wingetCommand
         OperationType = 'SetValue'
     }
 

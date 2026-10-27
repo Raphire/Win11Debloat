@@ -580,6 +580,11 @@ Describe 'Remove-AppxApp' {
 }
 
 Describe 'Set-RunOnceWingetTask' {
+    BeforeAll {
+        $captureScript = Join-Path $TestDrive 'Capture native arguments.ps1'
+        '$args | ConvertTo-Json -Compress' | Set-Content -LiteralPath $captureScript -Encoding UTF8
+    }
+
     BeforeEach {
         $script:Params = @{ User = 'Alice' }
         Mock Invoke-WithTargetUserHive {
@@ -593,7 +598,7 @@ Describe 'Set-RunOnceWingetTask' {
         }
     }
 
-    It 'encodes shell metacharacters and writes a safe RunOnce operation' {
+    It 'writes a direct WinGet command with shell metacharacters kept as literals' {
         Set-RunOnceWingetTask -appId "Vendor.App&'Test"
         Should -Invoke Invoke-WithTargetUserHive -Times 1 -Exactly -ParameterFilter { $TargetUserName -eq 'Alice' }
         Should -Invoke Invoke-RegistryOperation -Times 1 -Exactly -ParameterFilter {
@@ -601,10 +606,58 @@ Describe 'Set-RunOnceWingetTask' {
             $RegFilePath -eq '<dynamic>'
         }
 
-        $script:runOnceOperation.ValueData | Should -Match '^powershell\.exe -NoProfile -EncodedCommand [A-Za-z0-9+/=]+$'
-        $encodedCommand = $script:runOnceOperation.ValueData -replace '^powershell\.exe -NoProfile -EncodedCommand ', ''
-        $decodedCommand = [System.Text.Encoding]::Unicode.GetString([Convert]::FromBase64String($encodedCommand))
-        $decodedCommand | Should -Be "winget uninstall --accept-source-agreements --disable-interactivity --id 'Vendor.App&''Test'"
+        $script:runOnceOperation.ValueData | Should -BeExactly "winget.exe uninstall --accept-source-agreements --disable-interactivity --id `"Vendor.App&'Test`""
+    }
+
+    It 'quotes <AppId> as one native argument' -ForEach @(
+        @{ AppId = 'Vendor.App" --all'; QuotedId = '"Vendor.App\" --all"' }
+        @{ AppId = 'Vendor.App\"Test'; QuotedId = '"Vendor.App\\\"Test"' }
+        @{ AppId = 'Vendor.App\'; QuotedId = '"Vendor.App\\"' }
+        @{ AppId = 'Vendor.App & | < > ^ %PATH%'; QuotedId = '"Vendor.App & | < > ^ %PATH%"' }
+    ) {
+        Set-RunOnceWingetTask -appId $AppId | Should -BeTrue
+        $script:runOnceOperation.ValueData | Should -BeExactly "winget.exe uninstall --accept-source-agreements --disable-interactivity --id $QuotedId"
+
+        # Exercise native parsing with a harmless capture script instead of running WinGet.
+        $process = [System.Diagnostics.Process]::new()
+        $process.StartInfo.FileName = Join-Path $env:SystemRoot 'System32\WindowsPowerShell\v1.0\powershell.exe'
+        $nativeArguments = $script:runOnceOperation.ValueData.Substring('winget.exe '.Length)
+        $process.StartInfo.Arguments = "-NoProfile -NonInteractive -ExecutionPolicy Bypass -File `"$captureScript`" $nativeArguments"
+        $process.StartInfo.UseShellExecute = $false
+        $process.StartInfo.CreateNoWindow = $true
+        $process.StartInfo.RedirectStandardOutput = $true
+        $process.StartInfo.RedirectStandardError = $true
+        try {
+            $null = $process.Start()
+            if (-not $process.WaitForExit(15000)) {
+                $process.Kill()
+                throw 'Native argument capture timed out.'
+            }
+            $output = $process.StandardOutput.ReadToEnd()
+            $stderr = $process.StandardError.ReadToEnd()
+            $process.ExitCode | Should -Be 0 -Because $stderr
+            $stderr | Should -BeNullOrEmpty
+            $captured = $output | ConvertFrom-Json
+            $captured | Should -HaveCount 5
+            $captured[3] | Should -BeExactly '--id'
+            $captured[4] | Should -BeExactly $AppId
+        }
+        finally { $process.Dispose() }
+    }
+
+    It 'keeps a typical command within the RunOnce limit' {
+        Set-RunOnceWingetTask -appId 'Microsoft.Edge' | Should -BeTrue
+        $script:runOnceOperation.ValueData.Length | Should -Be 93
+    }
+
+    It 'accepts the RunOnce length limit and rejects longer commands without writing to a hive' {
+        Set-RunOnceWingetTask -appId ('A' * 181) | Should -BeTrue
+        $script:runOnceOperation.ValueData.Length | Should -Be 260
+
+        Mock Write-Error {}
+        Set-RunOnceWingetTask -appId ('A' * 182) | Should -BeFalse
+        Should -Invoke Invoke-WithTargetUserHive -Times 1 -Exactly
+        Should -Invoke Write-Error -Times 1 -Exactly -ParameterFilter { $Message -like '*exceeds 260 characters*' }
     }
 
     It 'schedules every resolved target but reports incomplete profile enumeration' {

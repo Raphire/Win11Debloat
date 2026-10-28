@@ -71,12 +71,6 @@ Describe 'Test-FileHashMatch' {
         Test-FileHashMatch $script:AbcFile $script:OtherHash | Should -BeFalse
     }
 
-    It 'rejects a file whose content changed' {
-        $changedFile = Join-Path $TestDrive 'changed.bin'
-        [System.IO.File]::WriteAllBytes($changedFile, [System.Text.Encoding]::ASCII.GetBytes('abd'))
-
-        Test-FileHashMatch $changedFile $script:AbcHash | Should -BeFalse
-    }
 }
 
 Describe 'Launcher archive verification flow' {

@@ -7,6 +7,49 @@ BeforeAll {
     })
 }
 
+Describe 'Release workflow version validation' {
+    BeforeEach {
+        $locationPushed = $false
+        $originalTag = $env:RELEASE_TAG
+        $checkoutPath = Join-Path $TestDrive ([guid]::NewGuid().ToString('N'))
+        New-Item -ItemType Directory -Path $checkoutPath -Force | Out-Null
+        $scriptPath = Join-Path $checkoutPath 'Win11Debloat.ps1'
+        $originalSource = '$script:Version = "2026.08.24"'
+        [IO.File]::WriteAllText($scriptPath, $originalSource)
+        # Version validation needs no repository or external authentication.
+        function git {}
+        function gh {}
+        Mock git { $global:LASTEXITCODE = 0 }
+        Mock gh { $global:LASTEXITCODE = 0 }
+        Push-Location $checkoutPath
+        $locationPushed = $true
+    }
+
+    AfterEach {
+        if ($locationPushed) { Pop-Location }
+        $env:RELEASE_TAG = $originalTag
+    }
+
+    It 'rejects invalid release version <InvalidVersion> before changing the source or calling external tools' -ForEach @(
+        @{ InvalidVersion = '2026.02.30-r2' }
+        @{ InvalidVersion = '2026.10.23-r0' }
+        @{ InvalidVersion = '2026.10.23-r' }
+        @{ InvalidVersion = '2026.10.23-r2-extra' }
+    ) {
+        $env:RELEASE_TAG = $InvalidVersion
+        { & $workflowBlocks[0] } | Should -Throw
+        [IO.File]::ReadAllText($scriptPath) | Should -BeExactly $originalSource
+        Should -Invoke git -Times 0 -Exactly
+        Should -Invoke gh -Times 0 -Exactly
+    }
+
+    It 'accepts a single-digit revision and updates the source version' {
+        $env:RELEASE_TAG = '2026.10.23-r2'
+        & $workflowBlocks[0]
+        [IO.File]::ReadAllText($scriptPath) | Should -BeExactly '$script:Version = "2026.10.23-r2"'
+    }
+}
+
 Describe 'Release workflow version commit' {
     BeforeEach {
         $locationPushed = $false
@@ -94,7 +137,6 @@ if ($text -notmatch [regex]::Escape($env:RELEASE_TAG)) { throw 'Tests did not se
 
     It 'commits and packages release version <ReleaseVersion> from the same tagged commit' -ForEach @(
         @{ ReleaseVersion = '2026.10.23' }
-        @{ ReleaseVersion = '2026.10.23-r2' }
         @{ ReleaseVersion = '2026.10.23-r10' }
     ) {
         $env:RELEASE_TAG = $ReleaseVersion
@@ -113,17 +155,6 @@ if ($text -notmatch [regex]::Escape($env:RELEASE_TAG)) { throw 'Tests did not se
         Expand-Archive -LiteralPath release-assets/Win11Debloat.zip -DestinationPath $unpacked
         [IO.File]::ReadAllText((Join-Path $unpacked "Win11Debloat-$ReleaseVersion/Win11Debloat.ps1")) |
             Should -Match $versionPattern
-    }
-
-    It 'rejects invalid release version <InvalidVersion> before changing the source' -ForEach @(
-        @{ InvalidVersion = '2026.02.30-r2' }
-        @{ InvalidVersion = '2026.10.23-r0' }
-        @{ InvalidVersion = '2026.10.23-r' }
-        @{ InvalidVersion = '2026.10.23-r2-extra' }
-    ) {
-        $env:RELEASE_TAG = $InvalidVersion
-        { & $workflowBlocks[0] } | Should -Throw
-        [IO.File]::ReadAllText((Join-Path $checkoutPath 'Win11Debloat.ps1')) | Should -Match '2026\.08\.24'
     }
 
     It 'does not commit or push a release when tests fail' {

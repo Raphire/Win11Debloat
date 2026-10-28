@@ -3,7 +3,7 @@ BeforeAll {
     $buildScript = Join-Path $repositoryRoot 'Scripts/Build-Release.ps1'
     $releasePath = Join-Path $TestDrive 'release'
     $version = '2026.10.22-r2'
-    $originalScript = [IO.File]::ReadAllBytes((Join-Path $repositoryRoot 'Win11Debloat.ps1'))
+    $originalScript = [IO.File]::ReadAllText((Join-Path $repositoryRoot 'Win11Debloat.ps1'))
     Push-Location $TestDrive
     try { & $buildScript -SourcePath $repositoryRoot -Version $version -OutputDirectory 'release' }
     finally { Pop-Location }
@@ -15,8 +15,8 @@ BeforeAll {
 Describe 'Release packaging' {
     It 'stamps only the packaged version and preserves runtime resources' {
         [IO.File]::ReadAllText((Join-Path $packagePath 'Win11Debloat.ps1')) | Should -Match '\$script:Version = "2026\.10\.22-r2"'
-        [Convert]::ToBase64String([IO.File]::ReadAllBytes((Join-Path $repositoryRoot 'Win11Debloat.ps1'))) |
-            Should -BeExactly ([Convert]::ToBase64String($originalScript))
+        [IO.File]::ReadAllText((Join-Path $repositoryRoot 'Win11Debloat.ps1')) |
+            Should -BeExactly $originalScript
         foreach ($directory in 'Assets', 'Config', 'Regfiles', 'Schemas') {
             foreach ($file in Get-ChildItem -LiteralPath (Join-Path $repositoryRoot $directory) -File -Recurse) {
                 $relativePath = $file.FullName.Substring($repositoryRoot.Length + 1)

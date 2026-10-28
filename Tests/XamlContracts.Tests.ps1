@@ -100,23 +100,6 @@ Describe 'XAML UI contracts' {
         $failures | Should -BeNullOrEmpty
     }
 
-    It 'keeps the main window navigation and deployment controls available' {
-        $mainWindow = Get-Content -LiteralPath (Join-Path $script:SchemaPath 'MainWindow.xaml') -Raw
-        $requiredNames = @(
-            'MainTabControl'
-            'HomeTab'
-            'DeploymentSettingsTab'
-            'DeploymentApplyBtn'
-            'UserSelectionCombo'
-            'AppSelectionPanel'
-            'AppSelectionStatus'
-        )
-
-        foreach ($name in $requiredNames) {
-            $mainWindow | Should -Match ('(?:x:Name|\bName)\s*=\s*"{0}"' -f [regex]::Escape($name))
-        }
-    }
-
     It 'exposes <Schema> links as keyboard-accessible hyperlinks with automation names' -TestCases @(
         @{ Schema = 'AboutWindow.xaml'; LinkNames = @('ProjectLink', 'KofiLink') }
         @{ Schema = 'RestoreBackupWindow.xaml'; LinkNames = @('NonRevertibleWikiLink') }

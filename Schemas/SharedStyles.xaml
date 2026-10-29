@@ -465,6 +465,7 @@
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="FontSize" Value="13"/>
         <Setter Property="Padding" Value="4,2"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="CheckBox">
@@ -474,7 +475,7 @@
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <Border x:Name="CheckBoxBorder" Grid.Column="0" Width="20" Height="20" Background="{DynamicResource CheckBoxBgColor}" BorderBrush="{DynamicResource CheckBoxBorderColor}" BorderThickness="1" CornerRadius="4" Margin="0,0,8,0">
+                            <Border x:Name="CheckBoxBorder" Grid.Column="0" Width="20" Height="20" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Background="{DynamicResource CheckBoxBgColor}" BorderBrush="{DynamicResource CheckBoxBorderColor}" BorderThickness="1" CornerRadius="4" Margin="0,0,8,0">
                                 <Grid>
                                     <TextBlock x:Name="CheckMark" Text="&#xE73E;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource ButtonBgColor}" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0">
                                         <TextBlock.Clip>
@@ -488,7 +489,7 @@
                                     </TextBlock>
                                 </Grid>
                             </Border>
-                            <ContentPresenter Grid.Column="1" VerticalAlignment="Center" Margin="0,0,0,2"/>
+                            <ContentPresenter Grid.Column="1" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Margin="0,0,0,2"/>
                         </Grid>
                     </Border>
                     <ControlTemplate.Triggers>
@@ -577,10 +578,11 @@
     <Style x:Key="FeatureCheckboxStyle" TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
         <Setter Property="Margin" Value="-4,-2,-4,10"/>
         <Setter Property="Padding" Value="4,2"/>
+        <Setter Property="VerticalContentAlignment" Value="Top"/>
         <Setter Property="ContentTemplate">
             <Setter.Value>
                 <DataTemplate>
-                    <TextBlock Text="{Binding}" TextTrimming="CharacterEllipsis"/>
+                    <TextBlock Text="{Binding}" TextWrapping="Wrap"/>
                 </DataTemplate>
             </Setter.Value>
         </Setter>

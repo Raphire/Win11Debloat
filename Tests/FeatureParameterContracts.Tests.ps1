@@ -20,6 +20,24 @@ BeforeAll {
 
         @($ast.ParamBlock.Parameters | ForEach-Object { $_.Name.VariablePath.UserPath })
     }
+
+    function Get-ControlParameterNames {
+        $tokens = $null
+        $parseErrors = $null
+        $ast = [System.Management.Automation.Language.Parser]::ParseFile($script:Win11DebloatPath, [ref]$tokens, [ref]$parseErrors)
+        $parseErrors | Should -BeNullOrEmpty
+
+        $assignment = $ast.Find({
+            param($node)
+            $node -is [System.Management.Automation.Language.AssignmentStatementAst] -and $node.Left.Extent.Text -eq '$script:ControlParams'
+        }, $true)
+        $assignment | Should -Not -BeNullOrEmpty
+
+        @(
+            $assignment.Right.FindAll({ param($node) $node -is [System.Management.Automation.Language.StringConstantExpressionAst] }, $true) |
+                ForEach-Object { $_.Value }
+        )
+    }
 }
 
 Describe 'FeatureId parameter contracts' {
@@ -99,26 +117,22 @@ Describe 'FeatureId parameter contracts' {
     }
 
     It 'accounts for every Win11Debloat.ps1 parameter as a FeatureId or a control parameter' {
-        $tokens = $null
-        $parseErrors = $null
-        $ast = [System.Management.Automation.Language.Parser]::ParseFile($script:Win11DebloatPath, [ref]$tokens, [ref]$parseErrors)
-        $parseErrors | Should -BeNullOrEmpty
-
-        $assignment = $ast.Find({
-            param($node)
-            $node -is [System.Management.Automation.Language.AssignmentStatementAst] -and $node.Left.Extent.Text -eq '$script:ControlParams'
-        }, $true)
-        $assignment | Should -Not -BeNullOrEmpty
-
-        $controlParameters = @(
-            $assignment.Right.FindAll({ param($node) $node -is [System.Management.Automation.Language.StringConstantExpressionAst] }, $true) |
-                ForEach-Object { $_.Value }
-        )
+        $controlParameters = Get-ControlParameterNames
         $unaccounted = @(
             Get-ScriptParameterNames -Path $script:Win11DebloatPath |
                 Where-Object { $script:Features.FeatureId -notcontains $_ -and $controlParameters -notcontains $_ }
         )
 
         $unaccounted | Should -HaveCount 0 -Because ($unaccounted -join ', ')
+    }
+
+    It 'treats every PowerShell common parameter as a control parameter' {
+        $controlParameters = Get-ControlParameterNames
+        $missing = @(
+            [System.Management.Automation.PSCmdlet]::CommonParameters |
+                Where-Object { $controlParameters -notcontains $_ }
+        )
+
+        $missing | Should -HaveCount 0 -Because ($missing -join ', ')
     }
 }

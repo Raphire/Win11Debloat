@@ -1,4 +1,4 @@
-[CmdletBinding(SupportsShouldProcess)]
+﻿[CmdletBinding(SupportsShouldProcess)]
 param (
     [switch]$CLI,
     [switch]$Silent,
@@ -172,7 +172,7 @@ if (-not $isAdmin) {
 }
 
 # Define script-level variables & paths
-$script:Version = "2026.08.24"
+$script:Version = "2026.10.30"
 $configPath = Join-Path $PSScriptRoot 'Config'
 # Deployment environments such as SCCM task sequences may not define LOCALAPPDATA.
 if ([string]::IsNullOrWhiteSpace($env:LOCALAPPDATA)) {

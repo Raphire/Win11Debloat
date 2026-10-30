@@ -513,7 +513,7 @@
     },
     "DisableDriverUpdates": {
       "Label": "Disable driver updates through Windows Update",
-      "ToolTip": "Prevents Windows Update from automatically downloading and installing driver updates. Windows will still attempt to install drivers automatically for new devices. Note: Some drivers may ignore this setting, and could still be updated by Windows Update.",
+      "ToolTip": "Prevents Windows Update from automatically downloading and installing driver updates. Windows will still install drivers automatically for new devices. Note: Some drivers may ignore this setting, and could still be updated by Windows Update.",
       "ApplyText": "Disabling driver updates through Windows Update",
       "UndoLabel": "Enable driver updates through Windows Update",
       "ApplyUndoText": "Enabling driver updates through Windows Update"

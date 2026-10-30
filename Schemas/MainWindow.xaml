@@ -2,7 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
         Title="%LANG:TitleBarAppName%"
-        MinWidth="860" MinHeight="640"
+        MinWidth="860" MinHeight="650"
         ResizeMode="CanResize" 
         SnapsToDevicePixels="True"
         WindowStartupLocation="CenterScreen"
@@ -467,7 +467,7 @@
 
                 <!-- Home Tab -->
                 <TabItem Header="%LANG:HomeTabHeader%" x:Name="HomeTab">
-                    <Grid>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                         <StackPanel x:Name="HomeContentPanel" HorizontalAlignment="Center" VerticalAlignment="Top">
                             <!-- Logo -->
                             <Viewbox Width="250" Height="250" Margin="0,0,0,16" HorizontalAlignment="Center">
@@ -493,7 +493,7 @@
                                 <Run Text="%LANG:HomeSubtitle%"/>
                             </TextBlock>
 
-                            <Border HorizontalAlignment="Center" BorderBrush="{DynamicResource AppBorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="16,12" MinWidth="500">
+                            <Border HorizontalAlignment="Center" BorderBrush="{DynamicResource AppBorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="16,12" MinWidth="500" Margin="0,0,0,12">
                                 <StackPanel>
                                     <TextBlock Text="%LANG:HomeUserQuestion%" Style="{StaticResource CategoryHeaderTextBlock}"/>
                                     <ComboBox x:Name="UserSelectionCombo" Margin="0,0,0,6" AutomationProperties.Name="%LANG:HomeUserSelectionAutomationName%" ToolTip="%LANG:DeployUserDescriptionCurrentUser%">
@@ -537,7 +537,7 @@
                                 </StackPanel>
                             </Border>
                         </StackPanel>
-                    </Grid>
+                    </ScrollViewer>
                 </TabItem>
 
                 <!-- App Removal Tab -->

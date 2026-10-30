@@ -35,8 +35,8 @@
       "ApplyUndoText": "正在启用 Windows 中的提示、技巧、推荐内容和广告"
     },
     "DisableNotifications": {
-      "Label": "禁用 Windows 通知（来自应用和其他发送者）",
-      "ToolTip": "禁用来自应用和其他发送者的 Windows 原生通知，包括 Discord、WhatsApp、Teams 和 Slack 等应用的通知。",
+      "Label": "禁用 Windows 系统和应用通知",
+      "ToolTip": "禁用 Windows 原生系统和应用通知，包括 Discord、WhatsApp、Teams 和 Slack 等应用的通知。",
       "ApplyText": "正在禁用 Windows 通知和提醒",
       "UndoLabel": "启用 Windows 通知和提醒",
       "ApplyUndoText": "正在启用 Windows 通知和提醒"

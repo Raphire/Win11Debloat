@@ -35,8 +35,8 @@
       "ApplyUndoText": "Abilitazione di suggerimenti, consigli, contenuti suggeriti e annunci in Windows"
     },
     "DisableNotifications": {
-      "Label": "Disabilita le notifiche di Windows (da app e altri mittenti)",
-      "ToolTip": "Disabilita le notifiche native di Windows provenienti da app e altri mittenti, incluse le notifiche di app come Discord, WhatsApp, Teams e Slack.",
+      "Label": "Disabilita le notifiche di sistema e delle app di Windows",
+      "ToolTip": "Disabilita le notifiche native di Windows provenienti dal sistema e dalle app, incluse le notifiche di app come Discord, WhatsApp, Teams e Slack.",
       "ApplyText": "Disabilitazione delle notifiche e dei promemoria di Windows",
       "UndoLabel": "Abilita le notifiche e i promemoria di Windows",
       "ApplyUndoText": "Abilitazione delle notifiche e dei promemoria di Windows"

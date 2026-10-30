@@ -35,8 +35,8 @@
       "ApplyUndoText": "Windows 전반의 팁, 요령, 추천 및 광고 사용 설정 중"
     },
     "DisableNotifications": {
-      "Label": "Windows 알림 사용 안 함(앱 및 다른 보낸 사람)",
-      "ToolTip": "앱 및 다른 보낸 사람의 기본 Windows 알림을 사용하지 않도록 설정합니다. Discord, WhatsApp, Teams, Slack 같은 앱의 알림도 포함됩니다.",
+      "Label": "Windows 시스템 및 앱 알림 사용 안 함",
+      "ToolTip": "Windows 기본 시스템 및 앱 알림을 사용하지 않도록 설정합니다. Discord, WhatsApp, Teams, Slack 같은 앱의 알림도 포함됩니다.",
       "ApplyText": "Windows 알림 및 미리 알림 사용 안 함 설정 중",
       "UndoLabel": "Windows 알림 및 미리 알림 사용",
       "ApplyUndoText": "Windows 알림 및 미리 알림 사용 설정 중"

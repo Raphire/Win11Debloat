@@ -35,8 +35,8 @@
       "ApplyUndoText": "Habilitando consejos, trucos, sugerencias y anuncios en todo Windows"
     },
     "DisableNotifications": {
-      "Label": "Deshabilitar las notificaciones de Windows (de aplicaciones y otros remitentes)",
-      "ToolTip": "Deshabilita las notificaciones nativas de Windows de aplicaciones y otros remitentes, incluidas las de aplicaciones como Discord, WhatsApp, Teams y Slack.",
+      "Label": "Deshabilitar las notificaciones del sistema y de las aplicaciones de Windows",
+      "ToolTip": "Deshabilita las notificaciones nativas de Windows del sistema y de las aplicaciones, incluidas las de aplicaciones como Discord, WhatsApp, Teams y Slack.",
       "ApplyText": "Deshabilitando las notificaciones y los recordatorios de Windows",
       "UndoLabel": "Habilitar las notificaciones y los recordatorios de Windows",
       "ApplyUndoText": "Habilitando las notificaciones y los recordatorios de Windows"

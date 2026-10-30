@@ -444,10 +444,9 @@
     },
     {
       "FeatureId": "DisableNotifications",
-      "Label": "Disable Windows Notifications (From apps and other senders)",
-      "ToolTip": "Disables native Windows notifications from apps and other senders, this includes notifications from apps like Discord, WhatsApp, Teams, and Slack.",
-      "Category": "Privacy & Suggested Content",
-      "Priority": 3,
+      "Label": "Disable Windows system and app notifications",
+      "ToolTip": "Disables native Windows system and app notifications, this includes notifications from apps like Discord, WhatsApp, Teams, and Slack.",
+      "Category": "System",
       "RegistryKey": "Disable_Notifications.reg",
       "ApplyText": "Disabling Windows notifications and reminders",
       "UndoLabel": "Enable Windows notifications and reminders",

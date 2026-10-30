@@ -35,8 +35,8 @@
       "ApplyUndoText": "Tips, aanbevelingen en advertenties in Windows inschakelen"
     },
     "DisableNotifications": {
-      "Label": "Windows-meldingen uitschakelen",
-      "ToolTip": "Schakelt Windows-meldingen uit van apps zoals Discord, WhatsApp, Teams en Slack, en van andere afzenders.",
+      "Label": "Windows-systeem- en appmeldingen uitschakelen",
+      "ToolTip": "Schakelt de ingebouwde Windows-meldingen van het systeem en apps uit, waaronder meldingen van apps zoals Discord, WhatsApp, Teams en Slack.",
       "ApplyText": "Windows-meldingen en herinneringen uitschakelen",
       "UndoLabel": "Windows-meldingen en herinneringen inschakelen",
       "ApplyUndoText": "Windows-meldingen en herinneringen inschakelen"

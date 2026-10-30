@@ -35,8 +35,8 @@
       "ApplyUndoText": "Activation des conseils, astuces, suggestions et publicités dans Windows"
     },
     "DisableNotifications": {
-      "Label": "Désactiver les notifications Windows (des applications et autres expéditeurs)",
-      "ToolTip": "Désactive les notifications Windows natives des applications et autres expéditeurs, notamment celles de Discord, WhatsApp, Teams et Slack.",
+      "Label": "Désactiver les notifications du système et des applications Windows",
+      "ToolTip": "Désactive les notifications Windows natives du système et des applications, notamment celles de Discord, WhatsApp, Teams et Slack.",
       "ApplyText": "Désactivation des notifications et rappels Windows",
       "UndoLabel": "Activer les notifications et rappels Windows",
       "ApplyUndoText": "Activation des notifications et rappels Windows"

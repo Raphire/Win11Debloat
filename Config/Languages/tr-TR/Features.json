@@ -35,10 +35,10 @@
       "ApplyUndoText": "Windows genelindeki ipuçları, öneriler ve reklamlar açılıyor"
     },
     "DisableNotifications": {
-      "Label": "Uygulamalardan ve diğer gönderenlerden gelen bildirimleri kapat",
-      "ToolTip": "Uygulamalardan ve diğer gönderenlerden gelen Windows bildirimlerini kapatır. Discord, WhatsApp, Teams ve Slack gibi uygulamaların bildirimleri de buna dahildir.",
+      "Label": "Windows sistem ve uygulama bildirimlerini kapat",
+      "ToolTip": "Windows sisteminin ve uygulamaların yerel bildirimlerini kapatır. Discord, WhatsApp, Teams ve Slack gibi uygulamaların bildirimleri de buna dahildir.",
       "ApplyText": "Windows bildirimleri ve anımsatıcılar kapatılıyor",
-      "UndoLabel": "Uygulamalardan ve diğer gönderenlerden gelen bildirimleri aç",
+      "UndoLabel": "Windows bildirimlerini ve anımsatıcıları aç",
       "ApplyUndoText": "Windows bildirimleri ve anımsatıcılar açılıyor"
     },
     "DisableLocationServices": {

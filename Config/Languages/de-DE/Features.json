@@ -35,8 +35,8 @@
       "ApplyUndoText": "Tipps, Tricks, Vorschläge und Werbung in ganz Windows werden aktiviert"
     },
     "DisableNotifications": {
-      "Label": "Windows-Benachrichtigungen deaktivieren (von Apps und anderen Sendern)",
-      "ToolTip": "Deaktiviert systemeigene Windows-Benachrichtigungen von Apps und anderen Sendern, einschließlich Benachrichtigungen von Apps wie Discord, WhatsApp, Teams und Slack.",
+      "Label": "Windows-System- und App-Benachrichtigungen deaktivieren",
+      "ToolTip": "Deaktiviert systemeigene Windows-Benachrichtigungen vom System und von Apps, einschließlich Benachrichtigungen von Apps wie Discord, WhatsApp, Teams und Slack.",
       "ApplyText": "Windows-Benachrichtigungen und Erinnerungen werden deaktiviert",
       "UndoLabel": "Windows-Benachrichtigungen und Erinnerungen aktivieren",
       "ApplyUndoText": "Windows-Benachrichtigungen und Erinnerungen werden aktiviert"

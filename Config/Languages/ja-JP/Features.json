@@ -35,8 +35,8 @@
       "ApplyUndoText": "Windows 全体のヒント、おすすめ、広告を有効にしています"
     },
     "DisableNotifications": {
-      "Label": "Windows の通知を無効にする (アプリやその他の送信元から)",
-      "ToolTip": "アプリやその他の送信元からの Windows の通知を無効にします。これには Discord、WhatsApp、Teams、Slack などのアプリからの通知が含まれます。",
+      "Label": "Windows のシステム通知とアプリ通知を無効にする",
+      "ToolTip": "Windows 標準のシステム通知とアプリ通知を無効にします。これには Discord、WhatsApp、Teams、Slack などのアプリからの通知が含まれます。",
       "ApplyText": "Windows の通知とリマインダーを無効にしています",
       "UndoLabel": "Windows の通知とリマインダーを有効にする",
       "ApplyUndoText": "Windows の通知とリマインダーを有効にしています"

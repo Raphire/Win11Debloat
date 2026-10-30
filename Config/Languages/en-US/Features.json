@@ -35,8 +35,8 @@
       "ApplyUndoText": "Enabling tips, tricks, suggestions and ads throughout Windows"
     },
     "DisableNotifications": {
-      "Label": "Disable Windows Notifications (From apps and other senders)",
-      "ToolTip": "Disables native Windows notifications from apps and other senders, this includes notifications from apps like Discord, WhatsApp, Teams, and Slack.",
+      "Label": "Disable Windows system and app notifications",
+      "ToolTip": "Disables native Windows system and app notifications, this includes notifications from apps like Discord, WhatsApp, Teams, and Slack.",
       "ApplyText": "Disabling Windows notifications and reminders",
       "UndoLabel": "Enable Windows notifications and reminders",
       "ApplyUndoText": "Enabling Windows notifications and reminders"

@@ -511,6 +511,13 @@
       "UndoLabel": "Allow automatic restarts after updates while signed in",
       "ApplyUndoText": "Allowing automatic restarts after updates while signed in"
     },
+    "DisableDriverUpdates": {
+      "Label": "Disable driver updates through Windows Update",
+      "ToolTip": "Prevents Windows Update from automatically downloading and installing driver updates. Windows will still attempt to install drivers automatically for new devices. Note: Some drivers may ignore this setting, and could still be updated by Windows Update.",
+      "ApplyText": "Disabling driver updates through Windows Update",
+      "UndoLabel": "Enable driver updates through Windows Update",
+      "ApplyUndoText": "Enabling driver updates through Windows Update"
+    },
     "DisableDeliveryOptimization": {
       "Label": "Disable sharing downloaded updates with other PCs",
       "ToolTip": "This will prevent your PC from sharing downloaded updates with other PCs on the local network or on the internet. This also prevents your PC from downloading updates from other PCs.",

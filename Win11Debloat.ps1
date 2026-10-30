@@ -31,6 +31,7 @@ param (
     [switch]$DisableStorageSense,
     [switch]$DisableUpdateASAP,
     [switch]$PreventUpdateAutoReboot,
+    [switch]$DisableDriverUpdates,
     [switch]$DisableDeliveryOptimization,
     [switch]$DisableDeviceAutoAppDownload,
     [switch]$DisableBing,

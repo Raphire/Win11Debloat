@@ -120,8 +120,13 @@ Write-Output " Win11Debloat Script"
 Write-Output "-------------------------------------------------------------------------------------------"
 
 $tempRootPath = $env:TEMP
-$tempWorkPath = Join-Path $tempRootPath 'Win11Debloat'
-$tempArchivePath = Join-Path $tempRootPath 'win11debloat.zip'
+
+# Every run gets its own folder and archive with a random name, so the files that are run elevated are never at a path that
+# is known (or can be prepared) in advance. User data lives in %LOCALAPPDATA%\Win11Debloat, not in this folder.
+$runId = [guid]::NewGuid().ToString('N')
+$tempWorkPath = Join-Path $tempRootPath "Win11Debloat-$runId"
+$tempArchivePath = Join-Path $tempRootPath "win11debloat-$runId.zip"
+$tempChecksumsPath = Join-Path $tempRootPath "win11debloat-$runId.sha256sums"
 
 # Read the expected SHA-256 of a file from the text of a SHA256SUMS file (lines of "<64 hex digits>  <file name>", as
 # written by sha256sum). Returns $null when the file is not listed.
@@ -158,10 +163,9 @@ try {
         $archiveAsset = @($release.assets | Where-Object { $_.name -ceq $releaseArchiveName }) | Select-Object -First 1
         $checksumsAsset = @($release.assets | Where-Object { $_.name -ceq $releaseChecksumsName }) | Select-Object -First 1
         if ($archiveAsset -and $checksumsAsset) {
-            $checksumsPath = Join-Path $tempRootPath 'win11debloat.sha256sums'
-            Invoke-RestMethod $checksumsAsset.browser_download_url -OutFile $checksumsPath
-            $expectedArchiveHash = Get-ExpectedFileHash ([System.IO.File]::ReadAllText($checksumsPath)) $releaseArchiveName
-            Remove-Item $checksumsPath -Force
+            Invoke-RestMethod $checksumsAsset.browser_download_url -OutFile $tempChecksumsPath
+            $expectedArchiveHash = Get-ExpectedFileHash ([System.IO.File]::ReadAllText($tempChecksumsPath)) $releaseArchiveName
+            Remove-Item $tempChecksumsPath -Force
             if (-not $expectedArchiveHash) {
                 throw "$releaseChecksumsName does not list $releaseArchiveName."
             }
@@ -174,6 +178,8 @@ try {
     Invoke-RestMethod $sourceUri -OutFile $tempArchivePath
 }
 catch {
+    # Do not leave the archive or checksum file of this run behind after a failed download
+    Remove-Item -Path $tempArchivePath, $tempChecksumsPath -Force -ErrorAction SilentlyContinue
     Write-Host "Unable to fetch required files from GitHub. Please check your internet connection and try again." -ForegroundColor Red
     Write-Error -ErrorRecord $_
     Write-Output ""
@@ -192,57 +198,29 @@ if ($expectedArchiveHash -and -not (Test-FileHashMatch $tempArchivePath $expecte
     Exit 1
 }
 
-# Remove old script folder if it exists, but keep configs, logs and backups
-if (Test-Path $tempWorkPath) {
-    Write-Output ""
-    Write-Output "> Cleaning up old script files..."
-
-    Get-ChildItem -Path $tempWorkPath -Exclude Config,Logs,Backups | Remove-Item -Recurse -Force
-}
-
-$configDir = Join-Path $tempWorkPath 'Config'
-$backupDir = Join-Path $tempWorkPath 'ConfigOld'
-
-# Temporarily move existing config files if they exist to prevent them from being overwritten by the new script files, will be moved back after the new script is unpacked
-if (Test-Path "$configDir") {
-    Write-Output ""
-    Write-Output "> Backing up existing config files..."
-
-    New-Item -ItemType Directory -Path "$backupDir" -Force | Out-Null
-
-    $filesToKeep = @(
-        'LastUsedSettings.json'
-    )
-
-    Get-ChildItem -Path "$configDir" -Recurse | Where-Object { $_.Name -in $filesToKeep } | Move-Item -Destination "$backupDir"
-
-    Remove-Item "$configDir" -Recurse -Force
-}
-
 Write-Output ""
 Write-Output "> Unpacking..."
 
 # Unzip archive to Win11Debloat folder
-Expand-Archive $tempArchivePath $tempWorkPath
+try {
+    Expand-Archive $tempArchivePath $tempWorkPath -ErrorAction Stop
+}
+catch {
+    # Do not leave the archive and a partly unpacked folder of this run behind
+    Remove-Item -Path $tempArchivePath, $tempWorkPath -Recurse -Force -ErrorAction SilentlyContinue
+    Write-Host "Unable to unpack the downloaded Win11Debloat archive." -ForegroundColor Red
+    Write-Error -ErrorRecord $_ -ErrorAction Continue
+    Write-Output ""
+    Write-Output "Press enter to exit..."
+    Read-Host | Out-Null
+    Exit 1
+}
 
 # Remove archive
 Remove-Item $tempArchivePath
 
 # Move files
 Get-ChildItem -Path (Join-Path $tempWorkPath '*Win11Debloat-*') -Recurse | Move-Item -Destination $tempWorkPath
-
-# Add existing config files back to Config folder
-if (Test-Path "$backupDir") {
-    if (-not (Test-Path "$configDir")) {
-        New-Item -ItemType Directory -Path "$configDir" -Force | Out-Null
-    }
-
-    Write-Output ""
-    Write-Output "> Restoring existing config files..."
-
-    Get-ChildItem -Path "$backupDir" -Recurse | Move-Item -Destination "$configDir"
-    Remove-Item "$backupDir" -Recurse -Force
-}
 
 # Quote a value so it survives CommandLineToArgvW parsing in the child process: double any backslash run that
 # precedes a quote or the closing quote, and escape embedded quotes, before wrapping the value in quotes.
@@ -297,7 +275,7 @@ try {
 }
 catch {
     $exitCode = 1
-    Write-Error "Failed to start Win11Debloat: $_"
+    Write-Error "Failed to start Win11Debloat: $_" -ErrorAction Continue
 }
 
 # Wait for the process to finish before continuing
@@ -306,13 +284,12 @@ if ($null -ne $debloatProcess) {
     $exitCode = $debloatProcess.ExitCode
 }
 
-# Remove all remaining script files, except for configs, logs and backups
+# Remove the folder with the script files of this run
 if (Test-Path $tempWorkPath) {
     Write-Output ""
     Write-Output "> Cleaning up..."
 
-    # Cleanup, remove Win11Debloat directory
-    Get-ChildItem -Path $tempWorkPath -Exclude Config,Logs,Backups | Remove-Item -Recurse -Force
+    Remove-Item -Path $tempWorkPath -Recurse -Force
 }
 
 Write-Output ""

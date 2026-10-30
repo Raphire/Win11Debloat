@@ -511,6 +511,13 @@
       "UndoLabel": "Oturum açıkken güncelleştirme sonrası otomatik yeniden başlatmaya izin ver",
       "ApplyUndoText": "Oturum açıkken güncelleştirme sonrası otomatik yeniden başlatmaya izin veriliyor"
     },
+    "DisableDriverUpdates": {
+      "Label": "Windows Update üzerinden sürücü güncelleştirmelerini devre dışı bırak",
+      "ToolTip": "Windows'un normal Windows kalite güncelleştirmeleri aracılığıyla sürücü güncelleştirmelerini otomatik olarak indirip yüklemesini engeller. Windows, yeni cihazlar için sürücüleri otomatik olarak yüklemeye devam edebilir. Güvenlik güncelleştirmeleri, kritik güncelleştirmeler veya özellik güncelleştirmeleriyle birlikte sunulan sürücüler yine de yüklenebilir.",
+      "ApplyText": "Windows Update üzerinden sürücü güncelleştirmeleri devre dışı bırakılıyor",
+      "UndoLabel": "Windows Update üzerinden sürücü güncelleştirmelerini etkinleştir",
+      "ApplyUndoText": "Windows Update üzerinden sürücü güncelleştirmeleri etkinleştiriliyor"
+    },
     "DisableDeliveryOptimization": {
       "Label": "Teslim İyileştirme ile paylaşımı kapat",
       "ToolTip": "Teslim İyileştirme üzerinden yerel ağdaki veya internetteki diğer cihazlardan güncelleştirme indirmeyi ve bu cihazlarla güncelleştirme paylaşmayı kapatır.",

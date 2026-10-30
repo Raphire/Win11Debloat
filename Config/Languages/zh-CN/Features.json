@@ -511,6 +511,13 @@
       "UndoLabel": "用户已登录时允许更新后自动重启",
       "ApplyUndoText": "正在允许用户已登录时更新后自动重启"
     },
+    "DisableDriverUpdates": {
+      "Label": "禁用通过 Windows 更新进行的驱动程序更新",
+      "ToolTip": "阻止 Windows 通过常规 Windows 质量更新自动下载和安装驱动程序更新。Windows 仍可自动为新设备安装驱动程序。安全更新、关键更新或功能更新中包含的驱动程序仍可能被安装。",
+      "ApplyText": "正在禁用通过 Windows 更新进行的驱动程序更新",
+      "UndoLabel": "启用通过 Windows 更新进行的驱动程序更新",
+      "ApplyUndoText": "正在启用通过 Windows 更新进行的驱动程序更新"
+    },
     "DisableDeliveryOptimization": {
       "Label": "禁用与其他电脑共享已下载的更新",
       "ToolTip": "阻止电脑向局域网或 Internet 上的其他电脑共享已下载的更新，同时阻止从其他电脑下载更新。",

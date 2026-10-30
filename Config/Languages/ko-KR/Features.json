@@ -511,6 +511,13 @@
       "UndoLabel": "로그인한 상태에서 업데이트 후 자동 다시 시작 허용",
       "ApplyUndoText": "로그인한 상태에서 업데이트 후 자동 다시 시작 허용 설정 중"
     },
+    "DisableDriverUpdates": {
+      "Label": "Windows 업데이트를 통한 드라이버 업데이트 비활성화",
+      "ToolTip": "Windows가 일반 Windows 품질 업데이트를 통해 드라이버 업데이트를 자동으로 다운로드하고 설치하지 못하도록 합니다. Windows는 새 장치의 드라이버를 계속 자동으로 설치할 수 있습니다. 보안 업데이트, 중요 업데이트 또는 기능 업데이트에 포함된 드라이버는 계속 설치될 수 있습니다.",
+      "ApplyText": "Windows 업데이트를 통한 드라이버 업데이트 비활성화 중",
+      "UndoLabel": "Windows 업데이트를 통한 드라이버 업데이트 활성화",
+      "ApplyUndoText": "Windows 업데이트를 통한 드라이버 업데이트 활성화 중"
+    },
     "DisableDeliveryOptimization": {
       "Label": "다운로드한 업데이트를 다른 PC와 공유하지 않도록 설정",
       "ToolTip": "PC가 로컬 네트워크나 인터넷의 다른 PC와 다운로드한 업데이트를 공유하지 않도록 합니다. 또한 다른 PC에서 업데이트를 다운로드하지 않도록 합니다.",

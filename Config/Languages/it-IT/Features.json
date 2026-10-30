@@ -511,6 +511,13 @@
       "UndoLabel": "Consenti i riavvii automatici dopo gli aggiornamenti mentre l'utente è connesso",
       "ApplyUndoText": "Abilitazione dei riavvii automatici dopo gli aggiornamenti mentre l'utente è connesso"
     },
+    "DisableDriverUpdates": {
+      "Label": "Disabilita gli aggiornamenti dei driver tramite Windows Update",
+      "ToolTip": "Impedisce a Windows di scaricare e installare automaticamente gli aggiornamenti dei driver tramite i normali aggiornamenti qualitativi di Windows. Windows può comunque installare automaticamente i driver per i nuovi dispositivi. I driver inclusi negli aggiornamenti della sicurezza, critici o delle funzionalità possono comunque essere installati.",
+      "ApplyText": "Disabilitazione degli aggiornamenti dei driver tramite Windows Update",
+      "UndoLabel": "Abilita gli aggiornamenti dei driver tramite Windows Update",
+      "ApplyUndoText": "Abilitazione degli aggiornamenti dei driver tramite Windows Update"
+    },
     "DisableDeliveryOptimization": {
       "Label": "Disabilita la condivisione degli aggiornamenti scaricati con altri PC",
       "ToolTip": "Impedisce al PC di condividere gli aggiornamenti scaricati con altri PC sulla rete locale o su Internet. Impedisce anche al PC di scaricare gli aggiornamenti da altri PC.",

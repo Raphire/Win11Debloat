@@ -511,6 +511,13 @@
       "UndoLabel": "Automatische Neustarts nach Updates bei aktiver Anmeldung zulassen",
       "ApplyUndoText": "Automatische Neustarts nach Updates bei aktiver Anmeldung werden zugelassen"
     },
+    "DisableDriverUpdates": {
+      "Label": "Treiberupdates über Windows Update deaktivieren",
+      "ToolTip": "Verhindert, dass Windows Treiberupdates über reguläre Windows-Qualitätsupdates automatisch herunterlädt und installiert. Windows kann weiterhin automatisch Treiber für neue Geräte installieren. Treiber, die in Sicherheitsupdates, kritischen Updates oder Funktionsupdates enthalten sind, können weiterhin installiert werden.",
+      "ApplyText": "Treiberupdates über Windows Update werden deaktiviert",
+      "UndoLabel": "Treiberupdates über Windows Update aktivieren",
+      "ApplyUndoText": "Treiberupdates über Windows Update werden aktiviert"
+    },
     "DisableDeliveryOptimization": {
       "Label": "Freigabe heruntergeladener Updates für andere PCs deaktivieren",
       "ToolTip": "Hiermit wird verhindert, dass Ihr PC heruntergeladene Updates für andere PCs im lokalen Netzwerk oder im Internet freigibt. Außerdem wird verhindert, dass Ihr PC Updates von anderen PCs herunterlädt.",

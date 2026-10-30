@@ -1431,6 +1431,20 @@
       "MaxVersion": null
     },
     {
+      "FeatureId": "DisableDriverUpdates",
+      "Label": "Disable driver updates through Windows Update",
+      "ToolTip": "Prevents Windows from automatically downloading and installing driver updates via regular Windows quality updates. Windows can still automatically install drivers for new devices. Drivers included in security, critical, or feature updates may still be installed.",
+      "Category": "Windows Update",
+      "RegistryKey": "Disable_Driver_Updates.reg",
+      "ApplyText": "Disabling driver updates through Windows Update",
+      "UndoLabel": "Enable driver updates through Windows Update",
+      "ApplyUndoText": "Enabling driver updates through Windows Update",
+      "RegistryUndoKey": "Enable_Driver_Updates.reg",
+      "RequiresReboot": true,
+      "MinVersion": null,
+      "MaxVersion": null
+    },
+    {
       "FeatureId": "DisableDeliveryOptimization",
       "Label": "Disable sharing downloaded updates with other PCs",
       "ToolTip": "This will prevent your PC from sharing downloaded updates with other PCs on the local network or on the internet. This also prevents your PC from downloading updates from other PCs.",

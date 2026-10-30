@@ -511,6 +511,13 @@
       "UndoLabel": "允許登入期間更新後自動重新啟動",
       "ApplyUndoText": "正在允許登入期間更新後自動重新啟動"
     },
+    "DisableDriverUpdates": {
+      "Label": "停用透過 Windows Update 進行的驅動程式更新",
+      "ToolTip": "防止 Windows 透過一般 Windows 品質更新自動下載及安裝驅動程式更新。Windows 仍可自動為新裝置安裝驅動程式。安全性更新、重大更新或功能更新中包含的驅動程式仍可能被安裝。",
+      "ApplyText": "正在停用透過 Windows Update 進行的驅動程式更新",
+      "UndoLabel": "啟用透過 Windows Update 進行的驅動程式更新",
+      "ApplyUndoText": "正在啟用透過 Windows Update 進行的驅動程式更新"
+    },
     "DisableDeliveryOptimization": {
       "Label": "停用與其他 PC 共用已下載的更新",
       "ToolTip": "這會防止您的 PC 透過「傳遞最佳化」與區域網路或網際網路上的其他 PC 共用已下載的更新，也會防止您的 PC 從其他 PC 下載更新。",

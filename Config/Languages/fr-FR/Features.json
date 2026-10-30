@@ -511,6 +511,13 @@
       "UndoLabel": "Autoriser les redémarrages automatiques après les mises à jour lorsque vous êtes connecté",
       "ApplyUndoText": "Autorisation des redémarrages automatiques après les mises à jour lorsque vous êtes connecté"
     },
+    "DisableDriverUpdates": {
+      "Label": "Désactiver les mises à jour de pilotes via Windows Update",
+      "ToolTip": "Empêche Windows de télécharger et d'installer automatiquement les mises à jour de pilotes via les mises à jour qualité habituelles de Windows. Windows peut toujours installer automatiquement les pilotes des nouveaux appareils. Les pilotes inclus dans les mises à jour de sécurité, critiques ou de fonctionnalités peuvent toujours être installés.",
+      "ApplyText": "Désactivation des mises à jour de pilotes via Windows Update",
+      "UndoLabel": "Activer les mises à jour de pilotes via Windows Update",
+      "ApplyUndoText": "Activation des mises à jour de pilotes via Windows Update"
+    },
     "DisableDeliveryOptimization": {
       "Label": "Désactiver le partage des mises à jour téléchargées avec d'autres PC",
       "ToolTip": "Cela empêche votre PC de partager les mises à jour téléchargées avec d'autres PC sur le réseau local ou sur Internet. Cela empêche également votre PC de télécharger des mises à jour à partir d'autres PC.",

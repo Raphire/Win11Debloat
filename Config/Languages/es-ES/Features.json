@@ -511,6 +511,13 @@
       "UndoLabel": "Permitir los reinicios automáticos después de las actualizaciones mientras haya una sesión iniciada",
       "ApplyUndoText": "Permitiendo los reinicios automáticos después de las actualizaciones mientras haya una sesión iniciada"
     },
+    "DisableDriverUpdates": {
+      "Label": "Desactivar las actualizaciones de controladores mediante Windows Update",
+      "ToolTip": "Impide que Windows descargue e instale automáticamente actualizaciones de controladores mediante las actualizaciones de calidad habituales de Windows. Windows puede seguir instalando controladores automáticamente para los dispositivos nuevos. Los controladores incluidos en las actualizaciones de seguridad, críticas o de características pueden seguir instalándose.",
+      "ApplyText": "Desactivando las actualizaciones de controladores mediante Windows Update",
+      "UndoLabel": "Activar las actualizaciones de controladores mediante Windows Update",
+      "ApplyUndoText": "Activando las actualizaciones de controladores mediante Windows Update"
+    },
     "DisableDeliveryOptimization": {
       "Label": "Deshabilitar el uso compartido de las actualizaciones descargadas con otros equipos",
       "ToolTip": "Impedirá que el equipo comparta las actualizaciones descargadas con otros equipos de la red local o de Internet. También impedirá que el equipo descargue actualizaciones desde otros equipos.",

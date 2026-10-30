@@ -511,6 +511,13 @@
       "UndoLabel": "Permitir reinicializações automáticas após atualizações enquanto conectado",
       "ApplyUndoText": "Permitindo reinicializações automáticas após atualizações enquanto conectado"
     },
+    "DisableDriverUpdates": {
+      "Label": "Desativar atualizações de drivers pelo Windows Update",
+      "ToolTip": "Impede que o Windows baixe e instale atualizações de drivers automaticamente por meio das atualizações de qualidade regulares do Windows. O Windows ainda pode instalar drivers automaticamente para novos dispositivos. Os drivers incluídos em atualizações de segurança, críticas ou de recursos ainda podem ser instalados.",
+      "ApplyText": "Desativando atualizações de drivers pelo Windows Update",
+      "UndoLabel": "Ativar atualizações de drivers pelo Windows Update",
+      "ApplyUndoText": "Ativando atualizações de drivers pelo Windows Update"
+    },
     "DisableDeliveryOptimization": {
       "Label": "Desabilitar compartilhamento de atualizações baixadas com outros PCs",
       "ToolTip": "Isto impedirá que seu PC compartilhe atualizações baixadas com outros PCs na rede local ou na internet. Isso também impede que seu PC baixe atualizações de outros PCs.",

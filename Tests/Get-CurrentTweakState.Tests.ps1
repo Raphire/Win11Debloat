@@ -43,6 +43,7 @@ Describe 'Get-ExpectedRegistryValueKind' {
 Describe 'Test-FeatureApplied - special features' {
     BeforeEach {
         $script:Params = @{}
+        Reset-FeatureStateCache
         $script:Features = @{
             DisableWidgets = [PSCustomObject]@{}
             DisableStoreSearchSuggestions = [PSCustomObject]@{}
@@ -58,13 +59,22 @@ Describe 'Test-FeatureApplied - special features' {
     }
 
     It '<Case>' -ForEach @(
-        @{ Case = 'treats Widgets as disabled when all related packages are absent'; PresentPackage = $null; Expected = $true; ExpectedCalls = 3 }
-        @{ Case = 'treats Widgets as enabled when a related package is present'; PresentPackage = 'MicrosoftWindows.Client.WebExperience'; Expected = $false; ExpectedCalls = 2 }
+        @{ Case = 'treats Widgets as disabled when all related packages are absent'; PresentPackage = $null; Expected = $true }
+        @{ Case = 'treats Widgets as enabled when a related package is present'; PresentPackage = 'MicrosoftWindows.Client.WebExperience'; Expected = $false }
     ) {
-        Mock Get-AppxPackage { param($Name) if ($Name -eq $PresentPackage) { [PSCustomObject]@{ Name = $Name } } }
+        Mock Get-AppxPackage {
+            param($Name, [switch]$AllUsers)
+            if ($Name) {
+                if ($Name -eq $PresentPackage) { [PSCustomObject]@{ Name = $Name } }
+                return
+            }
+            if ($PresentPackage) { [PSCustomObject]@{ Name = $PresentPackage } }
+        }
 
         Test-FeatureApplied -FeatureId 'DisableWidgets' | Should -Be $Expected
-        Should -Invoke Get-AppxPackage -Times $ExpectedCalls -Exactly
+        # One -AllUsers enumeration answers every package, so no per-name queries are needed.
+        Should -Invoke Get-AppxPackage -Times 1 -Exactly -ParameterFilter { $AllUsers -and -not $Name }
+        Should -Invoke Get-AppxPackage -Times 0 -Exactly -ParameterFilter { [bool]$Name }
     }
 
     It 'uses <Case> Store detection' -ForEach @(
@@ -95,6 +105,7 @@ Describe 'Test-FeatureApplied - registry preconditions' {
     BeforeEach {
         $script:Params = @{}
         $script:RegfilesPath = $TestDrive
+        Reset-FeatureStateCache
         $script:Features = @{
             NoRegistry = [PSCustomObject]@{ RegistryKey = '' }
             MissingFile = [PSCustomObject]@{ RegistryKey = 'missing.reg' }
@@ -122,6 +133,7 @@ Describe 'Test-FeatureApplied - registry state comparison' {
     BeforeEach {
         $script:Params = @{}
         $script:RegfilesPath = $TestDrive
+        Reset-FeatureStateCache
         $script:Features = @{ RegistryFeature = [PSCustomObject]@{ RegistryKey = 'feature.reg' } }
         '' | Set-Content -LiteralPath (Join-Path $TestDrive 'feature.reg')
         Mock Split-RegistryPath { [PSCustomObject]@{ Hive = 'HKEY_CURRENT_USER'; SubKey = 'Software\Example' } }
@@ -199,6 +211,98 @@ Describe 'Test-FeatureApplied - registry state comparison' {
         Mock Get-RegFileOperations { @([PSCustomObject]@{ OperationType = $OperationType; KeyPath = 'HKEY_CURRENT_USER\Software\Example'; ValueName = 'Gone' }) }
 
         Test-FeatureApplied -FeatureId 'RegistryFeature' | Should -BeTrue
+    }
+}
+
+Describe 'Feature state caches' {
+    BeforeEach {
+        $script:Params = @{}
+        $script:RegfilesPath = $TestDrive
+        Reset-FeatureStateCache
+        $script:Features = @{ RegistryFeature = [PSCustomObject]@{ RegistryKey = 'feature.reg' } }
+        '' | Set-Content -LiteralPath (Join-Path $TestDrive 'feature.reg')
+        Mock Split-RegistryPath { [PSCustomObject]@{ Hive = 'HKEY_CURRENT_USER'; SubKey = 'Software\Example' } }
+        Mock Get-RegistryRootKey { $null }
+    }
+
+    It 'parses a registry file once per refresh' {
+        Mock Get-RegFileOperations { @() }
+
+        Test-FeatureApplied -FeatureId 'RegistryFeature' | Should -BeFalse
+        Test-FeatureApplied -FeatureId 'RegistryFeature' | Should -BeFalse
+        Test-FeatureApplied -FeatureId 'RegistryFeature' | Should -BeFalse
+
+        Should -Invoke Get-RegFileOperations -Times 1 -Exactly
+    }
+
+    It 'parses the registry file again after the cache is reset' {
+        Mock Get-RegFileOperations { @() }
+
+        Test-FeatureApplied -FeatureId 'RegistryFeature' | Should -BeFalse
+        Reset-FeatureStateCache
+        Test-FeatureApplied -FeatureId 'RegistryFeature' | Should -BeFalse
+
+        Should -Invoke Get-RegFileOperations -Times 2 -Exactly
+    }
+
+    It 'reuses one Appx enumeration for every Widgets package' {
+        $script:Features['DisableWidgets'] = [PSCustomObject]@{}
+        Mock Get-AppxPackage { @() }
+
+        Test-FeatureApplied -FeatureId 'DisableWidgets' | Should -BeTrue
+        Test-FeatureApplied -FeatureId 'DisableWidgets' | Should -BeTrue
+
+        Should -Invoke Get-AppxPackage -Times 1 -Exactly -ParameterFilter { $AllUsers -eq $true -and -not $Name }
+    }
+
+    It 'falls back to a per-package query when the enumeration fails' {
+        Reset-FeatureStateCache
+        $script:Features['DisableWidgets'] = [PSCustomObject]@{}
+        Mock Get-AppxPackage {
+            param($Name, [switch]$AllUsers)
+            if (-not $Name) { throw 'enumeration failed' }
+            if ($Name -eq 'MicrosoftWindows.Client.WebExperience') { [PSCustomObject]@{ Name = $Name } }
+        }
+
+        Test-FeatureApplied -FeatureId 'DisableWidgets' | Should -BeFalse
+        Should -Invoke Get-AppxPackage -Times 2 -Exactly -ParameterFilter { [bool]$Name }
+    }
+}
+
+Describe 'Get-CachedRegistryPath' {
+    BeforeEach {
+        Reset-FeatureStateCache
+        Mock Split-RegistryPath { [PSCustomObject]@{ Hive = 'HKEY_CURRENT_USER'; SubKey = 'Software\Example' } }
+        Mock Get-RegistryRootKey { [PSCustomObject]@{ Name = 'root' } }
+    }
+
+    It 'resolves a path once per refresh' {
+        Get-CachedRegistryPath -KeyPath 'HKEY_CURRENT_USER\Software\Example' | Should -Not -BeNullOrEmpty
+        Get-CachedRegistryPath -KeyPath 'HKEY_CURRENT_USER\Software\Example' | Should -Not -BeNullOrEmpty
+        Get-CachedRegistryPath -KeyPath 'HKEY_CURRENT_USER\Software\Example' | Should -Not -BeNullOrEmpty
+
+        Should -Invoke Split-RegistryPath -Times 1 -Exactly
+        Should -Invoke Get-RegistryRootKey -Times 1 -Exactly
+    }
+
+    It 'resolves the path again after the cache is reset' {
+        Get-CachedRegistryPath -KeyPath 'HKEY_CURRENT_USER\Software\Example' | Should -Not -BeNullOrEmpty
+        Reset-FeatureStateCache
+        Get-CachedRegistryPath -KeyPath 'HKEY_CURRENT_USER\Software\Example' | Should -Not -BeNullOrEmpty
+
+        Should -Invoke Split-RegistryPath -Times 2 -Exactly
+    }
+
+    It 'returns nothing for a path that cannot be resolved' {
+        Mock Split-RegistryPath { $null }
+
+        Get-CachedRegistryPath -KeyPath 'not-a-registry-path' | Should -BeNullOrEmpty
+    }
+
+    It 'returns nothing when the hive is unknown' {
+        Mock Get-RegistryRootKey { $null }
+
+        Get-CachedRegistryPath -KeyPath 'HKEY_CURRENT_USER\Software\Example' | Should -BeNullOrEmpty
     }
 }
 

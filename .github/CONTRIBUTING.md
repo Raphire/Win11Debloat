@@ -65,13 +65,13 @@ The automated tests use Pester 5 and are found in the `Tests` directory. They co
 The bootstrap option can be used to automatically install Pester on your machine and run the full suite of tests:
 
 ```powershell
-.\Scripts\Run-Tests.ps1 -Bootstrap
+.\Tools\Run-Tests.ps1 -Bootstrap
 ```
 
 After the initial setup, you can simply run the full suite with:
 
 ```powershell
-.\Scripts\Run-Tests.ps1
+.\Tools\Run-Tests.ps1
 ```
 
 For a focused test run during development, you can also call Pester directly:
@@ -124,7 +124,6 @@ Win11Debloat/
 ├── Run.bat                      # Local launcher
 ├── Scripts/                     # Additional PowerShell scripts and functions
 │   ├── Get.ps1                  # Download-and-launch script
-│   ├── Run-Tests.ps1            # Pester test runner (optionally bootstraps Pester)
 │   ├── AppRemoval/              # App package removal logic
 │   ├── CLI/                     # Command-line interface helpers
 │   ├── Features/                # Feature apply, undo, backup, and restore logic
@@ -143,6 +142,9 @@ Win11Debloat/
 │   └── Sysprep/                 # Registry files for Sysprep mode
 ├── Schemas/                     # XAML views and shared GUI resources
 ├── Assets/                      # Static assets (icons, start menu templates)
+├── Tools/                       # Development scripts (excluded from release packages)
+│   ├── Build-Release.ps1        # Runtime release packaging
+│   └── Run-Tests.ps1            # Pester test runner (optionally bootstraps Pester)
 ├── Tests/                       # Pester tests for script and XAML contracts
 ├── Backups/                     # Registry backups (generated during use)
 └── Logs/                        # Script logs (generated during use)

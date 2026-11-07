@@ -59,7 +59,9 @@ Describe 'Release workflow version commit' {
         $testRoot = Join-Path $TestDrive ([guid]::NewGuid().ToString('N'))
         $checkoutPath = Join-Path $testRoot 'checkout'
         $remotePath = Join-Path $testRoot 'origin.git'
-        New-Item -ItemType Directory -Path (Join-Path $checkoutPath 'Scripts') -Force | Out-Null
+        foreach ($directory in 'Scripts', 'Tools') {
+            New-Item -ItemType Directory -Path (Join-Path $checkoutPath $directory) -Force | Out-Null
+        }
         git init --bare --quiet $remotePath
         git init --quiet --initial-branch master $checkoutPath
         git -C $checkoutPath config user.name 'Release test'
@@ -68,10 +70,10 @@ Describe 'Release workflow version commit' {
         git -C $checkoutPath config tag.gpgsign false
         git -C $checkoutPath config core.autocrlf false
         [IO.File]::WriteAllText((Join-Path $checkoutPath 'Win11Debloat.ps1'), '$script:Version = "2026.08.24"')
-        foreach ($name in 'Build-Release.ps1', 'Get.ps1') {
-            Copy-Item -LiteralPath (Join-Path $repositoryRoot "Scripts/$name") -Destination (Join-Path $checkoutPath "Scripts/$name")
+        foreach ($name in 'Tools/Build-Release.ps1', 'Scripts/Get.ps1') {
+            Copy-Item -LiteralPath (Join-Path $repositoryRoot $name) -Destination (Join-Path $checkoutPath $name)
         }
-        [IO.File]::WriteAllText((Join-Path $checkoutPath 'Scripts/Run-Tests.ps1'), @'
+        [IO.File]::WriteAllText((Join-Path $checkoutPath 'Tools/Run-Tests.ps1'), @'
 param([switch]$Bootstrap)
 $text = [IO.File]::ReadAllText((Join-Path $PSScriptRoot '../Win11Debloat.ps1'))
 if ($text -notmatch [regex]::Escape($env:RELEASE_TAG)) { throw 'Tests did not see the updated version.' }
@@ -158,7 +160,7 @@ if ($text -notmatch [regex]::Escape($env:RELEASE_TAG)) { throw 'Tests did not se
     }
 
     It 'does not commit or push a release when tests fail' {
-        [IO.File]::WriteAllText((Join-Path $checkoutPath 'Scripts/Run-Tests.ps1'), 'exit 1')
+        [IO.File]::WriteAllText((Join-Path $checkoutPath 'Tools/Run-Tests.ps1'), 'exit 1')
         { foreach ($block in $workflowBlocks) { & $block } } | Should -Throw '*Release tests failed*'
         (git --git-dir $remotePath rev-parse refs/heads/master) | Should -Be $initialCommit
         (git ls-remote --tags origin "refs/tags/$env:RELEASE_TAG") | Should -BeNullOrEmpty

@@ -6,7 +6,7 @@
         Plural-aware: a plural family in en-US (for example AppSelectionStatusSelected_one and _other) is expected in
         each language as one key per category that language's Get-PluralCategory rule can return, so ja-JP is not
         reported missing its _one keys and pt-BR is not reported for having _many. A shipped _other key is always allowed. Requires Import-JsonFile.ps1 and Import-LanguageFile.ps1 from Scripts/FileIO.
-        Reports only; it never changes a language folder.
+        Reports only; it never changes a language folder. A language folder whose catalogs cannot be loaded is returned with Loaded = $false and the remaining languages are still reported; only a missing en-US baseline throws.
 
     .PARAMETER LanguagesPath
         The directory containing language folders. Defaults to Config/Languages.
@@ -45,7 +45,14 @@ function Get-LanguageKeyReport {
     }
 
     foreach ($code in $LanguageCode) {
-        $content = Import-LanguageContent -LanguageFolder $code -LanguagesPath $LanguagesPath
+        # A folder with a missing or unreadable catalog must not stop the report: list it as not loaded and go on.
+        try {
+            $content = Import-LanguageContent -LanguageFolder $code -LanguagesPath $LanguagesPath -ErrorAction Stop
+        }
+        catch {
+            Write-Warning "Language '$code' could not be loaded: $($_.Exception.Message)"
+            $content = $null
+        }
         if (-not $content) {
             [PSCustomObject]@{ LanguageCode = $code; Loaded = $false; ExpectedCount = 0; MissingKeys = @(); ExtraKeys = @() }
             continue

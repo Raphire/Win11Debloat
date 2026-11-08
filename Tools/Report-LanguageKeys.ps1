@@ -3,7 +3,9 @@
         Prints, per translated language, which keys are missing or extra compared to en-US.
 
     .DESCRIPTION
-        Informational only: always exits 0, so a language that lags behind en-US never blocks a change.
+        Informational only: a language that lags behind en-US, or whose catalogs cannot be loaded (it is listed as
+        "could not load all catalogs"), never fails the run. It exits 1 only when the script itself breaks, for example
+        when the en-US baseline cannot be loaded.
         Writes Markdown to the console and, on GitHub Actions, to the job summary.
 
     .PARAMETER LanguageCode

@@ -3,7 +3,22 @@ BeforeAll {
     . (Join-Path $PSScriptRoot '..\Scripts\FileIO\Import-LanguageFile.ps1')
     . (Join-Path $PSScriptRoot '..\Tools\Get-LanguageKeyReport.ps1')
 
-    # Writes a language folder from plain hashtables, so each test states exactly which keys a language ships.
+    <#
+        .SYNOPSIS
+            Writes a language folder from plain hashtables, so each test states exactly which keys a language ships.
+
+        .PARAMETER Root
+            The directory that receives the language folder.
+
+        .PARAMETER Code
+            The language folder name, for example de-DE.
+
+        .PARAMETER Chrome
+            The flat Chrome catalog (key to text).
+
+        .PARAMETER Features
+            The Features table of Features.json (feature id to fields).
+    #>
     function New-LanguageFolder {
         param([string]$Root, [string]$Code, [hashtable]$Chrome, [hashtable]$Features = @{ TweakA = @{ Label = 'A' } })
 
@@ -88,6 +103,21 @@ Describe 'Get-LanguageKeyReport' {
         $report = Get-LanguageKeyReport -LanguagesPath $root
 
         $report.Loaded | Should -BeFalse
+    }
+
+    It 'marks a folder with a missing catalog as not loaded when errors stop the script, and still reports the others' {
+        New-LanguageFolder -Root $root -Code 'de-DE' -Chrome $script:EnglishChrome
+        New-LanguageFolder -Root $root -Code 'fr-FR' -Chrome $script:EnglishChrome
+        Remove-Item -LiteralPath (Join-Path $root 'de-DE\Apps.json')
+        Mock Write-Warning {}
+        $ErrorActionPreference = 'Stop'
+
+        $report = @(Get-LanguageKeyReport -LanguagesPath $root)
+
+        $report.LanguageCode | Should -Be @('de-DE', 'fr-FR')
+        $report[0].Loaded | Should -BeFalse
+        $report[1].Loaded | Should -BeTrue
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -like "*de-DE*" }
     }
 
     It 'limits the report to the requested languages' {

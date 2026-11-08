@@ -221,7 +221,7 @@ Describe 'Test-RegistryKeySnapshotCanBeRestored' {
         }
 
         { Test-RegistryKeySnapshotCanBeRestored -Snapshot $snapshot } |
-            Should -Throw '*Value was either too large or too small*'
+            Should -Throw -ErrorId 'InvalidCastIConvertible*'
     }
 
     It 'rejects a descendant that is not directly below its declared parent' {

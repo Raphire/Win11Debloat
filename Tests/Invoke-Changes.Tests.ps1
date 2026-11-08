@@ -35,6 +35,7 @@ BeforeAll {
             $entry = @{}
             foreach ($field in 'ApplyText', 'UndoLabel', 'ApplyUndoText') {
                 if ($null -ne $feature.$field) { $entry[$field] = [string]$feature.$field }
+                $feature.PSObject.Properties.Remove($field)
             }
             $langFeatures[$featureId] = [PSCustomObject]$entry
         }
@@ -112,7 +113,7 @@ Describe 'Invoke-FeatureApply' {
     It 'imports a registry-backed feature' {
         Invoke-FeatureApply -FeatureId 'RegistryFeature'
 
-        Should -Invoke Import-RegistryFile -Times 1 -Exactly -ParameterFilter { $path -eq 'feature.reg' }
+        Should -Invoke Import-RegistryFile -Times 1 -Exactly -ParameterFilter { $path -eq 'feature.reg' -and $Message -eq '> Apply registry feature...' }
         Should -Invoke Remove-SelectedApps -Times 0 -Exactly
     }
 
@@ -352,6 +353,7 @@ Describe 'Invoke-FeatureUndo' {
             DisableTelemetry = [PSCustomObject]@{}
             DisableStoreSearchSuggestions = [PSCustomObject]@{}
         }
+        Sync-TestLangFeatures
         Mock Set-StoreSearchSuggestionsEnabledForAllUsers { $true }
         Mock Set-StoreSearchSuggestionsEnabled { $true }
         Mock Get-StoreAppsDatabasePathForUser { 'store.db' }
@@ -378,6 +380,12 @@ Describe 'Invoke-FeatureUndo' {
         Mock Disable-WindowsFeature { param($FeatureName) $script:disabledFeatures.Add($FeatureName); $true }
         Invoke-FeatureUndo -FeatureId 'EnableWindowsSubsystemForLinux'
         $script:disabledFeatures | Should -Be @('Microsoft-Windows-Subsystem-Linux', 'VirtualMachinePlatform')
+    }
+
+    It 'uses the language catalog for undo messages without display metadata' {
+        Invoke-FeatureUndo -FeatureId 'EnableWindowsSandbox' | Should -BeTrue
+
+        Should -Invoke Write-Host -Times 1 -Exactly -ParameterFilter { $Object -eq '> Disable Sandbox...' }
     }
 
     It 'disables Sandbox and re-enables telemetry tasks' {

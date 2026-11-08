@@ -7,6 +7,75 @@ BeforeAll {
     $script:LanguagesPath = Join-Path $script:RepoRoot 'Config/Languages'
 }
 
+Describe 'CLI language routing' {
+    BeforeAll {
+        function Show-CliMenuOptions { '0' }
+        function Show-MainWindow {}
+        $tokens = $null
+        $parseErrors = $null
+        $ast = [System.Management.Automation.Language.Parser]::ParseFile(
+            "$script:RepoRoot/Win11Debloat.ps1", [ref]$tokens, [ref]$parseErrors)
+        $parseErrors | Should -BeNullOrEmpty
+        # Execute only language initialization and mode routing, avoiding Windows startup/mutations.
+        $initialization = $ast.EndBlock.Statements | Where-Object {
+            $_ -is [System.Management.Automation.Language.AssignmentStatementAst] -and
+            $_.Left.Extent.Text -in @('$script:UiPreferences', '$script:Lang')
+        }
+        $script:LanguageStartup = [scriptblock]::Create(($initialization.Extent.Text -join "`n"))
+        $routing = $ast.EndBlock.Statements | Where-Object {
+            $_ -is [System.Management.Automation.Language.IfStatementAst] -and
+            $_.Extent.Text -match '\$result = Show-MainWindow'
+        }
+        $script:LanguageRouting = [scriptblock]::Create($routing.Extent.Text)
+    }
+
+    BeforeEach {
+        $script:UiPreferencesFilePath = "$TestDrive/preferences.json"
+        Save-UiPreferences -Preferences @{ Theme = 'Dark'; Language = 'nl-NL' }
+        $script:Params = @{ CLI = $true }
+        $controlParamsCount = 1
+        $launchInCLI = $true
+        $CLI = $true
+        $Silent = $true
+        $Language = 'pt-BR'
+        $RunDefaults = $false
+        $RunDefaultsLite = $false
+        $RunSavedSettings = $false
+        $Config = $null
+        $script:MenuLanguage = $null
+        $script:GuiLanguage = $null
+        Mock Show-CliMenuOptions { $script:MenuLanguage = $script:Lang.LanguageCode; '0' }
+        Mock Show-MainWindow { throw 'Simulated GUI startup failure' }
+        Mock Write-Warning {}
+    }
+
+    It 'uses English in CLI despite saved and explicit GUI languages' {
+        & $script:LanguageStartup
+        & $script:LanguageRouting
+
+        $script:MenuLanguage | Should -Be 'en-US'
+        $script:UiPreferences.Theme | Should -Be 'Dark'
+        (Get-UiPreferences).Language | Should -Be 'nl-NL'
+        Should -Invoke Show-MainWindow -Times 0 -Exactly
+    }
+
+    It 'restores English before falling back from the selected GUI language to CLI' {
+        $launchInCLI = $false
+        $CLI = $false
+        Mock Show-MainWindow {
+            $script:GuiLanguage = $script:Lang.LanguageCode
+            throw 'Simulated GUI startup failure'
+        }
+        & $script:LanguageStartup
+        & $script:LanguageRouting
+
+        Should -Invoke Show-MainWindow -Times 1 -Exactly
+        $script:GuiLanguage | Should -Be 'pt-BR'
+        $script:MenuLanguage | Should -Be 'en-US'
+        (Get-UiPreferences).Language | Should -Be 'nl-NL'
+    }
+}
+
 Describe 'UI preference initialization' {
     BeforeEach {
         $script:UiPreferencesFilePath = "$TestDrive/preferences.json"

@@ -160,6 +160,13 @@
       "UndoLabel": "顯示開始功能表中的「所有應用程式」區段",
       "ApplyUndoText": "正在啟用開始功能表中的「所有應用程式」區段"
     },
+    "DisableStartWebView2": {
+      "Label": "停用 WebView2 以最佳化Windows 搜尋的記憶體使用量",
+      "ToolTip": "透過防止Windows 搜尋使用 WebView2 來減少記憶體用量。此設定適用於所有使用者。",
+      "ApplyText": "正在停用Windows 搜尋中的 WebView2",
+      "UndoLabel": "還原Windows 搜尋的預設行為",
+      "ApplyUndoText": "正在還原Windows 搜尋的預設行為"
+    },
     "DisableStartPhoneLink": {
       "Label": "停用開始功能表中的手機連結整合",
       "ToolTip": "當您的 PC 連結行動裝置後，這會移除開始功能表中的手機連結整合。",

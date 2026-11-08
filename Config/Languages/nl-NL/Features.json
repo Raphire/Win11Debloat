@@ -160,6 +160,13 @@
       "UndoLabel": "De sectie 'Alle apps' in het Startmenu tonen",
       "ApplyUndoText": "De sectie 'Alle apps' in het Startmenu inschakelen"
     },
+    "DisableStartWebView2": {
+      "Label": "Geheugengebruik van Windows Zoeken optimaliseren door WebView2 uit te schakelen",
+      "ToolTip": "Vermindert het geheugengebruik door te voorkomen dat Windows Zoeken WebView2 gebruikt. Deze instelling geldt voor alle gebruikers.",
+      "ApplyText": "WebView2 voor Windows Zoeken uitschakelen",
+      "UndoLabel": "Standaardwerking van Windows Zoeken herstellen",
+      "ApplyUndoText": "Standaardwerking van Windows Zoeken herstellen"
+    },
     "DisableStartPhoneLink": {
       "Label": "Telefoonkoppeling in het Startmenu uitschakelen",
       "ToolTip": "Verwijdert Telefoonkoppeling integratie uit het Startmenu als je een mobiel apparaat aan je pc hebt gekoppeld.",

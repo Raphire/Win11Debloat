@@ -29,7 +29,7 @@
     },
     "DisableSuggestions": {
       "Label": "禁用 Windows 中的提示、技巧和推荐内容",
-      "ToolTip": "移除 Windows 中的多种干扰内容，包括通知、提醒和同步提供商广告，同时阻止自动安装推荐应用。",
+      "ToolTip": "移除 Windows 中的多种干扰内容，包括通知、提醒、广告及其他干扰，同时阻止自动安装推荐应用。",
       "ApplyText": "正在禁用 Windows 中的提示、技巧、推荐内容和广告",
       "UndoLabel": "启用 Windows 中的提示、技巧和推荐内容",
       "ApplyUndoText": "正在启用 Windows 中的提示、技巧、推荐内容和广告"

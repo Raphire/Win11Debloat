@@ -29,7 +29,7 @@
     },
     "DisableSuggestions": {
       "Label": "Desabilitar dicas, truques e conteúdo sugerido em todo o Windows",
-      "ToolTip": "Esta configuração remove muitas distrações irritantes do Windows. Isso inclui coisas como notificações, lembretes e anúncios de provedor de sincronização. Também impede a instalação automática de apps sugeridos.",
+      "ToolTip": "Esta configuração remove muitas distrações irritantes do Windows, como notificações, lembretes, anúncios e outras interrupções. Também impede a instalação automática de apps sugeridos.",
       "ApplyText": "Desabilitando dicas, truques, sugestões e anúncios em todo o Windows",
       "UndoLabel": "Habilitar dicas, truques e conteúdo sugerido em todo o Windows",
       "ApplyUndoText": "Habilitando dicas, truques, sugestões e anúncios em todo o Windows"

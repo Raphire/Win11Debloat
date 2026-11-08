@@ -29,7 +29,7 @@
     },
     "DisableSuggestions": {
       "Label": "Désactiver les conseils, astuces et contenus suggérés dans Windows",
-      "ToolTip": "Ce paramètre supprime de nombreuses distractions gênantes dans Windows, notamment les notifications, les rappels et les publicités des fournisseurs de synchronisation. Il empêche également l'installation automatique des applications suggérées.",
+      "ToolTip": "Ce paramètre supprime de nombreuses distractions gênantes dans Windows, notamment les notifications, les rappels, les publicités et autres interruptions. Il empêche également l'installation automatique des applications suggérées.",
       "ApplyText": "Désactivation des conseils, astuces, suggestions et publicités dans Windows",
       "UndoLabel": "Activer les conseils, astuces et contenus suggérés dans Windows",
       "ApplyUndoText": "Activation des conseils, astuces, suggestions et publicités dans Windows"

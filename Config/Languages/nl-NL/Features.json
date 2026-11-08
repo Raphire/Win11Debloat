@@ -29,7 +29,7 @@
     },
     "DisableSuggestions": {
       "Label": "Tips en aanbevelingen in Windows uitschakelen",
-      "ToolTip": "Verwijdert veel storende meldingen, herinneringen en advertenties van synchronisatieproviders uit Windows. Voorkomt ook dat aanbevolen apps automatisch worden geïnstalleerd.",
+      "ToolTip": "Verwijdert veel storende meldingen, herinneringen, advertenties en andere onderbrekingen uit Windows. Voorkomt ook dat aanbevolen apps automatisch worden geïnstalleerd.",
       "ApplyText": "Tips, aanbevelingen en advertenties in Windows uitschakelen",
       "UndoLabel": "Tips en aanbevelingen in Windows inschakelen",
       "ApplyUndoText": "Tips, aanbevelingen en advertenties in Windows inschakelen"

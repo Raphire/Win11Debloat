@@ -29,7 +29,7 @@
     },
     "DisableSuggestions": {
       "Label": "Windows genelindeki ipuçlarını, püf noktalarını ve önerilen içeriği kapat",
-      "ToolTip": "Windows'taki birçok dikkat dağıtıcı öğeyi kaldırır. Bildirimler, anımsatıcılar ve eşitleme sağlayıcısı reklamları buna dahildir. Önerilen uygulamaların kendiliğinden yüklenmesini de engeller.",
+      "ToolTip": "Windows'taki birçok dikkat dağıtıcı öğeyi kaldırır. Bildirimler, anımsatıcılar, reklamlar ve diğer kesintiler buna dahildir. Önerilen uygulamaların kendiliğinden yüklenmesini de engeller.",
       "ApplyText": "Windows genelindeki ipuçları, öneriler ve reklamlar kapatılıyor",
       "UndoLabel": "Windows genelindeki ipuçlarını, püf noktalarını ve önerilen içeriği aç",
       "ApplyUndoText": "Windows genelindeki ipuçları, öneriler ve reklamlar açılıyor"

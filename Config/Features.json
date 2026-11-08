@@ -431,7 +431,7 @@
     {
       "FeatureId": "DisableSuggestions",
       "Label": "Disable tips, tricks & suggested content throughout Windows",
-      "ToolTip": "This setting removes many annoying distractions from Windows. This includes things like notifications, reminders and sync provider ads. It also prevents automated installation of suggested apps.",
+      "ToolTip": "This setting removes many annoying distractions from Windows. This includes things like notifications, reminders, ads and other interruptions. It also prevents automated installation of suggested apps.",
       "Category": "Privacy & Suggested Content",
       "Priority": 2,
       "RegistryKey": "Disable_Windows_Suggestions.reg",

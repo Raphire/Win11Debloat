@@ -15,6 +15,7 @@ Describe 'Test-RegistryBackupMatchesSelectedFeatures' {
             ApplyFeature = [PSCustomObject]@{ RegistryKey = 'apply.reg'; RegistryUndoKey = 'undo.reg' }
         }
         $script:CapturePlanCalls = [System.Collections.Generic.List[bool]]::new()
+        Mock Get-RegistryBackupTrustedValueMap { @{} }
         Mock Get-RegistryBackupCapturePlans {
             param($SelectedRegistryFeatures, $UndoRegistryFeatures, $UseSysprepRegFiles)
             $script:CapturePlanCalls.Add([bool]$UseSysprepRegFiles)
@@ -30,6 +31,7 @@ Describe 'Test-RegistryBackupMatchesSelectedFeatures' {
     It 'derives an allow list from selected features and accepts a matching snapshot' {
         $snapshot = [PSCustomObject]@{
             Path = 'HKEY_CURRENT_USER\Software\Example'
+            Exists = $true
             Values = @([PSCustomObject]@{ Name = 'Enabled'; Exists = $true; Kind = 'DWord'; Data = 1 })
             SubKeys = @()
         }
@@ -47,10 +49,12 @@ Describe 'Test-RegistryBackupMatchesSelectedFeatures' {
         $script:CapturePlanCalls | Should -Be @($true)
     }
 
-    It 'reports unknown selected features without deriving capture plans' {
+    It 'warns and skips unknown selected features without deriving capture plans' {
+        Mock Write-Warning {}
         $errors = @(Test-RegistryBackupMatchesSelectedFeatures -SelectedFeatureIds @('UnknownFeature') -SelectedUndoFeatureIds @() -Target 'CurrentUser' -RegistryKeys @())
 
-        $errors | Should -Contain "Selected feature 'UnknownFeature' was not found in the current feature catalog."
+        $errors | Should -BeNullOrEmpty
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -like '*UnknownFeature*' }
         $script:CapturePlanCalls | Should -BeNullOrEmpty
     }
 

@@ -11,6 +11,9 @@ Describe 'Convert-RegistryValueKindFromBackup' {
     It '<Case>' -ForEach @(
         @{ Case = 'parses registry kinds case-insensitively'; KindName = 'dword'; Expected = [Microsoft.Win32.RegistryValueKind]::DWord; ExpectedError = $null }
         @{ Case = 'rejects an invalid registry kind'; KindName = 'NotARegistryValueKind'; Expected = $null; ExpectedError = 'Unsupported registry value kind in backup: NotARegistryValueKind' }
+        @{ Case = 'rejects an undefined numeric kind'; KindName = '99'; Expected = $null; ExpectedError = 'Unsupported registry value kind in backup: 99' }
+        @{ Case = 'rejects Unknown'; KindName = 'Unknown'; Expected = $null; ExpectedError = 'Unsupported registry value kind in backup: Unknown' }
+        @{ Case = 'rejects None'; KindName = 'None'; Expected = $null; ExpectedError = 'Unsupported registry value kind in backup: None' }
     ) {
         if ($ExpectedError) {
             { Convert-RegistryValueKindFromBackup -KindName $KindName } | Should -Throw $ExpectedError

@@ -1,4 +1,4 @@
-{
+﻿{
   "Features": {
     "RemoveApps": {
       "Label": "卸载通过 Apps 参数指定的应用",
@@ -29,14 +29,14 @@
     },
     "DisableSuggestions": {
       "Label": "禁用 Windows 中的提示、技巧和推荐内容",
-      "ToolTip": "移除 Windows 中的多种干扰内容，包括通知、提醒和同步提供商广告，同时阻止自动安装推荐应用。",
+      "ToolTip": "移除 Windows 中的多种干扰内容，包括通知、提醒、广告及其他干扰，同时阻止自动安装推荐应用。",
       "ApplyText": "正在禁用 Windows 中的提示、技巧、推荐内容和广告",
       "UndoLabel": "启用 Windows 中的提示、技巧和推荐内容",
       "ApplyUndoText": "正在启用 Windows 中的提示、技巧、推荐内容和广告"
     },
     "DisableNotifications": {
-      "Label": "禁用 Windows 通知（来自应用和其他发送者）",
-      "ToolTip": "禁用来自应用和其他发送者的 Windows 原生通知，包括 Discord、WhatsApp、Teams 和 Slack 等应用的通知。",
+      "Label": "禁用 Windows 系统和应用通知",
+      "ToolTip": "禁用 Windows 原生系统和应用通知，包括 Discord、WhatsApp、Teams 和 Slack 等应用的通知。",
       "ApplyText": "正在禁用 Windows 通知和提醒",
       "UndoLabel": "启用 Windows 通知和提醒",
       "ApplyUndoText": "正在启用 Windows 通知和提醒"
@@ -160,6 +160,13 @@
       "UndoLabel": "显示开始菜单的“所有应用”区域",
       "ApplyUndoText": "正在启用开始菜单的“所有应用”区域"
     },
+    "DisableStartWebView2": {
+      "Label": "禁用 WebView2 以优化Windows 搜索的内存使用",
+      "ToolTip": "通过阻止Windows 搜索使用 WebView2 来减少内存占用。此设置适用于所有用户。",
+      "ApplyText": "正在禁用Windows 搜索中的 WebView2",
+      "UndoLabel": "恢复Windows 搜索的默认行为",
+      "ApplyUndoText": "正在恢复Windows 搜索的默认行为"
+    },
     "DisableStartPhoneLink": {
       "Label": "禁用开始菜单中的手机连接集成",
       "ToolTip": "当电脑关联了移动设备时，移除开始菜单中的手机连接集成。",
@@ -229,13 +236,6 @@
       "ApplyText": "正在为系统和应用启用深色模式",
       "UndoLabel": "禁用系统和应用的深色主题",
       "ApplyUndoText": "正在禁用系统和应用的深色模式"
-    },
-    "DisableDragTray": {
-      "Label": "禁用用于共享和移动文件的拖放托盘",
-      "ToolTip": "拖放托盘是 Windows 11 用于共享和移动文件的新功能，会在拖动文件时出现在屏幕顶部。",
-      "ApplyText": "正在禁用拖放托盘",
-      "UndoLabel": "启用用于共享和移动文件的拖放托盘",
-      "ApplyUndoText": "正在启用拖放托盘"
     },
     "RevertContextMenu": {
       "Label": "使用经典 Windows 10 右键菜单样式",
@@ -518,6 +518,13 @@
       "UndoLabel": "用户已登录时允许更新后自动重启",
       "ApplyUndoText": "正在允许用户已登录时更新后自动重启"
     },
+    "DisableDriverUpdates": {
+      "Label": "禁用通过 Windows 更新进行的驱动程序更新",
+      "ToolTip": "阻止 Windows 通过常规 Windows 质量更新自动下载和安装驱动程序更新。Windows 仍可自动为新设备安装驱动程序。安全更新、关键更新或功能更新中包含的驱动程序仍可能被安装。",
+      "ApplyText": "正在禁用通过 Windows 更新进行的驱动程序更新",
+      "UndoLabel": "启用通过 Windows 更新进行的驱动程序更新",
+      "ApplyUndoText": "正在启用通过 Windows 更新进行的驱动程序更新"
+    },
     "DisableDeliveryOptimization": {
       "Label": "禁用与其他电脑共享已下载的更新",
       "ToolTip": "阻止电脑向局域网或 Internet 上的其他电脑共享已下载的更新，同时阻止从其他电脑下载更新。",
@@ -594,7 +601,7 @@
     },
     "EnableWindowsSandbox": {
       "Label": "启用 Windows 沙盒",
-      "ToolTip": "Windows 沙盒是轻量级桌面环境，可在隔离环境中安全运行应用。安装在其中的软件与主机相互隔离。仅支持 Windows 11 专业版、专业工作站版和企业版。",
+      "ToolTip": "Windows 沙盒是轻量级桌面环境，可在隔离环境中安全运行应用。安装在其中的软件与主机相互隔离。仅支持 Windows 11 专业版、专业工作站版、企业版和教育版。",
       "ApplyText": "正在启用 Windows 沙盒",
       "UndoLabel": "禁用 Windows 沙盒",
       "ApplyUndoText": "正在禁用 Windows 沙盒"

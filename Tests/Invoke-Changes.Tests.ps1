@@ -35,6 +35,7 @@ BeforeAll {
             $entry = @{}
             foreach ($field in 'ApplyText', 'UndoLabel', 'ApplyUndoText') {
                 if ($null -ne $feature.$field) { $entry[$field] = [string]$feature.$field }
+                $feature.PSObject.Properties.Remove($field)
             }
             $langFeatures[$featureId] = [PSCustomObject]$entry
         }
@@ -106,12 +107,13 @@ Describe 'Invoke-FeatureApply' {
         Mock Get-Process { @() }
         Mock Stop-Process { param($InputObject) }
         Mock Write-Host {}
+        Mock Write-Warning {}
     }
 
     It 'imports a registry-backed feature' {
         Invoke-FeatureApply -FeatureId 'RegistryFeature'
 
-        Should -Invoke Import-RegistryFile -Times 1 -Exactly -ParameterFilter { $path -eq 'feature.reg' }
+        Should -Invoke Import-RegistryFile -Times 1 -Exactly -ParameterFilter { $path -eq 'feature.reg' -and $Message -eq '> Apply registry feature...' }
         Should -Invoke Remove-SelectedApps -Times 0 -Exactly
     }
 
@@ -164,7 +166,6 @@ Describe 'Invoke-FeatureApply' {
 
     It 'returns false when applying a feature throws' {
         Mock Invoke-ForceRemoveEdge { throw 'access denied' }
-        Mock Write-Warning {}
 
         Invoke-FeatureApply -FeatureId 'ForceRemoveEdge' | Should -BeFalse
 
@@ -172,8 +173,6 @@ Describe 'Invoke-FeatureApply' {
     }
 
     It 'returns false for an unknown feature' {
-        Mock Write-Warning {}
-
         Invoke-FeatureApply -FeatureId 'Unknown' | Should -BeFalse
 
         Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -match "Unknown feature 'Unknown'.*could not be applied" }
@@ -195,21 +194,16 @@ Describe 'Invoke-FeatureApply' {
         Should -Invoke Stop-Process -Times 0 -Exactly
     }
 
-    It 'stops widget processes before removing widget packages' {
-        $widget = [PSCustomObject]@{ Name = 'WidgetService' }
-        Mock Get-Process { $widget }
-
-        Invoke-FeatureApply -FeatureId 'DisableWidgets'
-
-        Should -Invoke Stop-Process -Times 1 -Exactly
-    }
-
-    It 'stops widget processes without a confirmation prompt' {
+    It 'stops widget processes without a confirmation prompt before removing widget packages' {
+        $calls = [System.Collections.Generic.List[string]]::new()
         Mock Get-Process { [PSCustomObject]@{ Name = 'Widgets' } }
+        Mock Stop-Process { $calls.Add('Stop') }
+        Mock Remove-SelectedApps { $calls.Add('Remove'); $true }
 
         Invoke-FeatureApply -FeatureId 'DisableWidgets'
 
         Should -Invoke Stop-Process -Times 1 -Exactly -ParameterFilter { $Force -and $ErrorAction -eq 'SilentlyContinue' }
+        @($calls) | Should -Be @('Stop', 'Remove')
     }
 
     It 'enables the expected optional Windows features' {
@@ -359,6 +353,7 @@ Describe 'Invoke-FeatureUndo' {
             DisableTelemetry = [PSCustomObject]@{}
             DisableStoreSearchSuggestions = [PSCustomObject]@{}
         }
+        Sync-TestLangFeatures
         Mock Set-StoreSearchSuggestionsEnabledForAllUsers { $true }
         Mock Set-StoreSearchSuggestionsEnabled { $true }
         Mock Get-StoreAppsDatabasePathForUser { 'store.db' }
@@ -385,6 +380,12 @@ Describe 'Invoke-FeatureUndo' {
         Mock Disable-WindowsFeature { param($FeatureName) $script:disabledFeatures.Add($FeatureName); $true }
         Invoke-FeatureUndo -FeatureId 'EnableWindowsSubsystemForLinux'
         $script:disabledFeatures | Should -Be @('Microsoft-Windows-Subsystem-Linux', 'VirtualMachinePlatform')
+    }
+
+    It 'uses the language catalog for undo messages without display metadata' {
+        Invoke-FeatureUndo -FeatureId 'EnableWindowsSandbox' | Should -BeTrue
+
+        Should -Invoke Write-Host -Times 1 -Exactly -ParameterFilter { $Object -eq '> Disable Sandbox...' }
     }
 
     It 'disables Sandbox and re-enables telemetry tasks' {
@@ -535,7 +536,6 @@ Describe 'Invoke-AllChanges' {
         $script:Params = @{ CustomApply = $true }
         $script:UndoParams = @{}
         Mock Invoke-ApplyFeatures { $script:AppRemovalVerificationUnavailable = $true }
-        Mock Write-Warning {}
 
         Invoke-AllChanges
 

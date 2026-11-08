@@ -1,0 +1,31 @@
+﻿{
+    "Version":  "1.0",
+    "BackupType":  "RegistryState",
+    "CreatedAt":  "2026-10-21T12:00:00+02:00",
+    "CreatedBy":  "Win11Debloat warning prompt test",
+    "ComputerName":  "TOMAHAWK-V2",
+    "Target":  "CurrentUser:jeffr",
+    "SelectedFeatures":  [
+                             "DisableGameBarIntegration"
+                         ],
+    "SelectedUndoFeatures":  [
+
+                             ],
+    "RegistryKeys":  [
+                         {
+                             "Path":  "HKEY_CLASSES_ROOT\\ms-gamebar\\shell\\open\\command",
+                             "Exists":  true,
+                             "Values":  [
+                                            {
+                                                "Name":  "",
+                                                "Exists":  true,
+                                                "Kind":  "String",
+                                                "Data":  "cmd.exe /d /c echo Win11Debloat restore warning test"
+                                            }
+                                        ],
+                             "SubKeys":  [
+
+                                         ]
+                         }
+                     ]
+}

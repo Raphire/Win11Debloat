@@ -79,13 +79,15 @@ Describe 'Get-SelectedRegistryFeaturesForBackupValidation' {
         $valueNames.Contains('mode') | Should -BeTrue
     }
 
-    It 'selects registry-backed apply features and reports unknown IDs' {
+    It 'selects registry-backed apply features and warns for unknown IDs' {
+        Mock Write-Warning {}
         $errors = New-Object System.Collections.Generic.List[string]
 
         $result = @(Get-SelectedRegistryFeaturesForBackupValidation -SelectedFeatureIds @('ApplyFeature', 'CustomFeature', 'MissingFeature') -IsUndoFeature:$false -Errors $errors)
 
         $result.Id | Should -Be 'ApplyFeature'
-        $errors | Should -Contain "Selected feature 'MissingFeature' was not found in the current feature catalog."
+        $errors | Should -BeNullOrEmpty
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -like '*MissingFeature*' }
     }
 
     It 'uses undo registry keys and falls back to apply keys when needed' {
@@ -95,26 +97,6 @@ Describe 'Get-SelectedRegistryFeaturesForBackupValidation' {
 
         $result.Id | Should -Be @('UndoFeature', 'FallbackUndoFeature')
         $errors | Should -BeNullOrEmpty
-    }
-}
-
-Describe 'Test-RegistryValueKindNameSupported' {
-    It 'accepts supported registry value kind <KindName>' -ForEach @(
-        @{ KindName = 'dword' }
-        @{ KindName = 'QWord' }
-        @{ KindName = 'MultiString' }
-    ) {
-        Test-RegistryValueKindNameSupported -KindName $KindName | Should -BeTrue
-    }
-
-    It 'rejects <Case>' -ForEach @(
-        @{ Case = 'a null kind name'; KindName = $null }
-        @{ Case = 'an empty kind name'; KindName = '' }
-        @{ Case = 'the Unknown registry kind'; KindName = 'Unknown' }
-        @{ Case = 'the unsupported None registry kind'; KindName = 'None' }
-        @{ Case = 'an invalid registry kind name'; KindName = 'NotARegistryValueKind' }
-    ) {
-        Test-RegistryValueKindNameSupported -KindName $KindName | Should -BeFalse
     }
 }
 
@@ -153,6 +135,16 @@ Describe 'Get-NormalizedRegistryValueName' {
     }
 }
 
+Describe 'Test-RegistryValueKindNameSupported' {
+    It 'rejects unsupported kind <KindName>' -ForEach @('99', '-2', 'Unknown', 'None', '', $null, 'NotARegistryValueKind') {
+        Test-RegistryValueKindNameSupported -KindName $_ | Should -BeFalse
+    }
+
+    It 'accepts defined kind <KindName>' -ForEach @('String', 'expandstring', 'Binary', 'DWord', 'dword', 'QWord', 'MultiString', '1') {
+        Test-RegistryValueKindNameSupported -KindName $_ | Should -BeTrue
+    }
+}
+
 Describe 'Normalize-RegistryKeySnapshot' {
     It 'normalizes nested snapshots and supplies value defaults' {
         $snapshot = [PSCustomObject]@{
@@ -187,6 +179,19 @@ Describe 'Normalize-RegistryKeySnapshot' {
     It 'rejects a snapshot without a registry path' {
         { Normalize-RegistryKeySnapshot -Snapshot ([PSCustomObject]@{ Exists = $true }) } |
             Should -Throw 'Backup validation failed: Registry key snapshot is missing Path.'
+    }
+
+    It 'rejects a <Case> key existence flag' -ForEach @(
+        @{ Case = 'missing'; Properties = @{} }
+        @{ Case = 'null'; Properties = @{ Exists = $null } }
+        @{ Case = 'string'; Properties = @{ Exists = 'false' } }
+        @{ Case = 'numeric'; Properties = @{ Exists = 0 } }
+    ) {
+        $propertiesWithPath = @{ Path = 'HKEY_CURRENT_USER\Software\Example' }
+        foreach ($entry in $Properties.GetEnumerator()) { $propertiesWithPath[$entry.Key] = $entry.Value }
+
+        { Normalize-RegistryKeySnapshot -Snapshot ([PSCustomObject]$propertiesWithPath) } |
+            Should -Throw '*must define Exists as a Boolean*'
     }
 }
 
@@ -223,6 +228,7 @@ Describe 'Test-RegistrySnapshotAgainstAllowList' {
         $errors = New-Object 'System.Collections.Generic.List[string]'
         $snapshot = [PSCustomObject]@{
             Path = 'HKEY_CURRENT_USER\Software\Example'
+            Exists = $true
             Values = @([PSCustomObject]@{ Name = 'Enabled'; Exists = $true; Kind = 'DWord'; Data = 1 })
             SubKeys = @()
         }
@@ -244,6 +250,7 @@ Describe 'Test-RegistrySnapshotAgainstAllowList' {
         $errors = New-Object 'System.Collections.Generic.List[string]'
         $snapshot = [PSCustomObject]@{
             Path = 'HKEY_CURRENT_USER\Software\Example'
+            Exists = $true
             Values = @([PSCustomObject]@{ Name = 'Bytes'; Exists = $true; Kind = 'Binary'; Data = @(1, 256) })
             SubKeys = @()
         }
@@ -266,6 +273,7 @@ Describe 'Test-RegistrySnapshotAgainstAllowList' {
         $errors = New-Object 'System.Collections.Generic.List[string]'
         $snapshot = [PSCustomObject]@{
             Path = 'HKEY_CURRENT_USER\Software\Example\Child'
+            Exists = $true
             Values = @([PSCustomObject]@{ Name = 'Unlisted'; Exists = $true; Kind = 'String'; Data = 'value' })
             SubKeys = @()
         }
@@ -287,11 +295,13 @@ Describe 'Test-RegistrySnapshotAgainstAllowList' {
         $errors = New-Object 'System.Collections.Generic.List[string]'
         $unexpectedPathSnapshot = [PSCustomObject]@{
             Path = 'HKEY_CURRENT_USER\Software\Unexpected'
+            Exists = $true
             Values = @()
             SubKeys = @()
         }
         $unexpectedValueSnapshot = [PSCustomObject]@{
             Path = 'HKEY_CURRENT_USER\Software\Example'
+            Exists = $true
             Values = @([PSCustomObject]@{ Name = 'Unexpected'; Exists = $true; Kind = 'String'; Data = 'value' })
             SubKeys = @()
         }

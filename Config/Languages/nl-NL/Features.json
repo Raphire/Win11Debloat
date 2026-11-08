@@ -1,4 +1,4 @@
-{
+﻿{
   "Features": {
     "RemoveApps": {
       "Label": "Apps verwijderen die met de parameter 'Apps' zijn opgegeven",
@@ -29,14 +29,14 @@
     },
     "DisableSuggestions": {
       "Label": "Tips en aanbevelingen in Windows uitschakelen",
-      "ToolTip": "Verwijdert veel storende meldingen, herinneringen en advertenties van synchronisatieproviders uit Windows. Voorkomt ook dat aanbevolen apps automatisch worden geïnstalleerd.",
+      "ToolTip": "Verwijdert veel storende meldingen, herinneringen, advertenties en andere onderbrekingen uit Windows. Voorkomt ook dat aanbevolen apps automatisch worden geïnstalleerd.",
       "ApplyText": "Tips, aanbevelingen en advertenties in Windows uitschakelen",
       "UndoLabel": "Tips en aanbevelingen in Windows inschakelen",
       "ApplyUndoText": "Tips, aanbevelingen en advertenties in Windows inschakelen"
     },
     "DisableNotifications": {
-      "Label": "Windows-meldingen uitschakelen",
-      "ToolTip": "Schakelt Windows-meldingen uit van apps zoals Discord, WhatsApp, Teams en Slack, en van andere afzenders.",
+      "Label": "Windows-systeem- en appmeldingen uitschakelen",
+      "ToolTip": "Schakelt de ingebouwde Windows-meldingen van het systeem en apps uit, waaronder meldingen van apps zoals Discord, WhatsApp, Teams en Slack.",
       "ApplyText": "Windows-meldingen en herinneringen uitschakelen",
       "UndoLabel": "Windows-meldingen en herinneringen inschakelen",
       "ApplyUndoText": "Windows-meldingen en herinneringen inschakelen"
@@ -160,6 +160,13 @@
       "UndoLabel": "De sectie 'Alle apps' in het Startmenu tonen",
       "ApplyUndoText": "De sectie 'Alle apps' in het Startmenu inschakelen"
     },
+    "DisableStartWebView2": {
+      "Label": "Geheugengebruik van Windows Zoeken optimaliseren door WebView2 uit te schakelen",
+      "ToolTip": "Vermindert het geheugengebruik door te voorkomen dat Windows Zoeken WebView2 gebruikt. Deze instelling geldt voor alle gebruikers.",
+      "ApplyText": "WebView2 voor Windows Zoeken uitschakelen",
+      "UndoLabel": "Standaardwerking van Windows Zoeken herstellen",
+      "ApplyUndoText": "Standaardwerking van Windows Zoeken herstellen"
+    },
     "DisableStartPhoneLink": {
       "Label": "Telefoonkoppeling in het Startmenu uitschakelen",
       "ToolTip": "Verwijdert Telefoonkoppeling integratie uit het Startmenu als je een mobiel apparaat aan je pc hebt gekoppeld.",
@@ -229,13 +236,6 @@
       "ApplyText": "Donker thema voor Windows en apps inschakelen",
       "UndoLabel": "Donker thema voor Windows en apps uitschakelen",
       "ApplyUndoText": "Donker thema voor Windows en apps uitschakelen"
-    },
-    "DisableDragTray": {
-      "Label": "'Drag Tray' voor het delen van bestanden uitschakelen",
-      "ToolTip": "Drag Tray is een nieuwe functie voor het delen en verplaatsen van bestanden in Windows 11. Deze verschijnt bovenaan het scherm wanneer je bestanden sleept.",
-      "ApplyText": "Drag Tray uitschakelen",
-      "UndoLabel": "'Drag Tray' voor het delen van bestanden inschakelen",
-      "ApplyUndoText": "Drag Tray inschakelen"
     },
     "RevertContextMenu": {
       "Label": "Het klassieke contextmenu van Windows 10 gebruiken",
@@ -518,6 +518,13 @@
       "UndoLabel": "Automatische herstarts na updates toestaan zolang een gebruiker is aangemeld",
       "ApplyUndoText": "Automatische herstarts na updates toestaan zolang een gebruiker is aangemeld"
     },
+    "DisableDriverUpdates": {
+      "Label": "Stuurprogramma-updates via Windows Update uitschakelen",
+      "ToolTip": "Voorkomt dat Windows automatisch stuurprogramma-updates downloadt en installeert via reguliere Windows-kwaliteitsupdates. Windows kan nog steeds automatisch stuurprogramma's voor nieuwe apparaten installeren. Stuurprogramma's die zijn opgenomen in beveiligingsupdates, essentiële updates of functie-updates kunnen nog steeds worden geïnstalleerd.",
+      "ApplyText": "Stuurprogramma-updates via Windows Update uitschakelen",
+      "UndoLabel": "Stuurprogramma-updates via Windows Update inschakelen",
+      "ApplyUndoText": "Stuurprogramma-updates via Windows Update inschakelen"
+    },
     "DisableDeliveryOptimization": {
       "Label": "Update downloads van andere pc's blokkeren",
       "ToolTip": "Voorkomt dat je pc updates uitwisselt met andere pc's op het lokale netwerk of internet.",
@@ -594,7 +601,7 @@
     },
     "EnableWindowsSandbox": {
       "Label": "Windows Sandbox inschakelen",
-      "ToolTip": "Met Windows Sandbox kun je apps in een afgeschermde bureaubladomgeving uitvoeren, los van je eigen Windows-installatie. Alleen beschikbaar in de Pro-, Workstation- en Enterprise-edities van Windows 11.",
+      "ToolTip": "Met Windows Sandbox kun je apps in een afgeschermde bureaubladomgeving uitvoeren, los van je eigen Windows-installatie. Alleen beschikbaar in de Pro-, Workstation-, Enterprise- en Education-edities van Windows 11.",
       "ApplyText": "Windows Sandbox inschakelen",
       "UndoLabel": "Windows Sandbox uitschakelen",
       "ApplyUndoText": "Windows Sandbox uitschakelen"

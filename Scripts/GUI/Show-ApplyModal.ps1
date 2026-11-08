@@ -185,9 +185,8 @@ function Show-ApplyModal {
                 }
             }
             if ($script:WingetDeferredRemovals -and $script:WingetDeferredRemovals.Count -gt 0) {
-                foreach ($appId in @($script:WingetDeferredRemovals.Keys | Sort-Object)) {
+                foreach ($appName in @(Get-DeferredAppRemovalLabels)) {
                     $tb = [System.Windows.Controls.TextBlock]::new()
-                    $appName = Get-Translation -Key $appId -Field 'FriendlyName' -Section 'Apps'
                     $label = Get-Translation -Key 'ApplyRebootRequiredWingetDeferred' -FormatArgs @($appName)
                     $tb.Text = "$([char]0x2022) $label"
                     $tb.FontSize = 12

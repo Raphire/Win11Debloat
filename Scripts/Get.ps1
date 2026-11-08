@@ -34,6 +34,7 @@ param (
     [switch]$DisableStorageSense,
     [switch]$DisableUpdateASAP,
     [switch]$PreventUpdateAutoReboot,
+    [switch]$DisableDriverUpdates,
     [switch]$DisableDeliveryOptimization,
     [switch]$DisableDeviceAutoAppDownload,
     [switch]$DisableBing,
@@ -64,6 +65,7 @@ param (
     [switch]$DisableStartRecommended,
     [switch]$DisableStartAllApps, [switch]$StartAllAppsCategory, [switch]$StartAllAppsGrid, [switch]$StartAllAppsList,
     [switch]$DisableStartPhoneLink,
+    [switch]$DisableStartWebView2,
     [switch]$DisableCopilot,
     [switch]$DisableRecall,
     [switch]$DisableClickToDo,
@@ -81,7 +83,6 @@ param (
     [switch]$ClearStartAllUsers,
     [string]$ReplaceStartAllUsers,
     [switch]$RevertContextMenu,
-    [switch]$DisableDragTray,
     [switch]$DisableMouseAcceleration,
     [switch]$DisableStickyKeys,
     [switch]$DisableWindowSnapping,
@@ -124,6 +125,28 @@ $tempRootPath = $env:TEMP
 $tempWorkPath = Join-Path $tempRootPath 'Win11Debloat'
 $tempArchivePath = Join-Path $tempRootPath 'win11debloat.zip'
 
+# Read the expected SHA-256 of a file from the text of a SHA256SUMS file (lines of "<64 hex digits>  <file name>", as
+# written by sha256sum). Returns $null when the file is not listed.
+function Get-ExpectedFileHash([string]$SumsText, [string]$FileName) {
+    foreach ($line in ($SumsText -split "`r?`n")) {
+        if ($line -match '^([0-9a-fA-F]{64})\s+\*?(.+?)\s*$' -and $Matches[2] -ceq $FileName) {
+            return $Matches[1].ToLowerInvariant()
+        }
+    }
+    return $null
+}
+
+# Check a file against an expected SHA-256 value (hex digits, any case).
+function Test-FileHashMatch([string]$Path, [string]$ExpectedHash) {
+    return (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash -ieq $ExpectedHash
+}
+
+# Names of the release assets the archive is verified with. When a release does not publish both, the source archive
+# GitHub generates for the release is downloaded as before, without a checksum to compare it to.
+$releaseArchiveName = 'Win11Debloat.zip'
+$releaseChecksumsName = 'SHA256SUMS'
+$expectedArchiveHash = $null
+
 # Download Win11Debloat from GitHub as a zip archive.
 try {
     if ($Dev) {
@@ -131,7 +154,24 @@ try {
         $sourceUri = "https://github.com/Raphire/Win11Debloat/archive/refs/heads/master.zip"
     } else {
         Write-Output "> Downloading Win11Debloat..."
-        $sourceUri = (Invoke-RestMethod https://api.github.com/repos/Raphire/Win11Debloat/releases/latest).zipball_url
+        $release = Invoke-RestMethod https://api.github.com/repos/Raphire/Win11Debloat/releases/latest
+        $sourceUri = $release.zipball_url
+
+        $archiveAsset = @($release.assets | Where-Object { $_.name -ceq $releaseArchiveName }) | Select-Object -First 1
+        $checksumsAsset = @($release.assets | Where-Object { $_.name -ceq $releaseChecksumsName }) | Select-Object -First 1
+        if ($archiveAsset -and $checksumsAsset) {
+            $checksumsPath = Join-Path $tempRootPath 'win11debloat.sha256sums'
+            Invoke-RestMethod $checksumsAsset.browser_download_url -OutFile $checksumsPath
+            $expectedArchiveHash = Get-ExpectedFileHash ([System.IO.File]::ReadAllText($checksumsPath)) $releaseArchiveName
+            Remove-Item $checksumsPath -Force
+            if (-not $expectedArchiveHash) {
+                throw "$releaseChecksumsName does not list $releaseArchiveName."
+            }
+            $sourceUri = $archiveAsset.browser_download_url
+        }
+        else {
+            Write-Warning 'This release does not publish both Win11Debloat.zip and SHA256SUMS. Downloading the source archive without SHA-256 verification.'
+        }
     }
     Invoke-RestMethod $sourceUri -OutFile $tempArchivePath
 }
@@ -144,31 +184,22 @@ catch {
     Exit 1
 }
 
-# Remove old script folder if it exists, but keep configs, logs and backups
+# Do not use an archive that differs from the checksum published with the release
+if ($expectedArchiveHash -and -not (Test-FileHashMatch $tempArchivePath $expectedArchiveHash)) {
+    Remove-Item $tempArchivePath -Force
+    Write-Host "The downloaded Win11Debloat archive does not match the SHA-256 checksum published with the release." -ForegroundColor Red
+    Write-Output ""
+    Write-Output "Press enter to exit..."
+    Read-Host | Out-Null
+    Exit 1
+}
+
+# Remove old script files if they exist, but keep logs and backups
 if (Test-Path $tempWorkPath) {
     Write-Output ""
     Write-Output "> Cleaning up old script files..."
 
-    Get-ChildItem -Path $tempWorkPath -Exclude Config,Logs,Backups | Remove-Item -Recurse -Force
-}
-
-$configDir = Join-Path $tempWorkPath 'Config'
-$backupDir = Join-Path $tempWorkPath 'ConfigOld'
-
-# Temporarily move existing config files if they exist to prevent them from being overwritten by the new script files, will be moved back after the new script is unpacked
-if (Test-Path "$configDir") {
-    Write-Output ""
-    Write-Output "> Backing up existing config files..."
-
-    New-Item -ItemType Directory -Path "$backupDir" -Force | Out-Null
-
-    $filesToKeep = @(
-        'LastUsedSettings.json'
-    )
-
-    Get-ChildItem -Path "$configDir" -Recurse | Where-Object { $_.Name -in $filesToKeep } | Move-Item -Destination "$backupDir"
-
-    Remove-Item "$configDir" -Recurse -Force
+    Get-ChildItem -Path $tempWorkPath -Exclude Logs,Backups | Remove-Item -Recurse -Force
 }
 
 Write-Output ""
@@ -182,19 +213,6 @@ Remove-Item $tempArchivePath
 
 # Move files
 Get-ChildItem -Path (Join-Path $tempWorkPath '*Win11Debloat-*') -Recurse | Move-Item -Destination $tempWorkPath
-
-# Add existing config files back to Config folder
-if (Test-Path "$backupDir") {
-    if (-not (Test-Path "$configDir")) {
-        New-Item -ItemType Directory -Path "$configDir" -Force | Out-Null
-    }
-
-    Write-Output ""
-    Write-Output "> Restoring existing config files..."
-
-    Get-ChildItem -Path "$backupDir" -Recurse | Move-Item -Destination "$configDir"
-    Remove-Item "$backupDir" -Recurse -Force
-}
 
 # Quote a value so it survives CommandLineToArgvW parsing in the child process: double any backslash run that
 # precedes a quote or the closing quote, and escape embedded quotes, before wrapping the value in quotes.
@@ -258,13 +276,12 @@ if ($null -ne $debloatProcess) {
     $exitCode = $debloatProcess.ExitCode
 }
 
-# Remove all remaining script files, except for configs, logs and backups
+# Remove all remaining script files, except for logs and backups
 if (Test-Path $tempWorkPath) {
     Write-Output ""
     Write-Output "> Cleaning up..."
 
-    # Cleanup, remove Win11Debloat directory
-    Get-ChildItem -Path $tempWorkPath -Exclude Config,Logs,Backups | Remove-Item -Recurse -Force
+    Get-ChildItem -Path $tempWorkPath -Exclude Logs,Backups | Remove-Item -Recurse -Force
 }
 
 Write-Output ""

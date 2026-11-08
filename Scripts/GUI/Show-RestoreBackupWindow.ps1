@@ -31,7 +31,16 @@ function Show-RestoreBackupWindow {
             }
 
             Write-Host "User confirmed registry restore for $($backup.Target)."
-            $restoreOpResult = Restore-RegistryBackupState -Backup $backup
+            $confirmUntrustedValues = {
+                param($mismatches)
+                $details = @($mismatches | ForEach-Object {
+                    $valueName = if ([string]::IsNullOrEmpty($_.Name)) { '(Default)' } else { $_.Name }
+                    Get-Translation -Key 'BackupExecutableMismatchDetails' -FormatArgs @($_.Path, $valueName, $_.Kind, ($_.Data | ConvertTo-Json -Compress -Depth 10))
+                }) -join "`n`n"
+                $message = Get-Translation -Key 'BackupExecutableWarningMessage' -FormatArgs @($details)
+                return (Show-MessageBox -Owner $Owner -Title (Get-Translation -Key 'BackupExecutableWarningTitle') -Message $message -Button 'OKCancel' -Icon 'Warning' -DefaultResult 'Cancel' -Width 700) -eq 'OK'
+            }
+            $restoreOpResult = Restore-RegistryBackupState -Backup $backup -ConfirmUntrustedValues $confirmUntrustedValues
             if ($restoreOpResult -and $restoreOpResult.Result) {
                 $restoreResult.RestoredRegistry = $true
                 if ($script:Params.ContainsKey("WhatIf")) {

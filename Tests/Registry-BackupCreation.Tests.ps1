@@ -106,6 +106,7 @@ Describe 'Add-RegistryPlanOperation' {
         $plan = $plans['hkey_current_user\software\example']
         $plan.IncludeSubKeys | Should -BeTrue
         $plan.CaptureAllValues | Should -BeTrue
+        $plan.AllowDeleteKey | Should -BeTrue
         $plan.ValueNames | Should -HaveCount 1
     }
 
@@ -156,6 +157,7 @@ Describe 'Get-RegistryBackupCapturePlans' {
         $plans[0].ValueNames | Should -Contain 'Enabled'
         $plans[0].ValueNames | Should -Contain 'Removed'
         $plans[0].ValueNames | Should -Not -Contain 'Ignored'
+        $plans[0].AllowDeleteKey | Should -BeFalse
     }
 
     It 'passes Sysprep selection through to registry-file resolution' {
@@ -209,12 +211,14 @@ Describe 'Get-RegistrySnapshotsForBackup' {
 
     It 'captures each plan directly for the current user' {
         $plans = @(
-            [PSCustomObject]@{ Path = 'HKEY_CURRENT_USER\Software\One'; CaptureAllValues = $true; ValueNames = @(); IncludeSubKeys = $true }
-            [PSCustomObject]@{ Path = 'HKEY_CURRENT_USER\Software\Two'; CaptureAllValues = $false; ValueNames = @('Value'); IncludeSubKeys = $false }
+            [PSCustomObject]@{ Path = 'HKEY_CURRENT_USER\Software\One'; CaptureAllValues = $true; ValueNames = @(); IncludeSubKeys = $true; AllowDeleteKey = $true }
+            [PSCustomObject]@{ Path = 'HKEY_CURRENT_USER\Software\Two'; CaptureAllValues = $false; ValueNames = @('Value'); IncludeSubKeys = $false; AllowDeleteKey = $false }
         )
 
         @(Get-RegistrySnapshotsForBackup -CapturePlans $plans) | Should -HaveCount 2
         Should -Invoke Get-RegistryKeySnapshot -Times 2 -Exactly
+        Should -Invoke Get-RegistryKeySnapshot -Times 1 -Exactly -ParameterFilter { $KeyPath -eq 'HKEY_CURRENT_USER\Software\One' -and $AllowDeleteKey }
+        Should -Invoke Get-RegistryKeySnapshot -Times 1 -Exactly -ParameterFilter { $KeyPath -eq 'HKEY_CURRENT_USER\Software\Two' -and -not $AllowDeleteKey }
         Should -Invoke Invoke-WithLoadedBackupHive -Times 0 -Exactly
     }
 

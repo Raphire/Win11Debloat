@@ -98,7 +98,6 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 
 #### System
 
-- Disable the Drag Tray for sharing & moving files.
 - Restore the old Windows 10 style context menu.
 - Turn off Enhance Pointer Precision (mouse acceleration).
 - Disable the Sticky Keys keyboard shortcut.
@@ -111,6 +110,7 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 
 - Prevent Windows from getting updates as soon as they're available.
 - Prevent automatic restarts after updates while signed in.
+- Disable driver updates through Windows Update.
 - Disable sharing of downloaded updates with other PCs, also known as Delivery Optimization.
 - Prevent Windows from auto-installing device companion apps, like LG Monitor App, Alienware Command Center and more.
 
@@ -125,6 +125,7 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 - Customize the start menu by removing pinned apps, hiding recommendations, and customizing the 'All Apps' section.
 - Disable the Phone Link mobile devices integration in the start menu.
 - Disable Bing web search & Copilot integration and Microsoft Store app suggestions in Windows search.
+- Optimize Windows search memory usage by disabling WebView2-based rendering.
 
 #### Taskbar
 

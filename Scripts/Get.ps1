@@ -194,31 +194,12 @@ if ($expectedArchiveHash -and -not (Test-FileHashMatch $tempArchivePath $expecte
     Exit 1
 }
 
-# Remove old script folder if it exists, but keep configs, logs and backups
+# Remove old script files if they exist, but keep logs and backups
 if (Test-Path $tempWorkPath) {
     Write-Output ""
     Write-Output "> Cleaning up old script files..."
 
-    Get-ChildItem -Path $tempWorkPath -Exclude Config,Logs,Backups | Remove-Item -Recurse -Force
-}
-
-$configDir = Join-Path $tempWorkPath 'Config'
-$backupDir = Join-Path $tempWorkPath 'ConfigOld'
-
-# Temporarily move existing config files if they exist to prevent them from being overwritten by the new script files, will be moved back after the new script is unpacked
-if (Test-Path "$configDir") {
-    Write-Output ""
-    Write-Output "> Backing up existing config files..."
-
-    New-Item -ItemType Directory -Path "$backupDir" -Force | Out-Null
-
-    $filesToKeep = @(
-        'LastUsedSettings.json'
-    )
-
-    Get-ChildItem -Path "$configDir" -Recurse | Where-Object { $_.Name -in $filesToKeep } | Move-Item -Destination "$backupDir"
-
-    Remove-Item "$configDir" -Recurse -Force
+    Get-ChildItem -Path $tempWorkPath -Exclude Logs,Backups | Remove-Item -Recurse -Force
 }
 
 Write-Output ""
@@ -232,19 +213,6 @@ Remove-Item $tempArchivePath
 
 # Move files
 Get-ChildItem -Path (Join-Path $tempWorkPath '*Win11Debloat-*') -Recurse | Move-Item -Destination $tempWorkPath
-
-# Add existing config files back to Config folder
-if (Test-Path "$backupDir") {
-    if (-not (Test-Path "$configDir")) {
-        New-Item -ItemType Directory -Path "$configDir" -Force | Out-Null
-    }
-
-    Write-Output ""
-    Write-Output "> Restoring existing config files..."
-
-    Get-ChildItem -Path "$backupDir" -Recurse | Move-Item -Destination "$configDir"
-    Remove-Item "$backupDir" -Recurse -Force
-}
 
 # Quote a value so it survives CommandLineToArgvW parsing in the child process: double any backslash run that
 # precedes a quote or the closing quote, and escape embedded quotes, before wrapping the value in quotes.
@@ -308,13 +276,12 @@ if ($null -ne $debloatProcess) {
     $exitCode = $debloatProcess.ExitCode
 }
 
-# Remove all remaining script files, except for configs, logs and backups
+# Remove all remaining script files, except for logs and backups
 if (Test-Path $tempWorkPath) {
     Write-Output ""
     Write-Output "> Cleaning up..."
 
-    # Cleanup, remove Win11Debloat directory
-    Get-ChildItem -Path $tempWorkPath -Exclude Config,Logs,Backups | Remove-Item -Recurse -Force
+    Get-ChildItem -Path $tempWorkPath -Exclude Logs,Backups | Remove-Item -Recurse -Force
 }
 
 Write-Output ""

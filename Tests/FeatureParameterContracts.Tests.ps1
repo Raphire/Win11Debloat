@@ -43,7 +43,7 @@ Describe 'FeatureId parameter contracts' {
         foreach ($feature in $config.Features) {
             $entry = $catalog.Features.($feature.FeatureId)
             $entry.ApplyText | Should -Not -BeNullOrEmpty -Because $feature.FeatureId
-            if ($feature.RegistryUndoKey -or $feature.FeatureId -in @('EnableWindowsSandbox', 'EnableWindowsSubsystemForLinux')) {
+            if ($feature.RegistryUndoKey -or $feature.FeatureId -in @('EnableWindowsSandbox', 'EnableWindowsSubsystemForLinux', 'DisableStoreSearchSuggestions')) {
                 $entry.UndoLabel | Should -Not -BeNullOrEmpty -Because $feature.FeatureId
                 $entry.ApplyUndoText | Should -Not -BeNullOrEmpty -Because $feature.FeatureId
             }

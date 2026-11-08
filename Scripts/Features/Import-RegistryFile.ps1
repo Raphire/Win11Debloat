@@ -53,7 +53,14 @@ function Import-RegistryFile {
 
                 try {
                     $global:LASTEXITCODE = 0
-                    $output = reg import $targetRegFilePath 2>&1
+                    $previousEap = $ErrorActionPreference
+                    $ErrorActionPreference = 'Continue'
+                    try {
+                        $output = reg import $targetRegFilePath 2>&1
+                    }
+                    finally {
+                        $ErrorActionPreference = $previousEap
+                    }
                     $importExitCode = $LASTEXITCODE
 
                     if ($output) {
@@ -66,15 +73,29 @@ function Import-RegistryFile {
                     }
                 }
                 catch {
-                    $result.Error = $_.Exception.Message
-                    $result.ExitCode = if ($LASTEXITCODE -ne 0) { $LASTEXITCODE } else { 1 }
+                    $caughtExitCode = $LASTEXITCODE
+                    $errorMessage = $_.Exception.Message
+                    $isSuccessBanner = $errorMessage -like '*The operation completed successfully*'
+
+                    if (($caughtExitCode -eq 0) -and $isSuccessBanner) {
+                        $result.ExitCode = 0
+                        $result.Error = $null
+                        if (-not $result.Output -or @($result.Output).Count -eq 0) {
+                            $result.Output = @($errorMessage)
+                        }
+                    }
+                    else {
+                        $result.Error = $errorMessage
+                        $result.ExitCode = if ($caughtExitCode -ne 0) { $caughtExitCode } else { 1 }
+                    }
                 }
 
                 return $result
             } -ArgumentList $targetRegFilePath
 
             $regOutput = @($regResult.Output)
-            $hasSuccess = ($regResult.ExitCode -eq 0) -and -not $regResult.Error
+            $isSuccessBanner = [bool]($regResult.Error -and ($regResult.Error -like '*The operation completed successfully*'))
+            $hasSuccess = ($regResult.ExitCode -eq 0) -and (-not $regResult.Error -or $isSuccessBanner)
 
             if ($regOutput) {
                 foreach ($line in $regOutput) {

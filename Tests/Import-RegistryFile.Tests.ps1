@@ -75,4 +75,19 @@ Describe 'Import-RegistryFile' {
         Should -Invoke Invoke-NonBlocking -Times 1 -Exactly
         Should -Invoke Invoke-RegistryOperationsFromRegFile -Times 0 -Exactly
     }
+
+    It 'does not treat the reg import success banner as a failure' {
+        Mock Invoke-NonBlocking {
+            [PSCustomObject]@{
+                Output = @('The operation completed successfully.')
+                ExitCode = 0
+                Error = 'The operation completed successfully.'
+            }
+        }
+
+        Import-RegistryFile -message 'Apply' -path 'feature.reg' | Should -BeTrue
+
+        Should -Invoke Invoke-RegistryOperationsFromRegFile -Times 0 -Exactly
+        Should -Invoke Write-Warning -Times 0 -Exactly
+    }
 }

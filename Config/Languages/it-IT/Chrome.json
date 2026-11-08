@@ -252,7 +252,6 @@
   "TweaksAlreadyAppliedTooltip": "Questa modifica è già applicata e non può essere annullata automaticamente. Visita la wiki di Win11Debloat per le istruzioni su come annullare manualmente questa modifica.",
   "DeployChangeRemoveApps_one": "Rimuovi {0} applicazione",
   "DeployChangeRemoveApps_other": "Rimuovi {0} applicazioni",
-  "DeployChangeUndoPrefix": "Annulla: {0}",
   "DeployNoChangesSelectedMessage": "Non è stata selezionata alcuna modifica.",
   "DeploySelectedChangesTitle": "Modifiche selezionate",
   "DeployUserDescriptionCurrentUser": "Il profilo dell'utente attualmente connesso",

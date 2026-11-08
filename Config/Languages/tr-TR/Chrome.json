@@ -270,7 +270,6 @@
 
   "DeployChangeRemoveApps_one": "{0} uygulamayı kaldır",
   "DeployChangeRemoveApps_other": "{0} uygulamayı kaldır",
-  "DeployChangeUndoPrefix": "Geri al: {0}",
   "DeployNoChangesSelectedMessage": "Seçili değişiklik yok.",
   "DeploySelectedChangesTitle": "Seçilen değişiklikler",
   "DeployUserDescriptionCurrentUser": "Şu anda oturum açmış kullanıcı profili",

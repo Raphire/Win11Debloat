@@ -252,7 +252,6 @@
   "TweaksAlreadyAppliedTooltip": "此微調已套用，且無法自動復原。請參閱 Win11Debloat Wiki 以了解如何手動還原此變更。",
   "DeployChangeRemoveApps_one": "移除 {0} 個應用程式",
   "DeployChangeRemoveApps_other": "移除 {0} 個應用程式",
-  "DeployChangeUndoPrefix": "復原：{0}",
   "DeployNoChangesSelectedMessage": "未選取任何變更。",
   "DeploySelectedChangesTitle": "選取的變更",
   "DeployUserDescriptionCurrentUser": "目前登入的使用者設定檔",

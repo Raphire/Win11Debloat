@@ -275,7 +275,6 @@
   "DeployChangeRemoveApps_one": "Remover {0} aplicativo",
   "DeployChangeRemoveApps_other": "Remover {0} aplicativos",
   "DeployChangeRemoveApps_many": "Remover {0} de aplicativos",
-  "DeployChangeUndoPrefix": "Desfazer: {0}",
   "DeployNoChangesSelectedMessage": "Nenhuma alteração foi selecionada.",
   "DeploySelectedChangesTitle": "Alterações selecionadas",
   "DeployUserDescriptionCurrentUser": "O perfil do usuário atualmente conectado",

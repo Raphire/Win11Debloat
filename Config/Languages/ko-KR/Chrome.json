@@ -252,7 +252,6 @@
   "TweaksAlreadyAppliedTooltip": "이 조정 항목은 이미 적용되어 자동으로 실행 취소할 수 없습니다. 이 변경 사항을 수동으로 되돌리는 방법은 Win11Debloat 위키를 참조하세요.",
   "DeployChangeRemoveApps_one": "앱 {0}개 제거",
   "DeployChangeRemoveApps_other": "앱 {0}개 제거",
-  "DeployChangeUndoPrefix": "실행 취소: {0}",
   "DeployNoChangesSelectedMessage": "선택된 변경 사항이 없습니다.",
   "DeploySelectedChangesTitle": "선택한 변경 사항",
   "DeployUserDescriptionCurrentUser": "현재 로그인한 사용자 프로필",

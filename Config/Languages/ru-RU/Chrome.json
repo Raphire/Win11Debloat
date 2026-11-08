@@ -262,7 +262,6 @@
   "DeployChangeRemoveApps_few": "Удалить {0} приложения",
   "DeployChangeRemoveApps_many": "Удалить {0} приложений",
   "DeployChangeRemoveApps_other": "Удалить {0} приложений",
-  "DeployChangeUndoPrefix": "Отменить: {0}",
   "DeployNoChangesSelectedMessage": "Изменения не выбраны.",
   "DeploySelectedChangesTitle": "Выбранные изменения",
   "DeployUserDescriptionCurrentUser": "Профиль пользователя, который сейчас вошел в систему",

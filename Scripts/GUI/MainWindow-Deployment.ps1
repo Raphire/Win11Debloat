@@ -117,12 +117,7 @@ function New-Overview {
     }
 
     foreach ($tweakAction in @(Get-PendingTweakActions -Window $Window -ShowAppliedTweaksMode:$showAppliedTweaksMode)) {
-        if ($tweakAction.Action -eq 'Undo') {
-            $changesList += Get-Translation -Key 'DeployChangeUndoPrefix' -FormatArgs @($tweakAction.Label)
-        }
-        else {
-            $changesList += $tweakAction.Label
-        }
+        $changesList += $tweakAction.Label
     }
 
     return $changesList

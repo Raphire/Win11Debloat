@@ -195,6 +195,35 @@ Describe 'Restore-RegistryBackupState' {
 
         Should -Invoke Restore-RegistryKeySnapshot -Times 0 -Exactly
     }
+
+    It 'continues restoring remaining snapshots when one fails, then reports the failure' {
+        Mock Write-Warning {}
+        Mock Restore-RegistryKeySnapshot { throw 'access denied' } -ParameterFilter { $Snapshot.Path -eq 'HKEY_CURRENT_USER\Software\One' }
+
+        { Restore-RegistryBackupState -Backup $script:backup } |
+            Should -Throw 'Registry restore finished with 1 failed key(s). See console for details.'
+
+        Should -Invoke Restore-RegistryKeySnapshot -Times 2 -Exactly
+        Should -Invoke Restore-RegistryKeySnapshot -Times 1 -Exactly -ParameterFilter { $Snapshot.Path -eq 'HKEY_CURRENT_USER\Software\Two' }
+    }
+
+    It 'rejects a malformed backup before restoring any snapshot' {
+        $script:backup.RegistryKeys = @(
+            [PSCustomObject]@{ Path = 'HKEY_CURRENT_USER\Software\One'; Exists = $true; Values = @(); SubKeys = @() }
+            [PSCustomObject]@{
+                Path = 'HKEY_CURRENT_USER\Software\Two'; Exists = $true; Values = @()
+                SubKeys = @(
+                    [PSCustomObject]@{ Path = 'HKEY_CURRENT_USER\Software\Two\Child'; Exists = $true; Values = @(); SubKeys = @() }
+                    [PSCustomObject]@{ Path = 'HKEY_CURRENT_USER\Software\Two\Child'; Exists = $true; Values = @(); SubKeys = @() }
+                )
+            }
+        )
+
+        { Restore-RegistryBackupState -Backup $script:backup } |
+            Should -Throw '*duplicate or unsupported registry child path*'
+
+        Should -Invoke Restore-RegistryKeySnapshot -Times 0 -Exactly
+    }
 }
 
 Describe 'Restore executable warning dialog' {
@@ -237,37 +266,5 @@ Describe 'Restore executable warning dialog' {
         $result = Show-RestoreBackupWindow
         $result.RestoredRegistry | Should -BeTrue
         Should -Invoke Show-MessageBox -Times 1 -Exactly -ParameterFilter { $DefaultResult -eq 'Cancel' }
-    }
-
-    It 'continues restoring remaining snapshots when one fails, then reports the failure' {
-        Mock Write-Warning {}
-        Mock Restore-RegistryKeySnapshot {
-            param($Snapshot)
-            if ($Snapshot.Path -eq 'HKEY_CURRENT_USER\Software\One') { throw 'access denied' }
-        }
-
-        { Restore-RegistryBackupState -Backup $script:backup } |
-            Should -Throw 'Registry restore finished with 1 failed key(s). See console for details.'
-
-        Should -Invoke Restore-RegistryKeySnapshot -Times 2 -Exactly
-        Should -Invoke Restore-RegistryKeySnapshot -Times 1 -Exactly -ParameterFilter { $Snapshot.Path -eq 'HKEY_CURRENT_USER\Software\Two' }
-    }
-
-    It 'rejects a malformed backup before restoring any snapshot' {
-        $script:backup.RegistryKeys = @(
-            [PSCustomObject]@{ Path = 'HKEY_CURRENT_USER\Software\One'; Exists = $true; Values = @(); SubKeys = @() }
-            [PSCustomObject]@{
-                Path = 'HKEY_CURRENT_USER\Software\Two'; Exists = $true; Values = @()
-                SubKeys = @(
-                    [PSCustomObject]@{ Path = 'HKEY_CURRENT_USER\Software\Two\Child'; Exists = $true; Values = @(); SubKeys = @() }
-                    [PSCustomObject]@{ Path = 'HKEY_CURRENT_USER\Software\Two\Child'; Exists = $true; Values = @(); SubKeys = @() }
-                )
-            }
-        )
-
-        { Restore-RegistryBackupState -Backup $script:backup } |
-            Should -Throw '*duplicate or unsupported registry child path*'
-
-        Should -Invoke Restore-RegistryKeySnapshot -Times 0 -Exactly
     }
 }

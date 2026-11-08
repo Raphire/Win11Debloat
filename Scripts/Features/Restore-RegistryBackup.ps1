@@ -210,20 +210,22 @@ function Restore-RegistryBackupState {
         }
 
         Write-Host "Applying registry restore from $($rootSnapshots.Count) root snapshot(s)."
-        $failures = [System.Collections.Generic.List[string]]::new()
+        $failureCount = 0
 
         foreach ($rootSnapshot in $rootSnapshots) {
             try {
                 Restore-RegistryKeySnapshot -Snapshot $rootSnapshot
             }
             catch {
-                $failures.Add("$($rootSnapshot.Path): $($_.Exception.Message)")
+                $failureCount++
                 Write-Warning "Failed to restore '$($rootSnapshot.Path)': $($_.Exception.Message)"
             }
         }
 
-        if ($failures.Count -gt 0) {
-            throw "Registry restore finished with $($failures.Count) failed key(s):`n$($failures -join "`n")"
+        if ($failureCount -gt 0) {
+            $restoreError = [System.InvalidOperationException]::new("Registry restore finished with $failureCount failed key(s). See console for details.")
+            $restoreError.Data['RegistryRestoreFailureCount'] = $failureCount
+            throw $restoreError
         }
     }
 

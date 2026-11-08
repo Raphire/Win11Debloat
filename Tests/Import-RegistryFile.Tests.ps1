@@ -83,6 +83,15 @@ Describe 'Import-RegistryFile' {
         }
 
         function global:reg {
+            <#
+                .SYNOPSIS
+                Test stand-in for reg.exe that emits the success banner on the error stream.
+
+                .DESCRIPTION
+                Mimics a successful Windows reg import under Windows PowerShell 5.1 by writing
+                "The operation completed successfully." as a NativeCommandError and setting
+                LASTEXITCODE to 0, so Import-RegistryFile's stderr handling can be exercised.
+            #>
             [CmdletBinding()]
             param(
                 [Parameter(ValueFromRemainingArguments = $true)]

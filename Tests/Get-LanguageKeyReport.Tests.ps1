@@ -1,7 +1,7 @@
 BeforeAll {
     . (Join-Path $PSScriptRoot '..\Scripts\FileIO\Import-JsonFile.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\FileIO\Import-LanguageFile.ps1')
-    . (Join-Path $PSScriptRoot '..\Scripts\FileIO\Get-LanguageKeyReport.ps1')
+    . (Join-Path $PSScriptRoot '..\Tools\Get-LanguageKeyReport.ps1')
 
     # Writes a language folder from plain hashtables, so each test states exactly which keys a language ships.
     function New-LanguageFolder {

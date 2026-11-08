@@ -5,7 +5,7 @@
     .DESCRIPTION
         Plural-aware: a plural family in en-US (for example AppSelectionStatusSelected_one and _other) is expected in
         each language as one key per category that language's Get-PluralCategory rule can return, so ja-JP is not
-        reported missing its _one keys and pt-BR is not reported for having _many. A shipped _other key is always allowed. Requires Import-LanguageFile.ps1.
+        reported missing its _one keys and pt-BR is not reported for having _many. A shipped _other key is always allowed. Requires Import-JsonFile.ps1 and Import-LanguageFile.ps1 from Scripts/FileIO.
         Reports only; it never changes a language folder.
 
     .PARAMETER LanguagesPath
@@ -19,7 +19,7 @@
 #>
 function Get-LanguageKeyReport {
     param(
-        [string]$LanguagesPath = (Join-Path $PSScriptRoot '..\..\Config\Languages'),
+        [string]$LanguagesPath = (Join-Path $PSScriptRoot '..\Config\Languages'),
         [string[]]$LanguageCode
     )
 

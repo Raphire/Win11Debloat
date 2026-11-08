@@ -144,6 +144,8 @@ Win11Debloat/
 ├── Assets/                      # Static assets (icons, start menu templates)
 ├── Tools/                       # Development scripts (excluded from release packages)
 │   ├── Build-Release.ps1        # Runtime release packaging
+│   ├── Get-LanguageKeyReport.ps1 # Compares language catalogs with en-US (plural-aware)
+│   ├── Report-LanguageKeys.ps1  # Prints the missing/extra language key report
 │   └── Run-Tests.ps1            # Pester test runner (optionally bootstraps Pester)
 ├── Tests/                       # Pester tests for script and XAML contracts
 ├── Backups/                     # Registry backups (generated during use)

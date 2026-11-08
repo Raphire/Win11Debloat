@@ -55,4 +55,4 @@ jobs:
 
       - name: Report missing and extra language keys
         shell: powershell
-        run: ./Scripts/Report-LanguageKeys.ps1
+        run: ./Tools/Report-LanguageKeys.ps1

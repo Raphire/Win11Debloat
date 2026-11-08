@@ -15,9 +15,10 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
-. (Join-Path $PSScriptRoot 'FileIO\Import-JsonFile.ps1')
-. (Join-Path $PSScriptRoot 'FileIO\Import-LanguageFile.ps1')
-. (Join-Path $PSScriptRoot 'FileIO\Get-LanguageKeyReport.ps1')
+$scriptsPath = Join-Path (Split-Path -Parent $PSScriptRoot) 'Scripts'
+. (Join-Path $scriptsPath 'FileIO\Import-JsonFile.ps1')
+. (Join-Path $scriptsPath 'FileIO\Import-LanguageFile.ps1')
+. (Join-Path $PSScriptRoot 'Get-LanguageKeyReport.ps1')
 
 $reports = @(Get-LanguageKeyReport -LanguageCode $LanguageCode)
 

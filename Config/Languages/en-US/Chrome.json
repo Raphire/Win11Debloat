@@ -213,7 +213,6 @@
   "RestoreOperationFailedMessage": "Restore failed: {0}",
   "RestoreRegistryFailures_one": "Registry restore failed for {0} key. See console for details.",
   "RestoreRegistryFailures_other": "Registry restore failed for {0} keys. See console for details.",
-  "RestoreOperationFailedSummary": "Registry restore failed. See console for details.",
   "RestoreOperationFailedTitle": "Backup Restore Failed",
   "RestoreUnexpectedError": "An unexpected error occurred.",
 

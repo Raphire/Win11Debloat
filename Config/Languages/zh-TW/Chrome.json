@@ -200,7 +200,6 @@
   "RestoreOperationFailedMessage": "還原失敗：{0}",
   "RestoreRegistryFailures_one": "{0} 個登錄機碼還原失敗。請查看主控台以了解詳細資料。",
   "RestoreRegistryFailures_other": "{0} 個登錄機碼還原失敗。請查看主控台以了解詳細資料。",
-  "RestoreOperationFailedSummary": "登錄還原失敗。請查看主控台以了解詳細資料。",
   "RestoreOperationFailedTitle": "還原備份失敗",
   "RestoreUnexpectedError": "發生未預期的錯誤。",
   "ImportExportCategoryApplications": "應用程式",

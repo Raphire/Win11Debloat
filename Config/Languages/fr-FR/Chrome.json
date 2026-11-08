@@ -200,7 +200,6 @@
   "RestoreOperationFailedMessage": "Échec de la restauration : {0}",
   "RestoreRegistryFailures_one": "Échec de la restauration du Registre pour {0} clé. Consultez la console pour plus de détails.",
   "RestoreRegistryFailures_other": "Échec de la restauration du Registre pour {0} clés. Consultez la console pour plus de détails.",
-  "RestoreOperationFailedSummary": "Échec de la restauration du Registre. Consultez la console pour plus de détails.",
   "RestoreOperationFailedTitle": "Échec de la restauration de la sauvegarde",
   "RestoreUnexpectedError": "Une erreur inattendue s'est produite.",
   "ImportExportCategoryApplications": "Applications",

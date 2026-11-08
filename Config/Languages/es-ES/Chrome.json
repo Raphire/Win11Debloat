@@ -200,7 +200,6 @@
   "RestoreOperationFailedMessage": "Error al restaurar: {0}",
   "RestoreRegistryFailures_one": "La restauración del Registro ha fallado para {0} clave. Consulte la consola para obtener más información.",
   "RestoreRegistryFailures_other": "La restauración del Registro ha fallado para {0} claves. Consulte la consola para obtener más información.",
-  "RestoreOperationFailedSummary": "Error al restaurar el Registro. Consulte la consola para obtener más información.",
   "RestoreOperationFailedTitle": "Error al restaurar la copia de seguridad",
   "RestoreUnexpectedError": "Se ha producido un error inesperado.",
   "ImportExportCategoryApplications": "Aplicaciones",

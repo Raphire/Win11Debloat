@@ -200,7 +200,6 @@
   "RestoreOperationFailedMessage": "恢复失败：{0}",
   "RestoreRegistryFailures_one": "{0} 个注册表项恢复失败。详情请查看控制台。",
   "RestoreRegistryFailures_other": "{0} 个注册表项恢复失败。详情请查看控制台。",
-  "RestoreOperationFailedSummary": "注册表恢复失败。详情请查看控制台。",
   "RestoreOperationFailedTitle": "恢复备份失败",
   "RestoreUnexpectedError": "发生意外错误。",
   "ImportExportCategoryApplications": "应用",

@@ -204,7 +204,6 @@
   "RestoreRegistryFailures_few": "Не удалось восстановить {0} раздела реестра. Дополнительные сведения см. в консоли.",
   "RestoreRegistryFailures_many": "Не удалось восстановить {0} разделов реестра. Дополнительные сведения см. в консоли.",
   "RestoreRegistryFailures_other": "Не удалось восстановить {0} разделов реестра. Дополнительные сведения см. в консоли.",
-  "RestoreOperationFailedSummary": "Не удалось восстановить реестр. Дополнительные сведения см. в консоли.",
   "RestoreOperationFailedTitle": "Сбой восстановления из резервной копии",
   "RestoreUnexpectedError": "Произошла непредвиденная ошибка.",
   "ImportExportCategoryApplications": "Приложения",

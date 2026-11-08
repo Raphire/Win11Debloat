@@ -213,7 +213,6 @@
   "RestoreOperationFailedMessage": "Geri yükleme başarısız oldu: {0}",
   "RestoreRegistryFailures_one": "{0} kayıt defteri anahtarı geri yüklenemedi. Ayrıntılar için konsola bakın.",
   "RestoreRegistryFailures_other": "{0} kayıt defteri anahtarı geri yüklenemedi. Ayrıntılar için konsola bakın.",
-  "RestoreOperationFailedSummary": "Kayıt defteri geri yüklenemedi. Ayrıntılar için konsola bakın.",
   "RestoreOperationFailedTitle": "Yedek geri yüklenemedi",
   "RestoreUnexpectedError": "Beklenmeyen bir hata oluştu.",
 

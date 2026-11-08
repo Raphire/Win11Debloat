@@ -200,7 +200,6 @@
   "RestoreOperationFailedMessage": "Wiederherstellung fehlgeschlagen: {0}",
   "RestoreRegistryFailures_one": "Wiederherstellung der Registrierung für {0} Schlüssel fehlgeschlagen. Details finden Sie in der Konsole.",
   "RestoreRegistryFailures_other": "Wiederherstellung der Registrierung für {0} Schlüssel fehlgeschlagen. Details finden Sie in der Konsole.",
-  "RestoreOperationFailedSummary": "Die Wiederherstellung der Registrierung ist fehlgeschlagen. Details finden Sie in der Konsole.",
   "RestoreOperationFailedTitle": "Wiederherstellung der Sicherung fehlgeschlagen",
   "RestoreUnexpectedError": "Ein unerwarteter Fehler ist aufgetreten.",
   "ImportExportCategoryApplications": "Anwendungen",

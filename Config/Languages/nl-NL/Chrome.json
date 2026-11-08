@@ -200,7 +200,6 @@
   "RestoreOperationFailedMessage": "Terugzetten mislukt: {0}",
   "RestoreRegistryFailures_one": "Het terugzetten van {0} registersleutel is mislukt. Zie de console voor meer informatie.",
   "RestoreRegistryFailures_other": "Het terugzetten van {0} registersleutels is mislukt. Zie de console voor meer informatie.",
-  "RestoreOperationFailedSummary": "Het terugzetten van de registerback-up is mislukt. Zie de console voor meer informatie.",
   "RestoreOperationFailedTitle": "Back-up terugzetten mislukt",
   "RestoreUnexpectedError": "Er is een onverwachte fout opgetreden.",
   "ImportExportCategoryApplications": "Apps",

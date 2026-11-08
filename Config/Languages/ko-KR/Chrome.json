@@ -200,7 +200,6 @@
   "RestoreOperationFailedMessage": "복원하지 못했습니다: {0}",
   "RestoreRegistryFailures_one": "레지스트리 키 {0}개 복원에 실패했습니다. 자세한 내용은 콘솔을 참조하세요.",
   "RestoreRegistryFailures_other": "레지스트리 키 {0}개 복원에 실패했습니다. 자세한 내용은 콘솔을 참조하세요.",
-  "RestoreOperationFailedSummary": "레지스트리 복원에 실패했습니다. 자세한 내용은 콘솔을 참조하세요.",
   "RestoreOperationFailedTitle": "백업 복원 실패",
   "RestoreUnexpectedError": "예기치 않은 오류가 발생했습니다.",
   "ImportExportCategoryApplications": "앱",

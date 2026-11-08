@@ -200,7 +200,6 @@
   "RestoreOperationFailedMessage": "Ripristino non riuscito: {0}",
   "RestoreRegistryFailures_one": "Ripristino del Registro di sistema non riuscito per {0} chiave. Consulta la console per i dettagli.",
   "RestoreRegistryFailures_other": "Ripristino del Registro di sistema non riuscito per {0} chiavi. Consulta la console per i dettagli.",
-  "RestoreOperationFailedSummary": "Ripristino del Registro di sistema non riuscito. Consulta la console per i dettagli.",
   "RestoreOperationFailedTitle": "Ripristino del backup non riuscito",
   "RestoreUnexpectedError": "Si è verificato un errore imprevisto.",
   "ImportExportCategoryApplications": "Applicazioni",

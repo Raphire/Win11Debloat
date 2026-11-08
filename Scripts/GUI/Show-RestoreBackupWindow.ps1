@@ -119,7 +119,7 @@ function Show-RestoreBackupWindow {
             Get-Translation -Key 'RestoreRegistryFailures' -Count $failureCount -FormatArgs @($failureCount)
         }
         else {
-            Get-Translation -Key 'RestoreOperationFailedSummary'
+            Get-Translation -Key 'RestoreOperationFailedMessage' -FormatArgs @($errorMessage)
         }
         Write-Error "Restore operation failed: $errorMessage" -ErrorAction Continue
         Show-MessageBox -Title (Get-Translation -Key 'RestoreOperationFailedTitle') -Message $dialogMessage -Icon Error

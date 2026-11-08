@@ -608,8 +608,8 @@
       "Category": "AI",
       "RegistryKey": "Disable_Agent_Connectors.reg",
       "ApplyText": "Disabling agent connectors",
-      "UndoLabel": "Enable agent connectors",
-      "ApplyUndoText": "Enabling agent connectors",
+      "UndoLabel": "Stop blocking agent connectors",
+      "ApplyUndoText": "Removing the block on agent connectors",
       "RegistryUndoKey": "Enable_Agent_Connectors.reg",
       "MinVersion": 26100,
       "MaxVersion": null

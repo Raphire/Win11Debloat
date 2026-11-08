@@ -120,8 +120,8 @@
       "Label": "Disable agent connectors",
       "ToolTip": "This will turn off agent connectors, which allow AI agents on this PC to connect to apps and services through Windows. This feature uses a policy, which may lock down the related setting.",
       "ApplyText": "Disabling agent connectors",
-      "UndoLabel": "Enable agent connectors",
-      "ApplyUndoText": "Enabling agent connectors"
+      "UndoLabel": "Stop blocking agent connectors",
+      "ApplyUndoText": "Removing the block on agent connectors"
     },
     "DisableAISvcAutoStart": {
       "Label": "Prevent AI service from starting automatically",

@@ -589,6 +589,32 @@
       "MaxVersion": null
     },
     {
+      "FeatureId": "DisableSettingsAgent",
+      "Label": "Disable AI-powered search in the Settings app",
+      "ToolTip": "This will disable the agentic search experience in the Settings app, which uses an AI model to answer natural language searches. Search results will be limited to the standard indexed and semantic search. This feature uses a policy, which may lock down the related setting.",
+      "Category": "AI",
+      "RegistryKey": "Disable_Settings_Agent.reg",
+      "ApplyText": "Disabling AI-powered search in the Settings app",
+      "UndoLabel": "Enable AI-powered search in the Settings app",
+      "ApplyUndoText": "Enabling AI-powered search in the Settings app",
+      "RegistryUndoKey": "Enable_Settings_Agent.reg",
+      "MinVersion": 26100,
+      "MaxVersion": null
+    },
+    {
+      "FeatureId": "DisableAgentConnectors",
+      "Label": "Disable agent connectors",
+      "ToolTip": "This will turn off agent connectors, which allow AI agents on this PC to connect to apps and services through Windows. This feature uses a policy, which may lock down the related setting.",
+      "Category": "AI",
+      "RegistryKey": "Disable_Agent_Connectors.reg",
+      "ApplyText": "Disabling agent connectors",
+      "UndoLabel": "Enable agent connectors",
+      "ApplyUndoText": "Enabling agent connectors",
+      "RegistryUndoKey": "Enable_Agent_Connectors.reg",
+      "MinVersion": 26100,
+      "MaxVersion": null
+    },
+    {
       "FeatureId": "DisableAISvcAutoStart",
       "Label": "Prevent AI service from starting automatically",
       "ToolTip": "This will set the WSAIFabricSvc service to manual startup, preventing the service from starting automatically with Windows.",

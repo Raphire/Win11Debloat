@@ -109,6 +109,20 @@
       "UndoLabel": "Enable Click To Do, AI text & image analysis",
       "ApplyUndoText": "Enabling Click to Do"
     },
+    "DisableSettingsAgent": {
+      "Label": "Disable AI-powered search in the Settings app",
+      "ToolTip": "This will disable the agentic search experience in the Settings app, which uses an AI model to answer natural language searches. Search results will be limited to the standard indexed and semantic search. This feature uses a policy, which may lock down the related setting.",
+      "ApplyText": "Disabling AI-powered search in the Settings app",
+      "UndoLabel": "Enable AI-powered search in the Settings app",
+      "ApplyUndoText": "Enabling AI-powered search in the Settings app"
+    },
+    "DisableAgentConnectors": {
+      "Label": "Disable agent connectors",
+      "ToolTip": "This will turn off agent connectors, which allow AI agents on this PC to connect to apps and services through Windows. This feature uses a policy, which may lock down the related setting.",
+      "ApplyText": "Disabling agent connectors",
+      "UndoLabel": "Enable agent connectors",
+      "ApplyUndoText": "Enabling agent connectors"
+    },
     "DisableAISvcAutoStart": {
       "Label": "Prevent AI service from starting automatically",
       "ToolTip": "This will set the WSAIFabricSvc service to manual startup, preventing the service from starting automatically with Windows.",

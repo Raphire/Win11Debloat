@@ -78,15 +78,39 @@ Describe 'Import-RegistryFile' {
 
     It 'does not treat the reg import success banner as a failure' {
         Mock Invoke-NonBlocking {
-            [PSCustomObject]@{
-                Output = @('The operation completed successfully.')
-                ExitCode = 0
-                Error = 'The operation completed successfully.'
-            }
+            param($ScriptBlock, $ArgumentList)
+            & $ScriptBlock @ArgumentList
         }
 
-        Import-RegistryFile -message 'Apply' -path 'feature.reg' | Should -BeTrue
+        function global:reg {
+            [CmdletBinding()]
+            param(
+                [Parameter(ValueFromRemainingArguments = $true)]
+                [object[]]$Arguments
+            )
 
+            $exception = [System.Management.Automation.RemoteException]::new('The operation completed successfully.')
+            $errorRecord = [System.Management.Automation.ErrorRecord]::new(
+                $exception,
+                'NativeCommandError',
+                [System.Management.Automation.ErrorCategory]::NotSpecified,
+                'reg.exe'
+            )
+            $PSCmdlet.WriteError($errorRecord)
+            $global:LASTEXITCODE = 0
+        }
+
+        $previousEap = $ErrorActionPreference
+        $ErrorActionPreference = 'Stop'
+        try {
+            Import-RegistryFile -message 'Apply' -path 'feature.reg' | Should -BeTrue
+        }
+        finally {
+            $ErrorActionPreference = $previousEap
+            Remove-Item -Path 'function:global:reg' -ErrorAction SilentlyContinue
+        }
+
+        Should -Invoke Invoke-NonBlocking -Times 1 -Exactly
         Should -Invoke Invoke-RegistryOperationsFromRegFile -Times 0 -Exactly
         Should -Invoke Write-Warning -Times 0 -Exactly
     }

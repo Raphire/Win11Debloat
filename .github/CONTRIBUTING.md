@@ -447,7 +447,7 @@ Add a matching entry for your `GroupId` to `Config/Languages/en-US/Features.json
 
 ### Localizing UI Text
 
-Feature labels and operation messages, group text, category labels, and app names live in `Config/Languages/en-US/`, not `Config/Features.json`. CLI mode uses English; the GUI uses the selected language with English fallback. Missing English entries display the raw ID.
+GUI text lives in `Config/Languages/en-US/`, not hardcoded in `Schemas/*.xaml`, `Scripts/GUI/*.ps1` or `Config/Features.json`. Adding or changing a Feature, Category, UI Group, or App means updating the matching English entry, or the GUI falls back to showing the raw ID.
 
 - `Config/Languages/en-US/Features.json`, under `"Features"`, keyed by `FeatureId`: `Label` describes the feature, `ToolTip` explains its impact, and `ApplyText` is the operation message. For features supporting undo, also add `UndoLabel` and `ApplyUndoText`.
 - `Config/Languages/en-US/Features.json`, under `"UiGroups"`, keyed by `GroupId`. Add `Label`, `ToolTip`, and a `Values` map of `FeatureId: "Option label"` matching the group's `Values` array.

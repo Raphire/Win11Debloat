@@ -54,7 +54,7 @@ jobs:
         shell: powershell
         run: |
           $global:LASTEXITCODE = 0
-          ./Scripts/Run-Tests.ps1 -Bootstrap
+          ./Tools/Run-Tests.ps1 -Bootstrap
           if ($LASTEXITCODE -ne 0) { throw 'Release tests failed.' }
 
       - name: Commit version and create release tag
@@ -90,7 +90,7 @@ jobs:
         shell: powershell
         run: |
           $source = @(Get-ChildItem release-source -Directory)[0].FullName
-          & (Join-Path $source 'Scripts/Build-Release.ps1') -SourcePath $source -Version $env:RELEASE_TAG -OutputDirectory release-assets
+          & (Join-Path $source 'Tools/Build-Release.ps1') -SourcePath $source -Version $env:RELEASE_TAG -OutputDirectory release-assets
 
       - name: Create draft release
         shell: powershell

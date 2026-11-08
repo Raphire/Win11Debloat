@@ -27,8 +27,7 @@ $packageName = "Win11Debloat-$Version"
 $packagePath = Join-Path $workPath $packageName
 $archivePath = Join-Path $outputPath 'Win11Debloat.zip'
 $excludedPaths = @(
-    '.git', '.github', '.gitignore', 'Tests', 'Logs', 'Backups',
-    'Scripts/Build-Release.ps1', 'Scripts/Run-Tests.ps1',
+    '.git', '.github', '.gitignore', 'Tests', 'Tools', 'Logs', 'Backups',
     'LastUsedSettings.json', 'Config/LastUsedSettings.json'
 )
 

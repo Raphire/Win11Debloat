@@ -741,6 +741,19 @@
       "MaxVersion": null
     },
     {
+      "FeatureId": "DisableStartWebView2",
+      "Label": "Use native start menu rendering to reduce memory usage",
+      "ToolTip": "Reduces memory usage by preventing the start menu from using WebView2. This setting applies to all users.",
+      "Category": "Start Menu & Search",
+      "RegistryKey": "Disable_Start_WebView2.reg",
+      "ApplyText": "Disabling WebView2 in the start menu",
+      "UndoLabel": "Restore default start menu rendering",
+      "ApplyUndoText": "Restoring default start menu rendering",
+      "RegistryUndoKey": "Enable_Start_WebView2.reg",
+      "MinVersion": 22000,
+      "MaxVersion": null
+    },
+    {
       "FeatureId": "DisableSettings365Ads",
       "Label": "Hide Microsoft 365 Copilot ads in Settings Home",
       "ToolTip": "This will turn off the Microsoft 365 Copilot ads that appear in the Settings Home page.",

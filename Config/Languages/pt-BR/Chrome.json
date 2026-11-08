@@ -212,6 +212,10 @@
   "RestoreStartMenuAllUsersSuccessMessage": "O backup do Menu Iniciar foi restaurado com sucesso para todos os usuários. As alterações serão aplicadas na próxima vez que os usuários fizerem login.",
   "RestoreStartMenuCurrentUserSuccessMessage": "O backup do Menu Iniciar foi restaurado com sucesso para o usuário atual. As alterações serão aplicadas na próxima vez que você fizer login.",
   "RestoreOperationFailedMessage": "Falha na restauração: {0}",
+  "RestoreRegistryFailures_one": "Falha na restauração do Registro para {0} chave. Veja o console para detalhes.",
+  "RestoreRegistryFailures_other": "Falha na restauração do Registro para {0} chaves. Veja o console para detalhes.",
+  "RestoreRegistryFailures_many": "Falha na restauração do Registro para {0} chaves. Veja o console para detalhes.",
+  "RestoreOperationFailedTitle": "Falha na restauração do backup",
   "RestoreUnexpectedError": "Ocorreu um erro inesperado.",
 
   "ImportExportCategoryApplications": "Aplicativos",

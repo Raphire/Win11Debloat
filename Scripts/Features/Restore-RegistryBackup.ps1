@@ -246,9 +246,29 @@ function Restore-RegistryBackupState {
     $restoreAction = {
         param($normalizedBackup)
 
-        Write-Host "Applying registry restore from $(@($normalizedBackup.RegistryKeys).Count) root snapshot(s)."
-        foreach ($rootSnapshot in @($normalizedBackup.RegistryKeys)) {
-            Restore-RegistryKeySnapshot -Snapshot $rootSnapshot
+        $rootSnapshots = @($normalizedBackup.RegistryKeys)
+
+        foreach ($rootSnapshot in $rootSnapshots) {
+            Test-RegistryKeySnapshotCanBeRestored -Snapshot $rootSnapshot
+        }
+
+        Write-Host "Applying registry restore from $($rootSnapshots.Count) root snapshot(s)."
+        $failureCount = 0
+
+        foreach ($rootSnapshot in $rootSnapshots) {
+            try {
+                Restore-RegistryKeySnapshot -Snapshot $rootSnapshot
+            }
+            catch {
+                $failureCount++
+                Write-Warning "Failed to restore '$($rootSnapshot.Path)': $($_.Exception.Message)"
+            }
+        }
+
+        if ($failureCount -gt 0) {
+            $restoreError = [System.InvalidOperationException]::new("Registry restore finished with $failureCount failed key(s). See console for details.")
+            $restoreError.Data['RegistryRestoreFailureCount'] = $failureCount
+            throw $restoreError
         }
     }
 

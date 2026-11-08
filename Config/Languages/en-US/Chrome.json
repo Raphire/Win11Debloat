@@ -211,6 +211,9 @@
   "RestoreStartMenuAllUsersSuccessMessage": "The Start Menu backup was successfully restored for all users. The changes will apply the next time users sign in.",
   "RestoreStartMenuCurrentUserSuccessMessage": "The Start Menu backup was successfully restored for the current user. The changes will apply the next time you sign in.",
   "RestoreOperationFailedMessage": "Restore failed: {0}",
+  "RestoreRegistryFailures_one": "Registry restore failed for {0} key. See console for details.",
+  "RestoreRegistryFailures_other": "Registry restore failed for {0} keys. See console for details.",
+  "RestoreOperationFailedTitle": "Backup Restore Failed",
   "RestoreUnexpectedError": "An unexpected error occurred.",
 
   "ImportExportCategoryApplications": "Applications",

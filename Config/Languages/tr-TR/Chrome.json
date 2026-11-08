@@ -211,6 +211,9 @@
   "RestoreStartMenuAllUsersSuccessMessage": "Başlat menüsü yedeği tüm kullanıcılar için geri yüklendi. Değişiklikler, kullanıcılar bir sonraki oturum açışında uygulanır.",
   "RestoreStartMenuCurrentUserSuccessMessage": "Başlat menüsü yedeği geçerli kullanıcı için geri yüklendi. Değişiklikler bir sonraki oturum açışınızda uygulanır.",
   "RestoreOperationFailedMessage": "Geri yükleme başarısız oldu: {0}",
+  "RestoreRegistryFailures_one": "{0} kayıt defteri anahtarı geri yüklenemedi. Ayrıntılar için konsola bakın.",
+  "RestoreRegistryFailures_other": "{0} kayıt defteri anahtarı geri yüklenemedi. Ayrıntılar için konsola bakın.",
+  "RestoreOperationFailedTitle": "Yedek geri yüklenemedi",
   "RestoreUnexpectedError": "Beklenmeyen bir hata oluştu.",
 
   "ImportExportCategoryApplications": "Uygulamalar",

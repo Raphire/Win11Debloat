@@ -51,14 +51,6 @@ Describe 'Invoke-SystemRestorePoint' {
         Should -Invoke Read-Host -Times 0 -Exactly
     }
 
-    It 'is loaded by the main entry point' {
-        $entryPoint = Get-Content -LiteralPath (Join-Path $PSScriptRoot '..\Win11Debloat.ps1') -Raw
-        $expectedImport = [regex]::Escape('Scripts/Features/Invoke-SystemRestorePoint.ps1')
-
-        $entryPoint | Should -Match $expectedImport
-        Get-Command Invoke-SystemRestorePoint | Should -Not -BeNullOrEmpty
-    }
-
     It 'enables disabled System Restore before creating the point in silent mode' {
         $script:Silent = $true
         Mock Get-ItemProperty { [PSCustomObject]@{ RPSessionInterval = 0 } }

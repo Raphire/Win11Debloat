@@ -1,4 +1,4 @@
-[CmdletBinding(SupportsShouldProcess)]
+﻿[CmdletBinding(SupportsShouldProcess)]
 param (
     [switch]$CLI,
     [switch]$Silent,
@@ -31,6 +31,7 @@ param (
     [switch]$DisableStorageSense,
     [switch]$DisableUpdateASAP,
     [switch]$PreventUpdateAutoReboot,
+    [switch]$DisableDriverUpdates,
     [switch]$DisableDeliveryOptimization,
     [switch]$DisableDeviceAutoAppDownload,
     [switch]$DisableBing,
@@ -62,6 +63,7 @@ param (
     [switch]$DisableStartRecommended,
     [switch]$DisableStartAllApps, [switch]$StartAllAppsCategory, [switch]$StartAllAppsGrid, [switch]$StartAllAppsList,
     [switch]$DisableStartPhoneLink,
+    [switch]$DisableStartWebView2,
     [switch]$DisableCopilot,
     [switch]$DisableRecall,
     [switch]$DisableClickToDo,
@@ -171,7 +173,7 @@ if (-not $isAdmin) {
 }
 
 # Define script-level variables & paths
-$script:Version = "2026.08.24"
+$script:Version = "2026.10.30"
 $configPath = Join-Path $PSScriptRoot 'Config'
 # Deployment environments such as SCCM task sequences may not define LOCALAPPDATA.
 if ([string]::IsNullOrWhiteSpace($env:LOCALAPPDATA)) {

@@ -29,14 +29,14 @@
     },
     "DisableSuggestions": {
       "Label": "Tips en aanbevelingen in Windows uitschakelen",
-      "ToolTip": "Verwijdert veel storende meldingen, herinneringen en advertenties van synchronisatieproviders uit Windows. Voorkomt ook dat aanbevolen apps automatisch worden geïnstalleerd.",
+      "ToolTip": "Verwijdert veel storende meldingen, herinneringen, advertenties en andere onderbrekingen uit Windows. Voorkomt ook dat aanbevolen apps automatisch worden geïnstalleerd.",
       "ApplyText": "Tips, aanbevelingen en advertenties in Windows uitschakelen",
       "UndoLabel": "Tips en aanbevelingen in Windows inschakelen",
       "ApplyUndoText": "Tips, aanbevelingen en advertenties in Windows inschakelen"
     },
     "DisableNotifications": {
-      "Label": "Windows-meldingen uitschakelen",
-      "ToolTip": "Schakelt Windows-meldingen uit van apps zoals Discord, WhatsApp, Teams en Slack, en van andere afzenders.",
+      "Label": "Windows-systeem- en appmeldingen uitschakelen",
+      "ToolTip": "Schakelt de ingebouwde Windows-meldingen van het systeem en apps uit, waaronder meldingen van apps zoals Discord, WhatsApp, Teams en Slack.",
       "ApplyText": "Windows-meldingen en herinneringen uitschakelen",
       "UndoLabel": "Windows-meldingen en herinneringen inschakelen",
       "ApplyUndoText": "Windows-meldingen en herinneringen inschakelen"
@@ -159,6 +159,13 @@
       "ApplyText": "De sectie 'Alle apps' in het Startmenu uitschakelen",
       "UndoLabel": "De sectie 'Alle apps' in het Startmenu tonen",
       "ApplyUndoText": "De sectie 'Alle apps' in het Startmenu inschakelen"
+    },
+    "DisableStartWebView2": {
+      "Label": "Geheugengebruik van Windows Zoeken optimaliseren door WebView2 uit te schakelen",
+      "ToolTip": "Vermindert het geheugengebruik door te voorkomen dat Windows Zoeken WebView2 gebruikt. Deze instelling geldt voor alle gebruikers.",
+      "ApplyText": "WebView2 voor Windows Zoeken uitschakelen",
+      "UndoLabel": "Standaardwerking van Windows Zoeken herstellen",
+      "ApplyUndoText": "Standaardwerking van Windows Zoeken herstellen"
     },
     "DisableStartPhoneLink": {
       "Label": "Telefoonkoppeling in het Startmenu uitschakelen",
@@ -510,6 +517,13 @@
       "ApplyText": "Automatische herstarts na updates voorkomen zolang een gebruiker is aangemeld",
       "UndoLabel": "Automatische herstarts na updates toestaan zolang een gebruiker is aangemeld",
       "ApplyUndoText": "Automatische herstarts na updates toestaan zolang een gebruiker is aangemeld"
+    },
+    "DisableDriverUpdates": {
+      "Label": "Stuurprogramma-updates via Windows Update uitschakelen",
+      "ToolTip": "Voorkomt dat Windows automatisch stuurprogramma-updates downloadt en installeert via reguliere Windows-kwaliteitsupdates. Windows kan nog steeds automatisch stuurprogramma's voor nieuwe apparaten installeren. Stuurprogramma's die zijn opgenomen in beveiligingsupdates, essentiële updates of functie-updates kunnen nog steeds worden geïnstalleerd.",
+      "ApplyText": "Stuurprogramma-updates via Windows Update uitschakelen",
+      "UndoLabel": "Stuurprogramma-updates via Windows Update inschakelen",
+      "ApplyUndoText": "Stuurprogramma-updates via Windows Update inschakelen"
     },
     "DisableDeliveryOptimization": {
       "Label": "Update downloads van andere pc's blokkeren",

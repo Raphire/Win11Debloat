@@ -231,6 +231,7 @@ Describe 'Registry backup deletion permissions' {
 
 Describe 'Executable registry backup values' {
     BeforeEach {
+        Mock Write-Host {}
         $script:Params = @{}
         $script:RegfilesPath = Join-Path $PSScriptRoot '..\Regfiles'
         $script:Features = @{}
@@ -638,6 +639,7 @@ Describe 'Executable registry restore confirmation' {
         $script:Features = @{}
         foreach ($feature in $script:FeatureCatalog.Features) { $script:Features[$feature.FeatureId] = $feature }
         Mock Write-Error {}
+        Mock Write-Host {}
         Mock Restore-RegistryKeySnapshot {}
         Mock Invoke-WithLoadedRestoreHive {
             param($Target, $ScriptBlock, $ArgumentObject)
@@ -678,7 +680,6 @@ Describe 'Executable registry restore confirmation' {
         @{ Response = $null }
         @{ Response = 'true' }
     ) {
-        Mock Write-Host {}
         $backup = New-ExecutableTestBackup
         (Restore-RegistryBackupState -Backup $backup -ConfirmUntrustedValues { $Response }).Result | Should -BeFalse
         Should -Invoke Write-Host -Times 1 -Exactly -ParameterFilter { $Object -like 'Registry restore canceled:*' }
@@ -687,7 +688,6 @@ Describe 'Executable registry restore confirmation' {
     }
 
     It 'shows all mismatches before writes and restores only after explicit approval' {
-        Mock Write-Host {}
         $backup = New-ExecutableTestBackup
         $backup.RegistryKeys += (New-ExecutableTestBackup -Path 'HKEY_CLASSES_ROOT\ms-gamebarservices\shell\open\command' -Data 'custom.exe').RegistryKeys
         $script:confirmationCount = 0

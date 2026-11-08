@@ -17,7 +17,7 @@ $testPath = Join-Path $repositoryRoot 'Tests'
 
 if (-not (Get-Module -ListAvailable -Name Pester | Where-Object { $_.Version.Major -eq 5 })) {
     if (-not $Bootstrap) {
-        Write-Error 'Pester 5 is required. Install it with: .\Scripts\Run-Tests.ps1 -Bootstrap'
+        Write-Error 'Pester 5 is required. Install it with: .\Tools\Run-Tests.ps1 -Bootstrap'
         exit 1
     }
 

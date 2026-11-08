@@ -22,6 +22,7 @@ BeforeAll {
 
 Describe 'Enable-WindowsFeature' {
     BeforeEach {
+        Mock Write-Warning {}
         $script:Params = @{}
         Mock Invoke-NonBlocking { [PSCustomObject]@{ Success = $true; Output = $null; Error = $null } }
         Mock Write-Host {}
@@ -65,7 +66,6 @@ Describe 'Enable-WindowsFeature' {
 
     It 'reports the worker error and returns false' {
         Mock Invoke-NonBlocking { [PSCustomObject]@{ Success = $false; Output = $null; Error = 'feature servicing failed' } }
-        Mock Write-Warning {}
 
         Enable-WindowsFeature -FeatureName 'Feature.One' | Should -BeFalse
 
@@ -96,6 +96,7 @@ Describe 'Enable-WindowsFeature' {
 
 Describe 'Disable-WindowsFeature' {
     BeforeEach {
+        Mock Write-Warning {}
         $script:Params = @{}
         Mock Invoke-NonBlocking { [PSCustomObject]@{ Success = $true; Output = $null; Error = $null } }
         Mock Write-Host {}
@@ -139,7 +140,6 @@ Describe 'Disable-WindowsFeature' {
 
     It 'reports the worker error and returns false' {
         Mock Invoke-NonBlocking { [PSCustomObject]@{ Success = $false; Output = $null; Error = 'feature servicing failed' } }
-        Mock Write-Warning {}
 
         Disable-WindowsFeature -FeatureName 'Feature.One' | Should -BeFalse
 

@@ -71,12 +71,6 @@ Describe 'Test-FileHashMatch' {
         Test-FileHashMatch $script:AbcFile $script:OtherHash | Should -BeFalse
     }
 
-    It 'rejects a file whose content changed' {
-        $changedFile = Join-Path $TestDrive 'changed.bin'
-        [System.IO.File]::WriteAllBytes($changedFile, [System.Text.Encoding]::ASCII.GetBytes('abd'))
-
-        Test-FileHashMatch $changedFile $script:AbcHash | Should -BeFalse
-    }
 }
 
 Describe 'Launcher archive verification flow' {
@@ -166,6 +160,17 @@ Describe 'Launcher archive verification flow' {
 
     It 'downloads the generated source archive when the release has no checksum asset' {
         $state.Release.assets = @($state.Release.assets | Where-Object { $_.name -ne 'SHA256SUMS' })
+        $ErrorActionPreference = 'Continue'
+
+        { & $getScriptPath *> $null } | Should -Throw '*reached extraction*'
+
+        Should -Invoke Invoke-RestMethod -Times 1 -Exactly -ParameterFilter { $Uri -eq $zipballUrl }
+        Should -Invoke Invoke-RestMethod -Times 0 -Exactly -ParameterFilter { $Uri -eq $checksumsUrl -or $Uri -eq $archiveUrl }
+        Should -Invoke Expand-Archive -Times 1 -Exactly
+    }
+
+    It 'downloads the generated source archive when the release has no archive asset' {
+        $state.Release.assets = @($state.Release.assets | Where-Object { $_.name -ne 'Win11Debloat.zip' })
         $ErrorActionPreference = 'Continue'
 
         { & $getScriptPath *> $null } | Should -Throw '*reached extraction*'

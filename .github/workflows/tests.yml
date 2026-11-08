@@ -23,7 +23,7 @@ jobs:
 
       - name: Run tests
         shell: powershell
-        run: ./Scripts/Run-Tests.ps1 -Bootstrap
+        run: ./Tools/Run-Tests.ps1 -Bootstrap
 
   psscriptanalyzer:
     name: PSScriptAnalyzer (Error severity)

@@ -35,7 +35,7 @@ Describe 'UI preference initialization' {
 
     It 'normalizes <Language> to the resolved folder' -ForEach @(
         @{ Language = 'nl-BE'; Expected = 'nl-NL' }
-        @{ Language = 'fr-FR'; Expected = 'en-US' }
+        @{ Language = 'zz-ZZ'; Expected = 'en-US' }
     ) {
         Initialize-UiPreferences -Language $Language
         $script:UiPreferences.Language | Should -Be $Expected

@@ -15,11 +15,6 @@ Describe 'Invoke-NonBlocking' {
         $result | Should -Be @(1, 2, 3)
     }
 
-    It 'stops a timed CLI operation and reports a timeout' {
-        { Invoke-NonBlocking -ScriptBlock { Start-Sleep -Seconds 3 } -TimeoutSeconds 1 } |
-            Should -Throw 'Operation timed out after 1 seconds'
-    }
-
     It 'stops a timed GUI operation and reports a timeout' {
         $script:GuiWindow = [PSCustomObject]@{}
         Mock Invoke-DoEvents {}
@@ -30,11 +25,23 @@ Describe 'Invoke-NonBlocking' {
 
     It 'uses a runspace and pumps UI events when a GUI window is present' {
         $script:GuiWindow = [PSCustomObject]@{}
-        Mock Invoke-DoEvents {}
+        $gate = [System.Threading.ManualResetEventSlim]::new($false)
+        Mock Invoke-DoEvents { $gate.Set() }
 
-        $result = Invoke-NonBlocking -ScriptBlock { 'done' }
-        $result | Should -Be 'done'
+        try {
+            $result = Invoke-NonBlocking -ScriptBlock {
+                param($Event)
+                if (-not $Event.Wait(5000)) { throw 'UI events were not pumped' }
+                [System.Threading.Thread]::CurrentThread.ManagedThreadId
+            } -ArgumentList @($gate) -TimeoutSeconds 5
 
+            $result | Should -BeOfType ([int])
+            $result | Should -Not -Be ([System.Threading.Thread]::CurrentThread.ManagedThreadId)
+            Should -Invoke Invoke-DoEvents -Times 1
+        }
+        finally {
+            $gate.Dispose()
+        }
     }
 
     It 'surfaces non-terminating errors from a runspace' {
@@ -47,10 +54,10 @@ Describe 'Invoke-NonBlocking' {
         Should -Invoke Write-Error -Times 1 -Exactly -ParameterFilter { $ErrorRecord.Exception.Message -match 'runspace failure' }
     }
 
-    It 'remains usable after a timed operation is stopped' {
+    It 'stops a timed CLI operation, reports a timeout, and remains usable afterward' {
         { Invoke-NonBlocking -ScriptBlock { Start-Sleep -Seconds 3 } -TimeoutSeconds 1 } |
             Should -Throw 'Operation timed out after 1 seconds'
 
-        Invoke-NonBlocking -ScriptBlock { 'next operation' } | Should -Be 'next operation'
+        Invoke-NonBlocking -ScriptBlock { 'next operation' } -TimeoutSeconds 5 | Should -Be 'next operation'
     }
 }

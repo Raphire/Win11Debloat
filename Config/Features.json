@@ -431,7 +431,7 @@
     {
       "FeatureId": "DisableSuggestions",
       "Label": "Disable tips, tricks & suggested content throughout Windows",
-      "ToolTip": "This setting removes many annoying distractions from Windows. This includes things like notifications, reminders and sync provider ads. It also prevents automated installation of suggested apps.",
+      "ToolTip": "This setting removes many annoying distractions from Windows. This includes things like notifications, reminders, ads and other interruptions. It also prevents automated installation of suggested apps.",
       "Category": "Privacy & Suggested Content",
       "Priority": 2,
       "RegistryKey": "Disable_Windows_Suggestions.reg",
@@ -444,10 +444,9 @@
     },
     {
       "FeatureId": "DisableNotifications",
-      "Label": "Disable Windows Notifications (From apps and other senders)",
-      "ToolTip": "Disables native Windows notifications from apps and other senders, this includes notifications from apps like Discord, WhatsApp, Teams, and Slack.",
-      "Category": "Privacy & Suggested Content",
-      "Priority": 3,
+      "Label": "Disable Windows system and app notifications",
+      "ToolTip": "Disables native Windows system and app notifications, this includes notifications from apps like Discord, WhatsApp, Teams, and Slack.",
+      "Category": "System",
       "RegistryKey": "Disable_Notifications.reg",
       "ApplyText": "Disabling Windows notifications and reminders",
       "UndoLabel": "Enable Windows notifications and reminders",
@@ -739,6 +738,20 @@
       "ApplyUndoText": "Enabling Microsoft Store app suggestions in search",
       "RegistryUndoKey": null,
       "MinVersion": 22621,
+      "MaxVersion": null
+    },
+    {
+      "FeatureId": "DisableStartWebView2",
+      "Label": "Optimize Windows search memory usage by disabling WebView2",
+      "ToolTip": "Reduces memory usage by preventing Windows search from using WebView2. This setting applies to all users.",
+      "Category": "Start Menu & Search",
+      "RegistryKey": "Disable_Start_WebView2.reg",
+      "ApplyText": "Disabling WebView2 in Windows search",
+      "UndoLabel": "Restore default Windows search behavior",
+      "ApplyUndoText": "Restoring default Windows search behavior",
+      "RegistryUndoKey": "Enable_Start_WebView2.reg",
+      "RequiresReboot": true,
+      "MinVersion": 22000,
       "MaxVersion": null
     },
     {
@@ -1427,6 +1440,20 @@
       "UndoLabel": "Allow automatic restarts after updates while signed in",
       "ApplyUndoText": "Allowing automatic restarts after updates while signed in",
       "RegistryUndoKey": "Allow_Auto_Reboot.reg",
+      "MinVersion": null,
+      "MaxVersion": null
+    },
+    {
+      "FeatureId": "DisableDriverUpdates",
+      "Label": "Disable driver updates through Windows Update",
+      "ToolTip": "Prevents Windows from automatically downloading and installing driver updates via regular Windows quality updates. Windows can still automatically install drivers for new devices. Drivers included in security, critical, or feature updates may still be installed.",
+      "Category": "Windows Update",
+      "RegistryKey": "Disable_Driver_Updates.reg",
+      "ApplyText": "Disabling driver updates through Windows Update",
+      "UndoLabel": "Enable driver updates through Windows Update",
+      "ApplyUndoText": "Enabling driver updates through Windows Update",
+      "RegistryUndoKey": "Enable_Driver_Updates.reg",
+      "RequiresReboot": true,
       "MinVersion": null,
       "MaxVersion": null
     },

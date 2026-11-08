@@ -160,6 +160,13 @@
       "UndoLabel": "Başlat menüsündeki 'Tüm uygulamalar' bölümünü göster",
       "ApplyUndoText": "Başlat menüsündeki 'Tüm uygulamalar' bölümü gösteriliyor"
     },
+    "DisableStartWebView2": {
+      "Label": "WebView2’yi devre dışı bırakarak Windows aramasının bellek kullanımını optimize et",
+      "ToolTip": "Windows aramasının WebView2 kullanmasını engelleyerek bellek kullanımını azaltır. Bu ayar tüm kullanıcılar için geçerlidir.",
+      "ApplyText": "Windows aramasında WebView2 devre dışı bırakılıyor",
+      "UndoLabel": "Windows aramasının varsayılan davranışını geri yükle",
+      "ApplyUndoText": "Windows aramasının varsayılan davranışı geri yükleniyor"
+    },
     "DisableStartPhoneLink": {
       "Label": "Başlat menüsündeki Telefon Bağlantısı tümleştirmesini kapat",
       "ToolTip": "Bilgisayara bağlı bir telefon varken Başlat menüsünde görünen Telefon Bağlantısı tümleştirmesini kaldırır.",

@@ -160,6 +160,13 @@
       "UndoLabel": "Afficher la section « Toutes les applications » du menu Démarrer",
       "ApplyUndoText": "Activation de la section « Toutes les applications » du menu Démarrer"
     },
+    "DisableStartWebView2": {
+      "Label": "Optimiser l’utilisation de la mémoire de la recherche Windows en désactivant WebView2",
+      "ToolTip": "Réduit l’utilisation de la mémoire en empêchant la recherche Windows d’utiliser WebView2. Ce paramètre s’applique à tous les utilisateurs.",
+      "ApplyText": "Désactivation de WebView2 dans la recherche Windows",
+      "UndoLabel": "Restaurer le fonctionnement par défaut de la recherche Windows",
+      "ApplyUndoText": "Restauration du fonctionnement par défaut de la recherche Windows"
+    },
     "DisableStartPhoneLink": {
       "Label": "Désactiver l'intégration de Mobile connecté dans le menu Démarrer",
       "ToolTip": "Cela supprime l'intégration de Mobile connecté dans le menu Démarrer lorsque vous avez un appareil mobile associé à votre PC.",

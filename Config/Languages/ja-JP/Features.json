@@ -160,6 +160,13 @@
       "UndoLabel": "スタート メニューの「すべてのアプリ」セクションを表示する",
       "ApplyUndoText": "スタート メニューの「すべてのアプリ」セクションを有効にしています"
     },
+    "DisableStartWebView2": {
+      "Label": "WebView2 を無効にしてWindows 検索のメモリ使用量を最適化する",
+      "ToolTip": "Windows 検索で WebView2 を使用しないようにして、メモリ使用量を削減します。この設定はすべてのユーザーに適用されます。",
+      "ApplyText": "Windows 検索の WebView2 を無効にしています",
+      "UndoLabel": "Windows 検索の動作を既定に戻す",
+      "ApplyUndoText": "Windows 検索の動作を既定に戻しています"
+    },
     "DisableStartPhoneLink": {
       "Label": "スタート メニューのスマートフォン連携を無効にする",
       "ToolTip": "PC にモバイル デバイスをリンクしている場合に、スタート メニューに表示されるスマートフォン連携を削除します。",

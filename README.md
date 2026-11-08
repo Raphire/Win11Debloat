@@ -125,6 +125,7 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 - Customize the start menu by removing pinned apps, hiding recommendations, and customizing the 'All Apps' section.
 - Disable the Phone Link mobile devices integration in the start menu.
 - Disable Bing web search & Copilot integration and Microsoft Store app suggestions in Windows search.
+- Optimize Windows search memory usage by disabling WebView2-based rendering.
 
 #### Taskbar
 

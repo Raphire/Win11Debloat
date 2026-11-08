@@ -160,6 +160,13 @@
       "UndoLabel": "시작 메뉴에서 '모든 앱' 섹션 표시",
       "ApplyUndoText": "시작 메뉴의 '모든 앱' 섹션 사용 설정 중"
     },
+    "DisableStartWebView2": {
+      "Label": "WebView2를 사용하지 않도록 하여 Windows 검색의 메모리 사용량 최적화",
+      "ToolTip": "Windows 검색에서 WebView2를 사용하지 않도록 하여 메모리 사용량을 줄입니다. 이 설정은 모든 사용자에게 적용됩니다.",
+      "ApplyText": "Windows 검색의 WebView2 사용 안 함 설정 중",
+      "UndoLabel": "Windows 검색의 기본 동작 복원",
+      "ApplyUndoText": "Windows 검색의 기본 동작 복원 중"
+    },
     "DisableStartPhoneLink": {
       "Label": "시작 메뉴의 휴대폰과 연결 통합 사용 안 함",
       "ToolTip": "PC에 모바일 장치가 연결되어 있을 때 시작 메뉴에 표시되는 휴대폰과 연결 통합을 제거합니다.",

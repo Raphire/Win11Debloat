@@ -160,6 +160,13 @@
       "UndoLabel": "Bereich „Alle Apps“ im Startmenü anzeigen",
       "ApplyUndoText": "Bereich „Alle Apps“ im Startmenü wird aktiviert"
     },
+    "DisableStartWebView2": {
+      "Label": "Speicherverbrauch der Windows-Suche durch Deaktivieren von WebView2 optimieren",
+      "ToolTip": "Reduziert den Speicherverbrauch, indem die Verwendung von WebView2 in der Windows-Suche verhindert wird. Diese Einstellung gilt für alle Benutzer.",
+      "ApplyText": "WebView2 in der Windows-Suche wird deaktiviert",
+      "UndoLabel": "Standardverhalten der Windows-Suche wiederherstellen",
+      "ApplyUndoText": "Standardverhalten der Windows-Suche wird wiederhergestellt"
+    },
     "DisableStartPhoneLink": {
       "Label": "Smartphone-Link-Integration im Startmenü deaktivieren",
       "ToolTip": "Hiermit wird die Smartphone-Link-Integration im Startmenü entfernt, wenn ein Mobilgerät mit Ihrem PC verknüpft ist.",

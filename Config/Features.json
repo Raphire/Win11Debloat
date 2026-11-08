@@ -741,6 +741,20 @@
       "MaxVersion": null
     },
     {
+      "FeatureId": "DisableStartWebView2",
+      "Label": "Optimize Windows search memory usage by disabling WebView2",
+      "ToolTip": "Reduces memory usage by preventing Windows search from using WebView2. This setting applies to all users.",
+      "Category": "Start Menu & Search",
+      "RegistryKey": "Disable_Start_WebView2.reg",
+      "ApplyText": "Disabling WebView2 in Windows search",
+      "UndoLabel": "Restore default Windows search behavior",
+      "ApplyUndoText": "Restoring default Windows search behavior",
+      "RegistryUndoKey": "Enable_Start_WebView2.reg",
+      "RequiresReboot": true,
+      "MinVersion": 22000,
+      "MaxVersion": null
+    },
+    {
       "FeatureId": "DisableSettings365Ads",
       "Label": "Hide Microsoft 365 Copilot ads in Settings Home",
       "ToolTip": "This will turn off the Microsoft 365 Copilot ads that appear in the Settings Home page.",

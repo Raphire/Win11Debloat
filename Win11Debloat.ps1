@@ -63,6 +63,7 @@ param (
     [switch]$DisableStartRecommended,
     [switch]$DisableStartAllApps, [switch]$StartAllAppsCategory, [switch]$StartAllAppsGrid, [switch]$StartAllAppsList,
     [switch]$DisableStartPhoneLink,
+    [switch]$DisableStartWebView2,
     [switch]$DisableCopilot,
     [switch]$DisableRecall,
     [switch]$DisableClickToDo,

@@ -160,6 +160,13 @@
       "UndoLabel": "显示开始菜单的“所有应用”区域",
       "ApplyUndoText": "正在启用开始菜单的“所有应用”区域"
     },
+    "DisableStartWebView2": {
+      "Label": "禁用 WebView2 以优化Windows 搜索的内存使用",
+      "ToolTip": "通过阻止Windows 搜索使用 WebView2 来减少内存占用。此设置适用于所有用户。",
+      "ApplyText": "正在禁用Windows 搜索中的 WebView2",
+      "UndoLabel": "恢复Windows 搜索的默认行为",
+      "ApplyUndoText": "正在恢复Windows 搜索的默认行为"
+    },
     "DisableStartPhoneLink": {
       "Label": "禁用开始菜单中的手机连接集成",
       "ToolTip": "当电脑关联了移动设备时，移除开始菜单中的手机连接集成。",

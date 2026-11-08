@@ -160,6 +160,13 @@
       "UndoLabel": "Mostrar seção 'Todos os Apps' no Menu Iniciar",
       "ApplyUndoText": "Habilitando a seção 'Todos os Apps' no Menu Iniciar"
     },
+    "DisableStartWebView2": {
+      "Label": "Otimizar o uso de memória da pesquisa do Windows desabilitando o WebView2",
+      "ToolTip": "Reduz o uso de memória impedindo que a pesquisa do Windows use o WebView2. Esta configuração se aplica a todos os usuários.",
+      "ApplyText": "Desabilitando o WebView2 na pesquisa do Windows",
+      "UndoLabel": "Restaurar o funcionamento padrão da pesquisa do Windows",
+      "ApplyUndoText": "Restaurando o funcionamento padrão da pesquisa do Windows"
+    },
     "DisableStartPhoneLink": {
       "Label": "Desabilitar integração do Vincular ao Celular no Menu Iniciar",
       "ToolTip": "Isto removerá a integração do Vincular ao Celular no Menu Iniciar quando você tiver um dispositivo móvel conectado ao seu PC.",

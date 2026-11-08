@@ -160,6 +160,13 @@
       "UndoLabel": "Mostrar la sección «Todas las aplicaciones» del menú Inicio",
       "ApplyUndoText": "Habilitando la sección «Todas las aplicaciones» del menú Inicio"
     },
+    "DisableStartWebView2": {
+      "Label": "Optimizar el uso de memoria de la búsqueda de Windows deshabilitando WebView2",
+      "ToolTip": "Reduce el uso de memoria al impedir que la búsqueda de Windows use WebView2. Esta configuración se aplica a todos los usuarios.",
+      "ApplyText": "Deshabilitando WebView2 en la búsqueda de Windows",
+      "UndoLabel": "Restaurar el comportamiento predeterminado de la búsqueda de Windows",
+      "ApplyUndoText": "Restaurando el comportamiento predeterminado de la búsqueda de Windows"
+    },
     "DisableStartPhoneLink": {
       "Label": "Deshabilitar la integración de Enlace Móvil en el menú Inicio",
       "ToolTip": "Quitará la integración de Enlace Móvil del menú Inicio cuando haya un dispositivo móvil vinculado al equipo.",

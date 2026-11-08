@@ -29,7 +29,7 @@
     },
     "DisableSuggestions": {
       "Label": "Tipps, Tricks und vorgeschlagene Inhalte in ganz Windows deaktivieren",
-      "ToolTip": "Diese Einstellung entfernt viele störende Ablenkungen aus Windows. Dazu gehören Benachrichtigungen, Erinnerungen und Werbung von Synchronisierungsanbietern. Außerdem wird die automatische Installation vorgeschlagener Apps verhindert.",
+      "ToolTip": "Diese Einstellung entfernt viele störende Ablenkungen aus Windows. Dazu gehören Benachrichtigungen, Erinnerungen, Werbung und andere Unterbrechungen. Außerdem wird die automatische Installation vorgeschlagener Apps verhindert.",
       "ApplyText": "Tipps, Tricks, Vorschläge und Werbung in ganz Windows werden deaktiviert",
       "UndoLabel": "Tipps, Tricks und vorgeschlagene Inhalte in ganz Windows aktivieren",
       "ApplyUndoText": "Tipps, Tricks, Vorschläge und Werbung in ganz Windows werden aktiviert"

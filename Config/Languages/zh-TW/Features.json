@@ -29,7 +29,7 @@
     },
     "DisableSuggestions": {
       "Label": "停用 Windows 各處的提示、技巧與建議內容",
-      "ToolTip": "此設定會移除 Windows 中許多惱人的干擾，包括通知、提醒和同步提供者廣告，也會阻止自動安裝建議的應用程式。",
+      "ToolTip": "此設定會移除 Windows 中許多惱人的干擾，包括通知、提醒、廣告及其他干擾，也會阻止自動安裝建議的應用程式。",
       "ApplyText": "正在停用 Windows 各處的提示、技巧、建議與廣告",
       "UndoLabel": "啟用 Windows 各處的提示、技巧與建議內容",
       "ApplyUndoText": "正在啟用 Windows 各處的提示、技巧、建議與廣告"

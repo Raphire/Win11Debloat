@@ -29,7 +29,7 @@
     },
     "DisableSuggestions": {
       "Label": "Disabilita suggerimenti, consigli e contenuti suggeriti in Windows",
-      "ToolTip": "Questa impostazione rimuove molte distrazioni fastidiose da Windows. Include elementi come notifiche, promemoria e annunci dei provider di sincronizzazione. Impedisce inoltre l'installazione automatica delle app suggerite.",
+      "ToolTip": "Questa impostazione rimuove molte distrazioni fastidiose da Windows, come notifiche, promemoria, annunci e altre interruzioni. Impedisce inoltre l'installazione automatica delle app suggerite.",
       "ApplyText": "Disabilitazione di suggerimenti, consigli, contenuti suggeriti e annunci in Windows",
       "UndoLabel": "Abilita suggerimenti, consigli e contenuti suggeriti in Windows",
       "ApplyUndoText": "Abilitazione di suggerimenti, consigli, contenuti suggeriti e annunci in Windows"

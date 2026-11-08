@@ -1,18 +1,6 @@
 # MainWindow-Deployment.ps1
 # Overview generation, pending tweak actions, feature labels, tweak preset maps, apply logic, user mode state, user selection, and validation.
 
-function Get-UndoFeatureLabel {
-    param([string]$FeatureId)
-
-    $undoLabel = $script:UndoFeatureLabelLookup[$FeatureId]
-    if (-not [string]::IsNullOrWhiteSpace([string]$undoLabel)) {
-        return [string]$undoLabel
-    }
-
-    # Fall back to the regular label (prefixed for undo context)
-    return [string]$script:FeatureLabelLookup[$FeatureId]
-}
-
 <#
     .SYNOPSIS
     Returns the tweak actions that are pending based on the current UI state.
@@ -61,7 +49,7 @@ function Get-PendingTweakActions {
                 $actions.Add([PSCustomObject]@{
                         Action    = 'Undo'
                         FeatureId = [string]$mapping.FeatureId
-                        Label     = [string](Get-UndoFeatureLabel -FeatureId $mapping.FeatureId)
+                        Label     = [string]$script:UndoFeatureLabelLookup[$mapping.FeatureId]
                     })
             }
         }
@@ -129,12 +117,7 @@ function New-Overview {
     }
 
     foreach ($tweakAction in @(Get-PendingTweakActions -Window $Window -ShowAppliedTweaksMode:$showAppliedTweaksMode)) {
-        if ($tweakAction.Action -eq 'Undo') {
-            $changesList += Get-Translation -Key 'DeployChangeUndoPrefix' -FormatArgs @($tweakAction.Label)
-        }
-        else {
-            $changesList += $tweakAction.Label
-        }
+        $changesList += $tweakAction.Label
     }
 
     return $changesList

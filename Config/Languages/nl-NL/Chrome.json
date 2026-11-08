@@ -252,7 +252,6 @@
   "TweaksAlreadyAppliedTooltip": "Deze aanpassing is al toegepast en kan niet automatisch ongedaan worden gemaakt. Op de Win11Debloat-wiki lees je hoe je de wijziging zelf kunt terugdraaien.",
   "DeployChangeRemoveApps_one": "{0} app verwijderen",
   "DeployChangeRemoveApps_other": "{0} apps verwijderen",
-  "DeployChangeUndoPrefix": "Ongedaan maken: {0}",
   "DeployNoChangesSelectedMessage": "Er zijn geen wijzigingen geselecteerd.",
   "DeploySelectedChangesTitle": "Geselecteerde wijzigingen",
   "DeployUserDescriptionCurrentUser": "Het gebruikersprofiel waarmee je nu bent aangemeld",

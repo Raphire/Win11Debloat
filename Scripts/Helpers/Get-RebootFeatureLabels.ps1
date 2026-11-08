@@ -5,7 +5,7 @@
     .DESCRIPTION
     Combines parameter keys from both forward and undo selections, removes duplicates,
     and returns the feature label that should be shown to users. Undo selections use
-    UndoLabel when available.
+    UndoLabel.
 #>
 function Get-RebootFeatureLabels {
     $rebootFeatureLabels = [System.Collections.Generic.List[string]]::new()
@@ -13,9 +13,9 @@ function Get-RebootFeatureLabels {
 
     foreach ($paramKey in $candidateParamKeys) {
         if ($script:Features.ContainsKey($paramKey) -and $script:Features[$paramKey].RequiresReboot -eq $true) {
-            $feature = $script:Features[$paramKey]
             $isUndo = $script:UndoParams.ContainsKey($paramKey)
-            $displayLabel = if ($isUndo -and $feature.UndoLabel) { Get-Translation -Key $paramKey -Field 'UndoLabel' -Section 'Features' } else { Get-Translation -Key $paramKey -Field 'Label' -Section 'Features' }
+            $labelField = if ($isUndo) { 'UndoLabel' } else { 'Label' }
+            $displayLabel = Get-Translation -Key $paramKey -Field $labelField -Section 'Features'
 
             if (-not [string]::IsNullOrWhiteSpace([string]$displayLabel)) {
                 [void]$rebootFeatureLabels.Add([string]$displayLabel)

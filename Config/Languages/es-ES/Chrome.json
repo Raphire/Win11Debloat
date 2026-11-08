@@ -252,7 +252,6 @@
   "TweaksAlreadyAppliedTooltip": "Este ajuste ya está aplicado y no se puede deshacer automáticamente. Visite la wiki de Win11Debloat para obtener instrucciones sobre cómo revertir este cambio manualmente.",
   "DeployChangeRemoveApps_one": "Quitar {0} aplicación",
   "DeployChangeRemoveApps_other": "Quitar {0} aplicaciones",
-  "DeployChangeUndoPrefix": "Deshacer: {0}",
   "DeployNoChangesSelectedMessage": "No se ha seleccionado ningún cambio.",
   "DeploySelectedChangesTitle": "Cambios seleccionados",
   "DeployUserDescriptionCurrentUser": "El perfil de usuario con la sesión iniciada actualmente",

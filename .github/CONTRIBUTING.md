@@ -303,14 +303,9 @@ Add your feature to the `"Features"` array in `Config/Features.json`:
 ```json
 {
   "FeatureId": "YourFeatureId",
-  "Label": "Short label describing the feature",
-  "ToolTip": "Detailed explanation of what this feature does and its impact.",
   "Category": "Privacy & Suggested Content",
   "Priority": 1,
   "RegistryKey": "Disable_YourFeature.reg",
-  "ApplyText": "Disabling your feature",
-  "UndoLabel": "Short description for the undo",
-  "ApplyUndoText": "Enabling your feature",
   "RegistryUndoKey": "Enable_YourFeature.reg",
   "RequiresReboot": false,
   "DisableWhenApplied": false,
@@ -322,14 +317,9 @@ Add your feature to the `"Features"` array in `Config/Features.json`:
 **Field Descriptions**:
 
 - `FeatureId`: Unique identifier, this must match parameter name in the Win11Debloat.ps1 and Get.ps1 files.
-- `Label`: Short description shown in the UI and wiki documentation.
-- `ToolTip`: Detailed explanation of what the feature does, used for tooltips in the GUI.
 - `Category`: One of the predefined categories (see Categories array in Features.json), features without a category won't be loaded into the GUI.
 - `Priority`: Optional. The priority value (int) is used to sort features within a category. If this field is omitted the feature will be sorted based on the order in the Features.json file.
 - `RegistryKey`: Filename of the registry file to apply (in Regfiles/ directory) or null if feature does not require registry changes.
-- `ApplyText`: Message shown when applying the feature.
-- `UndoLabel`: Short description for the undo shown in the UI.
-- `ApplyUndoText`: Message shown when undoing the feature.
 - `RegistryUndoKey`: Filename of the registry file to revert changes or null if feature does not require registry changes.
 - `RequiresReboot`: Optional boolean. Set to `true` if the feature requires a system reboot to take effect.
 - `DisableWhenApplied`: Optional boolean. Set to `true` if the feature has no supported undo method.
@@ -346,7 +336,7 @@ Add a corresponding parameter to both `Win11Debloat.ps1` AND `Scripts/Get.ps1`, 
 
 #### 4. Add the English Translation Entry
 
-Add a matching entry for your `FeatureId` to `Config/Languages/en-US/Features.json` (see [Localizing UI Text](#localizing-ui-text)) so the GUI shows your `Label`/`ToolTip`/etc. instead of the raw `FeatureId`.
+Add a matching entry for your `FeatureId` to `Config/Languages/en-US/Features.json` (see [Localizing UI Text](#localizing-ui-text)). Labels, tooltips, and apply/undo messages belong only in the language catalogs.
 
 #### 5. Add or Update Tests
 
@@ -423,7 +413,7 @@ To add a new category for organizing features:
   }
   ```
 
-  `CategoryId` is the stable identifier used for tweak presets, app-removal scope, and localization lookups. `Name` stays as the English display fallback. Skip `CategoryId` and the category falls back to using its `Name` as the ID, which breaks translation lookups, so always set one.
+  `CategoryId` is required for tweak presets and localization. `Name` must match the `Category` value on features and groups. Add the display label to `Config/Languages/en-US/Categories.json`, keyed by `CategoryId`.
 
 > [!TIP]
 > Use [Segoe Fluent Icon Assets](https://learn.microsoft.com/en-us/windows/apps/design/iconography/segoe-fluent-icons-font) for icon codes.
@@ -437,17 +427,13 @@ UI Groups allow features to be grouped together in the GUI with a combobox
 ```json
 {
   "GroupId": "UniqueGroupId",
-  "Label": "Display label for the group",
-  "ToolTip": "Explanation of what this group controls",
   "Category": "Category Name",
   "Priority": 1,
   "Values": [
     {
-      "Label": "Option 1",
       "FeatureIds": ["FeatureId1"]
     },
     {
-      "Label": "Option 2",
       "FeatureIds": ["FeatureId2"]
     }
   ]
@@ -461,9 +447,9 @@ Add a matching entry for your `GroupId` to `Config/Languages/en-US/Features.json
 
 ### Localizing UI Text
 
-GUI text lives in `Config/Languages/en-US/`, not hardcoded in `Schemas/*.xaml` or `Scripts/GUI/*.ps1`. Adding or changing a Feature, Category, UI Group, or App means updating the matching English entry, or the GUI falls back to showing the raw ID.
+GUI text lives in `Config/Languages/en-US/`, not hardcoded in `Schemas/*.xaml`, `Scripts/GUI/*.ps1` or `Config/Features.json`. Adding or changing a Feature, Category, UI Group, or App means updating the matching English entry, or the GUI falls back to showing the raw ID.
 
-- `Config/Languages/en-US/Features.json`, under `"Features"`, keyed by `FeatureId`. Add `Label`, `ToolTip`, `ApplyText`, `UndoLabel`, and `ApplyUndoText` to match whatever fields you set in `Config/Features.json`.
+- `Config/Languages/en-US/Features.json`, under `"Features"`, keyed by `FeatureId`: `Label` describes the feature, `ToolTip` explains its impact, and `ApplyText` is the operation message. For features supporting undo, also add `UndoLabel` and `ApplyUndoText`.
 - `Config/Languages/en-US/Features.json`, under `"UiGroups"`, keyed by `GroupId`. Add `Label`, `ToolTip`, and a `Values` map of `FeatureId: "Option label"` matching the group's `Values` array.
 - `Config/Languages/en-US/Categories.json`, keyed by `CategoryId`. Add a `Label` for every new category.
 - `Config/Languages/en-US/Apps.json`, keyed by `AppId`. Add `FriendlyName` and `Description` for every new app.

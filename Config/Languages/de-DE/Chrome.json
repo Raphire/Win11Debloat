@@ -252,7 +252,6 @@
   "TweaksAlreadyAppliedTooltip": "Diese Optimierung ist bereits angewendet und kann nicht automatisch rückgängig gemacht werden. Anweisungen zum manuellen Rückgängigmachen dieser Änderung finden Sie im Win11Debloat-Wiki.",
   "DeployChangeRemoveApps_one": "{0} Anwendung entfernen",
   "DeployChangeRemoveApps_other": "{0} Anwendungen entfernen",
-  "DeployChangeUndoPrefix": "Rückgängig: {0}",
   "DeployNoChangesSelectedMessage": "Es wurden keine Änderungen ausgewählt.",
   "DeploySelectedChangesTitle": "Ausgewählte Änderungen",
   "DeployUserDescriptionCurrentUser": "Das aktuell angemeldete Benutzerprofil",

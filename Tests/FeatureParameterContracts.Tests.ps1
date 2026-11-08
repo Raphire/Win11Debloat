@@ -23,6 +23,40 @@ BeforeAll {
 }
 
 Describe 'FeatureId parameter contracts' {
+    It 'keeps localized text out of feature definitions and uses category names for membership' {
+        $config = Get-Content -LiteralPath $script:FeaturesPath -Raw | ConvertFrom-Json
+        $objects = @($config.Categories) + @($config.Features) + @($config.UiGroups) + @($config.UiGroups.Values)
+        foreach ($item in $objects) {
+            foreach ($field in 'Label', 'ToolTip', 'ApplyText', 'UndoLabel', 'ApplyUndoText') {
+                $item.PSObject.Properties.Name | Should -Not -Contain $field
+            }
+        }
+        foreach ($item in (@($config.Features) + @($config.UiGroups) | Where-Object { $_.Category })) {
+            $config.Categories.Name | Should -Contain $item.Category
+        }
+    }
+
+    It 'has English text for feature operations, groups, options, and categories directly in the language catalogs' {
+        $config = Get-Content -LiteralPath $script:FeaturesPath -Raw | ConvertFrom-Json
+        $catalog = Get-Content -LiteralPath (Join-Path $script:RepoRoot 'Config\Languages\en-US\Features.json') -Raw | ConvertFrom-Json
+        $categories = Get-Content -LiteralPath (Join-Path $script:RepoRoot 'Config\Languages\en-US\Categories.json') -Raw | ConvertFrom-Json
+        foreach ($feature in $config.Features) {
+            $entry = $catalog.Features.($feature.FeatureId)
+            $entry.ApplyText | Should -Not -BeNullOrEmpty -Because $feature.FeatureId
+            if ($feature.RegistryUndoKey -or $feature.FeatureId -in @('EnableWindowsSandbox', 'EnableWindowsSubsystemForLinux', 'DisableStoreSearchSuggestions')) {
+                $entry.UndoLabel | Should -Not -BeNullOrEmpty -Because $feature.FeatureId
+                $entry.ApplyUndoText | Should -Not -BeNullOrEmpty -Because $feature.FeatureId
+            }
+        }
+        foreach ($group in $config.UiGroups) {
+            $entry = $catalog.UiGroups.($group.GroupId)
+            $entry.Label | Should -Not -BeNullOrEmpty
+            $entry.ToolTip | Should -Not -BeNullOrEmpty
+            foreach ($value in $group.Values) { $entry.Values.($value.FeatureIds[0]) | Should -Not -BeNullOrEmpty }
+        }
+        foreach ($category in $config.Categories) { $categories.($category.CategoryId).Label | Should -Not -BeNullOrEmpty }
+    }
+
     It 'declares every FeatureId as a parameter on Win11Debloat.ps1' {
         $parameterNames = Get-ScriptParameterNames -Path $script:Win11DebloatPath
         $missing = @($script:Features.FeatureId | Where-Object { $parameterNames -notcontains $_ })

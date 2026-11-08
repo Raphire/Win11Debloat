@@ -265,7 +265,6 @@
   "TweaksAlreadyAppliedTooltip": "この調整は既に適用されており、自動的に元に戻すことはできません。この変更を手動で元に戻す手順については、Win11Debloat の Wiki を参照してください。",
 
   "DeployChangeRemoveApps_other": "{0} 個のアプリケーションを削除",
-  "DeployChangeUndoPrefix": "元に戻す: {0}",
   "DeployNoChangesSelectedMessage": "変更が選択されていません。",
   "DeploySelectedChangesTitle": "選択された変更",
   "DeployUserDescriptionCurrentUser": "現在サインインしているユーザー プロファイル",

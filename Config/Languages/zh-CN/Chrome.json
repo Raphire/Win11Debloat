@@ -252,7 +252,6 @@
   "TweaksAlreadyAppliedTooltip": "此项调整已应用，无法自动撤销。请访问 Win11Debloat Wiki，查看手动撤销此更改的说明。",
   "DeployChangeRemoveApps_one": "卸载 {0} 个应用",
   "DeployChangeRemoveApps_other": "卸载 {0} 个应用",
-  "DeployChangeUndoPrefix": "撤销：{0}",
   "DeployNoChangesSelectedMessage": "未选择任何更改。",
   "DeploySelectedChangesTitle": "所选更改",
   "DeployUserDescriptionCurrentUser": "当前登录用户的配置文件",

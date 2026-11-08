@@ -270,7 +270,6 @@
 
   "DeployChangeRemoveApps_one": "Remove {0} application",
   "DeployChangeRemoveApps_other": "Remove {0} applications",
-  "DeployChangeUndoPrefix": "Undo: {0}",
   "DeployNoChangesSelectedMessage": "No changes have been selected.",
   "DeploySelectedChangesTitle": "Selected Changes",
   "DeployUserDescriptionCurrentUser": "The currently logged-in user profile",

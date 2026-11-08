@@ -100,6 +100,10 @@ Describe 'Get-RebootFeatureLabels' {
     }
 
     It 'includes reboot-required selections once and uses undo labels for undo operations' {
+        foreach ($feature in $script:Features.Values) {
+            $feature.PSObject.Properties.Remove('Label')
+            $feature.PSObject.Properties.Remove('UndoLabel')
+        }
         $result = @(Get-RebootFeatureLabels)
 
         $result | Should -HaveCount 2
@@ -118,7 +122,7 @@ Describe 'Get-RebootFeatureLabels' {
         $result | Should -Contain 'Apply feature'
     }
 
-    It 'falls back to the regular label when an undo selection has no undo label' {
+    It 'uses the translation key when an undo selection has no undo label' {
         $script:Params = @{}
         $script:UndoParams = @{ ApplyFeature = $true }
         $script:Features.ApplyFeature.UndoLabel = $null
@@ -127,10 +131,10 @@ Describe 'Get-RebootFeatureLabels' {
         $result = @(Get-RebootFeatureLabels)
 
         $result | Should -HaveCount 1
-        $result | Should -Contain 'Apply feature'
+        $result | Should -Contain 'ApplyFeature'
     }
 
-    It 'falls back to the regular label when the feature has no UndoLabel property' {
+    It 'uses the translation key when the feature has no UndoLabel property' {
         $script:Params = @{}
         $script:UndoParams = @{ MissingUndoLabelFeature = $true }
         $script:Features.MissingUndoLabelFeature = [PSCustomObject]@{
@@ -142,7 +146,7 @@ Describe 'Get-RebootFeatureLabels' {
         $result = @(Get-RebootFeatureLabels)
 
         $result | Should -HaveCount 1
-        $result | Should -Contain 'Feature without undo label'
+        $result | Should -Contain 'MissingUndoLabelFeature'
     }
 
     It 'returns no labels when there are no selected parameters' {

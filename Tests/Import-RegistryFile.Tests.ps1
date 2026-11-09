@@ -123,4 +123,25 @@ Describe 'Import-RegistryFile' {
         Should -Invoke Invoke-RegistryOperationsFromRegFile -Times 0 -Exactly
         Should -Invoke Write-Warning -Times 0 -Exactly
     }
+
+    It 'falls back to the PowerShell writer when reg cannot start' {
+        Mock Invoke-NonBlocking {
+            param($ScriptBlock, $ArgumentList)
+            & $ScriptBlock @ArgumentList
+        }
+
+        function global:reg {
+            throw [System.Management.Automation.CommandNotFoundException]::new("The term 'reg' is not recognized.")
+        }
+
+        try {
+            Import-RegistryFile -message 'Apply' -path 'feature.reg' | Should -BeTrue
+        }
+        finally {
+            Remove-Item -Path 'function:global:reg' -ErrorAction SilentlyContinue
+        }
+
+        Should -Invoke Invoke-RegistryOperationsFromRegFile -Times 1 -Exactly
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -like "reg import failed*" }
+    }
 }

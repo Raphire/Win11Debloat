@@ -73,27 +73,15 @@ function Import-RegistryFile {
                     }
                 }
                 catch {
-                    $caughtExitCode = $LASTEXITCODE
-                    $errorMessage = $_.Exception.Message
-
-                    if ($caughtExitCode -eq 0) {
-                        $result.ExitCode = 0
-                        $result.Error = $null
-                        if (-not $result.Output -or @($result.Output).Count -eq 0) {
-                            $result.Output = @($errorMessage)
-                        }
-                    }
-                    else {
-                        $result.Error = $errorMessage
-                        $result.ExitCode = $caughtExitCode
-                    }
+                    $result.Error = $_.Exception.Message
+                    $result.ExitCode = if ($LASTEXITCODE -ne 0) { $LASTEXITCODE } else { 1 }
                 }
 
                 return $result
             } -ArgumentList $targetRegFilePath
 
             $regOutput = @($regResult.Output)
-            $hasSuccess = $regResult.ExitCode -eq 0
+            $hasSuccess = ($regResult.ExitCode -eq 0) -and -not $regResult.Error
 
             if ($regOutput) {
                 foreach ($line in $regOutput) {

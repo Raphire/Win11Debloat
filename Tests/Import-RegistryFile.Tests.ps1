@@ -116,7 +116,7 @@ Describe 'Import-RegistryFile' {
         }
         finally {
             $ErrorActionPreference = $previousEap
-            Remove-Item -Path 'function:global:reg' -ErrorAction SilentlyContinue
+            Remove-Item -Path 'Function:\reg'
         }
 
         Should -Invoke Invoke-NonBlocking -Times 1 -Exactly
@@ -130,15 +130,13 @@ Describe 'Import-RegistryFile' {
             & $ScriptBlock @ArgumentList
         }
 
-        function global:reg {
-            throw [System.Management.Automation.CommandNotFoundException]::new("The term 'reg' is not recognized.")
-        }
-
+        $previousPath = $env:PATH
+        $env:PATH = ''
         try {
             Import-RegistryFile -message 'Apply' -path 'feature.reg' | Should -BeTrue
         }
         finally {
-            Remove-Item -Path 'function:global:reg' -ErrorAction SilentlyContinue
+            $env:PATH = $previousPath
         }
 
         Should -Invoke Invoke-RegistryOperationsFromRegFile -Times 1 -Exactly

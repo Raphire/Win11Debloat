@@ -85,12 +85,12 @@ Describe 'Import-RegistryFile' {
         function global:reg {
             <#
                 .SYNOPSIS
-                Test stand-in for reg.exe that emits the success banner on the error stream.
+                Test stand-in for reg.exe that emits a localized success banner on the error stream.
 
                 .DESCRIPTION
-                Mimics a successful Windows reg import under Windows PowerShell 5.1 by writing
-                "The operation completed successfully." as a NativeCommandError and setting
-                LASTEXITCODE to 0, so Import-RegistryFile's stderr handling can be exercised.
+                Mimics a successful Windows reg import under Windows PowerShell 5.1 by writing a
+                non-English success banner as a NativeCommandError and setting LASTEXITCODE to 0.
+                Import-RegistryFile must treat exit code 0 as success without matching banner text.
             #>
             [CmdletBinding()]
             param(
@@ -98,7 +98,7 @@ Describe 'Import-RegistryFile' {
                 [object[]]$Arguments
             )
 
-            $exception = [System.Management.Automation.RemoteException]::new('The operation completed successfully.')
+            $exception = [System.Management.Automation.RemoteException]::new('A operação foi concluída com êxito.')
             $errorRecord = [System.Management.Automation.ErrorRecord]::new(
                 $exception,
                 'NativeCommandError',

@@ -75,9 +75,8 @@ function Import-RegistryFile {
                 catch {
                     $caughtExitCode = $LASTEXITCODE
                     $errorMessage = $_.Exception.Message
-                    $isSuccessBanner = $errorMessage -like '*The operation completed successfully*'
 
-                    if (($caughtExitCode -eq 0) -and $isSuccessBanner) {
+                    if ($caughtExitCode -eq 0) {
                         $result.ExitCode = 0
                         $result.Error = $null
                         if (-not $result.Output -or @($result.Output).Count -eq 0) {
@@ -86,7 +85,7 @@ function Import-RegistryFile {
                     }
                     else {
                         $result.Error = $errorMessage
-                        $result.ExitCode = if ($caughtExitCode -ne 0) { $caughtExitCode } else { 1 }
+                        $result.ExitCode = $caughtExitCode
                     }
                 }
 
@@ -94,8 +93,7 @@ function Import-RegistryFile {
             } -ArgumentList $targetRegFilePath
 
             $regOutput = @($regResult.Output)
-            $isSuccessBanner = [bool]($regResult.Error -and ($regResult.Error -like '*The operation completed successfully*'))
-            $hasSuccess = ($regResult.ExitCode -eq 0) -and (-not $regResult.Error -or $isSuccessBanner)
+            $hasSuccess = $regResult.ExitCode -eq 0
 
             if ($regOutput) {
                 foreach ($line in $regOutput) {

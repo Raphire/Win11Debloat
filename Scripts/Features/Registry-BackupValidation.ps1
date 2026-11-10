@@ -344,12 +344,12 @@ function Test-RegistryExecutableValueDataAllowed {
 
 <#
     .SYNOPSIS
-        Converts legacy absent value-only keys into scoped missing-value snapshots.
+        Filters unknown backup entries and converts legacy absent value-only keys.
 
     .DESCRIPTION
-        Uses only trusted feature plans. Empty absent-key snapshots at exact value-only
-        paths are converted in memory; authorized tree deletions and invalid snapshots
-        remain unchanged for subsequent validation. The input snapshots are not modified.
+        Uses trusted feature plans to warn and discard unknown values and keys, then
+        converts legacy absent keys into scoped missing-value snapshots. Retained data
+        still undergoes normal validation. The input snapshots are not modified.
 #>
 function ConvertTo-CompatibleRegistryKeySnapshots {
     param(
@@ -362,9 +362,48 @@ function ConvertTo-CompatibleRegistryKeySnapshots {
 
     foreach ($snapshot in $RegistryKeys) {
         $normalizedPath = Get-NormalizedRegistryPathKey -Path $snapshot.Path
-        $plan = if ($normalizedPath) { $PlanMap[$normalizedPath] } else { $null }
+        # Invalid paths remain blocking validation errors.
+        if (-not $normalizedPath -or $snapshot.Path.IndexOf([char]0) -ge 0) {
+            $snapshot
+            continue
+        }
+
+        $planMatch = Find-RegistryAllowListPlanMatch -NormalizedPath $normalizedPath -PlanMap $PlanMap
+        $values = @(
+            foreach ($value in @($snapshot.Values)) {
+                $valueName = Get-NormalizedRegistryValueName -ValueName $value.Name
+                if ($null -ne $planMatch -and
+                    ($valueName.IndexOf([char]0) -ge 0 -or
+                    (Test-RegistryValueAllowedByPlan -PlanMatch $planMatch -ValueName $valueName))) {
+                    $value
+                }
+                else {
+                    $reference = Get-RegistryValueReferenceForError -SnapshotPath $snapshot.Path -ValueName $valueName
+                    Write-Warning "Skipping unknown backup registry value '$reference'."
+                }
+            }
+        )
+
+        if ($null -eq $planMatch) {
+            if (@($snapshot.Values).Count -eq 0) {
+                Write-Warning "Skipping unknown backup registry key '$($snapshot.Path)'."
+            }
+            # Discard the entire unknown subtree, including any deletion request.
+            $null = @(ConvertTo-CompatibleRegistryKeySnapshots -RegistryKeys @($snapshot.SubKeys) -PlanMap @{})
+            continue
+        }
+
+        $subKeys = @(ConvertTo-CompatibleRegistryKeySnapshots -RegistryKeys @($snapshot.SubKeys) -PlanMap $PlanMap)
+        # An emptied snapshot must not become a key-creation or legacy deletion request.
+        if ($values.Count -eq 0 -and $subKeys.Count -eq 0 -and
+            (@($snapshot.Values).Count -gt 0 -or @($snapshot.SubKeys).Count -gt 0)) {
+            continue
+        }
+
+        # Legacy conversion requires an exact plan; inherited subtree permissions do not qualify.
+        $plan = $PlanMap[$normalizedPath]
         $convertAbsentKey = $snapshot.Exists -is [bool] -and -not $snapshot.Exists -and
-            @($snapshot.Values).Count -eq 0 -and @($snapshot.SubKeys).Count -eq 0 -and
+            $values.Count -eq 0 -and $subKeys.Count -eq 0 -and
             $null -ne $plan -and -not $plan.CaptureAllValues -and -not $plan.IncludeSubKeys -and
             $plan.ValueNames.Count -gt 0 -and
             -not (Test-RegistryKeyDeletionAllowed -NormalizedPath $normalizedPath -PlanMap $PlanMap)
@@ -374,8 +413,8 @@ function ConvertTo-CompatibleRegistryKeySnapshots {
         # RemoveEmptyKey is derived here and is deliberately not read by normalization.
         $removeEmptyKey = $originallyAbsent -and ($snapshot.Exists -or $convertAbsentKey) -and
             $null -ne $plan -and -not $plan.CaptureAllValues -and -not $plan.IncludeSubKeys -and
-            @($snapshot.SubKeys).Count -eq 0 -and
-            @($snapshot.Values | Where-Object { [bool]$_.Exists }).Count -eq 0
+            $subKeys.Count -eq 0 -and
+            @($values | Where-Object { [bool]$_.Exists }).Count -eq 0
 
         [PSCustomObject]@{
             Path = $snapshot.Path
@@ -387,9 +426,9 @@ function ConvertTo-CompatibleRegistryKeySnapshots {
                     foreach ($valueName in @($plan.ValueNames | Sort-Object)) {
                         [PSCustomObject]@{ Name = $valueName; Exists = $false; Kind = $null; Data = $null }
                     }
-                } else { $snapshot.Values }
+                } else { $values }
             )
-            SubKeys = @(ConvertTo-CompatibleRegistryKeySnapshots -RegistryKeys @($snapshot.SubKeys) -PlanMap $PlanMap)
+            SubKeys = $subKeys
         }
     }
 }
@@ -400,8 +439,7 @@ function ConvertTo-CompatibleRegistryKeySnapshots {
         registry-backed apply or undo key relevant to the requested direction.
 
     .DESCRIPTION
-        Appends a translated error to the caller-supplied Errors list for any feature ID that
-        isn't in the current catalog, rather than failing the whole validation outright.
+        Warns and skips feature IDs that are no longer in the current catalog.
 #>
 function Get-SelectedRegistryFeaturesForBackupValidation {
     param(
@@ -424,7 +462,7 @@ function Get-SelectedRegistryFeaturesForBackupValidation {
     $selectedRegistryFeatures = New-Object System.Collections.Generic.List[object]
     foreach ($featureId in @($SelectedFeatureIds)) {
         if (-not $script:Features.ContainsKey($featureId)) {
-            $Errors.Add((Get-Translation -Key 'BackupFeatureNotInCatalog' -FormatArgs @($featureId)))
+            Write-Warning "Skipping unknown backup feature '$featureId'."
             continue
         }
 

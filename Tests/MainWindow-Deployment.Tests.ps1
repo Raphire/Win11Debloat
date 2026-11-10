@@ -37,17 +37,7 @@ BeforeAll {
     }
 }
 
-Describe 'Get-UndoFeatureLabel' {
-    BeforeEach {
-        $script:UndoFeatureLabelLookup = @{ DisableTelemetry = 'Enable telemetry' }
-        $script:FeatureLabelLookup = @{ DisableTelemetry = 'Disable telemetry'; DisableWidgets = 'Disable widgets' }
-    }
-
-    It 'prefers undo labels and falls back to feature labels' {
-        Get-UndoFeatureLabel -FeatureId 'DisableTelemetry' | Should -Be 'Enable telemetry'
-        Get-UndoFeatureLabel -FeatureId 'DisableWidgets' | Should -Be 'Disable widgets'
-    }
-
+Describe 'Main window helpers' {
     It 'reads selected app IDs from string or array settings and removes blanks' {
         $stringSettings = [PSCustomObject]@{ Settings = @([PSCustomObject]@{ Name = 'Apps'; Value = ' One.App, ,Two.App ' }) }
         $arraySettings = [PSCustomObject]@{ Settings = @([PSCustomObject]@{ Name = 'Apps'; Value = @(' One.App ', '', 'Two.App') }) }

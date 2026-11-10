@@ -58,10 +58,6 @@
             "Value": true
         },
         {
-            "Name": "DisableDragTray",
-            "Value": true
-        },
-        {
             "Name": "Hide3dObjects",
             "Value": true
         },

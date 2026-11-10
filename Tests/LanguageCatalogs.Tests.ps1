@@ -75,6 +75,12 @@ Describe 'Shipped language catalogs: <LanguageCode>' -ForEach $languageCases {
         }
     }
 
+    It 'includes every app name and description without relying on English fallback' {
+        foreach ($key in ($baselineValues.Keys | Where-Object { $_.StartsWith('Apps.') })) {
+            $translationValues.ContainsKey($key) | Should -BeTrue -Because "$LanguageCode/$key must be translated"
+        }
+    }
+
     It 'preserves UTF-8 UI and app names when loading the catalogs' {
         $lang.Chrome.SettingsTitle | Should -BeExactly $catalogs.Chrome.SettingsTitle
         $lang.Apps.'Microsoft.WindowsCalculator'.FriendlyName |

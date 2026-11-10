@@ -34,6 +34,7 @@ param (
     [switch]$DisableStorageSense,
     [switch]$DisableUpdateASAP,
     [switch]$PreventUpdateAutoReboot,
+    [switch]$DisableDriverUpdates,
     [switch]$DisableDeliveryOptimization,
     [switch]$DisableDeviceAutoAppDownload,
     [switch]$DisableBing,
@@ -64,6 +65,7 @@ param (
     [switch]$DisableStartRecommended,
     [switch]$DisableStartAllApps, [switch]$StartAllAppsCategory, [switch]$StartAllAppsGrid, [switch]$StartAllAppsList,
     [switch]$DisableStartPhoneLink,
+    [switch]$DisableStartWebView2,
     [switch]$DisableCopilot,
     [switch]$DisableRecall,
     [switch]$DisableClickToDo,
@@ -81,7 +83,6 @@ param (
     [switch]$ClearStartAllUsers,
     [string]$ReplaceStartAllUsers,
     [switch]$RevertContextMenu,
-    [switch]$DisableDragTray,
     [switch]$DisableMouseAcceleration,
     [switch]$DisableStickyKeys,
     [switch]$DisableWindowSnapping,
@@ -171,6 +172,9 @@ try {
                 throw "$releaseChecksumsName does not list $releaseArchiveName."
             }
             $sourceUri = $archiveAsset.browser_download_url
+        }
+        else {
+            Write-Warning 'This release does not publish both Win11Debloat.zip and SHA256SUMS. Downloading the source archive without SHA-256 verification.'
         }
     }
     Invoke-RestMethod $sourceUri -OutFile $tempArchivePath
@@ -282,12 +286,16 @@ if ($null -ne $debloatProcess) {
     $exitCode = $debloatProcess.ExitCode
 }
 
-# Remove the folder with the script files of this run
+# Remove the script files of this run, except logs and backups (the script keeps those in its own folder when
+# LOCALAPPDATA is not defined), then remove the folder itself when nothing is left in it
 if (Test-Path $tempWorkPath) {
     Write-Output ""
     Write-Output "> Cleaning up..."
 
-    Remove-Item -Path $tempWorkPath -Recurse -Force
+    Get-ChildItem -Path $tempWorkPath -Exclude Logs,Backups | Remove-Item -Recurse -Force
+    if (-not (Get-ChildItem -Path $tempWorkPath -Force)) {
+        Remove-Item -Path $tempWorkPath -Force
+    }
 }
 
 Write-Output ""

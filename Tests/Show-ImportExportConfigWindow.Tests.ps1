@@ -165,14 +165,6 @@ Describe 'Get-DeploymentCategoryDetailString' {
 
         Get-DeploymentCategoryDetailString -DeploymentSettings $settings | Should -Not -Match 'ImportExportOptionRegistryBackup'
     }
-}
-
-Describe 'Get-DeploymentCategoryDetailString with unsupported values' {
-    BeforeEach {
-        $warnings = [System.Collections.Generic.List[string]]::new()
-        Mock Write-Warning { $warnings.Add([string]$Message) }
-    }
-
     It 'does not list the registry backup for an unsupported SkipRegistryBackup value, and does not warn' {
         $settings = @([PSCustomObject]@{ Name = 'SkipRegistryBackup'; Value = 'yes' })
 
@@ -180,11 +172,9 @@ Describe 'Get-DeploymentCategoryDetailString with unsupported values' {
         $warnings | Should -HaveCount 0
     }
 
-    It 'lists the registry backup when SkipRegistryBackup is false or missing' -ForEach @(
-        @{ Settings = @([PSCustomObject]@{ Name = 'SkipRegistryBackup'; Value = $false }) }
-        @{ Settings = @([PSCustomObject]@{ Name = 'SkipRegistryBackup'; Value = 'false' }) }
-        @{ Settings = @([PSCustomObject]@{ Name = 'RestartExplorer'; Value = $true }) }
-    ) {
-        Get-DeploymentCategoryDetailString -DeploymentSettings $Settings | Should -Match 'ImportExportOptionRegistryBackup'
+    It 'lists the registry backup when SkipRegistryBackup is missing' {
+        $settings = @([PSCustomObject]@{ Name = 'RestartExplorer'; Value = $true })
+
+        Get-DeploymentCategoryDetailString -DeploymentSettings $settings | Should -Match 'ImportExportOptionRegistryBackup'
     }
 }

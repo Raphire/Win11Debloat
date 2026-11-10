@@ -27,6 +27,7 @@ Describe 'Import-RegistryBackup' {
     It 'parses and normalizes registry snapshots from a real backup structure' {
         Mock Test-UserNameMatch { $true }
         Mock Get-RegistryBackupValidationPlanMap { @{} }
+        Mock ConvertTo-CompatibleRegistryKeySnapshots { param($RegistryKeys) $RegistryKeys }
         Mock Test-RegistryBackupAgainstAllowList { @() }
 
         $result = Import-RegistryBackup -FilePath (Join-Path $script:JsonFixturePath 'RegistryBackup.RealStructure.json')
@@ -61,6 +62,7 @@ Describe 'ConvertTo-NormalizedRegistryBackup' {
     BeforeEach {
         $script:Features = @{ Example = [PSCustomObject]@{ FeatureId = 'Example'; RegistryKey = 'Example.reg' } }
         Mock Get-RegistryBackupValidationPlanMap { @{} }
+        Mock ConvertTo-CompatibleRegistryKeySnapshots { param($RegistryKeys) $RegistryKeys }
         Mock Test-RegistryBackupAgainstAllowList { @() }
         Mock Write-Error {}
     }
@@ -122,6 +124,7 @@ Describe 'Restore-RegistryBackupState' {
         Mock Test-UserNameMatch { $true }
         Mock Write-Error {}
         Mock Get-RegistryBackupValidationPlanMap { @{} }
+        Mock ConvertTo-CompatibleRegistryKeySnapshots { param($RegistryKeys) $RegistryKeys }
         Mock Test-RegistryBackupAgainstAllowList { @() }
         $script:backup = [PSCustomObject]@{
             Version = '1.0'; BackupType = 'RegistryState'; Target = 'CurrentUser:Tester'; SelectedFeatures = @('Example')
@@ -189,6 +192,35 @@ Describe 'Restore-RegistryBackupState' {
         $script:backup.RegistryKeys = @($script:backup.RegistryKeys[0], $script:backup.RegistryKeys[0])
 
         { Restore-RegistryBackupState -Backup $script:backup } | Should -Throw '*duplicate registry root path*'
+
+        Should -Invoke Restore-RegistryKeySnapshot -Times 0 -Exactly
+    }
+
+    It 'continues restoring remaining snapshots when one fails, then reports the failure' {
+        Mock Write-Warning {}
+        Mock Restore-RegistryKeySnapshot { throw 'access denied' } -ParameterFilter { $Snapshot.Path -eq 'HKEY_CURRENT_USER\Software\One' }
+
+        { Restore-RegistryBackupState -Backup $script:backup } |
+            Should -Throw 'Registry restore finished with 1 failed key(s). See console for details.'
+
+        Should -Invoke Restore-RegistryKeySnapshot -Times 2 -Exactly
+        Should -Invoke Restore-RegistryKeySnapshot -Times 1 -Exactly -ParameterFilter { $Snapshot.Path -eq 'HKEY_CURRENT_USER\Software\Two' }
+    }
+
+    It 'rejects a malformed backup before restoring any snapshot' {
+        $script:backup.RegistryKeys = @(
+            [PSCustomObject]@{ Path = 'HKEY_CURRENT_USER\Software\One'; Exists = $true; Values = @(); SubKeys = @() }
+            [PSCustomObject]@{
+                Path = 'HKEY_CURRENT_USER\Software\Two'; Exists = $true; Values = @()
+                SubKeys = @(
+                    [PSCustomObject]@{ Path = 'HKEY_CURRENT_USER\Software\Two\Child'; Exists = $true; Values = @(); SubKeys = @() }
+                    [PSCustomObject]@{ Path = 'HKEY_CURRENT_USER\Software\Two\Child'; Exists = $true; Values = @(); SubKeys = @() }
+                )
+            }
+        )
+
+        { Restore-RegistryBackupState -Backup $script:backup } |
+            Should -Throw '*duplicate or unsupported registry child path*'
 
         Should -Invoke Restore-RegistryKeySnapshot -Times 0 -Exactly
     }

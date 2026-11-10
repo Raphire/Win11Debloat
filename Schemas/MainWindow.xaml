@@ -2,7 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
         Title="%LANG:TitleBarAppName%"
-        MinWidth="860" MinHeight="640"
+        MinWidth="860" MinHeight="650"
         ResizeMode="CanResize" 
         SnapsToDevicePixels="True"
         WindowStartupLocation="CenterScreen"
@@ -147,7 +147,6 @@
 
         <!-- TextBlock style for App Name column in apps table -->
         <Style x:Key="AppNameTextStyle" TargetType="TextBlock">
-            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
 
@@ -160,7 +159,7 @@
 
         <!-- Column widths for the app table rows and header (indicator | name | description | id) -->
         <GridLength x:Key="AppTableDotColWidth">16</GridLength>
-        <GridLength x:Key="AppTableNameColWidth">180</GridLength>
+        <GridLength x:Key="AppTableNameColWidth">Auto</GridLength>
         <GridLength x:Key="AppTableDescColWidth">1*</GridLength>
         <GridLength x:Key="AppTableIdColWidth">261</GridLength>
 
@@ -468,7 +467,7 @@
 
                 <!-- Home Tab -->
                 <TabItem Header="%LANG:HomeTabHeader%" x:Name="HomeTab">
-                    <Grid>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                         <StackPanel x:Name="HomeContentPanel" HorizontalAlignment="Center" VerticalAlignment="Top">
                             <!-- Logo -->
                             <Viewbox Width="250" Height="250" Margin="0,0,0,16" HorizontalAlignment="Center">
@@ -494,7 +493,7 @@
                                 <Run Text="%LANG:HomeSubtitle%"/>
                             </TextBlock>
 
-                            <Border HorizontalAlignment="Center" BorderBrush="{DynamicResource AppBorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="16,12" MinWidth="500">
+                            <Border HorizontalAlignment="Center" BorderBrush="{DynamicResource AppBorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource CardBgColor}" Padding="16,12" MinWidth="500" Margin="0,0,0,12">
                                 <StackPanel>
                                     <TextBlock Text="%LANG:HomeUserQuestion%" Style="{StaticResource CategoryHeaderTextBlock}"/>
                                     <ComboBox x:Name="UserSelectionCombo" Margin="0,0,0,6" AutomationProperties.Name="%LANG:HomeUserSelectionAutomationName%" ToolTip="%LANG:DeployUserDescriptionCurrentUser%">
@@ -538,7 +537,7 @@
                                 </StackPanel>
                             </Border>
                         </StackPanel>
-                    </Grid>
+                    </ScrollViewer>
                 </TabItem>
 
                 <!-- App Removal Tab -->
@@ -650,7 +649,7 @@
                             </Grid.RowDefinitions>
                             
                             <!-- Apps List -->
-                            <Grid Grid.Row="0" Margin="20,0,20,10">
+                            <Grid Grid.Row="0" Margin="20,0,20,10" Grid.IsSharedSizeScope="True">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="*"/>
@@ -660,7 +659,7 @@
                                     <Grid Margin="42,6,23,8">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="{StaticResource AppTableDotColWidth}"/>
-                                            <ColumnDefinition Width="{StaticResource AppTableNameColWidth}"/>
+                                            <ColumnDefinition Width="{StaticResource AppTableNameColWidth}" SharedSizeGroup="AppTableName"/>
                                             <ColumnDefinition Width="{StaticResource AppTableDescColWidth}"/>
                                             <ColumnDefinition Width="{StaticResource AppTableIdColWidth}"/>
                                         </Grid.ColumnDefinitions>

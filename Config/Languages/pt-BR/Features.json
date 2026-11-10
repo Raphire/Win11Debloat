@@ -9,7 +9,7 @@
       "ApplyText": "Removendo apps selecionados"
     },
     "RemoveGamingApps": {
-      "Label": "Remover o App Xbox e o Xbox Gamebar",
+      "Label": "Remover o App Xbox e o Xbox Game Bar",
       "ApplyText": "Removendo apps relacionados a jogos"
     },
     "RemoveHPApps": {
@@ -29,14 +29,14 @@
     },
     "DisableSuggestions": {
       "Label": "Desabilitar dicas, truques e conteúdo sugerido em todo o Windows",
-      "ToolTip": "Esta configuração remove muitas distrações irritantes do Windows. Isso inclui coisas como notificações, lembretes e anúncios de provedor de sincronização. Também impede a instalação automática de apps sugeridos.",
+      "ToolTip": "Esta configuração remove muitas distrações irritantes do Windows, como notificações, lembretes, anúncios e outras interrupções. Também impede a instalação automática de apps sugeridos.",
       "ApplyText": "Desabilitando dicas, truques, sugestões e anúncios em todo o Windows",
       "UndoLabel": "Habilitar dicas, truques e conteúdo sugerido em todo o Windows",
       "ApplyUndoText": "Habilitando dicas, truques, sugestões e anúncios em todo o Windows"
     },
     "DisableNotifications": {
-      "Label": "Desabilitar notificações do Windows (de apps e outros remetentes)",
-      "ToolTip": "Desabilita notificações nativas do Windows de apps e outros remetentes, incluindo notificações de apps como Discord, WhatsApp, Teams e Slack.",
+      "Label": "Desabilitar notificações do sistema e de apps do Windows",
+      "ToolTip": "Desabilita notificações nativas do Windows do sistema e de apps, incluindo notificações de apps como Discord, WhatsApp, Teams e Slack.",
       "ApplyText": "Desabilitando notificações e lembretes do Windows",
       "UndoLabel": "Habilitar notificações e lembretes do Windows",
       "ApplyUndoText": "Habilitando notificações e lembretes do Windows"
@@ -160,12 +160,19 @@
       "UndoLabel": "Mostrar seção 'Todos os Apps' no Menu Iniciar",
       "ApplyUndoText": "Habilitando a seção 'Todos os Apps' no Menu Iniciar"
     },
+    "DisableStartWebView2": {
+      "Label": "Otimizar o uso de memória da pesquisa do Windows desabilitando o WebView2",
+      "ToolTip": "Reduz o uso de memória impedindo que a pesquisa do Windows use o WebView2. Esta configuração se aplica a todos os usuários.",
+      "ApplyText": "Desabilitando o WebView2 na pesquisa do Windows",
+      "UndoLabel": "Restaurar o funcionamento padrão da pesquisa do Windows",
+      "ApplyUndoText": "Restaurando o funcionamento padrão da pesquisa do Windows"
+    },
     "DisableStartPhoneLink": {
-      "Label": "Desabilitar integração do Phone Link no Menu Iniciar",
-      "ToolTip": "Isto removerá a integração do Phone Link no Menu Iniciar quando você tiver um dispositivo móvel conectado ao seu PC.",
-      "ApplyText": "Desabilitando a integração de dispositivos móveis do Phone Link no Menu Iniciar",
-      "UndoLabel": "Habilitar integração do Phone Link no Menu Iniciar",
-      "ApplyUndoText": "Habilitando a integração de dispositivos móveis do Phone Link no Menu Iniciar"
+      "Label": "Desabilitar integração do Vincular ao Celular no Menu Iniciar",
+      "ToolTip": "Isto removerá a integração do Vincular ao Celular no Menu Iniciar quando você tiver um dispositivo móvel conectado ao seu PC.",
+      "ApplyText": "Desabilitando a integração de dispositivos móveis do Vincular ao Celular no Menu Iniciar",
+      "UndoLabel": "Habilitar integração do Vincular ao Celular no Menu Iniciar",
+      "ApplyUndoText": "Habilitando a integração de dispositivos móveis do Vincular ao Celular no Menu Iniciar"
     },
     "DisableBing": {
       "Label": "Desabilitar pesquisa web do Bing e integração do Copilot na pesquisa",
@@ -182,18 +189,18 @@
       "ApplyUndoText": "Habilitando sugestões de apps da Microsoft Store na pesquisa"
     },
     "DisableSettings365Ads": {
-      "Label": "Ocultar anúncios do Microsoft 365 Copilot na Página Inicial do Configurações",
-      "ToolTip": "Isto desabilitará os anúncios do Microsoft 365 Copilot que aparecem na página inicial do Configurações.",
-      "ApplyText": "Desabilitando anúncios do Microsoft 365 Copilot na Página Inicial do Configurações",
-      "UndoLabel": "Mostrar anúncios do Microsoft 365 Copilot na Página Inicial do Configurações",
-      "ApplyUndoText": "Habilitando anúncios do Microsoft 365 Copilot na Página Inicial do Configurações"
+      "Label": "Ocultar anúncios do Microsoft 365 Copilot na Página Inicial de Configurações",
+      "ToolTip": "Isto desabilitará os anúncios do Microsoft 365 Copilot que aparecem na página inicial de Configurações.",
+      "ApplyText": "Desabilitando anúncios do Microsoft 365 Copilot na Página Inicial de Configurações",
+      "UndoLabel": "Mostrar anúncios do Microsoft 365 Copilot na Página Inicial de Configurações",
+      "ApplyUndoText": "Habilitando anúncios do Microsoft 365 Copilot na Página Inicial de Configurações"
     },
     "DisableSettingsHome": {
-      "Label": "Ocultar página 'Inicial' do Configurações",
+      "Label": "Ocultar página 'Inicial' de Configurações",
       "ToolTip": "Remove a página 'Inicial' do app Configurações.",
-      "ApplyText": "Desabilitando a Página Inicial do Configurações",
-      "UndoLabel": "Mostrar página 'Inicial' do Configurações",
-      "ApplyUndoText": "Habilitando a Página Inicial do Configurações"
+      "ApplyText": "Desabilitando a Página Inicial de Configurações",
+      "UndoLabel": "Mostrar página 'Inicial' de Configurações",
+      "ApplyUndoText": "Habilitando a Página Inicial de Configurações"
     },
     "DisableEdgeAI": {
       "Label": "Desabilitar funcionalidades de IA no Microsoft Edge",
@@ -217,11 +224,11 @@
       "ApplyUndoText": "Habilitando funcionalidades de IA no Paint"
     },
     "DisableNotepadAI": {
-      "Label": "Desabilitar funcionalidades de IA no Notepad",
-      "ToolTip": "Isto desabilitará funcionalidades de IA no Notepad, como as sugestões de escrita com IA. Esta funcionalidade usa políticas, que bloqueiam certas configurações.",
-      "ApplyText": "Desabilitando funcionalidades de IA no Notepad",
-      "UndoLabel": "Habilitar funcionalidades de IA no Notepad",
-      "ApplyUndoText": "Habilitando funcionalidades de IA no Notepad"
+      "Label": "Desabilitar funcionalidades de IA no Bloco de Notas",
+      "ToolTip": "Isto desabilitará funcionalidades de IA no Bloco de Notas, como as sugestões de escrita com IA. Esta funcionalidade usa políticas, que bloqueiam certas configurações.",
+      "ApplyText": "Desabilitando funcionalidades de IA no Bloco de Notas",
+      "UndoLabel": "Habilitar funcionalidades de IA no Bloco de Notas",
+      "ApplyUndoText": "Habilitando funcionalidades de IA no Bloco de Notas"
     },
     "EnableDarkMode": {
       "Label": "Habilitar tema escuro para o sistema e apps",
@@ -229,13 +236,6 @@
       "ApplyText": "Habilitando modo escuro para o sistema e apps",
       "UndoLabel": "Desabilitar tema escuro para o sistema e apps",
       "ApplyUndoText": "Desabilitando modo escuro para o sistema e apps"
-    },
-    "DisableDragTray": {
-      "Label": "Desabilitar 'Drag Tray' para compartilhar e mover arquivos",
-      "ToolTip": "O Drag Tray é uma nova funcionalidade para compartilhar e mover arquivos no Windows 11, aparece no topo da tela ao arrastar arquivos.",
-      "ApplyText": "Desabilitando Drag Tray",
-      "UndoLabel": "Habilitar 'Drag Tray' para compartilhar e mover arquivos",
-      "ApplyUndoText": "Habilitando Drag Tray"
     },
     "RevertContextMenu": {
       "Label": "Usar estilo clássico de menu de contexto do Windows 10",
@@ -259,11 +259,11 @@
       "ApplyUndoText": "Habilitando o atalho de teclado das Teclas de Aderência"
     },
     "DisableWindowSnapping": {
-      "Label": "Desabilitar snapping de janelas",
+      "Label": "Desabilitar encaixe de janelas",
       "ToolTip": "Isto desabilitará a capacidade de encaixar janelas nas laterais ou cantos da tela.",
-      "ApplyText": "Desabilitando snapping de janelas",
-      "UndoLabel": "Habilitar snapping de janelas",
-      "ApplyUndoText": "Habilitando snapping de janelas"
+      "ApplyText": "Desabilitando encaixe de janelas",
+      "UndoLabel": "Habilitar encaixe de janelas",
+      "ApplyUndoText": "Habilitando encaixe de janelas"
     },
     "DisableSnapAssist": {
       "Label": "Desabilitar sugestões de apps ao encaixar janelas",
@@ -344,11 +344,11 @@
       "ApplyUndoText": "Mostrando o ícone do chat da barra de tarefas"
     },
     "DisableStorageSense": {
-      "Label": "Desabilitar limpeza automática de disco do Storage Sense",
-      "ToolTip": "Isto desabilitará o Storage Sense, que automaticamente libera espaço em disco deletando arquivos temporários, esvaziando a lixeira e limpando arquivos na pasta de Downloads.",
-      "ApplyText": "Desabilitando limpeza automática de disco do Storage Sense",
-      "UndoLabel": "Habilitar limpeza automática de disco do Storage Sense",
-      "ApplyUndoText": "Habilitando limpeza automática de disco do Storage Sense"
+      "Label": "Desabilitar limpeza automática de disco do Sensor de Armazenamento",
+      "ToolTip": "Isto desabilitará o Sensor de Armazenamento, que automaticamente libera espaço em disco deletando arquivos temporários, esvaziando a lixeira e limpando arquivos na pasta de Downloads.",
+      "ApplyText": "Desabilitando limpeza automática de disco do Sensor de Armazenamento",
+      "UndoLabel": "Habilitar limpeza automática de disco do Sensor de Armazenamento",
+      "ApplyUndoText": "Habilitando limpeza automática de disco do Sensor de Armazenamento"
     },
     "DisableFastStartup": {
       "Label": "Desabilitar inicialização rápida",
@@ -518,6 +518,13 @@
       "UndoLabel": "Permitir reinicializações automáticas após atualizações enquanto conectado",
       "ApplyUndoText": "Permitindo reinicializações automáticas após atualizações enquanto conectado"
     },
+    "DisableDriverUpdates": {
+      "Label": "Desativar atualizações de drivers pelo Windows Update",
+      "ToolTip": "Impede que o Windows baixe e instale atualizações de drivers automaticamente por meio das atualizações de qualidade regulares do Windows. O Windows ainda pode instalar drivers automaticamente para novos dispositivos. Os drivers incluídos em atualizações de segurança, críticas ou de recursos ainda podem ser instalados.",
+      "ApplyText": "Desativando atualizações de drivers pelo Windows Update",
+      "UndoLabel": "Ativar atualizações de drivers pelo Windows Update",
+      "ApplyUndoText": "Ativando atualizações de drivers pelo Windows Update"
+    },
     "DisableDeliveryOptimization": {
       "Label": "Desabilitar compartilhamento de atualizações baixadas com outros PCs",
       "ToolTip": "Isto impedirá que seu PC compartilhe atualizações baixadas com outros PCs na rede local ou na internet. Isso também impede que seu PC baixe atualizações de outros PCs.",
@@ -600,11 +607,11 @@
       "ApplyUndoText": "Desabilitando Windows Sandbox"
     },
     "EnableWindowsSubsystemForLinux": {
-      "Label": "Habilitar Windows Subsystem for Linux",
-      "ToolTip": "O Windows Subsystem for Linux permite que você execute um ambiente Linux diretamente no Windows sem a necessidade de uma máquina virtual.",
-      "ApplyText": "Habilitando Windows Subsystem for Linux",
-      "UndoLabel": "Desabilitar Windows Subsystem for Linux",
-      "ApplyUndoText": "Desabilitando Windows Subsystem for Linux"
+      "Label": "Habilitar Subsistema do Windows para Linux",
+      "ToolTip": "O Subsistema do Windows para Linux permite que você execute um ambiente Linux diretamente no Windows sem a necessidade de uma máquina virtual.",
+      "ApplyText": "Habilitando Subsistema do Windows para Linux",
+      "UndoLabel": "Desabilitar Subsistema do Windows para Linux",
+      "ApplyUndoText": "Desabilitando Subsistema do Windows para Linux"
     },
     "ShowDriveLettersFirst": {
       "Label": "Mostrar letras de unidade antes da etiqueta da unidade",

@@ -79,13 +79,15 @@ Describe 'Get-SelectedRegistryFeaturesForBackupValidation' {
         $valueNames.Contains('mode') | Should -BeTrue
     }
 
-    It 'selects registry-backed apply features and reports unknown IDs' {
+    It 'selects registry-backed apply features and warns for unknown IDs' {
+        Mock Write-Warning {}
         $errors = New-Object System.Collections.Generic.List[string]
 
         $result = @(Get-SelectedRegistryFeaturesForBackupValidation -SelectedFeatureIds @('ApplyFeature', 'CustomFeature', 'MissingFeature') -IsUndoFeature:$false -Errors $errors)
 
         $result.Id | Should -Be 'ApplyFeature'
-        $errors | Should -Contain "Selected feature 'MissingFeature' was not found in the current feature catalog."
+        $errors | Should -BeNullOrEmpty
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -like '*MissingFeature*' }
     }
 
     It 'uses undo registry keys and falls back to apply keys when needed' {
@@ -95,26 +97,6 @@ Describe 'Get-SelectedRegistryFeaturesForBackupValidation' {
 
         $result.Id | Should -Be @('UndoFeature', 'FallbackUndoFeature')
         $errors | Should -BeNullOrEmpty
-    }
-}
-
-Describe 'Test-RegistryValueKindNameSupported' {
-    It 'accepts supported registry value kind <KindName>' -ForEach @(
-        @{ KindName = 'dword' }
-        @{ KindName = 'QWord' }
-        @{ KindName = 'MultiString' }
-    ) {
-        Test-RegistryValueKindNameSupported -KindName $KindName | Should -BeTrue
-    }
-
-    It 'rejects <Case>' -ForEach @(
-        @{ Case = 'a null kind name'; KindName = $null }
-        @{ Case = 'an empty kind name'; KindName = '' }
-        @{ Case = 'the Unknown registry kind'; KindName = 'Unknown' }
-        @{ Case = 'the unsupported None registry kind'; KindName = 'None' }
-        @{ Case = 'an invalid registry kind name'; KindName = 'NotARegistryValueKind' }
-    ) {
-        Test-RegistryValueKindNameSupported -KindName $KindName | Should -BeFalse
     }
 }
 
@@ -154,11 +136,11 @@ Describe 'Get-NormalizedRegistryValueName' {
 }
 
 Describe 'Test-RegistryValueKindNameSupported' {
-    It 'rejects unsupported kind <KindName>' -ForEach @('99', '-2', 'Unknown', 'None', '') {
+    It 'rejects unsupported kind <KindName>' -ForEach @('99', '-2', 'Unknown', 'None', '', $null, 'NotARegistryValueKind') {
         Test-RegistryValueKindNameSupported -KindName $_ | Should -BeFalse
     }
 
-    It 'accepts defined kind <KindName>' -ForEach @('String', 'expandstring', 'Binary', 'DWord', 'QWord', 'MultiString', '1') {
+    It 'accepts defined kind <KindName>' -ForEach @('String', 'expandstring', 'Binary', 'DWord', 'dword', 'QWord', 'MultiString', '1') {
         Test-RegistryValueKindNameSupported -KindName $_ | Should -BeTrue
     }
 }

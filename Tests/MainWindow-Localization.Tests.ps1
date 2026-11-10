@@ -43,6 +43,30 @@ BeforeAll {
     }
 }
 
+Describe 'Tweak category identifiers' {
+    It 'uses the defined CategoryId for controls and presets when it differs from Name' {
+        $script:Lang = Import-LanguageFile -LanguageCode 'en-US'
+        $feature = $script:Features['DisableTelemetry'] | Select-Object *
+        $feature.Category = 'Legacy Category'
+        $legacyCatalog = [PSCustomObject]@{
+            Categories = @([PSCustomObject]@{ Name = 'Legacy Category'; CategoryId = 'PrivacySuggestedContent'; Icon = '&#xE72E;' })
+            Features = @($feature)
+        }
+        Mock Import-JsonFile { $legacyCatalog } -ParameterFilter { $filePath -eq $script:FeaturesFilePath }
+        $window = New-LanguageTestWindow
+
+        New-DynamicTweakControls -Window $window -WinVersion 26100
+
+        $controlName = 'Feature_DisableTelemetry_Combo'
+        $script:UiControlMappings.Count | Should -Be 1
+        $script:UiControlMappings[$controlName].CategoryId | Should -Be 'PrivacySuggestedContent'
+        $map = Get-CategoryTweakPresetMap -Window $window -CategoryId 'PrivacySuggestedContent'
+        $map.Count | Should -Be 1
+        $map[$controlName].Control | Should -Be ($window.FindName($controlName))
+        $map[$controlName].DesiredValue | Should -BeTrue
+    }
+}
+
 Describe 'Language changes on existing controls' {
     BeforeEach {
         $script:Lang = Import-LanguageFile -LanguageCode 'en-US'
@@ -151,7 +175,7 @@ Describe 'Language changes on existing controls' {
             $disabled.ToolTip.Text | Should -Be (Get-Translation -Key 'TweaksAlreadyAppliedTooltip')
             [object]::ReferenceEquals($group.SelectedItem, $selectedItem) | Should -BeTrue
             $group.SelectedIndex | Should -Be 2
-            $selectedItem.Content | Should -Be (Get-GroupValueTranslation -GroupId 'SearchIcon' -FeatureId $script:UiControlMappings['Group_SearchIconCombo'].Values[1].FeatureIds[0] -FallbackLabel 'fallback')
+            $selectedItem.Content | Should -Be (Get-GroupValueTranslation -GroupId 'SearchIcon' -FeatureId $script:UiControlMappings['Group_SearchIconCombo'].Values[1].FeatureIds[0])
             @(Get-PendingTweakActions -Window $window -ShowAppliedTweaksMode $true | ForEach-Object { "$($_.Action):$($_.FeatureId)" } | Sort-Object) | Should -Be $before
             $script:FeatureLabelLookup['DisableTelemetry'] | Should -Be $checkbox.Content
             foreach ($category in $script:CategoryLanguageControls) {

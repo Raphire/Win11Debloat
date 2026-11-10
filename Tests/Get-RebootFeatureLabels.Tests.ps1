@@ -1,6 +1,7 @@
 BeforeAll {
     $rebootFeatureLabelsScriptPath = Join-Path $PSScriptRoot '..\Scripts\Helpers\Get-RebootFeatureLabels.ps1'
     . $rebootFeatureLabelsScriptPath
+    . (Join-Path $PSScriptRoot '..\Scripts\FileIO\Import-JsonFile.ps1')
     . (Join-Path $PSScriptRoot '..\Scripts\FileIO\Import-LanguageFile.ps1')
 
     # Builds a $script:Lang fixture whose Features section mirrors $script:Features exactly,
@@ -26,6 +27,60 @@ BeforeAll {
     }
 }
 
+Describe 'Get-DeferredAppRemovalLabels' {
+    BeforeEach {
+        $script:AppsListFilePath = Join-Path $PSScriptRoot '..\Config\Apps.json'
+        $script:Lang = Import-LanguageFile -LanguageCode 'en-US' -LanguagesPath (Join-Path $PSScriptRoot '..\Config\Languages')
+        $script:WingetDeferredRemovals = @{}
+    }
+
+    It 'returns one Edge label for <Ids>' -ForEach @(
+        @{ Ids = @('Microsoft.Edge', 'XPFFTQ037JWMHS') }
+        @{ Ids = @('XPFFTQ037JWMHS') }
+    ) {
+        foreach ($id in $Ids) { $script:WingetDeferredRemovals[$id] = 'Alice' }
+
+        $labels = @(Get-DeferredAppRemovalLabels)
+
+        $labels | Should -HaveCount 1
+        $labels[0] | Should -BeExactly 'Microsoft Edge'
+    }
+
+    It 'retains other apps and unknown IDs alongside a grouped app' {
+        $script:WingetDeferredRemovals = @{ 'Microsoft.Edge' = 'Alice'; 'XPFFTQ037JWMHS' = 'Alice'; 'Microsoft.OneDrive' = 'Alice'; 'Unknown.App' = 'Alice' }
+
+        $labels = @(Get-DeferredAppRemovalLabels)
+
+        $labels | Should -HaveCount 3
+        $labels | Should -Contain 'Microsoft Edge'
+        $labels | Should -Contain 'Unknown.App'
+        $labels | Should -Contain (Get-Translation -Key 'Microsoft.OneDrive' -Field 'FriendlyName' -Section 'Apps')
+    }
+
+    It 'keeps distinct catalog apps even when their translated names match' {
+        Mock Import-JsonFile {
+            [PSCustomObject]@{ Apps = @(
+                [PSCustomObject]@{ AppId = @('First.App', 'First.Alias') }
+                [PSCustomObject]@{ AppId = 'Second.App' }
+            ) }
+        }
+        $script:Lang.Apps = [PSCustomObject]@{
+            'First.App' = [PSCustomObject]@{ FriendlyName = 'Shared name' }
+            'Second.App' = [PSCustomObject]@{ FriendlyName = 'Shared name' }
+        }
+        $script:WingetDeferredRemovals = @{ 'First.App' = 'Alice'; 'First.Alias' = 'Alice'; 'Second.App' = 'Alice' }
+
+        $labels = @(Get-DeferredAppRemovalLabels)
+
+        $labels | Should -HaveCount 2
+        @($labels | Where-Object { $_ -eq 'Shared name' }).Count | Should -Be 2
+    }
+
+    It 'returns no labels without deferred removals' {
+        @(Get-DeferredAppRemovalLabels) | Should -HaveCount 0
+    }
+}
+
 Describe 'Get-RebootFeatureLabels' {
     BeforeEach {
         $script:Params = @{
@@ -45,6 +100,10 @@ Describe 'Get-RebootFeatureLabels' {
     }
 
     It 'includes reboot-required selections once and uses undo labels for undo operations' {
+        foreach ($feature in $script:Features.Values) {
+            $feature.PSObject.Properties.Remove('Label')
+            $feature.PSObject.Properties.Remove('UndoLabel')
+        }
         $result = @(Get-RebootFeatureLabels)
 
         $result | Should -HaveCount 2
@@ -63,7 +122,7 @@ Describe 'Get-RebootFeatureLabels' {
         $result | Should -Contain 'Apply feature'
     }
 
-    It 'falls back to the regular label when an undo selection has no undo label' {
+    It 'uses the translation key when an undo selection has no undo label' {
         $script:Params = @{}
         $script:UndoParams = @{ ApplyFeature = $true }
         $script:Features.ApplyFeature.UndoLabel = $null
@@ -72,10 +131,10 @@ Describe 'Get-RebootFeatureLabels' {
         $result = @(Get-RebootFeatureLabels)
 
         $result | Should -HaveCount 1
-        $result | Should -Contain 'Apply feature'
+        $result | Should -Contain 'ApplyFeature'
     }
 
-    It 'falls back to the regular label when the feature has no UndoLabel property' {
+    It 'uses the translation key when the feature has no UndoLabel property' {
         $script:Params = @{}
         $script:UndoParams = @{ MissingUndoLabelFeature = $true }
         $script:Features.MissingUndoLabelFeature = [PSCustomObject]@{
@@ -87,7 +146,7 @@ Describe 'Get-RebootFeatureLabels' {
         $result = @(Get-RebootFeatureLabels)
 
         $result | Should -HaveCount 1
-        $result | Should -Contain 'Feature without undo label'
+        $result | Should -Contain 'MissingUndoLabelFeature'
     }
 
     It 'returns no labels when there are no selected parameters' {

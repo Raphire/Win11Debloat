@@ -114,8 +114,15 @@ function Show-RestoreBackupWindow {
     }
     catch {
         $errorMessage = if ($_.Exception.Message) { $_.Exception.Message } else { Get-Translation -Key 'RestoreUnexpectedError' }
-        Write-Error "Restore operation failed: $errorMessage"
-        Show-MessageBox -Title (Get-Translation -Key 'ErrorTitle') -Message (Get-Translation -Key 'RestoreOperationFailedMessage' -FormatArgs @($errorMessage)) -Icon Error
+        $failureCount = $_.Exception.Data['RegistryRestoreFailureCount']
+        $dialogMessage = if ($failureCount -gt 0) {
+            Get-Translation -Key 'RestoreRegistryFailures' -Count $failureCount -FormatArgs @($failureCount)
+        }
+        else {
+            Get-Translation -Key 'RestoreOperationFailedMessage' -FormatArgs @($errorMessage)
+        }
+        Write-Error "Restore operation failed: $errorMessage" -ErrorAction Continue
+        Show-MessageBox -Title (Get-Translation -Key 'RestoreOperationFailedTitle') -Message $dialogMessage -Icon Error
         return [PSCustomObject]@{
             RestoredRegistry = $false
             RestoredStartMenu = $false

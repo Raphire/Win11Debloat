@@ -1,4 +1,6 @@
 BeforeAll {
+    . (Join-Path $PSScriptRoot '..\Scripts\FileIO\Import-JsonFile.ps1')
+    . (Join-Path $PSScriptRoot '..\Scripts\FileIO\Import-LanguageFile.ps1')
     function Get-UserName { 'Alice' }
     function Generate-AppsList { @() }
     function Add-Parameter { param($Name, $Value) }
@@ -20,7 +22,7 @@ Describe 'Show-CliMenuOptions' {
     BeforeEach {
         $script:Params = @{}
         $script:ControlParams = @('WhatIf', 'Silent')
-        $script:Features = @{ DisableTelemetry = [PSCustomObject]@{ Label = 'Disable telemetry' }; CreateRestorePoint = [PSCustomObject]@{ Label = 'Create restore point' } }
+        $script:Lang = Import-LanguageFile -LanguageCode 'en-US' -LanguagesPath (Join-Path $PSScriptRoot '..\Config\Languages')
         $script:SelectedApps = @('One.App', 'Two.App')
         $script:SavedSettingsFilePath = 'C:\Settings\LastUsedSettings.json'
         $script:DefaultSettingsFilePath = 'C:\Settings\DefaultSettings.json'
@@ -53,7 +55,7 @@ Describe 'Show-CliMenuOptions' {
     }
 
     It 'summarizes selected features and app removal before confirmation' {
-        $script:Params = @{ DisableTelemetry = $true; RemoveApps = $true; Apps = 'Default' }
+        $script:Params = @{ DisableTelemetry = $true; CreateRestorePoint = $true; RemoveApps = $true; Apps = 'Default' }
         $script:ControlParams = @('WhatIf', 'Silent', 'Apps')
         $script:InputQueue = @('')
 
@@ -61,7 +63,13 @@ Describe 'Show-CliMenuOptions' {
 
         Should -Invoke Generate-AppsList -Times 1 -Exactly
         Should -Invoke Read-Host -Times 1 -Exactly
-        Should -Invoke Write-Output -Times 2 -ParameterFilter { $InputObject -like '- *' }
+        Should -Invoke Write-Output -Times 3 -ParameterFilter { $InputObject -like '- *' }
+        Should -Invoke Write-Output -Times 1 -Exactly -ParameterFilter {
+            $InputObject -eq "- $(Get-Translation -Key 'CreateRestorePoint' -Field 'Label' -Section 'Features')"
+        }
+        Should -Invoke Write-Output -Times 1 -Exactly -ParameterFilter {
+            $InputObject -eq "- $(Get-Translation -Key 'DisableTelemetry' -Field 'Label' -Section 'Features')"
+        }
     }
 
     It 'returns the saved-settings menu option only when the file is available' {

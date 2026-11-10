@@ -75,4 +75,71 @@ Describe 'Import-RegistryFile' {
         Should -Invoke Invoke-NonBlocking -Times 1 -Exactly
         Should -Invoke Invoke-RegistryOperationsFromRegFile -Times 0 -Exactly
     }
+
+    It 'does not treat the reg import success banner as a failure' {
+        Mock Invoke-NonBlocking {
+            param($ScriptBlock, $ArgumentList)
+            & $ScriptBlock @ArgumentList
+        }
+
+        function global:reg {
+            <#
+                .SYNOPSIS
+                Test stand-in for reg.exe that emits a localized success banner on the error stream.
+
+                .DESCRIPTION
+                Mimics a successful Windows reg import under Windows PowerShell 5.1 by writing a
+                non-English success banner as a NativeCommandError and setting LASTEXITCODE to 0.
+                Import-RegistryFile must treat exit code 0 as success without matching banner text.
+            #>
+            [CmdletBinding()]
+            param(
+                [Parameter(ValueFromRemainingArguments = $true)]
+                [object[]]$Arguments
+            )
+
+            $exception = [System.Management.Automation.RemoteException]::new('A operação foi concluída com êxito.')
+            $errorRecord = [System.Management.Automation.ErrorRecord]::new(
+                $exception,
+                'NativeCommandError',
+                [System.Management.Automation.ErrorCategory]::NotSpecified,
+                'reg.exe'
+            )
+            $PSCmdlet.WriteError($errorRecord)
+            $global:LASTEXITCODE = 0
+        }
+
+        $previousEap = $ErrorActionPreference
+        $ErrorActionPreference = 'Stop'
+        try {
+            Import-RegistryFile -message 'Apply' -path 'feature.reg' | Should -BeTrue
+        }
+        finally {
+            $ErrorActionPreference = $previousEap
+            Remove-Item -Path 'Function:\reg'
+        }
+
+        Should -Invoke Invoke-NonBlocking -Times 1 -Exactly
+        Should -Invoke Invoke-RegistryOperationsFromRegFile -Times 0 -Exactly
+        Should -Invoke Write-Warning -Times 0 -Exactly
+    }
+
+    It 'falls back to the PowerShell writer when reg cannot start' {
+        Mock Invoke-NonBlocking {
+            param($ScriptBlock, $ArgumentList)
+            & $ScriptBlock @ArgumentList
+        }
+
+        $previousPath = $env:PATH
+        $env:PATH = ''
+        try {
+            Import-RegistryFile -message 'Apply' -path 'feature.reg' | Should -BeTrue
+        }
+        finally {
+            $env:PATH = $previousPath
+        }
+
+        Should -Invoke Invoke-RegistryOperationsFromRegFile -Times 1 -Exactly
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -like "reg import failed*" }
+    }
 }

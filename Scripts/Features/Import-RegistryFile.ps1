@@ -53,7 +53,14 @@ function Import-RegistryFile {
 
                 try {
                     $global:LASTEXITCODE = 0
-                    $output = reg import $targetRegFilePath 2>&1
+                    $previousEap = $ErrorActionPreference
+                    $ErrorActionPreference = 'Continue'
+                    try {
+                        $output = reg import $targetRegFilePath 2>&1
+                    }
+                    finally {
+                        $ErrorActionPreference = $previousEap
+                    }
                     $importExitCode = $LASTEXITCODE
 
                     if ($output) {

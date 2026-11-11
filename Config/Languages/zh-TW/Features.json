@@ -351,11 +351,11 @@
       "ApplyUndoText": "正在啟用儲存空間感知器自動清理磁碟"
     },
     "DisableStartupDelay": {
-      "Label": "停用啟動應用程式的延遲啟動",
-      "ToolTip": "停用登入後 Windows 執行啟動應用程式前的延遲，讓這些應用程式更早啟動。在效能較低或較舊的裝置上，這可能會使 Windows 在登入後的反應速度變慢。",
-      "ApplyText": "正在停用啟動應用程式延遲",
-      "UndoLabel": "還原預設的啟動應用程式延遲",
-      "ApplyUndoText": "正在還原預設的啟動應用程式延遲"
+      "Label": "取消啟動應用程式執行前的等待時間",
+      "ToolTip": "取消隨 Windows 自動啟動的應用程式的等待時間，讓這些應用程式更早啟動。在較舊或效能較低的裝置上，這可能會使 Windows 在登入後的反應速度變慢。",
+      "ApplyText": "正在取消啟動應用程式執行前的等待時間",
+      "UndoLabel": "還原啟動應用程式執行前的預設等待時間",
+      "ApplyUndoText": "正在還原啟動應用程式執行前的預設等待時間"
     },
     "DisableFastStartup": {
       "Label": "停用快速啟動",

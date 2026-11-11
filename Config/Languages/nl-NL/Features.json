@@ -351,8 +351,8 @@
       "ApplyUndoText": "Automatische schijfopruiming inschakelen"
     },
     "DisableStartupDelay": {
-      "Label": "Vertraagd starten van opstart-apps uitschakelen",
-      "ToolTip": "Schakelt de vertraging uit voordat Windows opstart-apps uitvoert nadat je je hebt aangemeld, zodat ze eerder kunnen starten. Hierdoor kan Windows na het aanmelden minder snel reageren op minder krachtige of oudere apparaten.",
+      "Label": "Vertraging voor opstart-apps uitschakelen",
+      "ToolTip": "Schakelt de wachttijd uit voor apps die automatisch met Windows opstarten, zodat ze eerder starten. Op oudere of minder krachtige apparaten kan Windows hierdoor na het aanmelden trager reageren.",
       "ApplyText": "Vertraging voor opstart-apps uitschakelen",
       "UndoLabel": "Standaardvertraging voor opstart-apps herstellen",
       "ApplyUndoText": "Standaardvertraging voor opstart-apps herstellen"

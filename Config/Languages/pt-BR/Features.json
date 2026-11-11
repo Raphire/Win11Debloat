@@ -351,8 +351,8 @@
       "ApplyUndoText": "Habilitando limpeza automática de disco do Sensor de Armazenamento"
     },
     "DisableStartupDelay": {
-      "Label": "Desabilitar a execução adiada dos aplicativos de inicialização",
-      "ToolTip": "Desabilita o atraso antes de o Windows executar os aplicativos de inicialização após você entrar, permitindo que eles iniciem mais cedo. Isso pode deixar o Windows menos responsivo após a entrada em dispositivos menos potentes ou mais antigos.",
+      "Label": "Desabilitar o atraso dos aplicativos de inicialização",
+      "ToolTip": "Desabilita o tempo de espera dos aplicativos que iniciam automaticamente com o Windows, permitindo que iniciem mais cedo. Em dispositivos mais antigos ou menos potentes, isso pode deixar o Windows menos responsivo após o login.",
       "ApplyText": "Desabilitando o atraso dos aplicativos de inicialização",
       "UndoLabel": "Restaurar o atraso padrão dos aplicativos de inicialização",
       "ApplyUndoText": "Restaurando o atraso padrão dos aplicativos de inicialização"

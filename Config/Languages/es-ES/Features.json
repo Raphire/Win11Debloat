@@ -351,8 +351,8 @@
       "ApplyUndoText": "Habilitando la limpieza automática de disco de Sensor de almacenamiento"
     },
     "DisableStartupDelay": {
-      "Label": "Deshabilitar el inicio diferido de las aplicaciones de inicio",
-      "ToolTip": "Deshabilita el retraso con el que Windows ejecuta las aplicaciones de inicio después de iniciar sesión, permitiendo que se inicien antes. Esto puede hacer que Windows responda más lentamente después de iniciar sesión en dispositivos menos potentes o más antiguos.",
+      "Label": "Deshabilitar el retraso de las aplicaciones de inicio",
+      "ToolTip": "Deshabilita el tiempo de espera de las aplicaciones que se inician automáticamente con Windows, para que se abran antes. Esto puede hacer que Windows responda más lentamente después de iniciar sesión en dispositivos más antiguos o menos potentes.",
       "ApplyText": "Deshabilitando el retraso de las aplicaciones de inicio",
       "UndoLabel": "Restaurar el retraso predeterminado de las aplicaciones de inicio",
       "ApplyUndoText": "Restaurando el retraso predeterminado de las aplicaciones de inicio"

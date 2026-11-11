@@ -352,7 +352,7 @@
     },
     "DisableStartupDelay": {
       "Label": "Verzögerten Start von Autostart-Apps deaktivieren",
-      "ToolTip": "Deaktiviert die Verzögerung, mit der Windows Autostart-Apps nach der Anmeldung ausführt, sodass diese früher starten können. Auf weniger leistungsstarken oder älteren Geräten kann Windows dadurch nach der Anmeldung langsamer reagieren.",
+      "ToolTip": "Deaktiviert die Wartezeit für Apps, die automatisch mit Windows starten, sodass sie früher starten können. Auf älteren oder weniger leistungsstarken Geräten kann Windows dadurch nach der Anmeldung langsamer reagieren.",
       "ApplyText": "Verzögerung für Autostart-Apps wird deaktiviert",
       "UndoLabel": "Standardverzögerung für Autostart-Apps wiederherstellen",
       "ApplyUndoText": "Standardverzögerung für Autostart-Apps wird wiederhergestellt"

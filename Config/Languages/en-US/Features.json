@@ -352,7 +352,7 @@
     },
     "DisableStartupDelay": {
       "Label": "Disable delayed launch of startup apps",
-      "ToolTip": "This will disable the delay before Windows runs startup apps after you sign in, allowing them to start sooner. This can make Windows less responsive after sign-in on less powerful or older devices.",
+      "ToolTip": "Disables the delay before Windows runs startup apps after you sign in, allowing them to start sooner. This can make Windows less responsive after sign-in on less powerful or older devices.",
       "ApplyText": "Disabling startup app delay",
       "UndoLabel": "Restore default startup app delay",
       "ApplyUndoText": "Restoring default startup app delay"

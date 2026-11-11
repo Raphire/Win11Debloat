@@ -350,6 +350,13 @@
       "UndoLabel": "Automatische schijfopruiming inschakelen",
       "ApplyUndoText": "Automatische schijfopruiming inschakelen"
     },
+    "DisableStartupDelay": {
+      "Label": "Vertraagd starten van opstart-apps uitschakelen",
+      "ToolTip": "Schakelt de vertraging uit voordat Windows opstart-apps uitvoert nadat je je hebt aangemeld, zodat ze eerder kunnen starten. Hierdoor kan Windows na het aanmelden minder snel reageren op minder krachtige of oudere apparaten.",
+      "ApplyText": "Vertraging voor opstart-apps uitschakelen",
+      "UndoLabel": "Standaardvertraging voor opstart-apps herstellen",
+      "ApplyUndoText": "Standaardvertraging voor opstart-apps herstellen"
+    },
     "DisableFastStartup": {
       "Label": "Snel opstarten uitschakelen",
       "ToolTip": "Met Snel opstarten start je pc sneller nadat je deze hebt afgesloten. Hiervoor bewaart Windows de systeemstatus op schijf. Uitschakelen kan bepaalde problemen oplossen, maar het opstarten kan dan iets langer duren.",

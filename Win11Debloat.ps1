@@ -26,6 +26,7 @@ param (
     [switch]$EnableWindowsSubsystemForLinux,
     [switch]$DisableTelemetry,
     [switch]$DisableFastStartup,
+    [switch]$DisableStartupDelay,
     [switch]$DisableBitlockerAutoEncryption,
     [switch]$DisableModernStandbyNetworking,
     [switch]$DisableStorageSense,

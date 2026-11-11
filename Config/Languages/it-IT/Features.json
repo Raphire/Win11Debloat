@@ -350,6 +350,13 @@
       "UndoLabel": "Abilita la pulizia automatica del disco di Sensore memoria",
       "ApplyUndoText": "Abilitazione della pulizia automatica del disco di Sensore memoria"
     },
+    "DisableStartupDelay": {
+      "Label": "Disabilita il ritardo delle app ad avvio automatico",
+      "ToolTip": "Disabilita il tempo di attesa per le app che si avviano automaticamente con Windows, consentendo loro di avviarsi prima. Sui dispositivi più datati o meno potenti, Windows potrebbe risultare meno reattivo dopo l'accesso.",
+      "ApplyText": "Disabilitazione del ritardo delle app ad avvio automatico",
+      "UndoLabel": "Ripristina il ritardo predefinito delle app ad avvio automatico",
+      "ApplyUndoText": "Ripristino del ritardo predefinito delle app ad avvio automatico"
+    },
     "DisableFastStartup": {
       "Label": "Disabilita l'avvio rapido",
       "ToolTip": "L'avvio rapido aiuta il PC ad avviarsi più velocemente dopo l'arresto salvando un'immagine del sistema sul disco. Disabilitare l'avvio rapido può aiutare con alcuni problemi, ma può comportare tempi di avvio leggermente più lunghi.",

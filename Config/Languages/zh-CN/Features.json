@@ -350,6 +350,13 @@
       "UndoLabel": "启用存储感知自动磁盘清理",
       "ApplyUndoText": "正在启用存储感知自动磁盘清理"
     },
+    "DisableStartupDelay": {
+      "Label": "取消启动应用运行前的等待时间",
+      "ToolTip": "取消随 Windows 自动启动的应用的等待时间，让这些应用更早启动。在较旧或性能较低的设备上，这可能会导致 Windows 在登录后的响应速度变慢。",
+      "ApplyText": "正在取消启动应用运行前的等待时间",
+      "UndoLabel": "恢复启动应用运行前的默认等待时间",
+      "ApplyUndoText": "正在恢复启动应用运行前的默认等待时间"
+    },
     "DisableFastStartup": {
       "Label": "禁用快速启动",
       "ToolTip": "快速启动会将系统映像保存到磁盘，以加快关机后的启动速度。禁用后可能解决某些问题，但开机时间可能略有增加。",

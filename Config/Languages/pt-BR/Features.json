@@ -350,6 +350,13 @@
       "UndoLabel": "Habilitar limpeza automática de disco do Sensor de Armazenamento",
       "ApplyUndoText": "Habilitando limpeza automática de disco do Sensor de Armazenamento"
     },
+    "DisableStartupDelay": {
+      "Label": "Desabilitar o atraso dos aplicativos de inicialização",
+      "ToolTip": "Desabilita o tempo de espera dos aplicativos que iniciam automaticamente com o Windows, permitindo que iniciem mais cedo. Em dispositivos mais antigos ou menos potentes, isso pode deixar o Windows menos responsivo após o login.",
+      "ApplyText": "Desabilitando o atraso dos aplicativos de inicialização",
+      "UndoLabel": "Restaurar o atraso padrão dos aplicativos de inicialização",
+      "ApplyUndoText": "Restaurando o atraso padrão dos aplicativos de inicialização"
+    },
     "DisableFastStartup": {
       "Label": "Desabilitar inicialização rápida",
       "ToolTip": "A inicialização rápida ajuda seu PC a iniciar mais rapidamente após o desligamento, salvando uma imagem do sistema em disco. Desabilitar a inicialização rápida pode ajudar com certos problemas, mas pode resultar em tempos de inicialização um pouco mais longos.",

@@ -350,6 +350,13 @@
       "UndoLabel": "Habilitar la limpieza automática de disco de Sensor de almacenamiento",
       "ApplyUndoText": "Habilitando la limpieza automática de disco de Sensor de almacenamiento"
     },
+    "DisableStartupDelay": {
+      "Label": "Deshabilitar el retraso de las aplicaciones de inicio",
+      "ToolTip": "Deshabilita el tiempo de espera de las aplicaciones que se inician automáticamente con Windows, para que se abran antes. Esto puede hacer que Windows responda más lentamente después de iniciar sesión en dispositivos más antiguos o menos potentes.",
+      "ApplyText": "Deshabilitando el retraso de las aplicaciones de inicio",
+      "UndoLabel": "Restaurar el retraso predeterminado de las aplicaciones de inicio",
+      "ApplyUndoText": "Restaurando el retraso predeterminado de las aplicaciones de inicio"
+    },
     "DisableFastStartup": {
       "Label": "Deshabilitar el inicio rápido",
       "ToolTip": "El inicio rápido ayuda a que el equipo se inicie más rápido después de apagarlo, ya que guarda una imagen del sistema en el disco. Deshabilitarlo puede ayudar con determinados problemas, aunque puede alargar ligeramente el tiempo de arranque.",

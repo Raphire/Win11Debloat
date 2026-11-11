@@ -350,6 +350,13 @@
       "UndoLabel": "Activer le nettoyage automatique du disque (Assistant Stockage)",
       "ApplyUndoText": "Activation du nettoyage automatique du disque (Assistant Stockage)"
     },
+    "DisableStartupDelay": {
+      "Label": "Désactiver le lancement différé des applications au démarrage",
+      "ToolTip": "Supprime le délai de lancement des applications qui démarrent automatiquement avec Windows, pour leur permettre de démarrer plus tôt. Sur les appareils plus anciens ou moins puissants, Windows peut alors être moins réactif après la connexion.",
+      "ApplyText": "Désactivation du délai de lancement des applications au démarrage",
+      "UndoLabel": "Rétablir le délai de lancement par défaut des applications au démarrage",
+      "ApplyUndoText": "Rétablissement du délai de lancement par défaut des applications au démarrage"
+    },
     "DisableFastStartup": {
       "Label": "Désactiver le démarrage rapide",
       "ToolTip": "Le démarrage rapide permet à votre PC de démarrer plus vite après un arrêt en enregistrant une image système sur le disque. Le désactiver peut résoudre certains problèmes, mais les temps de démarrage peuvent être légèrement plus longs.",

@@ -350,6 +350,13 @@
       "UndoLabel": "Akıllı Depolama özelliğini aç",
       "ApplyUndoText": "Akıllı Depolama açılıyor"
     },
+    "DisableStartupDelay": {
+      "Label": "Başlangıç uygulamalarının gecikmeli başlatılmasını kapat",
+      "ToolTip": "Windows ile birlikte otomatik olarak başlayan uygulamaların bekleme süresini kaldırarak daha erken başlamalarını sağlar. Bu durum, eski veya daha az güçlü cihazlarda oturum açtıktan sonra Windows'un daha yavaş yanıt vermesine neden olabilir.",
+      "ApplyText": "Başlangıç uygulamalarının başlatılma gecikmesi kapatılıyor",
+      "UndoLabel": "Başlangıç uygulamalarının varsayılan başlatılma gecikmesini geri yükle",
+      "ApplyUndoText": "Başlangıç uygulamalarının varsayılan başlatılma gecikmesi geri yükleniyor"
+    },
     "DisableFastStartup": {
       "Label": "Hızlı başlatmayı kapat",
       "ToolTip": "Hızlı başlatma, kapatma sırasında bir sistem görüntüsü kaydederek bilgisayarın daha çabuk açılmasını sağlar. Kapatmak bazı sorunları giderebilir ancak açılış biraz uzayabilir.",

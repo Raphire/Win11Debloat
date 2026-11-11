@@ -350,6 +350,13 @@
       "UndoLabel": "Automatische Speicheroptimierung aktivieren",
       "ApplyUndoText": "Automatische Speicheroptimierung wird aktiviert"
     },
+    "DisableStartupDelay": {
+      "Label": "Verzögerten Start von Autostart-Apps deaktivieren",
+      "ToolTip": "Deaktiviert die Wartezeit für Apps, die automatisch mit Windows starten, sodass sie früher starten können. Auf älteren oder weniger leistungsstarken Geräten kann Windows dadurch nach der Anmeldung langsamer reagieren.",
+      "ApplyText": "Verzögerung für Autostart-Apps wird deaktiviert",
+      "UndoLabel": "Standardverzögerung für Autostart-Apps wiederherstellen",
+      "ApplyUndoText": "Standardverzögerung für Autostart-Apps wird wiederhergestellt"
+    },
     "DisableFastStartup": {
       "Label": "Schnellstart deaktivieren",
       "ToolTip": "Der Schnellstart hilft Ihrem PC, nach dem Herunterfahren schneller zu starten, indem ein Systemabbild auf dem Datenträger gespeichert wird. Das Deaktivieren des Schnellstarts kann bei bestimmten Problemen helfen, kann jedoch zu etwas längeren Startzeiten führen.",

@@ -774,6 +774,14 @@
       "MaxVersion": null
     },
     {
+      "FeatureId": "DisableStartupDelay",
+      "Category": "System",
+      "RegistryKey": "Disable_Startup_Delay.reg",
+      "RegistryUndoKey": "Enable_Startup_Delay.reg",
+      "MinVersion": null,
+      "MaxVersion": null
+    },
+    {
       "FeatureId": "DisableFastStartup",
       "Category": "System",
       "RegistryKey": "Disable_Fast_Startup.reg",

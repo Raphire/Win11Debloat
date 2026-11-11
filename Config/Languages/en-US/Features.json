@@ -350,6 +350,13 @@
       "UndoLabel": "Enable Storage Sense automatic disk cleanup",
       "ApplyUndoText": "Enabling Storage Sense automatic disk cleanup"
     },
+    "DisableStartupDelay": {
+      "Label": "Disable delayed launch of startup apps",
+      "ToolTip": "Disables the delay before Windows runs startup apps after you sign in, allowing them to start sooner. This can make Windows less responsive after sign-in on less powerful or older devices.",
+      "ApplyText": "Disabling startup app delay",
+      "UndoLabel": "Restore default startup app delay",
+      "ApplyUndoText": "Restoring default startup app delay"
+    },
     "DisableFastStartup": {
       "Label": "Disable fast start-up",
       "ToolTip": "Fast Start-up helps your PC start faster after shutdown by saving a system image to disk. Disabling Fast Start-up can help with certain issues, but may result in slightly longer boot times.",

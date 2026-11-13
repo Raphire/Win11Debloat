@@ -84,7 +84,14 @@ Describe 'Packaged archive through the launcher' {
         $sumsText = [IO.File]::ReadAllText((Join-Path $releasePath 'SHA256SUMS'))
         Mock Clear-Host {}
         Mock Read-Host { throw 'Unexpected launcher prompt.' }
-        Mock Start-Process { throw 'Reached launch with real extraction.' }
+        $launch = @{}
+        Mock Start-Process {
+            $launch.Script = [regex]::Match([string]$ArgumentList, '-File "([^"]+)"').Groups[1].Value
+            $launch.Folder = Split-Path -Parent $launch.Script
+            $launch.MainScript = [IO.File]::ReadAllText($launch.Script)
+            $launch.HasSchema = Test-Path -LiteralPath (Join-Path $launch.Folder 'Schemas/MainWindow.xaml')
+            throw 'Reached launch with real extraction.'
+        }
         Mock Invoke-RestMethod {
             if ([string]$Uri -match 'releases/latest$') {
                 return [pscustomobject]@{
@@ -98,13 +105,14 @@ Describe 'Packaged archive through the launcher' {
             else { [IO.File]::WriteAllBytes($OutFile, $archiveBytes) }
         }
         try {
-            # Stop at the launcher's catch, before its final cleanup; no child process is created.
-            $ErrorActionPreference = 'Stop'
-            { & (Join-Path $releasePath 'Get.ps1') -CLI } | Should -Throw '*Reached launch with real extraction*'
-            $mainScript = Join-Path $launcherTemp 'Win11Debloat/Win11Debloat.ps1'
-            Test-Path -LiteralPath $mainScript | Should -BeTrue
-            [IO.File]::ReadAllText($mainScript) | Should -Match '\$script:Version = "2026\.10\.22-r2"'
-            Test-Path -LiteralPath (Join-Path $launcherTemp 'Win11Debloat/Schemas/MainWindow.xaml') | Should -BeTrue
+            # The mocked launch fails, so no child process is created; the launcher reports it and cleans up.
+            $ErrorActionPreference = 'Continue'
+            & (Join-Path $releasePath 'Get.ps1') -CLI *> $null
+            Split-Path -Parent $launch.Folder | Should -Be $launcherTemp
+            Split-Path -Leaf $launch.Folder | Should -Match '^Win11Debloat-[0-9a-f]{32}$'
+            $launch.MainScript | Should -Match '\$script:Version = "2026\.10\.22-r2"'
+            $launch.HasSchema | Should -BeTrue
+            Test-Path -LiteralPath $launch.Folder | Should -BeFalse
             Should -Invoke Start-Process -Times 1 -Exactly -ParameterFilter { $ArgumentList -like '*Win11Debloat.ps1*' }
         }
         finally { $env:TEMP = $originalTemp }

@@ -123,8 +123,13 @@ Write-Output " Win11Debloat Script"
 Write-Output "-------------------------------------------------------------------------------------------"
 
 $tempRootPath = $env:TEMP
-$tempWorkPath = Join-Path $tempRootPath 'Win11Debloat'
-$tempArchivePath = Join-Path $tempRootPath 'win11debloat.zip'
+
+# Every run gets its own folder and archive with a random name, so the files that are run elevated are never at a path that
+# is known (or can be prepared) in advance. User data lives in %LOCALAPPDATA%\Win11Debloat, not in this folder.
+$runId = [guid]::NewGuid().ToString('N')
+$tempWorkPath = Join-Path $tempRootPath "Win11Debloat-$runId"
+$tempArchivePath = Join-Path $tempRootPath "win11debloat-$runId.zip"
+$tempChecksumsPath = Join-Path $tempRootPath "win11debloat-$runId.sha256sums"
 
 # Read the expected SHA-256 of a file from the text of a SHA256SUMS file (lines of "<64 hex digits>  <file name>", as
 # written by sha256sum). Returns $null when the file is not listed.
@@ -161,10 +166,9 @@ try {
         $archiveAsset = @($release.assets | Where-Object { $_.name -ceq $releaseArchiveName }) | Select-Object -First 1
         $checksumsAsset = @($release.assets | Where-Object { $_.name -ceq $releaseChecksumsName }) | Select-Object -First 1
         if ($archiveAsset -and $checksumsAsset) {
-            $checksumsPath = Join-Path $tempRootPath 'win11debloat.sha256sums'
-            Invoke-RestMethod $checksumsAsset.browser_download_url -OutFile $checksumsPath
-            $expectedArchiveHash = Get-ExpectedFileHash ([System.IO.File]::ReadAllText($checksumsPath)) $releaseArchiveName
-            Remove-Item $checksumsPath -Force
+            Invoke-RestMethod $checksumsAsset.browser_download_url -OutFile $tempChecksumsPath
+            $expectedArchiveHash = Get-ExpectedFileHash ([System.IO.File]::ReadAllText($tempChecksumsPath)) $releaseArchiveName
+            Remove-Item $tempChecksumsPath -Force
             if (-not $expectedArchiveHash) {
                 throw "$releaseChecksumsName does not list $releaseArchiveName."
             }
@@ -177,6 +181,8 @@ try {
     Invoke-RestMethod $sourceUri -OutFile $tempArchivePath
 }
 catch {
+    # Do not leave the archive or checksum file of this run behind after a failed download
+    Remove-Item -Path $tempArchivePath, $tempChecksumsPath -Force -ErrorAction SilentlyContinue
     Write-Host "Unable to fetch required files from GitHub. Please check your internet connection and try again." -ForegroundColor Red
     Write-Error -ErrorRecord $_
     Write-Output ""
@@ -195,19 +201,23 @@ if ($expectedArchiveHash -and -not (Test-FileHashMatch $tempArchivePath $expecte
     Exit 1
 }
 
-# Remove old script files if they exist, but keep logs and backups
-if (Test-Path $tempWorkPath) {
-    Write-Output ""
-    Write-Output "> Cleaning up old script files..."
-
-    Get-ChildItem -Path $tempWorkPath -Exclude Logs,Backups | Remove-Item -Recurse -Force
-}
-
 Write-Output ""
 Write-Output "> Unpacking..."
 
 # Unzip archive to Win11Debloat folder
-Expand-Archive $tempArchivePath $tempWorkPath
+try {
+    Expand-Archive $tempArchivePath $tempWorkPath -ErrorAction Stop
+}
+catch {
+    # Do not leave the archive and a partly unpacked folder of this run behind
+    Remove-Item -Path $tempArchivePath, $tempWorkPath -Recurse -Force -ErrorAction SilentlyContinue
+    Write-Host "Unable to unpack the downloaded Win11Debloat archive." -ForegroundColor Red
+    Write-Error -ErrorRecord $_ -ErrorAction Continue
+    Write-Output ""
+    Write-Output "Press enter to exit..."
+    Read-Host | Out-Null
+    Exit 1
+}
 
 # Remove archive
 Remove-Item $tempArchivePath
@@ -268,7 +278,7 @@ try {
 }
 catch {
     $exitCode = 1
-    Write-Error "Failed to start Win11Debloat: $_"
+    Write-Error "Failed to start Win11Debloat: $_" -ErrorAction Continue
 }
 
 # Wait for the process to finish before continuing
@@ -277,12 +287,16 @@ if ($null -ne $debloatProcess) {
     $exitCode = $debloatProcess.ExitCode
 }
 
-# Remove all remaining script files, except for logs and backups
+# Remove the script files of this run, except logs and backups (the script keeps those in its own folder when
+# LOCALAPPDATA is not defined), then remove the folder itself when nothing is left in it
 if (Test-Path $tempWorkPath) {
     Write-Output ""
     Write-Output "> Cleaning up..."
 
     Get-ChildItem -Path $tempWorkPath -Exclude Logs,Backups | Remove-Item -Recurse -Force
+    if (-not (Get-ChildItem -Path $tempWorkPath -Force)) {
+        Remove-Item -Path $tempWorkPath -Force
+    }
 }
 
 Write-Output ""

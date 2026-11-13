@@ -18,8 +18,8 @@
         Discards the cached enumeration before reading, so the next call re-enumerates.
 
     .OUTPUTS
-        System.String[]. The installed package names. Empty when the enumeration
-        fails, so callers fall back to per-app queries.
+        System.String[]. The installed package names. Empty when the enumeration fails;
+        a failed enumeration is not cached, so the next call retries it.
 #>
 function Get-InstalledAppxNameSet {
     [CmdletBinding()]
@@ -45,11 +45,10 @@ function Get-InstalledAppxNameSet {
         }
     }
     catch {
-        # An empty result makes the caller fall back to per-app lookups instead of
-        # reporting every app as not installed.
+        # Leave the cache unset so the next refresh retries instead of remembering a
+        # failure. The empty result still means "no Appx entries matched" for this pass.
         Write-Warning "Unable to enumerate installed Appx packages: $($_.Exception.Message)"
-        $script:InstalledAppxNameCache = @()
-        return $script:InstalledAppxNameCache
+        return @()
     }
 
     # Case-insensitive lookup mirrors what the catalog comparison needs.

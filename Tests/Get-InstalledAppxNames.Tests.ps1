@@ -76,6 +76,19 @@ Describe 'Get-InstalledAppxNameSet' {
 
         @($names).Count | Should -Be 0 -Because 'a failed enumeration yields no names'
     }
+
+    It 'does not cache a failed enumeration, so the next call retries' {
+        $script:AppxEnumerationThrows = $true
+        $null = Get-InstalledAppxNameSet -WarningAction SilentlyContinue
+        $script:AppxEnumerationCount | Should -Be 1
+
+        # Recover, then ask again: the failure must not have been remembered.
+        $script:AppxEnumerationThrows = $false
+        $names = Get-InstalledAppxNameSet
+
+        $script:AppxEnumerationCount | Should -Be 2 -Because 'a failure is retried rather than cached'
+        $names | Should -Contain 'Contoso.Example.One'
+    }
 }
 
 Describe 'Import-AppDetailsFromJson with a pre-fetched Appx name set' {

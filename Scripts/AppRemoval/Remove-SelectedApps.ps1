@@ -37,40 +37,41 @@ function Remove-SelectedApps {
     $wingetRemovalFailures = @{}
     if (-not $script:WingetDeferredRemovals) { $script:WingetDeferredRemovals = @{} }
 
-    Foreach ($app in $appsList) {
-        if ($script:CancelRequested) { return $false }
+    try {
+        Foreach ($app in $appsList) {
+            if ($script:CancelRequested) { return $false }
 
-        $appIndex++
+            $appIndex++
 
-        if ($script:ApplySubStepCallback -and $appCount -gt 1) {
-            & $script:ApplySubStepCallback (Get-Translation -Key 'RemovingAppsSubStep' -FormatArgs @($appIndex, $appCount)) $appIndex $appCount
-        }
+            if ($script:ApplySubStepCallback -and $appCount -gt 1) {
+                & $script:ApplySubStepCallback (Get-Translation -Key 'RemovingAppsSubStep' -FormatArgs @($appIndex, $appCount)) $appIndex $appCount
+            }
 
-        if ($script:WingetDeferredRemovals.ContainsKey($app)) {
-            Write-Host "Skipping $app because its uninstall is already scheduled."
-            continue
-        }
+            if ($script:WingetDeferredRemovals.ContainsKey($app)) {
+                Write-Host "Skipping $app because its uninstall is already scheduled."
+                continue
+            }
 
-        Write-Host "Removing $app"
+            Write-Host "Removing $app"
 
-        if ((Get-AppRemovalMethod $app) -eq 'WinGet') {
-            $schedulingFailed = $false
-            $removalSucceeded = Remove-WinGetApp -app $app -SchedulingFailed ([ref]$schedulingFailed)
-            $wingetRemovedApps += $app
-            if ($schedulingFailed -or (($script:Params.ContainsKey('User') -or $script:Params.ContainsKey('Sysprep')) -and -not $removalSucceeded)) {
-                $wingetRemovalFailures[$app] = $true
+            if ((Get-AppRemovalMethod $app) -eq 'WinGet') {
+                $schedulingFailed = $false
+                $removalSucceeded = Remove-WinGetApp -app $app -SchedulingFailed ([ref]$schedulingFailed)
+                $wingetRemovedApps += $app
+                if ($schedulingFailed -or (($script:Params.ContainsKey('User') -or $script:Params.ContainsKey('Sysprep')) -and -not $removalSucceeded)) {
+                    $wingetRemovalFailures[$app] = $true
+                }
+            }
+            else {
+                if (-not (Remove-AppxApp -app $app -targetUser $targetUser)) {
+                    $script:AppRemovalFailures++
+                }
             }
         }
-        else {
-            if (-not (Remove-AppxApp -app $app -targetUser $targetUser)) {
-                $script:AppRemovalFailures++
-            }
-        }
-    }
 
-    if ($script:CancelRequested) {
-        return $false
-    }
+        if ($script:CancelRequested) {
+            return $false
+        }
 
     # Check whether any winget-removed apps are still present, and report errors for each one.
     if ($wingetRemovedApps.Count -gt 0) {
@@ -114,7 +115,17 @@ function Remove-SelectedApps {
 
     $script:AppRemovalFailures += $wingetRemovalFailures.Count
 
-    return ($script:AppRemovalFailures -eq $failuresBefore)
+        return ($script:AppRemovalFailures -eq $failuresBefore)
+    }
+    finally {
+        # The installed-package list is cached for the session, and an app that was
+        # just removed is no longer installed. This runs for every exit path,
+        # including a cancellation that happens after some apps were removed, so the
+        # next apps-tab refresh enumerates again instead of listing the removed app.
+        if (Get-Command -Name 'Reset-InstalledAppxNameCache' -ErrorAction SilentlyContinue) {
+            Reset-InstalledAppxNameCache
+        }
+    }
 }
 
 <#

@@ -162,6 +162,10 @@ Describe 'Get-ValidatedAppList' {
 
 Describe 'Import-AppDetailsFromJson' {
     BeforeEach {
+        # The installed-package lookup is cached for the session, so each case starts
+        # from a clean enumeration.
+        Reset-InstalledAppxNameCache
+
         $script:AppsListFilePath = Join-Path $TestDrive 'Apps.json'
         '{"Apps":[{"AppId":["One.App","Alias.App"],"FriendlyName":"One","SelectedByDefault":true,"RemovalMethod":"WinGet"},{"AppId":"Two.App","SelectedByDefault":false},{"AppId":"  ","SelectedByDefault":true}],"Presets":[{"Name":"Minimal","AppIds":["One.App"]}]}' |
             Set-Content -LiteralPath $script:AppsListFilePath -Encoding UTF8

@@ -210,7 +210,6 @@
   "RestoreStartMenuAllUsersSuccessMessage": "すべてのユーザーのスタート メニュー バックアップが正常に復元されました。変更は次回サインイン時に適用されます。",
   "RestoreStartMenuCurrentUserSuccessMessage": "現在のユーザーのスタート メニュー バックアップが正常に復元されました。変更は次回サインイン時に適用されます。",
   "RestoreOperationFailedMessage": "復元に失敗しました: {0}",
-  "RestoreRegistryFailures_one": "{0} 件のレジストリ キーの復元に失敗しました。詳細はコンソールを確認してください。",
   "RestoreRegistryFailures_other": "{0} 件のレジストリ キーの復元に失敗しました。詳細はコンソールを確認してください。",
   "RestoreOperationFailedTitle": "バックアップの復元に失敗しました",
   "RestoreUnexpectedError": "予期しないエラーが発生しました。",

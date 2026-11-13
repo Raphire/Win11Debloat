@@ -197,7 +197,6 @@
   "RestoreStartMenuAllUsersSuccessMessage": "已成功为所有用户恢复开始菜单备份。更改将在用户下次登录时生效。",
   "RestoreStartMenuCurrentUserSuccessMessage": "已成功为当前用户恢复开始菜单备份。更改将在你下次登录时生效。",
   "RestoreOperationFailedMessage": "恢复失败：{0}",
-  "RestoreRegistryFailures_one": "{0} 个注册表项恢复失败。详情请查看控制台。",
   "RestoreRegistryFailures_other": "{0} 个注册表项恢复失败。详情请查看控制台。",
   "RestoreOperationFailedTitle": "恢复备份失败",
   "RestoreUnexpectedError": "发生意外错误。",

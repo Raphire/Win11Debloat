@@ -197,7 +197,6 @@
   "RestoreStartMenuAllUsersSuccessMessage": "已成功為所有使用者還原開始功能表備份。變更將在每位使用者下次登入時生效。",
   "RestoreStartMenuCurrentUserSuccessMessage": "已成功為目前使用者還原開始功能表備份。變更將在您下次登入時生效。",
   "RestoreOperationFailedMessage": "還原失敗：{0}",
-  "RestoreRegistryFailures_one": "{0} 個登錄機碼還原失敗。請查看主控台以了解詳細資料。",
   "RestoreRegistryFailures_other": "{0} 個登錄機碼還原失敗。請查看主控台以了解詳細資料。",
   "RestoreOperationFailedTitle": "還原備份失敗",
   "RestoreUnexpectedError": "發生未預期的錯誤。",

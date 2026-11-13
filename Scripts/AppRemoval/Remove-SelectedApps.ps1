@@ -114,6 +114,13 @@ function Remove-SelectedApps {
 
     $script:AppRemovalFailures += $wingetRemovalFailures.Count
 
+    # The installed-package list is cached for the session, and an app that was
+    # just removed is no longer installed. Drop the cache so the next apps-tab
+    # refresh enumerates again instead of listing the removed app.
+    if (Get-Command -Name 'Reset-InstalledAppxNameCache' -ErrorAction SilentlyContinue) {
+        Reset-InstalledAppxNameCache
+    }
+
     return ($script:AppRemovalFailures -eq $failuresBefore)
 }
 

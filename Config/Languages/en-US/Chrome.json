@@ -39,7 +39,7 @@
   "HomeUsernamePlaceholder": "Enter username",
   "HomeDefaultModeBtn": "Default Mode",
   "HomeDefaultModeBtnTooltip": "Quickly select the recommended settings",
-  "HomeCustomSetupBtn": "Custom Setup",
+  "HomeCustomSetupBtn": "Custom Mode",
   "HomeCustomSetupBtnTooltip": "Manually select your preferred settings",
 
   "AppRemovalTabHeader": "App Removal",

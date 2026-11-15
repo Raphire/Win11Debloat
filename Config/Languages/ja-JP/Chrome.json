@@ -39,7 +39,7 @@
   "HomeUsernamePlaceholder": "ユーザー名を入力",
   "HomeDefaultModeBtn": "既定モード",
   "HomeDefaultModeBtnTooltip": "推奨設定をすばやく選択します",
-  "HomeCustomSetupBtn": "カスタム設定",
+  "HomeCustomSetupBtn": "カスタムモード",
   "HomeCustomSetupBtnTooltip": "好みの設定を手動で選択します",
 
   "AppRemovalTabHeader": "アプリの削除",

@@ -37,7 +37,7 @@
   "HomeUsernamePlaceholder": "Saisir le nom d'utilisateur",
   "HomeDefaultModeBtn": "Mode par défaut",
   "HomeDefaultModeBtnTooltip": "Sélectionnez rapidement les paramètres recommandés",
-  "HomeCustomSetupBtn": "Configuration perso.",
+  "HomeCustomSetupBtn": "Mode personnalisé",
   "HomeCustomSetupBtnTooltip": "Sélectionnez manuellement les paramètres de votre choix",
   "AppRemovalTabHeader": "Suppr. d'applications",
   "AppRemovalTitle": "Suppression d'applications",

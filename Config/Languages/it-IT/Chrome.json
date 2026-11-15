@@ -84,7 +84,7 @@
   "TweaksPresetAIAutomationName": "Tutte le funzionalità IA",
   "TweaksPresetAITooltip": "Seleziona tutte le modifiche relative all'IA",
   "TweaksDetectApplied": "Rileva modifiche applicate",
-  "TweaksDetectAppliedTooltip": "Rileva tutte le modifiche attualmente applicate all'utente corrente",
+  "TweaksDetectAppliedTooltip": "Rileva le modifiche già applicate all’utente corrente e seleziona le caselle corrispondenti. Deselezionando una modifica già applicata, questa verrà annullata quando si applicano le modifiche.",
   "TweaksSearchPlaceholder": "Cerca modifiche...",
   "TweaksSearchAutomationName": "Cerca modifiche",
   "DeployTabHeader": "Impostazioni di distribuzione",

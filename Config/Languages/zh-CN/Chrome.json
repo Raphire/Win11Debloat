@@ -84,7 +84,7 @@
   "TweaksPresetAIAutomationName": "所有AI功能",
   "TweaksPresetAITooltip": "选择所有与AI相关的系统调整",
   "TweaksDetectApplied": "检测已应用的调整",
-  "TweaksDetectAppliedTooltip": "检测当前用户已应用的所有系统调整",
+  "TweaksDetectAppliedTooltip": "检测当前用户已应用的系统调整，并勾选对应选项。取消勾选已应用的调整后，该调整会在应用更改时撤销。",
   "TweaksSearchPlaceholder": "搜索系统调整…",
   "TweaksSearchAutomationName": "搜索系统调整",
   "DeployTabHeader": "部署设置",

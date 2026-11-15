@@ -88,7 +88,7 @@
   "TweaksPresetAIAutomationName": "Todas funcionalidades de IA",
   "TweaksPresetAITooltip": "Selecionar todos os ajustes relacionados a IA",
   "TweaksDetectApplied": "Detectar ajustes aplicados",
-  "TweaksDetectAppliedTooltip": "Detectar todos os ajustes atualmente aplicados para o usuário atual",
+  "TweaksDetectAppliedTooltip": "Detectar os ajustes já aplicados ao usuário atual e marcar as caixas correspondentes. Ao desmarcar um ajuste já aplicado, ele será desfeito quando você aplicar as alterações.",
   "TweaksSearchPlaceholder": "Pesquisar ajustes...",
   "TweaksSearchAutomationName": "Pesquisar ajustes",
 

@@ -84,7 +84,7 @@
   "TweaksPresetAIAutomationName": "Все функции ИИ",
   "TweaksPresetAITooltip": "Выбрать все настройки, связанные с ИИ",
   "TweaksDetectApplied": "Определить примененные настройки",
-  "TweaksDetectAppliedTooltip": "Определить все настройки, уже примененные для текущего пользователя",
+  "TweaksDetectAppliedTooltip": "Определить настройки, уже применённые для текущего пользователя, и установить соответствующие флажки. Если снять флажок с уже применённой настройки, она будет отменена при применении изменений.",
   "TweaksSearchPlaceholder": "Поиск настроек...",
   "TweaksSearchAutomationName": "Поиск настроек",
   "DeployTabHeader": "Параметры развертывания",

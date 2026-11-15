@@ -84,7 +84,7 @@
   "TweaksPresetAIAutomationName": "Alle KI-Funktionen",
   "TweaksPresetAITooltip": "Alle KI-bezogenen Optimierungen auswählen",
   "TweaksDetectApplied": "Angewendete Optimierungen erkennen",
-  "TweaksDetectAppliedTooltip": "Alle derzeit für den aktuellen Benutzer angewendeten Optimierungen erkennen",
+  "TweaksDetectAppliedTooltip": "Bereits für den aktuellen Benutzer angewendete Optimierungen erkennen und die entsprechenden Kontrollkästchen aktivieren. Wenn Sie das Häkchen bei einer bereits angewendeten Optimierung entfernen, wird diese beim Anwenden der Änderungen rückgängig gemacht.",
   "TweaksSearchPlaceholder": "Optimierungen durchsuchen…",
   "TweaksSearchAutomationName": "Optimierungen durchsuchen",
   "DeployTabHeader": "Bereitstellungseinstellungen",

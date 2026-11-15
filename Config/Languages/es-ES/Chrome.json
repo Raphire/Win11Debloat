@@ -84,7 +84,7 @@
   "TweaksPresetAIAutomationName": "Todas las funciones de IA",
   "TweaksPresetAITooltip": "Seleccionar todos los ajustes relacionados con la IA",
   "TweaksDetectApplied": "Detectar los ajustes aplicados",
-  "TweaksDetectAppliedTooltip": "Detectar todos los ajustes aplicados actualmente para el usuario actual",
+  "TweaksDetectAppliedTooltip": "Detectar los ajustes ya aplicados al usuario actual y marcar sus casillas. Si desmarca un ajuste ya aplicado, se deshará cuando aplique los cambios.",
   "TweaksSearchPlaceholder": "Buscar ajustes...",
   "TweaksSearchAutomationName": "Buscar ajustes",
   "DeployTabHeader": "Configuración de implementación",

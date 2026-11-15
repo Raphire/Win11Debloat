@@ -155,4 +155,27 @@ Describe 'FeatureId parameter contracts' {
 
         $unaccounted | Should -HaveCount 0 -Because ($unaccounted -join ', ')
     }
+    It 'treats every PowerShell common parameter as a control parameter, without duplicates' {
+        $tokens = $null
+        $parseErrors = $null
+        $ast = [System.Management.Automation.Language.Parser]::ParseFile($script:Win11DebloatPath, [ref]$tokens, [ref]$parseErrors)
+        $parseErrors | Should -BeNullOrEmpty
+
+        $assignment = $ast.Find({
+            param($node)
+            $node -is [System.Management.Automation.Language.AssignmentStatementAst] -and $node.Left.Extent.Text -eq '$script:ControlParams'
+        }, $true)
+        $assignment | Should -Not -BeNullOrEmpty
+
+        $controlParameters = @(& ([scriptblock]::Create($assignment.Right.Extent.Text)))
+        $missing = @(
+            [System.Management.Automation.PSCmdlet]::CommonParameters |
+                Where-Object { $controlParameters -notcontains $_ }
+        )
+        $missing | Should -HaveCount 0 -Because ($missing -join ', ')
+
+        # Win11Debloat.ps1 counts the control parameters that were passed, a duplicate would be counted twice
+        $duplicates = @($controlParameters | Group-Object | Where-Object { $_.Count -gt 1 } | ForEach-Object { $_.Name })
+        $duplicates | Should -HaveCount 0 -Because ($duplicates -join ', ')
+    }
 }

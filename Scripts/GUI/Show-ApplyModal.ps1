@@ -70,6 +70,7 @@ function Show-ApplyModal {
     $applyRebootList = $applyWindow.FindName('ApplyRebootList')
     $applyCloseBtn = $applyWindow.FindName('ApplyCloseBtn')
     $applyKofiBtn = $applyWindow.FindName('ApplyKofiBtn')
+    Set-SupportLinkIcon -Icon $applyWindow.FindName('ApplyKofiIcon')
     $applyCancelBtn = $applyWindow.FindName('ApplyCancelBtn')
     
     # Initialize in-progress state
@@ -242,7 +243,7 @@ function Show-ApplyModal {
         if ($script:ApplyModalInErrorState) {
             Start-Process "https://github.com/Raphire/Win11Debloat/issues/new"
         } else {
-            Start-Process "https://ko-fi.com/raphire"
+            Start-Process (Get-SupportLinkUrl)
         }
     })
 

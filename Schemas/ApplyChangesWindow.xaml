@@ -163,7 +163,7 @@
                                 Style="{DynamicResource ModalSecondaryStretchedButtonStyle}"
                                 AutomationProperties.Name="%LANG:TitleBarSupportCreator%">
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                <TextBlock Text="&#xEB52;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="14" VerticalAlignment="Center" Margin="0,0,8,-1"/>
+                                <TextBlock x:Name="ApplyKofiIcon" Text="&#xEB52;" FontFamily="{DynamicResource AppIconFontFamily}" FontSize="14" VerticalAlignment="Center" Margin="0,0,8,-1"/>
                                 <TextBlock Text="%LANG:TitleBarSupportCreator%" VerticalAlignment="Center" FontSize="14" Margin="0,0,0,1"/>
                             </StackPanel>
                         </Button>

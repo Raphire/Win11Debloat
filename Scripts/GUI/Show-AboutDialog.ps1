@@ -57,6 +57,7 @@ function Show-AboutDialog {
     $versionText = $aboutWindow.FindName('VersionText')
     $projectLink = $aboutWindow.FindName('ProjectLink')
     $kofiLink = $aboutWindow.FindName('KofiLink')
+    Set-SupportLinkIcon -Icon $aboutWindow.FindName('KofiLinkIcon')
     $closeButton = $aboutWindow.FindName('CloseButton')
     
     # Set version
@@ -72,9 +73,9 @@ function Show-AboutDialog {
         Start-Process "https://github.com/Raphire/Win11Debloat"
     })
     
-    # Ko-fi link click handler
+    # Support link click handler
     $kofiLink.Add_Click({
-        Start-Process "https://ko-fi.com/raphire"
+        Start-Process (Get-SupportLinkUrl)
     })
     
     # Close button handler

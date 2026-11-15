@@ -501,7 +501,9 @@ function ConvertTo-LocalizedXaml {
         if (-not $resolvesSomewhere) { $missingKeys.Add($key) }
         if ($DynamicResources) { return "{DynamicResource Language_$key}" }
         $value = if ($resolvesSomewhere) { Get-Translation -Key $key -Lang $Lang } else { $key }
-        return [System.Security.SecurityElement]::Escape($value)
+        # Literal line breaks in XML attributes are normalized to spaces by the reader.
+        # Character references preserve translated paragraphs in Text/ToolTip attributes.
+        return [System.Security.SecurityElement]::Escape($value).Replace("`r", '&#xD;').Replace("`n", '&#xA;')
     }
 
     $result = [System.Text.RegularExpressions.Regex]::Replace($Xaml, '%LANG:([A-Za-z0-9_]+)%', $evaluator)

@@ -88,7 +88,7 @@
   "TweaksPresetAIAutomationName": "Tüm yapay zeka özellikleri",
   "TweaksPresetAITooltip": "Yapay zekayla ilgili tüm ayarları seç",
   "TweaksDetectApplied": "Uygulanmış ayarları bul",
-  "TweaksDetectAppliedTooltip": "Geçerli kullanıcı için zaten uygulanmış ayarları algılar ve ilgili kutuları işaretler. Uygulanmış bir ayarın işaretini kaldırırsanız değişiklikleri uyguladığınızda bu ayar geri alınır.",
+  "TweaksDetectAppliedTooltip": "Geçerli kullanıcı için uygulanmış ayarları algılar ve ilgili kutuları işaretler. Bir ayarın işaretini kaldırırsanız değişiklikleri uyguladığınızda ilgili sistem değişiklikleri geri alınır, ancak kaldırılan uygulamalar yeniden yüklenmez.",
   "TweaksSearchPlaceholder": "Ayar ara...",
   "TweaksSearchAutomationName": "Ayar ara",
 

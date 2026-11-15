@@ -88,7 +88,7 @@
   "TweaksPresetAIAutomationName": "すべての AI 機能",
   "TweaksPresetAITooltip": "AI 関連のすべての調整を選択します",
   "TweaksDetectApplied": "適用済みの調整を検出",
-  "TweaksDetectAppliedTooltip": "現在のユーザーに適用済みの調整を検出し、チェックを入れます。適用済みの調整のチェックを外すと、変更を適用したときにその調整が元に戻ります。",
+  "TweaksDetectAppliedTooltip": "現在のユーザーに適用済みの調整を検出し、チェックを入れます。調整のチェックを外すと、変更を適用したときにその調整によるシステムの変更が元に戻りますが、削除されたアプリは再インストールされません。",
   "TweaksSearchPlaceholder": "調整を検索...",
   "TweaksSearchAutomationName": "調整の検索",
 

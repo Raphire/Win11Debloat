@@ -84,7 +84,7 @@
   "TweaksPresetAIAutomationName": "Toutes les fonctionnalités d'IA",
   "TweaksPresetAITooltip": "Sélectionnez tous les ajustements liés à l'IA",
   "TweaksDetectApplied": "Détecter les ajustements appliqués",
-  "TweaksDetectAppliedTooltip": "Détecter les ajustements déjà appliqués à l’utilisateur actuel et cocher les cases correspondantes. Si vous décochez un ajustement déjà appliqué, il sera annulé lorsque vous appliquerez les modifications.",
+  "TweaksDetectAppliedTooltip": "Détecter les ajustements appliqués à l’utilisateur actuel et cocher les cases correspondantes. Si vous décochez un ajustement, les modifications apportées au système seront annulées lorsque vous appliquerez les modifications, mais les applications supprimées ne seront pas réinstallées.",
   "TweaksSearchPlaceholder": "Rechercher des ajustements...",
   "TweaksSearchAutomationName": "Rechercher des ajustements",
   "DeployTabHeader": "Paramètres de déploiement",

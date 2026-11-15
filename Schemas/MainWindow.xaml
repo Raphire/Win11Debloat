@@ -810,7 +810,10 @@
                                         </Popup>
                                     </StackPanel>
 
-                                    <CheckBox x:Name="ShowCurrentlyAppliedTweaksCheckBox" Grid.Column="1" IsChecked="True" Foreground="{DynamicResource AppFgColor}" VerticalAlignment="Center" HorizontalAlignment="Left" AutomationProperties.Name="%LANG:TweaksDetectApplied%" ToolTip="%LANG:TweaksDetectAppliedTooltip%">
+                                    <CheckBox x:Name="ShowCurrentlyAppliedTweaksCheckBox" Grid.Column="1" IsChecked="True" Foreground="{DynamicResource AppFgColor}" VerticalAlignment="Center" HorizontalAlignment="Left" AutomationProperties.Name="%LANG:TweaksDetectApplied%">
+                                        <CheckBox.ToolTip>
+                                            <TextBlock Text="%LANG:TweaksDetectAppliedTooltip%" TextWrapping="Wrap" MaxWidth="420"/>
+                                        </CheckBox.ToolTip>
                                         <TextBlock Text="%LANG:TweaksDetectApplied%" TextWrapping="Wrap"/>
                                     </CheckBox>
 

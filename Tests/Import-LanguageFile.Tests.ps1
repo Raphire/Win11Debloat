@@ -329,6 +329,21 @@ Describe 'ConvertTo-LocalizedXaml' {
         ConvertTo-LocalizedXaml -Xaml $xaml -Lang $script:EnLang | Should -Be '<a Text="Options"/><b Text="Close"/>'
     }
 
+    It 'preserves translated paragraphs through XML attribute parsing with <LineEnding> line breaks' -ForEach @(
+        @{ LineEnding = 'LF'; Separator = "`n" }
+        @{ LineEnding = 'CRLF'; Separator = "`r`n" }
+    ) {
+        $text = "First & second.${Separator}${Separator}Support Ukraine."
+        $lang = [PSCustomObject]@{ Chrome = [PSCustomObject]@{ Message = $text } }
+        $xaml = ConvertTo-LocalizedXaml -Xaml '<TextBlock Text="%LANG:Message%"/>' -Lang $lang
+        $reader = [System.Xml.XmlReader]::Create([System.IO.StringReader]::new($xaml))
+        try {
+            [void]$reader.Read()
+            $reader.GetAttribute('Text') | Should -BeExactly $text
+        }
+        finally { $reader.Close() }
+    }
+
     It 'throws when a marker key does not exist in any language' {
         $xaml = '<Button Content="%LANG:NoSuchKeyAnywhere%"/>'
 

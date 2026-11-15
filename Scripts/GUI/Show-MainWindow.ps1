@@ -85,7 +85,7 @@ function Show-MainWindow {
     })
 
     # ---- Menu/button event wiring ----
-    $kofiBtn.Add_Click({ Start-Process "https://ko-fi.com/raphire" })
+    $kofiBtn.Add_Click({ Start-Process (Get-SupportLinkUrl) })
     $window.FindName('SettingsBtn').Add_Click({ Open-MainWindowSettings -Window $window })
 
     $menuBtn.Add_Click({

@@ -21,6 +21,53 @@ function Update-WindowLanguageResources {
         $text = Get-Translation -Key $key -Section 'Chrome'
         foreach ($target in $targets) { $target.Resources["Language_$key"] = $text }
     }
+    Set-SupportLinkIcon -Icon $Window.FindName('KofiIcon')
+}
+
+<#
+    .SYNOPSIS
+        Returns the support destination for the active interface language.
+#>
+function Get-SupportLinkUrl {
+    if ($script:Lang.LanguageCode -eq 'ru-RU') {
+        return 'https://war.ukraine.ua/support-ukraine/'
+    }
+    return 'https://ko-fi.com/raphire'
+}
+
+<#
+    .SYNOPSIS
+        Shows the Ukrainian flag for Russian, or the creator support heart otherwise.
+
+    .PARAMETER Icon
+        The support link's icon TextBlock, when present in the window.
+#>
+function Set-SupportLinkIcon {
+    param([System.Windows.Controls.TextBlock]$Icon)
+
+    if ($null -eq $Icon) { return }
+    if ($script:Lang.LanguageCode -eq 'ru-RU') {
+        # Draw the flag directly so it also renders on Windows without flag emoji support.
+        $drawing = [System.Windows.Media.DrawingGroup]::new()
+        foreach ($stripe in @(
+            @{ Color = '#0057B7'; Y = 0 }
+            @{ Color = '#FFD700'; Y = 1 }
+        )) {
+            $brush = [System.Windows.Media.BrushConverter]::new().ConvertFromString($stripe.Color)
+            $rectangle = [System.Windows.Media.RectangleGeometry]::new([System.Windows.Rect]::new(0, $stripe.Y, 3, 1))
+            $drawing.Children.Add([System.Windows.Media.GeometryDrawing]::new($brush, $null, $rectangle))
+        }
+        $Icon.Text = ''
+        $Icon.Width = 18
+        $Icon.Height = 12
+        $Icon.Background = [System.Windows.Media.DrawingBrush]::new($drawing)
+    }
+    else {
+        $Icon.Text = [string][char]0xEB52
+        $Icon.ClearValue([System.Windows.FrameworkElement]::WidthProperty)
+        $Icon.ClearValue([System.Windows.FrameworkElement]::HeightProperty)
+        $Icon.ClearValue([System.Windows.Controls.TextBlock]::BackgroundProperty)
+    }
 }
 
 <#

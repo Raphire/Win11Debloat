@@ -84,7 +84,7 @@
   "TweaksPresetAIAutomationName": "所有 AI 功能",
   "TweaksPresetAITooltip": "選取所有與 AI 相關的微調",
   "TweaksDetectApplied": "偵測已套用的微調",
-  "TweaksDetectAppliedTooltip": "偵測目前使用者已套用的微調，並勾選對應選項。取消勾選已套用的微調後，該微調會在套用變更時復原。",
+  "TweaksDetectAppliedTooltip": "偵測目前使用者已套用的微調，並勾選對應選項。取消勾選某項微調後，套用變更時會復原該微調對系統所做的變更，但不會重新安裝已移除的應用程式。",
   "TweaksSearchPlaceholder": "搜尋微調...",
   "TweaksSearchAutomationName": "搜尋微調",
   "DeployTabHeader": "部署設定",

@@ -84,7 +84,7 @@
   "TweaksPresetAIAutomationName": "모든 AI 기능",
   "TweaksPresetAITooltip": "AI와 관련된 모든 조정 항목을 선택합니다",
   "TweaksDetectApplied": "적용된 조정 항목 감지",
-  "TweaksDetectAppliedTooltip": "현재 사용자에게 이미 적용된 조정 항목을 감지하여 체크 표시합니다. 이미 적용된 조정 항목의 체크를 해제하면 변경 사항을 적용할 때 해당 조정이 취소됩니다.",
+  "TweaksDetectAppliedTooltip": "현재 사용자에게 적용된 조정 항목을 감지하여 체크 표시합니다. 조정 항목의 체크를 해제하면 변경 사항을 적용할 때 해당 항목으로 인한 시스템 변경 사항이 취소되지만, 제거된 앱은 다시 설치되지 않습니다.",
   "TweaksSearchPlaceholder": "조정 항목 검색...",
   "TweaksSearchAutomationName": "조정 항목 검색",
   "DeployTabHeader": "배포 설정",

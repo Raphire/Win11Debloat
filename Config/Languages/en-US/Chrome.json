@@ -88,7 +88,7 @@
   "TweaksPresetAIAutomationName": "All AI features",
   "TweaksPresetAITooltip": "Select all AI related tweaks",
   "TweaksDetectApplied": "Detect applied tweaks",
-  "TweaksDetectAppliedTooltip": "Detect tweaks already applied for the current user and mark them as checked. Unchecking an applied tweak will undo it when you apply changes.",
+  "TweaksDetectAppliedTooltip": "Detect and check applied tweaks for the current user. Unchecking a tweak will undo any system changes when you apply changes, but will not reinstall removed apps.",
   "TweaksSearchPlaceholder": "Search tweaks...",
   "TweaksSearchAutomationName": "Search tweaks",
 

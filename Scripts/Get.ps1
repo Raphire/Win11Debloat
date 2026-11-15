@@ -70,6 +70,8 @@ param (
     [switch]$DisableCopilot,
     [switch]$DisableRecall,
     [switch]$DisableClickToDo,
+    [switch]$DisableSettingsAgent,
+    [switch]$DisableAgentConnectors,
     [switch]$DisableAISvcAutoStart,
     [switch]$DisablePaintAI,
     [switch]$DisableNotepadAI,

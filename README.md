@@ -93,6 +93,7 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 #### AI Features
 
 - Disable & remove Microsoft Copilot, Windows Recall and Click to Do.
+- Disable AI-powered search in the Settings app and Windows agent connectors.
 - Prevent AI service (WSAIFabricSvc) from starting automatically.
 - Disable AI Features in Edge, Chrome, Paint and Notepad.
 

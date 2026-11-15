@@ -245,8 +245,10 @@ Describe 'Executable registry backup values' {
         @{ Case = 'Game Bar command'; FeatureId = 'DisableGameBarIntegration'; Undo = $false; Path = 'HKEY_CLASSES_ROOT\ms-gamebar\shell\open\command'; Name = ''; Kind = 'String'; Data = 'cmd.exe /c echo doctored' }
         @{ Case = 'Game Bar services command'; FeatureId = 'DisableGameBarIntegration'; Undo = $false; Path = 'HKEY_CLASSES_ROOT\ms-gamebarservices\shell\open\command'; Name = ''; Kind = 'String'; Data = 'cmd.exe /c echo doctored' }
         @{ Case = 'undo command'; FeatureId = 'DisableGameBarIntegration'; Undo = $true; Path = 'HKEY_CLASSES_ROOT\ms-gamebar\shell\open\command'; Name = ''; Kind = 'String'; Data = 'cmd.exe /c echo doctored' }
-        @{ Case = 'RunOnce command'; FeatureId = 'RevertContextMenu'; Undo = $false; Path = 'HKEY_USERS\Default\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce'; Name = 'RestoreWin10ContextMenu'; Kind = 'String'; Data = 'cmd.exe /c echo doctored' }
+        @{ Case = 'RunOnce command'; FeatureId = 'RevertContextMenu'; Undo = $false; Path = 'HKEY_USERS\Default\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce'; Name = 'RestoreWin10ContextMenu1'; Kind = 'String'; Data = 'cmd.exe /c echo doctored' }
+        @{ Case = 'RunOnce command'; FeatureId = 'RevertContextMenu'; Undo = $false; Path = 'HKEY_USERS\Default\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce'; Name = 'RestoreWin10ContextMenu2'; Kind = 'String'; Data = 'cmd.exe /c echo doctored' }
         @{ Case = 'DLL path'; FeatureId = 'RevertContextMenu'; Undo = $false; Path = 'HKEY_USERS\Default\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32'; Name = ''; Kind = 'String'; Data = 'C:\Temp\doctored.dll' }
+        @{ Case = 'DLL path'; FeatureId = 'RevertContextMenu'; Undo = $false; Path = 'HKEY_USERS\Default\Software\Classes\CLSID\{51668040-5e31-4023-bbe3-149163bd80f1}\InprocServer32'; Name = ''; Kind = 'String'; Data = 'C:\Temp\doctored.dll' }
         @{ Case = 'COM indirection'; FeatureId = 'RevertContextMenu'; Undo = $true; Path = 'HKEY_CURRENT_USER\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\TreatAs'; Name = ''; Kind = 'String'; Data = '{00000000-0000-0000-0000-000000000001}' }
         @{ Case = 'appended command arguments'; FeatureId = 'DisableGameBarIntegration'; Undo = $false; Path = 'HKEY_CLASSES_ROOT\ms-gamebar\shell\open\command'; Name = ''; Kind = 'String'; Data = '%SystemRoot%/System32/systray.exe /doctored' }
         @{ Case = 'changed command kind'; FeatureId = 'DisableGameBarIntegration'; Undo = $false; Path = 'HKEY_CLASSES_ROOT\ms-gamebar\shell\open\command'; Name = ''; Kind = 'ExpandString'; Data = '%SystemRoot%/System32/systray.exe' }
@@ -300,9 +302,12 @@ Describe 'Executable registry backup values' {
     }
 
     It 'accepts the actual trusted RunOnce command' {
-        $operation = @(Get-RegFileOperations -regFilePath (Join-Path $script:RegfilesPath 'Sysprep\Disable_Show_More_Options_Context_Menu.reg') | Where-Object ValueName -eq 'RestoreWin10ContextMenu')[0]
+        $operation = @(Get-RegFileOperations -regFilePath (Join-Path $script:RegfilesPath 'Sysprep\Disable_Show_More_Options_Context_Menu.reg') | Where-Object ValueName -eq 'RestoreWin10ContextMenu1')[0]
         $snapshot = [PSCustomObject]@{ Path = $operation.KeyPath; Exists = $true; Values = @([PSCustomObject]@{ Name = $operation.ValueName; Exists = $true; Kind = 'String'; Data = $operation.ValueData }); SubKeys = @() }
+        @(Test-RegistryBackupMatchesSelectedFeatures -SelectedFeatureIds @('RevertContextMenu') -SelectedUndoFeatureIds @() -Target 'DefaultUserProfile' -RegistryKeys @($snapshot)) | Should -HaveCount 0
 
+        $operation = @(Get-RegFileOperations -regFilePath (Join-Path $script:RegfilesPath 'Sysprep\Disable_Show_More_Options_Context_Menu.reg') | Where-Object ValueName -eq 'RestoreWin10ContextMenu2')[0]
+        $snapshot = [PSCustomObject]@{ Path = $operation.KeyPath; Exists = $true; Values = @([PSCustomObject]@{ Name = $operation.ValueName; Exists = $true; Kind = 'String'; Data = $operation.ValueData }); SubKeys = @() }
         @(Test-RegistryBackupMatchesSelectedFeatures -SelectedFeatureIds @('RevertContextMenu') -SelectedUndoFeatureIds @() -Target 'DefaultUserProfile' -RegistryKeys @($snapshot)) | Should -HaveCount 0
     }
 

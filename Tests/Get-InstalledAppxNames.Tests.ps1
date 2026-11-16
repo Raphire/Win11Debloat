@@ -150,3 +150,84 @@ Describe 'Import-AppDetailsFromJson with a pre-fetched Appx name set' {
         @($apps).Count | Should -Be 2 -Because 'both enumerated names are installed'
     }
 }
+
+Describe 'Invoke-AppDetailsFromJsonAsync GUI-path runscape' {
+    BeforeAll {
+        # Force Invoke-NonBlocking down its real background-runscape branch. That branch
+        # only pumps the UI through Invoke-DoEvents while waiting for the runspace, so the
+        # test mocks the pump (same pattern as Invoke-NonBlocking.Tests.ps1) and needs no
+        # real WPF dispatcher. The runspace itself still hands the cache hashtable to the
+        # worker by reference across [powershell]::Create(), which is what this Describe
+        # actually verifies.
+        . (Join-Path $PSScriptRoot '..\Scripts\Threading\Invoke-NonBlocking.ps1')
+        . (Join-Path $PSScriptRoot '..\Scripts\Threading\Invoke-DoEvents.ps1')
+        $script:GuiWindow = [pscustomobject]@{ Title = 'test window' }
+
+        $script:AppsListFilePath = Join-Path $TestDrive 'Apps.json'
+        '{"Apps":[{"AppId":"Contoso.Example.One"},{"AppId":"Contoso.Example.Two"}]}' |
+            Set-Content -LiteralPath $script:AppsListFilePath -Encoding UTF8
+        $script:LoaderPath = Join-Path $PSScriptRoot '..\Scripts\FileIO\Import-AppDetailsFromJson.ps1'
+        $script:RealHelperPath = Join-Path $PSScriptRoot '..\Scripts\AppRemoval\Test-AppInWingetList.ps1'
+        $script:LanguagePath = Join-Path $PSScriptRoot '..\Scripts\FileIO\Import-LanguageFile.ps1'
+        $script:Lang = Import-LanguageFile -LanguageCode 'en-US'
+    }
+
+    BeforeEach {
+        Reset-InstalledAppxNameCache
+    }
+
+    AfterAll {
+        # Don't leak the fake window into other Describes, which rely on the inline path.
+        $script:GuiWindow = $null
+    }
+
+    It 'enumerates inside the runscape and backfills the shared cache by reference' {
+        Mock Invoke-DoEvents {}
+
+        # A mock Get-AppxPackage defined in this session cannot cross into the worker's
+        # fresh runscape, so inject one through the helper script the worker dot-sources.
+        $helper = Join-Path $TestDrive 'MockAppxHelper.ps1'
+        $lines = @(
+            'function Get-AppxPackage {'
+            '    return @('
+            '        [PSCustomObject]@{ Name = ''Contoso.Example.One'' }'
+            '        [PSCustomObject]@{ Name = ''Contoso.Example.Two'' }'
+            '    )'
+            '}'
+            ". '$script:RealHelperPath'"
+        )
+        Set-Content -LiteralPath $helper -Value $lines -Encoding UTF8
+
+        $apps = @(Invoke-AppDetailsFromJsonAsync -OnlyInstalled `
+            -LoaderScriptPath $script:LoaderPath -HelperScriptPath $helper `
+            -LanguageFileScriptPath $script:LanguagePath -AppsFilePath $script:AppsListFilePath `
+            -Lang $script:Lang)
+
+        @($apps).Count | Should -Be 2 -Because 'both enumerated names reach the UI through the real runscape'
+        # The caller-side cache is the same hashtable the worker filled by reference.
+        $script:InstalledAppxNameCache['Contoso.Example.One'] | Should -Be $true
+        $script:InstalledAppxNameCache['Contoso.Example.Two'] | Should -Be $true
+    }
+
+    It 'leaves the shared cache empty when the runscape enumeration fails' {
+        Mock Invoke-DoEvents {}
+
+        $helper = Join-Path $TestDrive 'FailingAppxHelper.ps1'
+        $lines = @(
+            'function Get-AppxPackage { throw ''enumeration failed'' }'
+            ". '$script:RealHelperPath'"
+        )
+        Set-Content -LiteralPath $helper -Value $lines -Encoding UTF8
+
+        # Invoke-NonBlocking returns $null when the worker emits no apps, the same empty
+        # result the GUI handles by filtering falsy entries before display
+        # (MainWindow-AppSelection.ps1); mirror that consumption here.
+        $apps = @(Invoke-AppDetailsFromJsonAsync -OnlyInstalled `
+            -LoaderScriptPath $script:LoaderPath -HelperScriptPath $helper `
+            -LanguageFileScriptPath $script:LanguagePath -AppsFilePath $script:AppsListFilePath `
+            -Lang $script:Lang | Where-Object { $_ -and $_.AppId })
+
+        $apps.Count | Should -Be 0 -Because 'a failed enumeration matches no installed apps'
+        $script:InstalledAppxNameCache.Count | Should -Be 0 -Because 'a failure is not cached, so the next refresh retries'
+    }
+}

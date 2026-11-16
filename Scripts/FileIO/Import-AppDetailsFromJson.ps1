@@ -11,8 +11,10 @@
         Reset-InstalledAppxNameCache to force a fresh enumeration, for example after
         the user removes an app and wants the list to reflect it.
 
-        The names are returned as a plain string array so they survive being handed
-        to a background runspace, where a HashSet would not.
+        Internally the cache is a hashtable so Invoke-AppDetailsFromJsonAsync can hand
+        it to a background runspace by reference and have the enumeration run there,
+        off the UI thread. This synchronous helper returns the same names as a plain
+        string array.
 
     .PARAMETER Reset
         Discards the cached enumeration before reading, so the next call re-enumerates.
@@ -31,29 +33,56 @@ function Get-InstalledAppxNameSet {
         $script:InstalledAppxNameCache = $null
     }
 
-    if ($null -ne $script:InstalledAppxNameCache) {
-        return $script:InstalledAppxNameCache
+    if ($null -eq $script:InstalledAppxNameCache) {
+        $script:InstalledAppxNameCache = @{}
     }
 
-    $names = @()
+    if ($script:InstalledAppxNameCache.Count -gt 0) {
+        return [string[]]@($script:InstalledAppxNameCache.Keys)
+    }
 
     try {
-        foreach ($installedApp in @(Get-AppxPackage -ErrorAction SilentlyContinue)) {
-            if ($installedApp.Name -is [string] -and $installedApp.Name) {
-                $names += $installedApp.Name
-            }
-        }
+        $names = @(Get-InstalledAppxPackageNames)
     }
     catch {
-        # Leave the cache unset so the next refresh retries instead of remembering a
+        # Leave the cache empty so the next refresh retries instead of remembering a
         # failure. The empty result still means "no Appx entries matched" for this pass.
         Write-Warning "Unable to enumerate installed Appx packages: $($_.Exception.Message)"
         return @()
     }
 
-    # Case-insensitive lookup mirrors what the catalog comparison needs.
-    $script:InstalledAppxNameCache = @($names | Sort-Object -Unique)
-    return $script:InstalledAppxNameCache
+    # Store the names as hashtable keys. A hashtable can be handed to a background
+    # runscape by reference and filled there, unlike a fixed string array, so the
+    # caller and the worker share one enumeration. The consumer is itself a
+    # case-insensitive hashtable, so duplicates and ordering are irrelevant.
+    foreach ($name in $names) {
+        $script:InstalledAppxNameCache[$name] = $true
+    }
+    return [string[]]@($script:InstalledAppxNameCache.Keys)
+}
+
+<#
+    .SYNOPSIS
+        Enumerates the installed Appx package names as a plain string array.
+
+    .DESCRIPTION
+        The single enumeration implementation, shared by the synchronous
+        Get-InstalledAppxNameSet path and the background worker in
+        Invoke-AppDetailsFromJsonAsync. Returns usable package names, skipping
+        entries whose Name is not a non-empty string. Enumeration failures are
+        left to propagate so the caller can decide whether to cache the result.
+#>
+function Get-InstalledAppxPackageNames {
+    [CmdletBinding()]
+    param ()
+
+    $names = @()
+    foreach ($installedApp in @(Get-AppxPackage -ErrorAction SilentlyContinue)) {
+        if ($installedApp.Name -is [string] -and $installedApp.Name) {
+            $names += $installedApp.Name
+        }
+    }
+    return $names
 }
 
 <#
@@ -219,20 +248,40 @@ function Invoke-AppDetailsFromJsonAsync {
     $initialCheckedFromJsonValue = [bool]$InitialCheckedFromJson
 
     # The runspace is a fresh powershell instance, so a script-scoped cache cannot be
-    # shared with it. Resolve the installed package names here and hand them over, so
-    # repeated refreshes reuse one enumeration instead of one per runspace.
-    $installedAppxNames = $null
-    if ($onlyInstalledValue) {
-        $installedAppxNames = [string[]]@(Get-InstalledAppxNameSet)
+    # shared with it directly. Hand over a hashtable cache by reference instead: the
+    # worker enumerates on the background thread and fills this same hashtable, so the
+    # UI thread never blocks on a Get-AppxPackage cache miss while later refreshes
+    # still reuse one enumeration.
+    if ($null -eq $script:InstalledAppxNameCache) {
+        $script:InstalledAppxNameCache = @{}
     }
 
     return Invoke-NonBlocking -ScriptBlock {
-        param($loaderScript, $helperScript, $languageFileScript, $appsListFilePath, $installedList, $onlyInstalled, $initialCheckedFromJson, $Lang, $appxNames)
+        param($loaderScript, $helperScript, $languageFileScript, $appsListFilePath, $installedList, $onlyInstalled, $initialCheckedFromJson, $Lang, $appxCache)
         $script:AppsListFilePath = $appsListFilePath
         $script:Lang = $Lang
         . $helperScript
         . $languageFileScript
         . $loaderScript
+
+        $appxNames = $null
+        if ($onlyInstalled) {
+            if ($appxCache.Count -eq 0) {
+                # Enumerate here on the worker thread so a cache miss never freezes the UI.
+                try {
+                    foreach ($name in @(Get-InstalledAppxPackageNames)) {
+                        $appxCache[$name] = $true
+                    }
+                }
+                catch {
+                    # Leave the cache empty so the next refresh retries. This pass treats the
+                    # failure as "no installed Appx apps matched".
+                    Write-Warning "Unable to enumerate installed Appx packages: $($_.Exception.Message)"
+                }
+            }
+            $appxNames = [string[]]@($appxCache.Keys)
+        }
+
         Import-AppDetailsFromJson -OnlyInstalled:$onlyInstalled -InstalledList $installedList -InitialCheckedFromJson:$initialCheckedFromJson -InstalledAppxNames $appxNames
-    } -ArgumentList $LoaderScriptPath, $HelperScriptPath, $LanguageFileScriptPath, $AppsFilePath, $InstalledList, $onlyInstalledValue, $initialCheckedFromJsonValue, $Lang, $installedAppxNames
+    } -ArgumentList $LoaderScriptPath, $HelperScriptPath, $LanguageFileScriptPath, $AppsFilePath, $InstalledList, $onlyInstalledValue, $initialCheckedFromJsonValue, $Lang, $script:InstalledAppxNameCache
 }

@@ -128,7 +128,7 @@ Describe 'Import-AppDetailsFromJson with a pre-fetched Appx name set' {
             Should -Be 1 -Because 'the enumerated name marks the app as installed'
     }
 
-    It 'filters correctly when the names cross into a background runspace' {
+    It 'filters correctly on the inline CLI path' {
         . (Join-Path $PSScriptRoot '..\Scripts\Threading\Invoke-NonBlocking.ps1')
 
         $script:AppsListFilePath = Join-Path $TestDrive 'Apps.json'
@@ -137,14 +137,15 @@ Describe 'Import-AppDetailsFromJson with a pre-fetched Appx name set' {
         $script:LanguagePath = Join-Path $PSScriptRoot '..\Scripts\FileIO\Import-LanguageFile.ps1'
         $script:Lang = Import-LanguageFile -LanguageCode 'en-US'
 
-        # The async path hands the names to a fresh runspace, where the array must
-        # survive intact instead of collapsing to its first element.
+        # Without a GUI window, Invoke-NonBlocking runs the scriptblock in-process, so
+        # the session's Get-AppxPackage mock is visible to the worker here. The real
+        # out-of-process runscape is covered by the GUI-path Describe below.
         $apps = @(Invoke-AppDetailsFromJsonAsync -OnlyInstalled -LoaderScriptPath $script:LoaderPath `
             -HelperScriptPath $script:WingetHelperPath -LanguageFileScriptPath $script:LanguagePath `
             -AppsFilePath $script:AppsListFilePath -Lang $script:Lang)
 
         @($apps | Where-Object { $_.AppIdDisplay -eq 'Contoso.Example.One' }).Count |
-            Should -Be 1 -Because 'the name set reaches the runspace intact'
+            Should -Be 1 -Because 'the name set reaches the loader intact'
         @($apps | Where-Object { $_.AppIdDisplay -eq 'Contoso.Example.Two' }).Count |
             Should -Be 1 -Because 'the second enumerated name also arrives intact'
         @($apps).Count | Should -Be 2 -Because 'both enumerated names are installed'

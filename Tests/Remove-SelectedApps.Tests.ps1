@@ -111,6 +111,29 @@ Describe 'Remove-SelectedApps' {
         $script:AppRemovalFailures | Should -Be 1
     }
 
+    It 'drops the installed-Appx cache even when cancellation follows a removal' {
+        # Stand in for the loader that owns the cache, so this file stays independent.
+        $script:CacheResets = 0
+        function Reset-InstalledAppxNameCache { $script:CacheResets++ }
+
+        try {
+            # Remove the first app, then cancel before the second one.
+            Mock Remove-AppxApp {
+                $script:CancelRequested = $true
+                return $true
+            }
+
+            $null = Remove-SelectedApps -appsList @('One.App', 'Two.App')
+
+            $script:CacheResets | Should -BeGreaterThan 0 -Because (
+                'a cancelled run that already removed an app must still invalidate the cache')
+            Should -Invoke Remove-AppxApp -Times 1 -Exactly
+        }
+        finally {
+            Remove-Item -Path Function:\Reset-InstalledAppxNameCache -ErrorAction SilentlyContinue
+        }
+    }
+
     It 'counts a failed WinGet removal' {
         Mock Get-AppRemovalMethod { 'WinGet' }
         Mock Remove-WinGetApp { $false }
